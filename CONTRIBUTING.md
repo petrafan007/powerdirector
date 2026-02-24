@@ -1,0 +1,154 @@
+# Contributing to PowerDirector
+
+This is a fork of PowerDirector that was vibecoded by Joseph Cavallaro Jr. Besides the new features and functionality described in README.md, I cannot take credit for anything else. These fine individuals below deserve all the credit! This is essentially a copy of that original CONTRIBUTING.md, but can be updated as others make changes.
+
+## Quick Links
+
+- **GitHub:** https://github.com/powerdirector/powerdirector
+- **Vision:** [`VISION.md`](VISION.md)
+- **Discord:** coming soon
+- **X/Twitter:** coming soon
+
+## Original Contributors
+
+- **Peter Steinberger** - Benevolent Dictator
+  - GitHub: [@steipete](https://github.com/steipete) 路 X: [@steipete](https://x.com/steipete)
+
+- **Shadow** - Discord subsystem, Discord admin, Clawhub, all community moderation
+  - GitHub: [@thewilloftheshadow](https://github.com/thewilloftheshadow) 路 X: [@4shad0wed](https://x.com/4shad0wed)
+
+- **Vignesh** - Memory (QMD), formal modeling, TUI, IRC, and Lobster
+  - GitHub: [@vignesh07](https://github.com/vignesh07) 路 X: [@\_vgnsh](https://x.com/_vgnsh)
+
+- **Jos** - Telegram, API, Nix mode
+  - GitHub: [@joshp123](https://github.com/joshp123) 路 X: [@jjpcodes](https://x.com/jjpcodes)
+
+- **Ayaan Zaidi** - Telegram subsystem, iOS app
+  - GitHub: [@obviyus](https://github.com/obviyus) 路 X: [@0bviyus](https://x.com/0bviyus)
+
+- **Tyler Yust** - Agents/subagents, cron, BlueBubbles, macOS app
+  - GitHub: [@tyler6204](https://github.com/tyler6204) 路 X: [@tyleryust](https://x.com/tyleryust)
+
+- **Mariano Belinky** - iOS app, Security
+  - GitHub: [@mbelinky](https://github.com/mbelinky) 路 X: [@belimad](https://x.com/belimad)
+
+- **Vincent Koc** - Agents, Telemetry, Hooks, Security
+  - GitHub: [@vincentkoc](https://github.com/vincentkoc) 路 X: [@vincent_koc](https://x.com/vincent_koc)
+
+- **Seb Slight** - Docs, Agent Reliability, Runtime Hardening
+  - GitHub: [@sebslight](https://github.com/sebslight) 路 X: [@sebslig](https://x.com/sebslig)
+
+- **Christoph Nakazawa** - JS Infra
+  - GitHub: [@cpojer](https://github.com/cpojer) 路 X: [@cnakazawa](https://x.com/cnakazawa)
+
+- **Gustavo Madeira Santana** - Multi-agents, CLI, web UI
+  - GitHub: [@gumadeiras](https://github.com/gumadeiras) 路 X: [@gumadeiras](https://x.com/gumadeiras)
+
+- **Onur Solmaz** - Agents, dev workflows, ACP integrations, MS Teams
+  - GitHub: [@onutc](https://github.com/onutc), [@osolmaz](https://github.com/osolmaz) 路 X: [@onusoz](https://x.com/onusoz)
+  
+## Maintainers
+
+- **Joseph Cavallaro Jr** - humble vibecoder
+  - GitHub: [@petrafan007](https://github.com/petrafan007)
+
+## How to Contribute
+
+1. **Bugs & small fixes** 鈫?Open a PR!
+2. **New features / architecture** send a message to petrafan007 on github, more to come.
+3. **Questions** send a message to petrafan007 on github, more to come.
+
+## Before You PR
+
+- Test locally with your PowerDirector instance
+- Run tests: `pnpm build && pnpm check && pnpm test`
+- Ensure CI checks pass
+- Keep PRs focused (one thing per PR; do not mix unrelated concerns)
+- Describe what & why
+
+## Control UI Decorators
+
+The Control UI uses Lit with **legacy** decorators (current Rollup parsing does not support
+`accessor` fields required for standard decorators). When adding reactive fields, keep the
+legacy style:
+
+```ts
+@state() foo = "bar";
+@property({ type: Number }) count = 0;
+```
+
+The root `tsconfig.json` is configured for legacy decorators (`experimentalDecorators: true`)
+with `useDefineForClassFields: false`. Avoid flipping these unless you are also updating the UI
+build tooling to support standard decorators.
+
+## AI/Vibe-Coded PRs Welcome! 馃
+
+Built with Codex, Claude, or other AI tools? **Awesome - just mark it!**
+
+Please include in your PR:
+
+- [ ] Mark as AI-assisted in the PR title or description
+- [ ] Note the degree of testing (untested / lightly tested / fully tested)
+- [ ] Include prompts or session logs if possible (super helpful!)
+- [ ] Confirm you understand what the code does
+
+AI PRs are first-class citizens here. We just want transparency so reviewers know what to look for.
+
+## Current Focus & Roadmap 馃椇
+
+We are currently prioritizing:
+
+- **Stability**: Fixing edge cases in channel connections (WhatsApp/Telegram).
+- **UX**: Improving the onboarding wizard and error messages.
+- **Skills**: For skill contributions, head to [ClawHub](https://clawhub.ai/) 鈥?the community hub for PowerDirector skills.
+- **Performance**: Optimizing token usage and compaction logic.
+
+Check the [GitHub Issues](https://github.com/powerdirector/powerdirector/issues) for "good first issue" labels!
+
+## Maintainers
+
+We're selectively expanding the maintainer team.
+If you're an experienced contributor who wants to help shape PowerDirector's direction 鈥?whether through code, docs, or community 鈥?we'd like to hear from you.
+
+Being a maintainer is a responsibility, not an honorary title. We expect active, consistent involvement 鈥?triaging issues, reviewing PRs, and helping move the project forward.
+
+Still interested? Email contributing@powerdirector.ai with:
+
+- Links to your PRs on PowerDirector (if you don't have any, start there first)
+- Links to open source projects you maintain or actively contribute to
+- Your GitHub, Discord, and X/Twitter handles
+- A brief intro: background, experience, and areas of interest
+- Languages you speak and where you're based
+- How much time you can realistically commit
+
+We welcome people across all skill sets 鈥?engineering, documentation, community management, and more.
+We review every human-only-written application carefully and add maintainers slowly and deliberately.
+Please allow a few weeks for a response.
+
+## Report a Vulnerability
+
+We take security reports seriously. Report vulnerabilities directly to the repository where the issue lives:
+
+- **Core CLI and gateway** 鈥?[powerdirector/powerdirector](https://github.com/powerdirector/powerdirector)
+- **macOS desktop app** 鈥?[powerdirector/powerdirector](https://github.com/powerdirector/powerdirector) (apps/macos)
+- **iOS app** 鈥?[powerdirector/powerdirector](https://github.com/powerdirector/powerdirector) (apps/ios)
+- **Android app** 鈥?[powerdirector/powerdirector](https://github.com/powerdirector/powerdirector) (apps/android)
+- **ClawHub** 鈥?[powerdirector/clawhub](https://github.com/powerdirector/clawhub)
+- **Trust and threat model** 鈥?[powerdirector/trust](https://github.com/powerdirector/trust)
+
+For issues that don't fit a specific repo, or if you're unsure, email **security@powerdirector.ai** and we'll route it.
+
+### Required in Reports
+
+1. **Title**
+2. **Severity Assessment**
+3. **Impact**
+4. **Affected Component**
+5. **Technical Reproduction**
+6. **Demonstrated Impact**
+7. **Environment**
+8. **Remediation Advice**
+
+Reports without reproduction steps, demonstrated impact, and remediation advice will be deprioritized. Given the volume of AI-generated scanner findings, we must ensure we're receiving vetted reports from researchers who understand the issues.
+
+

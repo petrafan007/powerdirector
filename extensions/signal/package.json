@@ -1,0 +1,15 @@
+{
+  "name": "@powerdirector/signal",
+  "version": "2026.2.19",
+  "private": true,
+  "description": "PowerDirector Signal channel plugin",
+  "type": "module",
+  "devDependencies": {
+    "powerdirector": "workspace:*"
+  },
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

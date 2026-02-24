@@ -1,0 +1,15 @@
+{
+  "name": "@powerdirector/google-antigravity-auth",
+  "version": "2026.2.19",
+  "private": true,
+  "description": "PowerDirector Google Antigravity OAuth provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "powerdirector": "workspace:*"
+  },
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

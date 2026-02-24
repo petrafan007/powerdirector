@@ -1,0 +1,14 @@
+{
+  "name": "@powerdirector/lobster",
+  "version": "2026.2.19",
+  "description": "Lobster workflow tool plugin (typed pipelines + resumable approvals)",
+  "type": "module",
+  "devDependencies": {
+    "powerdirector": "workspace:*"
+  },
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

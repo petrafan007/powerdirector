@@ -1,0 +1,44 @@
+# Node / build artifacts
+node_modules/
+dist/
+ui/.next/
+
+# Local runtime data / auth
+logs/
+nohup.out
+*.log
+media/
+gemini_tmp_images/
+state/
+powerdirector.db
+powerdirector.config.json.bak
+latest_session.json
+ui/.wwebjs_auth/
+
+# Test/output artifacts
+ui/playwright-report/
+ui/test-results/
+playwright-report/
+test-results/
+
+# Env/config caches
+.env
+.env.*
+.gemini/
+.qodo/
+.tmp_section_schema_compare.mjs
+
+# Backups/archives
+*.tgz
+powerdirector_backup_*
+powerdirector_extension_refactor_backup_*
+
+# Excluded sources
+powerdirector-source/
+moltbook-adk/
+scripts/
+test/
+tests/
+
+# OS/editor noise
+.DS_Store

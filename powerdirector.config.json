@@ -1,0 +1,12 @@
+{
+  "update": {
+    "channel": "stable",
+    "checkOnStart": true,
+    "auto": {
+      "enabled": false
+    }
+  },
+  "gateway": {
+    "mode": "local"
+  }
+}

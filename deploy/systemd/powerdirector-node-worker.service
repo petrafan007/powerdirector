@@ -1,0 +1,20 @@
+[Unit]
+Description=PowerDirector Node Worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=powerdirector
+Group=powerdirector
+WorkingDirectory=/opt/powerdirector
+EnvironmentFile=-/etc/default/powerdirector-node-worker
+ExecStart=/usr/bin/npm run worker:node
+Restart=always
+RestartSec=3
+KillSignal=SIGTERM
+TimeoutStopSec=20
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

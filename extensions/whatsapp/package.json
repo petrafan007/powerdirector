@@ -1,0 +1,15 @@
+{
+  "name": "@powerdirector/whatsapp",
+  "version": "2026.2.19",
+  "private": true,
+  "description": "PowerDirector WhatsApp channel plugin",
+  "type": "module",
+  "devDependencies": {
+    "powerdirector": "workspace:*"
+  },
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
