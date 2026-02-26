@@ -52,6 +52,9 @@ const nextConfig: NextConfig = {
       ...(config.resolve.extensionAlias ?? {}),
       ".js": [".ts", ".tsx", ".js"],
     };
+    config.resolve.extensions = Array.from(new Set([
+      ".ts", ".tsx", ".js", ".jsx", ...(config.resolve.extensions || [])
+    ]));
 
     // Force webpack to include the shared src-backend directory in compilation
     const tsRule = config.module.rules.find((rule) => rule.test && rule.test.toString().includes('ts'));
