@@ -38,7 +38,13 @@ export async function PUT(
             );
         }
 
-        const body = await request.json();
+        let body = await request.json();
+
+        // Fix for Bug 6: Frontend settings form passes arrays (like bindings) as objects with index keys
+        if (section === 'bindings' && body && typeof body === 'object' && !Array.isArray(body)) {
+            body = Object.values(body);
+        }
+
         const result = getConfigManager().updateSection(section as SectionName, body);
 
         if (!result.success) {

@@ -8,9 +8,8 @@ import {
 
 export async function GET() {
     const service = getService();
-    const sessions = service.sessionManager
-        .listSessions()
-        .map((session) => enrichSessionWithCustomInstructions(service, session));
+    const rawSessions = await service.sessionManager.listSessions();
+    const sessions = rawSessions.map((session) => enrichSessionWithCustomInstructions(service, session));
     return NextResponse.json(sessions);
 }
 
@@ -25,7 +24,7 @@ export async function POST(request: Request) {
 
     const customInstructions = normalizeCustomInstructions(body?.customInstructions);
 
-    const session = service.sessionManager.createSession(name, { customInstructions });
+    const session = await service.sessionManager.createSession(name, { customInstructions });
 
     // Backward-compatible persistence path for runtimes where SessionManager
     // does not yet store customInstructions in metadata.

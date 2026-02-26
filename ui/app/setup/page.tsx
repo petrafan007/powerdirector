@@ -311,6 +311,9 @@ export default function SetupWizardPage() {
             }
 
             // Done!
+            if (typeof window !== 'undefined') {
+                window.localStorage.removeItem('pd:setup-skipped');
+            }
             setStep(STEPS.length - 1);
             setAutoSkippedToFinish(false);
             await loadWizardMetadata();
