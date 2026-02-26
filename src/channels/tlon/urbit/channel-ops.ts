@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { UrbitHttpError } from "./errors.ts";
-import { urbitFetch } from "./fetch.ts";
-import { SsrFPolicy, LookupFn } from "./types.ts";
+import { UrbitHttpError } from "./errors.js";
+import { urbitFetch } from "./fetch.js";
+import { SsrFPolicy, LookupFn } from "./types.js";
 
 export type UrbitChannelDeps = {
   baseUrl: string;

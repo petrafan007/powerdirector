@@ -1,8 +1,8 @@
 import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.ts";
 import type { MsgContext } from "../auto-reply/templating.ts";
 import type { PowerDirectorConfig } from "../config/config.ts";
-import { formatLinkUnderstandingBody } from "./format.ts";
-import { runLinkUnderstanding } from "./runner.ts";
+import { formatLinkUnderstandingBody } from "./format.js";
+import { runLinkUnderstanding } from "./runner.js";
 
 export type ApplyLinkUnderstandingResult = {
   outputs: string[];

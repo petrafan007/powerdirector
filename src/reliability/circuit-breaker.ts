@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { PowerDirectorError, ErrorCode } from './errors.ts';
+import { PowerDirectorError, ErrorCode } from './errors.js';
 
 export enum CircuitState {
     CLOSED = 'CLOSED',

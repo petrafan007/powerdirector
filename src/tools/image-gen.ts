@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base.ts';
+import { Tool, ToolResult } from './base.js';
 import OpenAI from 'openai';
 import axios from 'axios';
 import fs from 'fs';
@@ -12,7 +12,7 @@ import {
     isImageGenConfigured,
     type ImageGenModelConfig,
     type ImageGenRouterConfig,
-} from './image-gen-router.ts';
+} from './image-gen-router.js';
 
 interface ImageGenToolOptions {
     enabled?: boolean;

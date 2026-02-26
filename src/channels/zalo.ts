@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.ts';
-import { getMe, sendMessage, getUpdates, ZaloUpdate, ZaloApiError } from './zalo/api.ts';
+import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.js';
+import { getMe, sendMessage, getUpdates, ZaloUpdate, ZaloApiError } from './zalo/api.js';
 
 export interface ZaloChannelOptions {
     botToken: string;

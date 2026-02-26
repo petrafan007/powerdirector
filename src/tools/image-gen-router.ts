@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { ToolResult } from './base.ts';
+import { ToolResult } from './base.js';
 import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
 import axios from 'axios';
 import FormData from 'form-data';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { executeSkill } from './skill-executor.ts';
+import { executeSkill } from './skill-executor.js';
 
 /**
  * Image Generation Model Configuration

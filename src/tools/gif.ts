@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base.ts';
+import { Tool, ToolResult } from './base.js';
 // @ts-ignore
 import Tenor from 'tenorjs';
 

@@ -1,9 +1,9 @@
 // @ts-nocheck
 import { Readable } from "node:stream";
-import { ensureUrbitChannelOpen, pokeUrbitChannel, scryUrbitPath } from "./channel-ops.ts";
-import { getUrbitContext, normalizeUrbitCookie } from "./context.ts";
-import { urbitFetch } from "./fetch.ts";
-import { SsrFPolicy, LookupFn } from "./types.ts";
+import { ensureUrbitChannelOpen, pokeUrbitChannel, scryUrbitPath } from "./channel-ops.js";
+import { getUrbitContext, normalizeUrbitCookie } from "./context.js";
+import { urbitFetch } from "./fetch.js";
+import { SsrFPolicy, LookupFn } from "./types.js";
 
 export type UrbitSseLogger = {
   log?: (message: string) => void;

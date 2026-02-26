@@ -1,11 +1,11 @@
 // @ts-nocheck
-import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.ts';
-import { UrbitSSEClient } from './tlon/urbit/sse-client.ts';
-import { authenticate } from './tlon/urbit/auth.ts';
-import { normalizeShip, parseChannelNest } from './tlon/targets.ts';
-import { fetchAllChannels } from './tlon/monitor/discovery.ts';
-import { extractMessageText, isBotMentioned, isDmAllowed } from './tlon/monitor/utils.ts';
-import { sendDm, sendGroupMessage } from './tlon/urbit/send.ts';
+import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.js';
+import { UrbitSSEClient } from './tlon/urbit/sse-client.js';
+import { authenticate } from './tlon/urbit/auth.js';
+import { normalizeShip, parseChannelNest } from './tlon/targets.js';
+import { fetchAllChannels } from './tlon/monitor/discovery.js';
+import { extractMessageText, isBotMentioned, isDmAllowed } from './tlon/monitor/utils.js';
+import { sendDm, sendGroupMessage } from './tlon/urbit/send.js';
 
 export interface TlonChannelOptions {
     ship: string;

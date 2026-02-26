@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { validateUrbitBaseUrl } from "./base-url.ts";
-import { UrbitUrlError } from "./errors.ts";
+import { validateUrbitBaseUrl } from "./base-url.js";
+import { UrbitUrlError } from "./errors.js";
 
 export type UrbitContext = {
   baseUrl: string;

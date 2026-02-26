@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base.ts';
+import { Tool, ToolResult } from './base.js';
 import OpenAI from 'openai';
 import fs from 'fs';
 import path from 'path';

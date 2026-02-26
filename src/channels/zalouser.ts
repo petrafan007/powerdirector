@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.ts';
-import { runZca, runZcaStreaming, parseJsonOutput } from './zalo/zca.ts';
+import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.js';
+import { runZca, runZcaStreaming, parseJsonOutput } from './zalo/zca.js';
 
 export interface ZaloUserChannelOptions {
     profile?: string;

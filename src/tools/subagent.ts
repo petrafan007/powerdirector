@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { Tool, ToolResult } from './base.ts';
+import { Tool, ToolResult } from './base.js';
 import { SessionManager } from '../state/session-manager.ts';
 import { Gateway } from '../core/gateway.ts';
 import { randomUUID } from 'crypto';

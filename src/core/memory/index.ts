@@ -1,7 +1,7 @@
 // @ts-nocheck
-export * from './types.ts';
-export * from './config.ts';
-export * from './embeddings.ts';
-export * from './manager.ts';
-export * from './qmd.ts';
-export * from './sqlite-vec.ts';
+export * from './types.js';
+export * from './config.js';
+export * from './embeddings.js';
+export * from './manager.js';
+export * from './qmd.js';
+export * from './sqlite-vec.js';

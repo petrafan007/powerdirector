@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { App } from '@slack/bolt';
-import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.ts';
+import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.js';
 
 export class SlackChannel implements Channel {
     public id = 'slack';

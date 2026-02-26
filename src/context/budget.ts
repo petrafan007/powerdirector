@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Message, ContextBudget, ContentPart, MediaPart } from './types.ts';
+import { Message, ContextBudget, ContentPart, MediaPart } from './types.js';
 import { PowerDirectorError, ErrorCode } from '../reliability/errors.ts';
 
 export class BudgetManager {

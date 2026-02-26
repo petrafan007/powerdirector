@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { spawn } from 'node:child_process';
-import { getRuntimeLogger } from './logger.ts';
+import { getRuntimeLogger } from './logger.js';
 
 type MdnsDiscoveryMode = 'off' | 'minimal' | 'full';
 

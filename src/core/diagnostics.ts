@@ -1,7 +1,7 @@
 // @ts-nocheck
 import fs from 'node:fs';
 import path from 'node:path';
-import { getRuntimeLogger } from './logger.ts';
+import { getRuntimeLogger } from './logger.js';
 
 export interface DiagnosticsOtelConfig {
     enabled?: boolean;

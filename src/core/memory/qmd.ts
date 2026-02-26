@@ -11,10 +11,10 @@ import {
     MemorySyncProgressUpdate,
     MemoryProviderStatus,
     MemorySource,
-} from "./types.ts";
-import { ResolvedQmdConfig } from "./config.ts";
-import { hashText } from "./internal.ts";
-import { resolveUserPath } from "./utils.ts";
+} from "./types.js";
+import { ResolvedQmdConfig } from "./config.js";
+import { hashText } from "./internal.js";
+import { resolveUserPath } from "./utils.js";
 
 const MAX_QMD_OUTPUT_CHARS = 200_000;
 const DEFAULT_SESSION_COLLECTION = "sessions";

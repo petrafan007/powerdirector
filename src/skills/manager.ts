@@ -3,10 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { getRuntimeLogger } from '../core/logger.ts';
-import { Skill, SkillEntry, SkillSnapshot } from './types.ts';
-import { SkillLoader } from './loader.ts';
-import { SkillFormatter } from './formatter.ts';
-import { shouldIncludeSkill } from './config.ts';
+import { Skill, SkillEntry, SkillSnapshot } from './types.js';
+import { SkillLoader } from './loader.js';
+import { SkillFormatter } from './formatter.js';
+import { shouldIncludeSkill } from './config.js';
 import { Tool, ToolResult } from '../tools/base.ts';
 
 

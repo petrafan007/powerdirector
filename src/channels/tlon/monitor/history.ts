@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { extractMessageText } from "./utils.ts";
+import { extractMessageText } from "./utils.js";
 
 export type TlonHistoryEntry = {
   author: string;

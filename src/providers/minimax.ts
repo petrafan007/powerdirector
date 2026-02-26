@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { OpenAICompatibleProvider, OpenAICompatibleConfig } from './openai-compatible.ts';
+import { OpenAICompatibleProvider, OpenAICompatibleConfig } from './openai-compatible.js';
 import { ProviderConfig } from '../reliability/types.ts';
 
 export class MinimaxProvider extends OpenAICompatibleProvider {

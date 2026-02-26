@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Client } from '@notionhq/client';
-import { Tool, ToolResult } from './base.ts';
+import { Tool, ToolResult } from './base.js';
 
 export class NotionTool implements Tool {
     public name = 'notion';

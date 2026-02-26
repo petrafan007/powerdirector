@@ -1,4 +1,4 @@
-export { applyLinkUnderstanding } from "./apply.ts";
-export { extractLinksFromMessage } from "./detect.ts";
-export { formatLinkUnderstandingBody } from "./format.ts";
-export { runLinkUnderstanding } from "./runner.ts";
+export { applyLinkUnderstanding } from "./apply.js";
+export { extractLinksFromMessage } from "./detect.js";
+export { formatLinkUnderstandingBody } from "./format.js";
+export { runLinkUnderstanding } from "./runner.js";

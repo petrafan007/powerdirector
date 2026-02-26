@@ -5,14 +5,14 @@ import {
     MemorySearchManager,
     MemorySearchResult,
     MemoryProviderStatus,
-} from "./types.ts";
+} from "./types.js";
 import {
     ResolvedMemoryBackendConfig,
     mergeMemorySearchConfig,
     resolveMemoryBackendConfig,
-} from "./config.ts";
-import { QmdBackend } from "./qmd.ts";
-import { SqliteVecBackend } from "./sqlite-vec.ts";
+} from "./config.js";
+import { QmdBackend } from "./qmd.js";
+import { SqliteVecBackend } from "./sqlite-vec.js";
 
 type BackendEntry = {
     manager: MemorySearchManager;

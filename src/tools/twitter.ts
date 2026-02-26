@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base.ts';
+import { Tool, ToolResult } from './base.js';
 import { TwitterApi } from 'twitter-api-v2';
 
 export class TwitterTool implements Tool {
