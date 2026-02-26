@@ -4,7 +4,7 @@ const next = require('next')
 const path = require('path')
 
 const dev = process.env.NODE_ENV !== 'production'
-const port = 3007
+const port = parseInt(process.env.PORT, 10) || 3007
 const hostname = '0.0.0.0'
 console.log('Attempting to start Next.js from:', __dirname)
 

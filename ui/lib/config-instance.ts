@@ -1,4 +1,4 @@
-import { ConfigManager } from '@backend/config/config-manager';
+import { ConfigManager } from '@backend/config/config-manager.js';
 import { resolvePowerDirectorRoot } from './paths';
 import fs from 'node:fs';
 import path from 'node:path';
