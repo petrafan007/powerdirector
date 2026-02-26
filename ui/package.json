@@ -3,8 +3,9 @@
   "version": "1.0.0-beta.4",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack -p 3007",
-    "build": "next build --webpack",
+    "sync-backend": "rm -rf src-backend && cp -r ../src src-backend",
+    "dev": "npm run sync-backend && next dev --webpack -p 3007",
+    "build": "npm run sync-backend && next build --webpack",
     "start": "NODE_ENV=production node server.js",
     "lint": "eslint",
     "test:e2e": "playwright test"
