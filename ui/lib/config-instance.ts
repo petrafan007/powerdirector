@@ -1,4 +1,4 @@
-import { ConfigManager } from '../../src/config/config-manager';
+import { ConfigManager } from '../../src/config/config-manager.js';
 import { resolvePowerDirectorRoot } from './paths';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -9,20 +9,20 @@ let _configManager: ConfigManager | null = null;
 function loadDotenv(rootDir: string) {
     const config = new ConfigManager(rootDir).getAll(false) as any;
     let dotenvPath = config?.env?.dotenvPath;
-    
+
     console.log(`[ConfigInstance] Initializing environment. Configured dotenvPath: ${dotenvPath || 'none'}`);
 
     if (dotenvPath) {
         if (dotenvPath.startsWith('~/')) {
             dotenvPath = path.join(process.env.HOME || '', dotenvPath.slice(2));
         }
-        
+
         if (fs.existsSync(dotenvPath)) {
             const stats = fs.statSync(dotenvPath);
             if (stats.isDirectory()) {
                 dotenvPath = path.join(dotenvPath, '.env');
             }
-            
+
             if (fs.existsSync(dotenvPath)) {
                 try {
                     console.log(`[ConfigInstance] Loading .env from: ${dotenvPath}`);
@@ -74,7 +74,7 @@ function loadDotenv(rootDir: string) {
                     if (key && !process.env[key]) process.env[key] = value;
                 }
                 console.log(`[ConfigInstance] Loaded local .env successfully.`);
-            } catch {}
+            } catch { }
         }
     }
 }
