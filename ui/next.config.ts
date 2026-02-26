@@ -51,12 +51,24 @@ const nextConfig: NextConfig = {
       ...(config.resolve.alias ?? {}),
       '@backend': path.resolve(configDir, '../src'),
     };
+    // Ensure webpack can resolve .js imports to .ts files in the external backend dir
     config.resolve.extensionAlias = {
       ...(config.resolve.extensionAlias ?? {}),
       ".js": [".ts", ".tsx", ".js"],
-      ".mjs": [".mts", ".mjs"],
-      ".cjs": [".cts", ".cjs"],
     };
+
+    // Force webpack to include the shared src directory in compilation
+    const tsRule = config.module.rules.find((rule) => rule.test && rule.test.toString().includes('ts'));
+    if (tsRule) {
+      if (Array.isArray(tsRule.include)) {
+        tsRule.include.push(path.resolve(configDir, '../src'));
+      } else if (tsRule.include) {
+        tsRule.include = [tsRule.include, path.resolve(configDir, '../src')];
+      } else {
+        tsRule.include = path.resolve(configDir, '../src');
+      }
+    }
+
     if (isServer) {
       const externalPackages = {
         "@mariozechner/pi-coding-agent": "commonjs @mariozechner/pi-coding-agent",
