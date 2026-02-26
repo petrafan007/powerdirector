@@ -145,16 +145,11 @@ export default function SetupWizardPage() {
 
                 if (shouldSkip) {
                     setStep(STEPS.length - 1);
-                } else if (shouldForceRun) {
-                    setStep(0);
                 }
             } else {
                 setWizardMeta(null);
                 setWizardMetaIsCurrentVersion(false);
                 setAutoSkippedToFinish(false);
-                if (shouldForceRun) {
-                    setStep(0);
-                }
             }
         } catch {
             // Keep wizard usable even if metadata load fails.
