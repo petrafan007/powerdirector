@@ -6,6 +6,9 @@ const configDir = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: configDir,
+  experimental: {
+    allowedDevOrigins: ["192.168.8.140", "localhost:4007"]
+  },
   serverExternalPackages: [
     "better-sqlite3",
     "tenorjs",
