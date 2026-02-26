@@ -47,6 +47,10 @@ const nextConfig: NextConfig = {
   },
   webpack: (config, { isServer }) => {
     config.resolve = config.resolve ?? {};
+    config.resolve.alias = {
+      ...(config.resolve.alias ?? {}),
+      '@backend': path.resolve(configDir, '../src'),
+    };
     config.resolve.extensionAlias = {
       ...(config.resolve.extensionAlias ?? {}),
       ".js": [".ts", ".tsx", ".js"],
