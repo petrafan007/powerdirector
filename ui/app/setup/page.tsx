@@ -805,7 +805,7 @@ function StepFeatures({ data, update }: { data: WizardData; update: <K extends k
                             >
                                 <option value="elevenlabs">ElevenLabs</option>
                                 <option value="openai">OpenAI</option>
-                                <option value="google">Google</option>
+                                <option value="edge">Edge TTS</option>
                             </select>
                         </div>
                     )}
