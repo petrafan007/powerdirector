@@ -37,7 +37,7 @@ export default function Home() {
     maxChatTabs: 5,
   });
 
-  // Fetch UI settings on mount
+  // Fetch UI settings and check if setup is needed on mount
   useEffect(() => {
     fetch('/api/config/ui')
       .then(r => r.json())
@@ -52,7 +52,21 @@ export default function Home() {
         }
       })
       .catch(() => { });
-  }, []);
+
+    // Check if wizard needs to run
+    fetch('/api/config/wizard')
+      .then(r => r.json())
+      .then(resp => {
+        const lastRunAt = resp?.data?.lastRunAt;
+        if (!lastRunAt) {
+          // If the skip flag is set in localStorage, don't force redirect
+          if (typeof window !== 'undefined' && !window.localStorage.getItem('pd:setup-skipped')) {
+            router.push('/setup');
+          }
+        }
+      })
+      .catch(() => { });
+  }, [router]);
 
   // Sync open tabs with active session and context sessions
   useEffect(() => {

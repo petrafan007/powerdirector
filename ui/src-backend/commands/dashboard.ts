@@ -1,0 +1,69 @@
+import { readConfigFileSnapshot, resolveGatewayPort } from '../config/config';
+import { copyToClipboard } from '../infra/clipboard';
+import type { RuntimeEnv } from '../runtime';
+import { defaultRuntime } from '../runtime';
+import {
+  detectBrowserOpenSupport,
+  formatControlUiSshHint,
+  openUrl,
+  resolveControlUiLinks,
+} from './onboard-helpers';
+
+type DashboardOptions = {
+  noOpen?: boolean;
+};
+
+export async function dashboardCommand(
+  runtime: RuntimeEnv = defaultRuntime,
+  options: DashboardOptions = {},
+) {
+  const snapshot = await readConfigFileSnapshot();
+  const cfg = snapshot.valid ? snapshot.config : {};
+  const port = resolveGatewayPort(cfg);
+  const bind = cfg.gateway?.bind ?? "loopback";
+  const basePath = cfg.gateway?.controlUi?.basePath;
+  const customBindHost = cfg.gateway?.customBindHost;
+  const token = cfg.gateway?.auth?.token ?? process.env.POWERDIRECTOR_GATEWAY_TOKEN ?? "";
+
+  // LAN URLs fail secure-context checks in browsers.
+  // Coerce only lan->loopback and preserve other bind modes.
+  const links = resolveControlUiLinks({
+    port,
+    bind: bind === "lan" ? "loopback" : bind,
+    customBindHost,
+    basePath,
+  });
+  // Prefer URL fragment to avoid leaking auth tokens via query params.
+  const dashboardUrl = token
+    ? `${links.httpUrl}#token=${encodeURIComponent(token)}`
+    : links.httpUrl;
+
+  runtime.log(`Dashboard URL: ${dashboardUrl}`);
+
+  const copied = await copyToClipboard(dashboardUrl).catch(() => false);
+  runtime.log(copied ? "Copied to clipboard." : "Copy to clipboard unavailable.");
+
+  let opened = false;
+  let hint: string | undefined;
+  if (!options.noOpen) {
+    const browserSupport = await detectBrowserOpenSupport();
+    if (browserSupport.ok) {
+      opened = await openUrl(dashboardUrl);
+    }
+    if (!opened) {
+      hint = formatControlUiSshHint({
+        port,
+        basePath,
+        token: token || undefined,
+      });
+    }
+  } else {
+    hint = "Browser launch disabled (--no-open). Use the URL above.";
+  }
+
+  if (opened) {
+    runtime.log("Opened in your browser. Keep that tab to control PowerDirector.");
+  } else if (hint) {
+    runtime.log(hint);
+  }
+}

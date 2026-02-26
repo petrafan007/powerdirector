@@ -1,0 +1,30 @@
+import type { PowerDirectorConfig } from '../config/config';
+import type { PluginInstallRecord } from '../config/types.plugins';
+
+export type PluginInstallUpdate = PluginInstallRecord & { pluginId: string };
+
+export function recordPluginInstall(
+  cfg: PowerDirectorConfig,
+  update: PluginInstallUpdate,
+): PowerDirectorConfig {
+  const { pluginId, ...record } = update;
+  const installs = {
+    ...cfg.plugins?.installs,
+    [pluginId]: {
+      ...cfg.plugins?.installs?.[pluginId],
+      ...record,
+      installedAt: record.installedAt ?? new Date().toISOString(),
+    },
+  };
+
+  return {
+    ...cfg,
+    plugins: {
+      ...cfg.plugins,
+      installs: {
+        ...installs,
+        [pluginId]: installs[pluginId],
+      },
+    },
+  };
+}

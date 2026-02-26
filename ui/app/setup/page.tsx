@@ -484,7 +484,12 @@ export default function SetupWizardPage() {
                 {!isFinishStep && (
                     <div className="text-center mt-4">
                         <button
-                            onClick={() => router.push('/')}
+                            onClick={() => {
+                                if (typeof window !== 'undefined') {
+                                    window.localStorage.setItem('pd:setup-skipped', 'true');
+                                }
+                                router.push('/');
+                            }}
                             className="text-xs transition-colors cursor-pointer"
                             style={{ color: 'var(--pd-text-muted)' }}
                         >

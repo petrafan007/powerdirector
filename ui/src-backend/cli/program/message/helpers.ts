@@ -1,0 +1,87 @@
+import type { Command } from "commander";
+import { messageCommand } from '../../../commands/message';
+import { danger, setVerbose } from '../../../globals';
+import { CHANNEL_TARGET_DESCRIPTION } from '../../../infra/outbound/channel-target';
+import { runGlobalGatewayStopSafely } from '../../../plugins/hook-runner-global';
+import { defaultRuntime } from '../../../runtime';
+import { runCommandWithRuntime } from '../../cli-utils';
+import { createDefaultDeps } from '../../deps';
+import { ensurePluginRegistryLoaded } from '../../plugin-registry';
+
+export type MessageCliHelpers = {
+  withMessageBase: (command: Command) => Command;
+  withMessageTarget: (command: Command) => Command;
+  withRequiredMessageTarget: (command: Command) => Command;
+  runMessageAction: (action: string, opts: Record<string, unknown>) => Promise<void>;
+};
+
+function normalizeMessageOptions(opts: Record<string, unknown>): Record<string, unknown> {
+  const { account, ...rest } = opts;
+  return {
+    ...rest,
+    accountId: typeof account === "string" ? account : undefined,
+  };
+}
+
+async function runPluginStopHooks(): Promise<void> {
+  await runGlobalGatewayStopSafely({
+    event: { reason: "cli message action complete" },
+    ctx: {},
+    onError: (err) => defaultRuntime.error(danger(`gateway_stop hook failed: ${String(err)}`)),
+  });
+}
+
+export function createMessageCliHelpers(
+  message: Command,
+  messageChannelOptions: string,
+): MessageCliHelpers {
+  const withMessageBase = (command: Command) =>
+    command
+      .option("--channel <channel>", `Channel: ${messageChannelOptions}`)
+      .option("--account <id>", "Channel account id (accountId)")
+      .option("--json", "Output result as JSON", false)
+      .option("--dry-run", "Print payload and skip sending", false)
+      .option("--verbose", "Verbose logging", false);
+
+  const withMessageTarget = (command: Command) =>
+    command.option("-t, --target <dest>", CHANNEL_TARGET_DESCRIPTION);
+  const withRequiredMessageTarget = (command: Command) =>
+    command.requiredOption("-t, --target <dest>", CHANNEL_TARGET_DESCRIPTION);
+
+  const runMessageAction = async (action: string, opts: Record<string, unknown>) => {
+    setVerbose(Boolean(opts.verbose));
+    ensurePluginRegistryLoaded();
+    const deps = createDefaultDeps();
+    let failed = false;
+    await runCommandWithRuntime(
+      defaultRuntime,
+      async () => {
+        await messageCommand(
+          {
+            ...normalizeMessageOptions(opts),
+            action,
+          },
+          deps,
+          defaultRuntime,
+        );
+      },
+      (err) => {
+        failed = true;
+        defaultRuntime.error(danger(String(err)));
+      },
+    );
+    await runPluginStopHooks();
+    defaultRuntime.exit(failed ? 1 : 0);
+  };
+
+  // `message` is only used for `message.help({ error: true })`, keep the
+  // command-specific helpers grouped here.
+  void message;
+
+  return {
+    withMessageBase,
+    withMessageTarget,
+    withRequiredMessageTarget,
+    runMessageAction,
+  };
+}

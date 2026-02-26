@@ -1,0 +1,45 @@
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveCommandAuthorization } from '../command-auth';
+import { normalizeCommandBody } from '../commands-registry';
+import type { MsgContext } from '../templating';
+import type { CommandContext } from './commands-types';
+import { stripMentions } from './mentions';
+
+export function buildCommandContext(params: {
+  ctx: MsgContext;
+  cfg: PowerDirectorConfig;
+  agentId?: string;
+  sessionKey?: string;
+  isGroup: boolean;
+  triggerBodyNormalized: string;
+  commandAuthorized: boolean;
+}): CommandContext {
+  const { ctx, cfg, agentId, sessionKey, isGroup, triggerBodyNormalized } = params;
+  const auth = resolveCommandAuthorization({
+    ctx,
+    cfg,
+    commandAuthorized: params.commandAuthorized,
+  });
+  const surface = (ctx.Surface ?? ctx.Provider ?? "").trim().toLowerCase();
+  const channel = (ctx.Provider ?? surface).trim().toLowerCase();
+  const abortKey = sessionKey ?? (auth.from || undefined) ?? (auth.to || undefined);
+  const rawBodyNormalized = triggerBodyNormalized;
+  const commandBodyNormalized = normalizeCommandBody(
+    isGroup ? stripMentions(rawBodyNormalized, ctx, cfg, agentId) : rawBodyNormalized,
+  );
+
+  return {
+    surface,
+    channel,
+    channelId: auth.providerId,
+    ownerList: auth.ownerList,
+    senderIsOwner: auth.senderIsOwner,
+    isAuthorizedSender: auth.isAuthorizedSender,
+    senderId: auth.senderId,
+    abortKey,
+    rawBodyNormalized,
+    commandBodyNormalized,
+    from: auth.from,
+    to: auth.to,
+  };
+}

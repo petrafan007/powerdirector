@@ -1,0 +1,65 @@
+import type { ChannelMessageActionName as ChannelMessageActionNameFromList } from './message-action-names';
+
+export { CHANNEL_MESSAGE_ACTION_NAMES } from './message-action-names';
+
+export type ChannelMessageActionName = ChannelMessageActionNameFromList;
+
+export type {
+  ChannelAuthAdapter,
+  ChannelCommandAdapter,
+  ChannelConfigAdapter,
+  ChannelDirectoryAdapter,
+  ChannelResolveKind,
+  ChannelResolveResult,
+  ChannelResolverAdapter,
+  ChannelElevatedAdapter,
+  ChannelGatewayAdapter,
+  ChannelGatewayContext,
+  ChannelGroupAdapter,
+  ChannelHeartbeatAdapter,
+  ChannelLoginWithQrStartResult,
+  ChannelLoginWithQrWaitResult,
+  ChannelLogoutContext,
+  ChannelLogoutResult,
+  ChannelOutboundAdapter,
+  ChannelOutboundContext,
+  ChannelPairingAdapter,
+  ChannelSecurityAdapter,
+  ChannelSetupAdapter,
+  ChannelStatusAdapter,
+} from './types.adapters';
+export type {
+  ChannelAccountSnapshot,
+  ChannelAccountState,
+  ChannelAgentPromptAdapter,
+  ChannelAgentTool,
+  ChannelAgentToolFactory,
+  ChannelCapabilities,
+  ChannelDirectoryEntry,
+  ChannelDirectoryEntryKind,
+  ChannelGroupContext,
+  ChannelHeartbeatDeps,
+  ChannelId,
+  ChannelLogSink,
+  ChannelMentionAdapter,
+  ChannelMessageActionAdapter,
+  ChannelMessageActionContext,
+  ChannelMessagingAdapter,
+  ChannelMeta,
+  ChannelOutboundTargetMode,
+  ChannelPollContext,
+  ChannelPollResult,
+  ChannelSecurityContext,
+  ChannelSecurityDmPolicy,
+  ChannelSetupInput,
+  ChannelStatusIssue,
+  ChannelStreamingAdapter,
+  ChannelThreadingAdapter,
+  ChannelThreadingContext,
+  ChannelThreadingToolContext,
+  ChannelToolSend,
+  BaseProbeResult,
+  BaseTokenResolution,
+} from './types.core';
+
+export type { ChannelPlugin } from './types.plugin';

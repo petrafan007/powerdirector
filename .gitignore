@@ -9,7 +9,7 @@ nohup.out
 *.log
 # media/  <-- Commented out to allow src/media
 gemini_tmp_images/
-state/
+/state/
 powerdirector.db
 powerdirector.config.json.bak
 latest_session.json
