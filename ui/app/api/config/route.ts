@@ -22,6 +22,12 @@ export async function GET() {
 export async function PUT(request: Request) {
     try {
         const body = await request.json();
+
+        // Fix for frontend sending arrays as objects with index keys
+        if (body.bindings && typeof body.bindings === 'object' && !Array.isArray(body.bindings)) {
+            body.bindings = Object.values(body.bindings);
+        }
+
         const mgr = getConfigManager();
         const result = mgr.update(body);
 

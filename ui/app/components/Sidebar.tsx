@@ -334,7 +334,7 @@ export default function Sidebar({ currentSessionId, onSelectSession, collapsed, 
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"></path></svg>
                         {!collapsed && <span className="text-sm">Debug</span>}
                     </Link>
-                    <a href="/api/logs/tail" target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 mx-2 px-2 py-1.5 rounded-lg transition-colors ${pathname?.startsWith('/logs') ? 'bg-[var(--pd-surface-panel)] text-[var(--pd-text-main)]' : 'text-[var(--pd-text-muted)] hover:text-[var(--pd-text-main)]'}`} title="Logs">
+                    <a href="/logs" target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 mx-2 px-2 py-1.5 rounded-lg transition-colors ${pathname?.startsWith('/logs') ? 'bg-[var(--pd-surface-panel)] text-[var(--pd-text-main)]' : 'text-[var(--pd-text-muted)] hover:text-[var(--pd-text-main)]'}`} title="Logs">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                         {!collapsed && <span className="text-sm">Logs</span>}
                     </a>

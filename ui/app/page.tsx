@@ -267,8 +267,8 @@ export default function Home() {
         {/* Content Area */}
         <div className="flex-1 min-h-0 relative">
 
-          {/* 1. Terminal Instances - Always mounted but hidden if not active to persist state */}
-          {openTabs.filter(t => t.id.startsWith('terminal-')).map(t => (
+          {/* 1. Terminal Instances */}
+          {uiSettings.chatTabs ? openTabs.filter(t => t.id.startsWith('terminal-')).map(t => (
             <div
               key={t.id}
               className="absolute inset-0 bg-[#1e1e1e]"
@@ -279,10 +279,14 @@ export default function Home() {
             >
               <TerminalInterface sessionId={t.id} />
             </div>
+          )) : (activeSessionId && activeSessionId.startsWith('terminal-') && (
+            <div className="absolute inset-0 bg-[#1e1e1e]" style={{ zIndex: 10 }}>
+              <TerminalInterface sessionId={activeSessionId} />
+            </div>
           ))}
 
-          {/* 2. Chat Instances - Always mounted but hidden if not active to persist state */}
-          {openTabs.filter(t => !t.id.startsWith('terminal-')).map(t => (
+          {/* 2. Chat Instances */}
+          {uiSettings.chatTabs ? openTabs.filter(t => !t.id.startsWith('terminal-')).map(t => (
             <div
               key={t.id}
               className="absolute inset-0"
@@ -293,6 +297,14 @@ export default function Home() {
             >
               <ChatInterface
                 sessionId={t.id}
+                sidebarCollapsed={false}
+                onToggleFullscreen={() => { }}
+              />
+            </div>
+          )) : (activeSessionId && !activeSessionId.startsWith('terminal-') && (
+            <div className="absolute inset-0" style={{ zIndex: 10 }}>
+              <ChatInterface
+                sessionId={activeSessionId}
                 sidebarCollapsed={false}
                 onToggleFullscreen={() => { }}
               />
