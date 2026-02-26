@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { TeamsChannel } from '../../../../src/channels/teams';
+import { TeamsChannel } from '@/src-backend/channels/teams';
 import { getService } from '../../../lib/agent-instance';
 
 export const runtime = 'nodejs';

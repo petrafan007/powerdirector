@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { approveDevicePairing, summarizeDeviceTokens } from '../../../../../../src/nodes/device-pairing';
+import { approveDevicePairing, summarizeDeviceTokens } from '@/src-backend/nodes/device-pairing';
 import { resolvePowerDirectorRoot } from '../../../../../lib/paths';
 
 export async function POST(req: NextRequest) {

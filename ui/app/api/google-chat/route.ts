@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { GoogleChatChannel } from '../../../../src/channels/google-chat';
+import { GoogleChatChannel } from '@/src-backend/channels/google-chat';
 import { getService } from '../../../lib/agent-instance';
 
 export const runtime = 'nodejs';

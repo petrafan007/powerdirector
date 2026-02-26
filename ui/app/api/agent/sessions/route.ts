@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getService } from '../../../../lib/agent-instance';
-import { loadConfig } from '../../../../../src/config/config';
+import { loadConfig } from '@/src-backend/config/config';
 import {
     listSessionsFromStore,
     loadCombinedSessionStoreForGateway
-} from '../../../../../src/gateway/session-utils';
+} from '@/src-backend/gateway/session-utils';
 
 /**
  * Returns sessions from the same SessionManager/DB as the main service

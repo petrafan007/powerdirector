@@ -3,7 +3,7 @@ import {
     listDevicePairing,
     requestDevicePairing,
     summarizeDeviceTokens
-} from '../../../../../src/nodes/device-pairing';
+} from '@/src-backend/nodes/device-pairing';
 import { resolvePowerDirectorRoot } from '../../../../lib/paths';
 
 function redactDevice(device: any): any {

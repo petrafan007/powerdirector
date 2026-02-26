@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { getRuntimeLogger } from '../../src/core/logger';
+import { getRuntimeLogger } from '@/src-backend/core/logger';
 
 const DEFAULT_LIMIT = 500;
 const DEFAULT_MAX_BYTES = 250_000;

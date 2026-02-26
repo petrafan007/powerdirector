@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../../../../../../src/agents/agent-scope';
-import { listChannelPlugins } from '../../../../../../src/channels/plugins/index';
-import { SECTION_NAMES, SectionName, sectionSchemas } from '../../../../../../src/config/config-schema';
-import { buildConfigSchema } from '../../../../../../src/config/schema';
-import { loadPluginManifestRegistry } from '../../../../../../src/plugins/manifest-registry';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '@/src-backend/agents/agent-scope';
+import { listChannelPlugins } from '@/src-backend/channels/plugins/index';
+import { SECTION_NAMES, SectionName, sectionSchemas } from '@/src-backend/config/config-schema';
+import { buildConfigSchema } from '@/src-backend/config/schema';
+import { loadPluginManifestRegistry } from '@/src-backend/plugins/manifest-registry';
 import { getConfigManager } from '../../../../../lib/config-instance';
 
 function asPlainObject(value: unknown): Record<string, unknown> | null {

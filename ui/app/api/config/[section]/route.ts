@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getConfigManager } from '../../../../lib/config-instance';
 import { resetService } from '../../../../lib/agent-instance';
-import { SECTION_NAMES, SectionName } from '../../../../../src/config/config-schema';
+import { SECTION_NAMES, SectionName } from '@/src-backend/config/config-schema';
 
 // GET /api/config/:section
 export async function GET(

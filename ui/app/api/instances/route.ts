@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server';
-import type { SystemPresence } from '../../../../src/infra/system-presence';
-import { listSystemPresence } from '../../../../src/infra/system-presence';
+import type { SystemPresence } from '@/src-backend/infra/system-presence';
+import { listSystemPresence } from '@/src-backend/infra/system-presence';
 
 type UiInstanceEntry = {
     id: string;

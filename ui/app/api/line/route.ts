@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { validateSignature, WebhookRequestBody, WebhookEvent } from '@line/bot-sdk';
 import { getService } from '../../../lib/agent-instance';
-import { LineChannel } from '../../../../src/channels/line';
+import { LineChannel } from '@/src-backend/channels/line';
 
 export async function POST(request: Request) {
     const signature = request.headers.get('x-line-signature');

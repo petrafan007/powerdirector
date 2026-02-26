@@ -1,8 +1,8 @@
 
 import { NextResponse } from 'next/server';
 import { getService } from '@/lib/agent-instance';
-import { listSystemPresence } from '../../../../src/infra/system-presence';
-import { TICK_INTERVAL_MS } from '../../../../src/gateway/server-constants';
+import { listSystemPresence } from '@/src-backend/infra/system-presence';
+import { TICK_INTERVAL_MS } from '@/src-backend/gateway/server-constants';
 
 export async function GET() {
     try {

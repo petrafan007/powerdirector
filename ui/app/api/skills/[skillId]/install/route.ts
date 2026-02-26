@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { installSkill as installSkillDeps } from '../../../../../../src/agents/skills-install';
-import { loadWorkspaceSkillEntries } from '../../../../../../src/agents/skills';
+import { installSkill as installSkillDeps } from '@/src-backend/agents/skills-install';
+import { loadWorkspaceSkillEntries } from '@/src-backend/agents/skills';
 import { PowerDirectorService } from '@/lib/agent-instance';
 import { getConfigManager } from '@/lib/config-instance';
 import { resolvePowerDirectorRoot } from '@/lib/paths';

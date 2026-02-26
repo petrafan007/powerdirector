@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getService } from '../../../lib/agent-instance';
 import { authorizeNodeRequest } from '../../../lib/nodes-auth';
 import { resolvePowerDirectorRoot } from '../../../lib/paths';
-import { buildNodeList } from '../../../../src/nodes/node-list';
-import { listDevicePairing } from '../../../../src/nodes/device-pairing';
-import { NodeInfo } from '../../../../src/nodes/manager';
+import { buildNodeList } from '@/src-backend/nodes/node-list';
+import { listDevicePairing } from '@/src-backend/nodes/device-pairing';
+import { NodeInfo } from '@/src-backend/nodes/manager';
 
 const VALID_PLATFORMS = ['macos', 'ios', 'android', 'linux', 'windows'] as const;
 

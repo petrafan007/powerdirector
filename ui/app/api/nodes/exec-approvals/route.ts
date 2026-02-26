@@ -8,7 +8,7 @@ import {
     readExecApprovalsSnapshot,
     saveExecApprovals,
     ExecApprovalsFile
-} from '../../../../../src/nodes/exec-approvals';
+} from '@/src-backend/nodes/exec-approvals';
 
 function redactExecApprovals(file: ExecApprovalsFile): ExecApprovalsFile {
     const socketPath = file.socket?.path?.trim();
