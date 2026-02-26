@@ -1,0 +1,15 @@
+{
+  "name": "@powerdirector/llm-task",
+  "version": "2026.2.19",
+  "private": true,
+  "description": "PowerDirector JSON-only LLM task plugin",
+  "type": "module",
+  "devDependencies": {
+    "powerdirector": "workspace:*"
+  },
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

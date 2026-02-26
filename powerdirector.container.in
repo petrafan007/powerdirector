@@ -1,0 +1,26 @@
+# PowerDirector gateway — Podman Quadlet (rootless)
+# Installed by setup-podman.sh into powerdirector's ~/.config/containers/systemd/
+# {{POWERDIRECTOR_HOME}} is replaced at install time.
+
+[Unit]
+Description=PowerDirector gateway (rootless Podman)
+
+[Container]
+Image=powerdirector:local
+ContainerName=powerdirector
+UserNS=keep-id
+Volume={{POWERDIRECTOR_HOME}}/.powerdirector:/home/node/.powerdirector
+EnvironmentFile={{POWERDIRECTOR_HOME}}/.powerdirector/.env
+Environment=HOME=/home/node
+Environment=TERM=xterm-256color
+PublishPort=18789:18789
+PublishPort=18790:18790
+Pull=never
+Exec=node dist/index.js gateway --bind lan --port 18789
+
+[Service]
+TimeoutStartSec=300
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

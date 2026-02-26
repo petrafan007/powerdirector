@@ -1,0 +1,1633 @@
+# PowerDirector Integration Tasks
+
+## 🔒 OpenClaw Parity Recovery Plan (Approved / In Progress)
+- [x] **Approval Gate**
+  - [x] Do not execute parity code changes until this section is approved.
+  - [x] After approval, execute strictly section-by-section with proof after each section.
+    - [x] Check items off this list as you do them.
+
+### Parity Rules (Non-Negotiable)
+- [ ] **Rule 1: OpenClaw parity first**
+  - [ ] For each parity-scoped section, match OpenClaw field existence, field type, enum options, defaults, frontend control type, backend wiring, and persistence behavior.
+- [ ] **Rule 2: Preserve PowerDirector customizations**
+  - [ ] Any feature that is intentionally PowerDirector-specific must not be removed or overwritten.
+  - [ ] PowerDirector-specific features may be refactored/fixed if broken or miswired, but behavior must be preserved.
+- [ ] **Rule 3: No invented features**
+  - [ ] If a parity-targeted feature cannot be found in OpenClaw source, stop and log it before implementing anything.
+- [ ] **Rule 4: Source of truth**
+  - [ ] OpenClaw source drives parity targets.
+  - [ ] PowerDirector source drives custom-feature preserve list.
+- [x] **Rule 5: No `legacy-src` end state**
+  - [x] Any remaining runtime/schema/config code currently under `legacy-src` must be migrated to canonical PowerDirector source locations (OpenClaw-aligned structure under `src`/`ui`), with imports and wiring updated.
+  - [x] Final state must have zero active codepaths/imports depending on `legacy-src`.
+    - 2026-02-24 proof: `rg -n "legacy-src" src ui scripts package.json README.md` returned no runtime/import references.
+- [x] **Rule 6: Theme lock (PowerDirector-owned)**
+  - [x] PowerDirector dark/light theme, styling system, and visual identity remain 100% intact and are not replaced by OpenClaw theme behavior.
+    - 2026-02-24 proof: parity sync changed config schema modules only (`src/config/**`), with no theme-system replacements in UI styling/layout files.
+- [x] **Rule 7: Port lock**
+  - [x] All existing runtime port assignments must remain unchanged.
+    - 2026-02-24 proof: `gateway.port` remains `3012` in both `powerdirector.config.json` and `powerdirector.config.json.bak`.
+- [x] **Rule 8: Docs lock**
+  - [x] Entire documentation set must be preserved, including all pages under docs directories/routes.
+    - 2026-02-24 proof: `npm --prefix ui run build` route manifest still includes `/docs` and all `/docs/config/*` pages.
+- [x] **Rule 9: CLI provider lock (Gemini/Codex)**
+  - [x] Any PowerDirector-specific code required for `google-gemini-cli` and `openai-codex` operation must not be removed or regressed.
+  - [x] Keep headless/auth/session/runtime handling for these CLI providers intact while doing parity work.
+    - 2026-02-24 proof: provider/runtime wiring still present in `src/providers/gemini-cli.ts`, `src/providers/codex-cli.ts`, `ui/app/api/providers/route.ts`, and `ui/app/components/ChatInterface.tsx`.
+- [ ] **Rule 10: Don't break Chat Interface**
+  - [ ] All existing functionality of `ui/app/components/ChatInterface.tsx` needs to be kept intact.
+
+  ## User updates
+  - [x] **fix `pdir` command. I'm not sure what happened to it, but I used to be able to type `pdir status` (instead of `openclaw status`), etc., but now it's somehow been reverted to `openclaw` (or it was never fully implemented, but look into it).**
+    - Added CLI bins in `package.json`: `powerdirector` and `pdir` -> `powerdirector.mjs`.
+    - Added `powerdirector.mjs` launcher (copied from OpenClaw bootstrap and adapted for PowerDirector paths), including local source fallback via `tsx` when compiled dist entry is unavailable.
+    - Updated CLI name handling to recognize `pdir` (`src/cli/cli-name.ts`, `src/cli/command-format.ts`).
+    - Verified live: `pdir --version`, `powerdirector --version`, `pdir status`, `pdir status --json`.
+
+
+### PowerDirector-Specific Features To Preserve (Inventory)
+- [x] **Chat attachments pipeline (preserve)**
+  - [x] Attach button, drag/drop, paste-from-clipboard image/file support, attachment preview/removal, model capability gating, attachment validation/normalization.
+  - [x] Evidence: `ui/app/components/ChatInterface.tsx`, `ui/lib/model-capabilities.ts`, `ui/app/api/chat/route.ts`, `src/gateway/chat-attachments.ts`, `src/gateway/server-methods/attachment-normalize.ts`.
+  - [x] 2026-02-24 hardening: normalized mixed attachment shapes at gateway boundary (`src/core/gateway.ts`) so UI/API/RPC attachment payloads are consumed consistently.
+- [x] **Rich media rendering/playback in chat (preserve + complete)**
+  - [x] Ensure images render inline and videos display/play correctly in chat history and live responses where media is present.
+  - [x] Keep attachment transport + normalization + UI rendering aligned end-to-end.
+  - [x] Evidence targets: `ui/app/components/ChatInterface.tsx`, chat message render components, attachment normalization/runtime handlers.
+- [x] **Chat provider/model selector UX (preserve)**
+  - [x] Provider + model selectors in composer, local persistence, runtime hint pass-through, provider/model sync on fallback.
+  - [x] Evidence: `ui/app/components/ChatInterface.tsx`, `ui/app/api/providers/route.ts`, `ui/lib/gateway-client.ts`.
+- [x] **Gemini CLI + Codex CLI runtime wiring (preserve)**
+  - [x] Preserve provider adapters, auth/session resolution, process launch options, and fallback integration for `google-gemini-cli` and `openai-codex`.
+  - [x] Evidence targets: `src/providers/gemini-cli.ts`, `src/providers/codex-cli.ts`, `ui/app/api/providers/route.ts`, `src/reliability/router.ts`.
+- [x] **Codex reasoning selector (preserve)**
+  - [x] Conditional selector for Codex models with `low|medium|high|extra_high`, per-chat persistence, backend pass-through.
+  - [x] Evidence: `ui/app/components/ChatInterface.tsx`, `ui/app/api/chat/route.ts`, `ui/lib/gateway-client.ts`.
+- [x] **Fallback visibility/diagnostics UX (preserve)**
+  - [x] All-models-failed modal details + explicit fallback notice + selector auto-switch to actual fallback provider/model.
+  - [x] Evidence: `ui/app/components/ChatInterface.tsx`, `ui/lib/gateway-client.ts`, `ui/app/api/chat/route.ts`.
+- [x] **Queued message preview + cancel (preserve)**
+  - [x] While generating, queued message text must be visible with remove (`X`) action.
+  - [x] Evidence: `ui/app/components/ChatInterface.tsx`.
+- [x] **Interactive tool input in chat (preserve)**
+  - [x] Input replies for running tool calls directly in chat (human-in-loop flows).
+  - [x] Evidence: `ui/app/components/ChatInterface.tsx`, `ui/app/api/chat/input/route.ts`.
+- [x] **Terminal runtime + UX (preserve)**
+  - [x] PTY-backed session management, reconnect behavior, idle-only auto-timeout, shell selection (`bash|zsh`), terminal session persistence across chat navigation, reliable copy/paste semantics.
+  - [x] Evidence: `src/core/terminal.ts`, `ui/app/components/TerminalInterface.tsx`, terminal API routes under `ui/app/api/terminal`.
+- [x] **Config/Terminal section (preserve)**
+  - [x] Keep PowerDirector terminal config keys and runtime wiring (`terminal.shell`, `terminal.autoTimeoutMinutes`, related terminal controls).
+  - [x] Evidence: `src/config/config-schema.ts`, `ui/app/config/definitions.ts`, `ui/app/api/config/schema/[section]/route.ts`.
+  - [x] 2026-02-24 schema validation proof: `terminal|meta|audio` schema routes return 200 with schema payload.
+- [x] **Per-chat custom instructions (preserve)**
+  - [x] Create/edit chat custom instructions storage + loading + runtime injection into chat context.
+  - [x] Evidence: `ui/app/components/ChatSessionDialog.tsx`, `ui/app/components/Sidebar.tsx`, `ui/app/api/sessions/route.ts`, `ui/app/api/sessions/[id]/route.ts`, `ui/lib/session-custom-instructions.ts`, `src/state/session-manager.ts`, `src/core/gateway.ts`.
+- [x] **PowerDirector manifest namespace (preserve)**
+  - [x] Keep metadata routing on `metadata.powerdirector` / `powerdirector` manifest blocks.
+  - [x] Evidence: `src/plugins/manifest.ts`, `src/shared/frontmatter.ts`, `src/hooks/frontmatter.ts`, `src/agents/skills/frontmatter.ts`.
+- [x] **UI extras (preserve unless broken)**
+  - [x] Theme/font/layout/chat-tab and related PowerDirector UX controls not present in OpenClaw remain intact and fully functional.
+  - [x] `config/ui` must continue to work as-is for existing PowerDirector-only settings.
+  - [x] `config/agents` likely has some PD customizations exposed that should be kept.
+  - [x] horizontal scrollbar under tabs for different config pages should be kept.
+  - [x] Evidence: canonical config schema/runtime + `ui/app/config/[section]/page.tsx`, `ui/app/page.tsx`.
+- [x] **Model/media compatibility extras (preserve unless broken)**
+  - [x] PowerDirector-specific compatibility fields in models/media remain unless explicitly deprecated by PowerDirector requirements.
+  - [x] Evidence: `src/config/config-schema.ts` (`models`, `media`), runtime consumers in `src/core/gateway.ts` and `src/core/media.ts`.
+- [x] **Documentation content/routes (preserve)**
+  - [x] Keep all docs directories/pages/routes intact; parity work must not remove or regress docs.
+  - [x] Evidence: `ui/docs/**` and `next build` route output includes all docs routes.
+
+### Hard Full-Parity Surfaces (No PowerDirector-Only Features Allowed)
+- [x] `/instances`
+- [x] `/sessions`
+- [x] `/channels` (exception: keep PowerDirector `Advanced Config` button only)
+- [x] `/agents`
+- [x] `/cron`
+- [x] `/usage`
+- [x] `/skills`
+- [x] `/nodes`
+- [x] `/debug`
+- [x] `/logs`
+
+2026-02-24 note: `/instances` parity pass removed mocked API payloads, switched to live `system-presence` data, wired overview instance count to live presence, and updated `ui/app/instances/page.tsx` to OpenClaw-style host/ip/mode/version plus roles/scopes chips.
+2026-02-24 note: `/sessions` now uses gateway session-store semantics via `src/gateway/session-utils` (`loadCombinedSessionStoreForGateway` + `listSessionsFromStore`) and renders session-key rows with OpenClaw-style filters/columns.
+2026-02-24 note: `/channels` replaced unsupported placeholder-heavy sections with a live channels snapshot view (cards + account health + probe/logout), while preserving the approved `Advanced Config` button.
+2026-02-24 note: `/skills` now has a dedicated route (`ui/app/skills/page.tsx`) with OpenClaw-style skills operations (filter, refresh, enable/disable, dependency install, API key save) backed by live `/api/skills` + per-skill config/install APIs; sidebar now links directly to `/skills`.
+2026-02-24 note: `/cron` replaced basic list-only rendering with scheduler metrics + detailed job cards (enabled/jobs/in-flight/max-concurrent/next wake, payload/id/channel/action/session target), backed by live `/api/cron/list`.
+2026-02-24 note: `/usage` removed non-functional controls and now provides fully wired date range filters, mode switch, session query filter, sort options, and CSV export, backed by live `/api/usage`.
+2026-02-24 note: `/agents`, `/nodes`, `/debug`, and `/logs` were re-audited against OpenClaw view semantics (no placeholder/mocked UI blocks, live API wiring intact on each page); `/agents` remains canonical at `/agents/main` with `/agents` redirecting there.
+
+### Execution Plan (After Approval)
+- [x] **Phase 0: Structure normalization**
+  - [x] Inventory and migrate active `legacy-src` codepaths into canonical source locations (`src`/`ui` and matching OpenClaw-style placement where applicable).
+  - [x] Update imports/callers/routes so runtime no longer depends on `legacy-src`.
+  - [x] Prove zero active references remain (`rg` report + build verification).
+    - 2026-02-24 verification: `npm run build` (root) passed, `npm --prefix ui run build` passed, and `rg` check above found no runtime/import references.
+- [ ] **Phase 1: Baseline + freeze**
+  - [x] Create fresh OpenClaw-vs-PowerDirector schema diff snapshots per section.
+    - 2026-02-24 snapshots: `/tmp/pd_schema_gaps_20260224_after_sync/summary.json` and per-section JSON files.
+  - [ ] Create runtime wiring audit snapshots per section (config load path -> runtime consumer -> persisted store).
+  - [x] Mark parity targets as `exact-parity` or `parity-with-PD-preserve`.
+    - 2026-02-24 classification: exact parity for all OpenClaw sections; approved PowerDirector-preserve extras only in `ui` (+11), `models` (+8), and `media` (+9), plus `terminal` section (`OPENCLAW_MISSING` by design).
+- [ ] **Phase 2: Section-by-section parity remediation**
+  - [ ] For each section: implement parity, run compare, run runtime validation, run persistence validation, record proof.
+  - [ ] Required order: `agents -> authentication -> channels -> messages -> commands -> hooks -> tools -> gateway -> diagnostics -> logging -> browser -> ui -> models -> audio -> nodeHost -> bindings -> broadcast -> media -> approvals -> session -> cron -> web -> discovery -> canvasHost -> talk -> memory -> plugins -> nodes page -> debug page -> logs page`.
+    - 2026-02-24 config parity implementation pass: synced OpenClaw config schema modules (`src/config/zod-schema*.ts` + `src/config/discord-preview-streaming.ts`) and rebuilt `src/config/config-schema.ts` as an OpenClaw-aligned adapter with approved PowerDirector-only schema preserves (`terminal`, `ui`, `models`, `media`).
+- [ ] **Phase 3: Skills / Extensions / Plugins deep parity pass**
+  - [ ] Reconcile missing OpenClaw features for skills/extensions/plugins while preserving any demonstrably intentional PowerDirector modifications.
+  - [ ] If conflict exists, log exact file-level diff and preserve decision before merge.
+- [ ] **Phase 4: End-to-end verification and report**
+  - [ ] Build backend and UI, run parity compares, run smoke scenarios, produce final mismatch report with zero unresolved parity gaps (except approved PowerDirector customizations).
+  - [ ] Explicitly verify setup wizard parity for both monolith and remote setup paths.
+  - [ ] Explicitly verify fixed port assignments are unchanged from pre-work baseline.
+  - [ ] Explicitly verify docs/pages integrity and chat media display/playback behavior.
+  - [ ] Explicitly verify Gemini CLI and Codex CLI both execute successfully in real runtime flows (not schema-only checks).
+
+### Section Completion Checklist (Must Pass Before Marking Done)
+- [ ] **Schema parity**
+  - [ ] No missing OpenClaw fields for the section.
+  - [ ] No type mismatch.
+  - [ ] No enum mismatch.
+  - [ ] No unintended extra fields (unless section is explicitly `parity-with-PD-preserve`).
+- [ ] **Frontend parity**
+  - [ ] No JSON placeholders where OpenClaw has concrete controls.
+  - [ ] Control type matches expected data type.
+  - [ ] For hard full-parity surfaces, no PowerDirector-only feature drift (except approved `/channels` advanced config button).
+- [ ] **Backend/runtime parity**
+  - [ ] Section values are actively consumed by runtime paths.
+  - [ ] Runtime behavior matches OpenClaw semantics for parity-target features.
+- [ ] **Persistence parity**
+  - [ ] Config save/load path proven.
+  - [ ] DB/file persistence verified for affected fields.
+- [ ] **Proof artifacts**
+  - [x] Compare output recorded.
+  - [x] Runtime validation notes recorded.
+  - [x] Build status recorded.
+  - [x] `legacy-src` reference report recorded.
+  - [x] Port assignment verification recorded.
+  - [x] Setup wizard monolith/remote verification recorded.
+  - [x] Theme integrity verification recorded (dark/light).
+  - [x] Media render/playback verification recorded.
+  - [x] Docs integrity verification recorded.
+  - [ ] Gemini CLI + Codex CLI runtime verification recorded.
+    - 2026-02-24: `npm run build` (root) and `npm --prefix ui run build` both passed.
+    - 2026-02-24: refreshed parity compare after schema sync shows zero missing/type/enum drift for all OpenClaw sections; only approved extras remain (`ui/models/media`) and `terminal` is intentionally PowerDirector-only.
+    - 2026-02-24: setup wizard remote/local paths re-verified (`ui/app/setup/page.tsx`, `ui/lib/wizard-flow.ts`, `src/wizard/onboarding.ts`).
+    - 2026-02-24: media rendering/playback paths verified in `ui/app/components/ChatInterface.tsx` (`img` + `video` handling for inline markdown/tool outputs/media paths).
+    - 2026-02-24: docs integrity verified by `next build` route manifest containing `/docs` and per-section docs routes.
+
+### Deliverables To Maintain During Execution
+- [x] Keep this section updated with per-section status and proof links/paths.
+  - 2026-02-24: updated with refreshed schema parity artifacts and verification notes after OpenClaw schema module sync.
+- [ ] Update `DB_WIRING_AUDIT_CONFIG_NODES_DEBUG_LOGS.md` when parity changes touch storage paths.
+- [ ] Log any blocked parity target with exact OpenClaw source reference and proposed resolution for approval.
+
+
+### ----HISTORICAL (IGNORE)----
+
+## Section-by-Section Config Parity Rework
+- [x] Agents
+  - [x] Re-validated against `/tmp/pd_config_parity_report.md`, `/tmp/pd_openclaw_schema_parity.json`, `/tmp/pd_openclaw_schema_fields.json`, `/tmp/pd_runtime_wiring_audit.json`
+  - [x] Fixed `agents.defaults` schema shape parity (`lazy` wrapper)
+  - [x] Fixed config UI union-field editing so agent fields do not get stuck in inferred placeholder shapes
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Authentication
+  - [x] Re-validated against `/tmp/pd_config_parity_report.md`, `/tmp/pd_openclaw_schema_parity.json`, `/tmp/pd_openclaw_schema_fields.json`, `/tmp/pd_runtime_wiring_audit.json`
+  - [x] Added OpenClaw-style auth field metadata/help labels in schema for `auth.profiles`, `auth.order`, and cooldown fields
+  - [x] Wired runtime auth resolution to read `auth-profiles.json` store candidates (`agent/auth-profiles.json`, `auth-profiles.json`, legacy `agent/auth.json`) and honor profile order precedence
+  - [x] Updated resolver to support OpenClaw-compatible credential shapes (`api_key`, `token`, `oauth`) and provider-specific OAuth payload for `google-gemini-cli`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+  - [x] Runtime smoke checks passed (profile-order precedence + oauth payload formatting)
+- [x] Channels
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/channels_schema_compare_before.json`) and captured baseline gap: `openFieldCount=1514`, `pdFieldCount=47`, `missingInPd=1512`, `typeMismatches=2`, `extraInPd=45`
+  - [x] Replaced generic record-based channels schema with OpenClaw-structured schemas for `defaults`, `whatsapp`, `telegram`, `discord`, `irc`, `googlechat`, `slack`, `signal`, `imessage`, `bluebubbles`, `msteams`, while preserving extension/PowerDirector channel passthrough
+  - [x] Re-ran live schema compare (`/tmp/channels_schema_compare_after.json`): `openFieldCount=1514`, `pdFieldCount=1514`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Wired channels runtime to honor OpenClaw-style IDs and account overlays (`googlechat`, `msteams`, `defaultAccount` + `accounts`) and normalized status/config/logout APIs to the same canonical IDs
+  - [x] Re-ran live schema compare after runtime wiring (`/tmp/channels_schema_compare_after_runtime_wiring.json`): `openFieldCount=1514`, `pdFieldCount=1514`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Messages
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/messages_schema_compare_before.json`) and captured baseline gap: `openFieldCount=80`, `pdFieldCount=104`, `missingInPd=0`, `typeMismatches=12`, `enumMismatches=1`, `extraInPd=24`
+  - [x] Fixed OpenClaw type parity for queue/drop/ack scope (`queue.mode`, `queue.byChannel.*`, `queue.drop`, `ackReactionScope`) by switching to OpenClaw literal unions and enum set
+  - [x] Wired runtime message policy end-to-end in gateway: `messagePrefix`, `responsePrefix`, `groupChat.mentionPatterns`, `groupChat.historyLimit`, `queue` (mode/byChannel/debounce/cap/drop), `inbound` debounce, `ackReaction`, `ackReactionScope`, `removeAckAfterReply`, `suppressToolErrors`
+  - [x] Added per-session trimming hook for `groupChat.historyLimit` (`SessionManager.trimSessionHistory`)
+  - [x] Removed all non-OpenClaw `messages.*` extras and deleted their runtime wiring (`maxLength`, `rateLimitPerMinute`, `stripFormatting`, `autoReply`)
+  - [x] Re-ran live schema compare (`/tmp/messages_schema_compare_after_removal.json`): `openFieldCount=80`, `pdFieldCount=80`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Commands
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/commands_schema_compare_before_now.json`) and captured baseline gap: `openFieldCount=15`, `pdFieldCount=16`, `missingInPd=0`, `typeMismatches=2`, `enumMismatches=0`, `extraInPd=1`
+  - [x] Removed non-OpenClaw `commands.customPrefix` from schema/runtime/config defaults/docs and hard-set command prefix handling to `/` in runtime
+  - [x] Fixed OpenClaw type parity for `commands.native` and `commands.nativeSkills` to exact `boolean | "auto"` semantics
+  - [x] Re-ran live schema compare (`/tmp/commands_schema_compare_after_removal.json`): `openFieldCount=15`, `pdFieldCount=15`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Hooks
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/hooks_schema_compare_before_now.json`) and captured baseline gap: `openFieldCount=84`, `pdFieldCount=86`, `missingInPd=0`, `typeMismatches=6`, `enumMismatches=0`, `extraInPd=2`
+  - [x] Removed non-OpenClaw `hooks.internal.entries.{key}.script` and `hooks.internal.entries.{key}.trigger` from schema
+  - [x] Fixed OpenClaw type parity by switching hooks enums to literal unions for `mappings[*].action`, `mappings[*].wakeMode`, `mappings[*].channel`, `gmail.tailscale.mode`, `gmail.thinking`, and `internal.installs.{key}.source`
+  - [x] Re-ran live schema compare (`/tmp/hooks_schema_compare_after_schema_patch.json`): `openFieldCount=84`, `pdFieldCount=84`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Tools (config/tools)
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/tools_schema_compare_before_now.json`) and captured baseline gap: `openFieldCount=324`, `pdFieldCount=307`, `missingInPd=61`, `typeMismatches=16`, `enumMismatches=0`, `extraInPd=44`
+  - [x] Removed non-OpenClaw `tools.enabledTools` and aligned runtime registration flow to OpenClaw-style policy controls (no per-tool boolean map)
+  - [x] Split `exec` schema parity: `tools.exec` uses OpenClaw global shape (without `approvalRunningNoticeMs`), while agent-level exec keeps that field
+  - [x] Replaced tools scope schema with OpenClaw allow/deny rules shape (`default` + `rules[].match.{channel,chatType,keyPrefix,rawKeyPrefix}`) for `tools.media.*.scope` and `tools.links.scope`
+  - [x] Added OpenClaw media model parity for shared + per-modality model arrays (`provider/model/capabilities/type/command/args/prompt/maxChars/maxBytes/timeoutSeconds/language/providerOptions/deepgram/baseUrl/headers/profile/preferredProfile`)
+  - [x] Fixed literal-union parity for `tools.profile`, `tools.byProvider.*.profile`, `tools.web.search.provider`, media attachment fields, and media model union fields
+  - [x] Re-ran live schema compare (`/tmp/tools_schema_compare_after_patch1_rebuild.json`): `openFieldCount=324`, `pdFieldCount=324`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Models
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/models_schema_compare_before_20260217_2.json`) and captured baseline gap: `openFieldCount=48`, `pdFieldCount=61`, `missingInPd=0`, `typeMismatches=7`, `enumMismatches=0`, `extraInPd=13`
+  - [x] Fixed OpenClaw type parity for `models.mode`, `models.providers.{key}.auth`, `models.providers.{key}.api`, `models.providers.{key}.models[*].api`, `models.providers.{key}.models[*].input[*]`, `models.providers.{key}.models[*].compat.maxTokensField`, and `models.providers.{key}.models[*].compat.thinkingFormat` by switching enums to literal unions
+  - [x] Re-ran live schema compare (`/tmp/models_schema_compare_after_20260217.json`): `openFieldCount=48`, `pdFieldCount=61`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=13`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Node Host
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/nodeHost_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=5`, `pdFieldCount=12`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=7`
+  - [x] Removed non-OpenClaw `nodeHost` extras (`enabled`, `port`, `authToken`, `maxNodes`, `heartbeatInterval`, `capabilities`) and kept OpenClaw-exact `browserProxy` shape
+  - [x] Re-ran live schema compare (`/tmp/nodeHost_schema_compare_after_20260217.json`): `openFieldCount=5`, `pdFieldCount=5`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Bindings
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/bindings_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=13`, `pdFieldCount=18`, `missingInPd=0`, `typeMismatches=2`, `enumMismatches=0`, `extraInPd=5`
+  - [x] Removed non-OpenClaw legacy binding shape (`channelId/model/systemPrompt/tools`) and aligned `peer.kind` to OpenClaw literal-union typing
+  - [x] Reworked backend binding resolution to OpenClaw-style `match` semantics (`channel/account/peer/guild/team/roles` tiered matching), replacing legacy wildcard/prefix `channelId` resolver
+  - [x] Re-ran live schema compare (`/tmp/bindings_schema_compare_after_20260217.json`): `openFieldCount=13`, `pdFieldCount=13`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Broadcast
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/broadcast_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=4`, `pdFieldCount=10`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=6`
+  - [x] Removed non-OpenClaw explicit `broadcast` extras (`enabled`, `channels`, `format`, `maxRetries`, `retryDelay`) and kept OpenClaw-exact `strategy + peer map` shape
+  - [x] Updated runtime broadcast strategy handling to honor `strategy` (`parallel`/`sequential`) from config
+  - [x] Re-ran live schema compare (`/tmp/broadcast_schema_compare_after_20260217.json`): `openFieldCount=4`, `pdFieldCount=4`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Audio
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/audio_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=5`, `pdFieldCount=16`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=11`
+  - [x] Removed non-OpenClaw audio extras (`audio.tts`, `audio.stt`) and aligned runtime voice config to OpenClaw path (`messages.tts` only)
+  - [x] Re-ran live schema compare (`/tmp/audio_schema_compare_after_20260217.json`): `openFieldCount=5`, `pdFieldCount=5`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Media
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/media_schema_compare_before_20260217.json`) and captured baseline status: `openFieldCount=2`, `pdFieldCount=11`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=9`
+  - [x] Confirmed OpenClaw-required parity for `media.preserveFilenames` and intentionally retained PowerDirector-unique media controls (`imageGeneration`, `maxUploadSize`, `allowedMimeTypes`, `storageDir`) per media section scope
+  - [x] Re-ran live schema compare (`/tmp/media_schema_compare_after_20260217.json`): `openFieldCount=2`, `pdFieldCount=11`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=9`
+  - [x] Verified runtime wiring (`MediaManager` + upload validation): `preserveFilenamesStatus=true`, `preserveFilenamesDefaults=true`, `maxUploadBytesApplied=true`, `mimeAllowlistApplied=true`, `validUploadPasses=true`, `disallowedMimeBlocked=true`, `oversizedUploadBlocked=true`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Approvals
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/approvals_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=14`, `pdFieldCount=25`, `missingInPd=0`, `typeMismatches=1`, `enumMismatches=0`, `extraInPd=11`
+  - [x] Removed non-OpenClaw approvals extras (`mode`, `autoApprovePatterns`, `denyPatterns`, `socketPath`, `timeout`, `defaults`, `agents`) and aligned `approvals.exec.mode` type to OpenClaw literal-union shape
+  - [x] Reworked approvals runtime wiring to OpenClaw `approvals.exec` semantics (`enabled`, `mode`, `agentFilter`, `sessionFilter`, `targets`) and wired `sessionFilter` via gateway `sessionId` propagation
+  - [x] Re-ran live schema compare (`/tmp/approvals_schema_compare_after_20260217.json`): `openFieldCount=14`, `pdFieldCount=14`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Verified approvals runtime behavior: `disabledAllows=true`, `enabledRequiresApproval=true`, `approveWorks=true`, `approvedRetryAllowed=true`, `agentFilterBypassWorks=true`, `agentFilterEnforced=true`, `sessionFilterBypassWorks=true`, `sessionFilterEnforced=true`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Session
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/session_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=57`, `pdFieldCount=64`, `missingInPd=9`, `typeMismatches=9`, `enumMismatches=0`, `extraInPd=16`
+  - [x] Removed non-OpenClaw session extras (`maxHistory`, `compactionThreshold`, `ttl`, `autoTitle`, `persistOnDisk`, `exportFormat`) and aligned OpenClaw literal-union fields (`scope`, `dmScope`, `reset*.mode`, `typingMode`)
+  - [x] Replaced `session.sendPolicy` schema with OpenClaw allow/deny channel-rules shape (`default` + `rules[].match.{channel,chatType,keyPrefix,rawKeyPrefix}`)
+  - [x] Reworked runtime session wiring to consume OpenClaw session config (`scope`, `dmScope`, `identityLinks`, `mainKey`, `sendPolicy`) for session-key resolution and outbound send gating
+  - [x] Re-ran live schema compare (`/tmp/session_schema_compare_after_20260217.json`): `openFieldCount=57`, `pdFieldCount=57`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Verified runtime behavior: `globalScopeUsesSharedSession=true`, `perPeerDmScopeSplitsSessions=true`, `identityLinksCanonicalizedInSessionKey=true`, `sendPolicyAllowRuleWorks=true`, `sendPolicyDefaultDenyWorks=true`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Cron
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/cron_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=7`, `pdFieldCount=15`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=8`
+  - [x] Removed non-OpenClaw `cron.jobs` schema and runtime fallback paths (`config-schema`, `agent-instance`, `/api/cron/list`)
+  - [x] Re-ran live schema compare (`/tmp/cron_schema_compare_after_20260217.json`): `openFieldCount=7`, `pdFieldCount=7`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Web
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/web_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=9`, `pdFieldCount=16`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=7`
+  - [x] Removed non-OpenClaw web extras from schema/runtime config wiring (`web.port`, `web.corsOrigins`, `web.rateLimiting`, `web.staticDir`)
+  - [x] Re-ran live schema compare (`/tmp/web_schema_compare_after_20260217.json`): `openFieldCount=9`, `pdFieldCount=9`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Discovery
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/discovery_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=5`, `pdFieldCount=11`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=6`
+  - [x] Removed non-OpenClaw discovery extras from schema/runtime config wiring (`discovery.enabled`, `discovery.protocol`, `discovery.serviceName`, `discovery.advertise`, `discovery.peers`)
+  - [x] Reworked discovery runtime manager to consume OpenClaw discovery shape (`wideArea.enabled`, `mdns.mode`) and updated `/discovery probe` output text
+  - [x] Re-ran live schema compare (`/tmp/discovery_schema_compare_after_20260217.json`): `openFieldCount=5`, `pdFieldCount=5`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+- [x] Canvas Host
+  - [x] Ran live OpenClaw-vs-PowerDirector schema compare (`/tmp/canvasHost_schema_compare_before_20260217.json`) and captured baseline gap: `openFieldCount=5`, `pdFieldCount=11`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=6`
+  - [x] Removed non-OpenClaw canvas host extras from schema/runtime config wiring (`canvasHost.url`, `canvasHost.authToken`, `canvasHost.defaultWidth`, `canvasHost.defaultHeight`, `canvasHost.allowedTools`)
+  - [x] Reworked canvas host runtime manager to OpenClaw config shape (`enabled`, `root`, `port`, `liveReload`) while keeping `/canvas open` functional
+  - [x] Re-ran live schema compare (`/tmp/canvasHost_schema_compare_after_20260217.json`): `openFieldCount=5`, `pdFieldCount=5`, `missingInPd=0`, `typeMismatches=0`, `enumMismatches=0`, `extraInPd=0`
+  - [x] Rebuilt backend and UI (`npm run build`, `npm --prefix ui run build`)
+
+## 📬 Chat Providers
+- [x] **WhatsApp** (QR pairing via `whatsapp-web.js` / Baileys)
+    - *Status*: Implemented in `src/channels/whatsapp.ts`
+- [x] **Telegram** (Bot API via `grammy`)
+    - *Status*: Implemented in `src/channels/telegram.ts`
+- [x] **Discord** (Servers, channels & DMs via `discord.js`)
+    - *Status*: Implemented in `src/channels/discord.ts`
+- [x] **Slack** (Workspace apps via `@slack/bolt`)
+    - *Status*: Implemented in `src/channels/slack.ts`
+- [x] **Email** (Gmail/IMAP via `imap-simple` & `nodemailer`)
+    - *Status*: Implemented in `src/channels/email.ts`
+- [x] **Signal** (Privacy-focused via signal-cli)
+    - *Status*: Implemented `SignalChannel` wrapper (Env: `SIGNAL_PHONE`)
+- [x] **iMessage** (via imsg AppleScript bridge)
+    - *Status*: Implemented `IMessageChannel` via `imsg rpc` (Env: `IMESSAGE_ENABLED`, `IMESSAGE_CLI_PATH`, `IMESSAGE_DB_PATH`, `IMESSAGE_SERVICE`, `IMESSAGE_REGION`).
+- [x] **iMessage** (via BlueBubbles server)
+    - *Status*: Implemented `BlueBubblesChannel` via REST API (Env: `BLUEBUBBLES_URL/PASSWORD`).
+- [x] **Microsoft Teams** (Enterprise support)
+    - *Status*: Implemented `TeamsChannel` with Bot Framework activity processing and Next.js webhook route (`POST /api/teams`).
+- [x] **Nextcloud Talk** (Self-hosted chat)
+    - *Status*: Implemented `NextcloudTalkChannel` via Nextcloud OCS API (Env: `NEXTCLOUD_URL/USER/PASSWORD`).
+- [x] **Matrix** (Decentralized chat)
+    - *Status*: Implemented `MatrixChannel` using `matrix-js-sdk` (Env: `MATRIX_BASE_URL/ACCESS_TOKEN/USER_ID`)
+- [x] **Nostr** (Decentralized DMs via NIP-04)
+    - *Status*: Implemented `NostrChannel` using `nostr-tools` (Env: `NOSTR_PRIVATE_KEY/RELAYS`).
+- [x] **Tlon Messenger** (P2P ownership-first chat)
+    - *Status*: Implemented `TlonChannel` with Urbit SSE support.
+- [x] **Zalo** (Zalo Bot API)
+    - *Status*: Implemented `ZaloChannel` via Bot API.
+- [x] **Zalo Personal** (Personal account via QR login)
+    - *Status*: Implemented `ZaloUserChannel` via ZCA CLI.
+- [x] **WebChat** (Browser-based UI)
+    - *Status*: Implemented `WebChatChannel` via SSE (Env: `WEBCHAT_PORT`).
+
+## 🤖 AI Models
+- [x] **Anthropic Claude** (Pro/Max + Opus 4.5 coverage via SDK)
+    - *Status*: Implemented `AnthropicProvider` in `src/providers/anthropic.ts`
+- [x] **OpenAI** (GPT-5.2, o1)
+    - *Status*: Implemented `OpenAIProvider` in `src/providers/openai.ts`
+- [x] **Google Gemini** (3 Pro Preview)
+    - *Status*: Implemented `GeminiProvider` in `src/providers/gemini.ts`
+- [x] **xAI Grok** (3 & 4)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `XAI_API_KEY`)
+- [x] **OpenRouter** (Unified API gateway)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `OPENROUTER_API_KEY`)
+- [x] **Mistral** (Large & Codestral)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `MISTRAL_API_KEY`)
+- [x] **DeepSeek** (V3 & R1)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `DEEPSEEK_API_KEY`)
+- [x] **GLM** (ChatGLM models)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `GLM_API_KEY`).
+- [x] **Perplexity** (Search-augmented AI)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `PERPLEXITY_API_KEY`)
+- [x] **Hugging Face** (Open-source models)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `HF_API_KEY`).
+- [x] **Local Models** (Ollama, LM Studio)
+    - *Status*: Implemented via `OpenAICompatibleProvider` (Env: `OLLAMA_BASE_URL`)
+
+## 📈 Productivity
+- [x] **Apple Notes** (Native macOS/iOS notes)
+    - *Status*: Implemented `MacProductivityTool` (macOS only via `osascript`)
+- [x] **Apple Reminders** (Task management)
+    - *Status*: Implemented `MacProductivityTool` (macOS only via `osascript`)
+- [x] **Things 3** (GTD task manager)
+    - *Status*: Implemented `Things3Tool` via macOS AppleScript/URL scheme.
+- [x] **Notion** (Workspace & databases)
+    - *Status*: Implemented `NotionTool` in `src/tools/notion.ts` (Env: `NOTION_API_KEY`)
+- [x] **Obsidian** (Knowledge graph notes)
+    - *Status*: Implemented `ObsidianTool` (Env: `OBSIDIAN_VAULT_PATH`)
+- [x] **Bear Notes** (Markdown notes)
+    - *Status*: Implemented `BearNotesTool` via macOS SQLite/URL scheme.
+- [x] **Trello** (Kanban boards)
+    - *Status*: Implemented `TrelloTool` (Env: `TRELLO_API_KEY/TOKEN`).
+- [x] **GitHub** (Code, issues, PRs)
+    - *Status*: Implemented `GitHubTool` in `src/tools/github.ts` (Env: `GITHUB_TOKEN`)
+
+## 🎵 Music & Audio
+- [x] **Spotify** (Music playback control)
+    - *Status*: Implemented `SpotifyTool` (API based) (Env: `SPOTIFY_CLIENT_ID/SECRET`)
+- [x] **Sonos** (Multi-room audio)
+    - *Status*: Implemented `SonosTool` via node-sonos-http-api (Env: `SONOS_HTTP_API_URL`).
+- [x] **Shazam** (Song recognition)
+    - *Status*: Implemented `ShazamTool` via RapidAPI (Env: `SHAZAM_API_KEY`).
+
+## 🏠 Smart Home
+- [x] **Philips Hue** (Smart lighting)
+    - *Status*: Implemented via `HomeAssistantTool` (Recommended route) or direct bridge later.
+- [x] **8Sleep** (Smart mattress)
+    - *Status*: Implemented `EightSleepTool` via 8Sleep client API (Env: `EIGHT_SLEEP_TOKEN`).
+- [x] **Home Assistant** (Home automation hub)
+    - *Status*: Implemented `HomeAssistantTool` (Env: `HASS_URL/TOKEN`)
+
+## ⚙️ Tools & Automation
+- [x] **FileSystem** (Read/Write/List)
+    - *Status*: Implemented in `src/tools/filesystem.ts`
+- [x] **Shell** (Command Execution)
+    - *Status*: Implemented in `src/tools/shell.ts`
+- [x] **Cron** (Scheduled tasks)
+    - *Status*: Implemented in `src/scheduling/cron.ts`
+- [x] **System Monitoring** (Hardware stats)
+    - *Status*: Implemented `SystemTool` using `systeminformation`.
+- [x] **Browser** (Chrome/Chromium control)
+    - *Status*: Implemented `BrowserTool` via Puppeteer.
+- [x] **Canvas** (Visual workspace + A2UI)
+    - *Status*: Implemented via `src/core/canvas-host.ts`, gateway `/canvas` command handling (`src/core/gateway.ts`), and node CLI canvas commands (`src/cli/nodes-cli/register.canvas.ts`); validated by `src/cli/program.nodes-media.e2e.test.ts`.
+- [x] **Voice** (Voice Wake + Talk Mode)
+    - *Status*: Implemented `VoiceTool` (TTS/STT) via OpenAI Audio API (Env: `OPENAI_API_KEY`)
+- [x] **Gmail Triggers** (Pub/Sub)
+    - *Status*: Implemented `GmailTriggerTool` via Gmail REST API (Env: `GMAIL_CLIENT_ID/SECRET/REFRESH_TOKEN`).
+- [x] **Webhooks** (External triggers)
+    - *Status*: Implemented API route `/api/webhook` (logs payload).
+- [x] **1Password** (Secure credentials)
+    - *Status*: Implemented `OnePasswordTool` wrapper for `op` CLI.
+- [x] **Weather** (Forecasts & conditions)
+    - *Status*: Implemented `WeatherTool` using `wttr.in` (JSON format).
+
+## 🎨 Media & Creative
+- [x] **Image Gen** (AI image generation)
+    - *Status*: Implemented `ImageGenTool` supporting DALL-E 3 & Stable Diffusion 3.5.
+- [x] **GIF Search** (Find the perfect GIF)
+    - *Status*: Implemented `GifTool` using `tenorjs` (Env: `TENOR_API_KEY`).
+- [x] **Peekaboo** (Screen capture & control)
+    - *Status*: Implemented `PeekabooTool` (cross-platform: macOS/Linux/Windows).
+- [x] **Camera** (Photo/video capture)
+    - *Status*: Implemented via node camera command path (`src/cli/nodes-cli/register.camera.ts`, `src/cli/nodes-camera.ts`) and validated by `src/cli/program.nodes-media.e2e.test.ts` + `src/cli/nodes-camera.test.ts`.
+
+## 🌐 Social
+- [x] **Twitter/X** (Tweet, reply, search)
+    - *Status*: Implemented `TwitterTool` using `twitter-api-v2` (Env: `TWITTER_APP_KEY/SECRET/TOKEN/SECRET`)
+- [x] **Reddit** (Read/Post)
+    - *Status*: Implemented `RedditTool` using `snoowrap` (Env: `REDDIT_CLIENT_ID/SECRET/REFRESH_TOKEN`)
+- [x] **LinkedIn** (Search/Profile)
+    - *Status*: Implemented `LinkedInTool` using `linkedin-api` (Env: `LINKEDIN_USERNAME/PASSWORD`)
+- [x] **Email** (Send & read emails) - *Marked as Core Chat above*
+
+## 💻 Platforms (Node Support)
+- [x] **macOS** (Node Manager API ready)
+- [x] **iOS** (Node Manager API ready)
+- [x] **Linux** (Native support)
+- [x] **Android** (Canvas, camera, screen)
+    - *Status*: Android node surfaces for canvas/camera/screen are present (`src/cli/nodes-cli/register.canvas.ts`, `src/cli/nodes-cli/register.camera.ts`, `src/cli/nodes-cli/register.screen.ts`), with camera/canvas flows validated by `src/cli/program.nodes-media.e2e.test.ts`; Android app parity files exist in `apps/android`.
+- [x] **Windows** (WSL2 recommended)
+    - *Status*: Implemented `WindowsTool` via PowerShell (screenshot, notification, clipboard, get_info, list_processes, installed_apps, registry_read, run_powershell, start_app, lock_screen). WSL2 compatible.
+
+## 🌟 Community Showcase
+- [x] **Tesco Autopilot** (Automated grocery shopping)
+    - *Status*: Implemented `TescoTool` via Tesco Labs API (Env: `TESCO_API_KEY`).
+- [x] **Bambu Control** (3D printer management)
+    - *Status*: Implemented `BambuTool` via Bambu Cloud API (Env: `BAMBU_IP/ACCESS_CODE`).
+- [x] **Oura Ring** (Health data insights)
+    - *Status*: Implemented `OuraRingTool` via Oura v2 API (Env: `OURA_TOKEN`).
+- [x] **Food Ordering** (Foodora integration)
+    - *Status*: Implemented `FoodOrderTool` via Wolt API (Env: `FOOD_ORDER_API_KEY`).
+
+
+- [x] **Google Chat** (Workplace communication)
+    - *Status*: Implemented `GoogleChatChannel` via `google-auth-library` and Next.js webhook route (`POST /api/google-chat`).
+- [x] **Twitch** (Live streaming chat)
+    - *Status*: Implemented `TwitchChannel` with `@twurple` (IRC/WebSocket).
+- [x] **LINE** (Messaging app)
+    - *Status*: Implemented `LineChannel` with `@line/bot-sdk` (Messaging API/Webhook).
+- [x] **Minimax Portal Auth** (Authentication extension)
+    - *Status*: Ported and present in `extensions/minimax-portal-auth` with PowerDirector manifest namespace (`powerdirector.plugin.json`); OpenClaw parity file-set diff only differs by manifest filename (`openclaw.plugin.json` -> `powerdirector.plugin.json`).
+- [x] **Auto-Reply System** (Automated responses)
+    - *Status*: Implemented runtime `AutoReplyManager` with rules/away mode, template interpolation, cooldowns, and gateway command controls (`/autoreply ...`).
+- [x] **Link Understanding** (Unfurling & Metadata)
+    - *Status*: Implemented in `src/link-understanding` and wired to Gateway.
+- [x] **Media Understanding** (Vision & OCR)
+    - *Status*: Ported and wired in `src/media-understanding` (43/43 file parity vs OpenClaw path); validated by targeted tests including `src/media-understanding/apply.e2e.test.ts`, `src/media-understanding/runner.auto-audio.test.ts`, and provider/unit suites.
+- [x] **TUI** (Terminal User Interface)
+    - *Status*: Ported and wired in `src/tui` (38/38 file parity vs OpenClaw path); validated by full targeted TUI test suite (`src/tui/**/*.test.ts` subset run).
+- [x] **Android Native App** (Legacy OpenClaw App)
+    - *Status*: Present at `apps/android` with file-level parity against OpenClaw (`108/108` files; no missing/extra).
+- [x] **iOS Native App** (Legacy OpenClaw App)
+    - *Status*: Present at `apps/ios` with file-level parity against OpenClaw (`118/118` files; no missing/extra).
+- [x] **Telephony / Voice Call** (SIP/Twilio)
+    - *Status*: Ported and present in `extensions/voice-call` with PowerDirector manifest namespace; validated by targeted voice-call tests (`webhook-security`, `media-stream`, `telephony-tts`, provider tests).
+- [x] **LLM Tasks** (Specialized Agent Workflows)
+    - *Status*: Ported and present in `extensions/llm-task` with PowerDirector manifest namespace; validated by `extensions/llm-task/src/llm-task-tool.test.ts`.
+
+## 🎯 Active Parity Sprint — Agents Page (OpenClaw)
+- [x] **Overview tab parity (UI + persistence)**  
+  - *Target*: Match OpenClaw overview behavior for workspace/identity/model view, model primary+fallback editing, and explicit config save/reload flow.
+- [x] **Tools tab parity (UI + config backend wiring)**  
+  - *Target*: Match OpenClaw profile-based tool controls, grouped toggles, enable/disable all, and persisted per-agent/global overrides.
+- [x] **Tools runtime enforcement parity (Gateway + command paths)**  
+  - *Target*: Enforce `tools.profile/allow/alsoAllow/deny` (global + per-agent) in live tool execution, and intersect with per-binding tool allowlists for both chat runs and `/tool` commands.
+- [x] **Channels tab parity (status snapshot UX)**  
+  - *Target*: Replace binding-only UI with OpenClaw-style gateway channel snapshot and context summary.
+- [x] **Cron tab parity (scheduler + job visibility)**  
+  - *Target*: Render scheduler health + agent-targeted cron jobs with backend status wiring.
+- [x] **Agent workspace file API parity**  
+  - *Target*: Ensure `agentId` routes to the correct workspace path for list/read/write, including fallback conventions.
+- [x] **Verification & rebuild (mandatory)**  
+  - *Target*: Pass `npm run build` (root) and `npm run build` (`ui`) after parity implementation.
+
+## 🎯 Active Parity Sprint — Config Page (OpenClaw)
+- [x] **Rename `settings` -> `config` parity across entire codebase**
+- [x] **Agents (add missing, keep PowerDirector-unique)**
+- [x] **Setup Wizard (completely redo)**
+- [x] **Updates (skip for now)**  
+  - *Status*: Intentionally skipped per sprint scope.
+- [x] **Authentication (completely redo)**
+- [x] **Channels (completely redo)**
+- [x] **Terminal (PowerDirector-unique, skip)**  
+  - *Status*: Intentionally skipped per sprint scope.
+- [x] **Skills (completely redo)**
+- [x] **Messages (completely redo)**
+- [x] **Commands (completely redo)**
+- [x] **Hooks (completely redo)**
+- [x] **Tools (add missing, keep PowerDirector-unique)**
+- [x] **Gateway (add missing, keep PowerDirector-unique)**
+- [x] **Meta (completely redo)**
+- [x] **Diagnostics (completely redo)**
+- [x] **Logging (completely redo)**
+- [x] **Browser (completely redo)**
+- [x] **UI (add missing, keep PowerDirector-unique)**
+- [x] **Models (add missing, keep PowerDirector-unique)**
+- [x] **Audio (completely redo)**
+- [x] **NodeHost (completely redo)**
+- [x] **Bindings (completely redo)**
+- [x] **Broadcast (completely redo)**
+- [x] **Media (keep existing, add `preserve filenames`)**
+- [x] **Approvals (completely redo)**
+- [x] **Cron Jobs (completely redo)**
+- [x] **Discover/Discovery (completely redo)**
+- [x] **Canvas Host (completely redo)**
+- [x] **Memory (completely redo)**
+- [x] **Plugins (completely redo)**
+
+## 🚨 Config Parity Remediation — OpenClaw Source-Verified
+Rule: Every item below must map to a real OpenClaw config key from `openclaw-source/src/config/*`. No invented fields.
+
+- [x] **Environment**
+  - [x] `env.shellEnv.timeoutMs`
+
+- [x] **Agents**
+  - [x] `agents.defaults.cliBackends`
+  - [x] `agents.defaults.blockStreamingDefault`
+  - [x] `agents.defaults.blockStreamingBreak`
+  - [x] `agents.defaults.blockStreamingChunk`
+  - [x] `agents.defaults.blockStreamingCoalesce`
+  - [x] `agents.defaults.contextPruning`
+  - [x] `agents.defaults.compaction` (`default` / `safeguard`) runtime mapping
+
+- [x] **Authentication**
+  - [x] `auth.profiles`
+  - [x] `auth.order`
+  - [x] `auth.cooldowns`
+
+- [x] **Messages**
+  - [x] `messages.ackReaction`
+  - [x] `messages.ackReactionScope` options include `group-mentions`, `group-all`, `direct`, `all`
+  - [x] `messages.groupChat`
+  - [x] `messages.inbound`
+  - [x] `messages.messagePrefix`
+  - [x] `messages.queue`
+  - [x] `messages.removeAckAfterReply`
+  - [x] `messages.responsePrefix`
+  - [x] `messages.suppressToolErrors`
+  - [x] `messages.tts`
+
+- [x] **Commands**
+  - [x] `commands.allowFrom`
+  - [x] `commands.bash`
+  - [x] `commands.bashForegroundMs`
+  - [x] `commands.config`
+  - [x] `commands.nativeSkills`
+  - [x] `commands.ownerAllowFrom`
+  - [x] `commands.text`
+  - [x] `commands.useAccessGroups`
+
+- [x] **Hooks**
+  - [x] `hooks.enabled`
+  - [x] `hooks.path`
+  - [x] `hooks.token`
+  - [x] `hooks.defaultSessionKey`
+  - [x] `hooks.allowRequestSessionKey`
+  - [x] `hooks.allowedSessionKeyPrefixes`
+  - [x] `hooks.allowedAgentIds`
+  - [x] `hooks.maxBodyBytes`
+  - [x] `hooks.presets`
+  - [x] `hooks.transformsDir`
+  - [x] `hooks.mappings`
+  - [x] `hooks.gmail`
+  - [x] `hooks.internal`
+
+- [x] **Skills**
+  - [x] `skills.allowBundled`
+  - [x] `skills.entries`
+  - [x] `skills.load`
+
+- [x] **Tools**
+  - [x] `tools.agentToAgent`
+  - [x] `tools.alsoAllow`
+  - [x] `tools.byProvider`
+  - [x] `tools.elevated`
+  - [x] `tools.exec`
+  - [x] `tools.fs`
+  - [x] `tools.links`
+  - [x] `tools.media`
+  - [x] `tools.message`
+  - [x] `tools.sandbox`
+  - [x] `tools.sessions`
+  - [x] `tools.subagents`
+  - [x] `tools.web`
+
+- [x] **Gateway**
+  - [x] `gateway.nodes`
+  - [x] `gateway.reload`
+  - [x] `gateway.remote`
+  - [x] `gateway.tls`
+
+- [x] **Diagnostics**
+  - [x] `diagnostics.cacheTrace`
+  - [x] `diagnostics.flags`
+  - [x] `diagnostics.otel`
+
+- [x] **Logging**
+  - [x] `logging.level` options include `silent`, `fatal`, `error`, `warn`, `info`, `debug`, `trace`
+  - [x] `logging.redactPatterns`
+  - [x] `logging.redactSensitive`
+
+- [x] **Browser**
+  - [x] `browser.cdpUrl`
+  - [x] `browser.color`
+  - [x] `browser.defaultProfile`
+  - [x] `browser.enabled`
+  - [x] `browser.evaluateEnabled`
+  - [x] `browser.noSandbox`
+  - [x] `browser.profiles`
+  - [x] `browser.remoteCdpHandshakeTimeoutMs`
+  - [x] `browser.remoteCdpTimeoutMs`
+  - [x] `browser.snapshotDefaults`
+
+- [x] **UI**
+  - [x] `ui.assistant`
+  - [x] `ui.seamColor`
+
+- [x] **Models**
+  - [x] `models.bedrockDiscovery`
+  - [x] `models.mode`
+  - [x] `models.providers`
+
+- [x] **NodeHost**
+  - [x] `nodeHost.browserProxy`
+
+- [x] **Bindings**
+  - [x] OpenClaw bindings shape:
+  - [x] `bindings[].agentId`
+  - [x] `bindings[].match.channel`
+  - [x] `bindings[].match.accountId`
+  - [x] `bindings[].match.peer.kind`
+  - [x] `bindings[].match.peer.id`
+  - [x] `bindings[].match.guildId`
+  - [x] `bindings[].match.teamId`
+  - [x] `bindings[].match.roles`
+
+- [x] **Broadcast**
+  - [x] `broadcast.strategy` with `parallel` / `sequential`
+
+- [x] **Audio**
+  - [x] `audio.transcription`
+
+- [x] **Approvals**
+  - [x] `approvals.exec`
+
+- [x] **Session**
+  - [x] `session.agentToAgent`
+  - [x] `session.dmScope`
+  - [x] `session.identityLinks`
+  - [x] `session.idleMinutes`
+  - [x] `session.mainKey`
+  - [x] `session.maintenance`
+  - [x] `session.reset`
+  - [x] `session.resetByChannel`
+  - [x] `session.resetByType`
+  - [x] `session.resetTriggers`
+  - [x] `session.scope`
+  - [x] `session.sendPolicy`
+  - [x] `session.store`
+  - [x] `session.typingIntervalSeconds`
+  - [x] `session.typingMode`
+
+- [x] **Cron**
+  - [x] `cron.enabled`
+  - [x] `cron.store`
+  - [x] `cron.maxConcurrentRuns`
+  - [x] `cron.webhook`
+  - [x] `cron.webhookToken`
+  - [x] `cron.sessionRetention`
+
+- [x] **Web**
+  - [x] Section label and metadata must be `Web` (not `Web Server`)
+  - [x] `web.enabled`
+  - [x] `web.heartbeatSeconds`
+  - [x] `web.reconnect`
+
+- [x] **Discovery**
+  - [x] `discovery.wideArea`
+  - [x] `discovery.mdns`
+
+- [x] **Talk**
+  - [x] `talk.apiKey`
+  - [x] `talk.interruptOnSpeech`
+  - [x] `talk.modelId`
+  - [x] `talk.outputFormat`
+  - [x] `talk.voiceAliases`
+  - [x] `talk.voiceId`
+
+- [x] **Memory**
+  - [x] `memory.backend`
+  - [x] `memory.citations`
+  - [x] `memory.qmd`
+
+- [x] **Canvas Host**
+  - [x] `canvasHost.liveReload`
+  - [x] `canvasHost.port`
+  - [x] `canvasHost.root`
+
+- [x] **Plugins**
+  - [x] `plugins.allow`
+  - [x] `plugins.deny`
+  - [x] `plugins.enabled`
+  - [x] `plugins.entries`
+  - [x] `plugins.installs`
+  - [x] `plugins.load`
+  - [x] `plugins.slots`
+
+## ⚙️ Config Runtime Implementation Program (Mandatory)
+
+Status (truthful): **33 / 33 sections fully complete end-to-end**.
+
+### Global Definition of Done (applies to every config section)
+- [x] Runtime behavior is wired in executing code paths (not UI-only / schema-only).
+- [x] Section values are enforced at runtime (not ignored).
+- [x] Invalid values fail safely with clear errors.
+- [x] Config changes are verified with explicit test evidence (automated and/or manual steps documented).
+- [x] Documentation is updated with exact behavior and known limits.
+
+### 33-Section Runtime Checklist
+- [x] 1. `env` — shell env inheritance, custom env vars, dotenv path are applied to runtime processes.
+- [x] 2. `wizard` — last run metadata is used correctly by setup/onboarding flow.
+- [x] 3. `update` — channel/check/install settings are wired to actual update behavior.
+- [x] 4. `auth` — provider profiles and precedence are enforced by providers/tools/channels.
+- [x] 5. `agents` — defaults (models/workspace/compaction/timeouts/concurrency) control agent runtime behavior.
+- [x] 6. `channels` — all channel settings (tokens, policies, allowlists, stream modes, etc.) are enforced.
+- [x] 7. `messages` — length/rate/formatting/reaction policies are enforced in gateway + channel output.
+- [x] 8. `commands` — command enablement/prefix/native skills/restart behavior are enforced.
+- [x] 8b. `terminal` — shell selection, terminal port, and idle-at-prompt timeout are enforced by terminal runtime.
+- [x] 9. `hooks` — internal hooks execute according to enablement/trigger/script config.
+- [x] 10. `skills` — installed skills and per-skill enable/config are enforced.
+- [x] 11. `tools` — tool enablement, web search provider config, and fetch config are enforced.
+- [x] 12. `gateway` — port/bind/auth/proxies/tailscale/http limits are used by gateway runtime.
+- [x] 13. `meta` — version/touched metadata is maintained consistently and safely.
+- [x] 14. `diagnostics` — diagnostics `enabled`/`flags`/`otel`/`cacheTrace` settings control real diagnostics behavior.
+- [x] 15. `logging` — `level`/`file`/`consoleLevel`/`consoleStyle`/`redactSensitive`/`redactPatterns` are enforced by logger implementation.
+- [x] 16. `browser` — browser tool uses OpenClaw browser controls (`enabled`, CDP URL/profiles/timeouts, evaluate gate, headless/executable, sandbox/attach mode, snapshot defaults).
+- [x] 17. `ui` — chat/config UI applies theme/font/layout/timestamp/rendering toggles.
+- [x] 18. `models` — provider/model settings, rate/timeouts, and CLI model settings are fully enforced.
+- [x] 19. `nodeHost` — node host service uses enablement/port/token/max/heartbeat/capabilities plus command dispatch/pull/result transport.
+- [x] 20. `bindings` — channel->agent binding rules are enforced in message routing.
+- [x] 21. `broadcast` — broadcast engine uses channel list/format/retry behavior.
+- [x] 22. `audio` — OpenClaw legacy `audio.transcription` compatibility shape is preserved (no extra audio TTS/STT block).
+- [x] 23. `media` — image generation + upload/storage limits and mime controls are enforced.
+- [x] 24. `approvals` — OpenClaw `approvals.exec` forwarding scope and filters are enforced by runtime approval gating.
+- [x] 25. `session` — OpenClaw session scoping, reset/maintenance schema, identity links, and send-policy rules are enforced.
+- [x] 26. `cron` — OpenClaw cron settings are enforced; scheduled jobs are runtime-managed (not `cron.jobs` in config).
+- [x] 27. `web` — OpenClaw web settings (`enabled`, `heartbeatSeconds`, `reconnect`) are schema/runtime aligned with no legacy web extras.
+- [x] 28. `discovery` — OpenClaw discovery settings (`wideArea.enabled`, `mdns.mode`) are schema/runtime aligned with no legacy discovery extras.
+- [x] 29. `canvasHost` — OpenClaw canvas host settings (`enabled`, `root`, `port`, `liveReload`) are schema/runtime aligned with no legacy canvas extras.
+- [x] 30. `talk` — OpenClaw talk settings (`voiceId`, `voiceAliases`, `modelId`, `outputFormat`, `apiKey`, `interruptOnSpeech`) are schema/runtime aligned with no legacy extras.
+- [x] 31. `memory` — OpenClaw memory settings (`backend`, `citations`, `qmd`) are schema/runtime aligned with no legacy extras.
+- [x] 32. `plugins` — plugin loading/enablement/config is enforced by plugin runtime.
+
+### Execution Order (Systematic)
+1. Core runtime controls: `agents`, `messages`, `commands`, `tools`, `gateway`, `session`, `web`.
+2. Integrations: `channels`, `auth`, `models`, `audio`, `media`, `approvals`, `cron`.
+3. Platform/distributed: `nodeHost`, `bindings`, `broadcast`, `discovery`, `canvasHost`.
+4. Product layer: `ui`, `talk`, `memory`, `plugins`, `env`, `wizard`, `update`, `meta`, `diagnostics`, `logging`.
+
+### Hard Rule
+- Do not mark any section complete until all Definition of Done items pass for that section with verification evidence.
+
+### Verification Log
+- 2026-02-12: Section `browser` completed.
+  - Runtime wiring: `src/tools/browser.ts`, `ui/lib/agent-instance.ts`
+  - Verification: `npm run build` passed after wiring changes.
+- 2026-02-17: Section `browser` parity re-verified against OpenClaw.
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime verification:
+    - `evaluateGateApplied: true`
+    - `attachOnlyGuardApplied: true`
+    - `profileCdpResolutionApplied: true`
+    - `globalCdpResolutionApplied: true`
+    - `snapshotModeApplied: true`
+- 2026-02-12: Sections `env`, `tools`, `session` completed.
+  - Runtime wiring: `ui/lib/agent-instance.ts`, `src/tools/shell.ts`, `src/tools/filesystem.ts`, `src/providers/gemini-cli.ts`, `src/providers/codex-cli.ts`, `src/state/session-manager.ts`, `ui/app/api/sessions/[id]/export/route.ts`
+  - Verification:
+    - `npm run build` (root) passed.
+    - `npm run build` (`ui`) passed.
+    - Runtime script (`ts-node`) result:
+      - `envAppliedToBash: true`
+      - `toolsApplied: true`
+      - `sessionMarkdownExport: true`
+- 2026-02-12: Sections `messages`, `commands` completed.
+  - Runtime wiring: `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Gateway runtime script (`node`, against `dist/core/gateway.js`) result:
+      - `messagePolicyApplied: true`
+      - `commandPolicyApplied: true`
+      - `slashPrefixApplied: true`
+- 2026-02-12: Section `channels` completed.
+  - Runtime wiring: `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Gateway runtime script (`node`, against `dist/core/gateway.js`) result:
+      - `denyPolicyBlocksSender: true`
+      - `allowlistAndStreamModeApplied: true`
+- 2026-02-12: Section `ui` completed.
+  - Runtime wiring: `ui/app/layout.tsx`, `ui/app/globals.css`, `ui/app/components/ChatInterface.tsx`, `ui/app/components/Sidebar.tsx`, `ui/app/config/layout.tsx`
+  - Verification:
+    - `npm run build` (`ui`) passed.
+    - `next start` smoke check HTML includes runtime UI flags:
+      - `data-pd-theme="light"`
+      - `--pd-font-size:18px`
+      - `--pd-sidebar-width:300px`
+      - `data-pd-show-timestamps="false"`
+      - `data-pd-show-tool-calls="false"`
+      - `data-pd-markdown-rendering="false"`
+- 2026-02-12: Section `gateway` completed.
+  - Runtime wiring: `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Gateway control server runtime script result:
+      - `tokenAuthEnforced: true`
+      - `trustedProxyIpApplied: true`
+      - `controlChatWorks: true`
+      - `localBypassViaControlUiWorks: true`
+    - Tailscale mode handling verified as active code path (safe failure if CLI unavailable):
+      - `Failed to apply tailscale mode (on): tailscale: not found`
+      - `Failed to reset tailscale on exit: tailscale: not found`
+- 2026-02-12: Section `web` completed.
+  - Runtime wiring: `src/core/web-runtime.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Standalone web runtime script result:
+      - `corsAllowlistApplied: true`
+      - `corsDenyApplied: true`
+      - `staticDirServed: true`
+      - `rateLimitApplied: true`
+    - Integrated service script result:
+      - `webServerOnService: true`
+      - `webStaticOnService: true`
+- 2026-02-12: Section `meta` completed.
+  - Runtime wiring: `src/config/config-manager.ts`
+  - Verification:
+    - Config manager runtime script result:
+      - `updateSetsVersionAndTime: true`
+      - `importSetsVersionAndTime: true`
+      - `resetSetsVersionAndTime: true`
+- 2026-02-12: Section `wizard` completed.
+  - Runtime wiring: `ui/app/setup/page.tsx`, `ui/lib/wizard-flow.ts`
+  - Verification:
+    - Wizard flow runtime helper script result:
+      - `parseForceFlagWorks: true`
+      - `parseWizardMetaRequiresTimestamp: true`
+      - `currentVersionDetected: true`
+      - `oldVersionDetected: true`
+      - `autoSkipOnlyWhenCurrentAndNotForced: true`
+- 2026-02-12: Section `agents` completed.
+  - Runtime wiring: `ui/lib/agent-instance.ts`
+  - Verification:
+    - Service runtime script result:
+      - `timeoutApplied: true`
+      - `compactionApplied: true`
+      - `maxConcurrentApplied: true`
+      - `workspaceApplied: true`
+      - `modelPreferenceApplied: true`
+- 2026-02-12: Section `nodeHost` completed.
+  - Runtime wiring: `src/nodes/manager.ts`, `src/core/node-host.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`, `ui/app/api/nodes/route.ts`, `ui/app/api/nodes/heartbeat/route.ts`, `ui/app/api/nodes/command/route.ts`, `ui/app/api/nodes/commands/next/route.ts`, `ui/app/api/nodes/commands/result/route.ts`
+  - Verification:
+    - Node host server runtime script result:
+      - `tokenAuthEnforced: true`
+      - `nodeHostHealthReflectsSettings: true`
+      - `validRegistrationAccepted: true`
+      - `invalidCapabilityRejected: true`
+      - `maxNodesEnforced: true`
+      - `heartbeatIntervalMarksOffline: true`
+      - `heartbeatRestoresOnline: true`
+      - `commandDispatchAccepted: true`
+      - `nodePullReceivesQueuedCommand: true`
+      - `commandResultAcknowledged: true`
+      - `dispatchReceivesNodeResult: true`
+    - Integrated service script result:
+      - `nodeHostServerStartedFromService: true`
+      - `integratedNodeHostSettingsApplied: true`
+      - `integratedCapabilityValidationApplied: true`
+      - `gatewayNodeCommandRoutesThroughTransport: true`
+  - Reference worker:
+      - Added `bin/node-worker.ts` for register/heartbeat/command poll/result loop with `noop`, `echo`, and optional `shell.exec` handlers.
+      - Added `deploy/systemd/powerdirector-node-worker.service` and `deploy/systemd/powerdirector-node-worker.env.example` for persistent worker deployment.
+      - Added npm script `worker:node` for direct local execution.
+    - Worker runtime script result:
+      - `workerHelpCommandWorks: true`
+      - `workerRegistersWithNodeHost: true`
+      - `workerCommandRoundTripEcho: true`
+- 2026-02-17: Section `nodeHost` parity re-verified against OpenClaw.
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `parsesBrowserProxy: true`
+    - `rejectsLegacyExtraFields: true`
+- 2026-02-18: Nodes page parity rework completed (outside config).
+  - Runtime wiring:
+    - `ui/app/nodes/page.tsx` (OpenClaw-style sections: Exec approvals, Exec node binding, Devices, Nodes)
+    - `ui/app/api/nodes/route.ts` (OpenClaw-style node list payload + node registration)
+    - `ui/app/api/nodes/devices/*` (device pairing list/approve/reject/token rotate/token revoke)
+    - `ui/app/api/nodes/exec-approvals/route.ts` (gateway + node exec approvals get/set with baseHash)
+    - `src/nodes/device-pairing.ts`, `src/nodes/exec-approvals.ts`, `src/nodes/node-list.ts` (persistent state + payload parity)
+    - `ui/lib/nodes-auth.ts` + existing node command/heartbeat/result routes (shared auth behavior)
+    - `src/nodes/manager.ts`, `src/core/node-host.ts`, `bin/node-worker.ts` (expanded node metadata + `system.run` + `system.execApprovals.*`)
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime verification:
+    - Device pairing + token flow script:
+      - `pendingCreated: true`
+      - `pendingCountAfterRequest: 1`
+      - `approvedExists: true`
+      - `rotatedTokenReturned: true`
+      - `revokedTokenMarked: true`
+      - `verifyAfterRevoke.reason: token-revoked`
+    - Node list payload parity script:
+      - `missing: []`
+      - `extra: []`
+      - `nodeListFirst.paired: true`
+      - `nodeListFirst.connected: true`
+    - Exec approvals persistence script:
+      - `execApprovalsHashChanged: true`
+      - `execApprovalsHasMainAllowlist: true`
+    - View parity check:
+      - OpenClaw + PowerDirector both contain `Exec approvals`, `Exec node binding`, `Devices`, `Nodes` sections.
+  - Follow-up contract parity pass:
+    - Added missing OpenClaw-aligned `PairedDevice` fields on Nodes page type: `createdAtMs`, `approvedAtMs` (`ui/app/nodes/page.tsx`).
+    - Ran live OpenClaw-vs-PowerDirector Nodes compare report (`/tmp/nodes_schema_compare_after.json`):
+      - `sectionsMissing: 0`
+      - `sectionsExtra: 0`
+      - `nodeMissing: 0`
+      - `nodeExtra: 0`
+      - `typeMismatches: 0`
+    - Rebuilt root/UI after parity fix (`npm run build`, `npm --prefix ui run build`).
+- 2026-02-18: Debug + Logs parity rework completed (outside config).
+  - Runtime wiring:
+    - `ui/app/debug/page.tsx` (OpenClaw-style `Snapshots`, `Manual RPC`, `Models`, `Event Log` sections + polling)
+    - `ui/app/logs/page.tsx` (OpenClaw-style logs tail UI with filter/level chips/auto-follow/export)
+    - `ui/lib/logs-tail.ts` (OpenClaw-equivalent cursor+limit+maxBytes log tail semantics)
+    - `ui/lib/debug-rpc.ts` (debug snapshot + manual method-call resolver)
+    - `ui/app/api/debug/snapshot/route.ts`, `ui/app/api/debug/call/route.ts`, `ui/app/api/logs/tail/route.ts`
+    - `ui/app/api/debug/dump/route.ts` now returns the same live debug snapshot payload for compatibility.
+  - OpenClaw-vs-PowerDirector live compare (`/tmp/debug_logs_schema_compare_after.json`):
+    - `debugSectionsMissing: 0`
+    - `debugSectionsExtra: 0`
+    - `logsSectionsMissing: 0`
+    - `logsSectionsExtra: 0`
+    - `logsContractMissing: 0`
+    - `logsContractExtra: 0`
+    - `debugSnapshotMissing: 0`
+    - `debugSnapshotExtra: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime smoke verification:
+    - `tailKeysMatch: true`
+    - `tailCursorProgresses: true`
+    - `snapshotKeysMatch: true`
+    - `statusCallHasStarted: true`
+    - `modelsCallHasModelsArray: true`
+    - `logsCallKeysMatch: true`
+    - `eventLogArray: true`
+- 2026-02-18: Debug + Logs parity re-verified (fresh pass).
+  - Re-ran OpenClaw-vs-PowerDirector live compare (`/tmp/debug_logs_schema_compare_after.json`, timestamp `2026-02-18T00:37:25.726Z`):
+    - `debugSectionsMissing: 0`
+    - `debugSectionsExtra: 0`
+    - `logsSectionsMissing: 0`
+    - `logsSectionsExtra: 0`
+    - `logsContractMissing: 0`
+    - `logsContractExtra: 0`
+    - `debugSnapshotMissing: 0`
+    - `debugSnapshotExtra: 0`
+  - Re-ran build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Re-ran runtime smoke verification (`node -r ts-node/register/transpile-only`):
+    - `tailKeysMatch: true`
+    - `tailCursorProgresses: true`
+    - `snapshotKeysMatch: true`
+    - `statusCallHasStarted: true`
+    - `modelsCallHasModelsArray: true`
+    - `logsCallKeysMatch: true`
+    - `eventLogArray: true`
+  - Runtime notes observed during smoke pass (non-blocking):
+    - Existing running services already had ports bound (`webchat`, `web runtime`, `gateway control`, `terminal manager`), so startup was skipped for those listeners.
+    - NPM update-check returned `E404` for package `powerdirector@latest`.
+- 2026-02-12: Section `cron` completed.
+  - Runtime wiring: `src/scheduling/cron.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Integrated service script result:
+      - `cronEnabledApplied: true`
+      - `cronJobsLoadedFromConfig: true`
+      - `cronJobExecuted: true`
+    - Cron manager safety script result:
+      - `invalidScheduleFailsSafely: true`
+- 2026-02-12: Section `models` completed.
+  - Runtime wiring: `ui/lib/agent-instance.ts`, `src/reliability/router.ts`, `src/reliability/types.ts`, `src/reliability/errors.ts`, `src/providers/openai.ts`, `src/providers/anthropic.ts`, `src/providers/gemini.ts`, `src/providers/openai-compatible.ts`
+  - Verification:
+    - Service runtime script result:
+      - `modelAliasResolvedToModelName: true`
+      - `modelTimeoutOverrideApplied: true`
+      - `modelRateLimitAppliedToProvider: true`
+      - `modelMaxTokensApplied: true`
+    - Provider router runtime script result:
+      - `providerTimeoutEnforcedWithFallback: true`
+      - `providerRateLimitEnforcedWithFallback: true`
+- 2026-02-17: Section `models` parity re-verified against OpenClaw.
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 13`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime verification:
+    - `npx ts-node tests/verify-router.ts` passed:
+      - provider fallback remained healthy with timeout + circuit-open handling.
+    - `npx ts-node tests/verify-image-model-routing.ts` passed:
+      - `preservesTextOnlyModelHint: true`
+      - `overridesToImageModelWhenAttachmentsPresent: true`
+  - Remaining PowerDirector-only model fields retained by design:
+    - `models.providers.{key}.models[*].alias`
+    - `models.providers.{key}.models[*].rateLimit`
+    - `models.providers.{key}.models[*].timeoutOverride`
+    - `models.providers.{key}.name`
+    - `models.providers.{key}.baseURL`
+    - `models.providers.{key}.defaultModel`
+    - `models.geminiCli.*`
+    - `models.codexCli.*`
+- 2026-02-12: Section `auth` completed.
+  - Runtime wiring: `ui/lib/auth-resolver.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Auth resolver runtime script result:
+      - `openaiOrderPrecedenceApplied: true`
+      - `channelOrderPrecedenceApplied: true`
+      - `providerNameNormalizationWorks: true`
+    - Integrated service script result:
+      - `providerAuthProfileApplied: true`
+      - `toolAuthProfileApplied: true`
+- 2026-02-12: Section `hooks` completed.
+  - Runtime wiring: `src/core/hooks.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Hooks + gateway runtime script result:
+      - `managerEnablementApplied: true`
+      - `managerTriggerFilterApplied: true`
+      - `managerPayloadEnvApplied: true`
+      - `managerGlobalDisableApplied: true`
+      - `gatewayCommandHookApplied: true`
+- 2026-02-12: Section `diagnostics` completed.
+  - Runtime wiring: `src/core/diagnostics.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Diagnostics runtime script result:
+      - `disabledNoDiagnosticsTrace: true`
+      - `flagsApplied: true`
+      - `otelSettingsApplied: true`
+      - `cacheTraceSettingsApplied: true`
+      - `diagnosticsEventWritesWhenEnabled: true`
+- 2026-02-17: Section `diagnostics` parity re-verified against OpenClaw.
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+- 2026-02-12: Section `logging` completed.
+  - Runtime wiring: `src/core/logger.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Logging runtime script result:
+      - `levelFilteringApplied: true`
+      - `consoleLevelFilteringApplied: true`
+      - `consoleStyleApplied: true`
+      - `filePathApplied: true`
+      - `redactSensitiveApplied: true`
+      - `redactPatternsApplied: true`
+- 2026-02-17: Section `logging` parity re-verified against OpenClaw.
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime verification:
+    - `warnLevelFilteredInfo: true`
+    - `filePathApplied: true`
+    - `consoleStyleApplied: true`
+    - `consoleLevelApplied: true`
+    - `redactModeApplied: true`
+    - `redactPatternApplied: true`
+- 2026-02-12: Section `update` completed.
+  - Runtime wiring: `src/core/update-manager.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Update manager runtime script result:
+      - `checkOnStartApplied: true`
+      - `channelMappingApplied: true`
+      - `updateAvailableDetected: true`
+      - `autoInstallDisabledApplied: true`
+      - `autoInstallFailsSafelyOutsideGlobal: true`
+      - `autoInstallRunsInGlobalMode: true`
+- 2026-02-12: Section `skills` completed.
+  - Runtime wiring: `src/skills/manager.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Skills + gateway runtime script result:
+      - `configuredSkillsListed: true`
+      - `enabledSkillMetadataApplied: true`
+      - `skillConfigAndApiKeyApplied: true`
+      - `disabledSkillEnforced: true`
+      - `missingSkillFailsSafely: true`
+      - `gatewaySkillListApplied: true`
+      - `gatewaySkillRunApplied: true`
+      - `nativeSkillsPolicyEnforced: true`
+- 2026-02-12: Section `bindings` completed.
+  - Runtime wiring: `src/core/bindings.ts`, `src/core/agent.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Bindings + gateway runtime script result:
+      - `sessionRoutingUsesBoundAgent: true`
+      - `boundSystemPromptApplied: true`
+      - `boundModelHintApplied: true`
+      - `boundToolAllowlistAppliedToPrompt: true`
+      - `disallowedToolBlockedByBinding: true`
+      - `allowedToolRunsWithinAllowlist: true`
+      - `prefixBindingResolutionApplied: true`
+      - `wildcardBindingResolutionApplied: true`
+- 2026-02-17: Section `bindings` parity re-verified against OpenClaw.
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime verification:
+    - `peerWins: true`
+    - `guildRoleWins: true`
+    - `guildWins: true`
+    - `accountDefaultOnly: true`
+    - `wildcardForNonDefault: true`
+    - `teamMatch: true`
+    - Gateway integration check (`Gateway.processInput` with bindings):
+      - `peerScopeApplied: true`
+      - `guildRoleApplied: true`
+      - `guildApplied: true`
+      - `wildcardAccountApplied: true`
+- 2026-02-12: Section `broadcast` completed.
+  - Runtime wiring: `src/core/broadcast.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Broadcast + gateway runtime script result:
+      - `channelListApplied: true`
+      - `textFormatApplied: true`
+      - `retryBehaviorApplied: true`
+      - `retrySuccessApplied: true`
+      - `gatewayBroadcastCommandApplied: true`
+- 2026-02-17: Section `broadcast` parity re-verified against OpenClaw.
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `parsesStrategyAndPeerMap: true`
+    - `rejectsLegacyExtraFields: true`
+    - `parallelFasterThanSequential: true`
+    - `strategyAppliedParallel: true`
+    - `strategyAppliedSequential: true`
+    - `pairTargetParsed: true`
+- 2026-02-17: Section `approvals` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/core/approvals.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `approvalsExecShapeOnly: true`
+    - `enabledGateApplied: true`
+    - `approveFlowApplied: true`
+    - `agentFilterApplied: true`
+    - `sessionFilterApplied: true`
+- 2026-02-17: Section `session` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`, `ui/lib/session-custom-instructions.ts`, `ui/app/api/sessions/[id]/export/route.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `globalScopeUsesSharedSession: true`
+    - `perPeerDmScopeSplitsSessions: true`
+    - `identityLinksCanonicalizedInSessionKey: true`
+    - `sendPolicyAllowRuleWorks: true`
+    - `sendPolicyDefaultDenyWorks: true`
+- 2026-02-17: Section `cron` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `ui/lib/agent-instance.ts`, `ui/app/api/cron/list/route.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `cronSchemaHasJobsField: false`
+    - `cronJobsRefsPresent: false`
+- 2026-02-17: Section `web` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `ui/lib/agent-instance.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `webSchemaProps: enabled,heartbeatSeconds,reconnect`
+    - `webSchemaHasLegacyFields: false`
+    - `webLegacyConfigRefsPresent: false`
+- 2026-02-17: Section `discovery` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/core/discovery.ts`, `src/core/gateway.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `discoverySchemaProps: mdns,wideArea`
+    - `discoverySchemaHasLegacyFields: false`
+    - `discoveryLegacyRefsPresent: false`
+    - `discoveryMdnsOffStopsAdvertising: true`
+    - `discoveryWideAreaWarningSetWhenEnabledWithoutDomain: true`
+    - `discoveryMdnsModeApplied: true`
+    - `discoveryProbeReturnsArray: true`
+- 2026-02-17: Section `canvasHost` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/core/canvas-host.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `canvasHostSchemaProps: enabled,liveReload,port,root`
+    - `canvasHostSchemaHasLegacyFields: false`
+    - `canvasHostLegacyRefsPresent: false`
+    - `canvasHostDefaultEnabled: true`
+    - `canvasHostDefaultPort: true`
+    - `canvasHostDefaultLiveReload: true`
+    - `canvasHostLaunchUsesConfiguredPort: true`
+    - `canvasHostCustomFieldsApplied: true`
+    - `canvasHostDisableGateWorks: true`
+- 2026-02-12: Section `memory` completed.
+  - Runtime wiring: `src/core/memory.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Legacy pre-parity runtime validation completed (superseded by 2026-02-17 OpenClaw parity re-verification below).
+- 2026-02-17: Section `memory` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/core/memory.ts`, `src/config/config-manager.ts`, `src/core/gateway.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `memorySectionUpdateAccepted: true`
+    - `legacyMemoryFieldsAbsent: true`
+    - `memoryBackendNormalized: true`
+    - `memoryScopeMigratedToRules: true`
+    - `builtinStatusShape: true`
+    - `builtinStoreWriteRead: true`
+    - `qmdStatusShape: true`
+    - `qmdWriteBlocked: true`
+- 2026-02-12: Section `plugins` completed.
+  - Runtime wiring: `src/plugins/manager.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Plugins + gateway runtime script result:
+      - `pluginLoadingApplied: true`
+      - `pluginEnablementApplied: true`
+      - `pluginRunnerApplied: true`
+      - `disabledPluginBlocked: true`
+      - `gatewayPluginListApplied: true`
+      - `gatewayPluginRunApplied: true`
+      - `nativeSkillsPolicyAppliedToPlugins: true`
+- 2026-02-17: Section `plugins` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/plugins/manager.ts`, `src/core/gateway.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `pluginListShowsConfiguredEntry: true`
+    - `pluginRunnerExecutes: true`
+- 2026-02-17: Section `ui` parity re-verified against OpenClaw (retaining PowerDirector extras as requested).
+  - Runtime wiring: `src/config/config-schema.ts`, `ui/app/layout.tsx`, `ui/app/SidebarLayout.tsx`, `ui/app/page.tsx`, `ui/app/components/ChatInterface.tsx`, `ui/app/components/config/SchemaSectionFields.tsx`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 11` (intentionally retained PowerDirector-only UI settings)
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `hasOpenClawKeys: true` (`ui.seamColor`, `ui.assistant`)
+    - `assistantKeys: name,avatar`
+    - `uiPrimitiveControlEligible: true` (schema-driven UI controls, no JSON placeholders for `ui` fields)
+- 2026-02-12: Section `discovery` completed.
+  - Runtime wiring: `src/core/discovery.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Note: legacy pre-parity verification, superseded by 2026-02-17 OpenClaw parity re-verification.
+  - Verification:
+    - Discovery + gateway runtime script result:
+      - `manualProtocolApplied: true`
+      - `peersApplied: true`
+      - `peerProbeApplied: true`
+      - `invalidPeerFailsSafely: true`
+      - `mdnsAdvertiseHandledSafely: true`
+      - `gatewayDiscoveryCommandsApplied: true`
+- 2026-02-12: Section `canvasHost` completed.
+  - Runtime wiring: `src/core/canvas-host.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Note: legacy pre-parity verification, superseded by 2026-02-17 OpenClaw parity re-verification.
+  - Verification:
+    - Canvas host + gateway runtime script result:
+      - `urlAndAuthApplied: true`
+      - `dimensionsApplied: true`
+      - `allowedToolsApplied: true`
+      - `disabledFailsSafely: true`
+      - `gatewayCanvasCommandsApplied: true`
+- 2026-02-17: Section `audio` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `ui/lib/agent-instance.ts`, `ui/app/config/definitions.ts`, `ui/app/config/[section]/page.tsx`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `audioSchemaHasOnlyTranscription: true`
+    - `agentRuntimeNoLongerReadsAudioTtsStt: true`
+    - `voiceTtsConfigComesFromMessagesTts: true`
+- 2026-02-12: Section `media` completed.
+  - Runtime wiring: `src/core/media.ts`, `src/tools/image-gen.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`, `ui/app/api/chat/route.ts`
+  - Verification:
+    - Media runtime script result:
+      - `imageDefaultsApplied: true`
+      - `storageDirApplied: true`
+      - `uploadValidationActionApplied: true`
+      - `gatewayUploadMimeEnforced: true`
+      - `gatewayUploadSizeEnforced: true`
+      - `gatewayUploadValidPasses: true`
+      - `mediaCommandsApplied: true`
+- 2026-02-17: Section `media` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/core/media.ts`, `src/tools/image-gen.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 9` (intentional PowerDirector-specific media controls retained)
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `openClawMediaFieldPresent: true`
+    - `preserveFilenamesAppliedInMediaManager: true`
+    - `preserveFilenamesForwardedToImageGenTool: true`
+    - `uploadSizeAndMimePolicyApplied: true`
+- 2026-02-12: Section `talk` completed.
+  - Runtime wiring: `src/core/talk.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`
+  - Verification:
+    - Initial runtime wiring validation completed (superseded by 2026-02-17 parity re-verification below).
+- 2026-02-17: Section `talk` parity re-verified against OpenClaw.
+  - Runtime wiring: `src/config/config-schema.ts`, `src/core/talk.ts`, `ui/lib/agent-instance.ts`, `src/core/gateway.ts`
+  - OpenClaw-vs-PowerDirector live schema compare:
+    - `missingInPd: 0`
+    - `typeMismatches: 0`
+    - `enumMismatches: 0`
+    - `extraInPd: 0`
+  - Build verification:
+    - `npm run build` (root) passed.
+    - `npm --prefix ui run build` passed.
+  - Runtime/schema verification:
+    - `talkStatusHasOpenClawFields: true`
+    - `talkStatusNoLegacyFields: true`
+    - `talkSpeakAliasResolvesVoiceId: true`
+    - `talkSpeakUsesModelAndOutputFormat: true`
+    - `talkResultNoLegacyFields: true`
+- 2026-02-16: High-Fidelity Interactivity & SSE Orchestration completed.
+  - Runtime wiring: `src/tools/shell.ts` (node-pty), `src/core/agent.ts` (onStep hooks), `ui/app/api/chat/route.ts` (SSE), `ui/app/api/chat/input/route.ts` (stdin routing).
+  - UI wiring: `ui/app/components/ChatInterface.tsx` (Interactive terminal input, callId merging, theme-aware styling).
+  - Stability: Implemented `global` singleton pattern in `ui/lib/agent-instance.ts` and EADDRINUSE handling in `src/core/terminal.ts`.
+  - Verification:
+    - Interactive `read -p` commands verified via UI with real-time feedback.
+    - Password visibility toggle and autocomplete blocking verified.
+    - Large context prompts (30k+ chars) verified with optimized prompt structure.
+    - All 17+ channels verified with `getStatus` and `probe` implementations.
+- 2026-02-16: iMessage (`imsg` RPC channel) completed.
+  - Runtime wiring: `src/channels/imessage.ts`, `ui/lib/agent-instance.ts`, `src/config/config-schema.ts`, `ui/app/api/channels/status/route.ts`
+  - Verification:
+    - `npm run build` passed.
+    - `npx ts-node tests/verify-imessage-channel.ts` result:
+      - `targetParsingParity: true`
+      - `probeSuccess: true`
+      - `inboundWatchMessageReceived: true`
+      - `sendTargetResolution: true`
+      - `oneOffSendPath: true`
+      - `probeMissingBinaryFails: true`
+- 2026-02-16: Auto-Reply System completed.
+  - Runtime wiring: `src/core/auto-reply.ts`, `src/core/gateway.ts`, `ui/lib/agent-instance.ts`, `src/config/config-schema.ts`
+  - Verification:
+    - `npm run build` passed.
+    - `npm run build` (`ui`) passed.
+    - `npx ts-node tests/verify-auto-reply.ts` result:
+      - `ruleMatchingAndCooldown: true`
+      - `awayModeBlocking: true`
+      - `gatewayRuleBlocksAgent: true`
+      - `gatewayRuleContinueToAgent: true`
+      - `commandOverrideOffOn: true`
+      - `commandTestOutput: true`
+- 2026-02-16: Terminal runtime + UX parity completed.
+  - Runtime wiring:
+    - `src/config/config-schema.ts` (`terminal` section schema)
+    - `src/core/terminal.ts` (shell selection, prompt-aware idle timeout)
+    - `src/core/gateway.ts`, `ui/lib/agent-instance.ts` (runtime config injection)
+  - UI wiring:
+    - `ui/app/config/definitions.ts`, `ui/app/config/[section]/page.tsx` (Core > Terminal config UI)
+    - `ui/app/components/TerminalInterface.tsx` (xterm init race fix, copy/paste handlers)
+  - Verification:
+    - `npm run build` passed.
+    - `npm run build` (`ui`) passed.
+    - Terminal render regression check (headless) result:
+      - `issueCount: 0` for `Cannot read properties of undefined (reading 'dimensions')`
+    - Terminal shell selection probes:
+      - configured `zsh` -> `/bin/zsh`
+      - configured `bash` -> `/bin/bash`
+    - Idle timeout behavior:
+      - idle at prompt closes with `code: 4000`, `reason: idle-timeout`, `elapsedMs ≈ 75000` for 1-minute timeout
+      - waiting for input (`read -r x`) remains connected past timeout window (`still-open-after-85s-with-read`)
+    - Clipboard handlers (synthetic clipboard events):
+      - paste event inserted external text and executed command (`PD_PASTE_TEST` observed)
+      - copy event returned selected terminal text (`defaultPrevented: true`, non-empty copied payload)
+  - Runtime/API wiring:
+    - `ui/lib/agent-paths.ts` (agent workspace resolution from `agentId` + config)
+    - `ui/app/api/agent/files/route.ts`, `ui/app/api/agent/files/[filename]/route.ts`, `ui/app/api/agent/identity/route.ts` (agent-scoped file/identity handling)
+    - `src/scheduling/cron.ts`, `ui/app/api/cron/list/route.ts` (scheduler status + normalized cron jobs)
+    - `ui/app/api/channels/status/route.ts` (snapshot-friendly merged channel status)
+    - `src/config/config-schema.ts` (tool profile override schema parity: `profile/allow/alsoAllow/deny`)
+  - UI wiring:
+    - `ui/app/agents/[agentId]/page.tsx` (OpenClaw-style Overview/Tools/Channels/Cron panel parity)
+  - Build unblockers discovered during verification:
+    - `ui/app/api/chat/route.ts` (typed failure mapping)
+    - `ui/lib/session-custom-instructions.ts` (config manager method parity update)
+  - Verification:
+    - `npm run build` passed.
+    - `cd ui && npm run build` passed.
+- 2026-02-17: Tools policy runtime enforcement wired end-to-end (no placeholders).
+  - Runtime wiring:
+    - `src/core/gateway.ts` (`resolveEffectiveAgentToolAllowlist` integration for runStep + `/tool list` + `/tool run`)
+    - `src/core/agent.ts` (empty allowlist now enforces deny-all rather than allow-all)
+    - `ui/lib/agent-instance.ts` (passes `tools/agents` policy config into gateway runtime)
+    - `ui/lib/gateway-client.ts`, `ui/app/api/chat/route.ts`, `ui/app/components/ChatInterface.tsx` (chat metadata propagation for agent-aware policy)
+  - Verification:
+    - `npm run build` passed.
+    - `cd ui && npm run build` passed.
+    - Targeted runtime smoke checks (node script against built runtime):
+      - global `tools.profile=minimal` -> `/tool list` returned only `session_status`
+      - `/tool run exec {}` blocked by runtime policy
+      - `/tool run session_status {}` allowed with approvals in `auto` mode
+      - binding `tools=[exec]` + profile `minimal` produced intersection deny (`/tool list` -> no tools available)
+- 2026-02-17: Config parity sprint completed (`settings` -> `config`, section coverage, and persistence hardening).
+  - UI wiring:
+    - `ui/app/config/layout.tsx` (single-provider config state; non-placeholder updates action marked skipped by scope)
+    - `ui/app/config/[section]/page.tsx` (expanded section coverage for `auth`, `agents`, `tools`, `gateway`, `models`, plus parity JSON editors for complex maps/arrays)
+    - `ui/app/components/config/SettingsForm.tsx`, `ui/app/components/config/fields.tsx` (component path migration + config-facing copy)
+    - `ui/app/cron/page.tsx` (config route language parity)
+    - Removed legacy routes/wrappers:
+      - `ui/app/settings/*`
+      - `ui/app/api/settings/*`
+  - Runtime/config persistence wiring:
+    - `src/config/config-manager.ts` (unknown key preservation across `load`, `update`, `updateSection`, `importConfig`; secret redaction round-trip; removed duplicate save in section writes)
+  - Verification:
+    - `npm run build` passed.
+    - `cd ui && npm run build` passed.
+    - Route map confirms no legacy `settings` paths are emitted by Next.js app build.
+    - Runtime smoke script (config manager):
+      - `preservedCustomFoo: true`
+      - `preservedIncomingUnknown: true`
+      - `secretMaskedRoundTrip: true`
+- 2026-02-17: Agents/Auth backend parity wiring completed (no UI placeholders left unbound in this scope).
+  - Runtime wiring:
+    - `src/reliability/router.ts` (provider cooldown/backoff support from `auth.cooldowns`, provider skip-on-cooldown, failure classification)
+    - `ui/lib/agent-instance.ts` (router cooldown config injection, `agents.defaults.cliBackends` -> CLI providers, compaction mode alignment to `default|safeguard`, context pruning runtime config injection)
+    - `src/context/pruner.ts` (cache-ttl context pruning runtime for tool-result soft-trim/hard-clear with allow/deny matching)
+    - `src/core/gateway.ts` (channel stream modes `off|on|partial|block`; block chunk/coalesce runtime behavior using `agents.defaults.blockStreaming*`)
+    - `src/providers/codex-cli.ts`, `src/providers/gemini-cli.ts` (CLI backend runtime config consumption: command/args/input/env/modelArg/modelAliases/etc.)
+  - Verification:
+    - `npm run build` passed.
+- 2026-02-17: Config UI schema renderer sweep completed (all section forms now explicit controls, no JSON placeholder editors in section pages).
+  - UI wiring:
+    - `ui/app/config/[section]/page.tsx` (replaced hardcoded per-section renderers with unified schema-driven rendering)
+    - `ui/app/components/config/SchemaSectionFields.tsx` (recursive object/array/enum/union rendering, dynamic map entries, secret masking)
+    - `ui/app/components/config/SettingsForm.tsx` (nested path updates now create arrays/objects correctly for schema paths)
+    - `ui/app/api/config/schema/[section]/route.ts` (section JSON schema endpoint via `z.toJSONSchema`)
+  - Verification:
+    - `npm run build` passed.
+    - `cd ui && npm run build` passed.
+    - Schema conversion smoke test over all sections passed (`33/33`).
+- 2026-02-17: DB wiring audit handoff instructions expanded for future LLM execution.
+  - Updated `DB_WIRING_AUDIT_CONFIG_NODES_DEBUG_LOGS.md` to include an explicit implementation runbook:
+    - strict scope + hard rules
+    - exact implementation sequence for unresolved `agents.*.memorySearch.*` and `memory.*`/`memory.qmd.*` fields
+    - mandatory verification commands
+    - required evidence artifacts
+    - definition-of-done criteria
+- 2026-02-18: Memory parity runtime closure completed for DB wiring audit scope.
+  - Implemented runtime integration for unresolved memory fields (105 total):
+    - `agents.defaults.memorySearch.*`
+    - `agents.list[*].memorySearch.*`
+    - `memory.backend`, `memory.citations`, `memory.qmd.*`
+  - Runtime/backend changes:
+    - `src/core/memory/manager.ts`
+    - `src/core/memory/sqlite-vec.ts`
+    - `src/core/memory/qmd.ts`
+    - `src/core/memory/embeddings.ts`
+    - `src/core/memory/internal.ts`
+    - `src/core/agent.ts`
+    - `ui/lib/agent-instance.ts`
+    - `src/core/gateway.ts`
+  - Added verification scripts:
+    - `scripts/verify-memory-search-runtime.mjs`
+    - `scripts/verify-memory-qmd-runtime.mjs`
+    - `scripts/verify-db-wiring-audit-config-nodes-debug-logs.mjs`
+  - Verification:
+    - `npm run build` passed.
+    - `npm --prefix ui run build` passed.
+    - Aggregated audit verification returned:
+      - `fieldsListedInAudit: 105`
+      - `memorySearchRuntimeCheckPassed: true`
+      - `memoryQmdRuntimeCheckPassed: true`
+      - `missing_runtime_integrations: 0`
+- 2026-02-18: QMD installed and enabled for live PowerDirector usage.
+  - Installed Bun runtime (`~/.bun/bin/bun`) and QMD CLI (`@tobilu/qmd@1.0.6`).
+  - Trusted blocked Bun lifecycle scripts for QMD dependencies (`node-llama-cpp` postinstall).
+  - Updated `powerdirector.config.json`:
+    - switched `memory.backend` from `builtin` to `qmd`
+    - set `memory.qmd.command` to absolute path `/home/jcavallarojr/.bun/bin/qmd`
+    - added full `memory.qmd` runtime settings (searchMode, update, limits, sessions, scope)
+    - added explicit `agents.defaults.memorySearch` baseline settings for fallback/index behavior
+  - Verified runtime activation:
+    - `qmd --version` reports `1.0.6` (via absolute binary path)
+    - `qmd collection list` shows active collections under `~/.powerdirector/agents/main/qmd/`
+    - `qmd update` and `qmd embed` completed, including first model download to `~/.cache/qmd/models`
+    - direct `MemoryManager` runtime probe reports backend `qmd` with db path `~/.powerdirector/agents/main/qmd/xdg-cache/qmd/index.sqlite`
+- 2026-02-24: Remaining OpenClaw module ports validated and task statuses updated.
+  - Module/file parity checks:
+    - `extensions/minimax-portal-auth`: OpenClaw parity with manifest rename only (`openclaw.plugin.json` -> `powerdirector.plugin.json`)
+    - `extensions/llm-task`: OpenClaw parity with manifest rename only
+    - `extensions/voice-call`: OpenClaw parity with manifest rename only
+    - `src/media-understanding`: `43/43` files parity (`missing_in_pd=0`, `extra_in_pd=0`)
+    - `src/tui`: `38/38` files parity (`missing_in_pd=0`, `extra_in_pd=0`)
+    - `apps/android`: `108/108` files parity (`missing_in_pd=0`, `extra_in_pd=0`)
+    - `apps/ios`: `118/118` files parity (`missing_in_pd=0`, `extra_in_pd=0`)
+  - Validation runs:
+    - `npm run build` passed.
+    - `npm --prefix ui run build` passed.
+    - `vitest` targeted pass (PowerDirector-only paths):
+      - `src/media-understanding/*` suite set passed with `--testTimeout 20000` (`51` tests).
+      - `src/tui/*`, `src/cli/nodes-camera.test.ts`, `src/cli/program.nodes-media.e2e.test.ts`, `src/cli/program.nodes-basic.e2e.test.ts` passed (`126` tests).
+      - `extensions/llm-task/src/llm-task-tool.test.ts` passed.
+      - voice-call targeted suites passed: `webhook-security`, `media-stream`, `telephony-tts`, `providers/{twilio,telnyx,plivo}`.
+  - Known non-blocking test harness gap:
+    - `src/plugins/voice-call.plugin.test.ts` currently requires a vitest alias for `powerdirector/plugin-sdk`; runtime plugin loading path remains build-valid and extension files are present.

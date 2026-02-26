@@ -1,0 +1,49 @@
+{
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "models": {
+    "providers": {
+      "anthropic": {
+        "name": "Anthropic",
+        "apiKey": "test_api_key_123",
+        "defaultModel": "claude-opus-4.6",
+        "models": []
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": ""
+      },
+      "workspace": "",
+      "timeoutSeconds": 180,
+      "compaction": {
+        "mode": "safeguard"
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "brave",
+        "apiKey": ""
+      }
+    }
+  },
+  "messages": {
+    "tts": {
+      "enabled": false,
+      "provider": "elevenlabs"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "bind": "lan"
+  }
+}

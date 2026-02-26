@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: powerdirector
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: SETUP_PASSWORD
+        sync: false
+      - key: POWERDIRECTOR_STATE_DIR
+        value: /data/.powerdirector
+      - key: POWERDIRECTOR_WORKSPACE_DIR
+        value: /data/workspace
+      - key: POWERDIRECTOR_GATEWAY_TOKEN
+        generateValue: true
+    disk:
+      name: powerdirector-data
+      mountPath: /data
+      sizeGB: 1
