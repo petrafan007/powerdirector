@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
     "@anthropic-ai/sdk",
     "@google/generative-ai",
     "ollama",
+    "@aws-sdk/client-bedrock",
     "systeminformation",
     "home-assistant-js-websocket",
     "qrcode-terminal",
