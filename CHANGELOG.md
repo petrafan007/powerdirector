@@ -5,14 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0-beta.3] - 2026-02-25
+## [1.0.0-beta.4] - 2026-02-25
 
 ### Fixed
-- Restored missing source files (e.g., `src/media/`, `openclaw-tools.ts`) that were accidentally deleted during sanitization.
-- Verified build integrity through a full `tsc` pass.
-- Bypassed hardcoded OAuth secrets in `extensions/google-antigravity-auth/index.ts`.
+- Standardized versioning across `package.json` files to resolve discrepancy.
+- Implemented `src/bootstrap.ts` to ensure `POWERDIRECTOR_STATE_DIR` is respected before path resolution, enabling proper environment isolation.
+- Fully purged oversized 1.4GB archive and sensitive `.bak` files from Git history.
+- Restored missing `src/media/` and critical source files accidentally deleted during sanitization.
 
-## [1.0.0-beta.2] - 2026-02-25
+## [1.0.0-beta.3] - 2026-02-25
 
 ### Added
 - Implemented `UpdateDaemon` for background polling of GitHub updates (`src/infra/update-daemon.ts`).
