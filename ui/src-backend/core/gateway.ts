@@ -648,7 +648,7 @@ export class Gateway {
         // 🟢 PowerDirector "Magic Stdin" Fix: If the session has a tool WAITING FOR INPUT,
         // redirected the main chat message to that tool instead of starting a new AI turn.
         const sessionData = this.sessionManager.getSession(sessionId);
-        const lastMsg = sessionData?.messages[sessionData.messages.length - 1];
+        const lastMsg = sessionData?.messages?.length ? sessionData.messages[sessionData.messages.length - 1] : undefined;
         if (lastMsg && lastMsg.metadata?.status === 'running' && lastMsg.metadata?.waitingForInput && lastMsg.metadata?.tool === 'shell') {
             const callId = lastMsg.metadata.callId;
             console.log(`[Gateway] [${sessionId}] Redirection chat input to active terminal (callId: ${callId})`);
@@ -819,14 +819,14 @@ export class Gateway {
             }
         }
 
-        const customInstructions = this.sessionManager.getSessionCustomInstructions(sessionId);
+        const customInstructions = typeof sessionData?.metadata?.customInstructions === 'string' ? sessionData.metadata.customInstructions : undefined;
         if (customInstructions) {
             const scopedInstructions = `--- [SESSION CUSTOM INSTRUCTIONS] ---\n${customInstructions}`;
             systemPrompt = (systemPrompt ? systemPrompt + '\n\n' : '') + scopedInstructions;
         }
 
-        const sessionStore = this.sessionManager.getSession(sessionId);
-        const sessionMetadata = sessionStore?.session?.metadata || {};
+        const sessionStore = sessionData;
+        const sessionMetadata = sessionStore?.metadata || {};
         let activeModelOverride = typeof sessionMetadata.activeModelOverride === 'string' ? sessionMetadata.activeModelOverride : undefined;
 
         let modelHint = context.metadata?.model;

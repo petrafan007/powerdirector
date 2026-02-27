@@ -13,15 +13,17 @@ export async function GET(
     const { id } = await params;
     const service = getService();
 
-    const data = service.sessionManager.getSession(id);
+    const data = await service.sessionManager.getSession(id);
 
     if (!data) {
         return NextResponse.json({ error: 'Session not found' }, { status: 404 });
     }
 
     return NextResponse.json({
-        ...data,
-        session: enrichSessionWithCustomInstructions(service, data.session)
+        id: data.id,
+        name: data.name,
+        messages: data.messages || [],
+        session: enrichSessionWithCustomInstructions(service, data)
     });
 }
 
@@ -66,13 +68,13 @@ export async function PATCH(
             return NextResponse.json({ error: result.error || 'Failed to update session' }, { status });
         }
     } else {
-        const existing = service.sessionManager.getSession(id);
+        const existing = await service.sessionManager.getSession(id);
         if (!existing) {
             return NextResponse.json({ error: 'Session not found' }, { status: 404 });
         }
 
         if (name && typeof sessionManagerCompat.renameSession === 'function') {
-            sessionManagerCompat.renameSession(id, name);
+            await sessionManagerCompat.renameSession(id, name);
         }
 
         if (hasInstructions) {
@@ -83,7 +85,7 @@ export async function PATCH(
         }
     }
 
-    const updated = service.sessionManager.getSession(id);
+    const updated = await service.sessionManager.getSession(id);
     return NextResponse.json({
         success: true,
         session: updated?.session ? enrichSessionWithCustomInstructions(service, updated.session) : null
