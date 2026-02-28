@@ -356,7 +356,7 @@ export default function Sidebar({ currentSessionId, onSelectSession, collapsed, 
                 {/* Footer — hidden when collapsed */}
                 {!collapsed && (
                     <div className="p-3 border-t text-[10px] text-center shrink-0" style={{ borderColor: 'var(--pd-border)', color: 'var(--pd-text-muted)' }}>
-                        PowerDirector v1.0
+                        PowerDirector v1.0.0-beta.2
                     </div>
                 )}
             </div>

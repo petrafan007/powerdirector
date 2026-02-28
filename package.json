@@ -1,6 +1,6 @@
 {
   "name": "powerdirector",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.2",
   "description": "**Reliability-first AI orchestration and chat control.**",
   "main": "index.js",
   "type": "module",
