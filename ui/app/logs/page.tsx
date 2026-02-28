@@ -342,7 +342,7 @@ export default function LogsPage() {
                     ) : (
                         <div className="divide-y divide-[var(--pd-border)]">
                             {filteredEntries.map((entry, index) => (
-                                <div key={`${entry.time ?? 'na'}-${index}`} className="grid grid-cols-[110px_70px_220px_1fr] gap-2 text-xs p-2 font-mono">
+                                <div key={`${entry.time ?? 'na'}-${index}`} className="text-xs p-2 font-mono" style={{ display: 'grid', gridTemplateColumns: '110px 70px 220px 1fr', gap: '0.5rem' }}>
                                     <div className="text-[var(--pd-text-muted)]">{formatTime(entry.time)}</div>
                                     <div className="uppercase text-[var(--pd-text-main)]">{entry.level || ''}</div>
                                     <div className="text-[var(--pd-text-muted)]">{entry.subsystem || ''}</div>
