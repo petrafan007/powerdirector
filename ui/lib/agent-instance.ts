@@ -765,6 +765,15 @@ export class PowerDirectorService {
         });
 
         registerOpenAICompatibleProvider({
+            id: 'inception',
+            envKey: 'INCEPTION_API_KEY',
+            baseUrlEnvKey: 'INCEPTION_BASE_URL',
+            modelEnvKey: 'INCEPTION_MODEL',
+            defaultBaseURL: 'https://api.inceptionlabs.ai/v1',
+            defaultModel: pickString(env.INCEPTION_MODEL) || 'mercury-2'
+        });
+
+        registerOpenAICompatibleProvider({
             id: 'ollama',
             baseUrlEnvKey: 'OLLAMA_BASE_URL',
             modelEnvKey: 'OLLAMA_MODEL',
