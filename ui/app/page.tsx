@@ -267,37 +267,57 @@ export default function Home() {
         {/* Content Area */}
         <div className="flex-1 min-h-0 relative">
 
-          {/* 1. Terminal Instances - Always mounted but hidden if not active to persist state */}
-          {openTabs.filter(t => t.id.startsWith('terminal-')).map(t => (
-            <div
-              key={t.id}
-              className="absolute inset-0 bg-[#1e1e1e]"
-              style={{
-                visibility: t.id === activeSessionId ? 'visible' : 'hidden',
-                zIndex: t.id === activeSessionId ? 10 : 0
-              }}
-            >
-              <TerminalInterface sessionId={t.id} />
-            </div>
-          ))}
+          {/* If Tabs are ENABLED: Mount all open tabs but hide inactive ones to persist state */}
+          {uiSettings.chatTabs ? (
+            <>
+              {openTabs.filter(t => t.id.startsWith('terminal-')).map(t => (
+                <div
+                  key={t.id}
+                  className="absolute inset-0 bg-[#1e1e1e]"
+                  style={{
+                    visibility: t.id === activeSessionId ? 'visible' : 'hidden',
+                    zIndex: t.id === activeSessionId ? 10 : 0
+                  }}
+                >
+                  <TerminalInterface sessionId={t.id} />
+                </div>
+              ))}
 
-          {/* 2. Chat Instances - Always mounted but hidden if not active to persist state */}
-          {openTabs.filter(t => !t.id.startsWith('terminal-')).map(t => (
-            <div
-              key={t.id}
-              className="absolute inset-0"
-              style={{
-                visibility: t.id === activeSessionId ? 'visible' : 'hidden',
-                zIndex: t.id === activeSessionId ? 10 : 0
-              }}
-            >
-              <ChatInterface
-                sessionId={t.id}
-                sidebarCollapsed={false}
-                onToggleFullscreen={() => { }}
-              />
-            </div>
-          ))}
+              {openTabs.filter(t => !t.id.startsWith('terminal-')).map(t => (
+                <div
+                  key={t.id}
+                  className="absolute inset-0"
+                  style={{
+                    visibility: t.id === activeSessionId ? 'visible' : 'hidden',
+                    zIndex: t.id === activeSessionId ? 10 : 0
+                  }}
+                >
+                  <ChatInterface
+                    sessionId={t.id}
+                    sidebarCollapsed={false}
+                    onToggleFullscreen={() => { }}
+                  />
+                </div>
+              ))}
+            </>
+          ) : (
+            /* If Tabs are DISABLED: Just mount the currently active session */
+            activeSessionId ? (
+              activeSessionId.startsWith('terminal-') ? (
+                <div key={`terminal-${activeSessionId}`} className="absolute inset-0 bg-[#1e1e1e] z-10">
+                  <TerminalInterface sessionId={activeSessionId} />
+                </div>
+              ) : (
+                <div key={`chat-${activeSessionId}`} className="absolute inset-0 z-10">
+                  <ChatInterface
+                    sessionId={activeSessionId}
+                    sidebarCollapsed={false}
+                    onToggleFullscreen={() => { }}
+                  />
+                </div>
+              )
+            ) : null
+          )}
 
           {/* 3. Empty State */}
           {!activeSessionId && (

@@ -8,6 +8,10 @@ logs/
 nohup.out
 *.log
 # media/  <-- Commented out to allow src/media
+agent/media/
+diagnostics/*.ndjson
+memory/*.md
+moltbook-adk/
 gemini_tmp_images/
 /state/
 powerdirector.db

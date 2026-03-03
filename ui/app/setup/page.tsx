@@ -25,7 +25,7 @@ interface WizardData {
     model: string;
     // Step 4: Agent Defaults
     workspace: string;
-    timeoutSeconds: number;
+    timeoutSeconds: string;
     compactionMode: string;
     // Step 5: Features
     webSearchEnabled: boolean;
@@ -34,7 +34,7 @@ interface WizardData {
     ttsEnabled: boolean;
     ttsProvider: string;
     // Step 6: Gateway (Server config for Standalone / Client config for Remote)
-    gatewayPort: number;
+    gatewayPort: string;
     gatewayBind: string;
     remoteGatewayUrl: string;
     remoteGatewayToken: string;
@@ -45,7 +45,7 @@ interface WizardData {
     // UI Features
     maxChatTabs: number;
     // Terminal Features
-    terminalPort: number;
+    terminalPort: string;
     terminalBind: string;
 }
 
@@ -55,14 +55,14 @@ const DEFAULT_DATA: WizardData = {
     apiKey: '',
     model: '',
     workspace: '',
-    timeoutSeconds: 180,
+    timeoutSeconds: '180',
     compactionMode: 'safeguard',
     webSearchEnabled: true,
     webSearchProvider: 'brave',
     webSearchApiKey: '',
     ttsEnabled: false,
     ttsProvider: 'elevenlabs',
-    gatewayPort: 18789,
+    gatewayPort: '3007',
     gatewayBind: 'lan',
     remoteGatewayUrl: '',
     remoteGatewayToken: '',
@@ -70,7 +70,7 @@ const DEFAULT_DATA: WizardData = {
     telegramToken: '',
     slackToken: '',
     maxChatTabs: 5,
-    terminalPort: 3008,
+    terminalPort: '3008',
     terminalBind: 'lan',
 };
 
@@ -123,6 +123,24 @@ const cardStyle = {
     background: 'var(--pd-surface-panel)',
     border: '1px solid var(--pd-border)',
 };
+
+function digitsOnly(value: string): string {
+    return value.replace(/\D+/g, '');
+}
+
+function parseBoundedInteger(rawValue: string, field: string, min: number, max: number): number {
+    const trimmed = rawValue.trim();
+    if (!trimmed) {
+        throw new Error(`${field} is required.`);
+    }
+
+    const parsed = Number.parseInt(trimmed, 10);
+    if (!Number.isFinite(parsed) || parsed < min || parsed > max) {
+        throw new Error(`${field} must be between ${min} and ${max}.`);
+    }
+
+    return parsed;
+}
 
 export default function SetupWizardPage() {
     const router = useRouter();
@@ -243,6 +261,16 @@ export default function SetupWizardPage() {
             } else {
                 // Standalone Mode: Save all server config
                 localStorage.setItem('pd_gateway_mode', 'local');
+                const timeoutSeconds = parseBoundedInteger(data.timeoutSeconds, 'Timeout (seconds)', 10, 600);
+                const gatewayPort = parseBoundedInteger(data.gatewayPort, 'Gateway port', 1, 65535);
+                const terminalPort = parseBoundedInteger(data.terminalPort, 'Terminal port', 1, 65535);
+                const normalizeBind = (value: string) => {
+                    if (value === 'localhost') return 'loopback';
+                    if (value === '0.0.0.0') return 'auto';
+                    return value;
+                };
+                const gatewayBind = normalizeBind(data.gatewayBind);
+                const terminalBind = normalizeBind(data.terminalBind);
 
                 // Save model/provider config
                 const selectedProvider = PROVIDERS.find(p => p.id === data.provider);
@@ -283,7 +311,7 @@ export default function SetupWizardPage() {
                     defaults: {
                         model: { primary: `${data.provider}/${data.model}` },
                         workspace: data.workspace,
-                        timeoutSeconds: data.timeoutSeconds,
+                        timeoutSeconds,
                         compaction: { mode: data.compactionMode },
                     }
                 });
@@ -307,16 +335,31 @@ export default function SetupWizardPage() {
                     }
                 });
 
-                // Save gateway config (Server Bind)
-                await saveSection('gateway', {
-                    port: data.gatewayPort,
-                    bind: data.gatewayBind,
-                });
+                // Save gateway config (Server Bind), supporting both legacy and current gateway shapes.
+                const existingGatewayRes = await fetch('/api/config/gateway');
+                const existingGatewayJson = await existingGatewayRes.json();
+                const existingGateway = existingGatewayJson?.data || {};
+                const gatewayPayload: Record<string, any> = { ...existingGateway };
+
+                if (existingGateway?.control && typeof existingGateway.control === 'object' && !Array.isArray(existingGateway.control)) {
+                    delete gatewayPayload.port;
+                    delete gatewayPayload.bind;
+                    gatewayPayload.control = {
+                        ...existingGateway.control,
+                        port: gatewayPort,
+                        bind: gatewayBind,
+                    };
+                } else {
+                    gatewayPayload.port = gatewayPort;
+                    gatewayPayload.bind = gatewayBind;
+                }
+
+                await saveSection('gateway', gatewayPayload);
 
                 // Save terminal config
                 await saveSection('terminal', {
-                    port: data.terminalPort,
-                    bind: data.terminalBind,
+                    port: terminalPort,
+                    bind: terminalBind,
                 });
 
                 // Save channel credentials configured in the wizard
@@ -770,11 +813,11 @@ function StepAgent({ data, update }: { data: WizardData; update: <K extends keyo
                     <label className="block text-sm font-medium mb-1" style={{ color: 'var(--pd-text-main)' }}>Timeout (seconds)</label>
                     <p className="text-xs mb-1.5" style={{ color: 'var(--pd-text-muted)' }}>Max time to wait for model responses</p>
                     <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         value={data.timeoutSeconds}
-                        min={10}
-                        max={600}
-                        onChange={e => update('timeoutSeconds', Number(e.target.value))}
+                        onChange={e => update('timeoutSeconds', digitsOnly(e.target.value))}
                         className="w-32 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         style={inputStyle}
                     />
@@ -893,47 +936,6 @@ function StepFeatures({ data, update }: { data: WizardData; update: <K extends k
                     )}
                 </div>
 
-                {/* Terminal */}
-                <div className="p-4 rounded-xl" style={cardStyle}>
-                    <div className="flex items-center gap-2 mb-3">
-                        <span className="text-lg">⌨️</span>
-                        <div>
-                            <div className="text-sm font-medium" style={{ color: 'var(--pd-text-main)' }}>Terminal</div>
-                            <div className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Interactive shell settings</div>
-                        </div>
-                    </div>
-                    <div className="space-y-2 ml-7">
-                        <div className="flex gap-3">
-                            <div className="flex-1">
-                                <label className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Port</label>
-                                <input
-                                    type="number"
-                                    value={data.terminalPort}
-                                    min={1}
-                                    max={65535}
-                                    onChange={e => update('terminalPort', Number(e.target.value))}
-                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    style={inputStyle}
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <label className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Bind</label>
-                                <select
-                                    value={data.terminalBind}
-                                    onChange={e => update('terminalBind', e.target.value)}
-                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    style={inputStyle}
-                                >
-                                    <option value="lan">LAN</option>
-                                    <option value="localhost">Localhost</option>
-                                    <option value="0.0.0.0">All Interfaces</option>
-                                    <option value="tailnet">Tailnet</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {/* Gateway */}
                 <div className="p-4 rounded-xl" style={cardStyle}>
                     <div className="flex items-center gap-2 mb-3">
@@ -948,11 +950,11 @@ function StepFeatures({ data, update }: { data: WizardData; update: <K extends k
                             <div className="flex-1">
                                 <label className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Port</label>
                                 <input
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     value={data.gatewayPort}
-                                    min={1}
-                                    max={65535}
-                                    onChange={e => update('gatewayPort', Number(e.target.value))}
+                                    onChange={e => update('gatewayPort', digitsOnly(e.target.value))}
                                     className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     style={inputStyle}
                                 />
@@ -966,8 +968,49 @@ function StepFeatures({ data, update }: { data: WizardData; update: <K extends k
                                     style={inputStyle}
                                 >
                                     <option value="lan">LAN</option>
-                                    <option value="localhost">Localhost</option>
-                                    <option value="0.0.0.0">All Interfaces</option>
+                                    <option value="loopback">Localhost</option>
+                                    <option value="auto">All Interfaces</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Terminal */}
+                <div className="p-4 rounded-xl" style={cardStyle}>
+                    <div className="flex items-center gap-2 mb-3">
+                        <span className="text-lg">⌨️</span>
+                        <div>
+                            <div className="text-sm font-medium" style={{ color: 'var(--pd-text-main)' }}>Terminal</div>
+                            <div className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Interactive shell settings</div>
+                        </div>
+                    </div>
+                    <div className="space-y-2 ml-7">
+                        <div className="flex gap-3">
+                            <div className="flex-1">
+                                <label className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Port</label>
+                                <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
+                                    value={data.terminalPort}
+                                    onChange={e => update('terminalPort', digitsOnly(e.target.value))}
+                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    style={inputStyle}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <label className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Bind</label>
+                                <select
+                                    value={data.terminalBind}
+                                    onChange={e => update('terminalBind', e.target.value)}
+                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    style={inputStyle}
+                                >
+                                    <option value="lan">LAN</option>
+                                    <option value="loopback">Localhost</option>
+                                    <option value="auto">All Interfaces</option>
+                                    <option value="tailnet">Tailnet</option>
                                 </select>
                             </div>
                         </div>

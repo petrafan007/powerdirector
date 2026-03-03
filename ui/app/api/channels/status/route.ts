@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { getService } from '../../../../lib/agent-instance';
 import { resolvePowerDirectorRoot } from '../../../../lib/paths';
 
@@ -174,7 +175,7 @@ export async function GET(request: Request) {
             if (fs.existsSync(configPath)) {
                 fullConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
             } else {
-                const homedir = process.env.HOME || '/home/jcavallarojr';
+                const homedir = process.env.HOME || os.homedir();
                 const homeConfigPath = path.join(homedir, '.powerdirector', 'powerdirector.json');
                 if (fs.existsSync(homeConfigPath)) {
                     fullConfig = JSON.parse(fs.readFileSync(homeConfigPath, 'utf8'));

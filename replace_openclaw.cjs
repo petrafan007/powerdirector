@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const files = fs.readFileSync('files_to_process.txt', 'utf8').trim().split('\n');
+const targetRoot = process.env.POWERDIRECTOR_TARGET_DIR || path.join(os.homedir(), 'powerdirector');
 
 let count = 0;
 files.forEach(f => {
@@ -16,11 +18,11 @@ files.forEach(f => {
   // Write the file back to powerdirector-source
   fs.writeFileSync(f, content, 'utf8');
 
-  // Copy to personal instance ~/powerdirector
-  const dest = path.join('/home/jcavallarojr/powerdirector', f);
+  // Copy to a local runtime mirror (defaults to ~/powerdirector).
+  const dest = path.join(targetRoot, f);
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, content, 'utf8');
   count++;
 });
 
-console.log('Successfully replaced and copied ' + count + ' files to ~/powerdirector');
+console.log('Successfully replaced and copied ' + count + ' files to ' + targetRoot);

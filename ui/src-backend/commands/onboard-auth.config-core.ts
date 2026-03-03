@@ -115,7 +115,7 @@ export function applyZaiProviderConfig(
   const baseUrl = params?.endpoint
     ? resolveZaiBaseUrl(params.endpoint)
     : (typeof existingProvider?.baseUrl === "string" ? existingProvider.baseUrl : "") ||
-      resolveZaiBaseUrl();
+    resolveZaiBaseUrl();
 
   providers.zai = {
     ...existingProviderRest,
@@ -145,6 +145,13 @@ export function applyOpenrouterProviderConfig(cfg: PowerDirectorConfig): PowerDi
     alias: models[OPENROUTER_DEFAULT_MODEL_REF]?.alias ?? "OpenRouter",
   };
 
+  const providers = { ...cfg.models?.providers };
+  providers.openrouter = {
+    ...providers.openrouter,
+    api: "openai-completions",
+    baseUrl: "https://openrouter.ai/api/v1",
+  };
+
   return {
     ...cfg,
     agents: {
@@ -153,6 +160,10 @@ export function applyOpenrouterProviderConfig(cfg: PowerDirectorConfig): PowerDi
         ...cfg.agents?.defaults,
         models,
       },
+    },
+    models: {
+      ...cfg.models,
+      providers,
     },
   };
 }
@@ -209,6 +220,13 @@ export function applyKimiCodeProviderConfig(cfg: PowerDirectorConfig): PowerDire
     alias: models[KIMI_CODING_MODEL_REF]?.alias ?? "Kimi K2.5",
   };
 
+  const providers = { ...cfg.models?.providers };
+  providers["kimi-coding"] = {
+    ...providers["kimi-coding"],
+    api: "openai-completions",
+    baseUrl: "https://api.moonshot.cn/v1", // Kimi Coding endpoint
+  };
+
   return {
     ...cfg,
     agents: {
@@ -217,6 +235,10 @@ export function applyKimiCodeProviderConfig(cfg: PowerDirectorConfig): PowerDire
         ...cfg.agents?.defaults,
         models,
       },
+    },
+    models: {
+      ...cfg.models,
+      providers,
     },
   };
 }
@@ -426,18 +448,18 @@ export function applyAuthProfileConfig(
   const reorderedProviderOrder =
     existingProviderOrder && preferProfileFirst
       ? [
-          params.profileId,
-          ...existingProviderOrder.filter((profileId) => profileId !== params.profileId),
-        ]
+        params.profileId,
+        ...existingProviderOrder.filter((profileId) => profileId !== params.profileId),
+      ]
       : existingProviderOrder;
   const order =
     existingProviderOrder !== undefined
       ? {
-          ...cfg.auth?.order,
-          [params.provider]: reorderedProviderOrder?.includes(params.profileId)
-            ? reorderedProviderOrder
-            : [...(reorderedProviderOrder ?? []), params.profileId],
-        }
+        ...cfg.auth?.order,
+        [params.provider]: reorderedProviderOrder?.includes(params.profileId)
+          ? reorderedProviderOrder
+          : [...(reorderedProviderOrder ?? []), params.profileId],
+      }
       : cfg.auth?.order;
   return {
     ...cfg,
@@ -458,9 +480,9 @@ export function applyQianfanProviderConfig(cfg: PowerDirectorConfig): PowerDirec
   const defaultProvider = buildQianfanProvider();
   const existingProvider = cfg.models?.providers?.qianfan as
     | {
-        baseUrl?: unknown;
-        api?: unknown;
-      }
+      baseUrl?: unknown;
+      api?: unknown;
+    }
     | undefined;
   const existingBaseUrl =
     typeof existingProvider?.baseUrl === "string" ? existingProvider.baseUrl.trim() : "";

@@ -474,6 +474,18 @@ export class ProviderRouter {
             const cooldownUntil = this.getProviderCooldownUntil(providerKey);
             if (cooldownUntil && cooldownUntil > Date.now()) {
                 console.log(`[Router] Skipping provider ${provider.config.name} (cooldown until ${new Date(cooldownUntil).toISOString()})`);
+                const waitMs = cooldownUntil - Date.now();
+                const waitMinutes = Math.max(1, Math.ceil(waitMs / 60000));
+                errors.push(new PowerDirectorError(
+                    `Provider ${provider.config.name} is in cooldown for ~${waitMinutes} more minute(s)`,
+                    ErrorCode.PROVIDER_RATE_LIMIT,
+                    {
+                        provider: provider.config.name,
+                        model: entryModel,
+                        retryable: false,
+                        strategy: 'NONE'
+                    }
+                ));
                 continue;
             }
 
@@ -514,7 +526,7 @@ export class ProviderRouter {
 
                     const getFirstChunk = () => this.withTimeout(
                         it.next(),
-                        Math.max(1, provider.config.timeoutMs || 300000),
+                        Math.max(90000, provider.config.timeoutMs || 300000),
                         `Provider ${provider.config.name} first chunk timed out`,
                         linkedSignal
                     );
@@ -656,7 +668,12 @@ export class ProviderRouter {
 
     private formatAggregateErrorMessage(errors: PowerDirectorError[]): string {
         if (errors.length === 0) {
-            return 'All providers failed (no providers are currently configured).';
+            const keys = Array.from(this.providerCooldowns.keys());
+            const cooling = keys.filter(k => (this.providerCooldowns.get(k)?.cooldownUntil || 0) > Date.now());
+            if (cooling.length > 0) {
+                return `All providers are currently in cooldown due to previous failures: ${cooling.join(', ')}. Please wait a moment.`;
+            }
+            return 'All providers failed (no providers are currently configured or available).';
         }
 
         const details = errors
@@ -715,6 +732,10 @@ export class ProviderRouter {
     private classifyFailureReason(error: PowerDirectorError): ProviderFailureReason {
         if (error.code === ErrorCode.PROVIDER_RATE_LIMIT) {
             return 'rate_limit';
+        }
+
+        if (error.code === ErrorCode.PROVIDER_TIMEOUT) {
+            return 'timeout';
         }
 
         const lower = String(error.message || '').toLowerCase();
@@ -777,6 +798,10 @@ export class ProviderRouter {
             state.billingCount += 1;
             const backoffMs = this.resolveBillingBackoffMs(providerName, state.billingCount);
             state.cooldownUntil = now + backoffMs;
+        } else if (reason === 'timeout' && state.errorCount < 3) {
+            // Short cooldown for transient timeouts to allow immediate retries
+            state.errorCount += 1;
+            state.cooldownUntil = now + 5000;
         } else {
             state.errorCount += 1;
             const backoffMs = this.calculateUnknownCooldownMs(state.errorCount);

@@ -1,24 +1,24 @@
 # Public Release and Ongoing Versioning Guide
 
-This revision is the concrete plan for shipping *PowerDirector* to GitHub from this machine, keeping the personal runtime at `~/powerdirector` and staging the new public repo in `~/powerdirector-source`. No git operations have been executed yet—this is the approved runbook to follow once you give the go-ahead.
+This revision is the concrete plan for shipping *PowerDirector* to GitHub from this machine, keeping the personal runtime at `<runtime-dir>` and staging the new public repo in `<repo-source-dir>`. No git operations have been executed yet—this is the approved runbook to follow once you give the go-ahead.
 
 ---
 
 # SECTION 0 - PROJECT-SPECIFIC PLAN (PowerDirector → GitHub)
 
 ## Goals
-- Create a clean, reproducible source tree in `~/powerdirector-source` ready for GitHub.
-- Keep the personal runtime intact at `~/powerdirector`.
+- Create a clean, reproducible source tree in `<repo-source-dir>` ready for GitHub.
+- Keep the personal runtime intact at `<runtime-dir>`.
 - Ship the initial GitHub release on the **beta** channel while keeping the UI/config default channel unchanged for users; future updates will pull from the new GitHub repo.
 
 ## Execution Order (once approved)
 1) **Full backup (pre-flight, no git yet)**
-   - Tarball the current runtime to `~/powerdirector_backup_$(date +%Y%m%d_%H%M%S).tar.gz`
+   - Tarball the current runtime to `<runtime-dir>_backup_$(date +%Y%m%d_%H%M%S).tar.gz`
    - Exclude: `node_modules`, `ui/.next`, `dist`, `logs`, `nohup.out`, `*.log`, `gemini_tmp_images`, `media` (large), `powerdirector.db` (optional: include separate secure copy if desired)
    - Include: `src`, `ui`, `config`, `docs`, `scripts`, `tests`, `openclaw-source`, `package-lock.json`, `powerdirector.config.json`, `powerdirector.config.json.bak`, `LICENSE`, `README.md`, `GITHUB.md`, `RELEASE_NOTES_*`, `TASKS.md`, `QA.md`
 2) **Stage repo workspace**
-   - Create `~/powerdirector-source`
-   - `rsync` sanitized source from `~/powerdirector/` into `~/powerdirector-source/`
+   - Create `<repo-source-dir>`
+   - `rsync` sanitized source from `<runtime-dir>/` into `<repo-source-dir>/`
    - Remove runtime-only artifacts (`node_modules`, `ui/.next`, `dist`, `logs`, `media` if oversized), keep lockfile
 3) **Sanitize for public**
    - Scan for secrets/TODO/stub per checklist (Section 1/Step A)
@@ -33,7 +33,7 @@ This revision is the concrete plan for shipping *PowerDirector* to GitHub from t
      - Origin: `https://github.com/<org-or-user>/powerdirector` (to be set at execution time)
      - Branch: `main`
      - Tags: `v*` with beta suffix for prerelease
-   - Verify `src/infra/update-runner.ts` path resolves repo root in `~/powerdirector-source` and respects config channel `beta`
+   - Verify `src/infra/update-runner.ts` path resolves repo root in `<repo-source-dir>` and respects config channel `beta`
 6) **Build/validate in staged tree**
    - `npm ci`
    - `npm --prefix ui ci`
@@ -42,12 +42,12 @@ This revision is the concrete plan for shipping *PowerDirector* to GitHub from t
    - `npm --prefix ui run lint` (warnings acceptable, errors must be zero)
    - `npm test` (smoke set: `src/gateway/call.test.ts`, `src/config/redact-snapshot.test.ts`, `src/memory/qmd-manager.test.ts`)
 7) **Git steps (execute only after approval)**
-   - `git init` in `~/powerdirector-source`
+   - `git init` in `<repo-source-dir>`
    - Commit sanitized tree
    - Tag `v1.0.0-beta.1`
    - Set remote to GitHub and push branch + tag
 8) **Post-publish**
-   - In personal runtime `~/powerdirector`, set `update.channel=beta` and configure updater to track the GitHub repo; run one dry-run update to confirm fetch succeeds.
+   - In personal runtime `<runtime-dir>`, set `update.channel=beta` and configure updater to track the GitHub repo; run one dry-run update to confirm fetch succeeds.
 
 ---
 

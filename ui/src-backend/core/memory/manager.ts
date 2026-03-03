@@ -201,7 +201,7 @@ export class MemoryManager {
         if (existingKey && existingKey !== cacheKey) {
             const existing = this.backends.get(existingKey);
             if (existing) {
-                await existing.manager.close().catch(() => {});
+                await existing.manager.close().catch(() => { });
                 this.backends.delete(existingKey);
             }
             this.backendKeyByAgent.delete(agentId);
@@ -258,8 +258,12 @@ export class MemoryManager {
     private resolveWorkspaceDir(agentId: string): string {
         const list = Array.isArray(this.config.agents?.list) ? this.config.agents.list : [];
         const entry = list.find((item: any) => item.id === agentId);
-        const raw = entry?.workspace || this.config.agents?.defaults?.workspace;
+        let raw = entry?.workspace || this.config.agents?.defaults?.workspace;
+
         if (typeof raw === "string" && raw.trim()) {
+            if (raw.startsWith('~/')) {
+                raw = path.join(process.env.HOME || '', raw.slice(2));
+            }
             return path.isAbsolute(raw) ? raw : path.resolve(this.baseDir, raw);
         }
         return this.baseDir;

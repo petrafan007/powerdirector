@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const Database = require('better-sqlite3');
 
 async function importSessions() {
-    const homedir = process.env.HOME || '/home/jcavallarojr';
+    const homedir = process.env.HOME || os.homedir();
     const agentsDir = path.join(homedir, '.powerdirector', 'agents');
-    const dbPath = '/home/jcavallarojr/powerdirector/powerdirector.db';
+    const dbPath = process.env.POWERDIRECTOR_DB_PATH || path.join(homedir, 'powerdirector', 'powerdirector.db');
 
     if (!fs.existsSync(agentsDir)) {
         console.log(`Agents directory ${agentsDir} not found.`);

@@ -31,6 +31,8 @@ interface RunStepOptions {
     fallbackChain?: string[];
     onFallback?: (metadata: any) => void;
     runId?: string;
+    /** If true, the "AVAILABLE TOOLS" block will be omitted from the text prompt (useful for providers with native tool support). */
+    skipToolsInText?: boolean;
 }
 
 export class Agent {
@@ -102,6 +104,7 @@ export class Agent {
 
     public async runStep(sessionId: string, userMessage?: string, options: RunStepOptions = {}): Promise<string> {
         const runId = options.runId || `run_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        const runStartTime = Date.now();
         console.log(`[Agent] Starting runStep for session ${sessionId} (runId: ${runId})`);
         const sessionData = this.sessionManager.getSession(sessionId);
         if (!sessionData) {
@@ -130,7 +133,7 @@ export class Agent {
             const msg: Message = {
                 role: 'user',
                 content,
-                timestamp: Date.now()
+                timestamp: runStartTime
             };
 
             // resetTriggers: If user message matches a trigger, reset the session history first.
@@ -178,6 +181,16 @@ export class Agent {
                 }
             } catch (err: any) {
                 console.warn(`[Agent] Memory search failed: ${err.message}`);
+            }
+        }
+
+        // If the tool definitions are massive, automatically skip them in the text prompt to avoid OOM/context limits
+        // especially if we are passing them natively to the router anyway.
+        if (options.skipToolsInText === undefined) {
+            const toolDefsJson = JSON.stringify(toolDefs);
+            if (toolDefsJson.length > 10000) {
+                console.log(`[Agent] Tool definitions are large (${toolDefsJson.length} chars). Automatically skipping them in text prompt.`);
+                options.skipToolsInText = true;
             }
         }
 
@@ -250,7 +263,7 @@ export class Agent {
                                 options.onStep({
                                     role: 'assistant',
                                     content: `[System: ${metadata.fallbackFromProvider || 'Primary'} failed. Falling back to ${metadata.provider}${metadata.model ? `/${metadata.model}` : ''}]`,
-                                    timestamp: Date.now(),
+                                    timestamp: runStartTime + turnSequence,
                                     metadata: {
                                         type: 'notification',
                                         status: 'fallback',
@@ -282,7 +295,7 @@ export class Agent {
                         options.onStep({
                             role: 'assistant',
                             content: responseText,
-                            timestamp: Date.now(),
+                            timestamp: runStartTime + turnSequence,
                             metadata: {
                                 type: 'status',
                                 status: 'thinking',
@@ -337,7 +350,7 @@ export class Agent {
                         options.onStep({
                             role: 'assistant',
                             content: `[System: ${providerLabel} stream interrupted (${retryReason || 'unknown reason'}). Retrying with fallback…]`,
-                            timestamp: Date.now(),
+                            timestamp: runStartTime + turnSequence,
                             metadata: {
                                 type: 'notification',
                                 status: 'retrying',
@@ -458,7 +471,7 @@ export class Agent {
                             const conversationalMsg: Message = {
                                 role: 'assistant',
                                 content: conversationalText,
-                                timestamp: Date.now(),
+                                timestamp: runStartTime + turnSequence,
                                 metadata: {
                                     turn: currentTurn,
                                     runId,
@@ -477,7 +490,7 @@ export class Agent {
                         const toolCallbackMsg: Message = {
                             role: 'assistant',
                             content: JSON.stringify({ tool: toolName, args: toolArgs }, null, 2),
-                            timestamp: Date.now(),
+                            timestamp: runStartTime + turnSequence,
                             metadata: {
                                 callId,
                                 tool: toolName,
@@ -506,7 +519,7 @@ export class Agent {
                                     options.onStep({
                                         role: 'assistant',
                                         content: chunk,
-                                        timestamp: Date.now(),
+                                        timestamp: runStartTime + turnSequence,
                                         metadata: { callId, tool: toolName, type: 'output', turn: currentTurn, runId, ...metadata }
                                     });
                                 }
@@ -526,7 +539,7 @@ export class Agent {
                         const toolResultMsg: Message = {
                             role: 'user',
                             content: `[Tool Output for ${toolName}]:\n${toolOutput}`,
-                            timestamp: Date.now(),
+                            timestamp: runStartTime + turnSequence,
                             metadata: {
                                 callId,
                                 tool: toolName,
@@ -683,7 +696,7 @@ export class Agent {
             return `${m.role.toUpperCase()}: ${content}`;
         }).join('\n\n');
 
-        const toolSection = tools.length > 0
+        const toolSection = (tools.length > 0 && !options.skipToolsInText)
             ? `\n\nAVAILABLE TOOLS:\n${JSON.stringify(tools, null, 2)}\n\nTo use a tool, respond with a JSON block like:\n\`\`\`json\n{"tool": "tool_name", "args": {...}}\n\`\`\`\nCRITICAL: My shell tool is HIGH-FIDELITY and FULLY INTERACTIVE. I am capable of running commands that require user input (like sudo, password prompts, or interactive installers). I should ALWAYS run the command FIRST and let the interactive interface handle the input. Never ask the user for a password or confirmation in conversational text if a tool can handle it.\n\nIMPORTANT: When working with Frigate NVR cameras, ALWAYS use the "frigate" tool instead of curl/shell commands. The frigate tool properly validates images and saves them to the correct location. Using curl to fetch images will result in broken/unvalidated files.\n\nIMPORTANT: Once you receive the output from a tool call, do NOT repeat the same tool call with the same arguments unless absolutely necessary. Instead, provide a final response summarizing the results or proceed to the next step.\n\nCRITICAL OUTPUT POLICY: When providing a final response, be concise and direct. DO NOT describe internal planning or thought processes. Provide the synthesized answer directly.\n`
             : '';
 

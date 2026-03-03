@@ -283,7 +283,7 @@ export const PowerDirectorSchema = z
         markdownRendering: z.boolean().optional(),
         maxSidebarChats: z.number().int().min(1).max(20).optional(),
         chatTabs: z.boolean().optional(),
-        maxChatTabs: z.number().int().min(1).max(20).optional(),
+        maxChatTabs: z.number().int().min(1).max(20).default(5),
       })
       .strict()
       .optional(),

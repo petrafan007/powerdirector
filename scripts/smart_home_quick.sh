@@ -5,12 +5,16 @@ set -euo pipefail
 # Requires: ~/.ha_env (HA_URL + HA_TOKEN)
 # Optional: ROBO_DEVICE_ID in ~/.roborock_env
 
+HA_ENV_FILE="${HA_ENV_FILE:-$HOME/.ha_env}"
+ROBOROCK_ENV_FILE="${ROBOROCK_ENV_FILE:-$HOME/.roborock_env}"
+FRIGATE_CLIP_HELPER="${FRIGATE_CLIP_HELPER:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/frigate_recent_clip.sh}"
+
 cmd="${1:-}"
 shift || true
 
 ha_call() {
   local domain="$1" service="$2" payload="$3"
-  source /home/jcavallarojr/.ha_env
+  source "$HA_ENV_FILE"
   curl -sS -X POST "$HA_URL/api/services/$domain/$service" \
     -H "Authorization: Bearer $HA_TOKEN" \
     -H "Content-Type: application/json" \
@@ -35,8 +39,8 @@ case "$cmd" in
     echo "OK: triggered $entity"
     ;;
   vacuum-start|vacuum-stop|vacuum-dock|vacuum-status)
-    source /home/jcavallarojr/.roborock_env
-    : "${ROBO_DEVICE_ID:?Set ROBO_DEVICE_ID in ~/.roborock_env}"
+    source "$ROBOROCK_ENV_FILE"
+    : "${ROBO_DEVICE_ID:?Set ROBO_DEVICE_ID in $ROBOROCK_ENV_FILE}"
     case "$cmd" in
       vacuum-start) roborock command --device_id "$ROBO_DEVICE_ID" start ;;
       vacuum-stop) roborock command --device_id "$ROBO_DEVICE_ID" stop ;;
@@ -53,7 +57,7 @@ case "$cmd" in
   frigate-clip)
     camera="${1:?camera required}"
     label="${2:-}"
-    /home/jcavallarojr/clawd/scripts/frigate_recent_clip.sh "$camera" "$label"
+    "$FRIGATE_CLIP_HELPER" "$camera" "$label"
     ;;
   *)
     cat <<USAGE

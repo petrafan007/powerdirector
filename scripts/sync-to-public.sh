@@ -3,8 +3,8 @@
 # PowerDirector Public Distribution Synchronizer
 # Usage: ./scripts/sync-to-public.sh
 
-SOURCE_DIR="/home/jcavallarojr/powerdirector"
-TARGET_DIR="/home/jcavallarojr/powerdirector-public"
+SOURCE_DIR="${POWERDIRECTOR_SOURCE_DIR:-$HOME/powerdirector}"
+TARGET_DIR="${POWERDIRECTOR_PUBLIC_DIR:-$HOME/powerdirector-public}"
 
 echo "==== PowerDirector Sync: Production -> Public ===="
 echo "Source: $SOURCE_DIR"

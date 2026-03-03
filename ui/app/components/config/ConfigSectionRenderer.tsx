@@ -143,7 +143,8 @@ export default function ConfigSectionRenderer({ sectionId, schema, data, onUpdat
 
         // Render Subsection Tab
         const subSchema = schema.properties![activeTab];
-        const subData = data?.[activeTab] || {};
+        const type = schemaType(subSchema);
+        const subData = data?.[activeTab] ?? (type === 'array' ? [] : type === 'object' ? {} : undefined);
 
         // Unwrap properties for cleaner tab view if it's a standard object
         if (schemaType(subSchema) === 'object' && subSchema.properties) {
@@ -466,28 +467,30 @@ function ComplexArrayField({ itemsSchema, value, path, onUpdate }: {
     // But we might want to ensure we add a valid default object.
 
     const addItem = () => {
-        const next = [...value];
+        const next = Array.isArray(value) ? [...value] : [];
         next.push(defaultValue(itemsSchema));
         const relativePath = path.slice(1).map(String).join('.');
         onUpdate(relativePath, next);
     };
 
     const removeItem = (index: number) => {
-        const next = [...value];
+        const next = Array.isArray(value) ? [...value] : [];
         next.splice(index, 1);
         const relativePath = path.slice(1).map(String).join('.');
         onUpdate(relativePath, next);
     };
 
+    const items = Array.isArray(value) ? value : [];
+
     return (
         <div className="space-y-3">
             {/* Header / Stats */}
             <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                <span>{value.length} items</span>
+                <span>{items.length} items</span>
             </div>
 
             {/* Existing Items */}
-            {value.map((item, index) => (
+            {items.map((item, index) => (
                 <div key={index} className="rounded-lg border p-3 group relative" style={{ borderColor: 'var(--pd-border)', background: 'var(--pd-surface-panel)' }}>
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-gray-700/30">
                         <div className="font-mono text-sm font-bold opacity-60">#{index + 1}</div>

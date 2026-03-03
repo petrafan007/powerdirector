@@ -679,6 +679,17 @@ export async function resolveImplicitProviders(params: {
       apiKey: MINIMAX_OAUTH_PLACEHOLDER,
     };
   }
+  const openrouterKey =
+    resolveEnvApiKeyVarName("openrouter") ??
+    resolveApiKeyFromProfiles({ provider: "openrouter", store: authStore });
+  if (openrouterKey) {
+    providers.openrouter = {
+      api: "openai-completions",
+      baseUrl: "https://openrouter.ai/api/v1",
+      apiKey: openrouterKey,
+      models: [],
+    };
+  }
 
   const moonshotKey =
     resolveEnvApiKeyVarName("moonshot") ??

@@ -3,7 +3,7 @@
 # Run via cron or systemd timer to get proactive notifications
 # before Claude Code auth expires.
 #
-# Suggested cron: */30 * * * * /home/admin/powerdirector/scripts/auth-monitor.sh
+# Suggested cron: */30 * * * * $HOME/powerdirector/scripts/auth-monitor.sh
 #
 # Environment variables:
 #   NOTIFY_PHONE - Phone number to send PowerDirector notification (e.g., +1234567890)
@@ -78,7 +78,8 @@ HOURS_LEFT=$((DIFF_MS / 3600000))
 MINS_LEFT=$(((DIFF_MS % 3600000) / 60000))
 
 if [ "$DIFF_MS" -lt 0 ]; then
-    send_notification "Claude Code auth EXPIRED! PowerDirector is down. Run: ssh l36 '~/powerdirector/scripts/mobile-reauth.sh'" "urgent"
+    REAUTH_HOST="${POWERDIRECTOR_SERVER:-your-server}"
+    send_notification "Claude Code auth EXPIRED! PowerDirector is down. Run: ssh ${REAUTH_HOST} '~/powerdirector/scripts/mobile-reauth.sh'" "urgent"
     exit 1
 elif [ "$HOURS_LEFT" -lt "$WARN_HOURS" ]; then
     send_notification "Claude Code auth expires in ${HOURS_LEFT}h ${MINS_LEFT}m. Consider re-auth soon." "high"

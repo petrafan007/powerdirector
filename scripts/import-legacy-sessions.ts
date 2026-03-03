@@ -1,10 +1,11 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { DatabaseManager } from '../src/state/db.ts';
 import { SessionManager } from '../src/state/session-manager.ts';
 
 async function importSessions() {
-    const homedir = process.env.HOME || '/home/jcavallarojr';
+    const homedir = process.env.HOME || os.homedir();
     const sessionsDir = path.join(homedir, '.powerdirector', 'sessions');
     const dbPath = path.join(homedir, '.powerdirector', 'powerdirector.db');
 

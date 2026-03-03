@@ -304,4 +304,4 @@ See [TASKS.md](TASKS.md) for current implementation status and upcoming features
 
 ## 📜 License
 
-MIT © 2026 petrafan007
+MIT © 2026 PowerDirector contributors

@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Abort failures no longer strand the UI in a paused state; chat resumes listening if a pause request is rejected or errors, preventing dropped output.
 - `/api/chat` streams now cancel gateway runs when the client disconnects, avoiding orphaned executions after a browser/tab closes.
 - Remote gateway mode has been reimplemented using the Gateway protocol (from OpenClaw) with proper `chat.send`/`chat.abort` requests and chat event streaming; local monolith mode remains available.
+- Setup Wizard numeric fields for timeout and ports now allow fully clearing/editing values without forcing a digit, fixing spinner-field overwrite friction.
+- Setup Wizard Features now lists Gateway before Terminal and defaults Gateway port to `3007` (matching local monolith defaults).
+- Setup Wizard now normalizes legacy bind values (`localhost`, `0.0.0.0`) to supported config values before saving.
+- Setup Wizard gateway save is now compatibility-safe across gateway config shapes by updating either top-level `gateway.port/bind` or legacy `gateway.control.port/bind`.
+- Removed tracked personal runtime artifacts from the repository (`agent/media/*`, `diagnostics/telemetry.ndjson`, `memory/*.md`, and `moltbook-adk`).
+- Auth monitor runbook paths are now home-relative (`%h/powerdirector/...` for systemd and `$HOME/powerdirector/...` in script guidance) instead of hardcoded user paths.
 
 ## [1.0.0-beta.2] - 2026-02-25
 

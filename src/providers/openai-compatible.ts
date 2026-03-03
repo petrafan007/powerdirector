@@ -11,6 +11,7 @@ export interface OpenAICompatibleConfig {
     timeoutMs?: number;
     rateLimitPerMinute?: number;
     maxTokens?: number;
+    disableTools?: boolean;
 }
 
 export class OpenAICompatibleProvider implements Provider {
@@ -19,6 +20,7 @@ export class OpenAICompatibleProvider implements Provider {
     public config: { name: string; apiEndpoint: string; timeoutMs: number; rateLimitPerMinute?: number };
     private defaultModel: string;
     private maxTokens: number;
+    private disableTools: boolean;
 
     constructor(config: OpenAICompatibleConfig) {
         this.client = new OpenAI({
@@ -34,6 +36,7 @@ export class OpenAICompatibleProvider implements Provider {
         };
         this.defaultModel = config.defaultModel || 'gpt-3.5-turbo'; // Fallback, usually overridden
         this.maxTokens = config.maxTokens ?? 4096;
+        this.disableTools = !!config.disableTools;
     }
 
     async completion(prompt: string, model?: string, options?: ProviderExecutionOptions): Promise<string> {

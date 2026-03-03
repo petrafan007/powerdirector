@@ -1604,7 +1604,7 @@ Status (truthful): **33 / 33 sections fully complete end-to-end**.
   - Trusted blocked Bun lifecycle scripts for QMD dependencies (`node-llama-cpp` postinstall).
   - Updated `powerdirector.config.json`:
     - switched `memory.backend` from `builtin` to `qmd`
-    - set `memory.qmd.command` to absolute path `/home/jcavallarojr/.bun/bin/qmd`
+    - set `memory.qmd.command` to absolute path `~/.bun/bin/qmd`
     - added full `memory.qmd` runtime settings (searchMode, update, limits, sessions, scope)
     - added explicit `agents.defaults.memorySearch` baseline settings for fallback/index behavior
   - Verified runtime activation:

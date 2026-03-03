@@ -44,9 +44,9 @@ export class ZaloUserChannel implements Channel {
             this.abortController = new AbortController();
             this.startListener();
         } catch (error: any) {
-            // If zca binary is not installed, silently disable. Don't throw so no retry loop.
+            // Suppress ENOENT errors if zca binary is missing - avoid restart loop
             if (error?.code === 'ENOENT' || String(error?.message || '').includes('ENOENT')) {
-                console.warn('[ZaloUser] zca binary not found. Zalo channel disabled. Install zca to activate.');
+                console.warn('[ZaloUser] zca binary not found. Zalo channel disabled.');
                 return;
             }
             console.error('[ZaloUser] Failed to start channel:', error);
@@ -111,12 +111,11 @@ export class ZaloUserChannel implements Channel {
                     }
                 }
             },
-            onError: (err) => {
+            onError: (err: any) => {
                 if (this.isRunning) {
-                    // If zca binary isn't installed, warn once and stop retrying to avoid log spam
-                    const isNotInstalled = (err as any)?.code === 'ENOENT' || String(err?.message || err).includes('ENOENT');
-                    if (isNotInstalled) {
-                        console.warn('[ZaloUser] zca binary not found — Zalo channel inactive. Install zca to enable.');
+                    // Suppress ENOENT spam - avoid repeated error logs if binary is missing
+                    if (err?.code === 'ENOENT' || String(err?.message || '').includes('ENOENT')) {
+                        console.warn('[ZaloUser] zca binary not found. Zalo channel disabled.');
                         this.isRunning = false;
                         return;
                     }

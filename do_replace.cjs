@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const lines = fs.readFileSync('files_to_process.txt', 'utf8').trim().split('\n');
+const targetRoot = process.env.POWERDIRECTOR_TARGET_DIR || path.join(os.homedir(), 'powerdirector');
 let replaced = 0, skippedExists = 0, skippedContent = 0;
 for (const f of lines) {
     if (!fs.existsSync(f)) {
@@ -22,7 +24,7 @@ for (const f of lines) {
 
     fs.writeFileSync(f, newC);
 
-    const dest = path.join('/home/jcavallarojr/powerdirector', f);
+    const dest = path.join(targetRoot, f);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, newC);
     replaced++;

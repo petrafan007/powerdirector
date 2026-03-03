@@ -19,6 +19,16 @@ const terminalSchema = z
   .object({
     shell: z.enum(['bash', 'zsh']).optional(),
     autoTimeoutMinutes: z.number().int().positive().optional(),
+    port: z.number().int().positive().optional(),
+    bind: z
+      .union([
+        z.literal('auto'),
+        z.literal('lan'),
+        z.literal('loopback'),
+        z.literal('custom'),
+        z.literal('tailnet'),
+      ])
+      .optional(),
   })
   .strict()
   .optional();

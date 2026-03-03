@@ -25,7 +25,7 @@ export class GeminiProvider implements Provider {
     constructor(apiKey: string, modelName: string = 'gemini-3-pro-preview', options: GeminiProviderOptions = {}) {
         this.client = new GoogleGenerativeAI(apiKey);
         this.circuit = new CircuitBreaker();
-        this.modelName = modelName;
+        this.modelName = modelName || 'gemini-3-pro-preview';
         this.maxTokens = options.maxTokens ?? 8192;
         this.config.timeoutMs = options.timeoutMs ?? 30000;
         this.config.rateLimitPerMinute = options.rateLimitPerMinute;

@@ -5,7 +5,7 @@
 # One-tap: shows status toast
 # If expired: directly opens auth URL
 
-SERVER="${POWERDIRECTOR_SERVER:-${CLAWDBOT_SERVER:-l36}}"
+SERVER="${POWERDIRECTOR_SERVER:-${CLAWDBOT_SERVER:-powerdirector-host}}"
 
 STATUS=$(ssh -o ConnectTimeout=5 "$SERVER" '$HOME/powerdirector/scripts/claude-auth-status.sh simple' 2>&1)
 
