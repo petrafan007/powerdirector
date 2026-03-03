@@ -36,6 +36,7 @@ export default function Home() {
     chatTabs: false,
     maxChatTabs: 5,
   });
+  const [terminalPort, setTerminalPort] = useState(3008);
 
   // Fetch UI settings and check if setup is needed on mount
   useEffect(() => {
@@ -49,6 +50,16 @@ export default function Home() {
             chatTabs: d.chatTabs ?? false,
             maxChatTabs: d.maxChatTabs ?? 5,
           });
+        }
+      })
+      .catch(() => { });
+
+    fetch('/api/config/terminal')
+      .then(r => r.json())
+      .then(resp => {
+        const port = resp?.data?.port;
+        if (typeof port === 'number' && Number.isFinite(port) && port > 0 && port <= 65535) {
+          setTerminalPort(Math.floor(port));
         }
       })
       .catch(() => { });
@@ -279,7 +290,7 @@ export default function Home() {
                     zIndex: t.id === activeSessionId ? 10 : 0
                   }}
                 >
-                  <TerminalInterface sessionId={t.id} />
+                  <TerminalInterface port={terminalPort} sessionId={t.id} />
                 </div>
               ))}
 
@@ -305,7 +316,7 @@ export default function Home() {
             activeSessionId ? (
               activeSessionId.startsWith('terminal-') ? (
                 <div key={`terminal-${activeSessionId}`} className="absolute inset-0 bg-[#1e1e1e] z-10">
-                  <TerminalInterface sessionId={activeSessionId} />
+                  <TerminalInterface port={terminalPort} sessionId={activeSessionId} />
                 </div>
               ) : (
                 <div key={`chat-${activeSessionId}`} className="absolute inset-0 z-10">

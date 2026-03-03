@@ -59,6 +59,35 @@ function normalizeReasoning(value: unknown): 'low' | 'medium' | 'high' | 'xhigh'
     return undefined;
 }
 
+function normalizeProviderId(value: unknown): string | undefined {
+    const provider = toStringOrUndefined(value);
+    if (!provider) return undefined;
+    if (provider.toLowerCase() === 'default') return undefined;
+    return provider;
+}
+
+function normalizeModelId(value: unknown): string | undefined {
+    const model = toStringOrUndefined(value);
+    if (!model) return undefined;
+    if (model.toLowerCase() === 'default') return undefined;
+    return model;
+}
+
+function resolveRequestedModelId(providerRaw: unknown, modelRaw: unknown): string | undefined {
+    const provider = normalizeProviderId(providerRaw);
+    const model = normalizeModelId(modelRaw);
+    if (!provider && !model) return undefined;
+    if (!provider && model) return model;
+    if (provider && !model) return undefined;
+
+    const providerLower = provider!.toLowerCase();
+    const modelLower = model!.toLowerCase();
+    if (modelLower.startsWith(`${providerLower}/`)) {
+        return model!;
+    }
+    return `${provider}/${model}`;
+}
+
 function isPlainObject(value: unknown): value is Record<string, any> {
     return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
@@ -83,11 +112,8 @@ export async function POST(request: Request) {
     try {
         const service = getService();
 
-        // Construct the model identifier (provider/model) if both are present
-        let modelId: string | undefined;
-        if (body.provider && body.model) {
-            modelId = `${body.provider}/${body.model}`;
-        }
+        // Only treat explicit non-default selections as provider overrides.
+        const modelId = resolveRequestedModelId(body.provider, body.model);
         const agentId = toStringOrUndefined(body.agentId);
         const reasoning = normalizeReasoning(body.reasoning);
 

@@ -908,6 +908,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         const effectiveProvider = selectedProvider;
         const effectiveModel = selectedModel;
+        const providerOverride = effectiveProvider && effectiveProvider !== 'default'
+            ? effectiveProvider
+            : undefined;
+        const modelOverride = effectiveModel && effectiveModel !== 'default'
+            ? effectiveModel
+            : undefined;
 
         // Validate attachments against model capabilities (skip when using Default chain)
         const skipAttachmentValidation =
@@ -996,8 +1002,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         try {
             const serverRunId = await gatewayClient.sendMessage(sessionId, textToSend || '', {
-                provider: effectiveProvider,
-                model: effectiveModel,
+                provider: providerOverride,
+                model: modelOverride,
                 reasoning: isCodexReasoningModel ? selectedReasoning : undefined,
                 attachments: attachmentPayloads.length > 0 ? attachmentPayloads : undefined,
                 agentId: agentId || undefined,

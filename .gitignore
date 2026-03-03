@@ -5,6 +5,8 @@ ui/.next/
 
 # Local runtime data / auth
 logs/
+!ui/app/api/logs/
+!ui/app/api/logs/**
 nohup.out
 *.log
 # media/  <-- Commented out to allow src/media
@@ -18,6 +20,7 @@ powerdirector.db
 powerdirector.config.json.bak
 latest_session.json
 ui/.wwebjs_auth/
+ui/src-backend/ui_migrated_backup_*/
 
 # Test/output artifacts
 ui/playwright-report/
