@@ -68,8 +68,15 @@ export default function Home() {
     fetch('/api/config/wizard')
       .then(r => r.json())
       .then(resp => {
-        const lastRunAt = resp?.data?.lastRunAt;
-        if (!lastRunAt) {
+        const wizard = resp?.data ?? {};
+        const hasWizardRun =
+          (typeof wizard.lastRunAt === 'string' && wizard.lastRunAt.trim().length > 0) ||
+          (typeof wizard.lastRunVersion === 'string' && wizard.lastRunVersion.trim().length > 0) ||
+          (typeof wizard.lastRunCommand === 'string' && wizard.lastRunCommand.trim().length > 0) ||
+          wizard.lastRunMode === 'local' ||
+          wizard.lastRunMode === 'remote';
+
+        if (!hasWizardRun) {
           // If the skip flag is set in localStorage, don't force redirect
           if (typeof window !== 'undefined' && !window.localStorage.getItem('pd:setup-skipped')) {
             router.push('/setup');

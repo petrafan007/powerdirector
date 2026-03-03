@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restored the Logs API endpoint (`/api/logs/tail`) so the Logs page can load and stream log lines again instead of returning 404.
 - Fixed chat "Unknown provider" failures when the UI is set to `Default` by treating `default` provider/model as "no explicit override" in both the chat UI payload and backend route normalization.
 - Fixed Terminal disconnects on non-default ports by loading `terminal.port` from config and wiring the Terminal UI websocket to that configured port.
+- Prevented false setup reruns by treating legacy wizard completion markers (`lastRunMode`/`lastRunVersion`/`lastRunCommand`) as valid completion state when `lastRunAt` is missing.
 
 ## [1.0.0-beta.2] - 2026-02-25
 
