@@ -351,7 +351,7 @@ export class Gateway {
             return options.terminal || {};
         };
         const initialTerminal = resolveTerminalOptions();
-        this.terminalManager = new TerminalManager(initialTerminal.port ?? 3008, resolveTerminalOptions);
+        this.terminalManager = new TerminalManager(initialTerminal.port ?? 4008, resolveTerminalOptions);
 
         const rawQueueByChannel = (
             options.messagePolicy?.queue?.byChannel

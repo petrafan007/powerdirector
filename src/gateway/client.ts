@@ -40,7 +40,7 @@ type Pending = {
 };
 
 export type GatewayClientOptions = {
-  url?: string; // ws://127.0.0.1:3007
+  url?: string; // ws://127.0.0.1:4007
   connectDelayMs?: number;
   tickWatchMinIntervalMs?: number;
   token?: string;
@@ -105,7 +105,7 @@ export class GatewayClient {
     if (this.closed) {
       return;
     }
-    const url = this.opts.url ?? "ws://127.0.0.1:3007";
+    const url = this.opts.url ?? "ws://127.0.0.1:4007";
     if (this.opts.tlsFingerprint && !url.startsWith("wss://")) {
       this.opts.onConnectError?.(new Error("gateway tls fingerprint requires wss:// gateway url"));
       return;

@@ -856,11 +856,24 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 const aborted = await gatewayClient.abort(sessionId, runId);
                 if (!aborted) {
                     setGlobalError('Pause request failed. The active run may still be in progress.');
+                    // Resume listening so we don't drop output from the still-running job.
+                    pausedRunIdRef.current = null;
+                    setPaused(false);
+                    if (runId) {
+                        activeRunIdRef.current = runId;
+                        setLoading(true);
+                    }
                 }
             }
         } catch (err) {
             console.error('Failed to pause run:', err);
             setGlobalError('Failed to pause the active run.');
+            pausedRunIdRef.current = null;
+            setPaused(false);
+            if (runId) {
+                activeRunIdRef.current = runId;
+                setLoading(true);
+            }
         }
     };
 
@@ -896,8 +909,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         const effectiveProvider = selectedProvider;
         const effectiveModel = selectedModel;
 
-        // Validate attachments against model capabilities
-        if (effectiveAttachmentsForSend.length > 0 && effectiveModel && effectiveProvider) {
+        // Validate attachments against model capabilities (skip when using Default chain)
+        const skipAttachmentValidation =
+            effectiveProvider === 'default' || effectiveModel === 'default';
+        if (!skipAttachmentValidation && effectiveAttachmentsForSend.length > 0 && effectiveModel && effectiveProvider) {
             const validation = validateAttachments(
                 effectiveModel,
                 effectiveProvider,
@@ -1739,21 +1754,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     onClick={() => setProviderFailures(null)}
                 >
                     <div
-                        className="relative w-full max-w-lg mx-4 rounded-2xl shadow-2xl border overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+                        className="relative w-full max-w-lg mx-4 rounded-2xl shadow-2xl border-2 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
                         style={{
                             background: 'var(--pd-surface-panel)',
-                            borderColor: 'rgba(239,68,68,0.35)',
+                            borderColor: '#ef4444',
                         }}
                         onClick={e => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: 'var(--pd-border)', background: 'rgba(239,68,68,0.08)' }}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#f87171', flexShrink: 0 }}>
-                                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-                            </svg>
+                        <div className="flex items-center gap-3 px-5 py-4 border-b border-red-500/20" style={{ background: 'rgba(239,68,68,0.15)' }}>
+                            <AlertCircle className="text-red-500 shrink-0" size={24} />
                             <div className="flex-1">
-                                <p className="font-semibold text-sm" style={{ color: '#f87171' }}>All Models Failed</p>
-                                <p className="text-xs opacity-60 mt-0.5">Every model in the chain was tried and failed.</p>
+                                <p className="font-bold text-base text-red-400">All Models Failed</p>
+                                <p className="text-xs text-red-300 opacity-80 mt-0.5">Every model in the chain was attempted and returned an error.</p>
                             </div>
                             <button
                                 onClick={() => setProviderFailures(null)}
@@ -1854,14 +1867,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 {/* Message list */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-thin">
                     {globalError && (
-                        <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-200 text-sm animate-in fade-in slide-in-from-top-2">
-                            <AlertCircle className="shrink-0" size={18} />
-                            <div className="flex-1">
-                                <p className="font-semibold">Chat Error</p>
-                                <p className="opacity-80">{globalError}</p>
+                        <div className="flex items-center gap-4 p-4 bg-red-500/20 border-2 border-red-500 rounded-2xl text-red-100 text-sm shadow-xl animate-in fade-in slide-in-from-top-4 duration-300 ring-4 ring-red-500/10">
+                            <div className="bg-red-500 p-2 rounded-xl text-white shadow-lg">
+                                <AlertCircle size={20} />
                             </div>
-                            <button onClick={() => setGlobalError(null)} className="p-1 hover:bg-white/10 rounded-md transition-colors">
-                                <X size={16} />
+                            <div className="flex-1">
+                                <p className="font-bold text-base mb-0.5 text-red-200">Chat Error</p>
+                                <p className="opacity-90 leading-relaxed">{globalError}</p>
+                            </div>
+                            <button
+                                onClick={() => setGlobalError(null)}
+                                className="p-2 hover:bg-white/20 rounded-xl transition-all hover:scale-110 active:scale-95"
+                                title="Dismiss"
+                            >
+                                <X size={18} />
                             </button>
                         </div>
                     )}

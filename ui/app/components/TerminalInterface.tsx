@@ -10,7 +10,7 @@ interface TerminalInterfaceProps {
     sessionId?: string;
 }
 
-export default function TerminalInterface({ port = 3008, sessionId }: TerminalInterfaceProps) {
+export default function TerminalInterface({ port = 4008, sessionId }: TerminalInterfaceProps) {
     const terminalRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WebSocket | null>(null);
     const termRef = useRef<Terminal | null>(null);

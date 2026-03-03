@@ -91,6 +91,9 @@ export async function POST(request: Request) {
         const agentId = toStringOrUndefined(body.agentId);
         const reasoning = normalizeReasoning(body.reasoning);
 
+        let activeRunId: string | null = null;
+        let activeSessionKey: string | null = null;
+
         const stream = new ReadableStream({
             async start(controller) {
                 let streamClosed = false;
@@ -129,6 +132,7 @@ export async function POST(request: Request) {
 
                 try {
                     const runId = incomingRunId || `run_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+                    activeRunId = runId;
                     safeSend({ runId });
 
                     let { output: response, sessionId: targetSessionId } = await service.gateway.processInput(sessionId, message || (isContinue ? 'Continue.' : ''), {
@@ -144,6 +148,8 @@ export async function POST(request: Request) {
                         onStep,
                         runId
                     });
+
+                    activeSessionKey = targetSessionId;
 
                     let responseMeta: Record<string, any> | undefined;
                     let responseTimestamp: number | undefined;
@@ -165,6 +171,7 @@ export async function POST(request: Request) {
                                 if (found) {
                                     latestAssistant = found;
                                     targetSessionId = s.id;
+                                    activeSessionKey = s.id;
                                     break;
                                 }
                             }
@@ -182,13 +189,21 @@ export async function POST(request: Request) {
                         console.warn('[API/Chat] Failed to resolve response metadata:', metaErr);
                     }
 
-                    safeSend({ response, responseMeta, responseTimestamp });
+                    safeSend({ response, responseMeta, responseTimestamp, sessionId: targetSessionId });
                 } catch (error: any) {
                     console.error('[API/Chat] Stream Error:', error);
                     safeSend(serializeError(error));
                 } finally {
                     clearInterval(heartbeat);
                     safeClose();
+                }
+            },
+            cancel() {
+                if (!activeSessionKey || !activeRunId) return;
+                try {
+                    service.gateway.abortRun(activeSessionKey, activeRunId);
+                } catch (err) {
+                    console.warn('[API/Chat] cancel abort failed:', err);
                 }
             }
         });

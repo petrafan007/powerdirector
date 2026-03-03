@@ -42,6 +42,11 @@ interface WizardData {
     discordToken: string;
     telegramToken: string;
     slackToken: string;
+    // UI Features
+    maxChatTabs: number;
+    // Terminal Features
+    terminalPort: number;
+    terminalBind: string;
 }
 
 const DEFAULT_DATA: WizardData = {
@@ -64,6 +69,9 @@ const DEFAULT_DATA: WizardData = {
     discordToken: '',
     telegramToken: '',
     slackToken: '',
+    maxChatTabs: 5,
+    terminalPort: 4008,
+    terminalBind: 'lan',
 };
 
 interface ProviderDef {
@@ -73,19 +81,21 @@ interface ProviderDef {
     models: string[];
     description: string;
     authType?: 'key' | 'cli'; // 'cli' = authorize button, 'key' = API key input (default)
+    api?: string;
+    baseUrl?: string;
 }
 
 const PROVIDERS: ProviderDef[] = [
-    { id: 'anthropic', name: 'Anthropic', icon: '🟣', models: ['claude-opus-4.6', 'claude-opus-4.5', 'claude-sonnet-4', 'claude-haiku-4'], description: 'Claude models — best for coding and reasoning' },
-    { id: 'openai', name: 'OpenAI', icon: '🟢', models: ['gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.1-codex-max', 'gpt-5', 'gpt-4.1'], description: 'GPT models — versatile and widely supported' },
-    { id: 'gemini', name: 'Google Gemini', icon: '🔵', models: ['gemini-3-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Gemini REST API — great multimodal capabilities' },
-    { id: 'gemini-cli', name: 'Gemini CLI', icon: '🔵', models: ['gemini-3-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Headless Gemini CLI — authorize your Google account', authType: 'cli' },
-    { id: 'codex', name: 'Codex CLI', icon: '🟢', models: ['gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.1-codex-max'], description: 'OpenAI Codex CLI — unrestricted/full-auto mode', authType: 'cli' },
-    { id: 'grok', name: 'xAI Grok', icon: '⚫', models: ['grok-4.1', 'grok-4.1-fast', 'grok-4'], description: 'Grok models — real-time knowledge' },
-    { id: 'deepseek', name: 'DeepSeek', icon: '🟠', models: ['deepseek-v3.2', 'deepseek-r1'], description: 'DeepSeek models — cost-effective reasoning' },
-    { id: 'perplexity', name: 'Perplexity', icon: '🔮', models: ['sonar-pro', 'sonar'], description: 'Perplexity models — live web-grounded answers' },
-    { id: 'openrouter', name: 'OpenRouter', icon: '🌈', models: [], description: 'Access any model via unified API gateway' },
-    { id: 'ollama', name: 'Ollama (Local)', icon: '🏠', models: ['llama-4', 'qwen3'], description: 'Run models locally — no API key needed' },
+    { id: 'anthropic', name: 'Anthropic', icon: '🟣', models: ['claude-opus-4.6', 'claude-opus-4.5', 'claude-sonnet-4', 'claude-haiku-4'], description: 'Claude models — best for coding and reasoning', api: 'anthropic-messages', baseUrl: 'https://api.anthropic.com' },
+    { id: 'openai', name: 'OpenAI', icon: '🟢', models: ['gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.1-codex-max', 'gpt-5', 'gpt-4.1'], description: 'GPT models — versatile and widely supported', api: 'openai-responses', baseUrl: 'https://api.openai.com/v1' },
+    { id: 'gemini', name: 'Google Gemini', icon: '🔵', models: ['gemini-3-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Gemini REST API — great multimodal capabilities', api: 'google-generative-ai', baseUrl: 'https://generativelanguage.googleapis.com' },
+    { id: 'gemini-cli', name: 'Gemini CLI', icon: '🔵', models: ['gemini-3-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Headless Gemini CLI — authorize your Google account', authType: 'cli', api: 'google-generative-ai', baseUrl: 'https://generativelanguage.googleapis.com' },
+    { id: 'codex', name: 'Codex CLI', icon: '🟢', models: ['gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.1-codex-max'], description: 'OpenAI Codex CLI — unrestricted/full-auto mode', authType: 'cli', api: 'openai-responses', baseUrl: 'https://api.openai.com/v1' },
+    { id: 'grok', name: 'xAI Grok', icon: '⚫', models: ['grok-4.1', 'grok-4.1-fast', 'grok-4'], description: 'Grok models — real-time knowledge', api: 'openai-completions', baseUrl: 'https://api.x.ai/v1' },
+    { id: 'deepseek', name: 'DeepSeek', icon: '🟠', models: ['deepseek-v3.2', 'deepseek-r1'], description: 'DeepSeek models — cost-effective reasoning', api: 'openai-completions', baseUrl: 'https://api.deepseek.com' },
+    { id: 'perplexity', name: 'Perplexity', icon: '🔮', models: ['sonar-pro', 'sonar'], description: 'Perplexity models — live web-grounded answers', api: 'openai-completions', baseUrl: 'https://api.perplexity.ai' },
+    { id: 'openrouter', name: 'OpenRouter', icon: '🌈', models: [], description: 'Access any model via unified API gateway', api: 'openai-completions', baseUrl: 'https://openrouter.ai/api/v1' },
+    { id: 'ollama', name: 'Ollama (Local)', icon: '🏠', models: ['llama-4', 'qwen3'], description: 'Run models locally — no API key needed', api: 'ollama', baseUrl: 'http://127.0.0.1:11434/v1' },
 ];
 
 // Steps logic needs to be dynamic or we define strict order and skip
@@ -130,26 +140,31 @@ export default function SetupWizardPage() {
         loadWizardMetadata();
     }, [shouldForceRun]);
 
-    const loadWizardMetadata = async () => {
+    const loadWizardMetadata = async (ignoreForceParam = false) => {
         try {
             const res = await fetch('/api/config/wizard');
             const json = await res.json();
             const parsedMeta = parseWizardMeta(json?.data);
             if (parsedMeta) {
                 const currentVersion = isCurrentWizardVersion(parsedMeta, APP_VERSION);
-                const shouldSkip = shouldAutoSkipWizard(parsedMeta, APP_VERSION, shouldForceRun);
+                const effectiveForceRun = ignoreForceParam ? false : shouldForceRun;
+                const shouldSkip = shouldAutoSkipWizard(parsedMeta, APP_VERSION, effectiveForceRun);
 
                 setWizardMeta(parsedMeta);
                 setWizardMetaIsCurrentVersion(currentVersion);
-                setAutoSkippedToFinish(shouldSkip);
+                setAutoSkippedToFinish(shouldSkip && !effectiveForceRun);
 
-                if (shouldSkip) {
+                if (shouldSkip && !effectiveForceRun) {
                     setStep(STEPS.length - 1);
+                } else if (effectiveForceRun) {
+                    setStep(0);
+                    setAutoSkippedToFinish(false);
                 }
             } else {
                 setWizardMeta(null);
                 setWizardMetaIsCurrentVersion(false);
                 setAutoSkippedToFinish(false);
+                setStep(0); // If no meta, always start at step 0
             }
         } catch {
             // Keep wizard usable even if metadata load fails.
@@ -231,13 +246,33 @@ export default function SetupWizardPage() {
 
                 // Save model/provider config
                 const selectedProvider = PROVIDERS.find(p => p.id === data.provider);
-                if (selectedProvider && data.apiKey) {
+                if (selectedProvider && (data.apiKey || data.provider === 'ollama')) {
+                    const existingModelsRes = await fetch('/api/config/models');
+                    const existingModelsJson = await existingModelsRes.json();
+                    const existingModels = existingModelsJson?.data || {};
+                    const existingProviders = existingModels.providers || {};
+                    const existingProvider = existingProviders[data.provider] || {};
+                    const existingModelList = Array.isArray(existingProvider.models) ? existingProvider.models : [];
+
+                    // Ensure the selected model is in the provider's model list
+                    const hasModel = existingModelList.some((m: any) => m.id === data.model);
+                    const updatedModels = hasModel ? existingModelList : [
+                        ...existingModelList,
+                        { id: data.model, name: data.model }
+                    ];
+
                     await saveSection('models', {
+                        ...existingModels,
                         providers: {
+                            ...existingProviders,
                             [data.provider]: {
+                                ...existingProvider,
                                 name: selectedProvider.name,
-                                apiKey: data.apiKey,
-                                defaultModel: data.model || selectedProvider.models[0] || '',
+                                api: selectedProvider.api || existingProvider.api,
+                                baseUrl: selectedProvider.baseUrl || existingProvider.baseUrl,
+                                apiKey: data.apiKey || existingProvider.apiKey,
+                                defaultModel: data.model,
+                                models: updatedModels
                             }
                         }
                     });
@@ -246,7 +281,7 @@ export default function SetupWizardPage() {
                 // Save agent defaults
                 await saveSection('agents', {
                     defaults: {
-                        model: { primary: data.model || '' },
+                        model: { primary: `${data.provider}/${data.model}` },
                         workspace: data.workspace,
                         timeoutSeconds: data.timeoutSeconds,
                         compaction: { mode: data.compactionMode },
@@ -278,6 +313,12 @@ export default function SetupWizardPage() {
                     bind: data.gatewayBind,
                 });
 
+                // Save terminal config
+                await saveSection('terminal', {
+                    port: data.terminalPort,
+                    bind: data.terminalBind,
+                });
+
                 // Save channel credentials configured in the wizard
                 const channelUpdates: Record<string, any> = {};
                 if (data.discordToken) {
@@ -303,6 +344,31 @@ export default function SetupWizardPage() {
                     lastRunCommand: 'setup-wizard',
                     lastRunMode: 'local',
                 });
+
+                // Save UI config
+                const existingUiRes = await fetch('/api/config/ui');
+                const existingUiJson = await existingUiRes.json();
+                const existingUi = existingUiJson?.data || {};
+                await saveSection('ui', {
+                    ...existingUi,
+                    chatTabs: true,
+                    maxChatTabs: 5
+                });
+
+                // Initialize a default "General Chat" session so the user has something to start with.
+                try {
+                    const existingSessionsRes = await fetch('/api/sessions');
+                    const existingSessions = await existingSessionsRes.json();
+                    if (Array.isArray(existingSessions) && existingSessions.length === 0) {
+                        await fetch('/api/sessions', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: 'General Chat' }),
+                        });
+                    }
+                } catch (sErr) {
+                    console.warn('Failed to initialize default session:', sErr);
+                }
             }
 
             // Done!
@@ -311,7 +377,7 @@ export default function SetupWizardPage() {
             }
             setStep(STEPS.length - 1);
             setAutoSkippedToFinish(false);
-            await loadWizardMetadata();
+            await loadWizardMetadata(true);
         } catch (err: any) {
             setError('Failed to save configuration: ' + err.message);
         } finally {
@@ -407,7 +473,8 @@ export default function SetupWizardPage() {
 
                         {/* Error */}
                         {error && (
-                            <div className="mt-4 p-3 bg-red-900/30 border border-red-800 rounded-lg text-sm text-red-300">
+                            <div className="mt-4 p-4 bg-red-500/20 border-2 border-red-500 rounded-xl text-sm text-red-100 shadow-lg animate-pulse">
+                                <span className="font-bold mr-2">❌ Error:</span>
                                 {error}
                             </div>
                         )}
@@ -646,16 +713,33 @@ function StepProvider({ data, update }: { data: WizardData; update: <K extends k
             {selectedProvider && selectedProvider.models.length > 0 && (
                 <div className="mt-4">
                     <label className="block text-sm font-medium mb-1" style={{ color: 'var(--pd-text-main)' }}>Default Model</label>
-                    <select
-                        value={data.model}
+                    <div className="flex gap-2">
+                        <select
+                            value={data.model}
+                            onChange={e => update('model', e.target.value)}
+                            className="flex-1 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            style={inputStyle}
+                        >
+                            {selectedProvider.models.map(m => (
+                                <option key={m} value={m}>{m}</option>
+                            ))}
+                            <option value="custom">-- Custom Model --</option>
+                        </select>
+                    </div>
+                </div>
+            )}
+
+            {(data.model === 'custom' || (selectedProvider && selectedProvider.models.length === 0)) && (
+                <div className="mt-4">
+                    <label className="block text-sm font-medium mb-1" style={{ color: 'var(--pd-text-main)' }}>Custom Model ID</label>
+                    <input
+                        type="text"
+                        value={data.model === 'custom' ? '' : data.model}
                         onChange={e => update('model', e.target.value)}
-                        className="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g. z-ai/glm-4.5-air:free"
+                        className="w-full rounded-lg px-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         style={inputStyle}
-                    >
-                        {selectedProvider.models.map(m => (
-                            <option key={m} value={m}>{m}</option>
-                        ))}
-                    </select>
+                    />
                 </div>
             )}
         </div>
@@ -807,6 +891,47 @@ function StepFeatures({ data, update }: { data: WizardData; update: <K extends k
                             </select>
                         </div>
                     )}
+                </div>
+
+                {/* Terminal */}
+                <div className="p-4 rounded-xl" style={cardStyle}>
+                    <div className="flex items-center gap-2 mb-3">
+                        <span className="text-lg">⌨️</span>
+                        <div>
+                            <div className="text-sm font-medium" style={{ color: 'var(--pd-text-main)' }}>Terminal</div>
+                            <div className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Interactive shell settings</div>
+                        </div>
+                    </div>
+                    <div className="space-y-2 ml-7">
+                        <div className="flex gap-3">
+                            <div className="flex-1">
+                                <label className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Port</label>
+                                <input
+                                    type="number"
+                                    value={data.terminalPort}
+                                    min={1}
+                                    max={65535}
+                                    onChange={e => update('terminalPort', Number(e.target.value))}
+                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    style={inputStyle}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <label className="text-xs" style={{ color: 'var(--pd-text-muted)' }}>Bind</label>
+                                <select
+                                    value={data.terminalBind}
+                                    onChange={e => update('terminalBind', e.target.value)}
+                                    className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    style={inputStyle}
+                                >
+                                    <option value="lan">LAN</option>
+                                    <option value="localhost">Localhost</option>
+                                    <option value="0.0.0.0">All Interfaces</option>
+                                    <option value="tailnet">Tailnet</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Gateway */}

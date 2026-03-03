@@ -1,7 +1,7 @@
 import os from "node:os";
 import type { PowerDirectorConfig } from "../config/types.js";
 
-const DEFAULT_GATEWAY_PORT = 3007;
+const DEFAULT_GATEWAY_PORT = 4007;
 
 export type PairingSetupPayload = {
   url: string;

@@ -148,7 +148,7 @@ function buildConfig(argv: string[]): WorkerConfig {
     const apiMode: ApiMode = apiModeRaw === 'next' ? 'next' : 'node-host';
 
     const baseUrlDefault = apiMode === 'next'
-        ? 'http://127.0.0.1:3007'
+        ? 'http://127.0.0.1:4007'
         : 'http://127.0.0.1:18790';
     const baseUrl = normalizeBaseUrl(readValue(args, 'base-url', 'NODE_WORKER_BASE_URL') || baseUrlDefault);
 
@@ -429,7 +429,7 @@ function printUsage(): void {
 
 Options:
   --api-mode <node-host|next>       Endpoint mode (default: node-host)
-  --base-url <url>                  Base URL (default: http://127.0.0.1:18790 for node-host, http://127.0.0.1:3007 for next)
+  --base-url <url>                  Base URL (default: http://127.0.0.1:18790 for node-host, http://127.0.0.1:4007 for next)
   --token <token>                   Node host auth token (optional if server has no token)
   --node-id <id>                    Node ID (default: <hostname>-<pid>)
   --name <name>                     Display name (default: "Node Worker (<hostname>)")

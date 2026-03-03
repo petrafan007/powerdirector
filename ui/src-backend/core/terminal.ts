@@ -10,6 +10,7 @@ export interface TerminalRuntimeOptions {
     shell?: TerminalShell;
     autoTimeoutMinutes?: number;
     port?: number;
+    bind?: 'auto' | 'lan' | 'loopback' | 'custom' | 'tailnet';
 }
 
 interface TerminalSession {
@@ -59,7 +60,7 @@ export class TerminalManager {
     private readonly port: number;
     private readonly runtimeOptionsProvider?: () => TerminalRuntimeOptions;
 
-    constructor(port: number = 3008, runtimeOptionsProvider?: () => TerminalRuntimeOptions) {
+    constructor(port: number = 4008, runtimeOptionsProvider?: () => TerminalRuntimeOptions) {
         this.port = port;
         this.runtimeOptionsProvider = runtimeOptionsProvider;
     }
@@ -187,19 +188,30 @@ export class TerminalManager {
         }, 15000);
     }
 
+    private resolveListenHost(): string {
+        const options = this.runtimeOptionsProvider ? (this.runtimeOptionsProvider() || {}) : {};
+        const bind = options.bind;
+        if (bind === 'loopback' || bind === 'localhost') {
+            return '127.0.0.1';
+        }
+        return '0.0.0.0';
+    }
+
     public async start(): Promise<void> {
         return new Promise((resolve) => {
+            const host = this.resolveListenHost();
             this.wss = new WebSocketServer({
-                port: this.port
+                port: this.port,
+                host
             });
 
             this.wss.on('connection', (ws, req) => {
-                console.log(`[TerminalManager] New connection attempt from ${req.socket.remoteAddress} to ${req.url}`);
+                console.log(`[TerminalManager] New connection attempt from ${req.socket.remoteAddress} to ${req.url} (host: ${host})`);
                 this.handleConnection(ws, req);
             });
 
             this.wss.on('listening', () => {
-                console.log(`[TerminalManager] Listening on port ${this.port}`);
+                console.log(`[TerminalManager] Listening on ${host}:${this.port}`);
                 resolve();
             });
 

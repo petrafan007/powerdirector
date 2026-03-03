@@ -646,7 +646,8 @@ export class PowerDirectorService {
         const geminiSelection = resolveModelSelection(geminiCfg, geminiDefaultModel);
         if (geminiApiKey) {
             console.log('Registering Gemini Provider...');
-            router.addProvider(new GeminiProvider(geminiApiKey, geminiSelection.model, {
+            const model = geminiSelection.model || 'gemini-3-pro-preview';
+            router.addProvider(new GeminiProvider(geminiApiKey, model, {
                 timeoutMs: asPositiveNumber(geminiSelection.entry?.timeoutOverride),
                 maxTokens: asPositiveNumber(geminiSelection.entry?.maxTokens),
                 rateLimitPerMinute: asPositiveNumber(geminiSelection.entry?.rateLimit)
@@ -664,6 +665,7 @@ export class PowerDirectorService {
             fallbackApiKey?: string;
             fallbackRateLimit?: number;
             fallbackTimeoutMs?: number;
+            disableTools?: boolean;
         }) => {
             const cfg = providerConfig(opts.id);
             const apiKey = pickString(
@@ -686,7 +688,8 @@ export class PowerDirectorService {
                 defaultModel: selection.model,
                 timeoutMs: asPositiveNumber(selection.entry?.timeoutOverride) || opts.fallbackTimeoutMs,
                 maxTokens: asPositiveNumber(selection.entry?.maxTokens),
-                rateLimitPerMinute: asPositiveNumber(selection.entry?.rateLimit) || opts.fallbackRateLimit
+                rateLimitPerMinute: asPositiveNumber(selection.entry?.rateLimit) || opts.fallbackRateLimit,
+                disableTools: opts.disableTools
             }));
         };
 
@@ -770,7 +773,8 @@ export class PowerDirectorService {
             baseUrlEnvKey: 'INCEPTION_BASE_URL',
             modelEnvKey: 'INCEPTION_MODEL',
             defaultBaseURL: 'https://api.inceptionlabs.ai/v1',
-            defaultModel: pickString(env.INCEPTION_MODEL) || 'mercury-2'
+            defaultModel: pickString(env.INCEPTION_MODEL) || 'mercury-2',
+            disableTools: true
         });
 
         registerOpenAICompatibleProvider({
@@ -985,10 +989,13 @@ export class PowerDirectorService {
             const terminalPort = typeof terminalCfg.port === 'number' && Number.isFinite(terminalCfg.port)
                 ? terminalCfg.port
                 : undefined;
+            const bind = terminalCfg.bind;
+
             return {
                 shell,
                 autoTimeoutMinutes,
-                port: terminalPort
+                port: terminalPort,
+                bind
             };
         };
 
@@ -1069,7 +1076,7 @@ export class PowerDirectorService {
             },
             channelPolicies: channelsConfig,
             networkPolicy: {
-                port: config.gateway?.port ?? 3008,
+                port: config.gateway?.port ?? 4008,
                 mode: config.gateway?.mode ?? 'local',
                 bind: config.gateway?.bind ?? 'lan',
                 disableDeviceAuth: config.gateway?.controlUi?.dangerouslyDisableDeviceAuth ?? false,
