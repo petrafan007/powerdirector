@@ -1076,7 +1076,7 @@ export class PowerDirectorService {
             },
             channelPolicies: channelsConfig,
             networkPolicy: {
-                port: config.gateway?.port ?? 4008,
+                port: config.gateway?.port ?? 3008,
                 mode: config.gateway?.mode ?? 'local',
                 bind: config.gateway?.bind ?? 'lan',
                 disableDeviceAuth: config.gateway?.controlUi?.dangerouslyDisableDeviceAuth ?? false,

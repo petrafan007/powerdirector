@@ -217,14 +217,14 @@ npm install
 npm run dev
 ```
 
-Visit `http://localhost:4007/setup` to run the configuration wizard.
+Visit `http://localhost:3007/setup` to run the configuration wizard.
 
 ### Port Assignments
 
 PowerDirector uses the following ports for its various components:
 
-- **4007**: Web UI (Main interface)
-- **4008**: Terminal WebSocket (Integrated terminal - now with robust conflict handling)
+- **3007**: Web UI (Main interface)
+- **3008**: Terminal WebSocket (Integrated terminal - now with robust conflict handling)
 - **3012**: Gateway Control API (Background API service)
 - **3013**: Web Runtime / Asset Server (Used for serving generated files)
 
@@ -238,8 +238,8 @@ PowerDirector is configured to run behind a dedicated Cloudflare Tunnel on `powe
 
 #### Ingress Rules
 The tunnel uses path-based routing to support both the web UI and the terminal on a single hostname:
-- `powerdirector.example.com/` -> `http://localhost:4007` (Web UI)
-- `powerdirector.example.com/terminal-ws` -> `ws://localhost:4008` (Terminal WebSocket)
+- `powerdirector.example.com/` -> `http://localhost:3007` (Web UI)
+- `powerdirector.example.com/terminal-ws` -> `ws://localhost:3008` (Terminal WebSocket)
 
 Note: `TerminalInterface.tsx` has been modified to automatically detect standard HTTPS/HTTP ports and use the `/terminal-ws` path for WebSocket connections.
 
@@ -254,7 +254,7 @@ npm run worker:node -- --token YOUR_NODE_TOKEN --node-id dev-node --capabilities
 
 ```bash
 # Start a worker against Next.js API routes instead of the direct node-host port
-npm run worker:node -- --api-mode next --base-url http://127.0.0.1:4007 --token YOUR_NODE_TOKEN --node-id dev-node
+npm run worker:node -- --api-mode next --base-url http://127.0.0.1:3007 --token YOUR_NODE_TOKEN --node-id dev-node
 ```
 
 The worker:
@@ -295,7 +295,7 @@ Notes:
 - Set `NODE_WORKER_TOKEN` in `/etc/default/powerdirector-node-worker`.
 - If you run through Next.js API routes instead of the direct node-host port, set:
   - `NODE_WORKER_API_MODE=next`
-  - `NODE_WORKER_BASE_URL=http://127.0.0.1:4007`
+  - `NODE_WORKER_BASE_URL=http://127.0.0.1:3007`
 - Update `User`, `Group`, and `WorkingDirectory` in `deploy/systemd/powerdirector-node-worker.service` to match your host.
 
 ## 📝 Roadmap & Tasks

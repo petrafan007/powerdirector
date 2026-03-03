@@ -70,7 +70,7 @@ const DEFAULT_DATA: WizardData = {
     telegramToken: '',
     slackToken: '',
     maxChatTabs: 5,
-    terminalPort: 4008,
+    terminalPort: 3008,
     terminalBind: 'lan',
 };
 

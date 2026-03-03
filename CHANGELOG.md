@@ -23,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Abort failures no longer strand the UI in a paused state; chat resumes listening if a pause request is rejected or errors, preventing dropped output.
 - `/api/chat` streams now cancel gateway runs when the client disconnects, avoiding orphaned executions after a browser/tab closes.
 - Remote gateway mode has been reimplemented using the Gateway protocol (from OpenClaw) with proper `chat.send`/`chat.abort` requests and chat event streaming; local monolith mode remains available.
-- Default local ports moved to 4007 (UI/gateway) and 4008 (terminal WebSocket) and docs/scripts updated accordingly so staging and test environments match.
 
 ## [1.0.0-beta.2] - 2026-02-25
 

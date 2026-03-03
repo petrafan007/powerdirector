@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-PORTS=(4007 4008)
+PORTS=(3007 3008)
 
 for PORT in "${PORTS[@]}"; do
     echo "[Port Safety] Checking for processes on port $PORT..."

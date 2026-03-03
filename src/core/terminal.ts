@@ -60,7 +60,7 @@ export class TerminalManager {
     private readonly port: number;
     private readonly runtimeOptionsProvider?: () => TerminalRuntimeOptions;
 
-    constructor(port: number = 4008, runtimeOptionsProvider?: () => TerminalRuntimeOptions) {
+    constructor(port: number = 3008, runtimeOptionsProvider?: () => TerminalRuntimeOptions) {
         this.port = port;
         this.runtimeOptionsProvider = runtimeOptionsProvider;
     }
