@@ -7,6 +7,7 @@
   "scripts": {
     "test": "vitest run src/gateway/call.test.ts src/config/redact-snapshot.test.ts src/memory/qmd-manager.test.ts",
     "build": "tsc",
+    "ui:build": "pnpm -C ui build",
     "dev": "./setup-ports.sh && tsx src/index.ts gateway --allow-unconfigured",
     "start": "./setup-ports.sh && node dist/index.js",
     "worker:node": "ts-node bin/node-worker.ts"
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.6",
     "@types/glob": "^8.1.0",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^25.2.3",
@@ -42,6 +44,7 @@
     "@buape/carbon": "^0.14.0",
     "@clack/prompts": "^1.0.1",
     "@google/generative-ai": "^0.24.1",
+    "@grammyjs/types": "^3.24.0",
     "@grammyjs/runner": "^2.0.3",
     "@grammyjs/transformer-throttler": "^1.2.1",
     "@homebridge/ciao": "^1.3.5",
@@ -52,6 +55,7 @@
     "@mariozechner/pi-agent-core": "0.53.0",
     "@mariozechner/pi-ai": "0.53.0",
     "@mariozechner/pi-coding-agent": "0.53.0",
+    "@mariozechner/pi-tui": "^0.53.0",
     "@matrix-org/matrix-sdk-crypto-nodejs": "^0.4.0",
     "@microsoft/agents-hosting": "^1.3.1",
     "@mozilla/readability": "^0.6.0",
