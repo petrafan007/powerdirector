@@ -8,7 +8,12 @@ import { VERSION } from "../version.js";
 import { resolvePowerDirectorPackageRoot } from "./powerdirector-root.js";
 import { normalizeVersionTag, resolveGitChannelRelease } from "./update-git-channel.js";
 import { normalizeUpdateChannel, DEFAULT_PACKAGE_CHANNEL } from "./update-channels.js";
-import { compareSemverStrings, resolveNpmChannelTag, checkUpdateStatus } from "./update-check.js";
+import {
+  compareSemverStrings,
+  resolveNpmChannelTag,
+  checkUpdateStatus,
+  type UpdateCheckResult,
+} from "./update-check.js";
 
 type UpdateCheckState = {
   lastCheckedAt?: string;
@@ -39,6 +44,11 @@ export function resetUpdateAvailableStateForTest(): void {
 
 const UPDATE_CHECK_FILENAME = "update-check.json";
 const UPDATE_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
+type CurrentInstallState = {
+  currentVersion: string;
+  currentSha?: string | null;
+};
 
 function shouldSkipCheck(allowInTests: boolean): boolean {
   if (allowInTests) {
@@ -91,21 +101,40 @@ function setUpdateAvailableCache(params: {
   params.onUpdateAvailableChange?.(params.next);
 }
 
-function resolvePersistedUpdateAvailable(state: UpdateCheckState): UpdateAvailable | null {
+function resolvePersistedUpdateAvailable(
+  state: UpdateCheckState,
+  current: CurrentInstallState,
+): UpdateAvailable | null {
   const latestVersion = state.lastAvailableVersion?.trim();
   if (!latestVersion) {
     return null;
   }
-  const cmp = compareSemverStrings(VERSION, latestVersion);
-  if (cmp == null || cmp >= 0) {
+  const cmp = compareSemverStrings(current.currentVersion, latestVersion);
+  const latestSha = state.lastAvailableSha?.trim() || null;
+  const currentSha = current.currentSha?.trim() || null;
+  const sameVersionShaUpdate =
+    current.currentVersion === latestVersion &&
+    Boolean(latestSha) &&
+    Boolean(currentSha) &&
+    latestSha !== currentSha;
+
+  if (!(cmp != null && cmp < 0) && !sameVersionShaUpdate) {
     return null;
   }
   const channel = state.lastAvailableTag?.trim() || DEFAULT_PACKAGE_CHANNEL;
   return {
-    currentVersion: VERSION,
+    currentVersion: current.currentVersion,
     latestVersion,
     channel,
-    ...(state.lastAvailableSha?.trim() ? { latestSha: state.lastAvailableSha.trim() } : {}),
+    ...(latestSha ? { latestSha } : {}),
+  };
+}
+
+function resolveCurrentInstallState(status: UpdateCheckResult): CurrentInstallState {
+  return {
+    currentVersion:
+      status.installKind === "git" ? normalizeVersionTag(status.git?.tag ?? null) ?? VERSION : VERSION,
+    currentSha: status.installKind === "git" ? status.git?.sha ?? null : null,
   };
 }
 
@@ -131,7 +160,19 @@ export async function runGatewayUpdateCheck(params: {
   const state = await readState(statePath);
   const now = Date.now();
   const lastCheckedAt = state.lastCheckedAt ? Date.parse(state.lastCheckedAt) : null;
-  const persistedAvailable = resolvePersistedUpdateAvailable(state);
+  const root = await resolvePowerDirectorPackageRoot({
+    moduleUrl: import.meta.url,
+    argv1: process.argv[1],
+    cwd: process.cwd(),
+  });
+  const currentStatus = await checkUpdateStatus({
+    root,
+    timeoutMs: 2500,
+    fetchGit: false,
+    includeRegistry: false,
+  });
+  const currentInstall = resolveCurrentInstallState(currentStatus);
+  const persistedAvailable = resolvePersistedUpdateAvailable(state, currentInstall);
   setUpdateAvailableCache({
     next: persistedAvailable,
     onUpdateAvailableChange: params.onUpdateAvailableChange,
@@ -144,19 +185,13 @@ export async function runGatewayUpdateCheck(params: {
     }
   }
 
-  const root = await resolvePowerDirectorPackageRoot({
-    moduleUrl: import.meta.url,
-    argv1: process.argv[1],
-    cwd: process.cwd(),
-  });
   const status = await checkUpdateStatus({
     root,
     timeoutMs: 2500,
     fetchGit: true,
     includeRegistry: false,
   });
-  const currentVersion =
-    status.installKind === "git" ? normalizeVersionTag(status.git?.tag ?? null) ?? VERSION : VERSION;
+  const { currentVersion } = resolveCurrentInstallState(status);
 
   const nextState: UpdateCheckState = {
     ...state,

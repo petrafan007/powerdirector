@@ -214,6 +214,12 @@ describe("update-startup", () => {
       ),
       "utf-8",
     );
+    vi.mocked(resolvePowerDirectorPackageRoot).mockResolvedValue("/opt/powerdirector");
+    vi.mocked(checkUpdateStatus).mockResolvedValue({
+      root: "/opt/powerdirector",
+      installKind: "package",
+      packageManager: "npm",
+    } satisfies UpdateCheckResult);
 
     const onUpdateAvailableChange = vi.fn();
     await runGatewayUpdateCheck({
@@ -224,7 +230,12 @@ describe("update-startup", () => {
       onUpdateAvailableChange,
     });
 
-    expect(vi.mocked(checkUpdateStatus)).not.toHaveBeenCalled();
+    expect(vi.mocked(checkUpdateStatus)).toHaveBeenCalledWith({
+      root: "/opt/powerdirector",
+      timeoutMs: 2500,
+      fetchGit: false,
+      includeRegistry: false,
+    });
     expect(onUpdateAvailableChange).toHaveBeenCalledWith({
       currentVersion: "1.0.0",
       latestVersion: "2.0.0",
@@ -234,6 +245,69 @@ describe("update-startup", () => {
       currentVersion: "1.0.0",
       latestVersion: "2.0.0",
       channel: "latest",
+    });
+  });
+
+  it("hydrates cached same-version git updates during throttle window when the target sha differs", async () => {
+    const statePath = path.join(tempDir, "update-check.json");
+    await fs.writeFile(
+      statePath,
+      JSON.stringify(
+        {
+          lastCheckedAt: new Date(Date.now()).toISOString(),
+          lastAvailableVersion: "1.0.0",
+          lastAvailableTag: "v1.0.0",
+          lastAvailableSha: "def456",
+        },
+        null,
+        2,
+      ),
+      "utf-8",
+    );
+    vi.mocked(resolvePowerDirectorPackageRoot).mockResolvedValue("/opt/powerdirector");
+    vi.mocked(checkUpdateStatus).mockResolvedValue({
+      root: "/opt/powerdirector",
+      installKind: "git",
+      packageManager: "pnpm",
+      git: {
+        root: "/opt/powerdirector",
+        sha: "abc123",
+        tag: "v1.0.0",
+        branch: "HEAD",
+        upstream: null,
+        dirty: false,
+        ahead: 0,
+        behind: 0,
+        fetchOk: null,
+      },
+    } satisfies UpdateCheckResult);
+
+    const onUpdateAvailableChange = vi.fn();
+    await runGatewayUpdateCheck({
+      cfg: { update: { channel: "stable" } },
+      log: { info: vi.fn() },
+      isNixMode: false,
+      allowInTests: true,
+      onUpdateAvailableChange,
+    });
+
+    expect(vi.mocked(checkUpdateStatus)).toHaveBeenCalledWith({
+      root: "/opt/powerdirector",
+      timeoutMs: 2500,
+      fetchGit: false,
+      includeRegistry: false,
+    });
+    expect(onUpdateAvailableChange).toHaveBeenCalledWith({
+      currentVersion: "1.0.0",
+      latestVersion: "1.0.0",
+      channel: "v1.0.0",
+      latestSha: "def456",
+    });
+    expect(getUpdateAvailable()).toEqual({
+      currentVersion: "1.0.0",
+      latestVersion: "1.0.0",
+      channel: "v1.0.0",
+      latestSha: "def456",
     });
   });
 
