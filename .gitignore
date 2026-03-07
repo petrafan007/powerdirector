@@ -9,10 +9,10 @@ logs/
 !ui/app/api/logs/**
 nohup.out
 *.log
-# media/  <-- Commented out to allow src/media
+/media/
 agent/media/
-diagnostics/*.ndjson
-memory/*.md
+/diagnostics/
+/memory/
 moltbook-adk/
 gemini_tmp_images/
 /state/
