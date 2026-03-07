@@ -110,7 +110,7 @@ const STEPS = [
     { id: 'finish', title: 'All Set!' },
 ];
 
-const APP_VERSION = process.env.NEXT_PUBLIC_PD_VERSION || '1.0.0';
+const APP_VERSION = process.env.NEXT_PUBLIC_PD_VERSION || '0.0.0';
 
 /* ── Shared inline style helpers ── */
 const inputStyle = {
