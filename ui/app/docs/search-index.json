@@ -91,11 +91,11 @@
     "snippet": "MANUAL_DOCUMENTATION_REQUIRED_FOR_update.checkOnStart"
   },
   {
-    "title": "Auto Install",
+    "title": "Automatic Installs",
     "section": "Updates",
-    "path": "/docs/config/update#update.autoInstall",
-    "rawPath": "update.autoInstall",
-    "snippet": "MANUAL_DOCUMENTATION_REQUIRED_FOR_update.autoInstall"
+    "path": "/docs/config/update#update.auto.enabled",
+    "rawPath": "update.auto.enabled",
+    "snippet": "MANUAL_DOCUMENTATION_REQUIRED_FOR_update.auto.enabled"
   },
   {
     "title": "Profiles",

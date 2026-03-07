@@ -29,14 +29,14 @@ export default function UpdateConfigDocs() {
                         <p>A global toggle that dictates whether the Gateway server initiates a `git fetch` or `npm update` upstream check the moment the node process boots. Setting this to `true` is convenient for single-node setups, but setting it to `false` is mandatory for highly-scalable multi-node topologies to prevent Thundering Herd DDoSing on the package registry during massive orchestration scale-outs.</p>
                     </div>
                 </div>
-                <div id="update.autoInstall" className="bg-[var(--pd-surface-panel)] border border-[var(--pd-border)] p-6 rounded-xl shadow-sm hover:border-[var(--pd-blue-500)] transition-colors scroll-mt-24">
-                    <h3 className="font-sans text-xl font-bold mt-0 mb-3 text-[var(--pd-text-main)]">{`Auto Install Updates`}</h3>
+                <div id="update.auto.enabled" className="bg-[var(--pd-surface-panel)] border border-[var(--pd-border)] p-6 rounded-xl shadow-sm hover:border-[var(--pd-blue-500)] transition-colors scroll-mt-24">
+                    <h3 className="font-sans text-xl font-bold mt-0 mb-3 text-[var(--pd-text-main)]">{`Automatic Installs`}</h3>
                     <div className="flex flex-wrap gap-3 mb-4 text-xs font-mono opacity-80">
-                        <span className="bg-[var(--pd-surface-hover)] border border-[var(--pd-border)] px-3 py-1.5 rounded">Path: <span className="text-[var(--pd-text-main)] font-semibold">{`update.autoInstall`}</span></span>
+                        <span className="bg-[var(--pd-surface-hover)] border border-[var(--pd-border)] px-3 py-1.5 rounded">Path: <span className="text-[var(--pd-text-main)] font-semibold">{`update.auto.enabled`}</span></span>
                         <span className="bg-[var(--pd-surface-hover)] border border-[var(--pd-border)] px-3 py-1.5 rounded">Type: <span className="text-[var(--pd-text-main)] font-semibold">{`boolean`}</span></span>
                     </div>
                     <div className="text-[0.95rem] text-[var(--pd-text-muted)] m-0 leading-relaxed font-normal">
-                        <p>When combined with `checkOnStart` or the background updater Cron Job, this flag dictates whether the system will autonomously rip-and-replace the live executable. If `true`, the system will download the patch, compile if necessary, automatically gracefully shut down the Gateway, and reboot. Use with major caution in production, as autonomous installations skip manual verification checkpoints.</p>
+                        <p>When enabled, PowerDirector installs the newest release from the currently selected channel. Git checkouts follow GitHub branches/tags, and package installs follow npm tags. Stable installs wait for the configured delay and jitter window; beta and dev installs apply as soon as a newer release is found.</p>
                     </div>
                 </div>
             </div>

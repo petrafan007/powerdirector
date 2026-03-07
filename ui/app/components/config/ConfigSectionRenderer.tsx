@@ -338,7 +338,14 @@ function renderNode(
     }
 
     if (type === 'number' || type === 'integer') {
-        const resolved = Number(valueForSchema(value, schema));
+        const rawValue =
+            value !== undefined
+                ? value
+                : schema.default !== undefined
+                    ? schema.default
+                    : undefined;
+        const resolved =
+            typeof rawValue === 'number' && Number.isFinite(rawValue) ? rawValue : undefined;
         return <NumberField label={label} description={description} value={resolved} onChange={(v) => patch(path, v)} />;
     }
 

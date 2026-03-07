@@ -3,8 +3,10 @@ import path from "node:path";
 import { formatCliCommand } from "../cli/command-format.js";
 import type { loadConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
+import { runCommandWithTimeout } from "../process/exec.js";
 import { VERSION } from "../version.js";
 import { resolvePowerDirectorPackageRoot } from "./powerdirector-root.js";
+import { normalizeVersionTag, resolveGitChannelRelease } from "./update-git-channel.js";
 import { normalizeUpdateChannel, DEFAULT_PACKAGE_CHANNEL } from "./update-channels.js";
 import { compareSemverStrings, resolveNpmChannelTag, checkUpdateStatus } from "./update-check.js";
 
@@ -12,14 +14,17 @@ type UpdateCheckState = {
   lastCheckedAt?: string;
   lastNotifiedVersion?: string;
   lastNotifiedTag?: string;
+  lastNotifiedSha?: string;
   lastAvailableVersion?: string;
   lastAvailableTag?: string;
+  lastAvailableSha?: string;
 };
 
 export type UpdateAvailable = {
   currentVersion: string;
   latestVersion: string;
   channel: string;
+  latestSha?: string | null;
 };
 
 let updateAvailableCache: UpdateAvailable | null = null;
@@ -70,7 +75,8 @@ function sameUpdateAvailable(a: UpdateAvailable | null, b: UpdateAvailable | nul
   return (
     a.currentVersion === b.currentVersion &&
     a.latestVersion === b.latestVersion &&
-    a.channel === b.channel
+    a.channel === b.channel &&
+    (a.latestSha ?? null) === (b.latestSha ?? null)
   );
 }
 
@@ -99,6 +105,7 @@ function resolvePersistedUpdateAvailable(state: UpdateCheckState): UpdateAvailab
     currentVersion: VERSION,
     latestVersion,
     channel,
+    ...(state.lastAvailableSha?.trim() ? { latestSha: state.lastAvailableSha.trim() } : {}),
   };
 }
 
@@ -148,6 +155,8 @@ export async function runGatewayUpdateCheck(params: {
     fetchGit: true,
     includeRegistry: false,
   });
+  const currentVersion =
+    status.installKind === "git" ? normalizeVersionTag(status.git?.tag ?? null) ?? VERSION : VERSION;
 
   const nextState: UpdateCheckState = {
     ...state,
@@ -170,11 +179,42 @@ export async function runGatewayUpdateCheck(params: {
   let isUpdateAvailable = false;
   let tag = "";
   let latestAvailableVersion = "";
+  let latestAvailableSha: string | null = null;
 
   if (status.installKind === "git" && channel === "dev") {
     tag = "dev";
     isUpdateAvailable = (status.git?.behind ?? 0) > 0;
     latestAvailableVersion = isUpdateAvailable ? "newer-commits" : VERSION;
+  } else if (status.installKind === "git") {
+    const gitChannel = channel === "beta" ? "beta" : "stable";
+    const gitRoot = status.root ?? root;
+    if (!gitRoot) {
+      await writeState(statePath, nextState);
+      return;
+    }
+    const resolved = await resolveGitChannelRelease(
+      async (argv, options) => {
+        const res = await runCommandWithTimeout(argv, options);
+        return { stdout: res.stdout, stderr: res.stderr, code: res.code };
+      },
+      gitRoot,
+      2500,
+      gitChannel,
+    );
+    if (!resolved.version || !resolved.tag) {
+      await writeState(statePath, nextState);
+      return;
+    }
+    tag = resolved.tag;
+    latestAvailableSha = resolved.sha;
+    const cmp = compareSemverStrings(currentVersion, resolved.version);
+    isUpdateAvailable =
+      (cmp != null && cmp < 0) ||
+      (cmp === 0 &&
+        Boolean(resolved.sha) &&
+        Boolean(status.git?.sha) &&
+        resolved.sha !== status.git?.sha);
+    latestAvailableVersion = resolved.version;
   } else {
     const resolved = await resolveNpmChannelTag({ channel, timeoutMs: 2500 });
     if (!resolved.version) {
@@ -182,16 +222,17 @@ export async function runGatewayUpdateCheck(params: {
       return;
     }
     tag = resolved.tag;
-    const cmp = compareSemverStrings(VERSION, resolved.version);
+    const cmp = compareSemverStrings(currentVersion, resolved.version);
     isUpdateAvailable = cmp != null && cmp < 0;
     latestAvailableVersion = resolved.version;
   }
 
   if (isUpdateAvailable) {
     const nextAvailable: UpdateAvailable = {
-      currentVersion: VERSION,
+      currentVersion,
       latestVersion: latestAvailableVersion,
       channel: tag,
+      ...(latestAvailableSha ? { latestSha: latestAvailableSha } : {}),
     };
     setUpdateAvailableCache({
       next: nextAvailable,
@@ -199,18 +240,23 @@ export async function runGatewayUpdateCheck(params: {
     });
     nextState.lastAvailableVersion = latestAvailableVersion;
     nextState.lastAvailableTag = tag;
+    nextState.lastAvailableSha = latestAvailableSha ?? undefined;
     const shouldNotify =
-      state.lastNotifiedVersion !== latestAvailableVersion || state.lastNotifiedTag !== tag;
+      state.lastNotifiedVersion !== latestAvailableVersion ||
+      state.lastNotifiedTag !== tag ||
+      (state.lastNotifiedSha ?? null) !== (latestAvailableSha ?? null);
     if (shouldNotify) {
       params.log.info(
-        `update available (${tag}): ${latestAvailableVersion} (current v${VERSION}). Run: ${formatCliCommand("powerdirector update")}`,
+        `update available (${tag}): ${latestAvailableVersion} (current v${currentVersion}). Run: ${formatCliCommand("powerdirector update")}`,
       );
       nextState.lastNotifiedVersion = latestAvailableVersion;
       nextState.lastNotifiedTag = tag;
+      nextState.lastNotifiedSha = latestAvailableSha ?? undefined;
     }
   } else {
     delete nextState.lastAvailableVersion;
     delete nextState.lastAvailableTag;
+    delete nextState.lastAvailableSha;
     setUpdateAvailableCache({
       next: null,
       onUpdateAvailableChange: params.onUpdateAvailableChange,

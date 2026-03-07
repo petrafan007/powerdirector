@@ -73,14 +73,20 @@ export function SelectField({ label, description, value, options, onChange }: Se
 interface NumberFieldProps {
     label: string;
     description?: string;
-    value: number;
+    value?: number;
     min?: number;
     max?: number;
     step?: number;
-    onChange: (val: number) => void;
+    onChange: (val: number | undefined) => void;
 }
 
 export function NumberField({ label, description, value, min, max, step, onChange }: NumberFieldProps) {
+    const [inputValue, setInputValue] = useState(value === undefined ? '' : String(value));
+
+    useEffect(() => {
+        setInputValue(value === undefined ? '' : String(value));
+    }, [value]);
+
     return (
         <div className="py-3 px-1">
             <label className="block text-sm font-medium mb-1" style={{ color: 'var(--pd-text-main)' }}>{label}</label>
@@ -88,11 +94,22 @@ export function NumberField({ label, description, value, min, max, step, onChang
             <div className="flex items-center gap-3">
                 <input
                     type="number"
-                    value={value}
+                    value={inputValue}
                     min={min}
                     max={max}
                     step={step}
-                    onChange={(e) => onChange(Number(e.target.value))}
+                    onChange={(e) => {
+                        const next = e.target.value;
+                        setInputValue(next);
+                        if (next.trim() === '') {
+                            onChange(undefined);
+                            return;
+                        }
+                        const parsed = Number(next);
+                        if (Number.isFinite(parsed)) {
+                            onChange(parsed);
+                        }
+                    }}
                     className="w-32 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     style={{
                         background: 'var(--pd-surface-panel)',

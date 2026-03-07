@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed chat "Unknown provider" failures when the UI is set to `Default` by treating `default` provider/model as "no explicit override" in both the chat UI payload and backend route normalization.
 - Fixed Terminal disconnects on non-default ports by loading `terminal.port` from config and wiring the Terminal UI websocket to that configured port.
 - Prevented false setup reruns by treating legacy wizard completion markers (`lastRunMode`/`lastRunVersion`/`lastRunCommand`) as valid completion state when `lastRunAt` is missing.
+- Repo-backed installs now use GitHub git release channels correctly for `stable`/`beta`/`dev`, including detection of force-updated tags that keep the same version string.
+- Git-based updates now preserve `powerdirector.config.json` during checkout/build so configured instances can install updates without config drift or dirty-worktree blocks.
+- Config > Updates now removes the duplicate legacy `Auto Install` toggle, keeps `Auto -> Enabled` as the only automatic install control, and adds an `Install Now` action with a themed progress modal plus explicit `Restart`/`Close` completion actions.
+- The embedded monolith runtime now uses the git-aware startup checker/update daemon, so Config > Updates and startup auto-checks follow the same channel rules as the standalone gateway.
 
 ## [1.0.0-beta.2] - 2026-02-25
 

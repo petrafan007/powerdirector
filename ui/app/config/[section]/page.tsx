@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from 'react';
 import SettingsForm from '../../components/config/SettingsForm';
 import ConfigSectionRenderer from '../../components/config/ConfigSectionRenderer';
+import UpdateSection from '../../components/config/UpdateSection';
 import { useSettings } from '../SettingsContext';
 
 const SECTION_META: Record<string, { title: string; description: string }> = {
@@ -114,12 +115,20 @@ export default function SectionPage({ params }: { params: Promise<{ section: str
                     );
                 }
                 return (
-                    <ConfigSectionRenderer
-                        sectionId={section}
-                        schema={schema}
-                        data={data}
-                        onUpdate={update}
-                    />
+                    section === 'update' ? (
+                        <UpdateSection
+                            schema={schema}
+                            data={data}
+                            onUpdate={update}
+                        />
+                    ) : (
+                        <ConfigSectionRenderer
+                            sectionId={section}
+                            schema={schema}
+                            data={data}
+                            onUpdate={update}
+                        />
+                    )
                 );
             }}
         </SettingsForm>

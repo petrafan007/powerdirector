@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveNpmChannelTag } from "./update-check.js";
+import { compareSemverStrings, resolveNpmChannelTag } from "./update-check.js";
 
 describe("resolveNpmChannelTag", () => {
   let versionByTag: Record<string, string | null>;
@@ -42,5 +42,10 @@ describe("resolveNpmChannelTag", () => {
     const resolved = await resolveNpmChannelTag({ channel: "beta", timeoutMs: 1000 });
 
     expect(resolved).toEqual({ tag: "beta", version: "1.0.2-beta.1" });
+  });
+
+  it("treats prereleases as older than the matching stable release", () => {
+    expect(compareSemverStrings("1.1.0-beta.1", "1.1.0")).toBe(-1);
+    expect(compareSemverStrings("v1.1.0-beta.1", "v1.1.0")).toBe(-1);
   });
 });

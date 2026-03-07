@@ -34,12 +34,7 @@ const terminalSchema = z
   .optional();
 
 const updateBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.update) as z.AnyZodObject;
-export const updateSchema = updateBaseSchema
-  .safeExtend({
-    autoInstall: z.boolean().optional(),
-  })
-  .strict()
-  .optional();
+export const updateSchema = updateBaseSchema.strict().optional();
 
 const authBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.auth) as z.AnyZodObject;
 export const authSchema = authBaseSchema

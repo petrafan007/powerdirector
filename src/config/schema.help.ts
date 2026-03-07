@@ -4,7 +4,16 @@ export const FIELD_HELP: Record<string, string> = {
   "meta.lastTouchedVersion": "Auto-set when PowerDirector writes the config.",
   "meta.lastTouchedAt": "ISO timestamp of the last config write (auto-set).",
   "update.channel": 'Update channel for git + npm installs ("stable", "beta", or "dev").',
-  "update.checkOnStart": "Check for npm updates when the gateway starts (default: true).",
+  "update.checkOnStart":
+    "Check for updates on startup using GitHub tags/branches for git installs and npm tags for package installs (default: true).",
+  "update.auto.enabled":
+    "Enable unattended installs for the selected channel. Stable waits for the delay/jitter window; beta/dev install as soon as an update is found.",
+  "update.auto.stableDelayHours":
+    "Minimum delay before a discovered stable update auto-installs (default: 24 hours).",
+  "update.auto.stableJitterHours":
+    "Additional random delay added to stable auto-installs to avoid synchronized rollouts (default: 12 hours).",
+  "update.auto.betaCheckIntervalHours":
+    "Polling interval for beta/dev auto-update checks in hours (default: 4).",
   "gateway.remote.url": "Remote Gateway WebSocket URL (ws:// or wss://).",
   "gateway.remote.tlsFingerprint":
     "Expected sha256 TLS fingerprint for the remote gateway (pin to avoid MITM).",

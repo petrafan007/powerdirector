@@ -18,7 +18,8 @@ import { getRuntimeLogger, configureRuntimeLogging } from '@/src-backend/core/lo
 import { MediaManager } from '@/src-backend/core/media';
 import { MemoryManager } from '@/src-backend/core/memory';
 import { TalkManager } from '@/src-backend/core/talk';
-import { UpdateManager } from '@/src-backend/core/update-manager';
+import { UpdateDaemon } from '@/src-backend/infra/update-daemon';
+import { runGatewayUpdateCheck } from '@/src-backend/infra/update-startup';
 import type { TerminalRuntimeOptions } from '@/src-backend/core/terminal';
 import { ProviderRouter, Provider } from '@/src-backend/reliability/router';
 import { CircuitBreaker } from '@/src-backend/reliability/circuit-breaker';
@@ -42,6 +43,7 @@ import { loadAuthProfileStore } from './auth-profile-store';
 import { resolveAuthCredential } from './auth-resolver';
 import { getConfigManager } from './config-instance';
 import { resolvePowerDirectorRoot } from './paths';
+import { scheduleAppProcessRestart } from './process-restart';
 
 function pickString(...values: Array<string | undefined | null>): string | undefined {
     for (const value of values) {
@@ -438,7 +440,6 @@ export class PowerDirectorService {
     public webRuntime: WebRuntimeServer;
     public nodeHost: NodeHostServer;
     public diagnosticsManager: DiagnosticsManager;
-    public updateManager: UpdateManager;
     public skillsManager: SkillsManager;
     public approvalsManager: ApprovalsManager;
     public bindingsManager: BindingsManager;
@@ -450,6 +451,7 @@ export class PowerDirectorService {
     public memoryManager: MemoryManager;
     public pluginsManager: PluginsManager;
     public usageManager: UsageManager;
+    private updateDaemon: UpdateDaemon | null = null;
 
     private constructor() {
         const rootDir = resolvePowerDirectorRoot();
@@ -459,23 +461,25 @@ export class PowerDirectorService {
         // Initialize logging
         configureRuntimeLogging(config.logging || {}, rootDir);
         console.log('Initializing PowerDirector Service...');
-        let packageName = 'powerdirector';
-        let packageVersion = '0.0.0';
-        try {
-            const pkg = JSON.parse(fs.readFileSync(`${rootDir}/package.json`, 'utf-8'));
-            packageName = pickString(pkg?.name, packageName) || packageName;
-            packageVersion = pickString(pkg?.version, packageVersion) || packageVersion;
-        } catch (error: any) {
-            console.warn(`Failed to read package metadata for update checks: ${error.message}`);
-        }
-        this.updateManager = new UpdateManager(config.update || {}, {
-            packageName,
-            currentVersion: packageVersion,
-            cwd: rootDir
-        });
-        this.updateManager.runStartupCheck().catch((error) => {
+        const runtimeLogger = getRuntimeLogger();
+        runGatewayUpdateCheck({
+            cfg: config,
+            log: runtimeLogger,
+            isNixMode: false
+        }).catch((error) => {
             console.warn('Startup update check failed:', error);
         });
+        this.updateDaemon = new UpdateDaemon(config, false, {
+            onUpdated: async () => {
+                const restart = scheduleAppProcessRestart();
+                if (!restart.ok) {
+                    runtimeLogger.warn(
+                        `auto-update installed successfully but restart failed (${restart.mode}${restart.detail ? `: ${restart.detail}` : ''})`
+                    );
+                }
+            }
+        });
+        this.updateDaemon.start();
 
         const modelProviders = (config.models?.providers || {}) as Record<string, any>;
         const channelsConfig = (config.channels || {}) as Record<string, any>;
@@ -1286,6 +1290,11 @@ export class PowerDirectorService {
                 await instance.memoryManager.stop();
             } catch (err) {
                 console.warn('Failed to stop memory manager during reset:', err);
+            }
+            try {
+                instance.updateDaemon?.stop();
+            } catch (err) {
+                console.warn('Failed to stop update daemon during reset:', err);
             }
             g.pdServiceInstance = undefined;
         }

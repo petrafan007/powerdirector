@@ -8,17 +8,46 @@ vi.mock("./powerdirector-root.js", () => ({
   resolvePowerDirectorPackageRoot: vi.fn(),
 }));
 
+vi.mock("../process/exec.js", () => ({
+  runCommandWithTimeout: vi.fn(),
+}));
+
 vi.mock("./update-check.js", async () => {
-  const parse = (value: string) => value.split(".").map((part) => Number.parseInt(part, 10));
+  const parse = (value: string) => {
+    const match = value.match(/^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/);
+    if (!match) {
+      return null;
+    }
+    return {
+      major: Number.parseInt(match[1] ?? "", 10),
+      minor: Number.parseInt(match[2] ?? "", 10),
+      patch: Number.parseInt(match[3] ?? "", 10),
+      prerelease: match[4] ?? null,
+    };
+  };
   const compareSemverStrings = (a: string, b: string) => {
     const left = parse(a);
     const right = parse(b);
-    for (let idx = 0; idx < 3; idx += 1) {
-      const l = left[idx] ?? 0;
-      const r = right[idx] ?? 0;
-      if (l !== r) {
-        return l < r ? -1 : 1;
-      }
+    if (!left || !right) {
+      return 0;
+    }
+    if (left.major !== right.major) {
+      return left.major < right.major ? -1 : 1;
+    }
+    if (left.minor !== right.minor) {
+      return left.minor < right.minor ? -1 : 1;
+    }
+    if (left.patch !== right.patch) {
+      return left.patch < right.patch ? -1 : 1;
+    }
+    if (left.prerelease && !right.prerelease) {
+      return -1;
+    }
+    if (!left.prerelease && right.prerelease) {
+      return 1;
+    }
+    if (left.prerelease && right.prerelease && left.prerelease !== right.prerelease) {
+      return left.prerelease < right.prerelease ? -1 : 1;
     }
     return 0;
   };
@@ -48,6 +77,7 @@ describe("update-startup", () => {
   let resolvePowerDirectorPackageRoot: (typeof import('./powerdirector-root'))["resolvePowerDirectorPackageRoot"];
   let checkUpdateStatus: (typeof import('./update-check'))["checkUpdateStatus"];
   let resolveNpmChannelTag: (typeof import('./update-check'))["resolveNpmChannelTag"];
+  let runCommandWithTimeout: (typeof import('../process/exec'))["runCommandWithTimeout"];
   let runGatewayUpdateCheck: (typeof import('./update-startup'))["runGatewayUpdateCheck"];
   let getUpdateAvailable: (typeof import('./update-startup'))["getUpdateAvailable"];
   let resetUpdateAvailableStateForTest: (typeof import('./update-startup'))["resetUpdateAvailableStateForTest"];
@@ -79,6 +109,7 @@ describe("update-startup", () => {
     if (!loaded) {
       ({ resolvePowerDirectorPackageRoot } = await import('./powerdirector-root'));
       ({ checkUpdateStatus, resolveNpmChannelTag } = await import('./update-check'));
+      ({ runCommandWithTimeout } = await import('../process/exec'));
       ({ runGatewayUpdateCheck, getUpdateAvailable, resetUpdateAvailableStateForTest } =
         await import('./update-startup'));
       loaded = true;
@@ -86,6 +117,7 @@ describe("update-startup", () => {
     vi.mocked(resolvePowerDirectorPackageRoot).mockReset();
     vi.mocked(checkUpdateStatus).mockReset();
     vi.mocked(resolveNpmChannelTag).mockReset();
+    vi.mocked(runCommandWithTimeout).mockReset();
     resetUpdateAvailableStateForTest();
   });
 
@@ -160,7 +192,7 @@ describe("update-startup", () => {
     const { log, parsed } = await runUpdateCheckAndReadState(channel);
 
     expect(log.info).toHaveBeenCalledWith(
-      expect.stringContaining("update available (latest): v2.0.0"),
+      expect.stringContaining("update available (latest): 2.0.0"),
     );
     expect(parsed.lastNotifiedVersion).toBe("2.0.0");
     expect(parsed.lastAvailableVersion).toBe("2.0.0");
@@ -246,6 +278,140 @@ describe("update-startup", () => {
     });
     expect(onUpdateAvailableChange).toHaveBeenNthCalledWith(2, null);
     expect(getUpdateAvailable()).toBeNull();
+  });
+
+  it("uses git tags for stable channel checks in git installs", async () => {
+    vi.mocked(resolvePowerDirectorPackageRoot).mockResolvedValue("/opt/powerdirector");
+    vi.mocked(checkUpdateStatus).mockResolvedValue({
+      root: "/opt/powerdirector",
+      installKind: "git",
+      packageManager: "pnpm",
+      git: {
+        root: "/opt/powerdirector",
+        sha: "abc123",
+        tag: "v1.0.0",
+        branch: "HEAD",
+        upstream: null,
+        dirty: false,
+        ahead: 0,
+        behind: 0,
+        fetchOk: true,
+      },
+    } satisfies UpdateCheckResult);
+    vi.mocked(runCommandWithTimeout).mockImplementation(async (argv) => {
+      const key = argv.join(" ");
+      if (key === "git -C /opt/powerdirector tag --list v* --sort=-v:refname") {
+        return { stdout: "v1.0.1\nv1.0.0-beta.1\n", stderr: "", code: 0 };
+      }
+      if (key === "git -C /opt/powerdirector rev-list -n 1 v1.0.1") {
+        return { stdout: "def456\n", stderr: "", code: 0 };
+      }
+      return { stdout: "", stderr: "", code: 0 };
+    });
+
+    const log = { info: vi.fn() };
+    await runGatewayUpdateCheck({
+      cfg: { update: { channel: "stable" } },
+      log,
+      isNixMode: false,
+      allowInTests: true,
+    });
+
+    expect(vi.mocked(resolveNpmChannelTag)).not.toHaveBeenCalled();
+    expect(getUpdateAvailable()).toEqual({
+      currentVersion: "1.0.0",
+      latestVersion: "1.0.1",
+      channel: "v1.0.1",
+      latestSha: "def456",
+    });
+  });
+
+  it("prefers stable git tags over matching prereleases on beta channel", async () => {
+    vi.mocked(resolvePowerDirectorPackageRoot).mockResolvedValue("/opt/powerdirector");
+    vi.mocked(checkUpdateStatus).mockResolvedValue({
+      root: "/opt/powerdirector",
+      installKind: "git",
+      packageManager: "pnpm",
+      git: {
+        root: "/opt/powerdirector",
+        sha: "abc123",
+        tag: "v1.0.0-beta.1",
+        branch: "HEAD",
+        upstream: null,
+        dirty: false,
+        ahead: 0,
+        behind: 0,
+        fetchOk: true,
+      },
+    } satisfies UpdateCheckResult);
+    vi.mocked(runCommandWithTimeout).mockImplementation(async (argv) => {
+      const key = argv.join(" ");
+      if (key === "git -C /opt/powerdirector tag --list v* --sort=-v:refname") {
+        return { stdout: "v1.0.0-beta.2\nv1.0.0\n", stderr: "", code: 0 };
+      }
+      if (key === "git -C /opt/powerdirector rev-list -n 1 v1.0.0") {
+        return { stdout: "def456\n", stderr: "", code: 0 };
+      }
+      return { stdout: "", stderr: "", code: 0 };
+    });
+
+    await runGatewayUpdateCheck({
+      cfg: { update: { channel: "beta" } },
+      log: { info: vi.fn() },
+      isNixMode: false,
+      allowInTests: true,
+    });
+
+    expect(getUpdateAvailable()).toEqual({
+      currentVersion: "1.0.0-beta.1",
+      latestVersion: "1.0.0",
+      channel: "v1.0.0",
+      latestSha: "def456",
+    });
+  });
+
+  it("treats a force-updated git tag as available when the version string is unchanged", async () => {
+    vi.mocked(resolvePowerDirectorPackageRoot).mockResolvedValue("/opt/powerdirector");
+    vi.mocked(checkUpdateStatus).mockResolvedValue({
+      root: "/opt/powerdirector",
+      installKind: "git",
+      packageManager: "pnpm",
+      git: {
+        root: "/opt/powerdirector",
+        sha: "abc123",
+        tag: null,
+        branch: "HEAD",
+        upstream: null,
+        dirty: false,
+        ahead: 0,
+        behind: 0,
+        fetchOk: true,
+      },
+    } satisfies UpdateCheckResult);
+    vi.mocked(runCommandWithTimeout).mockImplementation(async (argv) => {
+      const key = argv.join(" ");
+      if (key === "git -C /opt/powerdirector tag --list v* --sort=-v:refname") {
+        return { stdout: "v1.0.0\n", stderr: "", code: 0 };
+      }
+      if (key === "git -C /opt/powerdirector rev-list -n 1 v1.0.0") {
+        return { stdout: "def456\n", stderr: "", code: 0 };
+      }
+      return { stdout: "", stderr: "", code: 0 };
+    });
+
+    await runGatewayUpdateCheck({
+      cfg: { update: { channel: "stable" } },
+      log: { info: vi.fn() },
+      isNixMode: false,
+      allowInTests: true,
+    });
+
+    expect(getUpdateAvailable()).toEqual({
+      currentVersion: "1.0.0",
+      latestVersion: "1.0.0",
+      channel: "v1.0.0",
+      latestSha: "def456",
+    });
   });
 
   it("skips update check when disabled in config", async () => {

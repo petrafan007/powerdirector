@@ -68,10 +68,10 @@ describe("runGatewayUpdate", () => {
       if (key === `git -C ${tempDir} rev-parse HEAD`) {
         return { stdout: "abc123", stderr: "", code: 0 };
       }
-      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/`) {
+      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`) {
         return { stdout: "", stderr: "", code: 0 };
       }
-      if (key === `git -C ${tempDir} fetch --all --prune --tags`) {
+      if (key === `git -C ${tempDir} fetch --all --prune --tags --force`) {
         return { stdout: "", stderr: "", code: 0 };
       }
       if (key === `git -C ${tempDir} tag --list v* --sort=-v:refname`) {
@@ -126,8 +126,8 @@ describe("runGatewayUpdate", () => {
     return {
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/`]: { stdout: "" },
-      [`git -C ${tempDir} fetch --all --prune --tags`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: { stdout: `${stableTag}\n` },
       [`git -C ${tempDir} checkout --detach ${stableTag}`]: { stdout: "" },
     };
@@ -178,7 +178,7 @@ describe("runGatewayUpdate", () => {
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
       [`git -C ${tempDir} rev-parse --abbrev-ref HEAD`]: { stdout: "main" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/`]: { stdout: " M README.md" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: " M README.md" },
     });
 
     const result = await runWithRunner(runner);
@@ -188,17 +188,48 @@ describe("runGatewayUpdate", () => {
     expect(calls.some((call) => call.includes("rebase"))).toBe(false);
   });
 
+  it("preserves powerdirector.config.json across git tag installs", async () => {
+    await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
+    await setupUiIndex();
+    await fs.writeFile(
+      path.join(tempDir, "powerdirector.config.json"),
+      JSON.stringify({ gateway: { port: 3007 } }, null, 2),
+      "utf-8",
+    );
+
+    const stableTag = "v1.0.1-1";
+    const { runner, calls } = createRunner({
+      ...buildStableTagResponses(stableTag),
+      [`git -C ${tempDir} checkout -- powerdirector.config.json`]: { stdout: "" },
+      "pnpm install": { stdout: "" },
+      "pnpm build": { stdout: "" },
+      "pnpm ui:build": { stdout: "" },
+      [`${process.execPath} ${path.join(tempDir, "powerdirector.mjs")} doctor --non-interactive --fix`]: {
+        stdout: "",
+      },
+      [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "def456" },
+    });
+
+    const result = await runWithRunner(runner, { channel: "stable" });
+
+    expect(result.status).toBe("ok");
+    expect(calls).toContain(`git -C ${tempDir} checkout -- powerdirector.config.json`);
+    await expect(fs.readFile(path.join(tempDir, "powerdirector.config.json"), "utf-8")).resolves.toContain(
+      '"port": 3007',
+    );
+  });
+
   it("aborts rebase on failure", async () => {
     await setupGitCheckout();
     const { runner, calls } = createRunner({
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
       [`git -C ${tempDir} rev-parse --abbrev-ref HEAD`]: { stdout: "main" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
       [`git -C ${tempDir} rev-parse --abbrev-ref --symbolic-full-name @{upstream}`]: {
         stdout: "origin/main",
       },
-      [`git -C ${tempDir} fetch --all --prune --tags`]: { stdout: "" },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} rev-parse @{upstream}`]: { stdout: "upstream123" },
       [`git -C ${tempDir} rev-list --max-count=10 upstream123`]: { stdout: "upstream123\n" },
       [`git -C ${tempDir} rebase upstream123`]: { code: 1, stderr: "conflict" },
@@ -253,10 +284,40 @@ describe("runGatewayUpdate", () => {
     const { runner, calls } = createRunner({
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/`]: { stdout: "" },
-      [`git -C ${tempDir} fetch --all --prune --tags`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: {
         stdout: `${stableTag}\n${betaTag}\n`,
+      },
+      [`git -C ${tempDir} checkout --detach ${stableTag}`]: { stdout: "" },
+      "pnpm install": { stdout: "" },
+      "pnpm build": { stdout: "" },
+      "pnpm ui:build": { stdout: "" },
+      [`${process.execPath} ${path.join(tempDir, "powerdirector.mjs")} doctor --non-interactive --fix`]:
+        {
+          stdout: "",
+        },
+    });
+
+    const result = await runWithRunner(runner, { channel: "beta" });
+
+    expect(result.status).toBe("ok");
+    expect(calls).toContain(`git -C ${tempDir} checkout --detach ${stableTag}`);
+    expect(calls).not.toContain(`git -C ${tempDir} checkout --detach ${betaTag}`);
+  });
+
+  it("prefers the matching stable tag over an older prerelease", async () => {
+    await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
+    await setupUiIndex();
+    const stableTag = "v1.0.0";
+    const betaTag = "v1.0.0-beta.2";
+    const { runner, calls } = createRunner({
+      [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
+      [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
+      [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: {
+        stdout: `${betaTag}\n${stableTag}\n`,
       },
       [`git -C ${tempDir} checkout --detach ${stableTag}`]: { stdout: "" },
       "pnpm install": { stdout: "" },
@@ -482,8 +543,8 @@ describe("runGatewayUpdate", () => {
     const { runner } = createRunner({
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/`]: { stdout: "" },
-      [`git -C ${tempDir} fetch --all --prune --tags`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: { stdout: `${stableTag}\n` },
       [`git -C ${tempDir} checkout --detach ${stableTag}`]: { stdout: "" },
       "pnpm install": { stdout: "" },

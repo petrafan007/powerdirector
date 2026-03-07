@@ -3,8 +3,9 @@ import path from "node:path";
 import { getRuntimeLogger } from "../core/logger.js";
 import { resolveStateDir } from "../config/paths.js";
 import type { loadConfig } from "../config/config.js";
+import { scheduleGatewaySigusr1Restart } from "./restart.js";
 import { runGatewayUpdateCheck, getUpdateAvailable } from "./update-startup.js";
-import { runGatewayUpdate } from "./update-runner.js";
+import { runGatewayUpdate, type UpdateRunResult } from "./update-runner.js";
 
 const DAEMON_STATE_FILE = "update-daemon.json";
 
@@ -14,6 +15,10 @@ interface DaemonState {
     stableExecuteAt?: string;
 }
 
+interface UpdateDaemonOptions {
+    onUpdated?: (result: UpdateRunResult) => Promise<void> | void;
+}
+
 export class UpdateDaemon {
     private timer: NodeJS.Timeout | null = null;
     private cfg: ReturnType<typeof loadConfig>;
@@ -21,10 +26,12 @@ export class UpdateDaemon {
     private logger = getRuntimeLogger();
     private checkIntervalMs: number;
     private running = false;
+    private onUpdated?: UpdateDaemonOptions["onUpdated"];
 
-    constructor(cfg: ReturnType<typeof loadConfig>, isNixMode: boolean) {
+    constructor(cfg: ReturnType<typeof loadConfig>, isNixMode: boolean, options: UpdateDaemonOptions = {}) {
         this.cfg = cfg;
         this.isNixMode = isNixMode;
+        this.onUpdated = options.onUpdated;
         // Default check interval 10 minutes, unless beta overrides to less
         this.checkIntervalMs = 10 * 60 * 1000;
     }
@@ -136,8 +143,6 @@ export class UpdateDaemon {
         if (state.stableExecuteAt && now >= new Date(state.stableExecuteAt).getTime()) {
             this.logger.info(`Execute time reached for stable update ${update.latestVersion}. Installing now.`);
             await this.executeUpdate("stable");
-            // Execution usually restarts the process in `runGatewayUpdate` since it exits. 
-            // If not, clear the state.
             await this.writeState({});
         }
     }
@@ -147,6 +152,15 @@ export class UpdateDaemon {
         const result = await runGatewayUpdate({ channel: channel as any });
         if (result.status === "error") {
             this.logger.error("Auto-update failed", { reason: result.reason, steps: result.steps });
+            return;
         }
+        if (result.status !== "ok") {
+            return;
+        }
+        if (this.onUpdated) {
+            await this.onUpdated(result);
+            return;
+        }
+        scheduleGatewaySigusr1Restart({ delayMs: 0, reason: `update.auto.${channel}` });
     }
 }

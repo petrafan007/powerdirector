@@ -155,7 +155,7 @@ These sections are currently enforced in live runtime paths (not UI-only):
 
 - `env`: `shellEnv.enabled`, `customEnvVars`, and `dotenvPath` are applied to runtime subprocess environments (`shell` tool, `/bash`, CLI providers).
 - `wizard`: setup wizard now uses `lastRunAt`, `lastRunVersion`, `lastRunCommand`, and `lastRunMode` to decide auto-skip vs re-run behavior (including `?force=1` override).
-- `update`: startup update behavior now enforces `channel`, `checkOnStart`, and `autoInstall` via npm dist-tag checks with safe auto-install constraints.
+- `update`: startup/manual update behavior now enforces `channel`, `checkOnStart`, and `auto.enabled`, using GitHub git-channel checks for repo installs and immediate/manual install controls in the UI.
 - `auth`: profile-based credentials with ordered precedence are enforced for provider/tool/channel token resolution paths.
 - `agents`: defaults now control runtime provider preference ordering, workspace path for file/shell tools, compaction profile behavior, run timeout, and gateway concurrency.
 - `channels`: per-channel `enabled`, `dmPolicy`, `groupPolicy`, `allowFrom`, `guildIds`, `allowedChannelIds`, and `streamMode` are enforced in gateway message handling.

@@ -4,6 +4,7 @@ import { runCommandWithTimeout } from '../process/exec';
 import { fetchWithTimeout } from '../utils/fetch-timeout';
 import { detectPackageManager as detectPackageManagerImpl } from './detect-package-manager';
 import { parseSemver } from './runtime-guard';
+import { buildGitDirtyCheckArgv } from './update-git-runtime-files';
 import { channelToNpmTag, type UpdateChannel } from './update-channels';
 
 export type PackageManager = "pnpm" | "bun" | "npm" | "unknown";
@@ -135,13 +136,16 @@ export async function checkGitUpdateStatus(params: {
   const upstream = upstreamRes && upstreamRes.code === 0 ? upstreamRes.stdout.trim() : null;
 
   const dirtyRes = await runCommandWithTimeout(
-    ["git", "-C", root, "status", "--porcelain", "--", ":!dist/control-ui/"],
+    buildGitDirtyCheckArgv(root),
     { timeoutMs },
   ).catch(() => null);
   const dirty = dirtyRes && dirtyRes.code === 0 ? dirtyRes.stdout.trim().length > 0 : null;
 
   const fetchOk = params.fetch
-    ? await runCommandWithTimeout(["git", "-C", root, "fetch", "--quiet", "--prune"], { timeoutMs })
+    ? await runCommandWithTimeout(
+        ["git", "-C", root, "fetch", "--quiet", "--prune", "--tags", "--force", "--all"],
+        { timeoutMs },
+      )
         .then((r) => r.code === 0)
         .catch(() => false)
     : null;
@@ -342,9 +346,26 @@ export async function resolveNpmChannelTag(params: {
 }
 
 export function compareSemverStrings(a: string | null, b: string | null): number | null {
-  const pa = parseSemver(a);
-  const pb = parseSemver(b);
-  if (!pa || !pb) {
+  const normalize = (value: string | null) => {
+    const trimmed = value?.trim();
+    if (!trimmed) {
+      return null;
+    }
+    const match = trimmed.match(/^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/);
+    if (!match) {
+      return null;
+    }
+    return {
+      major: Number.parseInt(match[1] ?? "", 10),
+      minor: Number.parseInt(match[2] ?? "", 10),
+      patch: Number.parseInt(match[3] ?? "", 10),
+      prerelease: match[4] ?? null,
+    };
+  };
+
+  const pa = normalize(a);
+  const pb = normalize(b);
+  if (!pa || !pb || !Number.isFinite(pa.major) || !Number.isFinite(pb.major)) {
     return null;
   }
   if (pa.major !== pb.major) {
@@ -355,6 +376,18 @@ export function compareSemverStrings(a: string | null, b: string | null): number
   }
   if (pa.patch !== pb.patch) {
     return pa.patch < pb.patch ? -1 : 1;
+  }
+  if (pa.prerelease && !pb.prerelease) {
+    return -1;
+  }
+  if (!pa.prerelease && pb.prerelease) {
+    return 1;
+  }
+  if (pa.prerelease && pb.prerelease) {
+    if (pa.prerelease === pb.prerelease) {
+      return 0;
+    }
+    return pa.prerelease < pb.prerelease ? -1 : 1;
   }
   return 0;
 }
