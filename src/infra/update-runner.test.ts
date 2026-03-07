@@ -163,6 +163,22 @@ describe("runGatewayUpdate", () => {
     });
   }
 
+  async function runWithCommandOptions(
+    runCommand: (
+      argv: string[],
+      options: { cwd?: string; timeoutMs?: number; env?: NodeJS.ProcessEnv },
+    ) => Promise<CommandResult>,
+    options?: { channel?: "stable" | "beta"; tag?: string; cwd?: string },
+  ) {
+    return runGatewayUpdate({
+      cwd: options?.cwd ?? tempDir,
+      runCommand: async (argv, runOptions) => runCommand(argv, runOptions),
+      timeoutMs: 5000,
+      ...(options?.channel ? { channel: options.channel } : {}),
+      ...(options?.tag ? { tag: options.tag } : {}),
+    });
+  }
+
   async function seedGlobalPackageRoot(pkgRoot: string, version = "1.0.0") {
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
@@ -217,6 +233,57 @@ describe("runGatewayUpdate", () => {
     await expect(fs.readFile(path.join(tempDir, "powerdirector.config.json"), "utf-8")).resolves.toContain(
       '"port": 3007',
     );
+  });
+
+  it("strips TURBOPACK from updater child process env", async () => {
+    await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
+    await setupUiIndex();
+    process.env.TURBOPACK = "auto";
+
+    const seenEnvs = new Map<string, NodeJS.ProcessEnv | undefined>();
+    const stableTag = "v1.0.1";
+    const runCommand = async (
+      argv: string[],
+      options: { env?: NodeJS.ProcessEnv },
+    ): Promise<CommandResult> => {
+      const key = argv.join(" ");
+      seenEnvs.set(key, options.env);
+      if (key === `git -C ${tempDir} rev-parse --show-toplevel`) {
+        return { stdout: tempDir, stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} rev-parse HEAD`) {
+        return { stdout: key.includes("(after)") ? "def456" : "abc123", stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`) {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} fetch --all --prune --tags --force`) {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} tag --list v* --sort=-v:refname`) {
+        return { stdout: `${stableTag}\n`, stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} checkout --detach ${stableTag}`) {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === "pnpm install" || key === "pnpm build" || key === "pnpm ui:build") {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === `${process.execPath} ${path.join(tempDir, "powerdirector.mjs")} doctor --non-interactive --fix`) {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      return { stdout: "", stderr: "", code: 0 };
+    };
+
+    try {
+      const result = await runWithCommandOptions(runCommand, { channel: "stable" });
+      expect(result.status).toBe("ok");
+      expect(seenEnvs.get("pnpm install")?.TURBOPACK).toBeUndefined();
+      expect(seenEnvs.get("pnpm build")?.TURBOPACK).toBeUndefined();
+      expect(seenEnvs.get("pnpm ui:build")?.TURBOPACK).toBeUndefined();
+    } finally {
+      delete process.env.TURBOPACK;
+    }
   });
 
   it("aborts rebase on failure", async () => {

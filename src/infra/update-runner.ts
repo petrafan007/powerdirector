@@ -89,6 +89,17 @@ const START_DIRS = ["cwd", "argv1", "process"];
 const DEFAULT_PACKAGE_NAME = "powerdirector";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
 
+function createUpdateCommandEnv(overrides?: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const env: NodeJS.ProcessEnv = {
+    ...process.env,
+    ...(overrides ?? {}),
+  };
+  // Next.js sets TURBOPACK=auto in the server runtime; strip it so `next build --webpack`
+  // inside updater jobs does not inherit conflicting bundler flags.
+  delete env.TURBOPACK;
+  return env;
+}
+
 function normalizeDir(value?: string | null) {
   if (!value) {
     return null;
@@ -225,7 +236,11 @@ async function runStep(opts: RunStepOptions): Promise<UpdateStepResult> {
   progress?.onStepStart?.(stepInfo);
 
   const started = Date.now();
-  const result = await runCommand(argv, { cwd, timeoutMs, env });
+  const result = await runCommand(argv, {
+    cwd,
+    timeoutMs,
+    env: createUpdateCommandEnv(env),
+  });
   const durationMs = Date.now() - started;
 
   const stderrTail = trimLogTail(result.stderr, MAX_LOG_CHARS);

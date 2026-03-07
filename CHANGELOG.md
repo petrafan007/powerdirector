@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Config > Updates now removes the duplicate legacy `Auto Install` toggle, keeps `Auto -> Enabled` as the only automatic install control, and adds an `Install Now` action with a themed progress modal plus explicit `Restart`/`Close` completion actions.
 - The embedded monolith runtime now uses the git-aware startup checker/update daemon, so Config > Updates and startup auto-checks follow the same channel rules as the standalone gateway.
 - Persisted git update state now keeps same-version/different-SHA releases visible during the throttle window, so beta/dev auto-updates still install force-updated tags instead of dropping them until the next full fetch.
+- Updater child processes now strip inherited `TURBOPACK=auto`, preventing `pnpm ui:build` from failing under the running UI server with the Next.js "Multiple bundler flags set" error.
 - Fresh git checkouts now install the missing build-time packages needed by the root TypeScript build, and the root workspace exposes `ui:build` so the updater's install pipeline can complete from a clean clone.
 - The setup wizard and sidebar footer now display the actual app version from the build instead of the stale `1.0.0`/`1.0.0-beta.2` fallback strings.
 
