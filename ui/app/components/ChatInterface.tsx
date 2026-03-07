@@ -347,7 +347,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
     const fetchProviders = async () => {
         try {
-            const res = await fetch('/api/providers');
+            const res = await fetch('/api/providers', { cache: 'no-store' });
             const data = await res.json();
             if (data.providers?.length > 0) {
                 const providersWithDefault = [
@@ -372,6 +372,41 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             return { providers: onlyDefault };
         }
     };
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const handleConfigSaved = () => {
+            void fetchProviders().then((data) => {
+                const latestProviders = data?.providers ?? [];
+                if (selectedProvider === 'default') {
+                    setSelectedModel('default');
+                    return;
+                }
+
+                const provider = latestProviders.find((entry) => entry.id === selectedProvider);
+                if (!provider) {
+                    setSelectedProvider('default');
+                    setSelectedModel('default');
+                    localStorage.setItem('pd_selected_provider', 'default');
+                    return;
+                }
+
+                const nextModel = provider.models.includes(selectedModel)
+                    ? selectedModel
+                    : (providerModelMap[selectedProvider] && provider.models.includes(providerModelMap[selectedProvider])
+                        ? providerModelMap[selectedProvider]
+                        : (provider.defaultModel || provider.models[0] || 'default'));
+
+                setSelectedModel(nextModel);
+            });
+        };
+
+        window.addEventListener('pd:config-saved', handleConfigSaved as EventListener);
+        return () => {
+            window.removeEventListener('pd:config-saved', handleConfigSaved as EventListener);
+        };
+    }, [fetchProviders, providerModelMap, selectedModel, selectedProvider]);
 
     const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
         setTimeout(() => endRef.current?.scrollIntoView({ behavior }), 100);
@@ -751,30 +786,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 return [...prev, msg];
             });
 
-            if (msg?.role === 'assistant' && msg?.metadata?.fallbackUsed === true) {
-                const actualProvider = normalizeProviderId(msg.metadata?.provider);
-                const actualModel = normalizedText(msg.metadata?.model);
-                if (actualProvider && actualModel) {
-                    const matchedProvider = providers.find((provider) => provider.id === actualProvider);
-                    const resolvedModel = matchedProvider
-                        ? (matchedProvider.models.includes(actualModel)
-                            ? actualModel
-                            : (matchedProvider.defaultModel || matchedProvider.models[0] || actualModel))
-                        : actualModel;
-
-                    if (actualProvider !== selectedProvider || resolvedModel !== selectedModel) {
-                        setSelectedProvider(actualProvider);
-                        setSelectedModel(resolvedModel);
-                        setProviderModelMap((prev) => {
-                            const next = { ...prev, [actualProvider]: resolvedModel };
-                            localStorage.setItem('pd_provider_models', JSON.stringify(next));
-                            return next;
-                        });
-                        localStorage.setItem('pd_selected_provider', actualProvider);
-                    }
-                }
-            }
-
             const isActiveRunMessage = Boolean(messageRunId && activeRunIdRef.current && messageRunId === activeRunIdRef.current);
             const shouldEvaluateClear = isActiveRunMessage
                 || (loading && msg?.metadata?.final === true)
@@ -908,6 +919,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
         const effectiveProvider = selectedProvider;
         const effectiveModel = selectedModel;
+        const useDefaultModelChain = effectiveProvider === 'default' && effectiveModel === 'default';
         const providerOverride = effectiveProvider && effectiveProvider !== 'default'
             ? effectiveProvider
             : undefined;
@@ -1004,6 +1016,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             const serverRunId = await gatewayClient.sendMessage(sessionId, textToSend || '', {
                 provider: providerOverride,
                 model: modelOverride,
+                useDefaultModelChain,
                 reasoning: isCodexReasoningModel ? selectedReasoning : undefined,
                 attachments: attachmentPayloads.length > 0 ? attachmentPayloads : undefined,
                 agentId: agentId || undefined,
@@ -1948,7 +1961,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             <div key={msg.id || `${msg.timestamp}-${idx}`} className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} ${isNotification ? 'justify-center' : ''} gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300`}>
                                 {/* System / Error Message Handling */}
                                 {msg.role === 'system' && (
-                                    <div className="w-full flex justify-center my-2">
+                                    <div className="w-full my-2">
                                         {(() => {
                                             const isSummary = msg.metadata?.type === 'summary' || (typeof msg.content === 'string' && msg.content.includes('[Conversation Summary]'));
                                             const bgColor = isSummary ? 'rgba(59, 130, 246, 0.1)' : 'rgba(239, 68, 68, 0.1)';
@@ -1958,10 +1971,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                                             const Icon = isSummary ? Info : AlertCircle;
 
                                             return (
-                                                <div className="flex items-center gap-3 px-4 py-3 rounded-xl max-w-2xl border" style={{ background: bgColor, borderColor: borderColor }}>
-                                                    <Icon size={18} className="shrink-0" style={{ color: iconColor }} />
-                                                    <div className="text-sm" style={{ color: 'var(--pd-text-main)' }}>
-                                                        <div className="font-bold text-xs uppercase tracking-wider mb-1 opacity-70" style={{ color: iconColor }}>{label}</div>
+                                                <div className="w-full rounded-2xl border px-4 py-4 shadow-sm" style={{ background: bgColor, borderColor: borderColor }}>
+                                                    <div className="flex items-center gap-2 mb-3">
+                                                        <Icon size={18} className="shrink-0" style={{ color: iconColor }} />
+                                                        <div className="font-bold text-xs uppercase tracking-wider opacity-70" style={{ color: iconColor }}>{label}</div>
+                                                    </div>
+                                                    <div className="text-sm leading-relaxed" style={{ color: 'var(--pd-text-main)' }}>
                                                         {renderContent(msg.content, msg.metadata)}
                                                     </div>
                                                 </div>

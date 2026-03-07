@@ -250,6 +250,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                 setDirty(false);
                 setPendingChanges(0);
                 modifiedPaths.current.clear();
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('pd:config-saved'));
+                }
                 router.refresh();
                 setToast({ message: 'Configuration saved successfully', type: 'success' });
                 setTimeout(() => setToast(null), 3000);
@@ -355,4 +358,3 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         </SettingsContext.Provider>
     );
 }
-

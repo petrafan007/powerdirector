@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getService } from '../../../lib/agent-instance';
+import { shouldUseConfiguredDefaultChain } from '../../../lib/chat-model-selection';
 
 function toStringOrUndefined(value: unknown): string | undefined {
     if (typeof value !== 'string') return undefined;
@@ -114,6 +115,11 @@ export async function POST(request: Request) {
 
         // Only treat explicit non-default selections as provider overrides.
         const modelId = resolveRequestedModelId(body.provider, body.model);
+        const useDefaultModelChain = shouldUseConfiguredDefaultChain({
+            provider: body.provider,
+            model: body.model,
+            useDefaultModelChain: body.useDefaultModelChain
+        });
         const agentId = toStringOrUndefined(body.agentId);
         const reasoning = normalizeReasoning(body.reasoning);
 
@@ -166,7 +172,7 @@ export async function POST(request: Request) {
                         channelId: 'ui-api',
                         metadata: {
                             attachments: Array.isArray(attachments) ? attachments : [],
-                            model: modelId,
+                            model: useDefaultModelChain ? 'default' : modelId,
                             reasoning,
                             agentId,
                             continue: isContinue

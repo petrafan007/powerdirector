@@ -152,12 +152,18 @@ export class SessionManager {
             db.prepare(`DELETE FROM messages WHERE id IN (${placeholders})`).run(...deleteIds);
         }
 
-        // Add summary message at the beginning
+        const insertedAt = Date.now();
+
+        // Add the compacted baseline exactly where compaction happened so the UI
+        // keeps it in chronological order with the surrounding run output.
         this.saveMessage(id, {
             role: 'system',
             content: `[Session Summary]: ${summary}`,
-            timestamp: Date.now() - 1000,
-            metadata: { type: 'summary' }
+            timestamp: insertedAt,
+            metadata: {
+                type: 'summary',
+                sequence: insertedAt * 1000
+            }
         });
     }
 

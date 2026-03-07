@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0-beta.2] - 2026-03-07
+
+### Fixed
+- Chat `default/default` sends now explicitly clear sticky session model overrides, so saving new defaults in config and sending with `Default` immediately uses the latest configured primary/fallback chain instead of a stale session-pinned model.
+- Chat config saves now notify the live UI to refresh its provider catalog, and fallback events no longer silently rewrite the user's provider/model picker selection away from `Default`.
+- The session compaction "Context Baseline" card now renders full-width in the normal transcript flow and keeps stable chronological ordering instead of appearing as a centered floating card.
+- Standard-port/reverse-proxy installs now proxy `/terminal-ws` through the UI server to the configured terminal websocket port, restoring the embedded terminal on HTTPS/default-port deployments.
+- Local shell startup no longer emits a stale OpenClaw completion error when `~/.openclaw/completions/openclaw.zsh` is absent.
+
 ## [1.1.0-beta1] - 2026-03-01
 
 ### Added

@@ -330,6 +330,7 @@ export class LocalClient extends GatewayClient {
                     continue: metadata?.continue,
                     provider: metadata?.provider,
                     model: metadata?.model,
+                    useDefaultModelChain: metadata?.useDefaultModelChain === true,
                     reasoning: metadata?.reasoning,
                     attachments: metadata?.attachments,
                     agentId: metadata?.agentId,
