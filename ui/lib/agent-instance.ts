@@ -69,6 +69,22 @@ function envPositiveNumber(value: string | undefined): number | undefined {
     return parsed;
 }
 
+const MODEL_PROVIDER_ALIASES: Record<string, string> = {
+    codex: 'openai-codex',
+    'codex-cli': 'openai-codex',
+    'gemini-cli': 'google-gemini-cli',
+};
+
+function normalizeModelProviders(value: Record<string, any>): Record<string, any> {
+    const normalized: Record<string, any> = { ...value };
+    for (const [legacyId, canonicalId] of Object.entries(MODEL_PROVIDER_ALIASES)) {
+        if (!normalized[canonicalId] && normalized[legacyId]) {
+            normalized[canonicalId] = normalized[legacyId];
+        }
+    }
+    return normalized;
+}
+
 function isChannelEnabled(configured: any, fallback: boolean): boolean {
     if (typeof configured?.enabled === 'boolean') {
         return configured.enabled;
@@ -481,7 +497,7 @@ export class PowerDirectorService {
         });
         this.updateDaemon.start();
 
-        const modelProviders = (config.models?.providers || {}) as Record<string, any>;
+        const modelProviders = normalizeModelProviders((config.models?.providers || {}) as Record<string, any>);
         const channelsConfig = (config.channels || {}) as Record<string, any>;
         const messagesCfg = (config.messages || {}) as Record<string, any>;
         const sessionCfg = config.session || {};

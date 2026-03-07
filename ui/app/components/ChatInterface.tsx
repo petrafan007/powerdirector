@@ -135,6 +135,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     const [providers, setProviders] = useState<ProviderInfo[]>([]);
     const [selectedProvider, setSelectedProvider] = useState('default');
     const [selectedModel, setSelectedModel] = useState('default');
+    const [providerModelMap, setProviderModelMap] = useState<Record<string, string>>({});
     const [selectedReasoning, setSelectedReasoning] = useState<ReasoningLevel>(DEFAULT_REASONING_LEVEL);
     const [sessionReasoningMap, setSessionReasoningMap] = useState<Record<string, ReasoningLevel>>({});
     const [selectedToolOutput, setSelectedToolOutput] = useState<{ title: string, content: string, plainText?: boolean } | null>(null);
@@ -1709,10 +1710,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     }, [sortedMessages]);
 
 
-
-    // ─── Model Persistence ───
-    // Track the last selected model for each provider
-    const [providerModelMap, setProviderModelMap] = useState<Record<string, string>>({});
 
     // ─── Get models for selected provider ───
     const currentProvider = providers.find(p => p.id === selectedProvider);

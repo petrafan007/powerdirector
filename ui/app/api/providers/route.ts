@@ -24,6 +24,12 @@ const PROVIDER_META: Record<string, { name: string; icon: string }> = {
     huggingface: { name: 'HuggingFace', icon: '🤗' },
 };
 
+const PROVIDER_ALIASES: Record<string, string> = {
+    codex: 'openai-codex',
+    'codex-cli': 'openai-codex',
+    'gemini-cli': 'google-gemini-cli',
+};
+
 /**
  * GET /api/providers — returns available providers with models.
  *
@@ -41,7 +47,13 @@ export async function GET() {
         const config = mgr.getAll(false);
 
         const modelsSection = (config as any)?.models ?? {};
-        const providers = modelsSection?.providers ?? {};
+        const rawProviders = modelsSection?.providers ?? {};
+        const providers = { ...rawProviders } as Record<string, any>;
+        for (const [legacyId, canonicalId] of Object.entries(PROVIDER_ALIASES)) {
+            if (!providers[canonicalId] && providers[legacyId]) {
+                providers[canonicalId] = providers[legacyId];
+            }
+        }
 
         interface ProviderInfo {
             id: string;
