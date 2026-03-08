@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setup/config provider aliases for Codex CLI and Gemini CLI now normalize to the runtime IDs (`openai-codex`, `google-gemini-cli`), so wizard-saved CLI providers appear in the dropdown and route successfully.
 - The session compaction "Context Baseline" card now renders full-width in the normal transcript flow and keeps stable chronological ordering instead of appearing as a centered floating card.
 - Standard-port/reverse-proxy installs now proxy `/terminal-ws` through the UI server to the configured terminal websocket port, restoring the embedded terminal on HTTPS/default-port deployments.
+- Agent runs that describe planned tool usage without emitting callable JSON now trigger a stricter tool-call repair pass instead of being saved as a giant assistant transcript bubble, preventing Gemini/Codex fallback runs from surfacing internal execution plans as final chat output.
 
 ## [1.1.0-beta1] - 2026-03-01
 
@@ -56,7 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The setup wizard and sidebar footer now display the actual app version from the build instead of the stale `1.0.0`/`1.0.0-beta.2` fallback strings.
 - Git-based updates now treat `MEMORY.md` as a preserved personal runtime file alongside `powerdirector.config.json`, so local notes/config changes no longer trigger a false dirty-worktree block.
 - Git-based updates now create a timestamped runtime backup before checkout/install/build work, copying `.env`, config/memory files, SQLite state, runtime folders, and auth state so personal data can be restored if an update goes sideways.
-- Agent runs that describe planned tool usage without emitting callable JSON now trigger a stricter tool-call repair pass instead of being saved as a giant assistant transcript bubble, preventing Gemini/Codex fallback runs from surfacing internal execution plans as final chat output.
 
 ## [1.0.0-beta.2] - 2026-02-25
 
