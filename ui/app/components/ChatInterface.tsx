@@ -1671,12 +1671,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         const timeA = a.timestamp || 0;
         const timeB = b.timestamp || 0;
 
-        // Primary: Sort by timestamp
-        if (Math.abs(timeA - timeB) > 1000) { // If more than 1 second apart, use timestamp
+        // Message timestamps are already millisecond-resolution; only use the
+        // sequence counter to break exact ties so adjacent turns stay stable.
+        if (timeA !== timeB) {
             return timeA - timeB;
         }
 
-        // Secondary: If close in time, prefer sequence number (now monotonic)
         const seqA = (a.metadata?.sequence as number) || 0;
         const seqB = (b.metadata?.sequence as number) || 0;
         if (seqA !== seqB) return seqA - seqB;
