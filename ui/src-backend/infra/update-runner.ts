@@ -23,8 +23,10 @@ import {
 } from './update-global';
 import {
   buildGitDirtyCheckArgv,
+  createGitRuntimeBackup,
   restorePreservedGitRuntimeFiles,
   snapshotPreservedGitRuntimeFiles,
+  type GitRuntimeBackup,
 } from './update-git-runtime-files';
 import { resolveGitChannelTag } from './update-git-channel';
 
@@ -45,6 +47,7 @@ export type UpdateRunResult = {
   reason?: string;
   before?: { sha?: string | null; version?: string | null };
   after?: { sha?: string | null; version?: string | null };
+  backup?: GitRuntimeBackup;
   steps: UpdateStepResult[];
   durationMs: number;
 };
@@ -263,6 +266,71 @@ async function runStep(opts: RunStepOptions): Promise<UpdateStepResult> {
   };
 }
 
+type InlineStepOptions<T> = {
+  name: string;
+  command: string;
+  cwd: string;
+  progress?: UpdateStepProgress;
+  stepIndex: number;
+  totalSteps: number;
+  work: () => Promise<T>;
+};
+
+async function runInlineStep<T>(
+  opts: InlineStepOptions<T>,
+): Promise<{ step: UpdateStepResult; value?: T; error?: unknown }> {
+  const { name, command, cwd, progress, stepIndex, totalSteps, work } = opts;
+  const stepInfo: UpdateStepInfo = {
+    name,
+    command,
+    index: stepIndex,
+    total: totalSteps,
+  };
+
+  progress?.onStepStart?.(stepInfo);
+
+  const started = Date.now();
+  try {
+    const value = await work();
+    const durationMs = Date.now() - started;
+    progress?.onStepComplete?.({
+      ...stepInfo,
+      durationMs,
+      exitCode: 0,
+    });
+    return {
+      value,
+      step: {
+        name,
+        command,
+        cwd,
+        durationMs,
+        exitCode: 0,
+      },
+    };
+  } catch (error) {
+    const durationMs = Date.now() - started;
+    const stderrTail = trimLogTail(error instanceof Error ? error.message : String(error), MAX_LOG_CHARS);
+    progress?.onStepComplete?.({
+      ...stepInfo,
+      durationMs,
+      exitCode: 1,
+      stderrTail,
+    });
+    return {
+      error,
+      step: {
+        name,
+        command,
+        cwd,
+        durationMs,
+        exitCode: 1,
+        stderrTail,
+      },
+    };
+  }
+}
+
 function managerScriptArgs(manager: "pnpm" | "bun" | "npm", script: string, args: string[] = []) {
   if (manager === "pnpm") {
     return ["pnpm", script, ...args];
@@ -336,6 +404,19 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       totalSteps: gitTotalSteps,
     };
   };
+  const inlineStep = <T>(name: string, command: string, cwd: string, work: () => Promise<T>) => {
+    const currentIndex = stepIndex;
+    stepIndex += 1;
+    return runInlineStep({
+      name,
+      command,
+      cwd,
+      work,
+      progress,
+      stepIndex: currentIndex,
+      totalSteps: gitTotalSteps,
+    });
+  };
 
   const pkgRoot = await findPackageRoot(candidates);
 
@@ -364,12 +445,15 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     const beforeSha = beforeShaResult.stdout.trim() || null;
     const beforeVersion = await readPackageVersion(gitRoot);
     const preservedRuntimeFiles = await snapshotPreservedGitRuntimeFiles(gitRoot);
+    let runtimeBackup: GitRuntimeBackup | null = null;
     const channel: UpdateChannel = opts.channel ?? "dev";
     const branch = channel === "dev" ? await readBranchName(runCommand, gitRoot, timeoutMs) : null;
     const needsCheckoutMain = channel === "dev" && branch !== DEV_BRANCH;
     const resetRuntimeFilesStepCount = preservedRuntimeFiles.length > 0 ? 1 : 0;
     gitTotalSteps =
-      (channel === "dev" ? (needsCheckoutMain ? 11 : 10) : 9) + resetRuntimeFilesStepCount;
+      (channel === "dev" ? (needsCheckoutMain ? 11 : 10) : 9) + resetRuntimeFilesStepCount + 1;
+    const attachGitRuntimeBackup = (result: UpdateRunResult): UpdateRunResult =>
+      runtimeBackup ? { ...result, backup: runtimeBackup } : result;
     const buildGitErrorResult = (reason: string): UpdateRunResult => ({
       status: "error",
       mode: "git",
@@ -380,19 +464,20 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       durationMs: Date.now() - startedAt,
     });
     const finalizeGitResult = async (result: UpdateRunResult): Promise<UpdateRunResult> => {
+      const nextResult = attachGitRuntimeBackup(result);
       if (preservedRuntimeFiles.length === 0) {
-        return result;
+        return nextResult;
       }
 
       try {
         await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
       } catch (error) {
         return {
-          ...result,
+          ...nextResult,
           status: "error",
           reason: "restore-runtime-files-failed",
           steps: [
-            ...result.steps,
+            ...nextResult.steps,
             {
               name: "restore runtime files",
               command: `restore ${preservedRuntimeFiles.map((file) => file.relativePath).join(" ")}`,
@@ -405,7 +490,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         };
       }
 
-      return result;
+      return nextResult;
     };
     const runGitCheckoutOrFail = async (name: string, argv: string[]) => {
       const checkoutStep = await runStep(step(name, argv, gitRoot));
@@ -437,6 +522,18 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         durationMs: Date.now() - startedAt,
       });
     }
+
+    const backupStep = await inlineStep(
+      "backup runtime files",
+      "backup runtime files",
+      gitRoot,
+      async () => createGitRuntimeBackup(gitRoot),
+    );
+    steps.push(backupStep.step);
+    if (backupStep.step.exitCode !== 0 || !backupStep.value) {
+      return finalizeGitResult(buildGitErrorResult("backup-runtime-files-failed"));
+    }
+    runtimeBackup = backupStep.value;
 
     if (preservedRuntimeFiles.length > 0) {
       const resetRuntimeFilesStep = await runStep(

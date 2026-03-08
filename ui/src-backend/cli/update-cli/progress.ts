@@ -11,6 +11,7 @@ import type { UpdateCommandOptions } from './shared';
 
 const STEP_LABELS: Record<string, string> = {
   "clean check": "Working directory is clean",
+  "backup runtime files": "Backing up personal runtime files",
   "upstream check": "Upstream branch exists",
   "git fetch": "Fetching latest changes",
   "git rebase": "Rebasing onto target commit",
@@ -130,6 +131,9 @@ export function printResult(result: UpdateRunResult, opts: PrintResultOptions): 
   if (result.after?.version || result.after?.sha) {
     const after = result.after.version ?? result.after.sha?.slice(0, 8) ?? "";
     defaultRuntime.log(`  After: ${theme.muted(after)}`);
+  }
+  if (result.backup?.backupDir) {
+    defaultRuntime.log(`  Backup: ${theme.muted(result.backup.backupDir)}`);
   }
 
   if (!opts.hideSteps && result.steps.length > 0) {

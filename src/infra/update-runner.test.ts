@@ -68,7 +68,7 @@ describe("runGatewayUpdate", () => {
       if (key === `git -C ${tempDir} rev-parse HEAD`) {
         return { stdout: "abc123", stderr: "", code: 0 };
       }
-      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`) {
+      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`) {
         return { stdout: "", stderr: "", code: 0 };
       }
       if (key === `git -C ${tempDir} fetch --all --prune --tags --force`) {
@@ -126,7 +126,7 @@ describe("runGatewayUpdate", () => {
     return {
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`]: { stdout: "" },
       [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: { stdout: `${stableTag}\n` },
       [`git -C ${tempDir} checkout --detach ${stableTag}`]: { stdout: "" },
@@ -194,7 +194,7 @@ describe("runGatewayUpdate", () => {
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
       [`git -C ${tempDir} rev-parse --abbrev-ref HEAD`]: { stdout: "main" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: " M README.md" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`]: { stdout: " M README.md" },
     });
 
     const result = await runWithRunner(runner);
@@ -204,7 +204,7 @@ describe("runGatewayUpdate", () => {
     expect(calls.some((call) => call.includes("rebase"))).toBe(false);
   });
 
-  it("preserves powerdirector.config.json across git tag installs", async () => {
+  it("preserves tracked personal runtime files across git tag installs", async () => {
     await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
     await setupUiIndex();
     await fs.writeFile(
@@ -212,11 +212,12 @@ describe("runGatewayUpdate", () => {
       JSON.stringify({ gateway: { port: 3007 } }, null, 2),
       "utf-8",
     );
+    await fs.writeFile(path.join(tempDir, "MEMORY.md"), "local memory note\n", "utf-8");
 
     const stableTag = "v1.0.1-1";
     const { runner, calls } = createRunner({
       ...buildStableTagResponses(stableTag),
-      [`git -C ${tempDir} checkout -- powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} checkout -- powerdirector.config.json MEMORY.md`]: { stdout: "" },
       "pnpm install": { stdout: "" },
       "pnpm build": { stdout: "" },
       "pnpm ui:build": { stdout: "" },
@@ -229,10 +230,67 @@ describe("runGatewayUpdate", () => {
     const result = await runWithRunner(runner, { channel: "stable" });
 
     expect(result.status).toBe("ok");
-    expect(calls).toContain(`git -C ${tempDir} checkout -- powerdirector.config.json`);
+    expect(calls).toContain(`git -C ${tempDir} checkout -- powerdirector.config.json MEMORY.md`);
     await expect(fs.readFile(path.join(tempDir, "powerdirector.config.json"), "utf-8")).resolves.toContain(
       '"port": 3007',
     );
+    await expect(fs.readFile(path.join(tempDir, "MEMORY.md"), "utf-8")).resolves.toContain(
+      "local memory note",
+    );
+  });
+
+  it("creates a runtime backup before git tag installs", async () => {
+    await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
+    await setupUiIndex();
+    await fs.writeFile(path.join(tempDir, "powerdirector.config.json"), '{"gateway":{"port":3007}}\n', "utf-8");
+    await fs.writeFile(path.join(tempDir, "MEMORY.md"), "session note\n", "utf-8");
+    await fs.writeFile(path.join(tempDir, ".env"), "API_KEY=test\n", "utf-8");
+    await fs.mkdir(path.join(tempDir, "state"), { recursive: true });
+    await fs.writeFile(path.join(tempDir, "state", "session.json"), '{"ok":true}\n', "utf-8");
+
+    const oldHome = process.env.HOME;
+    process.env.HOME = path.join(tempDir, "home");
+
+    const stableTag = "v1.0.2";
+    const { runner } = createRunner({
+      ...buildStableTagResponses(stableTag),
+      [`git -C ${tempDir} checkout -- powerdirector.config.json MEMORY.md`]: { stdout: "" },
+      "pnpm install": { stdout: "" },
+      "pnpm build": { stdout: "" },
+      "pnpm ui:build": { stdout: "" },
+      [`${process.execPath} ${path.join(tempDir, "powerdirector.mjs")} doctor --non-interactive --fix`]: {
+        stdout: "",
+      },
+      [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "def456" },
+    });
+
+    try {
+      const result = await runWithRunner(runner, { channel: "stable" });
+
+      expect(result.status).toBe("ok");
+      expect(result.backup?.copiedPaths).toEqual(
+        expect.arrayContaining(["powerdirector.config.json", "MEMORY.md", ".env", "state"]),
+      );
+      expect(result.backup?.backupDir).toBeTruthy();
+      await expect(
+        fs.readFile(path.join(result.backup!.backupDir, "powerdirector.config.json"), "utf-8"),
+      ).resolves.toContain('"port":3007');
+      await expect(fs.readFile(path.join(result.backup!.backupDir, "MEMORY.md"), "utf-8")).resolves.toContain(
+        "session note",
+      );
+      await expect(fs.readFile(path.join(result.backup!.backupDir, ".env"), "utf-8")).resolves.toContain(
+        "API_KEY=test",
+      );
+      await expect(
+        fs.readFile(path.join(result.backup!.backupDir, "state", "session.json"), "utf-8"),
+      ).resolves.toContain('"ok":true');
+    } finally {
+      if (oldHome === undefined) {
+        delete process.env.HOME;
+      } else {
+        process.env.HOME = oldHome;
+      }
+    }
   });
 
   it("strips TURBOPACK from updater child process env", async () => {
@@ -254,7 +312,7 @@ describe("runGatewayUpdate", () => {
       if (key === `git -C ${tempDir} rev-parse HEAD`) {
         return { stdout: key.includes("(after)") ? "def456" : "abc123", stderr: "", code: 0 };
       }
-      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`) {
+      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`) {
         return { stdout: "", stderr: "", code: 0 };
       }
       if (key === `git -C ${tempDir} fetch --all --prune --tags --force`) {
@@ -292,7 +350,7 @@ describe("runGatewayUpdate", () => {
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
       [`git -C ${tempDir} rev-parse --abbrev-ref HEAD`]: { stdout: "main" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`]: { stdout: "" },
       [`git -C ${tempDir} rev-parse --abbrev-ref --symbolic-full-name @{upstream}`]: {
         stdout: "origin/main",
       },
@@ -351,7 +409,7 @@ describe("runGatewayUpdate", () => {
     const { runner, calls } = createRunner({
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`]: { stdout: "" },
       [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: {
         stdout: `${stableTag}\n${betaTag}\n`,
@@ -381,7 +439,7 @@ describe("runGatewayUpdate", () => {
     const { runner, calls } = createRunner({
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`]: { stdout: "" },
       [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: {
         stdout: `${betaTag}\n${stableTag}\n`,
@@ -610,7 +668,7 @@ describe("runGatewayUpdate", () => {
     const { runner } = createRunner({
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json`]: { stdout: "" },
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`]: { stdout: "" },
       [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: { stdout: `${stableTag}\n` },
       [`git -C ${tempDir} checkout --detach ${stableTag}`]: { stdout: "" },

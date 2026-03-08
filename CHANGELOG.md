@@ -54,6 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Runtime-only `diagnostics/`, `memory/`, and `media/` folders are now gitignored at the repo root so live instances can keep their local state without blocking Git-based updates as a dirty worktree.
 - Fresh git checkouts now install the missing build-time packages needed by the root TypeScript build, and the root workspace exposes `ui:build` so the updater's install pipeline can complete from a clean clone.
 - The setup wizard and sidebar footer now display the actual app version from the build instead of the stale `1.0.0`/`1.0.0-beta.2` fallback strings.
+- Git-based updates now treat `MEMORY.md` as a preserved personal runtime file alongside `powerdirector.config.json`, so local notes/config changes no longer trigger a false dirty-worktree block.
+- Git-based updates now create a timestamped runtime backup before checkout/install/build work, copying `.env`, config/memory files, SQLite state, runtime folders, and auth state so personal data can be restored if an update goes sideways.
 
 ## [1.0.0-beta.2] - 2026-02-25
 
