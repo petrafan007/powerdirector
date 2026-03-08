@@ -585,19 +585,13 @@ export class Agent {
                 }
             }
 
-            const hasRecentToolOutput = messages
-                .slice(-4)
-                .some((m: Message) => m.role === 'user' && typeof m.content === 'string' && m.content.startsWith('[Tool Output for '));
-            if (
-                toolIntentRepairCount < 1
-                && hasRecentToolOutput
-                && this.looksLikeToolIntentWithoutCall(responseText, toolDefs)
-            ) {
+            const looksLikeToolIntent = this.looksLikeToolIntentWithoutCall(responseText, toolDefs);
+            if (looksLikeToolIntent && toolIntentRepairCount < 2) {
                 toolIntentRepairCount++;
                 console.warn(`[Agent] Detected tool intent without callable JSON on turn ${currentTurn}. Requesting a strict tool call format.`);
                 messages.push({
                     role: 'user',
-                    content: 'System: You described using a tool but did not output a valid tool call JSON. Respond with ONLY one JSON object in the format {"tool":"tool_name","args":{...}} if a tool is needed. If no tool is needed, provide the final answer now.',
+                    content: 'System: You described planned tool usage but did not output a valid tool call JSON. If a tool is needed, respond with ONLY one JSON object in the format {"tool":"tool_name","args":{...}}. Do not include markdown, planning text, or explanation. If no tool is needed, provide the final answer now with no planning or tool discussion.',
                     timestamp: Date.now(),
                     metadata: {
                         internal: true,
@@ -609,6 +603,25 @@ export class Agent {
                 prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
                 loopEndedWithTool = true;
                 continue;
+            }
+
+            if (looksLikeToolIntent) {
+                console.warn(`[Agent] Repeated tool intent without callable JSON on turn ${currentTurn}. Returning a concise error instead of surfacing planning text.`);
+                const toolIntentErrorMsg: Message = {
+                    role: 'assistant',
+                    content: 'System Error: The model described tool usage without emitting a valid tool-call JSON. Please retry or switch models.',
+                    timestamp: Date.now(),
+                    metadata: {
+                        status: 'error',
+                        error: 'tool-intent-without-call',
+                        turn: currentTurn,
+                        runId,
+                        sequence: turnSequence++
+                    }
+                };
+                this.sessionManager.saveMessage(sessionId, toolIntentErrorMsg);
+                if (options.onStep) options.onStep(toolIntentErrorMsg);
+                return toolIntentErrorMsg.content as string;
             }
 
             console.log('[Agent] No tool call detected, finishing loop.');
