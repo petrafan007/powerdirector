@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Chat `default/default` sends now explicitly clear sticky session model overrides, so saving new defaults in config and sending with `Default` immediately uses the latest configured primary/fallback chain instead of a stale session-pinned model.
 - Chat config saves now notify the live UI to refresh its provider catalog, and fallback events no longer silently rewrite the user's provider/model picker selection away from `Default`.
+- Providerless same-provider fallback entries now normalize against the configured primary model provider during default routing, so entries like `gpt-5.1-codex-max` no longer disappear from the execution chain when the primary is `openai-codex/...`.
 - The main chat page no longer crashes when opening sessions after setup; provider/model persistence state is initialized before the config-refresh effect runs in production builds.
 - Setup/config provider aliases for Codex CLI and Gemini CLI now normalize to the runtime IDs (`openai-codex`, `google-gemini-cli`), so wizard-saved CLI providers appear in the dropdown and route successfully.
 - The session compaction "Context Baseline" card now renders full-width in the normal transcript flow and keeps stable chronological ordering instead of appearing as a centered floating card.

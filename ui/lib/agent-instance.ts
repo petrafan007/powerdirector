@@ -92,6 +92,23 @@ function isChannelEnabled(configured: any, fallback: boolean): boolean {
     return fallback;
 }
 
+function normalizeDefaultFallbackEntry(entry: string, params: {
+    primaryProvider?: string;
+    configuredProviderIds: Set<string>;
+}): string {
+    const trimmed = entry.trim();
+    if (!trimmed || trimmed.includes('/')) {
+        return trimmed;
+    }
+    if (params.configuredProviderIds.has(trimmed.toLowerCase())) {
+        return trimmed;
+    }
+    if (params.primaryProvider) {
+        return `${params.primaryProvider}/${trimmed}`;
+    }
+    return trimmed;
+}
+
 function parseDotenvContent(content: string): Record<string, string> {
     const env: Record<string, string> = {};
     const lines = content.split(/\r?\n/);
@@ -1119,8 +1136,20 @@ export class PowerDirectorService {
             imageModelHint: imageModelHint || undefined,
             defaultFallbackChain: (() => {
                 const primary = pickString(agentDefaults?.model?.primary);
+                const primaryProvider = primary && primary.includes('/')
+                    ? primary.slice(0, primary.indexOf('/')).trim()
+                    : undefined;
+                const configuredProviderIds = new Set(
+                    Object.keys(normalizeModelProviders((config?.models?.providers as Record<string, any>) || {}))
+                        .map((providerId) => providerId.toLowerCase())
+                );
                 const fallbacks = Array.isArray(agentDefaults?.model?.fallbacks)
-                    ? (agentDefaults.model.fallbacks as any[]).filter((v): v is string => typeof v === 'string' && v.trim().length > 0)
+                    ? (agentDefaults.model.fallbacks as any[])
+                        .filter((v): v is string => typeof v === 'string' && v.trim().length > 0)
+                        .map((entry) => normalizeDefaultFallbackEntry(entry, {
+                            primaryProvider,
+                            configuredProviderIds,
+                        }))
                     : [];
                 return [primary, ...fallbacks].filter((v): v is string => typeof v === 'string' && v.trim().length > 0);
             })(),
