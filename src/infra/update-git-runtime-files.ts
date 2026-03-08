@@ -15,6 +15,8 @@ export const GIT_RUNTIME_BACKUP_PATHS = [
   "memory",
   "ui/.wwebjs_auth",
 ] as const;
+export const GIT_SAFE_TEMP_ROOT_DIR_NAMES = ["tmp"] as const;
+export const GIT_SAFE_TEMP_ROOT_DIR_PREFIXES = [".tmp-"] as const;
 
 export type PreservedGitRuntimeFile = {
   relativePath: string;
@@ -46,6 +48,54 @@ export function buildGitDirtyCheckArgv(root: string): string[] {
     ":!dist/control-ui/",
     ...GIT_RUNTIME_PRESERVE_PATHS.map((relativePath) => `:!${relativePath}`),
   ];
+}
+
+function normalizeGitStatusPath(rawPath: string): string {
+  const trimmed = rawPath.trim();
+  if (!trimmed) {
+    return trimmed;
+  }
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"'))
+    || (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+export function isSafeGitTempRootDirPath(rawPath: string): boolean {
+  const normalizedPath = normalizeGitStatusPath(rawPath);
+  if (!normalizedPath.endsWith("/")) {
+    return false;
+  }
+  const rootDir = normalizedPath.slice(0, -1);
+  if (rootDir.includes("/")) {
+    return false;
+  }
+  if (GIT_SAFE_TEMP_ROOT_DIR_NAMES.includes(rootDir as (typeof GIT_SAFE_TEMP_ROOT_DIR_NAMES)[number])) {
+    return true;
+  }
+  return GIT_SAFE_TEMP_ROOT_DIR_PREFIXES.some((prefix) => rootDir.startsWith(prefix));
+}
+
+export function isIgnorableGitDirtyStatusLine(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed) {
+    return true;
+  }
+  if (!trimmed.startsWith("?? ")) {
+    return false;
+  }
+  return isSafeGitTempRootDirPath(trimmed.slice(3));
+}
+
+export function filterBlockingGitDirtyStatus(stdout: string): string[] {
+  return stdout
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter((line) => line.trim().length > 0)
+    .filter((line) => !isIgnorableGitDirtyStatusLine(line));
 }
 
 function formatBackupTimestamp(date: Date): string {

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The session compaction "Context Baseline" card now renders full-width in the normal transcript flow and keeps stable chronological ordering instead of appearing as a centered floating card.
 - Standard-port/reverse-proxy installs now proxy `/terminal-ws` through the UI server to the configured terminal websocket port, restoring the embedded terminal on HTTPS/default-port deployments.
 - Agent runs that describe planned tool usage without emitting callable JSON now trigger a stricter tool-call repair pass instead of being saved as a giant assistant transcript bubble, preventing Gemini/Codex fallback runs from surfacing internal execution plans as final chat output.
+- Git-based update checks and installs now ignore and automatically remove root-level untracked safe temp directories like `tmp/` and `.tmp-*`, so disposable scratch folders no longer block UI upgrades with a false dirty-worktree failure.
 
 ## [1.1.0-beta1] - 2026-03-01
 

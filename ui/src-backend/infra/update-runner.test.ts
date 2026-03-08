@@ -204,6 +204,49 @@ describe("runGatewayUpdate", () => {
     expect(calls.some((call) => call.includes("rebase"))).toBe(false);
   });
 
+  it("cleans safe untracked temp directories before the git dirty check", async () => {
+    await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
+    await setupUiIndex();
+    await fs.mkdir(path.join(tempDir, "tmp"), { recursive: true });
+    await fs.writeFile(path.join(tempDir, "tmp", "scratch.txt"), "temp\n", "utf-8");
+    await fs.mkdir(path.join(tempDir, ".tmp-frigate-edit"), { recursive: true });
+    await fs.writeFile(path.join(tempDir, ".tmp-frigate-edit", "notes.txt"), "temp\n", "utf-8");
+
+    const stableTag = "v1.0.2";
+    const { runner, calls } = createRunner({
+      ...buildStableTagResponses(stableTag),
+      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`]: {
+        stdout: "?? tmp/\n?? .tmp-frigate-edit/\n",
+      },
+      [`git -C ${tempDir} ls-files --others --exclude-standard --directory --no-empty-directory -- tmp`]: {
+        stdout: "tmp/\n",
+      },
+      [`git -C ${tempDir} ls-files --others --exclude-standard --directory --no-empty-directory -- .tmp-frigate-edit`]: {
+        stdout: ".tmp-frigate-edit/\n",
+      },
+      [`git -C ${tempDir} checkout -- powerdirector.config.json MEMORY.md`]: { stdout: "" },
+      "pnpm install": { stdout: "" },
+      "pnpm build": { stdout: "" },
+      "pnpm ui:build": { stdout: "" },
+      [`${process.execPath} ${path.join(tempDir, "powerdirector.mjs")} doctor --non-interactive --fix`]: {
+        stdout: "",
+      },
+      [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "def456" },
+    });
+
+    const result = await runWithRunner(runner, { channel: "stable" });
+
+    expect(result.status).toBe("ok");
+    expect(calls).toContain(
+      `git -C ${tempDir} ls-files --others --exclude-standard --directory --no-empty-directory -- tmp`,
+    );
+    expect(calls).toContain(
+      `git -C ${tempDir} ls-files --others --exclude-standard --directory --no-empty-directory -- .tmp-frigate-edit`,
+    );
+    await expect(pathExists(path.join(tempDir, "tmp"))).resolves.toBe(false);
+    await expect(pathExists(path.join(tempDir, ".tmp-frigate-edit"))).resolves.toBe(false);
+  });
+
   it("preserves tracked personal runtime files across git tag installs", async () => {
     await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
     await setupUiIndex();

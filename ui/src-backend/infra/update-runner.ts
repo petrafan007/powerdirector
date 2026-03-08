@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import type { Dirent } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { type CommandOptions, runCommandWithTimeout } from '../process/exec';
@@ -24,6 +25,10 @@ import {
 import {
   buildGitDirtyCheckArgv,
   createGitRuntimeBackup,
+  filterBlockingGitDirtyStatus,
+  GIT_SAFE_TEMP_ROOT_DIR_NAMES,
+  GIT_SAFE_TEMP_ROOT_DIR_PREFIXES,
+  isSafeGitTempRootDirPath,
   restorePreservedGitRuntimeFiles,
   snapshotPreservedGitRuntimeFiles,
   type GitRuntimeBackup,
@@ -368,6 +373,59 @@ function normalizeTag(tag?: string) {
   return trimmed;
 }
 
+function shouldConsiderSafeTempRootDir(name: string): boolean {
+  if (GIT_SAFE_TEMP_ROOT_DIR_NAMES.includes(name as (typeof GIT_SAFE_TEMP_ROOT_DIR_NAMES)[number])) {
+    return true;
+  }
+  return GIT_SAFE_TEMP_ROOT_DIR_PREFIXES.some((prefix) => name.startsWith(prefix));
+}
+
+async function cleanupGitSafeTempRootDirs(
+  root: string,
+  runCommand: CommandRunner,
+  timeoutMs: number,
+): Promise<{ removed: string[]; skipped: string[] }> {
+  const removed: string[] = [];
+  const skipped: string[] = [];
+  let entries: Dirent[] = [];
+
+  try {
+    entries = await fs.readdir(root, { withFileTypes: true });
+  } catch {
+    return { removed, skipped };
+  }
+
+  for (const entry of entries) {
+    if (!entry.isDirectory() || !shouldConsiderSafeTempRootDir(entry.name)) {
+      continue;
+    }
+
+    const relativePath = `${entry.name}/`;
+    if (!isSafeGitTempRootDirPath(relativePath)) {
+      continue;
+    }
+
+    const trackedCheck = await runCommand(
+      ["git", "-C", root, "ls-files", "--others", "--exclude-standard", "--directory", "--no-empty-directory", "--", entry.name],
+      { cwd: root, timeoutMs },
+    );
+    const listedUntracked = trackedCheck.stdout
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    if (!listedUntracked.some((line) => isSafeGitTempRootDirPath(line))) {
+      skipped.push(relativePath);
+      continue;
+    }
+
+    await fs.rm(path.join(root, entry.name), { recursive: true, force: true });
+    removed.push(relativePath);
+  }
+
+  return { removed, skipped };
+}
+
 export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<UpdateRunResult> {
   const startedAt = Date.now();
   const runCommand =
@@ -451,7 +509,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     const needsCheckoutMain = channel === "dev" && branch !== DEV_BRANCH;
     const resetRuntimeFilesStepCount = preservedRuntimeFiles.length > 0 ? 1 : 0;
     gitTotalSteps =
-      (channel === "dev" ? (needsCheckoutMain ? 11 : 10) : 9) + resetRuntimeFilesStepCount + 1;
+      (channel === "dev" ? (needsCheckoutMain ? 11 : 10) : 9) + resetRuntimeFilesStepCount + 2;
     const attachGitRuntimeBackup = (result: UpdateRunResult): UpdateRunResult =>
       runtimeBackup ? { ...result, backup: runtimeBackup } : result;
     const buildGitErrorResult = (reason: string): UpdateRunResult => ({
@@ -501,6 +559,17 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       return null;
     };
 
+    const cleanupTempStep = await inlineStep(
+      "cleanup safe temp artifacts",
+      "cleanup safe temp artifacts",
+      gitRoot,
+      async () => cleanupGitSafeTempRootDirs(gitRoot, runCommand, timeoutMs),
+    );
+    steps.push(cleanupTempStep.step);
+    if (cleanupTempStep.error) {
+      return finalizeGitResult(buildGitErrorResult("cleanup-safe-temp-failed"));
+    }
+
     const statusCheck = await runStep(
       step(
         "clean check",
@@ -509,8 +578,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       ),
     );
     steps.push(statusCheck);
-    const hasUncommittedChanges =
-      statusCheck.stdoutTail && statusCheck.stdoutTail.trim().length > 0;
+    const hasUncommittedChanges = filterBlockingGitDirtyStatus(statusCheck.stdoutTail ?? "").length > 0;
     if (hasUncommittedChanges) {
       return finalizeGitResult({
         status: "skipped",

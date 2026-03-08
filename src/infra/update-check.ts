@@ -4,7 +4,7 @@ import { runCommandWithTimeout } from "../process/exec.js";
 import { fetchWithTimeout } from "../utils/fetch-timeout.js";
 import { detectPackageManager as detectPackageManagerImpl } from "./detect-package-manager.js";
 import { parseSemver } from "./runtime-guard.js";
-import { buildGitDirtyCheckArgv } from "./update-git-runtime-files.js";
+import { buildGitDirtyCheckArgv, filterBlockingGitDirtyStatus } from "./update-git-runtime-files.js";
 import { channelToNpmTag, type UpdateChannel } from "./update-channels.js";
 
 export type PackageManager = "pnpm" | "bun" | "npm" | "unknown";
@@ -139,7 +139,7 @@ export async function checkGitUpdateStatus(params: {
     buildGitDirtyCheckArgv(root),
     { timeoutMs },
   ).catch(() => null);
-  const dirty = dirtyRes && dirtyRes.code === 0 ? dirtyRes.stdout.trim().length > 0 : null;
+  const dirty = dirtyRes && dirtyRes.code === 0 ? filterBlockingGitDirtyStatus(dirtyRes.stdout).length > 0 : null;
 
   const fetchOk = params.fetch
     ? await runCommandWithTimeout(
