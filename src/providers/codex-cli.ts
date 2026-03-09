@@ -5,6 +5,7 @@ import { CircuitBreaker } from '../reliability/circuit-breaker.ts';
 import { getRuntimeLogger } from '../core/logger.ts';
 
 type CliInputMode = 'arg' | 'stdin';
+type CodexReasoningEffort = 'low' | 'medium' | 'high' | 'xhigh';
 
 export interface CodexCliBackendConfig {
     command?: string;
@@ -15,6 +16,60 @@ export interface CodexCliBackendConfig {
     clearEnv?: string[];
     modelArg?: string;
     modelAliases?: Record<string, string>;
+    defaultReasoningEffort?: CodexReasoningEffort;
+    modelReasoningEfforts?: Record<string, CodexReasoningEffort>;
+}
+
+type CodexReasoningDecision = {
+    value: CodexReasoningEffort;
+    source: 'request' | 'model' | 'provider' | 'fallback';
+};
+
+export function normalizeCodexCliReasoningEffort(value?: unknown): CodexReasoningEffort | undefined {
+    if (typeof value !== 'string') return undefined;
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'low' || normalized === 'medium' || normalized === 'high' || normalized === 'xhigh') {
+        return normalized;
+    }
+    if (normalized === 'extra high' || normalized === 'extra-high' || normalized === 'extra_high') {
+        return 'xhigh';
+    }
+    return undefined;
+}
+
+function normalizeModelLookupKey(value?: string): string | undefined {
+    if (typeof value !== 'string') return undefined;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed.toLowerCase() : undefined;
+}
+
+export function summarizeCodexCliStderr(stderr: string): string[] {
+    const lines = stderr
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .filter((line) => /(?:\bWARN\b|\bERROR\b|failed|missing|denied|invalid|timed out)/i.test(line));
+
+    if (lines.length === 0) {
+        return [];
+    }
+
+    const counts = new Map<string, number>();
+    const ordered: string[] = [];
+    for (const line of lines) {
+        const normalized = line.replace(/^\d{4}-\d{2}-\d{2}T\S+\s+/, '');
+        if (!counts.has(normalized)) {
+            ordered.push(normalized);
+            counts.set(normalized, 1);
+            continue;
+        }
+        counts.set(normalized, (counts.get(normalized) || 0) + 1);
+    }
+
+    return ordered.slice(0, 6).map((line) => {
+        const count = counts.get(line) || 1;
+        return count > 1 ? `${line} (x${count})` : line;
+    });
 }
 
 /**
@@ -46,18 +101,6 @@ export class CodexCLIProvider implements Provider {
         this.backendConfig = backendConfig;
     }
 
-    private normalizeReasoning(value?: unknown): 'low' | 'medium' | 'high' | 'xhigh' | undefined {
-        if (typeof value !== 'string') return undefined;
-        const normalized = value.trim().toLowerCase();
-        if (normalized === 'low' || normalized === 'medium' || normalized === 'high' || normalized === 'xhigh') {
-            return normalized;
-        }
-        if (normalized === 'extra high' || normalized === 'extra-high' || normalized === 'extra_high') {
-            return 'xhigh';
-        }
-        return undefined;
-    }
-
     private resolveInputMode(): CliInputMode {
         return this.backendConfig?.input === 'arg' ? 'arg' : 'stdin';
     }
@@ -70,6 +113,30 @@ export class CodexCLIProvider implements Provider {
             return alias.trim();
         }
         return chosen;
+    }
+
+    private resolveReasoning(model: string, requested?: unknown): CodexReasoningDecision {
+        const explicit = normalizeCodexCliReasoningEffort(requested);
+        if (explicit) {
+            return { value: explicit, source: 'request' };
+        }
+
+        const modelKey = normalizeModelLookupKey(model);
+        const modelKeys = modelKey ? [modelKey, `openai-codex/${modelKey}`] : [];
+        for (const key of modelKeys) {
+            const byModel = this.backendConfig?.modelReasoningEfforts?.[key];
+            const modelReasoning = normalizeCodexCliReasoningEffort(byModel);
+            if (modelReasoning) {
+                return { value: modelReasoning, source: 'model' };
+            }
+        }
+
+        const providerReasoning = normalizeCodexCliReasoningEffort(this.backendConfig?.defaultReasoningEffort);
+        if (providerReasoning) {
+            return { value: providerReasoning, source: 'provider' };
+        }
+
+        return { value: 'high', source: 'fallback' };
     }
 
     private resolvePromptArg(prompt: string): string {
@@ -114,10 +181,10 @@ export class CodexCLIProvider implements Provider {
 
     private buildArgs(params: {
         prompt: string;
-        model?: string;
+        resolvedModel: string;
         forceUnrestricted: boolean;
         mode: string;
-        reasoning?: 'low' | 'medium' | 'high' | 'xhigh';
+        reasoning: CodexReasoningEffort;
     }): string[] {
         const baseArgs = Array.isArray(this.backendConfig?.args) && this.backendConfig!.args!.length > 0
             ? [...this.backendConfig!.args!]
@@ -141,16 +208,13 @@ export class CodexCLIProvider implements Provider {
         const modelArg = (typeof this.backendConfig?.modelArg === 'string' && this.backendConfig.modelArg.trim().length > 0)
             ? this.backendConfig.modelArg.trim()
             : '--model';
-        const resolvedModel = this.resolveModel(params.model);
         if (modelArg && !args.includes(modelArg)) {
-            args.push(modelArg, resolvedModel);
+            args.push(modelArg, params.resolvedModel);
         }
 
-        if (params.reasoning) {
-            const reasoningFlag = `model_reasoning_effort=${params.reasoning}`;
-            if (!args.includes(reasoningFlag)) {
-                args.push('-c', reasoningFlag);
-            }
+        const reasoningFlag = `model_reasoning_effort=${params.reasoning}`;
+        if (!args.includes(reasoningFlag)) {
+            args.push('-c', reasoningFlag);
         }
 
         if (inputMode === 'arg') {
@@ -179,19 +243,20 @@ export class CodexCLIProvider implements Provider {
             const logger = getRuntimeLogger();
             const mode = String(options?.approvalMode || this.approvalMode || 'unrestricted').trim().toLowerCase();
             const forceUnrestricted = mode === 'unrestricted' || mode === 'danger-full-access' || mode === 'yolo';
-            const reasoning = this.normalizeReasoning(options?.reasoning);
+            const resolvedModel = this.resolveModel(model);
+            const reasoning = this.resolveReasoning(resolvedModel, options?.reasoning);
             const inputMode = this.resolveInputMode();
             const command = this.resolveCommand();
             const args = this.buildArgs({
                 prompt,
-                model,
+                resolvedModel,
                 forceUnrestricted,
                 mode,
-                reasoning
+                reasoning: reasoning.value
             });
             const spawnEnv = this.buildSpawnEnv();
 
-            logger.info(`[CodexCLIProvider] Spawning codex with mode=${forceUnrestricted ? 'unrestricted' : mode || 'full-auto'} reasoning=${reasoning || 'default'} input=${inputMode}`);
+            logger.info(`[CodexCLIProvider] Spawning codex with mode=${forceUnrestricted ? 'unrestricted' : mode || 'full-auto'} model=${resolvedModel} reasoning=${reasoning.value} source=${reasoning.source} input=${inputMode}`);
 
             const child = spawn(command, args, {
                 env: spawnEnv,
@@ -266,6 +331,10 @@ export class CodexCLIProvider implements Provider {
                 logger.info(`[CodexCLIProvider] Process closed with code ${code}`);
                 if (settled) {
                     return;
+                }
+                const diagnostics = summarizeCodexCliStderr(stderr);
+                if (diagnostics.length > 0) {
+                    logger.warn(`[CodexCLIProvider] stderr diagnostics: ${diagnostics.join(' | ')}`);
                 }
                 if (code !== 0) {
                     settleReject(new Error(`Codex CLI exited with code ${code}: ${stderr.slice(0, 500) || stdout.trim().slice(-500) || 'Unknown error'}`));

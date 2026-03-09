@@ -275,6 +275,28 @@ export class Agent {
                             options.modelHint = `${metadata.provider}${metadata.model ? `/${metadata.model}` : ''}`;
                             // Notify Gateway (Session Scope)
                             if (options.onFallback) options.onFallback(metadata);
+                        },
+                        onRetry: (info: any) => {
+                            if (!options.onStep) return;
+                            const providerLabel = info.model
+                                ? `${info.provider}/${info.model}`
+                                : info.provider;
+                            options.onStep({
+                                role: 'assistant',
+                                content: `[System: ${providerLabel} retry ${info.attempt}/${info.maxRetries} in ${info.delayMs}ms (${info.reason})]`,
+                                timestamp: runStartTime + turnSequence,
+                                metadata: {
+                                    type: 'notification',
+                                    status: 'retrying',
+                                    turn: currentTurn,
+                                    runId,
+                                    sequence: turnSequence,
+                                    provider: info.provider,
+                                    model: info.model,
+                                    retryAttempt: info.attempt,
+                                    retryMaxAttempts: info.maxRetries
+                                }
+                            });
                         }
                     }),
                     stepTimeoutMs,

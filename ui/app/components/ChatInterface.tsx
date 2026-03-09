@@ -84,6 +84,56 @@ function normalizeProviderId(value: unknown): string {
     return normalized;
 }
 
+function normalizeReasoningLevel(value: unknown): ReasoningLevel | undefined {
+    if (typeof value !== 'string') return undefined;
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'low' || normalized === 'medium' || normalized === 'high' || normalized === 'xhigh') {
+        return normalized;
+    }
+    if (normalized === 'extra high' || normalized === 'extra-high' || normalized === 'extra_high') {
+        return 'xhigh';
+    }
+    return undefined;
+}
+
+function parseProviderModel(value: unknown): { provider: string; model: string } {
+    const normalized = normalizedText(value);
+    if (!normalized) return { provider: '', model: '' };
+    const slash = normalized.indexOf('/');
+    if (slash === -1) {
+        return { provider: '', model: normalized };
+    }
+    return {
+        provider: normalizeProviderId(normalized.slice(0, slash)),
+        model: normalized.slice(slash + 1).trim(),
+    };
+}
+
+function getConfiguredCodexDefaultReasoning(config: any): ReasoningLevel | undefined {
+    const providers = config?.models?.providers;
+    if (!providers || typeof providers !== 'object') return undefined;
+    for (const [providerId, providerConfig] of Object.entries(providers)) {
+        if (normalizeProviderId(providerId) !== 'openai-codex') continue;
+        return normalizeReasoningLevel((providerConfig as any)?.defaultReasoningEffort);
+    }
+    return undefined;
+}
+
+function getConfiguredCodexModelReasoning(config: any, provider: string, model: string): ReasoningLevel | undefined {
+    if (provider !== 'openai-codex' || !model) return undefined;
+    const entries = config?.agents?.defaults?.models;
+    if (!entries || typeof entries !== 'object') return undefined;
+
+    const target = `${provider}/${model}`.toLowerCase();
+    for (const [rawKey, entry] of Object.entries(entries)) {
+        const parsed = parseProviderModel(rawKey);
+        if (!parsed.provider || !parsed.model) continue;
+        if (`${parsed.provider}/${parsed.model}`.toLowerCase() !== target) continue;
+        return normalizeReasoningLevel((entry as any)?.reasoningEffort);
+    }
+    return undefined;
+}
+
 function formatProviderModel(provider: unknown, model: unknown): string {
     const providerId = normalizeProviderId(provider);
     const modelName = normalizedText(model);
@@ -191,6 +241,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         fetchHistory();
     }, [sessionId]);
 
+    const { gatewayClient, config } = useSettings();
+
     // ─── Initial Load & Persistence ───
     useEffect(() => {
         fetchUiSettings();
@@ -230,10 +282,29 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         });
     }, []);
 
+    const resolvedSelection = useMemo(() => {
+        if (selectedProvider === 'default' || selectedModel === 'default') {
+            return parseProviderModel(config?.agents?.defaults?.model?.primary);
+        }
+        return {
+            provider: normalizeProviderId(selectedProvider),
+            model: normalizedText(selectedModel),
+        };
+    }, [config, selectedModel, selectedProvider]);
+
+    const configuredReasoningDefault = useMemo(() => {
+        const byModel = getConfiguredCodexModelReasoning(
+            config,
+            resolvedSelection.provider,
+            resolvedSelection.model,
+        );
+        return byModel || getConfiguredCodexDefaultReasoning(config) || DEFAULT_REASONING_LEVEL;
+    }, [config, resolvedSelection.model, resolvedSelection.provider]);
+
     useEffect(() => {
         const savedForSession = sessionReasoningMap[sessionId];
-        setSelectedReasoning(savedForSession || DEFAULT_REASONING_LEVEL);
-    }, [sessionId, sessionReasoningMap]);
+        setSelectedReasoning(savedForSession || configuredReasoningDefault);
+    }, [configuredReasoningDefault, sessionId, sessionReasoningMap]);
 
     // ─── Fetch Agent Identity ───
     useEffect(() => {
@@ -551,8 +622,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     // ─── Send message ───
 
     // ─── Gateway Integration ───
-    const { gatewayClient } = useSettings();
-
     const [toolInput, setToolInput] = useState<Record<string, string>>({});
 
     const [showToolPasswords, setShowToolPasswords] = useState<Record<string, boolean>>({});
@@ -1714,7 +1783,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     // ─── Get models for selected provider ───
     const currentProvider = providers.find(p => p.id === selectedProvider);
     const currentModels = currentProvider?.models ?? [];
-    const isCodexReasoningModel = selectedProvider === 'openai-codex' || /codex/i.test(selectedModel);
+    const isCodexReasoningModel = resolvedSelection.provider === 'openai-codex' || /codex/i.test(resolvedSelection.model);
 
     // When provider changes, restore last used model or default
     const handleProviderChange = (newProviderId: string) => {

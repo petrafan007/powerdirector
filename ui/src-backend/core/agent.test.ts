@@ -161,4 +161,50 @@ describe("Agent tool intent repair", () => {
     ).toBe(true);
     expect(saved.at(-1)?.content).toBe("Frigate is running.");
   });
+
+  it("emits a retry notification when the provider router reports a retry", async () => {
+    const sessionManager = new FakeSessionManager();
+    const sessionId = "session-retry";
+    sessionManager.createSession(sessionId);
+
+    const executeStream = vi.fn(async (_prompt, _model, options) => {
+      options?.onRetry?.({
+        attempt: 1,
+        maxRetries: 2,
+        provider: "openai-codex",
+        model: "gpt-5.4",
+        reason: "PROVIDER_TIMEOUT: first chunk timed out",
+        delayMs: 2100,
+      });
+      return {
+        stream: streamChunks("Recovered."),
+        metadata: {
+          provider: "openai-codex",
+          model: "gpt-5.4",
+        },
+      };
+    });
+
+    const onStep = vi.fn();
+    const agent = new Agent(
+      sessionManager as any,
+      { logUsage: vi.fn() } as any,
+      { executeStream } as any,
+      { prune: (messages: any[]) => messages } as any,
+      new ToolRegistry(),
+      undefined,
+      { maxTurns: 3 },
+    );
+
+    const result = await agent.runStep(sessionId, "Ping", { onStep, runId: "run_retry" });
+
+    expect(result).toBe("Recovered.");
+    expect(
+      onStep.mock.calls.some(
+        ([message]) =>
+          typeof message?.content === "string"
+          && message.content.includes("openai-codex/gpt-5.4 retry 1/2"),
+      ),
+    ).toBe(true);
+  });
 });

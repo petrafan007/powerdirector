@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standard-port/reverse-proxy installs now proxy `/terminal-ws` through the UI server to the configured terminal websocket port, restoring the embedded terminal on HTTPS/default-port deployments.
 - Agent runs that describe planned tool usage without emitting callable JSON now trigger a stricter tool-call repair pass instead of being saved as a giant assistant transcript bubble, preventing Gemini/Codex fallback runs from surfacing internal execution plans as final chat output.
 - Git-based update checks and installs now ignore and automatically remove root-level untracked safe temp directories like `tmp/` and `.tmp-*`, so disposable scratch folders no longer block UI upgrades with a false dirty-worktree failure.
+- Codex CLI now resolves `model_reasoning_effort` explicitly from PowerDirector config or the chat override (`agents.defaults.models[*].reasoningEffort`, `models.providers.openai-codex.defaultReasoningEffort`, then fallback `high`) instead of silently inheriting `~/.codex/config.toml`, and the chat composer now picks up that configured default for Codex-backed sessions.
+- Codex CLI stderr warnings are now summarized into the PowerDirector log even on successful runs, exposing hidden Codex state-db/runtime issues that previously disappeared unless the CLI exited non-zero.
+- Provider retries now emit visible chat-system notifications with the retry attempt, delay, and reason, so stalled Codex/Gemini attempts no longer appear to vanish into the UI with no explanation.
+- Auto-update now defers installation and restart while chat runs are still active, preventing background updates from interrupting in-flight agent replies.
 
 ## [1.1.0-beta1] - 2026-03-01
 

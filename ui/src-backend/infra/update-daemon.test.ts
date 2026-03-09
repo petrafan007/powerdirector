@@ -126,6 +126,27 @@ describe("UpdateDaemon", () => {
 
             daemon.stop();
         });
+
+        it("defers beta auto updates while chat runs are active", async () => {
+            const config = createMockConfig({ channel: "beta" });
+            const daemon = new UpdateDaemon(config, false, {
+                getActiveRunsCount: () => 2,
+            });
+
+            vi.mocked(getUpdateAvailable).mockReturnValue({
+                currentVersion: "1.0.0",
+                latestVersion: "1.1.0-beta.1",
+                channel: "beta",
+            });
+
+            daemon.start();
+            await vi.advanceTimersByTimeAsync(5000);
+
+            expect(runGatewayUpdateCheck).toHaveBeenCalled();
+            expect(runGatewayUpdate).not.toHaveBeenCalled();
+
+            daemon.stop();
+        });
     });
 
     describe("tick behavior (stable channel)", () => {

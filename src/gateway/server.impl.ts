@@ -646,7 +646,9 @@ export async function startGatewayServer(
         broadcast(GATEWAY_EVENT_UPDATE_AVAILABLE, payload, { dropIfSlow: true });
       },
     });
-    updateDaemon = new UpdateDaemon(cfgAtStart, isNixMode);
+    updateDaemon = new UpdateDaemon(cfgAtStart, isNixMode, {
+      getActiveRunsCount: () => chatAbortControllers.size,
+    });
     updateDaemon.start();
   }
   const tailscaleCleanup = minimalTestGateway

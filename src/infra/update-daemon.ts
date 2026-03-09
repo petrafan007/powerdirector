@@ -17,6 +17,7 @@ interface DaemonState {
 
 interface UpdateDaemonOptions {
     onUpdated?: (result: UpdateRunResult) => Promise<void> | void;
+    getActiveRunsCount?: () => number;
 }
 
 export class UpdateDaemon {
@@ -27,11 +28,13 @@ export class UpdateDaemon {
     private checkIntervalMs: number;
     private running = false;
     private onUpdated?: UpdateDaemonOptions["onUpdated"];
+    private getActiveRunsCount?: UpdateDaemonOptions["getActiveRunsCount"];
 
     constructor(cfg: ReturnType<typeof loadConfig>, isNixMode: boolean, options: UpdateDaemonOptions = {}) {
         this.cfg = cfg;
         this.isNixMode = isNixMode;
         this.onUpdated = options.onUpdated;
+        this.getActiveRunsCount = options.getActiveRunsCount;
         // Default check interval 10 minutes, unless beta overrides to less
         this.checkIntervalMs = 10 * 60 * 1000;
     }
@@ -148,6 +151,11 @@ export class UpdateDaemon {
     }
 
     private async executeUpdate(channel: string) {
+        const activeRuns = Math.max(0, Number(this.getActiveRunsCount?.() ?? 0));
+        if (activeRuns > 0) {
+            this.logger.info(`Deferring auto-update for channel ${channel}; ${activeRuns} active chat run(s) still running.`);
+            return;
+        }
         this.logger.info(`Triggering background gateway update for channel: ${channel}`);
         const result = await runGatewayUpdate({ channel: channel as any });
         if (result.status === "error") {

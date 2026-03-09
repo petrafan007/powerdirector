@@ -24,6 +24,7 @@ export interface ProviderExecutionOptions {
      */
     fallbackChain?: string[];
     onFallback?: (metadata: ProviderExecutionMetadata) => void;
+    onRetry?: (info: ProviderRetryInfo) => void;
 }
 
 export interface ProviderExecutionMetadata {
@@ -40,6 +41,15 @@ export interface ProviderExecutionMetadata {
 export interface ProviderExecutionResult {
     output: string;
     metadata: ProviderExecutionMetadata;
+}
+
+export interface ProviderRetryInfo {
+    attempt: number;
+    maxRetries: number;
+    provider: string;
+    model?: string;
+    reason: string;
+    delayMs: number;
 }
 
 export interface ProviderStreamResult {
@@ -906,6 +916,14 @@ export class ProviderRouter {
                 console.log(
                     `Retry ${attempt}/${maxRetries} for ${provider.config.name} in ${Math.round(delay)}ms (reason: ${reason})`
                 );
+                options?.onRetry?.({
+                    attempt,
+                    maxRetries,
+                    provider: provider.config.name,
+                    model,
+                    reason,
+                    delayMs: Math.round(delay),
+                });
                 await this.waitWithAbort(delay, options?.signal);
             }
         }

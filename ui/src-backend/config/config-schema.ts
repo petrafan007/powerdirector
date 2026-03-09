@@ -114,6 +114,7 @@ export const modelProviderSchema = ModelProviderSchema.safeExtend({
   name: z.string().optional(),
   baseURL: z.string().optional(),
   defaultModel: z.string().optional(),
+  defaultReasoningEffort: z.enum(["low", "medium", "high", "xhigh"]).optional(),
   rateLimit: z.number().int().positive().optional(),
 }).strict();
 

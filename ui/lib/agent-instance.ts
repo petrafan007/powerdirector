@@ -362,6 +362,61 @@ function normalizeBackendId(value: string): string {
     return normalizeLookupKey(value);
 }
 
+type CodexReasoningEffort = 'low' | 'medium' | 'high' | 'xhigh';
+
+function normalizeCodexReasoningEffort(value: unknown): CodexReasoningEffort | undefined {
+    if (typeof value !== 'string') return undefined;
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'low' || normalized === 'medium' || normalized === 'high' || normalized === 'xhigh') {
+        return normalized;
+    }
+    if (normalized === 'extra high' || normalized === 'extra-high' || normalized === 'extra_high') {
+        return 'xhigh';
+    }
+    return undefined;
+}
+
+function normalizeConfiguredModelKey(value: unknown): string | undefined {
+    if (typeof value !== 'string') return undefined;
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+    const slash = trimmed.indexOf('/');
+    if (slash === -1) return undefined;
+    const providerRaw = normalizeLookupKey(trimmed.slice(0, slash));
+    const model = trimmed.slice(slash + 1).trim();
+    if (!providerRaw || !model) return undefined;
+    const provider = MODEL_PROVIDER_ALIASES[providerRaw] || providerRaw;
+    return `${provider}/${model}`;
+}
+
+function resolveCodexReasoningConfig(config: any): {
+    defaultReasoningEffort?: CodexReasoningEffort;
+    modelReasoningEfforts?: Record<string, CodexReasoningEffort>;
+} {
+    const providers = normalizeModelProviders((config?.models?.providers || {}) as Record<string, any>);
+    const providerDefault = normalizeCodexReasoningEffort(providers['openai-codex']?.defaultReasoningEffort);
+    const rawEntries = (config?.agents?.defaults?.models && typeof config.agents.defaults.models === 'object')
+        ? config.agents.defaults.models as Record<string, any>
+        : {};
+
+    const modelReasoningEfforts: Record<string, CodexReasoningEffort> = {};
+    for (const [rawKey, entry] of Object.entries(rawEntries)) {
+        const normalizedKey = normalizeConfiguredModelKey(rawKey);
+        if (!normalizedKey || !normalizedKey.startsWith('openai-codex/')) {
+            continue;
+        }
+        const override = normalizeCodexReasoningEffort((entry as any)?.reasoningEffort);
+        if (override) {
+            modelReasoningEfforts[normalizedKey.toLowerCase()] = override;
+        }
+    }
+
+    return {
+        defaultReasoningEffort: providerDefault,
+        modelReasoningEfforts: Object.keys(modelReasoningEfforts).length > 0 ? modelReasoningEfforts : undefined,
+    };
+}
+
 function resolveCliBackendConfig(agentDefaults: any, candidates: string[]): CliBackendCommonConfig | undefined {
     const configured = (agentDefaults?.cliBackends && typeof agentDefaults.cliBackends === 'object')
         ? agentDefaults.cliBackends as Record<string, any>
@@ -502,17 +557,6 @@ export class PowerDirectorService {
         }).catch((error) => {
             console.warn('Startup update check failed:', error);
         });
-        this.updateDaemon = new UpdateDaemon(config, false, {
-            onUpdated: async () => {
-                const restart = scheduleAppProcessRestart();
-                if (!restart.ok) {
-                    runtimeLogger.warn(
-                        `auto-update installed successfully but restart failed (${restart.mode}${restart.detail ? `: ${restart.detail}` : ''})`
-                    );
-                }
-            }
-        });
-        this.updateDaemon.start();
 
         const modelProviders = normalizeModelProviders((config.models?.providers || {}) as Record<string, any>);
         const channelsConfig = (config.channels || {}) as Record<string, any>;
@@ -872,6 +916,7 @@ export class PowerDirectorService {
         const codexCliModels = Array.isArray(codexCliCfg.models) ? codexCliCfg.models : [];
         const codexCliModel = pickString(codexCliCfg.defaultModel, env.CODEX_CLI_MODEL, codexCliModels[0]?.id) || '';
         const codexApprovalMode = pickString(codexCliCfg.approvalMode, env.CODEX_CLI_APPROVAL_MODE, 'unrestricted') || 'unrestricted';
+        const codexReasoningConfig = resolveCodexReasoningConfig(config);
         if (codexCliEnabled) {
             console.log('Registering Codex CLI Provider...');
             const codexProvider = new CodexCLIProvider(
@@ -881,7 +926,11 @@ export class PowerDirectorService {
                     ...process.env,
                     ...runtimeProcessEnv
                 },
-                toCodexCliBackendConfig(codexCliBackend)
+                {
+                    ...(toCodexCliBackendConfig(codexCliBackend) || {}),
+                    defaultReasoningEffort: codexReasoningConfig.defaultReasoningEffort,
+                    modelReasoningEfforts: codexReasoningConfig.modelReasoningEfforts,
+                }
             );
             router.addProvider(codexProvider);
         }
@@ -1292,6 +1341,19 @@ export class PowerDirectorService {
         this.gateway.start().catch(err => console.error('Gateway start failed:', err));
         this.webRuntime.start().catch(err => console.error('Web runtime start failed:', err));
         this.nodeHost.start().catch(err => console.error('Node host start failed:', err));
+
+        this.updateDaemon = new UpdateDaemon(config, false, {
+            getActiveRunsCount: () => this.gateway.getActiveAgentsCount(),
+            onUpdated: async () => {
+                const restart = scheduleAppProcessRestart();
+                if (!restart.ok) {
+                    runtimeLogger.warn(
+                        `auto-update installed successfully but restart failed (${restart.mode}${restart.detail ? `: ${restart.detail}` : ''})`
+                    );
+                }
+            }
+        });
+        this.updateDaemon.start();
     }
 
     public static getInstance(): PowerDirectorService {
