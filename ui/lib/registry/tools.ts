@@ -38,7 +38,7 @@ import { SubagentsTool } from '@/src-backend/tools/subagent';
 import { SkillTool } from '@/src-backend/tools/skill';
 import { coerceImageGenModelConfig } from '@/src-backend/tools/image-gen-router';
 import { setGlobalSkillsManager } from '@/src-backend/tools/skill-executor';
-import { frigateTool } from '@/src-backend/tools/frigate';
+import { FrigateTool } from '@/src-backend/tools/frigate';
 
 export interface ToolInitializationOptions {
     env: any;
@@ -296,5 +296,5 @@ export function initializeTools(tools: ToolRegistry, options: ToolInitialization
     }
 
     // Register Frigate NVR tool for camera snapshots with image validation
-    registerTool(frigateTool);
+    registerTool(new FrigateTool({ mediaDir: mediaStatus.storageDir }));
 }

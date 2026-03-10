@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { getRuntimeLogger } from '../core/logger.ts';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
 
 /**
  * Result from executing a skill
@@ -129,7 +130,7 @@ async function executeNanoBananaPro(options: SkillExecutionOptions): Promise<Ski
 
     // Resolve output path
     const timestamp = Date.now();
-    const outputPath = output || path.join(storageDir || baseDir, 'media', `image-${timestamp}.png`);
+    const outputPath = output || path.join(storageDir || resolveDefaultMediaStorageDir(), `image-${timestamp}.png`);
     const outputDir = path.dirname(outputPath);
 
     // Ensure output directory exists

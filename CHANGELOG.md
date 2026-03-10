@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Gemini CLI now spawns directly instead of via `/bin/sh`, streams stdin prompts without a shell pipeline, emits a keepalive chunk when stderr shows retry/backoff activity, and summarizes retry/capacity diagnostics into the PowerDirector log so `gemini-3.1-pro-preview` no longer drops into a false first-chunk timeout while OAuth-backed retries are still in progress.
 - Gemini CLI retry/capacity failures that exit with code `0` but produce no assistant text are now treated as provider errors instead of silent empty successes, so `gemini-3.1-pro-preview` falls through to the next fallback model or surfaces a real error instead of disappearing into the chat UI.
 - Git-based updates now sanitize bundler environment flags for the post-doctor `ui:build` repair path too, preventing inherited `TURBOPACK=auto` from breaking same-version and new-version UI upgrades with the Next.js multiple-bundler error.
+- The embedded UI runtime now resolves the default agent workspace even when `agents.defaults.workspace` is blank, so shell and filesystem tool activity no longer falls back to the git checkout cwd and spray temporary/generated files into the install repo root.
+- Media, Frigate snapshots/clips, image-generation outputs, and default diagnostics traces now write to the PowerDirector state directory by default instead of the install repo, keeping routine runtime artifacts out of Git-managed installs unless the user explicitly configures a different location.
 
 ## [1.1.0-beta.2] - 2026-03-07
 

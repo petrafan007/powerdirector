@@ -44,6 +44,8 @@ import { resolveAuthCredential } from './auth-resolver';
 import { getConfigManager } from './config-instance';
 import { resolvePowerDirectorRoot } from './paths';
 import { scheduleAppProcessRestart } from './process-restart';
+import { resolveServiceWorkspaceDir } from './runtime-defaults';
+import { resolveDefaultGeneratedDir, resolveDefaultTmpDir } from '@/src-backend/infra/runtime-paths';
 
 function pickString(...values: Array<string | undefined | null>): string | undefined {
     for (const value of values) {
@@ -568,8 +570,9 @@ export class PowerDirectorService {
         const nodeHostCfg = config.nodeHost || {};
         const cronCfg = config.cron || {};
 
-        const workspaceDir = pickString(agentDefaults.workspace);
+        const workspaceDir = resolveServiceWorkspaceDir(config);
         const runtimeProcessEnv = toProcessEnvMap(env);
+        fs.mkdirSync(workspaceDir, { recursive: true });
 
         console.log('[PowerDirector] Environment loaded:', {
             rootDir,
@@ -579,9 +582,7 @@ export class PowerDirectorService {
             hasStability: !!env.STABILITY_API_KEY,
             geminiKeyLength: env.GEMINI_API_KEY?.length || 0
         });
-        if (workspaceDir) {
-            runtimeProcessEnv.WORKSPACE_DIR = workspaceDir;
-        }
+        runtimeProcessEnv.WORKSPACE_DIR = workspaceDir;
 
         const imageModelPrimary = pickString(agentDefaults.imageModel?.primary);
         if (imageModelPrimary) {
@@ -590,6 +591,9 @@ export class PowerDirectorService {
         }
 
         this.mediaManager = new MediaManager(config.media || {}, rootDir);
+        runtimeProcessEnv.MEDIA_DIR = this.mediaManager.getStatus().storageDir;
+        runtimeProcessEnv.POWERDIRECTOR_GENERATED_DIR = resolveDefaultGeneratedDir();
+        runtimeProcessEnv.POWERDIRECTOR_TMP_DIR = resolveDefaultTmpDir();
         this.talkManager = new TalkManager(config.talk || {}, { baseDir: rootDir });
 
         const channelAliases: Record<string, string[]> = {

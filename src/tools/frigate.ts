@@ -6,8 +6,19 @@ import http from 'http';
 import https from 'https';
 import { getRuntimeLogger } from '../core/logger.ts';
 import { execSync } from 'child_process';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
 
-const MEDIA_DIR = process.env.MEDIA_DIR || path.join(process.cwd(), 'media');
+interface FrigateToolOptions {
+    mediaDir?: string;
+}
+
+function resolveDisplayPath(targetPath: string): string {
+    const relativePath = path.relative(process.cwd(), targetPath);
+    if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+        return targetPath;
+    }
+    return relativePath;
+}
 
 /**
  * Validates that a buffer contains actual image data by checking magic bytes.
@@ -75,6 +86,13 @@ Use this tool instead of curl to fetch images from Frigate - it properly validat
         required: ['action']
     };
 
+    private readonly mediaDir: string;
+
+    constructor(options: FrigateToolOptions = {}) {
+        const rawMediaDir = typeof options.mediaDir === 'string' ? options.mediaDir.trim() : '';
+        this.mediaDir = rawMediaDir || process.env.MEDIA_DIR || resolveDefaultMediaStorageDir();
+    }
+
     async execute(args: any): Promise<ToolResult> {
         const { action, host = 'http://localhost:5000', camera, eventId, outputPath, label, after, limit = 10 } = args;
         try {
@@ -113,10 +131,10 @@ Use this tool instead of curl to fetch images from Frigate - it properly validat
             }
             // ALWAYS save to media directory for consistent access via /api/media
             const filename = `frigate-clip-${eventId}-${Date.now()}.mp4`;
-            const finalPath = path.join(MEDIA_DIR, filename);
+            const finalPath = path.join(this.mediaDir, filename);
 
             try {
-                await fs.promises.mkdir(MEDIA_DIR, { recursive: true });
+                await fs.promises.mkdir(this.mediaDir, { recursive: true });
                 await fs.promises.writeFile(finalPath, buffer);
                 logger.info(`[FrigateTool] Saved video clip to ${finalPath}`);
             } catch (err: any) {
@@ -124,8 +142,7 @@ Use this tool instead of curl to fetch images from Frigate - it properly validat
                 return { output: `Error saving video clip: ${err.message}`, isError: true };
             }
 
-            const relativePath = path.relative(process.cwd(), finalPath);
-            return { output: `Video clip saved: ${relativePath} (${buffer.length} bytes)` };
+            return { output: `Video clip saved: ${resolveDisplayPath(finalPath)} (${buffer.length} bytes)` };
         } catch (error: any) { return { output: `Error fetching clip: ${error.message}`, isError: true }; }
     }
 
@@ -153,10 +170,10 @@ Use this tool instead of curl to fetch images from Frigate - it properly validat
         const ext = imageType === 'jpeg' ? 'jpg' : imageType;
         // ALWAYS use media directory - ignore outputPath from LLM to prevent saving to wrong locations
         const filename = `frigate-${Date.now()}.${ext}`;
-        const finalPath = path.join(MEDIA_DIR, filename);
+        const finalPath = path.join(this.mediaDir, filename);
 
         try {
-            await fs.promises.mkdir(MEDIA_DIR, { recursive: true });
+            await fs.promises.mkdir(this.mediaDir, { recursive: true });
             await fs.promises.writeFile(finalPath, buffer);
             logger.info(`[FrigateTool] Saved image to ${finalPath}`);
         } catch (err: any) {
@@ -165,8 +182,7 @@ Use this tool instead of curl to fetch images from Frigate - it properly validat
         }
 
         // Return path relative to cwd for display (so UI can find it via /api/media)
-        const relativePath = path.relative(process.cwd(), finalPath);
-        return { output: `Image saved: ${relativePath} (${buffer.length} bytes, type: ${imageType})` };
+        return { output: `Image saved: ${resolveDisplayPath(finalPath)} (${buffer.length} bytes, type: ${imageType})` };
     }
 
     private getStartOfToday(): number {

@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { getRuntimeLogger } from './logger.js';
+import { resolveDefaultDiagnosticsDir } from '../infra/runtime-paths.js';
 
 export interface DiagnosticsOtelConfig {
     enabled?: boolean;
@@ -51,8 +52,13 @@ export class DiagnosticsManager {
         this.cacheTrace = { ...(config.cacheTrace || {}) };
         this.otelEnabled = this.enabled && (this.otel.enabled ?? false);
         this.cacheTraceEnabled = this.enabled && (this.cacheTrace.enabled ?? false);
-        this.otelTracePath = path.join(baseDir, 'diagnostics', 'otel.ndjson');
-        this.cacheTracePath = this.resolveCacheTracePath(baseDir, this.cacheTrace.filePath);
+        const defaultDiagnosticsDir = resolveDefaultDiagnosticsDir();
+        this.otelTracePath = path.join(defaultDiagnosticsDir, 'otel.ndjson');
+        this.cacheTracePath = this.resolveCacheTracePath(
+            defaultDiagnosticsDir,
+            baseDir,
+            this.cacheTrace.filePath,
+        );
     }
 
     public start(): void {
@@ -147,12 +153,16 @@ export class DiagnosticsManager {
         };
     }
 
-    private resolveCacheTracePath(baseDir: string, filePath?: string): string {
+    private resolveCacheTracePath(
+        defaultDiagnosticsDir: string,
+        baseDir: string,
+        filePath?: string,
+    ): string {
         if (typeof filePath === 'string' && filePath.trim().length > 0) {
             if (path.isAbsolute(filePath)) return filePath;
             return path.join(baseDir, filePath);
         }
-        return path.join(baseDir, 'diagnostics', 'cache-trace.ndjson');
+        return path.join(defaultDiagnosticsDir, 'cache-trace.ndjson');
     }
 
     private ensureDirectory(dir: string): void {

@@ -13,6 +13,7 @@ import {
     type ImageGenModelConfig,
     type ImageGenRouterConfig,
 } from './image-gen-router.js';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
 
 interface ImageGenToolOptions {
     enabled?: boolean;
@@ -75,7 +76,7 @@ export class ImageGenTool implements Tool {
         this.defaultModel = options.defaultModel || '';
         this.defaultSize = options.defaultSize || '1024x1024';
         this.preserveFilenames = options.preserveFilenames === true;
-        this.storageDir = options.storageDir || process.cwd();
+        this.storageDir = options.storageDir || resolveDefaultMediaStorageDir();
         this.maxUploadSizeBytes = Math.max(1, Math.floor(options.maxUploadSizeBytes ?? 50 * 1024 * 1024));
         this.allowedMimeTypes = Array.isArray(options.allowedMimeTypes)
             ? options.allowedMimeTypes.filter((type) => typeof type === 'string' && type.trim().length > 0)

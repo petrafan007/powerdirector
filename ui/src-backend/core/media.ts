@@ -1,6 +1,7 @@
 // @ts-nocheck
 import fs from 'node:fs';
 import path from 'node:path';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths';
 
 type ImageProvider = 'openai' | 'stability' | 'google';
 type ImageSize = '256x256' | '512x512' | '1024x1024' | string;
@@ -59,7 +60,7 @@ export class MediaManager {
         const rawStorage = typeof config.storageDir === 'string' ? config.storageDir.trim() : '';
         this.storageDir = rawStorage
             ? (path.isAbsolute(rawStorage) ? rawStorage : path.join(baseDir, rawStorage))
-            : path.join(baseDir, 'media');
+            : resolveDefaultMediaStorageDir();
 
         if (!fs.existsSync(this.storageDir)) {
             fs.mkdirSync(this.storageDir, { recursive: true });
