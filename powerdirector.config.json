@@ -38,7 +38,7 @@
   },
   "messages": {
     "tts": {
-      "enabled": false,
+      "auto": "off",
       "provider": "elevenlabs"
     }
   },
