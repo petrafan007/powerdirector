@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { resolveConfigBackupBasePath } from './artifact-paths';
 import { rotateConfigBackups } from './backup-rotation';
 import { withTempHome } from './test-helpers';
 import type { PowerDirectorConfig } from './types';
@@ -13,6 +14,7 @@ describe("config backup rotation", () => {
         throw new Error("Expected POWERDIRECTOR_STATE_DIR to be set by withTempHome");
       }
       const configPath = path.join(stateDir, "powerdirector.json");
+      const backupBase = resolveConfigBackupBasePath(configPath);
       const buildConfig = (version: number): PowerDirectorConfig =>
         ({
           agents: { list: [{ id: `v${version}` }] },
@@ -25,28 +27,29 @@ describe("config backup rotation", () => {
 
       await writeVersion(0);
       for (let version = 1; version <= 6; version += 1) {
-        await rotateConfigBackups(configPath, fs);
-        await fs.copyFile(configPath, `${configPath}.bak`).catch(() => {
+        await rotateConfigBackups(backupBase, fs);
+        await fs.mkdir(path.dirname(backupBase), { recursive: true });
+        await fs.copyFile(configPath, backupBase).catch(() => {
           // best-effort
         });
         await writeVersion(version);
       }
 
-      const readName = async (suffix = "") => {
-        const raw = await fs.readFile(`${configPath}${suffix}`, "utf-8");
+      const readName = async (targetPath: string) => {
+        const raw = await fs.readFile(targetPath, "utf-8");
         return (
           (JSON.parse(raw) as { agents?: { list?: Array<{ id?: string }> } }).agents?.list?.[0]
             ?.id ?? null
         );
       };
 
-      await expect(readName()).resolves.toBe("v6");
-      await expect(readName(".bak")).resolves.toBe("v5");
-      await expect(readName(".bak.1")).resolves.toBe("v4");
-      await expect(readName(".bak.2")).resolves.toBe("v3");
-      await expect(readName(".bak.3")).resolves.toBe("v2");
-      await expect(readName(".bak.4")).resolves.toBe("v1");
-      await expect(fs.stat(`${configPath}.bak.5`)).rejects.toThrow();
+      await expect(readName(configPath)).resolves.toBe("v6");
+      await expect(readName(backupBase)).resolves.toBe("v5");
+      await expect(readName(`${backupBase}.1`)).resolves.toBe("v4");
+      await expect(readName(`${backupBase}.2`)).resolves.toBe("v3");
+      await expect(readName(`${backupBase}.3`)).resolves.toBe("v2");
+      await expect(readName(`${backupBase}.4`)).resolves.toBe("v1");
+      await expect(fs.stat(`${backupBase}.5`)).rejects.toThrow();
     });
   });
 });

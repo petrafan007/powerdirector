@@ -17,6 +17,8 @@ export const GIT_RUNTIME_BACKUP_PATHS = [
 ] as const;
 export const GIT_SAFE_TEMP_ROOT_DIR_NAMES = ["tmp"] as const;
 export const GIT_SAFE_TEMP_ROOT_DIR_PREFIXES = [".tmp-"] as const;
+const GIT_SAFE_CONFIG_ARTIFACT_ROOT_FILE_RE =
+  /^powerdirector(?:\.config)?\.json(?:\.bak(?:\.\d+)?|(?:\.[^.]+){0,2}\.tmp)$/i;
 
 export type PreservedGitRuntimeFile = {
   relativePath: string;
@@ -79,6 +81,11 @@ export function isSafeGitTempRootDirPath(rawPath: string): boolean {
   return GIT_SAFE_TEMP_ROOT_DIR_PREFIXES.some((prefix) => rootDir.startsWith(prefix));
 }
 
+export function isSafeGitConfigArtifactRootPath(rawPath: string): boolean {
+  const normalizedPath = normalizeGitStatusPath(rawPath);
+  return !normalizedPath.includes("/") && GIT_SAFE_CONFIG_ARTIFACT_ROOT_FILE_RE.test(normalizedPath);
+}
+
 export function isIgnorableGitDirtyStatusLine(line: string): boolean {
   const trimmed = line.trim();
   if (!trimmed) {
@@ -87,7 +94,8 @@ export function isIgnorableGitDirtyStatusLine(line: string): boolean {
   if (!trimmed.startsWith("?? ")) {
     return false;
   }
-  return isSafeGitTempRootDirPath(trimmed.slice(3));
+  const dirtyPath = trimmed.slice(3);
+  return isSafeGitTempRootDirPath(dirtyPath) || isSafeGitConfigArtifactRootPath(dirtyPath);
 }
 
 export function filterBlockingGitDirtyStatus(stdout: string): string[] {

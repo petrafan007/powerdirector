@@ -1,7 +1,7 @@
 export const CONFIG_BACKUP_COUNT = 5;
 
 export async function rotateConfigBackups(
-  configPath: string,
+  backupBase: string,
   ioFs: {
     unlink: (path: string) => Promise<void>;
     rename: (from: string, to: string) => Promise<void>;
@@ -10,7 +10,6 @@ export async function rotateConfigBackups(
   if (CONFIG_BACKUP_COUNT <= 1) {
     return;
   }
-  const backupBase = `${configPath}.bak`;
   const maxIndex = CONFIG_BACKUP_COUNT - 1;
   await ioFs.unlink(`${backupBase}.${maxIndex}`).catch(() => {
     // best-effort

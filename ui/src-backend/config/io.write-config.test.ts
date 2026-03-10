@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
+import { resolveConfigBackupBasePath } from './artifact-paths';
 import { withTempHome } from './home-env.test-harness';
 import { createConfigIO } from './io';
 
@@ -275,7 +276,7 @@ describe("config io write", () => {
         .find((entry) => typeof entry === "string" && entry.startsWith("Config overwrite:"));
       expect(typeof overwriteLog).toBe("string");
       expect(overwriteLog).toContain(configPath);
-      expect(overwriteLog).toContain(`${configPath}.bak`);
+      expect(overwriteLog).toContain(resolveConfigBackupBasePath(configPath, process.env, () => home));
       expect(overwriteLog).toContain("sha256");
     });
   });
@@ -338,6 +339,32 @@ describe("config io write", () => {
       expect(last.watchMode).toBe(true);
       expect(last.watchSession).toBe("watch-session-1");
       expect(last.watchCommand).toBe("gateway --force");
+    });
+  });
+
+  it("stores config temp and backup artifacts outside the active config directory", async () => {
+    await withTempHome("powerdirector-config-io-", async (home) => {
+      const { configPath, io, snapshot } = await writeConfigAndCreateIo({
+        home,
+        initialConfig: { gateway: { port: 18789 } },
+      });
+      const next = structuredClone(snapshot.config);
+      next.gateway = { ...next.gateway, mode: "local" };
+
+      await io.writeConfigFile(next);
+
+      const backupBase = resolveConfigBackupBasePath(configPath, process.env, () => home);
+      await expect(fs.readFile(backupBase, "utf-8")).resolves.toContain('"port": 18789');
+      await expect(fs.stat(`${configPath}.bak`)).rejects.toThrow();
+      await expect(fs.stat(`${configPath}.tmp`)).rejects.toThrow();
+
+      const siblingEntries = await fs.readdir(path.dirname(configPath));
+      expect(
+        siblingEntries.some(
+          (name) =>
+            name.startsWith(path.basename(configPath) + ".") && (name.endsWith(".tmp") || name.includes(".bak")),
+        ),
+      ).toBe(false);
     });
   });
 });

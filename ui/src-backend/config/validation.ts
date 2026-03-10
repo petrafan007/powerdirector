@@ -1,6 +1,7 @@
 import path from "node:path";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
 import { CHANNEL_IDS, normalizeChatChannelId } from '../channels/registry';
+import { findGitRoot } from '../infra/git-root';
 import {
   normalizePluginsConfig,
   resolveEnableState,
@@ -8,7 +9,7 @@ import {
 } from '../plugins/config-state';
 import { loadPluginManifestRegistry } from '../plugins/manifest-registry';
 import { validateJsonSchemaValue } from '../plugins/schema-validator';
-import { isRecord } from '../utils';
+import { isRecord, resolveUserPath } from '../utils';
 import { findDuplicateAgentDirs, formatDuplicateAgentDirError } from './agent-dirs';
 import { applyAgentDefaults, applyModelDefaults, applySessionDefaults } from './defaults';
 import { findLegacyConfigIssues } from './legacy';
@@ -83,6 +84,47 @@ function validateIdentityAvatar(config: PowerDirectorConfig): ConfigValidationIs
   return issues;
 }
 
+function isPathInsideRoot(targetPath: string, rootPath: string): boolean {
+  const relative = path.relative(path.resolve(rootPath), path.resolve(targetPath));
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+function resolveInstallGitRoot(): string | null {
+  return findGitRoot(process.cwd());
+}
+
+function validateWorkspaceLocations(config: PowerDirectorConfig): ConfigValidationIssue[] {
+  const gitRoot = resolveInstallGitRoot();
+  if (!gitRoot) {
+    return [];
+  }
+
+  const issues: ConfigValidationIssue[] = [];
+  const addIssue = (workspaceRaw: unknown, issuePath: string) => {
+    if (typeof workspaceRaw !== "string") {
+      return;
+    }
+    const workspace = workspaceRaw.trim();
+    if (!workspace) {
+      return;
+    }
+    const resolved = resolveUserPath(workspace);
+    if (!isPathInsideRoot(resolved, gitRoot)) {
+      return;
+    }
+    issues.push({
+      path: issuePath,
+      message: "workspace must live outside the PowerDirector install checkout to keep Git updates clean.",
+    });
+  };
+
+  addIssue(config.agents?.defaults?.workspace, "agents.defaults.workspace");
+  for (const [index, entry] of (config.agents?.list ?? []).entries()) {
+    addIssue(entry?.workspace, `agents.list.${index}.workspace`);
+  }
+  return issues;
+}
+
 /**
  * Validates config without applying runtime defaults.
  * Use this when you need the raw validated config (e.g., for writing back to file).
@@ -123,8 +165,9 @@ export function validateConfigObjectRaw(
     };
   }
   const avatarIssues = validateIdentityAvatar(validated.data as PowerDirectorConfig);
-  if (avatarIssues.length > 0) {
-    return { ok: false, issues: avatarIssues };
+  const workspaceIssues = validateWorkspaceLocations(validated.data as PowerDirectorConfig);
+  if (avatarIssues.length > 0 || workspaceIssues.length > 0) {
+    return { ok: false, issues: [...avatarIssues, ...workspaceIssues] };
   }
   return {
     ok: true,

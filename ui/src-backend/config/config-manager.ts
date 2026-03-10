@@ -2,8 +2,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolveConfigBackupBasePath, resolveConfigTempPath } from './artifact-paths';
 import { configSchema, sectionSchemas, SECRET_FIELDS, SECTION_NAMES } from './config-schema';
 import type { PowerDirectorConfig, SectionName } from './config-schema';
+import { validateConfigObjectRaw } from './validation';
 
 const CONFIG_FILENAME = 'powerdirector.config.json';
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -239,7 +241,8 @@ export class ConfigManager {
         try {
             // Create backup
             if (fs.existsSync(this.configPath)) {
-                const backupPath = `${this.configPath}.bak`;
+                const backupPath = resolveConfigBackupBasePath(this.configPath);
+                fs.mkdirSync(path.dirname(backupPath), { recursive: true });
                 fs.copyFileSync(this.configPath, backupPath);
             }
 
@@ -250,7 +253,8 @@ export class ConfigManager {
             }
 
             // Write atomically: write to temp, then rename
-            const tmpPath = `${this.configPath}.tmp`;
+            const tmpPath = resolveConfigTempPath(this.configPath, `${process.pid}`);
+            fs.mkdirSync(path.dirname(tmpPath), { recursive: true });
             fs.writeFileSync(tmpPath, JSON.stringify(this.config, null, 2), 'utf-8');
             fs.renameSync(tmpPath, this.configPath);
 
@@ -304,10 +308,18 @@ export class ConfigManager {
         // Preserve unknown keys from submitted section payload, then merge in secret handling.
         const normalized = this.mergeUnknownFields(normalizedInput, result.data);
         const merged = this.mergeSecrets(this.config[section] as any, normalized);
+        const nextConfig = {
+            ...this.config,
+            [section]: merged,
+        } as PowerDirectorConfig;
+        const validatedFull = validateConfigObjectRaw(nextConfig);
+        if (!validatedFull.ok) {
+            return {
+                success: false,
+                errors: validatedFull.issues.map((i: any) => `${i.path || '<root>'}: ${i.message}`)
+            };
+        }
         (this.config as any)[section] = merged;
-
-
-
         this.save();
         return { success: true };
     }
@@ -326,10 +338,14 @@ export class ConfigManager {
         // Preserve unknown keys from submitted payload, then merge in secret handling.
         const normalized = this.mergeUnknownFields(normalizedData, result.data);
         const merged = this.mergeSecrets(this.config, normalized);
+        const validatedFull = validateConfigObjectRaw(merged);
+        if (!validatedFull.ok) {
+            return {
+                success: false,
+                errors: validatedFull.issues.map((i: any) => `${i.path || '<root>'}: ${i.message}`)
+            };
+        }
         this.config = merged;
-
-
-
         this.save();
         return { success: true };
     }
@@ -351,8 +367,15 @@ export class ConfigManager {
                     errors: result.error.issues.map((i: any) => `${i.path.join('.')}: ${i.message}`)
                 };
             }
-            this.config = this.mergeUnknownFields(normalizedRaw, result.data) as PowerDirectorConfig;
-
+            const merged = this.mergeUnknownFields(normalizedRaw, result.data) as PowerDirectorConfig;
+            const validatedFull = validateConfigObjectRaw(merged);
+            if (!validatedFull.ok) {
+                return {
+                    success: false,
+                    errors: validatedFull.issues.map((i: any) => `${i.path || '<root>'}: ${i.message}`)
+                };
+            }
+            this.config = merged;
             this.save();
             return { success: true };
         } catch (err: any) {

@@ -15,6 +15,7 @@ import {
 import { VERSION } from '../version';
 import { DuplicateAgentDirError, findDuplicateAgentDirs } from './agent-dirs';
 import { rotateConfigBackups } from './backup-rotation';
+import { resolveConfigBackupBasePath, resolveConfigTempPath } from './artifact-paths';
 import {
   applyCompactionDefaults,
   applyContextPruningDefaults,
@@ -926,7 +927,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
       const changeSummary =
         typeof changedPathCount === "number" ? `, changedPaths=${changedPathCount}` : "";
       deps.logger.warn(
-        `Config overwrite: ${configPath} (sha256 ${previousHash ?? "unknown"} -> ${nextHash}, backup=${configPath}.bak${changeSummary})`,
+        `Config overwrite: ${configPath} (sha256 ${previousHash ?? "unknown"} -> ${nextHash}, backup=${backupBasePath}${changeSummary})`,
       );
     };
     const logConfigWriteAnomalies = () => {
@@ -993,20 +994,25 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
       });
     };
 
-    const tmp = path.join(
-      dir,
-      `${path.basename(configPath)}.${process.pid}.${crypto.randomUUID()}.tmp`,
+    const backupBasePath = resolveConfigBackupBasePath(configPath, deps.env, deps.homedir);
+    const tmp = resolveConfigTempPath(
+      configPath,
+      `${process.pid}.${crypto.randomUUID()}`,
+      deps.env,
+      deps.homedir,
     );
 
     try {
+      await deps.fs.promises.mkdir(path.dirname(backupBasePath), { recursive: true });
+      await deps.fs.promises.mkdir(path.dirname(tmp), { recursive: true });
       await deps.fs.promises.writeFile(tmp, json, {
         encoding: "utf-8",
         mode: 0o600,
       });
 
       if (deps.fs.existsSync(configPath)) {
-        await rotateConfigBackups(configPath, deps.fs.promises);
-        await deps.fs.promises.copyFile(configPath, `${configPath}.bak`).catch(() => {
+        await rotateConfigBackups(backupBasePath, deps.fs.promises);
+        await deps.fs.promises.copyFile(configPath, backupBasePath).catch(() => {
           // best-effort
         });
       }
