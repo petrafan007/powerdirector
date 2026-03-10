@@ -56,6 +56,13 @@ export function summarizeGeminiCliStderr(stderr: string): string[] {
     });
 }
 
+function buildNoOutputError(stderr: string, diagnostics: string[]): Error {
+    const details = diagnostics.length > 0
+        ? diagnostics.join(' | ')
+        : (stderr.trim().slice(-500) || 'Gemini CLI exited successfully but produced no output.');
+    return new Error(`Gemini CLI produced no output: ${details}`);
+}
+
 function createAbortError(): Error {
     const err = new Error('Gemini CLI request aborted');
     err.name = 'AbortError';
@@ -376,6 +383,10 @@ export class GeminiCLIProvider implements Provider {
             if (code !== 0) {
                 const codeStr = code === null ? 'null (killed or aborted)' : code.toString();
                 fail(new Error(`Gemini CLI exited with code ${codeStr}: ${stderr.slice(0, 500) || stdout.trim().slice(-500) || 'Unknown error'}`));
+                return;
+            }
+            if (stdout.trim().length === 0 && (diagnostics.length > 0 || stderr.trim().length > 0)) {
+                fail(buildNoOutputError(stderr, diagnostics));
                 return;
             }
             finish();

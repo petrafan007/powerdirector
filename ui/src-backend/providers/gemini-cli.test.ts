@@ -97,4 +97,29 @@ describe("GeminiCLIProvider", () => {
     );
     expect(child.stdin.written).toBe("Reply with exactly: gemini-ok");
   });
+
+  it("fails when Gemini exits 0 after retry diagnostics but never produces stdout", async () => {
+    const child = createChild();
+    spawnMock.mockReturnValue(child);
+
+    const provider = new GeminiCLIProvider("gemini-3.1-pro-preview", {}, {
+      command: "gemini",
+    });
+
+    const stream = provider.completionStream("Reply with exactly: gemini-ok", "gemini-3.1-pro-preview");
+    const iterator = stream[Symbol.asyncIterator]();
+
+    queueMicrotask(() => {
+      child.stderr.emit(
+        "data",
+        Buffer.from("Attempt 1 failed with status 429. Retrying with backoff...\nNo capacity available for model gemini-3.1-pro-preview on the server\n"),
+      );
+      setTimeout(() => {
+        child.emit("close", 0);
+      }, 0);
+    });
+
+    await expect(iterator.next()).resolves.toEqual({ value: "", done: false });
+    await expect(iterator.next()).rejects.toThrow(/Gemini CLI produced no output: Attempt 1 failed with status 429/);
+  });
 });
