@@ -36,6 +36,24 @@ const NodeHostSchema = z
   .strict()
   .optional();
 
+const TerminalSchema = z
+  .object({
+    shell: z.enum(["bash", "zsh"]).optional(),
+    autoTimeoutMinutes: z.number().int().positive().optional(),
+    port: z.number().int().positive().optional(),
+    bind: z
+      .union([
+        z.literal("auto"),
+        z.literal("lan"),
+        z.literal("loopback"),
+        z.literal("custom"),
+        z.literal("tailnet"),
+      ])
+      .optional(),
+  })
+  .strict()
+  .optional();
+
 const MemoryQmdPathSchema = z
   .object({
     path: z.string(),
@@ -328,6 +346,7 @@ export const PowerDirectorSchema = z
       .strict()
       .optional(),
     messages: MessagesSchema,
+    terminal: TerminalSchema,
     commands: CommandsSchema,
     approvals: ApprovalsSchema,
     session: SessionSchema,

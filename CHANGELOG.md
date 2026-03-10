@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Config writes now store temp files and rotated backups under the PowerDirector state directory instead of next to the live config file, so saving config no longer leaves `*.tmp` or `.bak.*` artifacts in a Git-backed install.
 - Config validation now rejects default or per-agent workspaces that point inside the PowerDirector install checkout, preventing shell/file outputs from being configured back into the repo and blocking future Git updates.
 - Git dirty-check filtering now treats legacy root-level config temp/backup artifacts as safe cleanup candidates, covering old `powerdirector.config.json.tmp` and `.bak.*` files during update checks while the new state-dir artifact path rolls out.
+- Raw config validation now accepts the same provider metadata fields (`defaultModel`, `defaultReasoningEffort`, provider `name`) and top-level `terminal` settings that the setup wizard and config UI save, fixing Codex CLI onboarding and section saves on installs that already carry terminal config.
 
 ## [1.1.0-beta.2] - 2026-03-07
 

@@ -57,7 +57,8 @@ export const ModelDefinitionSchema = z
 
 export const ModelProviderSchema = z
   .object({
-    baseUrl: z.string().min(1),
+    baseUrl: z.string().min(1).optional(),
+    baseURL: z.string().min(1).optional(),
     apiKey: z.string().optional().register(sensitive),
     auth: z
       .union([z.literal("api-key"), z.literal("aws-sdk"), z.literal("oauth"), z.literal("token")])
@@ -65,7 +66,12 @@ export const ModelProviderSchema = z
     api: ModelApiSchema.optional(),
     headers: z.record(z.string(), z.string()).optional(),
     authHeader: z.boolean().optional(),
-    models: z.array(ModelDefinitionSchema),
+    retrieveLocalModels: z.boolean().optional(),
+    defaultModel: z.string().optional(),
+    defaultReasoningEffort: z.enum(["low", "medium", "high", "xhigh"]).optional(),
+    name: z.string().optional(),
+    rateLimit: z.number().int().positive().optional(),
+    models: z.array(ModelDefinitionSchema).optional(),
   })
   .strict();
 

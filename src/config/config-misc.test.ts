@@ -259,6 +259,28 @@ describe("model compat config schema", () => {
 
     expect(res.ok).toBe(true);
   });
+
+  it("accepts codex provider defaults and top-level terminal config in raw validation", () => {
+    const res = validateConfigObject({
+      models: {
+        providers: {
+          "openai-codex": {
+            name: "Codex CLI",
+            baseUrl: "https://api.openai.com/v1",
+            defaultModel: "gpt-5.4",
+            defaultReasoningEffort: "medium",
+            models: [{ id: "gpt-5.4", name: "GPT 5.4 Codex", reasoning: true }],
+          },
+        },
+      },
+      terminal: {
+        port: 4008,
+        bind: "lan",
+      },
+    });
+
+    expect(res.ok).toBe(true);
+  });
 });
 
 describe("config paths", () => {
