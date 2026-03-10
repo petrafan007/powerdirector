@@ -330,7 +330,7 @@ export default function SetupWizardPage() {
                 // Save audio config
                 await saveSection('messages', {
                     tts: {
-                        enabled: data.ttsEnabled,
+                        auto: data.ttsEnabled ? 'always' : 'off',
                         provider: data.ttsProvider,
                     }
                 });
