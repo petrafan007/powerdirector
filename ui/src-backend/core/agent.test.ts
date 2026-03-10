@@ -207,4 +207,119 @@ describe("Agent tool intent repair", () => {
       ),
     ).toBe(true);
   });
+
+  it("repairs shell-command planning text even when the model uses legacy tool aliases", async () => {
+    const sessionManager = new FakeSessionManager();
+    const sessionId = "session-legacy-shell";
+    sessionManager.createSession(sessionId);
+
+    const toolRegistry = new ToolRegistry();
+    const shellExecute = vi.fn(async () => ({ output: "log tail" }));
+    toolRegistry.register({
+      name: "shell",
+      description: "Run shell commands",
+      parameters: {
+        type: "object",
+        properties: {
+          cmd: { type: "string" },
+        },
+        required: ["cmd"],
+      },
+      execute: shellExecute,
+    });
+
+    const responses = [
+      "I will read the log file first. I'll use `run_shell_command` with `cat` because the file is outside the workspace.",
+      '```json\n{"tool":"shell","args":{"cmd":"cat /tmp/openclaw/openclaw-2026-03-09.log"}}\n```',
+      "The log tail is ready.",
+    ];
+    const executeStream = vi.fn(async () => ({
+      stream: streamChunks(responses.shift() ?? "The log tail is ready."),
+      metadata: {
+        provider: "google-gemini-cli",
+        model: "gemini-3.1-pro-preview",
+      },
+    }));
+
+    const agent = new Agent(
+      sessionManager as any,
+      { logUsage: vi.fn() } as any,
+      { executeStream } as any,
+      { prune: (messages: any[]) => messages } as any,
+      toolRegistry,
+      undefined,
+      { maxTurns: 6 },
+    );
+
+    await expect(agent.runStep(sessionId, "Inspect the OpenClaw log.")).resolves.toBe("The log tail is ready.");
+
+    const saved = sessionManager.getSession(sessionId)?.messages ?? [];
+    expect(executeStream).toHaveBeenCalledTimes(3);
+    expect(shellExecute).toHaveBeenCalledWith(
+      { cmd: "cat /tmp/openclaw/openclaw-2026-03-09.log" },
+      expect.objectContaining({ sessionId }),
+    );
+    expect(
+      saved.some(
+        (message) =>
+          message.role === "assistant"
+          && typeof message.content === "string"
+          && message.content.includes("run_shell_command"),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not persist partial assistant text when an aborted run is superseded by a newer user turn", async () => {
+    const sessionManager = new FakeSessionManager();
+    const sessionId = "session-abort-superseded";
+    sessionManager.createSession(sessionId);
+
+    const executeStream = vi.fn(async () => ({
+      stream: (async function* () {
+        yield "Partial assistant output";
+        sessionManager.saveMessage(sessionId, {
+          role: "user",
+          content: "Newer follow-up",
+          timestamp: Date.now() + 100,
+        });
+        const err = new Error("aborted");
+        err.name = "AbortError";
+        throw err;
+      })(),
+      metadata: {
+        provider: "google-gemini-cli",
+        model: "gemini-3.1-pro-preview",
+      },
+    }));
+
+    const onStep = vi.fn();
+    const agent = new Agent(
+      sessionManager as any,
+      { logUsage: vi.fn() } as any,
+      { executeStream } as any,
+      { prune: (messages: any[]) => messages } as any,
+      new ToolRegistry(),
+      undefined,
+      { maxTurns: 3 },
+    );
+
+    await expect(agent.runStep(sessionId, "First question", { onStep, runId: "run_abort" })).resolves.toBe("Aborted.");
+
+    const saved = sessionManager.getSession(sessionId)?.messages ?? [];
+    expect(
+      saved.some(
+        (message) =>
+          message.role === "assistant"
+          && typeof message.content === "string"
+          && message.content.includes("Partial assistant output"),
+      ),
+    ).toBe(false);
+    expect(
+      onStep.mock.calls.some(
+        ([message]) =>
+          typeof message?.content === "string"
+          && message.content.includes("Execution stopped by user"),
+      ),
+    ).toBe(false);
+  });
 });

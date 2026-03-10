@@ -129,7 +129,7 @@ afterEach(() => {
 });
 
 describe("chat abort transcript persistence", () => {
-  it("persists run-scoped abort partial with rpc metadata and idempotency", async () => {
+  it("does not persist run-scoped abort partial text into transcript history", async () => {
     const { transcriptPath, sessionId } = await createTranscriptFixture("powerdirector-chat-abort-run-");
     const runId = "idem-abort-run-1";
     const respond = vi.fn();
@@ -164,24 +164,12 @@ describe("chat abort transcript persistence", () => {
     const lines = await readTranscriptLines(transcriptPath);
     const persisted = lines
       .map((line) => line.message)
-      .filter(
-        (message): message is Record<string, unknown> =>
-          Boolean(message) && message?.idempotencyKey === `${runId}:assistant`,
-      );
+      .find((message) => message?.idempotencyKey === `${runId}:assistant`);
 
-    expect(persisted).toHaveLength(1);
-    expect(persisted[0]).toMatchObject({
-      stopReason: "stop",
-      idempotencyKey: `${runId}:assistant`,
-      powerdirectorAbort: {
-        aborted: true,
-        origin: "rpc",
-        runId,
-      },
-    });
+    expect(persisted).toBeUndefined();
   });
 
-  it("persists session-scoped abort partials with rpc metadata", async () => {
+  it("does not persist session-scoped abort partials into transcript history", async () => {
     const { transcriptPath, sessionId } = await createTranscriptFixture(
       "powerdirector-chat-abort-session-",
     );
@@ -216,18 +204,11 @@ describe("chat abort transcript persistence", () => {
       .map((line) => line.message)
       .find((message) => message?.idempotencyKey === "run-b:assistant");
 
-    expect(runAPersisted).toMatchObject({
-      idempotencyKey: "run-a:assistant",
-      powerdirectorAbort: {
-        aborted: true,
-        origin: "rpc",
-        runId: "run-a",
-      },
-    });
+    expect(runAPersisted).toBeUndefined();
     expect(runBPersisted).toBeUndefined();
   });
 
-  it("persists /stop partials with stop-command metadata", async () => {
+  it("does not persist /stop partials into transcript history", async () => {
     const { transcriptPath, sessionId } = await createTranscriptFixture("powerdirector-chat-stop-");
     const respond = vi.fn();
     const context = createChatAbortContext({
@@ -263,14 +244,7 @@ describe("chat abort transcript persistence", () => {
       .map((line) => line.message)
       .find((message) => message?.idempotencyKey === "run-stop-1:assistant");
 
-    expect(persisted).toMatchObject({
-      idempotencyKey: "run-stop-1:assistant",
-      powerdirectorAbort: {
-        aborted: true,
-        origin: "stop-command",
-        runId: "run-stop-1",
-      },
-    });
+    expect(persisted).toBeUndefined();
   });
 
   it("skips run-scoped transcript persistence when partial text is blank", async () => {

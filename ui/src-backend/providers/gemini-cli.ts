@@ -1,13 +1,17 @@
 // @ts-nocheck
 import { spawn } from 'child_process';
 import { existsSync, mkdirSync, writeFileSync, unlinkSync } from 'fs';
-import { tmpdir } from 'os';
 import { join } from 'path';
 import { Provider } from '../reliability/router.ts';
 import { CircuitBreaker } from '../reliability/circuit-breaker.ts';
 import { getRuntimeLogger } from '../core/logger.ts';
 
 type CliInputMode = 'arg' | 'stdin';
+
+type StreamResolver = {
+    resolve: (value: IteratorResult<string>) => void;
+    reject: (error: unknown) => void;
+};
 
 export interface GeminiCliBackendConfig {
     command?: string;
@@ -23,8 +27,39 @@ export interface GeminiCliBackendConfig {
     imageMode?: 'repeat' | 'list';
 }
 
-function shellEscape(value: string): string {
-    return `'${String(value).replace(/'/g, `'\\''`)}'`;
+export function summarizeGeminiCliStderr(stderr: string): string[] {
+    const lines = stderr
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .filter((line) => /(?:429|capacity|retry|resource_exhausted|failed|error|quota|unavailable)/i.test(line));
+
+    if (lines.length === 0) {
+        return [];
+    }
+
+    const counts = new Map<string, number>();
+    const ordered: string[] = [];
+    for (const line of lines) {
+        const normalized = line.replace(/^\d{4}-\d{2}-\d{2}T\S+\s+/, '');
+        if (!counts.has(normalized)) {
+            ordered.push(normalized);
+            counts.set(normalized, 1);
+            continue;
+        }
+        counts.set(normalized, (counts.get(normalized) || 0) + 1);
+    }
+
+    return ordered.slice(0, 6).map((line) => {
+        const count = counts.get(line) || 1;
+        return count > 1 ? `${line} (x${count})` : line;
+    });
+}
+
+function createAbortError(): Error {
+    const err = new Error('Gemini CLI request aborted');
+    err.name = 'AbortError';
+    return err;
 }
 
 /**
@@ -161,6 +196,15 @@ export class GeminiCLIProvider implements Provider {
 
         let finalPrompt = prompt;
         const imagePaths: string[] = [];
+        let cleanedUp = false;
+
+        const cleanupTempFiles = () => {
+            if (cleanedUp) return;
+            cleanedUp = true;
+            for (const p of imagePaths) {
+                try { unlinkSync(join(workspaceDir, p)); } catch { }
+            }
+        };
 
         if (options?.attachments && options.attachments.length > 0) {
             const images = options.attachments.filter((a: any) => a.category === 'image' || a.type === 'image');
@@ -198,101 +242,187 @@ export class GeminiCLIProvider implements Provider {
             }
         }
 
-        const hasModelArg = modelArg && baseArgs.includes(modelArg);
+        const args = [...baseArgs];
+        const hasModelArg = modelArg && args.includes(modelArg);
         if (modelArg && !hasModelArg) {
-            baseArgs.push(modelArg, modelToUse);
+            args.push(modelArg, modelToUse);
+        }
+        if (inputMode === 'arg') {
+            args.push(this.resolvePromptArg(finalPrompt));
         }
 
-        const tempPromptFile = join(tmpdir(), `gemini-p-${Date.now()}.txt`);
-        let commandText = '';
-        if (inputMode === 'stdin') {
-            writeFileSync(tempPromptFile, finalPrompt);
-            const argsSegment = baseArgs.map((arg) => shellEscape(arg)).join(' ');
-            commandText = `cat ${shellEscape(tempPromptFile)} | ${shellEscape(command)} ${argsSegment}`;
-        } else {
-            const promptArg = this.resolvePromptArg(finalPrompt);
-            const argsSegment = [...baseArgs, promptArg].map((arg) => shellEscape(arg)).join(' ');
-            commandText = `${shellEscape(command)} ${argsSegment}`;
-        }
+        logger.info(`[GeminiCLIProvider] Spawning gemini with input=${inputMode} model=${modelToUse}`);
 
-        logger.info(`[GeminiCLIProvider] Spawning gemini with input=${inputMode}`);
-
-        const child = spawn('/bin/sh', ['-c', commandText], {
+        const child = spawn(command, args, {
             env: spawnEnv,
             stdio: ['pipe', 'pipe', 'pipe'],
             timeout: this.config.timeoutMs,
             cwd: workspaceDir
         });
 
-        if (options?.signal) {
-            const abortHandler = () => {
-                logger.info(`[GeminiCLIProvider] Aborting child process due to signal`);
-                child.kill('SIGKILL');
-            };
-            options.signal.addEventListener('abort', abortHandler, { once: true });
-            child.on('close', () => options.signal?.removeEventListener('abort', abortHandler));
-        }
-
-        child.stdin.end();
-
+        let settledError: unknown = null;
+        let finished = false;
+        let heartbeatSentAt = 0;
+        let sawStdout = false;
         let stdout = '';
         let stderr = '';
+        const queue: string[] = [];
+        const waiters: StreamResolver[] = [];
 
-        const stdoutIter = async function* () {
-            for await (const chunk of child.stdout) {
-                const text = chunk.toString();
-                stdout += text;
-                yield text;
+        const resolveQueued = () => {
+            while (waiters.length > 0 && queue.length > 0) {
+                waiters.shift()!.resolve({ value: queue.shift()!, done: false });
+            }
+            if (!finished || queue.length > 0) {
+                return;
+            }
+            while (waiters.length > 0) {
+                const waiter = waiters.shift()!;
+                if (settledError) {
+                    waiter.reject(settledError);
+                } else {
+                    waiter.resolve({ value: undefined, done: true });
+                }
             }
         };
 
-        const stderrHandler = async () => {
-            for await (const chunk of child.stderr) {
-                stderr += chunk.toString();
+        const pushChunk = (value: string) => {
+            queue.push(value);
+            resolveQueued();
+        };
+
+        const finish = () => {
+            if (finished) return;
+            finished = true;
+            cleanupTempFiles();
+            resolveQueued();
+        };
+
+        const fail = (error: unknown) => {
+            if (finished) return;
+            settledError = error;
+            finished = true;
+            cleanupTempFiles();
+            resolveQueued();
+        };
+
+        let abortHandler: (() => void) | null = null;
+        let killTimer: NodeJS.Timeout | null = null;
+        const cleanupAbortHandler = () => {
+            if (killTimer) {
+                clearTimeout(killTimer);
+                killTimer = null;
+            }
+            if (abortHandler) {
+                abortHandler();
+                abortHandler = null;
             }
         };
-        stderrHandler();
 
-        for await (const chunk of stdoutIter()) {
-            // If output is JSON, we can't easily stream the "response" field unless we parse it.
-            // But we can just yield the raw chunks and let the consumer handle it.
-            yield chunk;
+        if (options?.signal) {
+            if (options.signal.aborted) {
+                try { child.kill('SIGKILL'); } catch { }
+                fail(createAbortError());
+            } else {
+                const onAbort = () => {
+                    logger.info('[GeminiCLIProvider] Aborting child process due to signal');
+                    try { child.kill('SIGTERM'); } catch { }
+                    killTimer = setTimeout(() => {
+                        try { child.kill('SIGKILL'); } catch { }
+                    }, 1000);
+                    fail(createAbortError());
+                };
+                options.signal.addEventListener('abort', onAbort, { once: true });
+                abortHandler = () => options.signal?.removeEventListener('abort', onAbort);
+            }
         }
 
-        const exitCode = await new Promise<number | null>((resolve) => {
-            child.on('close', (code) => resolve(code));
+        child.stdout.on('data', (chunk: Buffer) => {
+            const text = chunk.toString();
+            sawStdout = sawStdout || text.length > 0;
+            stdout += text;
+            pushChunk(text);
+        });
+
+        child.stderr.on('data', (chunk: Buffer) => {
+            const text = chunk.toString();
+            stderr += text;
+            if (!sawStdout && text.trim()) {
+                const now = Date.now();
+                if (now - heartbeatSentAt >= 1000) {
+                    heartbeatSentAt = now;
+                    pushChunk('');
+                }
+            }
+        });
+
+        child.stdin.on('error', (err: any) => {
+            logger.error('[GeminiCLIProvider] Stdin error:', err);
+        });
+
+        child.on('error', (err) => {
+            logger.error('[GeminiCLIProvider] Process error:', err);
+            cleanupAbortHandler();
+            fail(err);
+        });
+
+        child.on('close', (code) => {
+            cleanupAbortHandler();
+            logger.info(`[GeminiCLIProvider] Process closed with code ${code}`);
+            const diagnostics = summarizeGeminiCliStderr(stderr);
+            if (diagnostics.length > 0) {
+                logger.warn(`[GeminiCLIProvider] stderr diagnostics: ${diagnostics.join(' | ')}`);
+            }
+            if (code !== 0) {
+                const codeStr = code === null ? 'null (killed or aborted)' : code.toString();
+                fail(new Error(`Gemini CLI exited with code ${codeStr}: ${stderr.slice(0, 500) || stdout.trim().slice(-500) || 'Unknown error'}`));
+                return;
+            }
+            finish();
         });
 
         if (inputMode === 'stdin') {
-            try { unlinkSync(tempPromptFile); } catch { }
-        }
-        for (const p of imagePaths) {
-            try { unlinkSync(join(workspaceDir, p)); } catch { }
-        }
-
-        logger.info(`[GeminiCLIProvider] Process closed with code ${exitCode}`);
-
-        if (exitCode !== 0) {
-            const codeStr = exitCode === null ? 'null (killed or aborted)' : exitCode.toString();
-            throw new Error(`Gemini CLI exited with code ${codeStr}: ${stderr.slice(0, 500) || stdout.trim().slice(-500) || 'Unknown error'}`);
+            child.stdin.write(finalPrompt, () => {
+                child.stdin.end();
+            });
+        } else {
+            child.stdin.end();
         }
 
-        // Post-processing for JSON format if needed (though iterator already yielded raw chunks)
-        // If the consumer expected final parsed response, they should use completion() 
-        // which now calls completionStream and accumulates.
-        if (outputFormat === 'json') {
-            const firstBrace = stdout.indexOf('{');
-            const lastBrace = stdout.lastIndexOf('}');
-            if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-                const jsonPart = stdout.substring(firstBrace, lastBrace + 1);
-                try {
-                    const parsed = JSON.parse(jsonPart);
-                    // If we are in completion(), we want to return ONLY the response field if it exists.
-                    // But we already yielded chunks. 
-                    // This is a bit inconsistent. 
-                    // Let's refine: completion() should return the parsed response.
-                } catch { }
+        const stream = {
+            [Symbol.asyncIterator]() {
+                return {
+                    next(): Promise<IteratorResult<string>> {
+                        if (queue.length > 0) {
+                            return Promise.resolve({ value: queue.shift()!, done: false });
+                        }
+                        if (finished) {
+                            if (settledError) {
+                                return Promise.reject(settledError);
+                            }
+                            return Promise.resolve({ value: undefined, done: true });
+                        }
+                        return new Promise<IteratorResult<string>>((resolve, reject) => {
+                            waiters.push({ resolve, reject });
+                        });
+                    },
+                    return(): Promise<IteratorResult<string>> {
+                        cleanupAbortHandler();
+                        try { child.kill('SIGTERM'); } catch { }
+                        finish();
+                        return Promise.resolve({ value: undefined, done: true });
+                    }
+                };
             }
+        };
+
+        try {
+            for await (const chunk of stream as AsyncIterable<string>) {
+                yield chunk;
+            }
+        } finally {
+            cleanupAbortHandler();
+            cleanupTempFiles();
         }
     }
 }

@@ -988,20 +988,12 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     const uiIndexHealth = await resolveControlUiDistIndexHealth({ root: gitRoot });
     if (!uiIndexHealth.exists) {
       const repairArgv = managerScriptArgs(manager, "ui:build");
-      const started = Date.now();
-      const repairResult = await runCommand(repairArgv, { cwd: gitRoot, timeoutMs });
-      const repairStep: UpdateStepResult = {
-        name: "ui:build (post-doctor repair)",
-        command: repairArgv.join(" "),
-        cwd: gitRoot,
-        durationMs: Date.now() - started,
-        exitCode: repairResult.code,
-        stdoutTail: trimLogTail(repairResult.stdout, MAX_LOG_CHARS),
-        stderrTail: trimLogTail(repairResult.stderr, MAX_LOG_CHARS),
-      };
+      const repairStep = await runStep(
+        step("ui:build (post-doctor repair)", repairArgv, gitRoot),
+      );
       steps.push(repairStep);
 
-      if (repairResult.code !== 0) {
+      if (repairStep.exitCode !== 0) {
         return finalizeGitResult({
           status: "error",
           mode: "git",

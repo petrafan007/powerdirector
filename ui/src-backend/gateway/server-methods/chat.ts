@@ -497,24 +497,10 @@ function abortChatRunsForSessionKeyWithPartials(params: {
   abortOrigin: AbortOrigin;
   stopReason?: string;
 }) {
-  const snapshots = collectSessionAbortPartials({
-    chatAbortControllers: params.context.chatAbortControllers,
-    chatRunBuffers: params.context.chatRunBuffers,
-    sessionKey: params.sessionKey,
-    abortOrigin: params.abortOrigin,
-  });
-  const res = abortChatRunsForSessionKey(params.ops, {
+  return abortChatRunsForSessionKey(params.ops, {
     sessionKey: params.sessionKey,
     stopReason: params.stopReason,
   });
-  if (res.aborted) {
-    persistAbortedPartials({
-      context: params.context,
-      sessionKey: params.sessionKey,
-      snapshots,
-    });
-  }
-  return res;
 }
 
 function nextChatSeq(context: { agentRunSeq: Map<string, number> }, runId: string) {
@@ -675,26 +661,11 @@ export const chatHandlers: GatewayRequestHandlers = {
       return;
     }
 
-    const partialText = context.chatRunBuffers.get(runId);
     const res = abortChatRunById(ops, {
       runId,
       sessionKey: rawSessionKey,
       stopReason: "rpc",
     });
-    if (res.aborted && partialText && partialText.trim()) {
-      persistAbortedPartials({
-        context,
-        sessionKey: rawSessionKey,
-        snapshots: [
-          {
-            runId,
-            sessionId: active.sessionId,
-            text: partialText,
-            abortOrigin: "rpc",
-          },
-        ],
-      });
-    }
     respond(true, {
       ok: true,
       aborted: res.aborted,

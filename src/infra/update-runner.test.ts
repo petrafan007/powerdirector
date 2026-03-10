@@ -387,6 +387,70 @@ describe("runGatewayUpdate", () => {
     }
   });
 
+  it("strips TURBOPACK from the post-doctor ui repair build env", async () => {
+    await setupGitCheckout({ packageManager: "pnpm@8.0.0" });
+    await setupUiIndex();
+    process.env.TURBOPACK = "auto";
+
+    const seenEnvs = new Map<string, NodeJS.ProcessEnv[]>();
+    const stableTag = "v1.0.1";
+    const doctorKey = `${process.execPath} ${path.join(tempDir, "powerdirector.mjs")} doctor --non-interactive --fix`;
+    let uiBuildCount = 0;
+    const runCommand = async (
+      argv: string[],
+      options: { env?: NodeJS.ProcessEnv },
+    ): Promise<CommandResult> => {
+      const key = argv.join(" ");
+      const existing = seenEnvs.get(key) ?? [];
+      existing.push(options.env);
+      seenEnvs.set(key, existing);
+
+      if (key === `git -C ${tempDir} rev-parse --show-toplevel`) {
+        return { stdout: tempDir, stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} rev-parse HEAD`) {
+        return { stdout: "abc123", stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/ :!powerdirector.config.json :!MEMORY.md`) {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} fetch --all --prune --tags --force`) {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} tag --list v* --sort=-v:refname`) {
+        return { stdout: `${stableTag}\n`, stderr: "", code: 0 };
+      }
+      if (key === `git -C ${tempDir} checkout --detach ${stableTag}`) {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === "pnpm install" || key === "pnpm build") {
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === "pnpm ui:build") {
+        uiBuildCount += 1;
+        if (uiBuildCount >= 2) {
+          await setupUiIndex();
+        }
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      if (key === doctorKey) {
+        await removeControlUiAssets();
+        return { stdout: "", stderr: "", code: 0 };
+      }
+      return { stdout: "", stderr: "", code: 0 };
+    };
+
+    try {
+      const result = await runWithCommandOptions(runCommand, { channel: "stable" });
+      expect(result.status).toBe("ok");
+      const uiBuildEnvs = seenEnvs.get("pnpm ui:build") ?? [];
+      expect(uiBuildEnvs).toHaveLength(2);
+      expect(uiBuildEnvs.every((env) => env?.TURBOPACK === undefined)).toBe(true);
+    } finally {
+      delete process.env.TURBOPACK;
+    }
+  });
+
   it("aborts rebase on failure", async () => {
     await setupGitCheckout();
     const { runner, calls } = createRunner({

@@ -341,20 +341,26 @@ export class Agent {
             } catch (err: any) {
                 if (options.abortSignal?.aborted || err.name === 'AbortError' || err.message?.toLowerCase().includes('abort')) {
                     console.log(`[Agent] Execution aborted for session ${sessionId} at turn ${currentTurn}`);
-                    const abortMsg: Message = {
-                        role: 'assistant',
-                        content: responseText + "\n\n[Execution stopped by user]",
-                        timestamp: Date.now(),
-                        metadata: {
-                            status: 'completed',
-                            aborted: true,
-                            runId,
-                            sequence: turnSequence++
-                        }
-                    };
-                    this.sessionManager.saveMessage(sessionId, abortMsg);
-                    if (options.onStep) options.onStep(abortMsg);
-                    return responseText || "Aborted.";
+                    const superseded = this.hasNewerUserMessage(sessionId, runStartTime);
+                    if (superseded) {
+                        console.log(`[Agent] Suppressing abort notice for superseded run ${runId}; a newer user turn already exists.`);
+                        return "Aborted.";
+                    }
+                    if (options.onStep) {
+                        options.onStep({
+                            role: 'assistant',
+                            content: 'Execution stopped by user',
+                            timestamp: Date.now(),
+                            metadata: {
+                                type: 'notification',
+                                status: 'aborted',
+                                aborted: true,
+                                runId,
+                                sequence: turnSequence++
+                            }
+                        });
+                    }
+                    return "Aborted.";
                 }
 
                 if (this.isRetryableStreamError(err) && streamRetryCount < 2) {
@@ -899,21 +905,59 @@ export class Agent {
         );
     }
 
+    private hasNewerUserMessage(sessionId: string, afterTimestamp: number): boolean {
+        const session = this.sessionManager.getSession(sessionId);
+        if (!session) {
+            return false;
+        }
+        return session.messages.some((message: any) =>
+            message?.role === 'user' && typeof message?.timestamp === 'number' && message.timestamp > afterTimestamp
+        );
+    }
+
     private looksLikeToolIntentWithoutCall(responseText: string, toolDefs: any[]): boolean {
         if (typeof responseText !== 'string' || responseText.trim().length === 0) {
             return false;
         }
         const normalized = responseText.toLowerCase();
-        if (!normalized.includes('tool')) {
+        const intentMatches = normalized.match(/\b(i will|i'll|let me|i am going to|i'm going to|i'll start by|i will start by)\b/g);
+        if (!intentMatches || intentMatches.length === 0) {
             return false;
         }
-        const hasIntentLanguage = /(i will|i'll|let me|going to|i am going to|i'm going to|i can)/.test(normalized);
-        if (!hasIntentLanguage) {
-            return false;
-        }
-        return toolDefs.some((def: any) => {
+        const aliases = new Set<string>();
+        const addAlias = (value?: string) => {
+            if (typeof value !== 'string') return;
+            const trimmed = value.trim().toLowerCase();
+            if (!trimmed) return;
+            aliases.add(trimmed);
+        };
+
+        for (const def of toolDefs) {
             const toolName = typeof def?.name === 'string' ? def.name.toLowerCase() : '';
-            return toolName.length > 0 && normalized.includes(toolName);
-        });
+            if (!toolName) continue;
+            addAlias(toolName);
+            addAlias(toolName.replace(/[_-]+/g, ' '));
+            if (toolName === 'shell') {
+                addAlias('shell command');
+                addAlias('terminal');
+                addAlias('terminal command');
+                addAlias('run_shell_command');
+            } else if (toolName.includes('read')) {
+                addAlias('read file');
+                addAlias('read_file');
+            } else if (toolName.includes('write')) {
+                addAlias('write file');
+                addAlias('write_file');
+            } else if (toolName.includes('replace')) {
+                addAlias('replace file');
+                addAlias('replace_in_file');
+                addAlias('edit file');
+            } else if (toolName.includes('list')) {
+                addAlias('list files');
+                addAlias('list_files');
+            }
+        }
+
+        return Array.from(aliases).some((alias) => normalized.includes(alias));
     }
 }

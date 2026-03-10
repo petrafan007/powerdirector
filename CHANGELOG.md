@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0-beta.3] - 2026-03-09
+
+### Fixed
+- Aborted chat runs no longer persist partial assistant text into session history or transcript files, and the chat UI now collapses legacy aborted blobs into a concise notification instead of rendering them as duplicate/missing assistant replies.
+- Tool-intent repair now catches Gemini/Codex planning narration that uses legacy aliases like `run_shell_command` or plain phrases like "shell command", preventing giant "I will..." execution plans from being saved as final assistant bubbles instead of real tool calls.
+- Gemini CLI now spawns directly instead of via `/bin/sh`, streams stdin prompts without a shell pipeline, emits a keepalive chunk when stderr shows retry/backoff activity, and summarizes retry/capacity diagnostics into the PowerDirector log so `gemini-3.1-pro-preview` no longer drops into a false first-chunk timeout while OAuth-backed retries are still in progress.
+- Git-based updates now sanitize bundler environment flags for the post-doctor `ui:build` repair path too, preventing inherited `TURBOPACK=auto` from breaking same-version and new-version UI upgrades with the Next.js multiple-bundler error.
+
 ## [1.1.0-beta.2] - 2026-03-07
 
 ### Fixed

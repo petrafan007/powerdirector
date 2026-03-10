@@ -109,6 +109,24 @@ function parseProviderModel(value: unknown): { provider: string; model: string }
     };
 }
 
+function normalizeTranscriptMessage(message: Message): Message {
+    const metadata = message?.metadata && typeof message.metadata === 'object'
+        ? { ...message.metadata }
+        : message?.metadata;
+    if (metadata?.aborted === true && message.role === 'assistant') {
+        return {
+            ...message,
+            content: 'Execution stopped by user',
+            metadata: {
+                ...metadata,
+                type: 'notification',
+                status: 'aborted'
+            }
+        };
+    }
+    return message;
+}
+
 function getConfiguredCodexDefaultReasoning(config: any): ReasoningLevel | undefined {
     const providers = config?.models?.providers;
     if (!providers || typeof providers !== 'object') return undefined;
@@ -333,9 +351,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         const res = await fetch(`/api/sessions/${sessionId}`);
         const data = await res.json();
         if (data.messages) {
+            const normalizedDbMessages = (data.messages as Message[]).map((message) => normalizeTranscriptMessage(message));
             setMessages(prev => {
                 if (activeRunIdRef.current) {
-                    const dbMessages = data.messages as any[];
+                    const dbMessages = normalizedDbMessages as any[];
                     const activeRunId = activeRunIdRef.current;
 
                     const merged = dbMessages.map(dbm => {
@@ -395,7 +414,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     });
                     return [...merged, ...purelyLocalMessages];
                 }
-                return data.messages;
+                return normalizedDbMessages;
             });
             scrollToBottom('instant' as any);
         }
@@ -699,7 +718,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     useEffect(() => {
         if (!gatewayClient) return;
 
-        const handleMessage = (msg: any) => {
+        const handleMessage = (rawMsg: any) => {
+            const msg = normalizeTranscriptMessage(rawMsg);
             const isOurRun = msg.metadata?.runId && msg.metadata.runId === activeRunIdRef.current;
             const messageRunId = normalizedText(msg?.metadata?.runId);
             const pausedRunId = pausedRunIdRef.current;
