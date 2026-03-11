@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Raw config validation now accepts the same provider metadata fields (`defaultModel`, `defaultReasoningEffort`, provider `name`) and top-level `terminal` settings that the setup wizard and config UI save, fixing Codex CLI onboarding and section saves on installs that already carry terminal config.
 - The setup wizard now saves `messages.tts.auto` instead of the removed legacy `messages.tts.enabled` field, fixing standalone setup completion for fresh installs that leave text-to-speech disabled.
 - The tracked sanitized `powerdirector.config.json` now uses the current `messages.tts.auto` schema too, so fresh GitHub clones no longer start from a legacy config that blocks section saves during the setup wizard.
+- Config > Models provider form no longer renders duplicate "Base Url" / "Base URL" fields; redundant `baseURL` and other already-inherited fields were removed from the extended schema.
+- Config saves no longer fail with `Unrecognized keys: imageGenModel, maxTurns` or `imageGeneration, maxUploadSize` errors; full-config validation now uses the extended schema that includes all PowerDirector-specific fields.
 
 ## [1.1.0-beta.2] - 2026-03-07
 

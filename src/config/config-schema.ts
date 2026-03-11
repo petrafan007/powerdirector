@@ -109,13 +109,7 @@ export const modelEntrySchema = ModelDefinitionSchema.safeExtend({
 
 export const modelProviderSchema = ModelProviderSchema.safeExtend({
   baseUrl: z.string().min(1).optional(),
-  retrieveLocalModels: z.boolean().optional(),
   models: z.array(modelEntrySchema).optional(),
-  name: z.string().optional(),
-  baseURL: z.string().optional(),
-  defaultModel: z.string().optional(),
-  defaultReasoningEffort: z.enum(["low", "medium", "high", "xhigh"]).optional(),
-  rateLimit: z.number().int().positive().optional(),
 }).strict();
 
 const modelsBaseSchema = unwrapSchema(ModelsConfigSchema) as z.AnyZodObject;

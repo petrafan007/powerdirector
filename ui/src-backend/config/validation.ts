@@ -14,7 +14,7 @@ import { findDuplicateAgentDirs, formatDuplicateAgentDirError } from './agent-di
 import { applyAgentDefaults, applyModelDefaults, applySessionDefaults } from './defaults';
 import { findLegacyConfigIssues } from './legacy';
 import type { PowerDirectorConfig, ConfigValidationIssue } from './types';
-import { PowerDirectorSchema } from './zod-schema';
+import { configSchema } from './config-schema';
 
 const AVATAR_SCHEME_RE = /^[a-z][a-z0-9+.-]*:/i;
 const AVATAR_DATA_RE = /^data:/i;
@@ -142,11 +142,11 @@ export function validateConfigObjectRaw(
       })),
     };
   }
-  const validated = PowerDirectorSchema.safeParse(raw);
+  const validated = configSchema.safeParse(raw);
   if (!validated.success) {
     return {
       ok: false,
-      issues: validated.error.issues.map((iss) => ({
+      issues: validated.error.issues.map((iss: any) => ({
         path: iss.path.join("."),
         message: iss.message,
       })),
@@ -190,29 +190,29 @@ export function validateConfigObject(
 
 export function validateConfigObjectWithPlugins(raw: unknown):
   | {
-      ok: true;
-      config: PowerDirectorConfig;
-      warnings: ConfigValidationIssue[];
-    }
+    ok: true;
+    config: PowerDirectorConfig;
+    warnings: ConfigValidationIssue[];
+  }
   | {
-      ok: false;
-      issues: ConfigValidationIssue[];
-      warnings: ConfigValidationIssue[];
-    } {
+    ok: false;
+    issues: ConfigValidationIssue[];
+    warnings: ConfigValidationIssue[];
+  } {
   return validateConfigObjectWithPluginsBase(raw, { applyDefaults: true });
 }
 
 export function validateConfigObjectRawWithPlugins(raw: unknown):
   | {
-      ok: true;
-      config: PowerDirectorConfig;
-      warnings: ConfigValidationIssue[];
-    }
+    ok: true;
+    config: PowerDirectorConfig;
+    warnings: ConfigValidationIssue[];
+  }
   | {
-      ok: false;
-      issues: ConfigValidationIssue[];
-      warnings: ConfigValidationIssue[];
-    } {
+    ok: false;
+    issues: ConfigValidationIssue[];
+    warnings: ConfigValidationIssue[];
+  } {
   return validateConfigObjectWithPluginsBase(raw, { applyDefaults: false });
 }
 
@@ -221,15 +221,15 @@ function validateConfigObjectWithPluginsBase(
   opts: { applyDefaults: boolean },
 ):
   | {
-      ok: true;
-      config: PowerDirectorConfig;
-      warnings: ConfigValidationIssue[];
-    }
+    ok: true;
+    config: PowerDirectorConfig;
+    warnings: ConfigValidationIssue[];
+  }
   | {
-      ok: false;
-      issues: ConfigValidationIssue[];
-      warnings: ConfigValidationIssue[];
-    } {
+    ok: false;
+    issues: ConfigValidationIssue[];
+    warnings: ConfigValidationIssue[];
+  } {
   const base = opts.applyDefaults ? validateConfigObject(raw) : validateConfigObjectRaw(raw);
   if (!base.ok) {
     return { ok: false, issues: base.issues, warnings: [] };
