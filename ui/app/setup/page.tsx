@@ -88,8 +88,8 @@ interface ProviderDef {
 const PROVIDERS: ProviderDef[] = [
     { id: 'anthropic', name: 'Anthropic', icon: '🟣', models: ['claude-opus-4.6', 'claude-opus-4.5', 'claude-sonnet-4', 'claude-haiku-4'], description: 'Claude models — best for coding and reasoning', api: 'anthropic-messages', baseUrl: 'https://api.anthropic.com' },
     { id: 'openai', name: 'OpenAI', icon: '🟢', models: ['gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.1-codex-max', 'gpt-5', 'gpt-4.1'], description: 'GPT models — versatile and widely supported', api: 'openai-responses', baseUrl: 'https://api.openai.com/v1' },
-    { id: 'gemini', name: 'Google Gemini', icon: '🔵', models: ['gemini-3-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Gemini REST API — great multimodal capabilities', api: 'google-generative-ai', baseUrl: 'https://generativelanguage.googleapis.com' },
-    { id: 'google-gemini-cli', name: 'Gemini CLI', icon: '🔵', models: ['gemini-3-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Headless Gemini CLI — authorize your Google account', authType: 'cli', api: 'google-generative-ai', baseUrl: 'https://generativelanguage.googleapis.com' },
+    { id: 'gemini', name: 'Google Gemini', icon: '🔵', models: ['gemini-3.1-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Gemini REST API — great multimodal capabilities', api: 'google-generative-ai', baseUrl: 'https://generativelanguage.googleapis.com' },
+    { id: 'google-gemini-cli', name: 'Gemini CLI', icon: '🔵', models: ['gemini-3.1-pro-preview', 'gemini-3-flash-preview', 'gemini-2.5-pro', 'gemini-2.5-flash'], description: 'Headless Gemini CLI — authorize your Google account', authType: 'cli', api: 'google-generative-ai', baseUrl: 'https://generativelanguage.googleapis.com' },
     { id: 'openai-codex', name: 'Codex CLI', icon: '🟢', models: ['gpt-5.3-codex', 'gpt-5.2-codex', 'gpt-5.1-codex-max'], description: 'OpenAI Codex CLI — unrestricted/full-auto mode', authType: 'cli', api: 'openai-responses', baseUrl: 'https://api.openai.com/v1' },
     { id: 'grok', name: 'xAI Grok', icon: '⚫', models: ['grok-4.1', 'grok-4.1-fast', 'grok-4'], description: 'Grok models — real-time knowledge', api: 'openai-completions', baseUrl: 'https://api.x.ai/v1' },
     { id: 'deepseek', name: 'DeepSeek', icon: '🟠', models: ['deepseek-v3.2', 'deepseek-r1'], description: 'DeepSeek models — cost-effective reasoning', api: 'openai-completions', baseUrl: 'https://api.deepseek.com' },
@@ -701,6 +701,11 @@ function StepProvider({ data, update }: { data: WizardData; update: <K extends k
     const selectedProvider = PROVIDERS.find(p => p.id === data.provider);
     const isCli = selectedProvider?.authType === 'cli';
     const needsKey = !isCli && data.provider !== 'ollama';
+    const [isCustomModel, setIsCustomModel] = useState(() => {
+        // Initialize to true if the current model value is not in the provider's preset list
+        if (!selectedProvider) return false;
+        return selectedProvider.models.length === 0 || (data.model !== '' && !selectedProvider.models.includes(data.model));
+    });
 
     return (
         <div>
@@ -714,6 +719,7 @@ function StepProvider({ data, update }: { data: WizardData; update: <K extends k
                         onClick={() => {
                             update('provider', provider.id);
                             update('model', provider.models[0] || '');
+                            setIsCustomModel(false);
                         }}
                         className={`p-3 rounded-xl text-left transition-all cursor-pointer ${data.provider === provider.id
                             ? 'border-2 border-blue-500'
@@ -758,8 +764,16 @@ function StepProvider({ data, update }: { data: WizardData; update: <K extends k
                     <label className="block text-sm font-medium mb-1" style={{ color: 'var(--pd-text-main)' }}>Default Model</label>
                     <div className="flex gap-2">
                         <select
-                            value={data.model}
-                            onChange={e => update('model', e.target.value)}
+                            value={isCustomModel ? 'custom' : data.model}
+                            onChange={e => {
+                                if (e.target.value === 'custom') {
+                                    setIsCustomModel(true);
+                                    update('model', '');
+                                } else {
+                                    setIsCustomModel(false);
+                                    update('model', e.target.value);
+                                }
+                            }}
                             className="flex-1 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             style={inputStyle}
                         >
@@ -772,12 +786,12 @@ function StepProvider({ data, update }: { data: WizardData; update: <K extends k
                 </div>
             )}
 
-            {(data.model === 'custom' || (selectedProvider && selectedProvider.models.length === 0)) && (
+            {(isCustomModel || (selectedProvider && selectedProvider.models.length === 0)) && (
                 <div className="mt-4">
                     <label className="block text-sm font-medium mb-1" style={{ color: 'var(--pd-text-main)' }}>Custom Model ID</label>
                     <input
                         type="text"
-                        value={data.model === 'custom' ? '' : data.model}
+                        value={data.model}
                         onChange={e => update('model', e.target.value)}
                         placeholder="e.g. z-ai/glm-4.5-air:free"
                         className="w-full rounded-lg px-3 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"

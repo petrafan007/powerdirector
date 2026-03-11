@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The tracked sanitized `powerdirector.config.json` now uses the current `messages.tts.auto` schema too, so fresh GitHub clones no longer start from a legacy config that blocks section saves during the setup wizard.
 - Config > Models provider form no longer renders duplicate "Base Url" / "Base URL" fields; redundant `baseURL` and other already-inherited fields were removed from the extended schema.
 - Config saves no longer fail with `Unrecognized keys: imageGenModel, maxTurns` or `imageGeneration, maxUploadSize` errors; full-config validation now uses the extended schema that includes all PowerDirector-specific fields.
+- Setup Wizard custom model input no longer disappears when typing; the "Custom Model" selection mode is now tracked independently from the model value so the text field stays visible while entering a custom model ID.
+- Setup Wizard Gemini provider now lists `gemini-3.1-pro-preview` as the default model instead of the older `gemini-3-pro-preview`.
 
 ## [1.1.0-beta.2] - 2026-03-07
 
