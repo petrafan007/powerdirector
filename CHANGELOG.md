@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0-beta.3] - 2026-03-09
 
 ### Fixed
+- The `ui:build` script now routes through a dedicated Node script that explicitly purges `TURBOPACK` from the environment, ensuring users running legacy updater versions won't suffer a Multiple Bundler Flags crash when updating to newer patches.
 - Chat messages missing initial stream timestamps now default to `Date.now()` on append and use a stable fallback during re-sorts, so optimistic user messages no longer render visually below newer AI responses.
 - Aborted chat runs no longer persist partial assistant text into session history or transcript files, and the chat UI now collapses legacy aborted blobs into a concise notification instead of rendering them as duplicate/missing assistant replies.
 - Tool-intent repair now catches Gemini/Codex planning narration that uses legacy aliases like `run_shell_command` or plain phrases like "shell command", preventing giant "I will..." execution plans from being saved as final assistant bubbles instead of real tool calls.

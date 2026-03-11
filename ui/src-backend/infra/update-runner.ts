@@ -104,7 +104,7 @@ function createUpdateCommandEnv(overrides?: NodeJS.ProcessEnv): NodeJS.ProcessEn
   };
   // Next.js sets TURBOPACK=auto in the server runtime; strip it so `next build --webpack`
   // inside updater jobs does not inherit conflicting bundler flags.
-  delete env.TURBOPACK;
+  env.TURBOPACK = undefined;
   return env;
 }
 
@@ -748,7 +748,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       );
       steps.push(worktreeStep);
       if (worktreeStep.exitCode !== 0) {
-        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => {});
+        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => { });
         return finalizeGitResult({
           status: "error",
           mode: "git",
@@ -816,7 +816,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           cwd: gitRoot,
           timeoutMs,
         }).catch(() => null);
-        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => {});
+        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => { });
       }
 
       if (!selectedSha) {
