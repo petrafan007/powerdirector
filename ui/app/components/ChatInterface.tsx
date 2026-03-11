@@ -810,6 +810,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             newMessages[ghostIndex] = msg;
                             return newMessages;
                         }
+                        return [...prev, msg];
                     }
                 }
 

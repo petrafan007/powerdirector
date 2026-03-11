@@ -5,9 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0-beta.3] - 2026-03-09
+## [1.1.0-beta.3] - 2026-03-10
 
 ### Fixed
+- [Hotfix 8] Fixed a UI regression where Gemini CLI's conversational "thinking" text was inadvertently merged and rendered inside the subsequent JSON tool execution block.
+- [Hotfix 9] Fixed a UI state bug where streaming message chunks tagged with a tool id falsely inherited `status: 'completed'` from the tool block, causing the text box to disappear during generation.
+- [Hotfix] Fixed issue where `TerminalManager` WebSockets crashed the Next.js `dev` and `build` commands.h the UI backend with `b.unmask is not a function`, because `ws` and its fallback native binaries are now strictly excluded from Next.js server-edge bundle resolution in `ui/next.config.ts`.
 - [Hotfix 8] TerminalManager WebSocket connections no longer crash the UI backend with `b.unmask is not a function`, because `ws` and its fallback native binaries are now strictly excluded from Next.js server-edge bundle resolution in `ui/next.config.ts`.
 - [Hotfix 8] The `google-gemini-cli` adapter now injects a critical system instruction to forbid the CLI binary from running its own internal tools (such as `grep_search`), ensuring the chat UI receives the structured JSON tool calls instead of timing out while the restricted binary tries to autonomously edit the user's workspace.
 - [Hotfix 5] Fixed missing Custom Model dropdown text input bug.

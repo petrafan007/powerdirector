@@ -201,7 +201,11 @@ export class GeminiCLIProvider implements Provider {
         const spawnEnv = this.buildSpawnEnv();
         const modelToUse = this.resolveModel(model);
 
-        let finalPrompt = prompt;
+        let finalPrompt = `[CRITICAL SYSTEM INSTRUCTION]
+You are acting as a raw language model API. You MUST NOT use any of your built-in tools (such as grep_search, read_file, run_shell_command, cli_help, codebase_investigator, etc) to autonomously fulfill the user's request.
+Instead, you must ONLY output the exact JSON required to call the tools listed in the "AVAILABLE TOOLS" section below, or output raw text if no tools are needed. Do not attempt to achieve the user's goal autonomously.
+
+${prompt}`;
         const imagePaths: string[] = [];
         let cleanedUp = false;
 
