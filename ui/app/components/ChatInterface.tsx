@@ -873,7 +873,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 }
 
                 // Default: append new message
-                return [...prev, msg];
+                const newMsg = { ...msg };
+                if (!newMsg.timestamp) {
+                    newMsg.timestamp = Date.now();
+                }
+                return [...prev, newMsg];
             });
 
             const isActiveRunMessage = Boolean(messageRunId && activeRunIdRef.current && messageRunId === activeRunIdRef.current);
@@ -1757,8 +1761,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     };
 
     const sortedMessages = [...messages].sort((a, b) => {
-        const timeA = a.timestamp || 0;
-        const timeB = b.timestamp || 0;
+        const timeA = a.timestamp || Number.MAX_SAFE_INTEGER;
+        const timeB = b.timestamp || Number.MAX_SAFE_INTEGER;
 
         // Message timestamps are already millisecond-resolution; only use the
         // sequence counter to break exact ties so adjacent turns stay stable.
