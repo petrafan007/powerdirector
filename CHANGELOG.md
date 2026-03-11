@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0-beta.3] - 2026-03-09
 
 ### Fixed
+- [Hotfix 8] TerminalManager WebSocket connections no longer crash the UI backend with `b.unmask is not a function`, because `ws` and its fallback native binaries are now strictly excluded from Next.js server-edge bundle resolution in `ui/next.config.ts`.
+- [Hotfix 8] The `google-gemini-cli` adapter now injects a critical system instruction to forbid the CLI binary from running its own internal tools (such as `grep_search`), ensuring the chat UI receives the structured JSON tool calls instead of timing out while the restricted binary tries to autonomously edit the user's workspace.
 - [Hotfix 5] Fixed missing Custom Model dropdown text input bug.
 - [Hotfix 5] Removed explicit Anthropic default from initial Setup Wizard config, forcing an explicit user choice.
 - [Hotfix 5] Updated Gemini 3.0 Pro preview default id to `gemini-3.1-pro-preview`.

@@ -354,6 +354,12 @@ export class GeminiCLIProvider implements Provider {
         child.stderr.on('data', (chunk: Buffer) => {
             const text = chunk.toString();
             stderr += text;
+            if (/(?:429|capacity|resource_exhausted)/i.test(text)) {
+                logger.warn(`[GeminiCLIProvider] Intercepted 429 Resource Exhausted on stderr`);
+                try { child.kill('SIGTERM'); } catch { }
+                fail(new Error(`[GeminiCLIProvider] Resource Exhausted (429): No capacity available.`));
+                return;
+            }
             if (!sawStdout && text.trim()) {
                 const now = Date.now();
                 if (now - heartbeatSentAt >= 1000) {
