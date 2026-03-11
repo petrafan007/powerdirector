@@ -5,7 +5,7 @@ import { runCommandWithTimeout } from '../process/exec';
 import { defaultRuntime, type RuntimeEnv } from '../runtime';
 import { resolvePowerDirectorPackageRoot, resolvePowerDirectorPackageRootSync } from './powerdirector-root';
 
-const CONTROL_UI_DIST_PATH_SEGMENTS = ["dist", "control-ui", "index.html"] as const;
+const CONTROL_UI_DIST_PATH_SEGMENTS = ["ui", ".next", "build-manifest.json"] as const;
 
 export function resolveControlUiDistIndexPathForRoot(root: string): string {
   return path.join(root, ...CONTROL_UI_DIST_PATH_SEGMENTS);
@@ -26,9 +26,9 @@ export async function resolveControlUiDistIndexHealth(
   const indexPath = opts.root
     ? resolveControlUiDistIndexPathForRoot(opts.root)
     : await resolveControlUiDistIndexPath({
-        argv1: opts.argv1 ?? process.argv[1],
-        moduleUrl: opts.moduleUrl,
-      });
+      argv1: opts.argv1 ?? process.argv[1],
+      moduleUrl: opts.moduleUrl,
+    });
   return {
     indexPath,
     exists: Boolean(indexPath && fs.existsSync(indexPath)),
@@ -83,12 +83,12 @@ export async function resolveControlUiDistIndexPath(
   // Case 1: entrypoint is directly inside dist/ (e.g., dist/entry.js)
   const distDir = path.dirname(normalized);
   if (path.basename(distDir) === "dist") {
-    return path.join(distDir, "control-ui", "index.html");
+    return path.join(distDir, "..", "ui", ".next", "build-manifest.json");
   }
 
   const packageRoot = await resolvePowerDirectorPackageRoot({ argv1: normalized, moduleUrl });
   if (packageRoot) {
-    return path.join(packageRoot, "dist", "control-ui", "index.html");
+    return path.join(packageRoot, "ui", ".next", "build-manifest.json");
   }
 
   // Fallback: traverse up and find package.json with name "powerdirector" + dist/control-ui/index.html
@@ -96,7 +96,7 @@ export async function resolveControlUiDistIndexPath(
   let dir = path.dirname(normalized);
   for (let i = 0; i < 8; i++) {
     const pkgJsonPath = path.join(dir, "package.json");
-    const indexPath = path.join(dir, "dist", "control-ui", "index.html");
+    const indexPath = path.join(dir, "ui", ".next", "build-manifest.json");
     if (fs.existsSync(pkgJsonPath)) {
       try {
         const raw = fs.readFileSync(pkgJsonPath, "utf-8");
