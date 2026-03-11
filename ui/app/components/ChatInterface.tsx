@@ -2028,10 +2028,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             && !isToolOutput
                             && !hasToolMetadata
                             && !contentLooksLikeToolCall;
+                        // Strict requirement for an execution bubble: must explicitly have a running/pending tool state
+                        // or be the actual tool output itself. Mere proximity to a tool call shouldn't inherit the bubble formatting.
                         const isExecutionOnlyMessage = isExecutionTurn
                             && !isAssistantFinal
-                            && (hasToolMetadata || isToolOutput || contentLooksLikeToolCall || isStatusStep)
-                            && !isPlainAssistantMessage;
+                            && !isPlainAssistantMessage
+                            && (hasToolMetadata || isToolOutput || contentLooksLikeToolCall)
+                            && (messageStatus === 'running' || isToolOutput || messageType === 'tool' || contentLooksLikeToolCall);
                         const isToolRelated = isToolCall || isToolOutput || isStatusStep || isExecutionOnlyMessage;
 
                         const isUser = msg.role === 'user' && !isToolRelated;

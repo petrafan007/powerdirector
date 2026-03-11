@@ -220,8 +220,11 @@ export default function LogsPage() {
         if (!autoFollow || !atBottom) return;
         const node = containerRef.current;
         if (!node) return;
-        node.scrollTop = node.scrollHeight;
-    }, [entries, autoFollow, atBottom]);
+        // Delay scroll until after React layout and incoming paint shifts
+        requestAnimationFrame(() => {
+            node.scrollTop = node.scrollHeight;
+        });
+    }, [autoFollow, atBottom, entries.length]);
 
     const filteredEntries = useMemo(() => {
         const needle = filterText.trim().toLowerCase();
