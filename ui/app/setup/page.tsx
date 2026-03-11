@@ -51,7 +51,7 @@ interface WizardData {
 
 const DEFAULT_DATA: WizardData = {
     usageMode: 'standalone',
-    provider: 'anthropic',
+    provider: '',
     apiKey: '',
     model: '',
     workspace: '',
@@ -217,11 +217,17 @@ export default function SetupWizardPage() {
         }
 
         // Validation
-        if (step === 2 && !data.apiKey && data.provider !== 'ollama') { // step 2 is provider now
-            const selectedProv = PROVIDERS.find(p => p.id === data.provider);
-            if (selectedProv?.authType !== 'cli') {
-                setError('Please enter an API key to continue.');
+        if (step === 2) { // step 2 is provider now
+            if (!data.provider) {
+                setError('Please choose an AI provider to continue.');
                 return;
+            }
+            if (!data.apiKey && data.provider !== 'ollama') {
+                const selectedProv = PROVIDERS.find(p => p.id === data.provider);
+                if (selectedProv?.authType !== 'cli') {
+                    setError('Please enter an API key to continue.');
+                    return;
+                }
             }
         }
         setStep(s => Math.min(s + 1, STEPS.length - 1));
