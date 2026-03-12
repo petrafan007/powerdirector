@@ -1262,33 +1262,39 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     };
 
     const renderToolOutput = (content: any, toolName: string) => {
-        const text = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
+        let text = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
+
+        // Pretty-print loose JSON strings if they look like JSON
+        if (typeof content === 'string' && content.trim().startsWith('{') && content.trim().endsWith('}')) {
+            try {
+                const parsed = JSON.parse(content);
+                text = JSON.stringify(parsed, null, 2);
+            } catch (e) { /* ignore */ }
+        }
+
         const isSelected = selectedToolOutput?.content === text;
         const lines = text.split('\n');
-        const isLong = lines.length > 10 || text.length > 800;
+        const isLong = lines.length > 15 || text.length > 1200;
 
         let displayContent = text;
         if (isLong) {
-            displayContent = lines.slice(0, 10).join('\n');
-            if (displayContent.length > 800) displayContent = displayContent.slice(0, 800);
+            displayContent = lines.slice(0, 15).join('\n');
+            if (displayContent.length > 1200) displayContent = displayContent.slice(0, 1200);
             displayContent += '\n... (truncated)';
         }
 
         return (
             <div
-                className={`cursor-pointer group relative overflow-hidden transition-all duration-200 hover:opacity-90 rounded-lg ${isLong ? 'max-h-[300px]' : ''} ${isSelected ? 'ring-2 ring-red-500' : ''}`}
+                className={`cursor-pointer group relative overflow-hidden transition-all duration-200 hover:opacity-90 rounded-lg ${isLong ? 'max-h-[400px]' : ''} ${isSelected ? 'ring-2 ring-red-500' : ''}`}
                 onClick={() => setSelectedToolOutput({ title: `Tool Output: ${toolName}`, content: text, plainText: true })}
             >
-                <div className="pointer-events-none">
-                    <pre
-                        className="m-0 whitespace-pre-wrap break-words text-[12px] leading-relaxed font-mono"
-                        style={{ color: 'var(--pd-text-main)' }}
-                    >
-                        {displayContent}
-                    </pre>
+                <div className="pointer-events-none p-1">
+                    <div className="text-[12px] leading-relaxed font-mono whitespace-pre-wrap break-words" style={{ color: 'var(--pd-text-main)' }}>
+                        {renderFormatting(displayContent)}
+                    </div>
                 </div>
                 {isLong && (
-                    <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[var(--pd-surface-panel-2)] to-transparent pointer-events-none opacity-60" />
+                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--pd-surface-panel-2)] to-transparent pointer-events-none opacity-80" />
                 )}
             </div>
         );
@@ -1770,6 +1776,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         if (timeA !== timeB) {
             return timeA - timeB;
         }
+
+        // Break ties with role: user always comes first for exact same timestamp.
+        // This prevents "jumping" where the prompt appears below the execution block.
+        if (a.role === 'user' && b.role !== 'user') return -1;
+        if (b.role === 'user' && a.role !== 'user') return 1;
 
         const seqA = (a.metadata?.sequence as number) || 0;
         const seqB = (b.metadata?.sequence as number) || 0;

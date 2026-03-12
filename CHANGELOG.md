@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0-beta.3] - 2026-03-10
 
 ### Fixed
+- [Hotfix 10] Fixed critical regression in provider router where 429 errors caused infinite retry loops; implemented per-model cooldowns to allow immediate fallback to alternative models (e.g. Gemini Pro to Gemini Flash).
+- [Hotfix 10] Enforced strict tool isolation for Gemini CLI by adding `--tool-mode none`, preventing autonomous workspace modifications and path errors.
+- [Hotfix 10] Fixed JSON response stripping in Gemini CLI provider to ensure the agent receives the full tool-calling payload.
+- [Hotfix 10] Resolved "jumping" chat interface prompt glitch by stabilizing message sorting logic to prioritize user messages on timestamp ties.
+- [Hotfix 10] Added automatic media rendering and JSON pretty-printing to tool execution blocks in the chat UI.
+- [Hotfix 10] Increased UI update restart timeout to 2000ms to allow proper gateway connection cleanup before process exit.
+- [Hotfix 10] Resolved "Detached HEAD" warning in the UI update flow.
 - [Hotfix 8] Fixed a UI regression where Gemini CLI's conversational "thinking" text was inadvertently merged and rendered inside the subsequent JSON tool execution block.
 - [Hotfix 9] Fixed a UI state bug where streaming message chunks tagged with a tool id falsely inherited `status: 'completed'` from the tool block, causing the text box to disappear during generation.
 - [Hotfix] Fixed issue where `TerminalManager` WebSockets crashed the Next.js `dev` and `build` commands.h the UI backend with `b.unmask is not a function`, because `ws` and its fallback native binaries are now strictly excluded from Next.js server-edge bundle resolution in `ui/next.config.ts`.

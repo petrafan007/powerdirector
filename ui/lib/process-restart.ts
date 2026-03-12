@@ -10,7 +10,7 @@ export type ScheduledAppRestart = {
 
 let scheduledRestart: ScheduledAppRestart | null = null;
 
-export function scheduleAppProcessRestart(delayMs = 600): ScheduledAppRestart {
+export function scheduleAppProcessRestart(delayMs = 2000): ScheduledAppRestart {
     if (scheduledRestart) {
         return scheduledRestart;
     }

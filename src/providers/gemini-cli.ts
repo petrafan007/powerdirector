@@ -177,7 +177,8 @@ export class GeminiCLIProvider implements Provider {
                 const jsonPart = fullText.substring(firstBrace, lastBrace + 1);
                 try {
                     const parsed = JSON.parse(jsonPart);
-                    return parsed.response || jsonPart;
+                    // Return the whole JSON part to preserve tool calls/metadata
+                    return jsonPart;
                 } catch {
                     return fullText.trim();
                 }
@@ -197,7 +198,7 @@ export class GeminiCLIProvider implements Provider {
         const outputFormat = this.backendConfig?.output || 'text';
         const baseArgs = Array.isArray(this.backendConfig?.args) && this.backendConfig!.args!.length > 0
             ? [...this.backendConfig!.args!]
-            : ['--output-format', outputFormat, '--approval-mode', 'yolo'];
+            : ['--output-format', outputFormat, '--tool-mode', 'none'];
         const spawnEnv = this.buildSpawnEnv();
         const modelToUse = this.resolveModel(model);
 

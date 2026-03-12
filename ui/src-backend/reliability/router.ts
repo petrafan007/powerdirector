@@ -279,8 +279,8 @@ export class ProviderRouter {
                 ));
                 break;
             }
-            const providerKey = this.normalizeProviderName(provider.config.name);
-            const cooldownUntil = this.getProviderCooldownUntil(providerKey);
+            const effectiveModel = entry.model || undefined;
+            const cooldownUntil = this.getProviderCooldownUntil(provider.config.name, effectiveModel);
             if (cooldownUntil && cooldownUntil > Date.now()) {
                 const waitMs = cooldownUntil - Date.now();
                 const waitMinutes = Math.max(1, Math.ceil(waitMs / 60000));
@@ -297,7 +297,6 @@ export class ProviderRouter {
                 continue;
             }
 
-            let effectiveModel: string | undefined;
             try {
                 effectiveModel = this.resolveEffectiveModel(provider, entryModel);
                 if (index === 0) {
@@ -324,7 +323,7 @@ export class ProviderRouter {
                         linkedSignal
                     );
 
-                this.clearProviderCooldown(providerKey);
+                this.clearProviderCooldown(provider.config.name, effectiveModel);
                 const fallbackUsed = index > 0;
                 this.abortController = null;
                 const metadata: ProviderExecutionMetadata = {
@@ -362,7 +361,7 @@ export class ProviderRouter {
                 }
 
                 errors.push(pdError);
-                this.recordProviderFailure(provider.config.name, pdError);
+                this.recordProviderFailure(provider.config.name, pdError, effectiveModel);
                 // Continue to next entry
             }
         }
@@ -480,10 +479,9 @@ export class ProviderRouter {
         for (const [index, entry] of targetEntries.entries()) {
             if (hardDeadline && Date.now() >= hardDeadline) break;
             const { provider, model: entryModel } = entry;
-            const providerKey = this.normalizeProviderName(provider.config.name);
-            const cooldownUntil = this.getProviderCooldownUntil(providerKey);
+            const cooldownUntil = this.getProviderCooldownUntil(provider.config.name, entryModel);
             if (cooldownUntil && cooldownUntil > Date.now()) {
-                console.log(`[Router] Skipping provider ${provider.config.name} (cooldown until ${new Date(cooldownUntil).toISOString()})`);
+                console.log(`[Router] Skipping provider ${provider.config.name}/${entryModel || 'default'} (cooldown until ${new Date(cooldownUntil).toISOString()})`);
                 const waitMs = cooldownUntil - Date.now();
                 const waitMinutes = Math.max(1, Math.ceil(waitMs / 60000));
                 errors.push(new PowerDirectorError(
@@ -563,7 +561,7 @@ export class ProviderRouter {
                                         provider.config.name,
                                         effectiveModel
                                     );
-                                    router.recordProviderFailure(provider.config.name, pdError);
+                                    router.recordProviderFailure(provider.config.name, pdError, effectiveModel);
                                     console.warn(`Stream interrupted for ${provider.config.name}:`, err);
                                     throw pdError;
                                 }
@@ -584,7 +582,7 @@ export class ProviderRouter {
                     stream = (async function* () { yield output; })();
                 }
 
-                this.clearProviderCooldown(providerKey);
+                this.clearProviderCooldown(provider.config.name, effectiveModel);
                 const fallbackUsed = index > 0;
 
                 const metadata: ProviderExecutionMetadata = {
@@ -622,7 +620,7 @@ export class ProviderRouter {
                 }
 
                 errors.push(pdError);
-                this.recordProviderFailure(provider.config.name, pdError);
+                this.recordProviderFailure(provider.config.name, pdError, effectiveModel);
             }
         }
 
@@ -783,14 +781,14 @@ export class ProviderRouter {
         return Math.min(maxMs, baseMs * 2 ** exponent);
     }
 
-    private recordProviderFailure(providerName: string, error: PowerDirectorError): void {
-        const key = this.normalizeProviderName(providerName);
+    private recordProviderFailure(providerName: string, error: PowerDirectorError, modelName?: string): void {
+        const pKey = this.normalizeProviderName(providerName);
+        const mKey = modelName ? this.normalizeProviderName(modelName) : '';
+        const key = mKey ? `${pKey}/${mKey}` : pKey;
 
         // LAN/Local providers should not be put into cooldown as transient 
         // network/wake issues are common and they are "free" to retry.
-        // Also skip cooldown for CLI providers to allow same-provider model fallbacks
-        // (e.g. gemini-3-pro-preview -> gemini-3-flash-preview) to work immediately.
-        if (key.includes('ollama') || key.includes('-cli')) {
+        if (pKey.includes('ollama')) {
             console.log(`[Router] Skipping cooldown for provider: ${providerName}`);
             return;
         }
@@ -821,8 +819,11 @@ export class ProviderRouter {
         this.providerCooldowns.set(key, state);
     }
 
-    private clearProviderCooldown(providerName: string): void {
-        const key = this.normalizeProviderName(providerName);
+    private clearProviderCooldown(providerName: string, modelName?: string): void {
+        const pKey = this.normalizeProviderName(providerName);
+        const mKey = modelName ? this.normalizeProviderName(modelName) : '';
+        const key = mKey ? `${pKey}/${mKey}` : pKey;
+
         const existing = this.providerCooldowns.get(key);
         if (!existing) return;
         this.providerCooldowns.set(key, {
@@ -835,8 +836,21 @@ export class ProviderRouter {
         });
     }
 
-    private getProviderCooldownUntil(providerName: string): number {
-        const key = this.normalizeProviderName(providerName);
+    private getProviderCooldownUntil(providerName: string, modelName?: string): number {
+        const pKey = this.normalizeProviderName(providerName);
+        const mKey = modelName ? this.normalizeProviderName(modelName) : '';
+
+        // 1. Check specific model cooldown first
+        if (mKey) {
+            const mUntil = this.getCooldownForKey(`${pKey}/${mKey}`);
+            if (mUntil > 0) return mUntil;
+        }
+
+        // 2. Fall back to checking general provider cooldown
+        return this.getCooldownForKey(pKey);
+    }
+
+    private getCooldownForKey(key: string): number {
         const state = this.providerCooldowns.get(key);
         if (!state) return 0;
         if (state.cooldownUntil <= Date.now()) {
