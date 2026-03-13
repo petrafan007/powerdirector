@@ -183,6 +183,28 @@ export default function UpdateSection({ schema, data, onUpdate }: UpdateSectionP
             if (!res.ok) {
                 throw new Error(json?.error || 'Failed to restart application');
             }
+
+            // Poll for health until it's back, then refresh
+            let attempts = 0;
+            const poll = async () => {
+                try {
+                    const h = await fetch('/api/health');
+                    if (h.ok) {
+                        window.location.reload();
+                        return;
+                    }
+                } catch {
+                    // ignore
+                }
+                attempts++;
+                if (attempts < 60) { // 1 minute timeout
+                    setTimeout(poll, 1000);
+                } else {
+                    setRestarting(false);
+                    setModalError('Restart timed out. Please refresh the page manually.');
+                }
+            };
+            setTimeout(poll, 2000); // Initial wait for process to die
         } catch (error: any) {
             setModalError(error?.message || 'Failed to restart application');
             setRestarting(false);
