@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - [Hotfix 10] Fixed critical regression in provider router where 429 errors caused infinite retry loops; implemented per-model cooldowns to allow immediate fallback to alternative models (e.g. Gemini Pro to Gemini Flash).
 - [Hotfix 10] Enforced strict tool isolation for Gemini CLI by adding `--tool-mode none`, preventing autonomous workspace modifications and path errors.
+- **[Hotfix 10]**: Fixed provider router redeclaration, Gemini CLI tool mode, and UI message sorting/rendering glitches. (2026-03-12)
+- **[Hotfix 11]**: Resolved client-side exception in Chat UI, fixed media rendering in multi-part content, and improved URL regex for assets with query params. (2026-03-12)
 - [Hotfix 10] Fixed JSON response stripping in Gemini CLI provider to ensure the agent receives the full tool-calling payload.
 - [Hotfix 10] Resolved "jumping" chat interface prompt glitch by stabilizing message sorting logic to prioritize user messages on timestamp ties.
 - [Hotfix 10] Added automatic media rendering and JSON pretty-printing to tool execution blocks in the chat UI.

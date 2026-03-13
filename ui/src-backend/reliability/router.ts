@@ -279,7 +279,7 @@ export class ProviderRouter {
                 ));
                 break;
             }
-            const effectiveModel = entry.model || undefined;
+            let effectiveModel = entry.model || undefined;
             const cooldownUntil = this.getProviderCooldownUntil(provider.config.name, effectiveModel);
             if (cooldownUntil && cooldownUntil > Date.now()) {
                 const waitMs = cooldownUntil - Date.now();

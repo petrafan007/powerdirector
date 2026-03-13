@@ -110,9 +110,10 @@ function parseProviderModel(value: unknown): { provider: string; model: string }
 }
 
 function normalizeTranscriptMessage(message: Message): Message {
-    const metadata = message?.metadata && typeof message.metadata === 'object'
+    if (!message) return message;
+    const metadata = message.metadata && typeof message.metadata === 'object'
         ? { ...message.metadata }
-        : message?.metadata;
+        : (message.metadata || {});
     if (metadata?.aborted === true && message.role === 'assistant') {
         return {
             ...message,
@@ -1303,7 +1304,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     const renderFormatting = (text: string) => {
         // IMPORTANT: Image/video paths must be detected BEFORE bold/italic patterns
         // The order matters: media paths first (including bold-wrapped), then markdown links, then URLs, then bold/italic
-        const parts = text.split(/(\!\[[^\]]*\]\([^)]+\)|\*\*\/home\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)\*\*|\*\*\/tmp\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)\*\*|media\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)|\/home\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)|\/tmp\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)|(?:Image|Saved|Generated|Video)[^:\n\r]*:\s*[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)|\[.*?\]\(.*?\)|\bhttps?:\/\/[^\s<]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)|\bhttps?:\/\/[^\s<]+|\*\*.*?\*\*|\*.*?\*)/g);
+        const parts = text.split(/(\!\[[^\]]*\]\([^)]+\)|\*\*\/home\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)(?:\?[a-zA-Z0-9=&._-]*)?\*\*|\*\*\/tmp\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)(?:\?[a-zA-Z0-9=&._-]*)?\*\*|media\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)(?:\?[a-zA-Z0-9=&._-]*)?|\/home\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)(?:\?[a-zA-Z0-9=&._-]*)?|\/tmp\/[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)(?:\?[a-zA-Z0-9=&._-]*)?|(?:Image|Saved|Generated|Video|Clip)[^:\n\r]*:\s*[a-zA-Z0-9._\-\/]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)(?:\?[a-zA-Z0-9=&._-]*)?|\[.*?\]\(.*?\)|\bhttps?:\/\/[^\s<]+\.(?:png|jpe?g|webp|gif|svg|mp4|webm|mov)(?:\?[a-zA-Z0-9=&._-]*)?|\bhttps?:\/\/[^\s<]+|\*\*.*?\*\*|\*.*?\*)/g);
         return parts.map((part, pi) => {
             if (!part) return null;
 
@@ -1337,7 +1338,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             alt={mdImageMatch[1] || ''}
                             className="w-full h-auto max-h-[400px] object-contain"
                             onError={(e) => {
-                                (e.target as HTMLImageElement).parentElement!.style.display = 'none';
+                                (e.target as HTMLImageElement).parentElement?.style && ((e.target as HTMLImageElement).parentElement!.style.display = 'none');
                             }}
                         />
                     </div>
@@ -1353,7 +1354,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             alt="Generated Asset"
                             className="w-full h-auto max-h-[400px] object-contain"
                             onError={(e) => {
-                                (e.target as HTMLImageElement).parentElement!.style.display = 'none';
+                                (e.target as HTMLImageElement).parentElement?.style && ((e.target as HTMLImageElement).parentElement!.style.display = 'none');
                             }}
                         />
                     </div>
@@ -1370,7 +1371,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             alt="Generated Asset"
                             className="w-full h-auto max-h-[400px] object-contain"
                             onError={(e) => {
-                                (e.target as HTMLImageElement).parentElement!.style.display = 'none';
+                                (e.target as HTMLImageElement).parentElement?.style && ((e.target as HTMLImageElement).parentElement!.style.display = 'none');
                             }}
                         />
                     </div>
@@ -1386,7 +1387,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             alt="Generated Asset"
                             className="w-full h-auto max-h-[400px] object-contain"
                             onError={(e) => {
-                                (e.target as HTMLImageElement).parentElement!.style.display = 'none';
+                                (e.target as HTMLImageElement).parentElement?.style && ((e.target as HTMLImageElement).parentElement!.style.display = 'none');
                             }}
                         />
                     </div>
@@ -1461,7 +1462,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             alt="Generated Asset"
                             className="w-full h-auto max-h-[400px] object-contain"
                             onError={(e) => {
-                                (e.target as HTMLImageElement).parentElement!.style.display = 'none';
+                                (e.target as HTMLImageElement).parentElement?.style && ((e.target as HTMLImageElement).parentElement!.style.display = 'none');
                             }}
                         />
                     </div>
@@ -1477,7 +1478,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             alt="Image"
                             className="w-full h-auto max-h-[400px] object-contain"
                             onError={(e) => {
-                                (e.target as HTMLImageElement).parentElement!.style.display = 'none';
+                                (e.target as HTMLImageElement).parentElement?.style && ((e.target as HTMLImageElement).parentElement!.style.display = 'none');
                             }}
                         />
                     </div>
@@ -1723,7 +1724,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             return attachMetadataMedia((
                 <div className="space-y-4">
                     {content.map((c, i) => {
-                        if (c.type === 'text') return <div key={i} className="whitespace-pre-wrap leading-relaxed">{c.text}</div>;
+                        if (c.type === 'text') return <div key={i} className="whitespace-pre-wrap leading-relaxed">{renderFormatting(c.text)}</div>;
                         if (c.type === 'image') {
                             const url = c.image_url?.url || c.previewUrl;
                             return (
