@@ -603,11 +603,15 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     }
     runtimeBackup = backupStep.value;
 
-    if (preservedRuntimeFiles.length > 0) {
+    if (preservedRuntimeFiles.length > 0 || true) {
+      const resetPaths = [
+        ...preservedRuntimeFiles.map((file) => file.relativePath),
+        "ui/src-backend/",
+      ];
       const resetRuntimeFilesStep = await runStep(
         step(
           "reset runtime files",
-          ["git", "-C", gitRoot, "checkout", "--", ...preservedRuntimeFiles.map((file) => file.relativePath)],
+          ["git", "-C", gitRoot, "checkout", "--", ...resetPaths],
           gitRoot,
         ),
       );
