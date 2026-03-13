@@ -180,6 +180,7 @@ export function resolveConfigPath(
   if (override) {
     return resolveUserPath(override, env, homedir);
   }
+  const stateOverride = env.POWERDIRECTOR_STATE_DIR?.trim() || env.POWERDIRECTOR_STATE_DIR?.trim();
   const projectRoot = findProjectRoot();
   const candidates = [
     path.join(stateDir, CONFIG_FILENAME),
