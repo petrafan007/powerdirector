@@ -17,7 +17,7 @@ async function writeConfig(
   home: string,
   dirname: ".powerdirector",
   port: number,
-  filename: string = "powerdirector.json",
+  filename: string = "powerdirector.config.json",
 ) {
   const dir = path.join(home, dirname);
   await fs.mkdir(dir, { recursive: true });
@@ -27,7 +27,7 @@ async function writeConfig(
 }
 
 describe("config io paths", () => {
-  it("uses ~/.powerdirector/powerdirector.json when config exists", async () => {
+  it("uses ~/.powerdirector/powerdirector.config.json when config exists", async () => {
     await withTempHome(async (home) => {
       const configPath = await writeConfig(home, ".powerdirector", 19001);
       const io = createConfigIO({
@@ -39,13 +39,13 @@ describe("config io paths", () => {
     });
   });
 
-  it("defaults to ~/.powerdirector/powerdirector.json when config is missing", async () => {
+  it("defaults to ~/.powerdirector/powerdirector.config.json when config is missing", async () => {
     await withTempHome(async (home) => {
       const io = createConfigIO({
         env: {} as NodeJS.ProcessEnv,
         homedir: () => home,
       });
-      expect(io.configPath).toBe(path.join(home, ".powerdirector", "powerdirector.json"));
+      expect(io.configPath).toBe(path.join(home, ".powerdirector", "powerdirector.config.json"));
     });
   });
 
@@ -55,7 +55,7 @@ describe("config io paths", () => {
         env: { POWERDIRECTOR_HOME: path.join(home, "svc-home") } as NodeJS.ProcessEnv,
         homedir: () => path.join(home, "ignored-home"),
       });
-      expect(io.configPath).toBe(path.join(home, "svc-home", ".powerdirector", "powerdirector.json"));
+      expect(io.configPath).toBe(path.join(home, "svc-home", ".powerdirector", "powerdirector.config.json"));
     });
   });
 

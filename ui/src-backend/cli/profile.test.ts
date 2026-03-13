@@ -62,7 +62,7 @@ describe("applyCliProfileEnv", () => {
     const expectedStateDir = path.join(path.resolve("/home/peter"), ".powerdirector-dev");
     expect(env.POWERDIRECTOR_PROFILE).toBe("dev");
     expect(env.POWERDIRECTOR_STATE_DIR).toBe(expectedStateDir);
-    expect(env.POWERDIRECTOR_CONFIG_PATH).toBe(path.join(expectedStateDir, "powerdirector.json"));
+    expect(env.POWERDIRECTOR_CONFIG_PATH).toBe(path.join(expectedStateDir, "powerdirector.config.json"));
     expect(env.POWERDIRECTOR_GATEWAY_PORT).toBe("19001");
   });
 
@@ -78,7 +78,7 @@ describe("applyCliProfileEnv", () => {
     });
     expect(env.POWERDIRECTOR_STATE_DIR).toBe("/custom");
     expect(env.POWERDIRECTOR_GATEWAY_PORT).toBe("19099");
-    expect(env.POWERDIRECTOR_CONFIG_PATH).toBe(path.join("/custom", "powerdirector.json"));
+    expect(env.POWERDIRECTOR_CONFIG_PATH).toBe(path.join("/custom", "powerdirector.config.json"));
   });
 
   it("uses POWERDIRECTOR_HOME when deriving profile state dir", () => {
@@ -95,7 +95,7 @@ describe("applyCliProfileEnv", () => {
     const resolvedHome = path.resolve("/srv/powerdirector-home");
     expect(env.POWERDIRECTOR_STATE_DIR).toBe(path.join(resolvedHome, ".powerdirector-work"));
     expect(env.POWERDIRECTOR_CONFIG_PATH).toBe(
-      path.join(resolvedHome, ".powerdirector-work", "powerdirector.json"),
+      path.join(resolvedHome, ".powerdirector-work", "powerdirector.config.json"),
     );
   });
 });

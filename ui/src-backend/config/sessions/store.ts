@@ -296,7 +296,7 @@ function resolveRotateBytes(maintenance?: SessionMaintenanceConfig): number {
 }
 
 /**
- * Resolve maintenance settings from powerdirector.json (`session.maintenance`).
+ * Resolve maintenance settings from powerdirector.config.json (`session.maintenance`).
  * Falls back to built-in defaults when config is missing or unset.
  */
 export function resolveMaintenanceConfig(): ResolvedSessionMaintenanceConfig {

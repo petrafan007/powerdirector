@@ -60,7 +60,7 @@ describe("Nix integration (U3, U5, U9)", () => {
       ).toBe(path.join(path.resolve(customHome), ".powerdirector"));
     });
 
-    it("CONFIG_PATH defaults to POWERDIRECTOR_HOME/.powerdirector/powerdirector.json", () => {
+    it("CONFIG_PATH defaults to POWERDIRECTOR_HOME/.powerdirector/powerdirector.config.json", () => {
       const customHome = path.join(path.sep, "custom", "home");
       expect(
         resolveConfigPathCandidate(
@@ -70,10 +70,10 @@ describe("Nix integration (U3, U5, U9)", () => {
             POWERDIRECTOR_STATE_DIR: undefined,
           }),
         ),
-      ).toBe(path.join(path.resolve(customHome), ".powerdirector", "powerdirector.json"));
+      ).toBe(path.join(path.resolve(customHome), ".powerdirector", "powerdirector.config.json"));
     });
 
-    it("CONFIG_PATH defaults to ~/.powerdirector/powerdirector.json when env not set", () => {
+    it("CONFIG_PATH defaults to ~/.powerdirector/powerdirector.config.json when env not set", () => {
       expect(
         resolveConfigPathCandidate(
           envWith({ POWERDIRECTOR_CONFIG_PATH: undefined, POWERDIRECTOR_STATE_DIR: undefined }),
@@ -84,9 +84,9 @@ describe("Nix integration (U3, U5, U9)", () => {
     it("CONFIG_PATH respects POWERDIRECTOR_CONFIG_PATH override", () => {
       expect(
         resolveConfigPathCandidate(
-          envWith({ POWERDIRECTOR_CONFIG_PATH: "/nix/store/abc/powerdirector.json" }),
+          envWith({ POWERDIRECTOR_CONFIG_PATH: "/nix/store/abc/powerdirector.config.json" }),
         ),
-      ).toBe(path.resolve("/nix/store/abc/powerdirector.json"));
+      ).toBe(path.resolve("/nix/store/abc/powerdirector.config.json"));
     });
 
     it("CONFIG_PATH expands ~ in POWERDIRECTOR_CONFIG_PATH override", async () => {
@@ -102,7 +102,7 @@ describe("Nix integration (U3, U5, U9)", () => {
 
     it("CONFIG_PATH uses STATE_DIR when only state dir is overridden", () => {
       expect(resolveConfigPathCandidate(envWith({ POWERDIRECTOR_STATE_DIR: "/custom/state" }))).toBe(
-        path.join(path.resolve("/custom/state"), "powerdirector.json"),
+        path.join(path.resolve("/custom/state"), "powerdirector.config.json"),
       );
     });
   });
@@ -132,7 +132,7 @@ describe("Nix integration (U3, U5, U9)", () => {
           "utf-8",
         );
         await fs.writeFile(
-          path.join(configDir, "powerdirector.json"),
+          path.join(configDir, "powerdirector.config.json"),
           JSON.stringify(
             {
               plugins: {
@@ -215,7 +215,7 @@ describe("Nix integration (U3, U5, U9)", () => {
         const configDir = path.join(home, ".powerdirector");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "powerdirector.json"),
+          path.join(configDir, "powerdirector.config.json"),
           JSON.stringify({
             channels: { telegram: { botToken: "123:ABC" } },
           }),
@@ -233,7 +233,7 @@ describe("Nix integration (U3, U5, U9)", () => {
         const configDir = path.join(home, ".powerdirector");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "powerdirector.json"),
+          path.join(configDir, "powerdirector.config.json"),
           JSON.stringify({
             channels: { telegram: { tokenFile: "/run/agenix/telegram-token" } },
           }),
@@ -251,7 +251,7 @@ describe("Nix integration (U3, U5, U9)", () => {
         const configDir = path.join(home, ".powerdirector");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "powerdirector.json"),
+          path.join(configDir, "powerdirector.config.json"),
           JSON.stringify({
             channels: {
               telegram: {

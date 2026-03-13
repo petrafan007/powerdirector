@@ -3,7 +3,7 @@ import type { RuntimeEnv } from '../runtime';
 import type { MockFn } from '../test-utils/vitest-mock-fn';
 
 export const baseConfigSnapshot = {
-  path: "/tmp/powerdirector.json",
+  path: "/tmp/powerdirector.config.json",
   exists: true,
   raw: "{}",
   parsed: {},

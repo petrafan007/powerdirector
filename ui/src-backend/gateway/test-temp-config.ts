@@ -11,7 +11,7 @@ export async function withTempConfig(params: {
   const prevDisableCache = process.env.POWERDIRECTOR_DISABLE_CONFIG_CACHE;
 
   const dir = await mkdtemp(path.join(os.tmpdir(), params.prefix ?? "powerdirector-test-config-"));
-  const configPath = path.join(dir, "powerdirector.json");
+  const configPath = path.join(dir, "powerdirector.config.json");
 
   process.env.POWERDIRECTOR_CONFIG_PATH = configPath;
   process.env.POWERDIRECTOR_DISABLE_CONFIG_CACHE = "1";

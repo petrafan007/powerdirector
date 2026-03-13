@@ -78,7 +78,7 @@ async function main() {
 
   const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-zai-fallback-"));
   const stateDir = path.join(baseDir, "state");
-  const configPath = path.join(baseDir, "powerdirector.json");
+  const configPath = path.join(baseDir, "powerdirector.config.json");
   await fs.mkdir(stateDir, { recursive: true });
 
   const config = {

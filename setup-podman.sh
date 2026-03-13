@@ -196,7 +196,7 @@ fi
 
 # The gateway refuses to start unless gateway.mode=local is set in config.
 # Make first-run non-interactive; users can run the wizard later to configure channels/providers.
-POWERDIRECTOR_JSON="$POWERDIRECTOR_CONFIG/powerdirector.json"
+POWERDIRECTOR_JSON="$POWERDIRECTOR_CONFIG/powerdirector.config.json"
 if ! run_as_powerdirector test -f "$POWERDIRECTOR_JSON"; then
   printf '%s\n' '{ gateway: { mode: "local" } }' | run_as_powerdirector tee "$POWERDIRECTOR_JSON" >/dev/null
   run_as_powerdirector chmod 600 "$POWERDIRECTOR_JSON" 2>/dev/null || true

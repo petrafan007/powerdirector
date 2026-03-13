@@ -74,9 +74,9 @@ export class SkillsManager {
 
         // Initialize PowerDirector config persistence
         const homeDir = process.env.HOME || process.env.USERPROFILE || '/root';
-        this.powerdirectorConfigPath = path.join(homeDir, '.powerdirector', 'powerdirector.json');
+        this.powerdirectorConfigPath = path.join(homeDir, '.powerdirector', 'powerdirector.config.json');
 
-        // Load initial config from both source (passed in) AND powerdirector.json
+        // Load initial config from both source (passed in) AND powerdirector.config.json
         this.configEntries = { ...config.entries };
         this.loadPersistedConfig();
 
@@ -98,7 +98,7 @@ export class SkillsManager {
                     }
                 }
             } catch (e) {
-                this.logger.error('Failed to load powerdirector.json', e);
+                this.logger.error('Failed to load powerdirector.config.json', e);
             }
         }
     }
@@ -335,7 +335,7 @@ export class SkillsManager {
             this.configEntries[skillId].apiKey = apiKey;
         }
 
-        // Persist to ~/.powerdirector/powerdirector.json
+        // Persist to ~/.powerdirector/powerdirector.config.json
         try {
             const dir = path.dirname(this.powerdirectorConfigPath);
             if (!fs.existsSync(dir)) {

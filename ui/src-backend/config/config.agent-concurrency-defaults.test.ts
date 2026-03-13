@@ -51,7 +51,7 @@ describe("agent concurrency defaults", () => {
       const configDir = path.join(home, ".powerdirector");
       await fs.mkdir(configDir, { recursive: true });
       await fs.writeFile(
-        path.join(configDir, "powerdirector.json"),
+        path.join(configDir, "powerdirector.config.json"),
         JSON.stringify({}, null, 2),
         "utf-8",
       );

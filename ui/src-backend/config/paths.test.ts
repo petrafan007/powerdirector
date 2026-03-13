@@ -46,7 +46,7 @@ describe("state + config path candidates", () => {
     expect(resolveStateDir(env)).toBe(path.join(resolvedHome, ".powerdirector"));
 
     const candidates = resolveDefaultConfigCandidates(env);
-    expect(candidates[0]).toBe(path.join(resolvedHome, ".powerdirector", "powerdirector.json"));
+    expect(candidates[0]).toBe(path.join(resolvedHome, ".powerdirector", "powerdirector.config.json"));
   }
 
   it("uses POWERDIRECTOR_STATE_DIR when set", () => {
@@ -77,19 +77,19 @@ describe("state + config path candidates", () => {
     const resolvedHome = path.resolve(home);
     const candidates = resolveDefaultConfigCandidates({} as NodeJS.ProcessEnv, () => home);
     const expected = [
-      path.join(resolvedHome, ".powerdirector", "powerdirector.json"),
+      path.join(resolvedHome, ".powerdirector", "powerdirector.config.json"),
       path.join(resolvedHome, ".powerdirector", "clawdbot.json"),
       path.join(resolvedHome, ".powerdirector", "moldbot.json"),
       path.join(resolvedHome, ".powerdirector", "moltbot.json"),
-      path.join(resolvedHome, ".clawdbot", "powerdirector.json"),
+      path.join(resolvedHome, ".clawdbot", "powerdirector.config.json"),
       path.join(resolvedHome, ".clawdbot", "clawdbot.json"),
       path.join(resolvedHome, ".clawdbot", "moldbot.json"),
       path.join(resolvedHome, ".clawdbot", "moltbot.json"),
-      path.join(resolvedHome, ".moldbot", "powerdirector.json"),
+      path.join(resolvedHome, ".moldbot", "powerdirector.config.json"),
       path.join(resolvedHome, ".moldbot", "clawdbot.json"),
       path.join(resolvedHome, ".moldbot", "moldbot.json"),
       path.join(resolvedHome, ".moldbot", "moltbot.json"),
-      path.join(resolvedHome, ".moltbot", "powerdirector.json"),
+      path.join(resolvedHome, ".moltbot", "powerdirector.config.json"),
       path.join(resolvedHome, ".moltbot", "clawdbot.json"),
       path.join(resolvedHome, ".moltbot", "moldbot.json"),
       path.join(resolvedHome, ".moltbot", "moltbot.json"),
@@ -114,7 +114,7 @@ describe("state + config path candidates", () => {
     try {
       const legacyDir = path.join(root, ".powerdirector");
       await fs.mkdir(legacyDir, { recursive: true });
-      const legacyPath = path.join(legacyDir, "powerdirector.json");
+      const legacyPath = path.join(legacyDir, "powerdirector.config.json");
       await fs.writeFile(legacyPath, "{}", "utf-8");
 
       const resolved = resolveConfigPathCandidate({} as NodeJS.ProcessEnv, () => root);
@@ -129,13 +129,13 @@ describe("state + config path candidates", () => {
     try {
       const legacyDir = path.join(root, ".powerdirector");
       await fs.mkdir(legacyDir, { recursive: true });
-      const legacyConfig = path.join(legacyDir, "powerdirector.json");
+      const legacyConfig = path.join(legacyDir, "powerdirector.config.json");
       await fs.writeFile(legacyConfig, "{}", "utf-8");
 
       const overrideDir = path.join(root, "override");
       const env = { POWERDIRECTOR_STATE_DIR: overrideDir } as NodeJS.ProcessEnv;
       const resolved = resolveConfigPath(env, overrideDir, () => root);
-      expect(resolved).toBe(path.join(overrideDir, "powerdirector.json"));
+      expect(resolved).toBe(path.join(overrideDir, "powerdirector.config.json"));
     } finally {
       await fs.rm(root, { recursive: true, force: true });
     }

@@ -53,7 +53,7 @@ describe("gateway e2e", () => {
 
       const configDir = path.join(tempHome, ".powerdirector");
       await fs.mkdir(configDir, { recursive: true });
-      const configPath = path.join(configDir, "powerdirector.json");
+      const configPath = path.join(configDir, "powerdirector.config.json");
 
       const cfg = {
         agents: { defaults: { workspace: workspaceDir } },

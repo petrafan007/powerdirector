@@ -300,7 +300,7 @@ TRASH
 
     # Assert config + workspace scaffolding.
     workspace_dir="$HOME/.powerdirector/workspace"
-    config_path="$HOME/.powerdirector/powerdirector.json"
+    config_path="$HOME/.powerdirector/powerdirector.config.json"
     sessions_dir="$HOME/.powerdirector/agents/main/sessions"
 
     assert_file "$config_path"
@@ -371,7 +371,7 @@ NODE
       --skip-skills \
       --skip-health
 
-    config_path="$HOME/.powerdirector/powerdirector.json"
+    config_path="$HOME/.powerdirector/powerdirector.config.json"
     assert_file "$config_path"
 
     CONFIG_PATH="$config_path" node --input-type=module - <<'"'"'NODE'"'"'
@@ -407,7 +407,7 @@ NODE
     export HOME="$home_dir"
     mkdir -p "$HOME/.powerdirector"
     # Seed a remote config to exercise reset path.
-	    cat > "$HOME/.powerdirector/powerdirector.json" <<'"'"'JSON'"'"'
+	    cat > "$HOME/.powerdirector/powerdirector.config.json" <<'"'"'JSON'"'"'
 {
   "agents": { "defaults": { "workspace": "/root/old" } },
   "gateway": {
@@ -429,7 +429,7 @@ JSON
       --skip-ui \
       --skip-health
 
-    config_path="$HOME/.powerdirector/powerdirector.json"
+    config_path="$HOME/.powerdirector/powerdirector.config.json"
     assert_file "$config_path"
 
     CONFIG_PATH="$config_path" node --input-type=module - <<'"'"'NODE'"'"'
@@ -462,7 +462,7 @@ NODE
 	    # Channels-only configure flow.
 	    run_wizard_cmd channels "$home_dir" "node \"$POWERDIRECTOR_ENTRY\" configure --section channels" send_channels_flow
 
-    config_path="$HOME/.powerdirector/powerdirector.json"
+    config_path="$HOME/.powerdirector/powerdirector.config.json"
     assert_file "$config_path"
 
     CONFIG_PATH="$config_path" node --input-type=module - <<'"'"'NODE'"'"'
@@ -502,7 +502,7 @@ NODE
     export HOME="$home_dir"
     mkdir -p "$HOME/.powerdirector"
     # Seed skills config to ensure it survives the wizard.
-	    cat > "$HOME/.powerdirector/powerdirector.json" <<'"'"'JSON'"'"'
+	    cat > "$HOME/.powerdirector/powerdirector.config.json" <<'"'"'JSON'"'"'
 {
   "skills": {
     "allowBundled": ["__none__"],
@@ -513,7 +513,7 @@ JSON
 
 	    run_wizard_cmd skills "$home_dir" "node \"$POWERDIRECTOR_ENTRY\" configure --section skills" send_skills_flow
 
-    config_path="$HOME/.powerdirector/powerdirector.json"
+    config_path="$HOME/.powerdirector/powerdirector.config.json"
     assert_file "$config_path"
 
     CONFIG_PATH="$config_path" node --input-type=module - <<'"'"'NODE'"'"'

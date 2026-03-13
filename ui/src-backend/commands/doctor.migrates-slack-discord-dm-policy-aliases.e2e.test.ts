@@ -4,7 +4,7 @@ import { readConfigFileSnapshot, writeConfigFile } from './doctor.e2e-harness';
 describe("doctor command", () => {
   it("migrates Slack/Discord dm.policy keys to dmPolicy aliases", { timeout: 60_000 }, async () => {
     readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/powerdirector.json",
+      path: "/tmp/powerdirector.config.json",
       exists: true,
       raw: "{}",
       parsed: {

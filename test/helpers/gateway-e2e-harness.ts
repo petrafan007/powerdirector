@@ -105,7 +105,7 @@ export async function spawnGatewayInstance(name: string): Promise<GatewayInstanc
   const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `powerdirector-e2e-${name}-`));
   const configDir = path.join(homeDir, ".powerdirector");
   await fs.mkdir(configDir, { recursive: true });
-  const configPath = path.join(configDir, "powerdirector.json");
+  const configPath = path.join(configDir, "powerdirector.config.json");
   const stateDir = path.join(configDir, "state");
   const config = {
     gateway: {

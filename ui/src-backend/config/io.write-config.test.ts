@@ -17,7 +17,7 @@ describe("config io write", () => {
     env?: NodeJS.ProcessEnv;
     logger?: { warn: (msg: string) => void; error: (msg: string) => void };
   }) {
-    const configPath = path.join(params.home, ".powerdirector", "powerdirector.json");
+    const configPath = path.join(params.home, ".powerdirector", "powerdirector.config.json");
     await fs.mkdir(path.dirname(configPath), { recursive: true });
     await fs.writeFile(configPath, JSON.stringify(params.initialConfig, null, 2), "utf-8");
 
@@ -180,7 +180,7 @@ describe("config io write", () => {
 
   it("keeps env refs in arrays when appending entries", async () => {
     await withTempHome("powerdirector-config-io-", async (home) => {
-      const configPath = path.join(home, ".powerdirector", "powerdirector.json");
+      const configPath = path.join(home, ".powerdirector", "powerdirector.config.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,

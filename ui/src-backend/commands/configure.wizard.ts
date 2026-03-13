@@ -117,7 +117,7 @@ async function promptChannelMode(runtime: RuntimeEnv): Promise<ChannelsWizardMod
         {
           value: "remove",
           label: "Remove channel config",
-          hint: "Delete channel tokens/settings from powerdirector.json",
+          hint: "Delete channel tokens/settings from powerdirector.config.json",
         },
       ],
       initialValue: "configure",

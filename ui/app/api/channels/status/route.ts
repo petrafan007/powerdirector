@@ -176,7 +176,7 @@ export async function GET(request: Request) {
                 fullConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
             } else {
                 const homedir = process.env.HOME || os.homedir();
-                const homeConfigPath = path.join(homedir, '.powerdirector', 'powerdirector.json');
+                const homeConfigPath = path.join(homedir, '.powerdirector', 'powerdirector.config.json');
                 if (fs.existsSync(homeConfigPath)) {
                     fullConfig = JSON.parse(fs.readFileSync(homeConfigPath, 'utf8'));
                 }

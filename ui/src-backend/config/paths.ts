@@ -20,7 +20,7 @@ export const isNixMode = resolveIsNixMode();
 // Support historical (and occasionally misspelled) legacy state dirs.
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moldbot", ".moltbot"] as const;
 const NEW_STATE_DIRNAME = ".powerdirector";
-const CONFIG_FILENAME = "powerdirector.json";
+const CONFIG_FILENAME = "powerdirector.config.json";
 const LEGACY_CONFIG_FILENAMES = ["clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function resolveDefaultHomeDir(): string {
@@ -113,7 +113,7 @@ export const STATE_DIR = resolveStateDir();
 /**
  * Config file path (JSON5).
  * Can be overridden via POWERDIRECTOR_CONFIG_PATH.
- * Default: ~/.powerdirector/powerdirector.json (or $POWERDIRECTOR_STATE_DIR/powerdirector.json)
+ * Default: ~/.powerdirector/powerdirector.config.json (or $POWERDIRECTOR_STATE_DIR/powerdirector.config.json)
  */
 export function resolveCanonicalConfigPath(
   env: NodeJS.ProcessEnv = process.env,

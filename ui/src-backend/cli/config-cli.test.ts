@@ -36,7 +36,7 @@ function buildSnapshot(params: {
   config: PowerDirectorConfig;
 }): ConfigFileSnapshot {
   return {
-    path: "/tmp/powerdirector.json",
+    path: "/tmp/powerdirector.config.json",
     exists: true,
     raw: JSON.stringify(params.resolved),
     parsed: params.resolved,

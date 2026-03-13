@@ -550,7 +550,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     providerOverrides: params.providerOverrides,
   });
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-live-"));
-  const tempConfigPath = path.join(tempDir, "powerdirector.json");
+  const tempConfigPath = path.join(tempDir, "powerdirector.config.json");
   await fs.writeFile(tempConfigPath, `${JSON.stringify(nextCfg, null, 2)}\n`);
   process.env.POWERDIRECTOR_CONFIG_PATH = tempConfigPath;
 

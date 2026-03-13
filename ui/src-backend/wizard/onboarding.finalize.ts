@@ -308,7 +308,7 @@ export async function finalizeOnboardingWizard(
     await prompter.note(
       [
         "Gateway token: shared auth for the Gateway + Control UI.",
-        "Stored in: ~/.powerdirector/powerdirector.json (gateway.auth.token) or POWERDIRECTOR_GATEWAY_TOKEN.",
+        "Stored in: ~/.powerdirector/powerdirector.config.json (gateway.auth.token) or POWERDIRECTOR_GATEWAY_TOKEN.",
         `View token: ${formatCliCommand("powerdirector config get gateway.auth.token")}`,
         `Generate token: ${formatCliCommand("powerdirector doctor --generate-gateway-token")}`,
         "Web UI stores a copy in this browser's localStorage (powerdirector.control.settings.v1).",

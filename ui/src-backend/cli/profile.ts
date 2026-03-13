@@ -118,7 +118,7 @@ export function applyCliProfileEnv(params: {
   }
 
   if (!env.POWERDIRECTOR_CONFIG_PATH?.trim()) {
-    env.POWERDIRECTOR_CONFIG_PATH = path.join(stateDir, "powerdirector.json");
+    env.POWERDIRECTOR_CONFIG_PATH = path.join(stateDir, "powerdirector.config.json");
   }
 
   if (profile === "dev" && !env.POWERDIRECTOR_GATEWAY_PORT?.trim()) {

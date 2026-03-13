@@ -4,7 +4,7 @@ set -euo pipefail
 cd /repo
 
 export POWERDIRECTOR_STATE_DIR="/tmp/powerdirector-test"
-export POWERDIRECTOR_CONFIG_PATH="${POWERDIRECTOR_STATE_DIR}/powerdirector.json"
+export POWERDIRECTOR_CONFIG_PATH="${POWERDIRECTOR_STATE_DIR}/powerdirector.config.json"
 
 echo "==> Build"
 pnpm build

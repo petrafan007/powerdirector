@@ -10,7 +10,7 @@ import { hasExplicitOptions } from '../command-options';
 export function registerSetupCommand(program: Command) {
   program
     .command("setup")
-    .description("Initialize ~/.powerdirector/powerdirector.json and the agent workspace")
+    .description("Initialize ~/.powerdirector/powerdirector.config.json and the agent workspace")
     .addHelpText(
       "after",
       () =>

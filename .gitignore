@@ -21,10 +21,10 @@ powerdirector.config.json.bak
 powerdirector.config.json.bak.*
 powerdirector.config.json.tmp
 powerdirector.config.json.*.tmp
-powerdirector.json.bak
-powerdirector.json.bak.*
-powerdirector.json.tmp
-powerdirector.json.*.tmp
+powerdirector.config.json.bak
+powerdirector.config.json.bak.*
+powerdirector.config.json.tmp
+powerdirector.config.json.*.tmp
 latest_session.json
 ui/.wwebjs_auth/
 ui/src-backend/ui_migrated_backup_*/

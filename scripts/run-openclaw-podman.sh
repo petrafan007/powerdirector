@@ -147,7 +147,7 @@ fi
 
 # The gateway refuses to start unless gateway.mode=local is set in config.
 # Keep this minimal; users can run the wizard later to configure channels/providers.
-CONFIG_JSON="$CONFIG_DIR/powerdirector.json"
+CONFIG_JSON="$CONFIG_DIR/powerdirector.config.json"
 if [[ ! -f "$CONFIG_JSON" ]]; then
   echo '{ gateway: { mode: "local" } }' >"$CONFIG_JSON"
   chmod 600 "$CONFIG_JSON" 2>/dev/null || true

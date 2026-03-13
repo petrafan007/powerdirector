@@ -13,7 +13,7 @@ describe("config backup rotation", () => {
       if (!stateDir) {
         throw new Error("Expected POWERDIRECTOR_STATE_DIR to be set by withTempHome");
       }
-      const configPath = path.join(stateDir, "powerdirector.json");
+      const configPath = path.join(stateDir, "powerdirector.config.json");
       const backupBase = resolveConfigBackupBasePath(configPath);
       const buildConfig = (version: number): PowerDirectorConfig =>
         ({

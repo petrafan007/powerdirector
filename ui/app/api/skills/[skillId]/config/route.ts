@@ -14,7 +14,7 @@ export async function POST(
     const service = PowerDirectorService.getInstance();
 
     try {
-        // 1. Update SkillsManager (syncs with powerdirector.json)
+        // 1. Update SkillsManager (syncs with powerdirector.config.json)
         await service.skillsManager.updateSkillConfig(skillId, enabled, apiKey);
 
         // 2. Update ConfigManager (syncs with powerdirector.config.json)
