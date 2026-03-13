@@ -29,7 +29,7 @@ const modelRegistryState = {
 let previousExitCode: typeof process.exitCode;
 
 vi.mock("../config/config.js", () => ({
-  CONFIG_PATH: "/tmp/powerdirector.json",
+  CONFIG_PATH: "/tmp/powerdirector.config.json",
   STATE_DIR: "/tmp/powerdirector-state",
   loadConfig,
 }));

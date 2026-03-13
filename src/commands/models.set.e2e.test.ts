@@ -5,7 +5,7 @@ const writeConfigFile = vi.fn().mockResolvedValue(undefined);
 const loadConfig = vi.fn().mockReturnValue({});
 
 vi.mock("../config/config.js", () => ({
-  CONFIG_PATH: "/tmp/powerdirector.json",
+  CONFIG_PATH: "/tmp/powerdirector.config.json",
   readConfigFileSnapshot,
   writeConfigFile,
   loadConfig,
@@ -13,7 +13,7 @@ vi.mock("../config/config.js", () => ({
 
 function mockConfigSnapshot(config: Record<string, unknown> = {}) {
   readConfigFileSnapshot.mockResolvedValue({
-    path: "/tmp/powerdirector.json",
+    path: "/tmp/powerdirector.config.json",
     exists: true,
     raw: "{}",
     parsed: {},

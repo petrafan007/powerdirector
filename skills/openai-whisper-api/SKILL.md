@@ -39,7 +39,7 @@ Defaults:
 
 ## API key
 
-Set `OPENAI_API_KEY`, or configure it in `~/.powerdirector/powerdirector.json`:
+Set `OPENAI_API_KEY`, or configure it in `~/.powerdirector/powerdirector.config.json`:
 
 ```json5
 {

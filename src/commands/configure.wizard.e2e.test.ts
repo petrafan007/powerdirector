@@ -29,7 +29,7 @@ vi.mock("@clack/prompts", () => ({
 }));
 
 vi.mock("../config/config.js", () => ({
-  CONFIG_PATH: "~/.powerdirector/powerdirector.json",
+  CONFIG_PATH: "~/.powerdirector/powerdirector.config.json",
   readConfigFileSnapshot: mocks.readConfigFileSnapshot,
   writeConfigFile: mocks.writeConfigFile,
   resolveGatewayPort: mocks.resolveGatewayPort,

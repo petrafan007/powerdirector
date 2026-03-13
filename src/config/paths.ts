@@ -20,8 +20,25 @@ export const isNixMode = resolveIsNixMode();
 // Support historical (and occasionally misspelled) legacy state dirs.
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moldbot", ".moltbot"] as const;
 const NEW_STATE_DIRNAME = ".powerdirector";
-const CONFIG_FILENAME = "powerdirector.json";
-const LEGACY_CONFIG_FILENAMES = ["clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+const CONFIG_FILENAME = "powerdirector.config.json";
+const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+
+function findProjectRoot(): string | null {
+  let current = process.cwd();
+  const root = path.parse(current).root;
+  while (current !== root) {
+    if (fs.existsSync(path.join(current, "package.json"))) {
+      // Heuristic: check if this seems like the project root (e.g. has src)
+      if (fs.existsSync(path.join(current, "src"))) {
+        return current;
+      }
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return null;
+}
 
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);
@@ -113,7 +130,7 @@ export const STATE_DIR = resolveStateDir();
 /**
  * Config file path (JSON5).
  * Can be overridden via POWERDIRECTOR_CONFIG_PATH.
- * Default: ~/.powerdirector/powerdirector.json (or $POWERDIRECTOR_STATE_DIR/powerdirector.json)
+ * Default: ~/.powerdirector/powerdirector.config.json (or $POWERDIRECTOR_STATE_DIR/powerdirector.config.json)
  */
 export function resolveCanonicalConfigPath(
   env: NodeJS.ProcessEnv = process.env,
@@ -208,6 +225,12 @@ export function resolveDefaultConfigCandidates(
   }
 
   const candidates: string[] = [];
+  const projectRoot = findProjectRoot();
+  if (projectRoot) {
+    candidates.push(path.join(projectRoot, CONFIG_FILENAME));
+    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
+  }
+
   const powerdirectorStateDir =
     env.POWERDIRECTOR_STATE_DIR?.trim() ||
     env.POWERDIRECTOR_STATE_DIR?.trim() ||

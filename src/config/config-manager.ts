@@ -6,6 +6,7 @@ import { resolveConfigBackupBasePath, resolveConfigTempPath } from './artifact-p
 import { configSchema, sectionSchemas, SECRET_FIELDS, SECTION_NAMES } from './config-schema.js';
 import type { PowerDirectorConfig, SectionName } from './config-schema.js';
 import { validateConfigObjectRaw } from './validation.js';
+import { resolveConfigPathCandidate } from './paths.js';
 
 const CONFIG_FILENAME = 'powerdirector.config.json';
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -57,42 +58,17 @@ export class ConfigManager {
     private configPath: string;
     private lastLoaded: number = 0;
 
-    constructor(configDir?: string) {
-        const dir = configDir || process.env.CONFIG_DIR || this.findProjectRoot();
-        this.configPath = path.join(dir, CONFIG_FILENAME);
+    constructor(configDirOrPath?: string) {
+        if (configDirOrPath) {
+            if (fs.existsSync(configDirOrPath) && fs.statSync(configDirOrPath).isDirectory()) {
+                this.configPath = path.join(configDirOrPath, CONFIG_FILENAME);
+            } else {
+                this.configPath = configDirOrPath;
+            }
+        } else {
+            this.configPath = resolveConfigPathCandidate();
+        }
         this.config = this.load();
-    }
-
-    private findProjectRoot(): string {
-        let current = process.cwd();
-        const root = path.parse(current).root;
-
-        // Try to find the config file first
-        while (current !== root) {
-            if (fs.existsSync(path.join(current, CONFIG_FILENAME))) {
-                return current;
-            }
-            if (fs.existsSync(path.join(current, 'package.json'))) {
-                // Check if it's the right package.json (optional, but good safety)
-                // For now, let's assume the presence of the config file is the strongest signal.
-                // But if config doesn't exist yet (first run), we want the root containing package.json
-            }
-            current = path.dirname(current);
-        }
-
-        // Reset and look for package.json if config not found
-        current = process.cwd();
-        while (current !== root) {
-            if (fs.existsSync(path.join(current, 'package.json'))) {
-                // Heuristic: check if this seems like the project root (e.g. has src)
-                if (fs.existsSync(path.join(current, 'src'))) {
-                    return current;
-                }
-            }
-            current = path.dirname(current);
-        }
-
-        return process.cwd();
     }
 
     private normalizeAuthModes(value: any): any {

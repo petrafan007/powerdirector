@@ -15,7 +15,7 @@ const CONFIG_DIR = path.join(ROOT_DIR, "config");
 const ETC_POWERDIRECTOR_DIR = path.join(ROOT_DIR, "etc", "powerdirector");
 const SHARED_DIR = path.join(ROOT_DIR, "shared");
 
-const DEFAULT_BASE_PATH = path.join(CONFIG_DIR, "powerdirector.json");
+const DEFAULT_BASE_PATH = path.join(CONFIG_DIR, "powerdirector.config.json");
 
 function configPath(...parts: string[]) {
   return path.join(CONFIG_DIR, ...parts);
@@ -283,10 +283,10 @@ describe("resolveConfigIncludes", () => {
   it("rejects parent directory traversal escaping config directory (CWE-22)", () => {
     const files = { [sharedPath("common.json")]: { shared: true } };
     const obj = { $include: "../../shared/common.json" };
-    expect(() => resolve(obj, files, configPath("sub", "powerdirector.json"))).toThrow(
+    expect(() => resolve(obj, files, configPath("sub", "powerdirector.config.json"))).toThrow(
       ConfigIncludeError,
     );
-    expect(() => resolve(obj, files, configPath("sub", "powerdirector.json"))).toThrow(
+    expect(() => resolve(obj, files, configPath("sub", "powerdirector.config.json"))).toThrow(
       /escapes config directory/,
     );
   });
@@ -582,7 +582,7 @@ describe("security: path traversal protection (CWE-22)", () => {
 
         const result = resolveConfigIncludes(
           { $include: "./includes/extra.json5" },
-          path.join(linkRoot, "powerdirector.json"),
+          path.join(linkRoot, "powerdirector.config.json"),
         );
         expect(result).toEqual({ logging: { redactSensitive: "tools" } });
       } finally {

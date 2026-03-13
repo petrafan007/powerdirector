@@ -111,7 +111,7 @@ PowerDirector does **not** model one gateway as a multi-tenant, adversarial user
 PowerDirector security guidance assumes:
 
 - The host where PowerDirector runs is within a trusted OS/admin boundary.
-- Anyone who can modify `~/.powerdirector` state/config (including `powerdirector.json`) is effectively a trusted operator.
+- Anyone who can modify `~/.powerdirector` state/config (including `powerdirector.config.json`) is effectively a trusted operator.
 - A single Gateway shared by mutually untrusted people is **not a recommended setup**. Use separate gateways (or at minimum separate OS users/hosts) per trust boundary.
 - Authenticated Gateway callers are treated as trusted operators. Session identifiers (for example `sessionKey`) are routing controls, not per-user authorization boundaries.
 - Multiple gateway instances can run on one machine, but the recommended model is clean per-user isolation (prefer one host/VPS per user).

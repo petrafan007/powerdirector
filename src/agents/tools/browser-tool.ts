@@ -212,7 +212,7 @@ function resolveBrowserBaseUrl(params: {
   }
   if (!resolved.enabled) {
     throw new Error(
-      "Browser control is disabled. Set browser.enabled=true in ~/.powerdirector/powerdirector.json.",
+      "Browser control is disabled. Set browser.enabled=true in ~/.powerdirector/powerdirector.config.json.",
     );
   }
   return undefined;

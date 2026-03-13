@@ -78,7 +78,7 @@ describe("resolveProviderAuths key normalization", () => {
     const stateDir = path.join(home, ".powerdirector");
     await fs.mkdir(stateDir, { recursive: true });
     await fs.writeFile(
-      path.join(stateDir, "powerdirector.json"),
+      path.join(stateDir, "powerdirector.config.json"),
       `${JSON.stringify(config, null, 2)}\n`,
       "utf8",
     );

@@ -78,7 +78,7 @@ async function withOnboardEnv(
   delete process.env.CUSTOM_API_KEY;
 
   const tempHome = await makeTempWorkspace(prefix);
-  const configPath = path.join(tempHome, "powerdirector.json");
+  const configPath = path.join(tempHome, "powerdirector.config.json");
   process.env.HOME = tempHome;
   process.env.POWERDIRECTOR_STATE_DIR = tempHome;
   process.env.POWERDIRECTOR_CONFIG_PATH = configPath;

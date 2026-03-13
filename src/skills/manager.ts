@@ -8,6 +8,7 @@ import { SkillLoader } from './loader.js';
 import { SkillFormatter } from './formatter.js';
 import { shouldIncludeSkill } from './config.js';
 import { Tool, ToolResult } from '../tools/base.ts';
+import { resolveConfigPathCandidate } from '../config/paths.js';
 
 
 type NodeManager = 'npm' | 'yarn' | 'pnpm';
@@ -73,10 +74,9 @@ export class SkillsManager {
         this.formatter = new SkillFormatter();
 
         // Initialize PowerDirector config persistence
-        const homeDir = process.env.HOME || process.env.USERPROFILE || '/root';
-        this.powerdirectorConfigPath = path.join(homeDir, '.powerdirector', 'powerdirector.json');
+        this.powerdirectorConfigPath = resolveConfigPathCandidate();
 
-        // Load initial config from both source (passed in) AND powerdirector.json
+        // Load initial config from both source (passed in) AND powerdirector.config.json
         this.configEntries = { ...config.entries };
         this.loadPersistedConfig();
 
@@ -98,7 +98,7 @@ export class SkillsManager {
                     }
                 }
             } catch (e) {
-                this.logger.error('Failed to load powerdirector.json', e);
+                this.logger.error('Failed to load powerdirector.config.json', e);
             }
         }
     }
@@ -335,7 +335,7 @@ export class SkillsManager {
             this.configEntries[skillId].apiKey = apiKey;
         }
 
-        // Persist to ~/.powerdirector/powerdirector.json
+        // Persist to ~/.powerdirector/powerdirector.config.json
         try {
             const dir = path.dirname(this.powerdirectorConfigPath);
             if (!fs.existsSync(dir)) {

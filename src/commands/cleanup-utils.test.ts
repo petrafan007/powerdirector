@@ -16,7 +16,7 @@ describe("buildCleanupPlan", () => {
     const plan = buildCleanupPlan({
       cfg: cfg as unknown as PowerDirectorConfig,
       stateDir: path.join(tmpRoot, "powerdirector-state"),
-      configPath: path.join(tmpRoot, "powerdirector-state", "powerdirector.json"),
+      configPath: path.join(tmpRoot, "powerdirector-state", "powerdirector.config.json"),
       oauthDir: path.join(tmpRoot, "powerdirector-oauth"),
     });
 

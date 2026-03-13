@@ -712,7 +712,7 @@ async function maybeMigrateLegacyConfig(): Promise<string[]> {
   }
 
   const targetDir = path.join(home, ".powerdirector");
-  const targetPath = path.join(targetDir, "powerdirector.json");
+  const targetPath = path.join(targetDir, "powerdirector.config.json");
   try {
     await fs.access(targetPath);
     return changes;

@@ -157,8 +157,8 @@ describe("shortenHomePath", () => {
     vi.stubEnv("POWERDIRECTOR_HOME", "/srv/powerdirector-home");
     vi.stubEnv("HOME", "/home/other");
 
-    expect(shortenHomePath(`${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.json`)).toBe(
-      "$POWERDIRECTOR_HOME/.powerdirector/powerdirector.json",
+    expect(shortenHomePath(`${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.config.json`)).toBe(
+      "$POWERDIRECTOR_HOME/.powerdirector/powerdirector.config.json",
     );
 
     vi.unstubAllEnvs();
@@ -171,8 +171,8 @@ describe("shortenHomeInString", () => {
     vi.stubEnv("HOME", "/home/other");
 
     expect(
-      shortenHomeInString(`config: ${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.json`),
-    ).toBe("config: $POWERDIRECTOR_HOME/.powerdirector/powerdirector.json");
+      shortenHomeInString(`config: ${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.config.json`),
+    ).toBe("config: $POWERDIRECTOR_HOME/.powerdirector/powerdirector.config.json");
 
     vi.unstubAllEnvs();
   });

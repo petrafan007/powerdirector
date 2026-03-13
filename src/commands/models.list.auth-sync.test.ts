@@ -46,7 +46,7 @@ describe("models list auth-profile sync", () => {
     try {
       const stateDir = path.join(root, "state");
       const agentDir = path.join(stateDir, "agents", "main", "agent");
-      const configPath = path.join(stateDir, "powerdirector.json");
+      const configPath = path.join(stateDir, "powerdirector.config.json");
       await fs.mkdir(agentDir, { recursive: true });
       await fs.writeFile(configPath, "{}\n", "utf8");
 

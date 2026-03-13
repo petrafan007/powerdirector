@@ -220,7 +220,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     }
     await withStateDir("state-lan-", async (stateDir) => {
       process.env.POWERDIRECTOR_STATE_DIR = stateDir;
-      process.env.POWERDIRECTOR_CONFIG_PATH = path.join(stateDir, "powerdirector.json");
+      process.env.POWERDIRECTOR_CONFIG_PATH = path.join(stateDir, "powerdirector.config.json");
 
       const port = await getFreeGatewayPort();
       const workspace = path.join(stateDir, "powerdirector");

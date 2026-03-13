@@ -101,7 +101,7 @@ describe("daemon-cli coverage", () => {
 
   beforeEach(() => {
     process.env.POWERDIRECTOR_STATE_DIR = "/tmp/powerdirector-cli-state";
-    process.env.POWERDIRECTOR_CONFIG_PATH = "/tmp/powerdirector-cli-state/powerdirector.json";
+    process.env.POWERDIRECTOR_CONFIG_PATH = "/tmp/powerdirector-cli-state/powerdirector.config.json";
     delete process.env.POWERDIRECTOR_GATEWAY_PORT;
     delete process.env.POWERDIRECTOR_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
@@ -155,7 +155,7 @@ describe("daemon-cli coverage", () => {
       environment: {
         POWERDIRECTOR_PROFILE: "dev",
         POWERDIRECTOR_STATE_DIR: "/tmp/powerdirector-daemon-state",
-        POWERDIRECTOR_CONFIG_PATH: "/tmp/powerdirector-daemon-state/powerdirector.json",
+        POWERDIRECTOR_CONFIG_PATH: "/tmp/powerdirector-daemon-state/powerdirector.config.json",
         POWERDIRECTOR_GATEWAY_PORT: "19001",
       },
       sourcePath: "/tmp/bot.molt.gateway.plist",

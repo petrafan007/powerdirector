@@ -321,7 +321,7 @@ describe("config strict validation", () => {
       const configDir = path.join(home, ".powerdirector");
       await fs.mkdir(configDir, { recursive: true });
       await fs.writeFile(
-        path.join(configDir, "powerdirector.json"),
+        path.join(configDir, "powerdirector.config.json"),
         JSON.stringify({
           agents: { list: [{ id: "pi" }] },
           routing: { allowFrom: ["+15555550123"] },

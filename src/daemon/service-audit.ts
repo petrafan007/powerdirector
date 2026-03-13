@@ -218,7 +218,7 @@ function auditGatewayToken(
   issues.push({
     code: SERVICE_AUDIT_CODES.gatewayTokenMismatch,
     message:
-      "Gateway service POWERDIRECTOR_GATEWAY_TOKEN does not match gateway.auth.token in powerdirector.json",
+      "Gateway service POWERDIRECTOR_GATEWAY_TOKEN does not match gateway.auth.token in powerdirector.config.json",
     detail: serviceToken ? "service token is stale" : "service token is missing",
     level: "recommended",
   });
