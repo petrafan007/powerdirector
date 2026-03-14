@@ -175,23 +175,23 @@ export default function UpdateSection({ schema, data, onUpdate }: UpdateSectionP
         setRestarting(true);
         setModalError(null);
         try {
-            const res = await fetch('/api/update/restart', {
+            // Fire and forget the restart request. The server will die shortly after.
+            // We don't await it heavily because the connection might be closed by the server.
+            fetch('/api/update/restart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
+            }).catch(() => {
+                // Ignore errors as the server might have already started shutting down
             });
-            const json = await res.json().catch(() => ({}));
-            if (!res.ok) {
-                throw new Error(json?.error || 'Failed to restart application');
-            }
 
-            // Poll for health until it's back, then refresh
+            // Start polling for health almost immediately
             let attempts = 0;
             const poll = async () => {
                 try {
-                    // During restart, we might get connection refused (caught by catch)
-                    // or a 404/503 from the web server if it's up but the app isn't ready.
-                    // We only want to reload when we get a real 200 OK from the gateway.
-                    const h = await fetch('/api/health', { cache: 'no-store' });
+                    const h = await fetch('/api/health', { 
+                        cache: 'no-store',
+                        signal: AbortSignal.timeout(2000)
+                    });
                     if (h.status === 200) {
                         window.location.reload();
                         return;
@@ -201,15 +201,18 @@ export default function UpdateSection({ schema, data, onUpdate }: UpdateSectionP
                 }
                 attempts++;
                 if (attempts < 120) { // 2 minute timeout
-                    setTimeout(poll, 1000);
+                    // Poll faster (every 500ms) to catch the server as soon as it's up
+                    setTimeout(poll, 500);
                 } else {
                     setRestarting(false);
                     setModalError('Restart is taking longer than expected. Please refresh the page manually.');
                 }
             };
-            setTimeout(poll, 3000); // Initial wait for process to die
+            
+            // Wait just a bit for the previous process to at least start its shutdown
+            setTimeout(poll, 1500);
         } catch (error: any) {
-            setModalError(error?.message || 'Failed to restart application');
+            setModalError(error?.message || 'Failed to trigger restart');
             setRestarting(false);
         }
     };
