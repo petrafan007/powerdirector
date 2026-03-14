@@ -188,23 +188,26 @@ export default function UpdateSection({ schema, data, onUpdate }: UpdateSectionP
             let attempts = 0;
             const poll = async () => {
                 try {
-                    const h = await fetch('/api/health');
-                    if (h.ok) {
+                    // During restart, we might get connection refused (caught by catch)
+                    // or a 404/503 from the web server if it's up but the app isn't ready.
+                    // We only want to reload when we get a real 200 OK from the gateway.
+                    const h = await fetch('/api/health', { cache: 'no-store' });
+                    if (h.status === 200) {
                         window.location.reload();
                         return;
                     }
                 } catch {
-                    // ignore
+                    // ignore connection errors
                 }
                 attempts++;
-                if (attempts < 60) { // 1 minute timeout
+                if (attempts < 120) { // 2 minute timeout
                     setTimeout(poll, 1000);
                 } else {
                     setRestarting(false);
-                    setModalError('Restart timed out. Please refresh the page manually.');
+                    setModalError('Restart is taking longer than expected. Please refresh the page manually.');
                 }
             };
-            setTimeout(poll, 2000); // Initial wait for process to die
+            setTimeout(poll, 3000); // Initial wait for process to die
         } catch (error: any) {
             setModalError(error?.message || 'Failed to restart application');
             setRestarting(false);
