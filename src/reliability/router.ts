@@ -543,8 +543,8 @@ export class ProviderRouter {
                         ? await provider.circuit.execute(getFirstChunk)
                         : await getFirstChunk();
 
-                    if (firstChunk.done) {
-                        stream = (async function* () { })();
+                    if (firstChunk.done || (typeof firstChunk.value === 'string' && firstChunk.value.length === 0)) {
+                        throw new Error(`Provider ${provider.config.name} returned an empty first chunk`);
                     } else {
                         const router = this;
                         stream = (async function* () {

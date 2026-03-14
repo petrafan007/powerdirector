@@ -38,7 +38,11 @@ export class GeminiProvider implements Provider {
         });
 
         const result = await genModel.generateContent(prompt, { signal: options?.signal });
-        return result.response.text();
+        const text = result.response.text();
+        if (!text) {
+            throw new Error('Gemini returned an empty response');
+        }
+        return text;
     }
 
     async *completionStream(prompt: string, model?: string, options?: { signal?: AbortSignal }): AsyncIterable<string> {
@@ -48,8 +52,16 @@ export class GeminiProvider implements Provider {
         });
 
         const result = await genModel.generateContentStream(prompt, { signal: options?.signal });
+        let sawChunk = false;
         for await (const chunk of result.stream) {
-            yield chunk.text();
+            const text = chunk.text();
+            if (text) {
+                sawChunk = true;
+                yield text;
+            }
+        }
+        if (!sawChunk) {
+            throw new Error('Gemini stream returned no text content');
         }
     }
 }
