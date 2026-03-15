@@ -293,17 +293,13 @@ export function initializeTools(tools: ToolRegistry, options: ToolInitialization
 
     // Set global skills manager for skill-executor (used by image-gen-router)
     const activeGateway = resolvedGateway;
-    const activeSkillsManager = activeGateway?.skillsManager || (typeof window === 'undefined' ? (require('../agent-instance').PowerDirectorService.getInstance().skillsManager) : undefined);
+    const activeSkillsManager = activeGateway?.skillsManager;
 
     if (activeSkillsManager) {
         setGlobalSkillsManager(activeSkillsManager);
 
         // Register each enabled skill as a first-class tool
         activeSkillsManager.getTools().forEach((t: any) => registerTool(t));
-    } else if (getGateway) {
-        // If gateway is not yet ready, we might need a way to register skills later or 
-        // rely on the SkillTool catch-all. 
-        // For now, let's at least ensure SkillTool works.
     }
 
     // Register Frigate NVR tool for camera snapshots with image validation
