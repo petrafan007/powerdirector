@@ -52,7 +52,7 @@ export class DiscoveryManager {
 
         const config = getConfigManager().get();
         if (!config) {
-            this.logger.error(`[DiscoveryManager] Missing config in getConfigManager().get(). ConfigPath: ${getConfigManager().getConfigPath()}`);
+            this.logger.error(`[DiscoveryManager] Missing config. CWD: ${process.cwd()}, Root: ${resolvePowerDirectorRoot()}, ConfigPath: ${getConfigManager().getConfigPath()}`);
         }
         this.started = true;
 
