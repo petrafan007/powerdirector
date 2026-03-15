@@ -422,6 +422,32 @@ export class Agent {
             if (responseText.length === 0) {
                 console.warn(`[Agent] TURN ${currentTurn} PRODUCED 0 CHARS. This usually means the model refused to respond or the prompt was too large/confusing.`);
 
+                if (streamRetryCount < 2) {
+                    streamRetryCount++;
+                    retryReason = 'empty response';
+                    console.log(
+                        `[Agent] Recoverable empty response for turn ${currentTurn}. Retrying (${streamRetryCount}/2).`
+                    );
+                    if (options.onStep) {
+                        options.onStep({
+                            role: 'assistant',
+                            content: `[System: Empty response from ${providerLabel}. Retrying with fallback…]`,
+                            timestamp: runStartTime + turnSequence,
+                            metadata: {
+                                type: 'notification',
+                                status: 'retrying',
+                                turn: currentTurn,
+                                runId,
+                                sequence: turnSequence,
+                                provider: providerLabel
+                            }
+                        });
+                    }
+                    responseText = '';
+                    prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                    continue;
+                }
+
                 const zeroCharErrorMsg = `System Error: The LLM returned an empty response. This may indicate the context window is full, the prompt was rejected by safety filters, or the underlying provider failed silently.`;
 
                 const errorFeedbackMsg: Message = {

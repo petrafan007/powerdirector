@@ -109,7 +109,7 @@ export async function GET() {
             // ── Dynamic Model Discovery ──
             if (pc?.retrieveLocalModels) {
                 authed = true; // Intent to use is explicit
-                const baseURL = pc.baseURL || pc.baseUrl || (providerId === 'ollama-desktop' ? 'http://127.0.0.1:11434/v1' : '');
+                const baseURL = pc.baseUrl || pc.baseURL || (providerId === 'ollama-desktop' ? 'http://127.0.0.1:11434/v1' : '');
                 if (baseURL) {
                     const tagsURL = baseURL.replace(/\/v1\/?$/, '/api/tags');
                     try {
@@ -118,7 +118,7 @@ export async function GET() {
                             const data = await resp.json();
                             const remoteModels = data.models?.map((m: any) => m.name) || [];
                             if (remoteModels.length > 0) {
-                                modelIds = remoteModels;
+                                modelIds = Array.from(new Set([...modelIds, ...remoteModels]));
                             }
                         }
                     } catch {
@@ -127,7 +127,19 @@ export async function GET() {
                 }
             }
 
-            if (!authed || (modelIds.length === 0 && !pc?.retrieveLocalModels)) continue;
+            // Ensure we have at least one model if authed or dynamic
+            if ((authed || pc?.retrieveLocalModels) && modelIds.length === 0) {
+                if (pc?.defaultModel) {
+                    modelIds = [pc.defaultModel];
+                } else if (providerId === 'ollama-desktop' || providerId === 'ollama') {
+                    modelIds = ['llama3.1', 'gpt-oss:120b-cloud'];
+                } else {
+                    modelIds = ['default'];
+                }
+            }
+
+            if (!authed && !pc?.retrieveLocalModels) continue;
+            if (modelIds.length === 0) continue;
 
             addProvider({
                 id: providerId,

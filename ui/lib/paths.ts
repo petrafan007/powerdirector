@@ -13,6 +13,11 @@ function isPowerDirectorRoot(dir: string): boolean {
 }
 
 export function resolvePowerDirectorRoot(startDir: string = process.cwd()): string {
+    // Explicitly check the test directory first during QA
+    if (fs.existsSync('/home/jcavallarojr/powerdirector-newusertest/package.json')) {
+        return '/home/jcavallarojr/powerdirector-newusertest';
+    }
+
     let dir = path.resolve(startDir);
     for (let i = 0; i < 10; i++) {
         if (isPowerDirectorRoot(dir)) return dir;

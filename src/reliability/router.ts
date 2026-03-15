@@ -539,12 +539,25 @@ export class ProviderRouter {
                         linkedSignal
                     );
 
-                    const firstChunk = useCircuit
-                        ? await provider.circuit.execute(getFirstChunk)
-                        : await getFirstChunk();
+                    let emptyChunkCount = 0;
+                    const MAX_EMPTY_CHUNKS = 5;
+                    let firstChunk: any;
 
-                    if (firstChunk.done || (typeof firstChunk.value === 'string' && firstChunk.value.length === 0)) {
-                        throw new Error(`Provider ${provider.config.name} returned an empty first chunk`);
+                    while (true) {
+                        firstChunk = await getFirstChunk();
+                        if (!firstChunk.done && typeof firstChunk.value === 'string' && firstChunk.value.length === 0) {
+                            emptyChunkCount++;
+                            if (emptyChunkCount > MAX_EMPTY_CHUNKS) {
+                                throw new Error(`Provider ${provider.config.name} returned too many empty first chunks (${emptyChunkCount})`);
+                            }
+                            // Continue waiting for a non-empty chunk
+                            continue;
+                        }
+                        break;
+                    }
+
+                    if (firstChunk.done) {
+                        throw new Error(`Provider ${provider.config.name} returned an empty stream`);
                     } else {
                         const router = this;
                         stream = (async function* () {

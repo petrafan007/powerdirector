@@ -510,6 +510,12 @@ export function createGatewayHttpServer(opts: {
         req.url = scopedCanvas.rewrittenUrl;
       }
       const requestPath = new URL(req.url ?? "/", "http://localhost").pathname;
+      if (requestPath === "/health") {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+        res.end("OK");
+        return;
+      }
       if (await handleHooksRequest(req, res)) {
         return;
       }

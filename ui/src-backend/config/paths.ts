@@ -21,7 +21,24 @@ export const isNixMode = resolveIsNixMode();
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moldbot", ".moltbot"] as const;
 const NEW_STATE_DIRNAME = ".powerdirector";
 const CONFIG_FILENAME = "powerdirector.config.json";
-const LEGACY_CONFIG_FILENAMES = ["clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+
+function findProjectRoot(): string | null {
+  let current = process.cwd();
+  const root = path.parse(current).root;
+  while (current !== root) {
+    if (fs.existsSync(path.join(current, "package.json"))) {
+      // Heuristic: check if this seems like the project root (e.g. has src)
+      if (fs.existsSync(path.join(current, "src"))) {
+        return current;
+      }
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return null;
+}
 
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);
@@ -164,10 +181,15 @@ export function resolveConfigPath(
     return resolveUserPath(override, env, homedir);
   }
   const stateOverride = env.POWERDIRECTOR_STATE_DIR?.trim() || env.POWERDIRECTOR_STATE_DIR?.trim();
+  const projectRoot = findProjectRoot();
   const candidates = [
     path.join(stateDir, CONFIG_FILENAME),
     ...LEGACY_CONFIG_FILENAMES.map((name) => path.join(stateDir, name)),
   ];
+  if (projectRoot) {
+    candidates.push(path.join(projectRoot, CONFIG_FILENAME));
+    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
+  }
   const existing = candidates.find((candidate) => {
     try {
       return fs.existsSync(candidate);
@@ -208,6 +230,12 @@ export function resolveDefaultConfigCandidates(
   }
 
   const candidates: string[] = [];
+  const projectRoot = findProjectRoot();
+  if (projectRoot) {
+    candidates.push(path.join(projectRoot, CONFIG_FILENAME));
+    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
+  }
+
   const powerdirectorStateDir =
     env.POWERDIRECTOR_STATE_DIR?.trim() ||
     env.POWERDIRECTOR_STATE_DIR?.trim() ||

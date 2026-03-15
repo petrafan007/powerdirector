@@ -82,8 +82,11 @@ function loadDotenv(rootDir: string) {
 export function getConfigManager(): ConfigManager {
     if (!_configManager) {
         const root = resolvePowerDirectorRoot();
+        console.log(`[ConfigInstance] resolvePowerDirectorRoot returned: ${root}`);
+        console.log(`[ConfigInstance] process.cwd(): ${process.cwd()}`);
         loadDotenv(root);
         _configManager = new ConfigManager(root);
+        console.log(`[ConfigInstance] ConfigManager initialized with path: ${_configManager.getConfigPath()}`);
     }
     return _configManager;
 }

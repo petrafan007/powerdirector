@@ -186,13 +186,16 @@ export default function UpdateSection({ schema, data, onUpdate }: UpdateSectionP
 
             // Start polling for health almost immediately
             let attempts = 0;
+            let success = false;
             const poll = async () => {
+                if (success) return;
                 try {
                     const h = await fetch('/api/health', { 
                         cache: 'no-store',
                         signal: AbortSignal.timeout(2000)
                     });
                     if (h.status === 200) {
+                        success = true;
                         window.location.reload();
                         return;
                     }
@@ -201,7 +204,6 @@ export default function UpdateSection({ schema, data, onUpdate }: UpdateSectionP
                 }
                 attempts++;
                 if (attempts < 120) { // 2 minute timeout
-                    // Poll faster (every 500ms) to catch the server as soon as it's up
                     setTimeout(poll, 500);
                 } else {
                     setRestarting(false);
@@ -209,8 +211,14 @@ export default function UpdateSection({ schema, data, onUpdate }: UpdateSectionP
                 }
             };
             
-            // Wait just a bit for the previous process to at least start its shutdown
             setTimeout(poll, 1500);
+
+            // Absolute fallback
+            setTimeout(() => {
+                if (!success) {
+                    window.location.reload();
+                }
+            }, 10000);
         } catch (error: any) {
             setModalError(error?.message || 'Failed to trigger restart');
             setRestarting(false);

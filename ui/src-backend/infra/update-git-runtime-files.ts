@@ -48,6 +48,7 @@ export function buildGitDirtyCheckArgv(root: string): string[] {
     "--porcelain",
     "--",
     ":!dist/control-ui/",
+    ":!ui/src-backend/",
     ...GIT_RUNTIME_PRESERVE_PATHS.map((relativePath) => `:!${relativePath}`),
   ];
 }

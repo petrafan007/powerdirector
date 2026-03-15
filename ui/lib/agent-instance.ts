@@ -658,7 +658,7 @@ export class PowerDirectorService {
             return { key: entry?.key, base, effective, accounts, accountId };
         };
 
-        const configuredDbPath = pickString(env.DB_PATH, process.env.DB_PATH);
+        const configuredDbPath = pickString(config.database?.path, env.DB_PATH, process.env.DB_PATH);
         const dbPath = configuredDbPath || `${rootDir}/powerdirector.db`;
 
         const db = new DatabaseManager(dbPath);
@@ -1004,6 +1004,11 @@ export class PowerDirectorService {
             }
         );
 
+        this.skillsManager = new SkillsManager(config.skills || {}, {
+            baseDir: rootDir,
+            env: runtimeProcessEnv
+        });
+
         const tools = new ToolRegistry();
         initializeTools(tools, {
             env,
@@ -1015,7 +1020,7 @@ export class PowerDirectorService {
             pickString,
             sessionManager: this.sessionManager,
             mediaManager: this.mediaManager,
-            gateway: undefined, // Will be set later or use getter
+            getGateway: () => this.gateway,
             agentDefaults
         });
 
@@ -1049,10 +1054,6 @@ export class PowerDirectorService {
         }
         const hooksManager = new HooksManager(config.hooks || {}, {
             cwd: workspaceDir || rootDir,
-            env: runtimeProcessEnv
-        });
-        this.skillsManager = new SkillsManager(config.skills || {}, {
-            baseDir: rootDir,
             env: runtimeProcessEnv
         });
         this.approvalsManager = new ApprovalsManager(config.approvals || {});

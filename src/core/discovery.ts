@@ -49,6 +49,11 @@ export class DiscoveryManager {
 
     public async start(servicePort: number): Promise<void> {
         if (this.started) return;
+
+        const config = getConfigManager().get();
+        if (!config) {
+            this.logger.error(`[DiscoveryManager] Missing config in getConfigManager().get(). ConfigPath: ${getConfigManager().getConfigPath()}`);
+        }
         this.started = true;
 
         if (this.mdnsMode !== 'off') {

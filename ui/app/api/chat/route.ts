@@ -159,6 +159,9 @@ export async function POST(request: Request) {
                 }, 5000);
 
                 const onStep = (msg: any) => {
+                    if (msg?.metadata?.status === 'fallback') {
+                        console.error(`[API/Chat] Provider fallback occurred: ${msg.content}`);
+                    }
                     safeSend({ step: msg });
                 };
 

@@ -8,6 +8,7 @@ import { SkillLoader } from './loader';
 import { SkillFormatter } from './formatter';
 import { shouldIncludeSkill } from './config';
 import { Tool, ToolResult } from '../tools/base.ts';
+import { resolveConfigPathCandidate } from '../config/paths';
 
 
 type NodeManager = 'npm' | 'yarn' | 'pnpm';
@@ -73,8 +74,7 @@ export class SkillsManager {
         this.formatter = new SkillFormatter();
 
         // Initialize PowerDirector config persistence
-        const homeDir = process.env.HOME || process.env.USERPROFILE || '/root';
-        this.powerdirectorConfigPath = path.join(homeDir, '.powerdirector', 'powerdirector.config.json');
+        this.powerdirectorConfigPath = resolveConfigPathCandidate();
 
         // Load initial config from both source (passed in) AND powerdirector.config.json
         this.configEntries = { ...config.entries };
