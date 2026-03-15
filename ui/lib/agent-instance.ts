@@ -37,8 +37,6 @@ import { GeminiCLIProvider, type GeminiCliBackendConfig } from '@/src-backend/pr
 import { CodexCLIProvider, type CodexCliBackendConfig } from '@/src-backend/providers/codex-cli';
 import { PluginsManager } from '@/src-backend/plugins/manager';
 import { SkillsManager } from '@/src-backend/skills/manager';
-import { initializeTools } from './registry/tools';
-import { initializeChannels } from './registry/channels';
 import { loadAuthProfileStore } from './auth-profile-store';
 import { resolveAuthCredential } from './auth-resolver';
 import { getConfigManager } from './config-instance';
@@ -1009,6 +1007,8 @@ export class PowerDirectorService {
             env: runtimeProcessEnv
         });
 
+        // Use lazy require to break circular dependency
+        const { initializeTools } = require('./registry/tools');
         const tools = new ToolRegistry();
         initializeTools(tools, {
             env,
@@ -1331,6 +1331,7 @@ export class PowerDirectorService {
         });
 
         // Initialize Channels via registry
+        const { initializeChannels } = require('./registry/channels');
         initializeChannels(this.gateway, {
             env,
             config,
