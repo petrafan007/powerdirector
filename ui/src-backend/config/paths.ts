@@ -24,12 +24,6 @@ const CONFIG_FILENAME = "powerdirector.config.json";
 const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function findProjectRoot(): string | null {
-  // Explicitly check the test directory first during QA
-  const qaRoot = '/home/jcavallarojr/powerdirector-newusertest';
-  if (fs.existsSync(path.join(qaRoot, "package.json")) && fs.existsSync(path.join(qaRoot, "src"))) {
-    return qaRoot;
-  }
-
   let current = process.cwd();
   const root = path.parse(current).root;
   while (current !== root) {

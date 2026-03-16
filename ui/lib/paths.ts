@@ -13,13 +13,6 @@ function isPowerDirectorRoot(dir: string): boolean {
 }
 
 export function resolvePowerDirectorRoot(startDir: string = process.cwd()): string {
-    // Explicitly check the test directory first during QA
-    const qaPath = '/home/jcavallarojr/powerdirector-newusertest';
-    if (fs.existsSync(path.join(qaPath, 'package.json'))) {
-        console.log(`[resolvePowerDirectorRoot] QA Override active: ${qaPath}`);
-        return qaPath;
-    }
-
     let dir = path.resolve(startDir);
     for (let i = 0; i < 10; i++) {
         if (isPowerDirectorRoot(dir)) return dir;

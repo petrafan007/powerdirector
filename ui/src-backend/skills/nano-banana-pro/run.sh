@@ -26,4 +26,4 @@ if [ -z "$GEMINI_API_KEY" ]; then
 fi
 
 # Run the python script using uv
-uv run "$SKILL_DIR/scripts/image.py" --prompt "$PROMPT" --filename "$FILENAME"
+uv run "$SKILL_DIR/scripts/image.py" --prompt "$PROMPT" --output "$FILENAME" --model "imagen-4.0-generate-001"
