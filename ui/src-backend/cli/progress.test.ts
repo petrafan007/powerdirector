@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createCliProgress } from './progress';
+import { createCliProgress } from "./progress.js";
 
 describe("cli progress", () => {
   it("logs progress when non-tty and fallback=log", () => {

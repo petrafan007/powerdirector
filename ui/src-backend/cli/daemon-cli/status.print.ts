@@ -1,20 +1,20 @@
-import { resolveControlUiLinks } from '../../commands/onboard-helpers';
+import { resolveControlUiLinks } from "../../commands/onboard-helpers.js";
 import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
-} from '../../daemon/constants';
-import { renderGatewayServiceCleanupHints } from '../../daemon/inspect';
-import { resolveGatewayLogPaths } from '../../daemon/launchd';
+} from "../../daemon/constants.js";
+import { renderGatewayServiceCleanupHints } from "../../daemon/inspect.js";
+import { resolveGatewayLogPaths } from "../../daemon/launchd.js";
 import {
   isSystemdUnavailableDetail,
   renderSystemdUnavailableHints,
-} from '../../daemon/systemd-hints';
-import { isWSLEnv } from '../../infra/wsl';
-import { getResolvedLoggerSettings } from '../../logging';
-import { defaultRuntime } from '../../runtime';
-import { colorize } from '../../terminal/theme';
-import { shortenHomePath } from '../../utils';
-import { formatCliCommand } from '../command-format';
+} from "../../daemon/systemd-hints.js";
+import { isWSLEnv } from "../../infra/wsl.js";
+import { getResolvedLoggerSettings } from "../../logging.js";
+import { defaultRuntime } from "../../runtime.js";
+import { colorize } from "../../terminal/theme.js";
+import { shortenHomePath } from "../../utils.js";
+import { formatCliCommand } from "../command-format.js";
 import {
   createCliStatusTextStyles,
   filterDaemonEnv,
@@ -22,12 +22,12 @@ import {
   resolveRuntimeStatusColor,
   renderRuntimeHints,
   safeDaemonEnv,
-} from './shared';
+} from "./shared.js";
 import {
   type DaemonStatus,
   renderPortDiagnosticsForCli,
   resolvePortListeningAddresses,
-} from './status.gather';
+} from "./status.gather.js";
 
 function sanitizeDaemonStatusForJson(status: DaemonStatus): DaemonStatus {
   const command = status.service.command;

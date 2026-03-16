@@ -1,4 +1,4 @@
-import type { DiscordPluralKitConfig } from '../discord/pluralkit';
+import type { DiscordPluralKitConfig } from "../discord/pluralkit.js";
 import type {
   BlockStreamingCoalesceConfig,
   DmPolicy,
@@ -6,10 +6,10 @@ import type {
   MarkdownConfig,
   OutboundRetryConfig,
   ReplyToMode,
-} from './types.base';
-import type { ChannelHeartbeatVisibilityConfig } from './types.channels';
-import type { DmConfig, ProviderCommandsConfig } from './types.messages';
-import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from './types.tools';
+} from "./types.base.js";
+import type { ChannelHeartbeatVisibilityConfig } from "./types.channels.js";
+import type { DmConfig, ProviderCommandsConfig } from "./types.messages.js";
+import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from "./types.tools.js";
 
 export type DiscordDmConfig = {
   /** If false, ignore all incoming Discord DMs. Default: true. */

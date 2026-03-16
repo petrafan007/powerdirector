@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createProviderUsageFetch, makeResponse } from '../test-utils/provider-usage-fetch';
-import { fetchClaudeUsage } from './provider-usage.fetch.claude';
+import { createProviderUsageFetch, makeResponse } from "../test-utils/provider-usage-fetch.js";
+import { fetchClaudeUsage } from "./provider-usage.fetch.claude.js";
 
 const MISSING_SCOPE_MESSAGE = "missing scope requirement user:profile";
 

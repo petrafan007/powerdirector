@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { normalizeProviderId } from '../model-selection';
-import { saveAuthProfileStore, updateAuthProfileStoreWithLock } from './store';
-import type { AuthProfileFailureReason, AuthProfileStore, ProfileUsageStats } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { normalizeProviderId } from "../model-selection.js";
+import { saveAuthProfileStore, updateAuthProfileStoreWithLock } from "./store.js";
+import type { AuthProfileFailureReason, AuthProfileStore, ProfileUsageStats } from "./types.js";
 
 export function resolveProfileUnusableUntil(
   stats: Pick<ProfileUsageStats, "cooldownUntil" | "disabledUntil">,

@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { DmPolicy } from '../../config/types';
-import type { RuntimeEnv } from '../../runtime';
-import type { WizardPrompter } from '../../wizard/prompts';
-import type { ChannelId } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { DmPolicy } from "../../config/types.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import type { WizardPrompter } from "../../wizard/prompts.js";
+import type { ChannelId } from "./types.js";
 
 export type SetupChannelsOptions = {
   allowDisable?: boolean;

@@ -1,8 +1,8 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { isPidAlive } from '../shared/pid-alive';
-import { resolveProcessScopedMap } from '../shared/process-scoped-map';
+import { isPidAlive } from "../shared/pid-alive.js";
+import { resolveProcessScopedMap } from "../shared/process-scoped-map.js";
 
 type LockFilePayload = {
   pid?: number;

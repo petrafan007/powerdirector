@@ -1,4 +1,4 @@
-import { normalizeProviderId } from '../agents/model-selection';
+import { normalizeProviderId } from "../agents/model-selection.js";
 
 export const ANTHROPIC_SETUP_TOKEN_PREFIX = "sk-ant-oat01-";
 export const ANTHROPIC_SETUP_TOKEN_MIN_LENGTH = 80;

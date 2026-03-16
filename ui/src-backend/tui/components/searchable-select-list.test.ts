@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { stripAnsi, visibleWidth } from '../../terminal/ansi';
-import { SearchableSelectList, type SearchableSelectListTheme } from './searchable-select-list';
+import { stripAnsi, visibleWidth } from "../../terminal/ansi.js";
+import { SearchableSelectList, type SearchableSelectListTheme } from "./searchable-select-list.js";
 
 const mockTheme: SearchableSelectListTheme = {
   selectedPrefix: (t) => `[${t}]`,

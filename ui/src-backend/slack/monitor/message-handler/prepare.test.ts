@@ -3,16 +3,16 @@ import os from "node:os";
 import path from "node:path";
 import type { App } from "@slack/bolt";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { expectInboundContextContract } from '../../../../test/helpers/inbound-contract';
-import type { PowerDirectorConfig } from '../../../config/config';
-import { resolveAgentRoute } from '../../../routing/resolve-route';
-import { resolveThreadSessionKeys } from '../../../routing/session-key';
-import type { RuntimeEnv } from '../../../runtime';
-import type { ResolvedSlackAccount } from '../../accounts';
-import type { SlackMessageEvent } from '../../types';
-import type { SlackMonitorContext } from '../context';
-import { createSlackMonitorContext } from '../context';
-import { prepareSlackMessage } from './prepare';
+import { expectInboundContextContract } from "../../../../test/helpers/inbound-contract.js";
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import { resolveAgentRoute } from "../../../routing/resolve-route.js";
+import { resolveThreadSessionKeys } from "../../../routing/session-key.js";
+import type { RuntimeEnv } from "../../../runtime.js";
+import type { ResolvedSlackAccount } from "../../accounts.js";
+import type { SlackMessageEvent } from "../../types.js";
+import type { SlackMonitorContext } from "../context.js";
+import { createSlackMonitorContext } from "../context.js";
+import { prepareSlackMessage } from "./prepare.js";
 
 describe("slack prepareSlackMessage inbound contract", () => {
   let fixtureRoot = "";

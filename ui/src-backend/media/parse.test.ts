@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { splitMediaFromOutput } from './parse';
+import { splitMediaFromOutput } from "./parse.js";
 
 describe("splitMediaFromOutput", () => {
   it("detects audio_as_voice tag and strips it", () => {

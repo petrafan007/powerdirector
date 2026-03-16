@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { emitAgentEvent } from '../infra/agent-events';
+import { emitAgentEvent } from "../infra/agent-events.js";
 import "./test-helpers/fast-core-tools.js";
 import {
   getCallGatewayMock,
   resetSessionsSpawnConfigOverride,
-} from './powerdirector-tools.subagents.sessions-spawn.test-harness';
-import { resetSubagentRegistryForTests } from './subagent-registry';
+} from "./powerdirector-tools.subagents.sessions-spawn.test-harness.js";
+import { resetSubagentRegistryForTests } from "./subagent-registry.js";
 
 vi.mock("./pi-embedded.js", () => ({
   isEmbeddedPiRunActive: () => false,
@@ -16,12 +16,12 @@ vi.mock("./pi-embedded.js", () => ({
 
 const callGatewayMock = getCallGatewayMock();
 
-type CreatePowerDirectorTools = (typeof import('./powerdirector-tools'))["createPowerDirectorTools"];
+type CreatePowerDirectorTools = (typeof import("./powerdirector-tools.js"))["createPowerDirectorTools"];
 type CreatePowerDirectorToolsOpts = Parameters<CreatePowerDirectorTools>[0];
 
 async function getSessionsSpawnTool(opts: CreatePowerDirectorToolsOpts) {
   // Dynamic import: ensure harness mocks are installed before tool modules load.
-  const { createPowerDirectorTools } = await import('./powerdirector-tools');
+  const { createPowerDirectorTools } = await import("./powerdirector-tools.js");
   const tool = createPowerDirectorTools(opts).find((candidate) => candidate.name === "sessions_spawn");
   if (!tool) {
     throw new Error("missing sessions_spawn tool");

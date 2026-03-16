@@ -2,17 +2,17 @@ import {
   formatUpdateAvailableHint,
   formatUpdateOneLiner,
   resolveUpdateAvailability,
-} from '../../commands/status.update';
-import { readConfigFileSnapshot } from '../../config/config';
+} from "../../commands/status.update.js";
+import { readConfigFileSnapshot } from "../../config/config.js";
 import {
   normalizeUpdateChannel,
   resolveUpdateChannelDisplay,
-} from '../../infra/update-channels';
-import { checkUpdateStatus } from '../../infra/update-check';
-import { defaultRuntime } from '../../runtime';
-import { renderTable } from '../../terminal/table';
-import { theme } from '../../terminal/theme';
-import { parseTimeoutMsOrExit, resolveUpdateRoot, type UpdateStatusOptions } from './shared';
+} from "../../infra/update-channels.js";
+import { checkUpdateStatus } from "../../infra/update-check.js";
+import { defaultRuntime } from "../../runtime.js";
+import { renderTable } from "../../terminal/table.js";
+import { theme } from "../../terminal/theme.js";
+import { parseTimeoutMsOrExit, resolveUpdateRoot, type UpdateStatusOptions } from "./shared.js";
 
 function formatGitStatusLine(params: {
   branch: string | null;

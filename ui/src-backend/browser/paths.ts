@@ -1,5 +1,5 @@
 import path from "node:path";
-import { resolvePreferredPowerDirectorTmpDir } from '../infra/tmp-powerdirector-dir';
+import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir.js";
 
 export const DEFAULT_BROWSER_TMP_DIR = resolvePreferredPowerDirectorTmpDir();
 export const DEFAULT_TRACE_DIR = DEFAULT_BROWSER_TMP_DIR;

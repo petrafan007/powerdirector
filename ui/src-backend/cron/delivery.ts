@@ -1,4 +1,4 @@
-import type { CronDeliveryMode, CronJob, CronMessageChannel } from './types';
+import type { CronDeliveryMode, CronJob, CronMessageChannel } from "./types.js";
 
 export type CronDeliveryPlan = {
   mode: CronDeliveryMode;

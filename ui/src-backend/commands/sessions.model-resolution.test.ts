@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { mockSessionsConfig, runSessionsJson, writeStore } from './sessions.test-helpers';
+import { mockSessionsConfig, runSessionsJson, writeStore } from "./sessions.test-helpers.js";
 
 mockSessionsConfig();
 
-import { sessionsCommand } from './sessions';
+import { sessionsCommand } from "./sessions.js";
 
 type SessionsJsonPayload = {
   sessions?: Array<{

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatLocationText, toLocationContext } from './location';
+import { formatLocationText, toLocationContext } from "./location.js";
 
 describe("provider location helpers", () => {
   it("formats pin locations with accuracy", () => {

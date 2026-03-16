@@ -1,9 +1,9 @@
-import { getChannelPlugin, normalizeChannelId } from '../channels/plugins/index';
-import { normalizeTargetForProvider } from '../infra/outbound/target-normalization';
-import { MEDIA_TOKEN_RE } from '../media/parse';
-import { truncateUtf16Safe } from '../utils';
-import { collectTextContentBlocks } from './content-blocks';
-import { type MessagingToolSend } from './pi-embedded-messaging';
+import { getChannelPlugin, normalizeChannelId } from "../channels/plugins/index.js";
+import { normalizeTargetForProvider } from "../infra/outbound/target-normalization.js";
+import { MEDIA_TOKEN_RE } from "../media/parse.js";
+import { truncateUtf16Safe } from "../utils.js";
+import { collectTextContentBlocks } from "./content-blocks.js";
+import { type MessagingToolSend } from "./pi-embedded-messaging.js";
 
 const TOOL_RESULT_MAX_CHARS = 8000;
 const TOOL_ERROR_MAX_CHARS = 400;

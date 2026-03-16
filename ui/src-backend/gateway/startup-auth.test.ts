@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 const mocks = vi.hoisted(() => ({
   writeConfigFile: vi.fn(async (_cfg: PowerDirectorConfig) => {}),
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     writeConfigFile: mocks.writeConfigFile,
@@ -16,7 +16,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 import {
   assertHooksTokenSeparateFromGatewayAuth,
   ensureGatewayStartupAuth,
-} from './startup-auth';
+} from "./startup-auth.js";
 
 describe("ensureGatewayStartupAuth", () => {
   async function expectEphemeralGeneratedTokenWhenOverridden(cfg: PowerDirectorConfig) {

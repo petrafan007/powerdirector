@@ -6,25 +6,25 @@ import {
   readJsonFile,
   resolveArchiveKind,
   resolvePackedRootDir,
-} from '../infra/archive';
-import { installPackageDir } from '../infra/install-package-dir';
+} from "../infra/archive.js";
+import { installPackageDir } from "../infra/install-package-dir.js";
 import {
   resolveSafeInstallDir,
   safeDirName,
   unscopedPackageName,
-} from '../infra/install-safe-path';
+} from "../infra/install-safe-path.js";
 import {
   type NpmIntegrityDrift,
   type NpmSpecResolution,
   resolveArchiveSourcePath,
   withTempDir,
-} from '../infra/install-source-utils';
-import { installFromNpmSpecArchive } from '../infra/npm-pack-install';
-import { validateRegistryNpmSpec } from '../infra/npm-registry-spec';
-import { POWERDIRECTOR_MANIFEST_KEY } from './manifest';
-import { extensionUsesSkippedScannerPath, isPathInside } from '../security/scan-paths';
-import * as skillScanner from '../security/skill-scanner';
-import { CONFIG_DIR, resolveUserPath } from '../utils';
+} from "../infra/install-source-utils.js";
+import { installFromNpmSpecArchive } from "../infra/npm-pack-install.js";
+import { validateRegistryNpmSpec } from "../infra/npm-registry-spec.js";
+import { POWERDIRECTOR_MANIFEST_KEY } from "./manifest.js";
+import { extensionUsesSkippedScannerPath, isPathInside } from "../security/scan-paths.js";
+import * as skillScanner from "../security/skill-scanner.js";
+import { CONFIG_DIR, resolveUserPath } from "../utils.js";
 
 type PluginInstallLogger = {
   info?: (message: string) => void;

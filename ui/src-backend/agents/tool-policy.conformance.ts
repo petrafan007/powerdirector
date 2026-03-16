@@ -7,7 +7,7 @@
  *   the formal models/extractors.
  */
 
-import { TOOL_GROUPS } from './tool-policy';
+import { TOOL_GROUPS } from "./tool-policy.js";
 
 // Tool name aliases are intentionally not exported from tool-policy today.
 // Keep the conformance snapshot focused on exported policy constants.

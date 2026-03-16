@@ -1,6 +1,6 @@
 import type { WebClient } from "@slack/web-api";
-import { isRecord } from '../utils';
-import { createSlackWebClient } from './client';
+import { isRecord } from "../utils.js";
+import { createSlackWebClient } from "./client.js";
 
 export type SlackScopesResult = {
   ok: boolean;

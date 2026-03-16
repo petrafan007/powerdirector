@@ -2,14 +2,14 @@ import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
-} from '../../daemon/constants';
-import { resolveGatewayLogPaths } from '../../daemon/launchd';
-import { formatRuntimeStatus } from '../../daemon/runtime-format';
-import { pickPrimaryLanIPv4 } from '../../gateway/net';
-import { getResolvedLoggerSettings } from '../../logging';
-import { colorize, isRich, theme } from '../../terminal/theme';
-import { formatCliCommand } from '../command-format';
-import { parsePort } from '../shared/parse-port';
+} from "../../daemon/constants.js";
+import { resolveGatewayLogPaths } from "../../daemon/launchd.js";
+import { formatRuntimeStatus } from "../../daemon/runtime-format.js";
+import { pickPrimaryLanIPv4 } from "../../gateway/net.js";
+import { getResolvedLoggerSettings } from "../../logging.js";
+import { colorize, isRich, theme } from "../../terminal/theme.js";
+import { formatCliCommand } from "../command-format.js";
+import { parsePort } from "../shared/parse-port.js";
 
 export { formatRuntimeStatus };
 export { parsePort };

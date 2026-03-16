@@ -1,4 +1,4 @@
-import type { AuthChoice } from './onboard-types';
+import type { AuthChoice } from "./onboard-types.js";
 
 const PREFERRED_PROVIDER_BY_AUTH_CHOICE: Partial<Record<AuthChoice, string>> = {
   oauth: "anthropic",

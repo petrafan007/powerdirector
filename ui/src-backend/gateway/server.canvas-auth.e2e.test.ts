@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
 import { WebSocket, WebSocketServer } from "ws";
-import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH } from '../canvas-host/a2ui';
-import type { CanvasHostHandler } from '../canvas-host/server';
-import { createAuthRateLimiter } from './auth-rate-limit';
-import type { ResolvedGatewayAuth } from './auth';
-import { CANVAS_CAPABILITY_PATH_PREFIX } from './canvas-capability';
-import { attachGatewayUpgradeHandler, createGatewayHttpServer } from './server-http';
-import type { GatewayWsClient } from './server/ws-types';
-import { withTempConfig } from './test-temp-config';
+import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH } from "../canvas-host/a2ui.js";
+import type { CanvasHostHandler } from "../canvas-host/server.js";
+import { createAuthRateLimiter } from "./auth-rate-limit.js";
+import type { ResolvedGatewayAuth } from "./auth.js";
+import { CANVAS_CAPABILITY_PATH_PREFIX } from "./canvas-capability.js";
+import { attachGatewayUpgradeHandler, createGatewayHttpServer } from "./server-http.js";
+import type { GatewayWsClient } from "./server/ws-types.js";
+import { withTempConfig } from "./test-temp-config.js";
 
 async function listen(
   server: ReturnType<typeof createGatewayHttpServer>,

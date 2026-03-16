@@ -1,8 +1,8 @@
 import os from "node:os";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { runExec } from '../process/exec';
-import type { RuntimeEnv } from '../runtime';
-import { ensureBinary } from './binaries';
+import type { runExec } from "../process/exec.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { ensureBinary } from "./binaries.js";
 import {
   __testing,
   consumeGatewaySigusr1RestartAuthorization,
@@ -12,9 +12,9 @@ import {
   scheduleGatewaySigusr1Restart,
   setGatewaySigusr1RestartPolicy,
   setPreRestartDeferralCheck,
-} from './restart';
-import { createTelegramRetryRunner } from './retry-policy';
-import { listTailnetAddresses } from './tailnet';
+} from "./restart.js";
+import { createTelegramRetryRunner } from "./retry-policy.js";
+import { listTailnetAddresses } from "./tailnet.js";
 
 describe("infra runtime", () => {
   function setupRestartSignalSuite() {

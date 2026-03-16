@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   resolveLineAccount,
   resolveDefaultLineAccountId,
   normalizeAccountId,
   DEFAULT_ACCOUNT_ID,
-} from './accounts';
+} from "./accounts.js";
 
 describe("LINE accounts", () => {
   const originalEnv = { ...process.env };

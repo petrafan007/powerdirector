@@ -7,16 +7,16 @@ import {
   clearSessionStoreCacheForTest,
   loadSessionStore,
   updateSessionStore,
-} from '../sessions';
-import type { SessionConfig } from '../types.base';
+} from "../sessions.js";
+import type { SessionConfig } from "../types.base.js";
 import {
   resolveSessionFilePath,
   resolveSessionTranscriptPathInDir,
   validateSessionId,
-} from './paths';
-import { resolveSessionResetPolicy } from './reset';
-import { appendAssistantMessageToSessionTranscript } from './transcript';
-import type { SessionEntry } from './types';
+} from "./paths.js";
+import { resolveSessionResetPolicy } from "./reset.js";
+import { appendAssistantMessageToSessionTranscript } from "./transcript.js";
+import type { SessionEntry } from "./types.js";
 
 describe("session path safety", () => {
   it("rejects unsafe session IDs", () => {

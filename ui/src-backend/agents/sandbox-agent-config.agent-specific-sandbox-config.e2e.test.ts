@@ -2,7 +2,7 @@ import { EventEmitter } from "node:events";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 type SpawnCall = {
   command: string;
@@ -42,15 +42,15 @@ vi.mock("node:child_process", async (importOriginal) => {
 });
 
 vi.mock("./skills.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./skills')>();
+  const actual = await importOriginal<typeof import("./skills.js")>();
   return {
     ...actual,
     syncSkillsToWorkspace: vi.fn(async () => undefined),
   };
 });
 
-let resolveSandboxContext: typeof import('./sandbox').resolveSandboxContext;
-let resolveSandboxConfigForAgent: typeof import('./sandbox').resolveSandboxConfigForAgent;
+let resolveSandboxContext: typeof import("./sandbox.js").resolveSandboxContext;
+let resolveSandboxConfigForAgent: typeof import("./sandbox.js").resolveSandboxConfigForAgent;
 
 async function resolveContext(config: PowerDirectorConfig, sessionKey: string, workspaceDir: string) {
   return resolveSandboxContext({
@@ -74,7 +74,7 @@ function expectDockerSetupCommand(command: string) {
 
 describe("Agent-specific sandbox config", () => {
   beforeAll(async () => {
-    ({ resolveSandboxConfigForAgent, resolveSandboxContext } = await import('./sandbox'));
+    ({ resolveSandboxConfigForAgent, resolveSandboxContext } = await import("./sandbox.js"));
   });
 
   beforeEach(() => {

@@ -1,18 +1,18 @@
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { loadSessionStore, resolveSessionKey } from '../config/sessions';
+import { loadSessionStore, resolveSessionKey } from "../config/sessions.js";
 import {
   getCompactEmbeddedPiSessionMock,
   getRunEmbeddedPiAgentMock,
   installTriggerHandlingE2eTestHooks,
   makeCfg,
   withTempHome,
-} from './reply.triggers.trigger-handling.test-harness';
+} from "./reply.triggers.trigger-handling.test-harness.js";
 
-let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import('./reply'));
+  ({ getReplyFromConfig } = await import("./reply.js"));
 });
 
 installTriggerHandlingE2eTestHooks();

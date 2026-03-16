@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { AcpSession } from './types';
+import type { AcpSession } from "./types.js";
 
 export type AcpSessionStore = {
   createSession: (params: { sessionKey: string; cwd: string; sessionId?: string }) => AcpSession;

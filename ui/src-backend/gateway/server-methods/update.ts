@@ -1,19 +1,19 @@
-import { loadConfig } from '../../config/config';
-import { extractDeliveryInfo } from '../../config/sessions';
-import { resolvePowerDirectorPackageRoot } from '../../infra/powerdirector-root';
+import { loadConfig } from "../../config/config.js";
+import { extractDeliveryInfo } from "../../config/sessions.js";
+import { resolvePowerDirectorPackageRoot } from "../../infra/powerdirector-root.js";
 import {
   formatDoctorNonInteractiveHint,
   type RestartSentinelPayload,
   writeRestartSentinel,
-} from '../../infra/restart-sentinel';
-import { scheduleGatewaySigusr1Restart } from '../../infra/restart';
-import { normalizeUpdateChannel } from '../../infra/update-channels';
-import { runGatewayUpdate } from '../../infra/update-runner';
-import { formatControlPlaneActor, resolveControlPlaneActor } from '../control-plane-audit';
-import { validateUpdateRunParams } from '../protocol/index';
-import { parseRestartRequestParams } from './restart-request';
-import type { GatewayRequestHandlers } from './types';
-import { assertValidParams } from './validation';
+} from "../../infra/restart-sentinel.js";
+import { scheduleGatewaySigusr1Restart } from "../../infra/restart.js";
+import { normalizeUpdateChannel } from "../../infra/update-channels.js";
+import { runGatewayUpdate } from "../../infra/update-runner.js";
+import { formatControlPlaneActor, resolveControlPlaneActor } from "../control-plane-audit.js";
+import { validateUpdateRunParams } from "../protocol/index.js";
+import { parseRestartRequestParams } from "./restart-request.js";
+import type { GatewayRequestHandlers } from "./types.js";
+import { assertValidParams } from "./validation.js";
 
 export const updateHandlers: GatewayRequestHandlers = {
   "update.run": async ({ params, respond, client, context }) => {

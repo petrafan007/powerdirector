@@ -1,9 +1,9 @@
 import "./run.overflow-compaction.mocks.shared.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { compactEmbeddedPiSessionDirect } from './compact';
-import { runEmbeddedPiAgent } from './run';
-import { mockOverflowRetrySuccess } from './run.overflow-compaction.fixture';
-import { runEmbeddedAttempt } from './run/attempt';
+import { compactEmbeddedPiSessionDirect } from "./compact.js";
+import { runEmbeddedPiAgent } from "./run.js";
+import { mockOverflowRetrySuccess } from "./run.overflow-compaction.fixture.js";
+import { runEmbeddedAttempt } from "./run/attempt.js";
 
 const mockedRunEmbeddedAttempt = vi.mocked(runEmbeddedAttempt);
 const mockedCompactDirect = vi.mocked(compactEmbeddedPiSessionDirect);

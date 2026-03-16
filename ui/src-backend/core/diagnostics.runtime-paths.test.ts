@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { DiagnosticsManager } from './diagnostics';
+import { DiagnosticsManager } from "./diagnostics.js";
 
 const originalStateDir = process.env.POWERDIRECTOR_STATE_DIR;
 

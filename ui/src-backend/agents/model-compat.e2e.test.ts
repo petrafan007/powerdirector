@@ -1,6 +1,6 @@
 import type { Api, Model } from "@mariozechner/pi-ai";
 import { describe, expect, it } from "vitest";
-import { normalizeModelCompat } from './model-compat';
+import { normalizeModelCompat } from "./model-compat.js";
 
 const baseModel = (): Model<Api> =>
   ({

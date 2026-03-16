@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { makeTempWorkspace, writeWorkspaceFile } from '../test-helpers/workspace';
+import { makeTempWorkspace, writeWorkspaceFile } from "../test-helpers/workspace.js";
 import {
   DEFAULT_AGENTS_FILENAME,
   DEFAULT_BOOTSTRAP_FILENAME,
@@ -13,7 +13,7 @@ import {
   ensureAgentWorkspace,
   loadWorkspaceBootstrapFiles,
   resolveDefaultAgentWorkspaceDir,
-} from './workspace';
+} from "./workspace.js";
 
 describe("resolveDefaultAgentWorkspaceDir", () => {
   it("uses POWERDIRECTOR_HOME for default workspace resolution", () => {

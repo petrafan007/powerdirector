@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import type { MockBaileysSocket } from '../../test/mocks/baileys';
-import { createMockBaileys } from '../../test/mocks/baileys';
+import type { MockBaileysSocket } from "../../test/mocks/baileys.js";
+import { createMockBaileys } from "../../test/mocks/baileys.js";
 
 // Use globalThis to store the mock config so it survives vi.mock hoisting
 const CONFIG_KEY = Symbol.for("powerdirector:testConfigMock");
@@ -31,7 +31,7 @@ export function resetLoadConfigMock() {
 }
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => {
@@ -51,7 +51,7 @@ vi.mock("../../config/config.js", async (importOriginal) => {
   // `../../config/config.js` is correct for modules under `src/web/auto-reply/*`.
   // For typing in this file (which lives in `src/web/*`), refer to the same module
   // via the local relative path.
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => {

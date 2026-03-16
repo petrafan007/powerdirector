@@ -1,8 +1,8 @@
 // @ts-nocheck
 import fs from 'node:fs';
 import path from 'node:path';
-import { getRuntimeLogger } from './logger';
-import { resolveDefaultDiagnosticsDir } from '../infra/runtime-paths';
+import { getRuntimeLogger } from './logger.js';
+import { resolveDefaultDiagnosticsDir } from '../infra/runtime-paths.js';
 
 export interface DiagnosticsOtelConfig {
     enabled?: boolean;

@@ -1,18 +1,18 @@
 import type { App } from "@slack/bolt";
-import type { HistoryEntry } from '../../auto-reply/reply/history';
-import { formatAllowlistMatchMeta } from '../../channels/allowlist-match';
-import type { PowerDirectorConfig, SlackReactionNotificationMode } from '../../config/config';
-import { resolveSessionKey, type SessionScope } from '../../config/sessions';
-import type { DmPolicy, GroupPolicy } from '../../config/types';
-import { logVerbose } from '../../globals';
-import { createDedupeCache } from '../../infra/dedupe';
-import { getChildLogger } from '../../logging';
-import type { RuntimeEnv } from '../../runtime';
-import type { SlackMessageEvent } from '../types';
-import { normalizeAllowList, normalizeAllowListLower, normalizeSlackSlug } from './allow-list';
-import type { SlackChannelConfigEntries } from './channel-config';
-import { resolveSlackChannelConfig } from './channel-config';
-import { isSlackChannelAllowedByPolicy } from './policy';
+import type { HistoryEntry } from "../../auto-reply/reply/history.js";
+import { formatAllowlistMatchMeta } from "../../channels/allowlist-match.js";
+import type { PowerDirectorConfig, SlackReactionNotificationMode } from "../../config/config.js";
+import { resolveSessionKey, type SessionScope } from "../../config/sessions.js";
+import type { DmPolicy, GroupPolicy } from "../../config/types.js";
+import { logVerbose } from "../../globals.js";
+import { createDedupeCache } from "../../infra/dedupe.js";
+import { getChildLogger } from "../../logging.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import type { SlackMessageEvent } from "../types.js";
+import { normalizeAllowList, normalizeAllowListLower, normalizeSlackSlug } from "./allow-list.js";
+import type { SlackChannelConfigEntries } from "./channel-config.js";
+import { resolveSlackChannelConfig } from "./channel-config.js";
+import { isSlackChannelAllowedByPolicy } from "./policy.js";
 
 export function inferSlackChannelType(
   channelId?: string | null,
@@ -79,7 +79,7 @@ export type SlackMonitorContext = {
   replyToMode: "off" | "first" | "all";
   threadHistoryScope: "thread" | "channel";
   threadInheritParent: boolean;
-  slashCommand: Required<import('../../config/config').SlackSlashCommandConfig>;
+  slashCommand: Required<import("../../config/config.js").SlackSlashCommandConfig>;
   textLimit: number;
   ackReactionScope: string;
   mediaMaxBytes: number;

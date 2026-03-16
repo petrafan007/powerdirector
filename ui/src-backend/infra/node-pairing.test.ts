@@ -7,7 +7,7 @@ import {
   getPairedNode,
   requestNodePairing,
   verifyNodeToken,
-} from './node-pairing';
+} from "./node-pairing.js";
 
 async function setupPairedNode(baseDir: string): Promise<string> {
   const request = await requestNodePairing(

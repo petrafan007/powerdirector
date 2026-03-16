@@ -1,18 +1,18 @@
-import { getChannelPlugin } from '../../channels/plugins/index';
+import { getChannelPlugin } from "../../channels/plugins/index.js";
 import type {
   ChannelDirectoryEntry,
   ChannelDirectoryEntryKind,
   ChannelId,
-} from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { buildDirectoryCacheKey, DirectoryCache } from './directory-cache';
-import { ambiguousTargetError, unknownTargetError } from './target-errors';
+} from "../../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
+import { buildDirectoryCacheKey, DirectoryCache } from "./directory-cache.js";
+import { ambiguousTargetError, unknownTargetError } from "./target-errors.js";
 import {
   buildTargetResolverSignature,
   normalizeChannelTargetInput,
   normalizeTargetForProvider,
-} from './target-normalization';
+} from "./target-normalization.js";
 
 export type TargetResolveKind = ChannelDirectoryEntryKind | "channel";
 

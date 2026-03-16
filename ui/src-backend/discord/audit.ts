@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { DiscordGuildChannelConfig, DiscordGuildEntry } from '../config/types';
-import { isRecord } from '../utils';
-import { resolveDiscordAccount } from './accounts';
-import { fetchChannelPermissionsDiscord } from './send';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { DiscordGuildChannelConfig, DiscordGuildEntry } from "../config/types.js";
+import { isRecord } from "../utils.js";
+import { resolveDiscordAccount } from "./accounts.js";
+import { fetchChannelPermissionsDiscord } from "./send.js";
 
 export type DiscordChannelPermissionsAuditEntry = {
   channelId: string;

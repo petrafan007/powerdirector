@@ -1,9 +1,9 @@
-import type { DirectoryConfigParams } from '../channels/plugins/directory-config';
-import type { ChannelDirectoryEntry } from '../channels/plugins/types';
-import { resolveDiscordAccount } from './accounts';
-import { fetchDiscord } from './api';
-import { normalizeDiscordSlug } from './monitor/allow-list';
-import { normalizeDiscordToken } from './token';
+import type { DirectoryConfigParams } from "../channels/plugins/directory-config.js";
+import type { ChannelDirectoryEntry } from "../channels/plugins/types.js";
+import { resolveDiscordAccount } from "./accounts.js";
+import { fetchDiscord } from "./api.js";
+import { normalizeDiscordSlug } from "./monitor/allow-list.js";
+import { normalizeDiscordToken } from "./token.js";
 
 type DiscordGuild = { id: string; name: string };
 type DiscordUser = { id: string; username: string; global_name?: string; bot?: boolean };

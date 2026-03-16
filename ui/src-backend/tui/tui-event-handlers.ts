@@ -1,6 +1,6 @@
-import { asString, extractTextFromMessage, isCommandMessage } from './tui-formatters';
-import { TuiStreamAssembler } from './tui-stream-assembler';
-import type { AgentEvent, ChatEvent, TuiStateAccess } from './tui-types';
+import { asString, extractTextFromMessage, isCommandMessage } from "./tui-formatters.js";
+import { TuiStreamAssembler } from "./tui-stream-assembler.js";
+import type { AgentEvent, ChatEvent, TuiStateAccess } from "./tui-types.js";
 
 type EventHandlerChatLog = {
   startTool: (toolCallId: string, toolName: string, args: unknown) => void;

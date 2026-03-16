@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { AuthProfileStore } from './auth-profiles';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { AuthProfileStore } from "./auth-profiles.js";
 
 // Mock auth-profiles module — must be before importing model-fallback
 vi.mock("./auth-profiles.js", () => ({
@@ -15,8 +15,8 @@ import {
   getSoonestCooldownExpiry,
   isProfileInCooldown,
   resolveAuthProfileOrder,
-} from './auth-profiles';
-import { _probeThrottleInternals, runWithModelFallback } from './model-fallback';
+} from "./auth-profiles.js";
+import { _probeThrottleInternals, runWithModelFallback } from "./model-fallback.js";
 
 const mockedEnsureAuthProfileStore = vi.mocked(ensureAuthProfileStore);
 const mockedGetSoonestCooldownExpiry = vi.mocked(getSoonestCooldownExpiry);

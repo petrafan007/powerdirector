@@ -1,4 +1,4 @@
-import { theme } from '../terminal/theme';
+import { theme } from "../terminal/theme.js";
 
 export type HelpExample = readonly [command: string, description: string];
 

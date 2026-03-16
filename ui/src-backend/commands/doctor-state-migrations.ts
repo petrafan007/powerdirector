@@ -1,4 +1,4 @@
-export type { LegacyStateDetection } from '../infra/state-migrations';
+export type { LegacyStateDetection } from "../infra/state-migrations.js";
 export {
   autoMigrateLegacyStateDir,
   autoMigrateLegacyAgentDir,
@@ -9,4 +9,4 @@ export {
   resetAutoMigrateLegacyAgentDirForTest,
   resetAutoMigrateLegacyStateForTest,
   runLegacyStateMigrations,
-} from '../infra/state-migrations';
+} from "../infra/state-migrations.js";

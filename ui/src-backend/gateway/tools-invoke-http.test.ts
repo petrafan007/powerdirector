@@ -114,7 +114,7 @@ vi.mock("../agents/powerdirector-tools.js", () => {
   };
 });
 
-const { handleToolsInvokeHttpRequest } = await import('./tools-invoke-http');
+const { handleToolsInvokeHttpRequest } = await import("./tools-invoke-http.js");
 
 let pluginHttpHandlers: Array<(req: IncomingMessage, res: ServerResponse) => Promise<boolean>> = [];
 

@@ -1,8 +1,8 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { captureEnv } from '../test-utils/env';
-import { connectOk, installGatewayTestHooks, rpcReq } from './test-helpers';
-import { withServer } from './test-with-server';
+import { captureEnv } from "../test-utils/env.js";
+import { connectOk, installGatewayTestHooks, rpcReq } from "./test-helpers.js";
+import { withServer } from "./test-with-server.js";
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -11,7 +11,7 @@ describe("gateway skills.status", () => {
     const envSnapshot = captureEnv(["POWERDIRECTOR_BUNDLED_SKILLS_DIR"]);
     process.env.POWERDIRECTOR_BUNDLED_SKILLS_DIR = path.join(process.cwd(), "skills");
     const secret = "discord-token-secret-abc";
-    const { writeConfigFile } = await import('../config/config');
+    const { writeConfigFile } = await import("../config/config.js");
     await writeConfigFile({
       session: { mainKey: "main-test" },
       channels: {

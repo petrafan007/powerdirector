@@ -3,9 +3,9 @@ import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import type { Duplex } from "node:stream";
 import WebSocket, { WebSocketServer } from "ws";
-import { loadConfig } from '../config/config';
-import { isLoopbackAddress, isLoopbackHost } from '../gateway/net';
-import { rawDataToString } from '../infra/ws';
+import { loadConfig } from "../config/config.js";
+import { isLoopbackAddress, isLoopbackHost } from "../gateway/net.js";
+import { rawDataToString } from "../infra/ws.js";
 
 type CdpCommand = {
   id: number;

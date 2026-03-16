@@ -1,5 +1,5 @@
-import type { NormalizedUsage } from '../agents/usage';
-import type { PowerDirectorConfig } from '../config/config';
+import type { NormalizedUsage } from "../agents/usage.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 
 export type ModelCostConfig = {
   input: number;

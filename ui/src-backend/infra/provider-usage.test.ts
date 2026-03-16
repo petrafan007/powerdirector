@@ -1,16 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { withTempHome } from '../../test/helpers/temp-home';
-import { ensureAuthProfileStore, listProfilesForProvider } from '../agents/auth-profiles';
-import { createProviderUsageFetch, makeResponse } from '../test-utils/provider-usage-fetch';
+import { withTempHome } from "../../test/helpers/temp-home.js";
+import { ensureAuthProfileStore, listProfilesForProvider } from "../agents/auth-profiles.js";
+import { createProviderUsageFetch, makeResponse } from "../test-utils/provider-usage-fetch.js";
 import {
   formatUsageReportLines,
   formatUsageSummaryLine,
   loadProviderUsageSummary,
   type UsageSummary,
-} from './provider-usage';
-import { ignoredErrors } from './provider-usage.shared';
+} from "./provider-usage.js";
+import { ignoredErrors } from "./provider-usage.shared.js";
 
 const minimaxRemainsEndpoint = "api.minimaxi.com/v1/api/openplatform/coding_plan/remains";
 const usageNow = Date.UTC(2026, 0, 7, 0, 0, 0);

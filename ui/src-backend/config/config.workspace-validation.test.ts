@@ -1,6 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { validateConfigObject } from './config';
+import { validateConfigObject } from "./config.js";
 
 describe("workspace location validation", () => {
   it("rejects a default workspace inside the current checkout", () => {

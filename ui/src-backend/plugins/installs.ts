@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { PluginInstallRecord } from '../config/types.plugins';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { PluginInstallRecord } from "../config/types.plugins.js";
 
 export type PluginInstallUpdate = PluginInstallRecord & { pluginId: string };
 

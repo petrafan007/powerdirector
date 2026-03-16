@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../../../config/config';
+import type { PowerDirectorConfig } from "../../../config/config.js";
 
 const handleDiscordAction = vi.fn(async (..._args: unknown[]) => ({ details: { ok: true } }));
 const handleTelegramAction = vi.fn(async (..._args: unknown[]) => ({ ok: true }));
@@ -24,11 +24,11 @@ vi.mock("../../../agents/tools/slack-actions.js", () => ({
   handleSlackAction,
 }));
 
-const { discordMessageActions } = await import('./discord');
-const { handleDiscordMessageAction } = await import('./discord/handle-action');
-const { telegramMessageActions } = await import('./telegram');
-const { signalMessageActions } = await import('./signal');
-const { createSlackActions } = await import('../slack.actions');
+const { discordMessageActions } = await import("./discord.js");
+const { handleDiscordMessageAction } = await import("./discord/handle-action.js");
+const { telegramMessageActions } = await import("./telegram.js");
+const { signalMessageActions } = await import("./signal.js");
+const { createSlackActions } = await import("../slack.actions.js");
 
 function telegramCfg(): PowerDirectorConfig {
   return { channels: { telegram: { botToken: "tok" } } } as PowerDirectorConfig;

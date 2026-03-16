@@ -1,11 +1,11 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from '../../config/config';
-import { createDiscordActionGate } from '../../discord/accounts';
-import { readStringParam } from './common';
-import { handleDiscordGuildAction } from './discord-actions-guild';
-import { handleDiscordMessagingAction } from './discord-actions-messaging';
-import { handleDiscordModerationAction } from './discord-actions-moderation';
-import { handleDiscordPresenceAction } from './discord-actions-presence';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { createDiscordActionGate } from "../../discord/accounts.js";
+import { readStringParam } from "./common.js";
+import { handleDiscordGuildAction } from "./discord-actions-guild.js";
+import { handleDiscordMessagingAction } from "./discord-actions-messaging.js";
+import { handleDiscordModerationAction } from "./discord-actions-moderation.js";
+import { handleDiscordPresenceAction } from "./discord-actions-presence.js";
 
 const messagingActions = new Set([
   "react",

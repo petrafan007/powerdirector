@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import type { DiscordActionConfig, PowerDirectorConfig } from '../../config/config';
-import { handleDiscordGuildAction } from './discord-actions-guild';
-import { handleDiscordMessagingAction } from './discord-actions-messaging';
-import { handleDiscordModerationAction } from './discord-actions-moderation';
-import { handleDiscordAction } from './discord-actions';
+import type { DiscordActionConfig, PowerDirectorConfig } from "../../config/config.js";
+import { handleDiscordGuildAction } from "./discord-actions-guild.js";
+import { handleDiscordMessagingAction } from "./discord-actions-messaging.js";
+import { handleDiscordModerationAction } from "./discord-actions-moderation.js";
+import { handleDiscordAction } from "./discord-actions.js";
 
 const discordSendMocks = vi.hoisted(() => ({
   banMemberDiscord: vi.fn(async () => ({})),

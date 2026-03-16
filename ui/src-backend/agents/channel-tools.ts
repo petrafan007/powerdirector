@@ -1,13 +1,13 @@
-import { getChannelDock } from '../channels/dock';
-import { getChannelPlugin, listChannelPlugins } from '../channels/plugins/index';
+import { getChannelDock } from "../channels/dock.js";
+import { getChannelPlugin, listChannelPlugins } from "../channels/plugins/index.js";
 import type {
   ChannelAgentTool,
   ChannelMessageActionName,
   ChannelPlugin,
-} from '../channels/plugins/types';
-import { normalizeAnyChannelId } from '../channels/registry';
-import type { PowerDirectorConfig } from '../config/config';
-import { defaultRuntime } from '../runtime';
+} from "../channels/plugins/types.js";
+import { normalizeAnyChannelId } from "../channels/registry.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { defaultRuntime } from "../runtime.js";
 
 /**
  * Get the list of supported message actions for a specific channel.

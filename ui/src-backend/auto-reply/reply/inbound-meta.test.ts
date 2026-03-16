@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { TemplateContext } from '../templating';
-import { buildInboundMetaSystemPrompt, buildInboundUserContextPrefix } from './inbound-meta';
+import type { TemplateContext } from "../templating.js";
+import { buildInboundMetaSystemPrompt, buildInboundUserContextPrefix } from "./inbound-meta.js";
 
 function parseInboundMetaPayload(text: string): Record<string, unknown> {
   const match = text.match(/```json\n([\s\S]*?)\n```/);

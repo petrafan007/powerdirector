@@ -10,7 +10,7 @@ import {
   hasFlag,
   shouldMigrateState,
   shouldMigrateStateFromPath,
-} from './argv';
+} from "./argv.js";
 
 describe("argv helpers", () => {
   it.each([

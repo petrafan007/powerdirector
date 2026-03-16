@@ -1,16 +1,16 @@
 import {
   buildCloudflareAiGatewayModelDefinition,
   resolveCloudflareAiGatewayBaseUrl,
-} from '../agents/cloudflare-ai-gateway';
-import type { PowerDirectorConfig } from '../config/config';
+} from "../agents/cloudflare-ai-gateway.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   applyAgentDefaultModelPrimary,
   applyProviderConfigWithDefaultModel,
-} from './onboard-auth.config-shared';
+} from "./onboard-auth.config-shared.js";
 import {
   CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF,
   VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF,
-} from './onboard-auth.credentials';
+} from "./onboard-auth.credentials.js";
 
 export function applyVercelAiGatewayProviderConfig(cfg: PowerDirectorConfig): PowerDirectorConfig {
   const models = { ...cfg.agents?.defaults?.models };

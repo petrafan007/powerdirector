@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveTelegramAccount } from './accounts';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveTelegramAccount } from "./accounts.js";
 
 describe("resolveTelegramAccount", () => {
   it("falls back to the first configured account when accountId is omitted", () => {

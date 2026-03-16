@@ -7,24 +7,24 @@ import {
   PresenceUpdateListener,
   type User,
 } from "@buape/carbon";
-import { danger } from '../../globals';
+import { danger } from "../../globals.js";
 import { formatDurationSeconds } from "../../infra/format-time/format-duration.ts";
-import { enqueueSystemEvent } from '../../infra/system-events';
-import { createSubsystemLogger } from '../../logging/subsystem';
-import { resolveAgentRoute } from '../../routing/resolve-route';
+import { enqueueSystemEvent } from "../../infra/system-events.js";
+import { createSubsystemLogger } from "../../logging/subsystem.js";
+import { resolveAgentRoute } from "../../routing/resolve-route.js";
 import {
   normalizeDiscordSlug,
   resolveDiscordChannelConfigWithFallback,
   resolveDiscordGuildEntry,
   shouldEmitDiscordReactionNotification,
-} from './allow-list';
-import { formatDiscordReactionEmoji, formatDiscordUserTag } from './format';
-import { resolveDiscordChannelInfo } from './message-utils';
-import { setPresence } from './presence-cache';
+} from "./allow-list.js";
+import { formatDiscordReactionEmoji, formatDiscordUserTag } from "./format.js";
+import { resolveDiscordChannelInfo } from "./message-utils.js";
+import { setPresence } from "./presence-cache.js";
 
-type LoadedConfig = ReturnType<typeof import('../../config/config').loadConfig>;
-type RuntimeEnv = import('../../runtime').RuntimeEnv;
-type Logger = ReturnType<typeof import('../../logging/subsystem').createSubsystemLogger>;
+type LoadedConfig = ReturnType<typeof import("../../config/config.js").loadConfig>;
+type RuntimeEnv = import("../../runtime.js").RuntimeEnv;
+type Logger = ReturnType<typeof import("../../logging/subsystem.js").createSubsystemLogger>;
 
 export type DiscordMessageEvent = Parameters<MessageCreateListener["handle"]>[0];
 
@@ -37,7 +37,7 @@ type DiscordReactionListenerParams = {
   accountId: string;
   runtime: RuntimeEnv;
   botUserId?: string;
-  guildEntries?: Record<string, import('./allow-list').DiscordGuildEntryResolved>;
+  guildEntries?: Record<string, import("./allow-list.js").DiscordGuildEntryResolved>;
   logger: Logger;
 };
 
@@ -174,7 +174,7 @@ async function handleDiscordReactionEvent(params: {
   cfg: LoadedConfig;
   accountId: string;
   botUserId?: string;
-  guildEntries?: Record<string, import('./allow-list').DiscordGuildEntryResolved>;
+  guildEntries?: Record<string, import("./allow-list.js").DiscordGuildEntryResolved>;
   logger: Logger;
 }) {
   try {

@@ -2,16 +2,16 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { buildModelAliasIndex } from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import { saveSessionStore } from '../../config/sessions';
+import { buildModelAliasIndex } from "../../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { SessionEntry } from "../../config/sessions.js";
+import { saveSessionStore } from "../../config/sessions.js";
 import { formatZonedTimestamp } from "../../infra/format-time/format-datetime.ts";
-import { enqueueSystemEvent, resetSystemEventsForTest } from '../../infra/system-events';
-import { applyResetModelOverride } from './session-reset-model';
-import { prependSystemEvents } from './session-updates';
-import { persistSessionUsageUpdate } from './session-usage';
-import { initSessionState } from './session';
+import { enqueueSystemEvent, resetSystemEventsForTest } from "../../infra/system-events.js";
+import { applyResetModelOverride } from "./session-reset-model.js";
+import { prependSystemEvents } from "./session-updates.js";
+import { persistSessionUsageUpdate } from "./session-usage.js";
+import { initSessionState } from "./session.js";
 
 // Perf: session-store locks are exercised elsewhere; most session tests don't need FS lock files.
 vi.mock("../../agents/session-write-lock.js", () => ({
@@ -1094,7 +1094,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
       sessionId: existingSessionId,
       overrides: { verboseLevel: "on" },
     });
-    const sessionUtils = await import('../../gateway/session-utils.fs');
+    const sessionUtils = await import("../../gateway/session-utils.fs.js");
     const archiveSpy = vi.spyOn(sessionUtils, "archiveSessionTranscripts");
 
     const cfg = {

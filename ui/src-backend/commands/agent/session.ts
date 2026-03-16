@@ -1,13 +1,13 @@
 import crypto from "node:crypto";
-import { listAgentIds } from '../../agents/agent-scope';
-import type { MsgContext } from '../../auto-reply/templating';
+import { listAgentIds } from "../../agents/agent-scope.js";
+import type { MsgContext } from "../../auto-reply/templating.js";
 import {
   normalizeThinkLevel,
   normalizeVerboseLevel,
   type ThinkLevel,
   type VerboseLevel,
-} from '../../auto-reply/thinking';
-import type { PowerDirectorConfig } from '../../config/config';
+} from "../../auto-reply/thinking.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
 import {
   evaluateSessionFreshness,
   loadSessionStore,
@@ -19,8 +19,8 @@ import {
   resolveSessionKey,
   resolveStorePath,
   type SessionEntry,
-} from '../../config/sessions';
-import { normalizeMainKey } from '../../routing/session-key';
+} from "../../config/sessions.js";
+import { normalizeMainKey } from "../../routing/session-key.js";
 
 export type SessionResolution = {
   sessionId: string;

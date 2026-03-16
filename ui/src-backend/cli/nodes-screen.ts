@@ -1,6 +1,6 @@
 import * as path from "node:path";
-import { writeBase64ToFile } from './nodes-camera';
-import { asRecord, asString, resolveTempPathParts } from './nodes-media-utils';
+import { writeBase64ToFile } from "./nodes-camera.js";
+import { asRecord, asString, resolveTempPathParts } from "./nodes-media-utils.js";
 
 export type ScreenRecordPayload = {
   format: string;

@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import type { GatewayAuthConfig } from '../config/config';
-import { makeTempWorkspace } from '../test-helpers/workspace';
-import { getFreePortBlockWithPermissionFallback } from '../test-utils/ports';
+import type { GatewayAuthConfig } from "../config/config.js";
+import { makeTempWorkspace } from "../test-helpers/workspace.js";
+import { getFreePortBlockWithPermissionFallback } from "../test-utils/ports.js";
 import {
   createThrowingRuntime,
   readJsonFile,
   runNonInteractiveOnboarding,
-} from './onboard-non-interactive.test-helpers';
+} from "./onboard-non-interactive.test-helpers.js";
 
 const gatewayClientCalls: Array<{
   url?: string;
@@ -66,7 +66,7 @@ async function expectGatewayTokenAuth(params: {
   token: string;
   env: NodeJS.ProcessEnv;
 }) {
-  const { authorizeGatewayConnect, resolveGatewayAuth } = await import('../gateway/auth');
+  const { authorizeGatewayConnect, resolveGatewayAuth } = await import("../gateway/auth.js");
   const auth = resolveGatewayAuth({ authConfig: params.authConfig, env: params.env });
   const resNoToken = await authorizeGatewayConnect({ auth, connectAuth: { token: undefined } });
   expect(resNoToken.ok).toBe(false);
@@ -159,7 +159,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
         runtime,
       );
 
-      const { resolveConfigPath } = await import('../config/paths');
+      const { resolveConfigPath } = await import("../config/paths.js");
       const configPath = resolveConfigPath(process.env, stateDir);
       const cfg = await readJsonFile<{
         gateway?: { auth?: GatewayAuthConfig };
@@ -194,7 +194,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
         runtime,
       );
 
-      const { resolveConfigPath } = await import('../config/config');
+      const { resolveConfigPath } = await import("../config/config.js");
       const cfg = await readJsonFile<{
         gateway?: { mode?: string; remote?: { url?: string; token?: string } };
       }>(resolveConfigPath());
@@ -204,7 +204,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
       expect(cfg.gateway?.remote?.token).toBe(token);
 
       gatewayClientCalls.length = 0;
-      const { callGateway } = await import('../gateway/call');
+      const { callGateway } = await import("../gateway/call.js");
       const health = await callGateway<{ ok?: boolean }>({ method: "health" });
       expect(health?.ok).toBe(true);
       const lastCall = gatewayClientCalls[gatewayClientCalls.length - 1];
@@ -240,7 +240,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
         runtime,
       );
 
-      const { resolveConfigPath } = await import('../config/paths');
+      const { resolveConfigPath } = await import("../config/paths.js");
       const configPath = resolveConfigPath(process.env, stateDir);
       const cfg = await readJsonFile<{
         gateway?: {

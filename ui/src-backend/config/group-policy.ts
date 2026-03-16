@@ -1,7 +1,7 @@
-import type { ChannelId } from '../channels/plugins/types';
-import { normalizeAccountId } from '../routing/session-key';
-import type { PowerDirectorConfig } from './config';
-import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from './types.tools';
+import type { ChannelId } from "../channels/plugins/types.js";
+import { normalizeAccountId } from "../routing/session-key.js";
+import type { PowerDirectorConfig } from "./config.js";
+import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from "./types.tools.js";
 
 export type GroupPolicyChannel = ChannelId;
 

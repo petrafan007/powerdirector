@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { describe, expect, it, vi } from "vitest";
-import { makeMockHttpResponse } from '../test-http-response';
-import { createTestRegistry } from './__tests__/test-utils';
-import { createGatewayPluginRequestHandler } from './plugins-http';
+import { makeMockHttpResponse } from "../test-http-response.js";
+import { createTestRegistry } from "./__tests__/test-utils.js";
+import { createGatewayPluginRequestHandler } from "./plugins-http.js";
 
 describe("createGatewayPluginRequestHandler", () => {
   it("returns false when no handlers are registered", async () => {

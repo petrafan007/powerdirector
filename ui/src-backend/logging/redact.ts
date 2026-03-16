@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 function resolveNodeRequire(): ((id: string) => NodeJS.Require) | null {
   const getBuiltinModule = (

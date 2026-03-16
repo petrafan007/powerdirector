@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import type { SshParsedTarget } from './ssh-tunnel';
+import type { SshParsedTarget } from "./ssh-tunnel.js";
 
 export type SshResolvedConfig = {
   user?: string;

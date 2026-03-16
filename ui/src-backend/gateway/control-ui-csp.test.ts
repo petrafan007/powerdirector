@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildControlUiCspHeader } from './control-ui-csp';
+import { buildControlUiCspHeader } from "./control-ui-csp.js";
 
 describe("buildControlUiCspHeader", () => {
   it("blocks inline scripts while allowing inline styles", () => {

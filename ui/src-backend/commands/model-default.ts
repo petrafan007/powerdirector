@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentModelListConfig } from '../config/types';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { AgentModelListConfig } from "../config/types.js";
 
 export function resolvePrimaryModel(model?: AgentModelListConfig | string): string | undefined {
   if (typeof model === "string") {

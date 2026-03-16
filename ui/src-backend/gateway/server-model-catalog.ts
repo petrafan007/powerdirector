@@ -2,8 +2,8 @@ import {
   loadModelCatalog,
   type ModelCatalogEntry,
   resetModelCatalogCacheForTest,
-} from '../agents/model-catalog';
-import { loadConfig } from '../config/config';
+} from "../agents/model-catalog.js";
+import { loadConfig } from "../config/config.js";
 
 export type GatewayModelChoice = ModelCatalogEntry;
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { DEFAULT_ASSISTANT_IDENTITY, resolveAssistantIdentity } from './assistant-identity';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { DEFAULT_ASSISTANT_IDENTITY, resolveAssistantIdentity } from "./assistant-identity.js";
 
 describe("resolveAssistantIdentity avatar normalization", () => {
   it("drops sentence-like avatar placeholders", () => {

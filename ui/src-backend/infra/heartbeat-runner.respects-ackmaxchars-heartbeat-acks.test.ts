@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveMainSessionKey } from '../config/sessions';
-import { runHeartbeatOnce, type HeartbeatDeps } from './heartbeat-runner';
-import { installHeartbeatRunnerTestRuntime } from './heartbeat-runner.test-harness';
-import { seedSessionStore, withTempHeartbeatSandbox } from './heartbeat-runner.test-utils';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveMainSessionKey } from "../config/sessions.js";
+import { runHeartbeatOnce, type HeartbeatDeps } from "./heartbeat-runner.js";
+import { installHeartbeatRunnerTestRuntime } from "./heartbeat-runner.test-harness.js";
+import { seedSessionStore, withTempHeartbeatSandbox } from "./heartbeat-runner.test-utils.js";
 
 // Avoid pulling optional runtime deps during isolated runs.
 vi.mock("jiti", () => ({ createJiti: () => () => ({}) }));

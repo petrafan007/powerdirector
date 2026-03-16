@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { createExecApprovalForwarder } from './exec-approval-forwarder';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { createExecApprovalForwarder } from "./exec-approval-forwarder.js";
 
 const baseRequest = {
   id: "req-1",

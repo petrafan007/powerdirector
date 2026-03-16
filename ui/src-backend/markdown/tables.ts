@@ -1,6 +1,6 @@
-import type { MarkdownTableMode } from '../config/types.base';
-import { markdownToIRWithMeta } from './ir';
-import { renderMarkdownWithMarkers } from './render';
+import type { MarkdownTableMode } from "../config/types.base.js";
+import { markdownToIRWithMeta } from "./ir.js";
+import { renderMarkdownWithMarkers } from "./render.js";
 
 const MARKDOWN_STYLE_MARKERS = {
   bold: { open: "**", close: "**" },

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage } from './base';
+import { Channel, ChannelMessage } from './base.js';
 import { Activity, CloudAdapter, ConfigurationServiceClientCredentialFactory, TurnContext } from 'botbuilder';
 
 function safeTimestampMs(raw: unknown): number {

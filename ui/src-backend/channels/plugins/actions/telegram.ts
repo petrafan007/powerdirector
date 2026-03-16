@@ -3,16 +3,16 @@ import {
   readStringArrayParam,
   readStringOrNumberParam,
   readStringParam,
-} from '../../../agents/tools/common';
-import { handleTelegramAction } from '../../../agents/tools/telegram-actions';
-import type { TelegramActionConfig } from '../../../config/types.telegram';
-import { extractToolSend } from '../../../plugin-sdk/tool-send';
+} from "../../../agents/tools/common.js";
+import { handleTelegramAction } from "../../../agents/tools/telegram-actions.js";
+import type { TelegramActionConfig } from "../../../config/types.telegram.js";
+import { extractToolSend } from "../../../plugin-sdk/tool-send.js";
 import {
   createTelegramActionGate,
   listEnabledTelegramAccounts,
-} from '../../../telegram/accounts';
-import { isTelegramInlineButtonsEnabled } from '../../../telegram/inline-buttons';
-import type { ChannelMessageActionAdapter, ChannelMessageActionName } from '../types';
+} from "../../../telegram/accounts.js";
+import { isTelegramInlineButtonsEnabled } from "../../../telegram/inline-buttons.js";
+import type { ChannelMessageActionAdapter, ChannelMessageActionName } from "../types.js";
 
 const providerId = "telegram";
 

@@ -15,7 +15,7 @@ import {
   listPortListeners,
   type PortProcess,
   parseLsofOutput,
-} from './ports';
+} from "./ports.js";
 
 describe("gateway --force helpers", () => {
   let originalKill: typeof process.kill;

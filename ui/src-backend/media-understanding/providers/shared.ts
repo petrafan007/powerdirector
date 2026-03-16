@@ -1,7 +1,7 @@
-import type { GuardedFetchResult } from '../../infra/net/fetch-guard';
-import { fetchWithSsrFGuard } from '../../infra/net/fetch-guard';
-import type { LookupFn, SsrFPolicy } from '../../infra/net/ssrf';
-export { fetchWithTimeout } from '../../utils/fetch-timeout';
+import type { GuardedFetchResult } from "../../infra/net/fetch-guard.js";
+import { fetchWithSsrFGuard } from "../../infra/net/fetch-guard.js";
+import type { LookupFn, SsrFPolicy } from "../../infra/net/ssrf.js";
+export { fetchWithTimeout } from "../../utils/fetch-timeout.js";
 
 const MAX_ERROR_CHARS = 300;
 

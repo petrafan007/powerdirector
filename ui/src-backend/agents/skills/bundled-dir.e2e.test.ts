@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
-import { resolveBundledSkillsDir } from './bundled-dir';
+import { resolveBundledSkillsDir } from "./bundled-dir.js";
 
 async function writeSkill(dir: string, name: string) {
   await fs.mkdir(dir, { recursive: true });

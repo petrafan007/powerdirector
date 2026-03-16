@@ -3,9 +3,9 @@ import type { IncomingMessage } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { CONTROL_UI_BOOTSTRAP_CONFIG_PATH } from './control-ui-contract';
-import { handleControlUiHttpRequest } from './control-ui';
-import { makeMockHttpResponse } from './test-http-response';
+import { CONTROL_UI_BOOTSTRAP_CONFIG_PATH } from "./control-ui-contract.js";
+import { handleControlUiHttpRequest } from "./control-ui.js";
+import { makeMockHttpResponse } from "./test-http-response.js";
 
 describe("handleControlUiHttpRequest", () => {
   async function withControlUiRoot<T>(params: {

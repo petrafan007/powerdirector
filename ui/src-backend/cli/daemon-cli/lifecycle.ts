@@ -1,12 +1,12 @@
-import { resolveGatewayService } from '../../daemon/service';
+import { resolveGatewayService } from "../../daemon/service.js";
 import {
   runServiceRestart,
   runServiceStart,
   runServiceStop,
   runServiceUninstall,
-} from './lifecycle-core';
-import { renderGatewayServiceStartHints } from './shared';
-import type { DaemonLifecycleOptions } from './types';
+} from "./lifecycle-core.js";
+import { renderGatewayServiceStartHints } from "./shared.js";
+import type { DaemonLifecycleOptions } from "./types.js";
 
 export async function runDaemonUninstall(opts: DaemonLifecycleOptions = {}) {
   return await runServiceUninstall({

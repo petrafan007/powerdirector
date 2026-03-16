@@ -4,11 +4,11 @@ import {
   getCallGatewayMock,
   getSessionsSpawnTool,
   setSessionsSpawnConfigOverride,
-} from './powerdirector-tools.subagents.sessions-spawn.test-harness';
+} from "./powerdirector-tools.subagents.sessions-spawn.test-harness.js";
 import {
   listSubagentRunsForRequester,
   resetSubagentRegistryForTests,
-} from './subagent-registry';
+} from "./subagent-registry.js";
 
 describe("sessions_spawn requesterOrigin threading", () => {
   const spawnAndReadRequesterRun = async (opts?: { agentThreadId?: number }) => {

@@ -1,5 +1,5 @@
-import { redactToolDetail } from '../logging/redact';
-import { shortenHomeInString } from '../utils';
+import { redactToolDetail } from "../logging/redact.js";
+import { shortenHomeInString } from "../utils.js";
 import {
   defaultTitle,
   formatDetailKey,
@@ -13,7 +13,7 @@ import {
   resolveWebSearchDetail,
   resolveWriteDetail,
   type ToolDisplaySpec as ToolDisplaySpecBase,
-} from './tool-display-common';
+} from "./tool-display-common.js";
 import TOOL_DISPLAY_JSON from "./tool-display.json" with { type: "json" };
 
 type ToolDisplaySpec = ToolDisplaySpecBase & {

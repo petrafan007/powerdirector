@@ -1,13 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { parseCmdScriptCommandLine, quoteCmdScriptArg } from './cmd-argv';
-import { assertNoCmdLineBreak, parseCmdSetAssignment, renderCmdSetAssignment } from './cmd-set';
-import { resolveGatewayServiceDescription, resolveGatewayWindowsTaskName } from './constants';
-import { formatLine, writeFormattedLines } from './output';
-import { resolveGatewayStateDir } from './paths';
-import { parseKeyValueOutput } from './runtime-parse';
-import { execSchtasks } from './schtasks-exec';
-import type { GatewayServiceRuntime } from './service-runtime';
+import { parseCmdScriptCommandLine, quoteCmdScriptArg } from "./cmd-argv.js";
+import { assertNoCmdLineBreak, parseCmdSetAssignment, renderCmdSetAssignment } from "./cmd-set.js";
+import { resolveGatewayServiceDescription, resolveGatewayWindowsTaskName } from "./constants.js";
+import { formatLine, writeFormattedLines } from "./output.js";
+import { resolveGatewayStateDir } from "./paths.js";
+import { parseKeyValueOutput } from "./runtime-parse.js";
+import { execSchtasks } from "./schtasks-exec.js";
+import type { GatewayServiceRuntime } from "./service-runtime.js";
 import type {
   GatewayServiceCommandConfig,
   GatewayServiceControlArgs,
@@ -16,7 +16,7 @@ import type {
   GatewayServiceInstallArgs,
   GatewayServiceManageArgs,
   GatewayServiceRenderArgs,
-} from './service-types';
+} from "./service-types.js";
 
 function resolveTaskName(env: GatewayServiceEnv): string {
   const override = env.POWERDIRECTOR_WINDOWS_TASK_NAME?.trim();

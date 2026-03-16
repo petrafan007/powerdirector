@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { AuthProfileStore } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { AuthProfileStore } from "./types.js";
 
 export function resolveAuthProfileDisplayLabel(params: {
   cfg?: PowerDirectorConfig;

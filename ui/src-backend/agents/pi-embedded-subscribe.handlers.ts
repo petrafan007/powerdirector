@@ -3,21 +3,21 @@ import {
   handleAgentStart,
   handleAutoCompactionEnd,
   handleAutoCompactionStart,
-} from './pi-embedded-subscribe.handlers.lifecycle';
+} from "./pi-embedded-subscribe.handlers.lifecycle.js";
 import {
   handleMessageEnd,
   handleMessageStart,
   handleMessageUpdate,
-} from './pi-embedded-subscribe.handlers.messages';
+} from "./pi-embedded-subscribe.handlers.messages.js";
 import {
   handleToolExecutionEnd,
   handleToolExecutionStart,
   handleToolExecutionUpdate,
-} from './pi-embedded-subscribe.handlers.tools';
+} from "./pi-embedded-subscribe.handlers.tools.js";
 import type {
   EmbeddedPiSubscribeContext,
   EmbeddedPiSubscribeEvent,
-} from './pi-embedded-subscribe.handlers.types';
+} from "./pi-embedded-subscribe.handlers.types.js";
 
 export function createEmbeddedPiSessionEventHandler(ctx: EmbeddedPiSubscribeContext) {
   return (evt: EmbeddedPiSubscribeEvent) => {

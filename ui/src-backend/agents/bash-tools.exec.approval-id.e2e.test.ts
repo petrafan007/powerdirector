@@ -43,7 +43,7 @@ describe("exec approvals", () => {
   });
 
   it("reuses approval id as the node runId", async () => {
-    const { callGatewayTool } = await import('./tools/gateway');
+    const { callGatewayTool } = await import("./tools/gateway.js");
     let invokeParams: unknown;
 
     vi.mocked(callGatewayTool).mockImplementation(async (method, _opts, params) => {
@@ -58,7 +58,7 @@ describe("exec approvals", () => {
       return { ok: true };
     });
 
-    const { createExecTool } = await import('./bash-tools.exec');
+    const { createExecTool } = await import("./bash-tools.exec.js");
     const tool = createExecTool({
       host: "node",
       ask: "always",
@@ -78,7 +78,7 @@ describe("exec approvals", () => {
   });
 
   it("skips approval when node allowlist is satisfied", async () => {
-    const { callGatewayTool } = await import('./tools/gateway');
+    const { callGatewayTool } = await import("./tools/gateway.js");
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-test-bin-"));
     const binDir = path.join(tempDir, "bin");
     await fs.mkdir(binDir, { recursive: true });
@@ -111,7 +111,7 @@ describe("exec approvals", () => {
       return { ok: true };
     });
 
-    const { createExecTool } = await import('./bash-tools.exec');
+    const { createExecTool } = await import("./bash-tools.exec.js");
     const tool = createExecTool({
       host: "node",
       ask: "on-miss",
@@ -128,14 +128,14 @@ describe("exec approvals", () => {
   });
 
   it("honors ask=off for elevated gateway exec without prompting", async () => {
-    const { callGatewayTool } = await import('./tools/gateway');
+    const { callGatewayTool } = await import("./tools/gateway.js");
     const calls: string[] = [];
     vi.mocked(callGatewayTool).mockImplementation(async (method) => {
       calls.push(method);
       return { ok: true };
     });
 
-    const { createExecTool } = await import('./bash-tools.exec');
+    const { createExecTool } = await import("./bash-tools.exec.js");
     const tool = createExecTool({
       ask: "off",
       security: "full",
@@ -149,7 +149,7 @@ describe("exec approvals", () => {
   });
 
   it("requires approval for elevated ask when allowlist misses", async () => {
-    const { callGatewayTool } = await import('./tools/gateway');
+    const { callGatewayTool } = await import("./tools/gateway.js");
     const calls: string[] = [];
     let resolveApproval: (() => void) | undefined;
     const approvalSeen = new Promise<void>((resolve) => {
@@ -169,7 +169,7 @@ describe("exec approvals", () => {
       return { ok: true };
     });
 
-    const { createExecTool } = await import('./bash-tools.exec');
+    const { createExecTool } = await import("./bash-tools.exec.js");
     const tool = createExecTool({
       ask: "on-miss",
       security: "allowlist",

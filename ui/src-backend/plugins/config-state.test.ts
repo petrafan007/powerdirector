@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizePluginsConfig } from './config-state';
+import { normalizePluginsConfig } from "./config-state.js";
 
 describe("normalizePluginsConfig", () => {
   it("uses default memory slot when not specified", () => {

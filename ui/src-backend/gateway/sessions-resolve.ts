@@ -1,18 +1,18 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { loadSessionStore, updateSessionStore } from '../config/sessions';
-import { parseSessionLabel } from '../sessions/session-label';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadSessionStore, updateSessionStore } from "../config/sessions.js";
+import { parseSessionLabel } from "../sessions/session-label.js";
 import {
   ErrorCodes,
   type ErrorShape,
   errorShape,
   type SessionsResolveParams,
-} from './protocol/index';
+} from "./protocol/index.js";
 import {
   listSessionsFromStore,
   loadCombinedSessionStoreForGateway,
   pruneLegacyStoreKeys,
   resolveGatewaySessionStoreTarget,
-} from './session-utils';
+} from "./session-utils.js";
 
 export type SessionsResolveResult = { ok: true; key: string } | { ok: false; error: ErrorShape };
 

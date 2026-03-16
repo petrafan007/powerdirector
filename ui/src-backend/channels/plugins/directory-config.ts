@@ -1,11 +1,11 @@
-import type { PowerDirectorConfig } from '../../config/types';
-import { resolveDiscordAccount } from '../../discord/accounts';
-import { resolveSlackAccount } from '../../slack/accounts';
-import { resolveTelegramAccount } from '../../telegram/accounts';
-import { resolveWhatsAppAccount } from '../../web/accounts';
-import { isWhatsAppGroupJid, normalizeWhatsAppTarget } from '../../whatsapp/normalize';
-import { normalizeSlackMessagingTarget } from './normalize/slack';
-import type { ChannelDirectoryEntry } from './types';
+import type { PowerDirectorConfig } from "../../config/types.js";
+import { resolveDiscordAccount } from "../../discord/accounts.js";
+import { resolveSlackAccount } from "../../slack/accounts.js";
+import { resolveTelegramAccount } from "../../telegram/accounts.js";
+import { resolveWhatsAppAccount } from "../../web/accounts.js";
+import { isWhatsAppGroupJid, normalizeWhatsAppTarget } from "../../whatsapp/normalize.js";
+import { normalizeSlackMessagingTarget } from "./normalize/slack.js";
+import type { ChannelDirectoryEntry } from "./types.js";
 
 export type DirectoryConfigParams = {
   cfg: PowerDirectorConfig;

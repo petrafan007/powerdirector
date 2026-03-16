@@ -1,32 +1,32 @@
 import path from "node:path";
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
-import type { ExecAsk, ExecHost, ExecSecurity } from '../infra/exec-approvals';
-import { requestHeartbeatNow } from '../infra/heartbeat-wake';
-import { mergePathPrepend } from '../infra/path-prepend';
-import { enqueueSystemEvent } from '../infra/system-events';
-import type { ProcessSession } from './bash-process-registry';
-import type { ExecToolDetails } from './bash-tools.exec-types';
-import type { BashSandboxConfig } from './bash-tools.shared';
-export { applyPathPrepend, normalizePathPrepend } from '../infra/path-prepend';
-import { logWarn } from '../logger';
-import type { ManagedRun } from '../process/supervisor/index';
-import { getProcessSupervisor } from '../process/supervisor/index';
+import type { ExecAsk, ExecHost, ExecSecurity } from "../infra/exec-approvals.js";
+import { requestHeartbeatNow } from "../infra/heartbeat-wake.js";
+import { mergePathPrepend } from "../infra/path-prepend.js";
+import { enqueueSystemEvent } from "../infra/system-events.js";
+import type { ProcessSession } from "./bash-process-registry.js";
+import type { ExecToolDetails } from "./bash-tools.exec-types.js";
+import type { BashSandboxConfig } from "./bash-tools.shared.js";
+export { applyPathPrepend, normalizePathPrepend } from "../infra/path-prepend.js";
+import { logWarn } from "../logger.js";
+import type { ManagedRun } from "../process/supervisor/index.js";
+import { getProcessSupervisor } from "../process/supervisor/index.js";
 import {
   addSession,
   appendOutput,
   createSessionSlug,
   markExited,
   tail,
-} from './bash-process-registry';
+} from "./bash-process-registry.js";
 import {
   buildDockerExecArgs,
   chunkString,
   clampWithDefault,
   readEnvInt,
-} from './bash-tools.shared';
-import { buildCursorPositionResponse, stripDsrRequests } from './pty-dsr';
-import { getShellConfig, sanitizeBinaryOutput } from './shell-utils';
+} from "./bash-tools.shared.js";
+import { buildCursorPositionResponse, stripDsrRequests } from "./pty-dsr.js";
+import { getShellConfig, sanitizeBinaryOutput } from "./shell-utils.js";
 
 // Security: Blocklist of environment variables that could alter execution flow
 // or inject code when running on non-sandboxed hosts (Gateway/Node).

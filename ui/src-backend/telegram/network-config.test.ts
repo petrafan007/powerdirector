@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveTelegramAutoSelectFamilyDecision } from './network-config';
+import { resolveTelegramAutoSelectFamilyDecision } from "./network-config.js";
 
 describe("resolveTelegramAutoSelectFamilyDecision", () => {
   it("prefers env enable over env disable", () => {

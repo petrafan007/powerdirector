@@ -4,7 +4,7 @@ const getTailnetHostname = vi.hoisted(() => vi.fn());
 
 vi.mock("../infra/tailscale.js", () => ({ getTailnetHostname }));
 
-import { resolveTailnetDnsHint } from './server-discovery';
+import { resolveTailnetDnsHint } from "./server-discovery.js";
 
 describe("resolveTailnetDnsHint", () => {
   const prevTailnetDns = { value: undefined as string | undefined };

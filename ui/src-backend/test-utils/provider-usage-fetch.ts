@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { withFetchPreconnect } from './fetch-mock';
+import { withFetchPreconnect } from "./fetch-mock.js";
 
 type UsageFetchInput = string | Request | URL;
 type UsageFetchHandler = (url: string, init?: RequestInit) => Promise<Response> | Response;

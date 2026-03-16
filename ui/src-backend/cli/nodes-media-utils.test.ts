@@ -5,7 +5,7 @@ import {
   asRecord,
   asString,
   resolveTempPathParts,
-} from './nodes-media-utils';
+} from "./nodes-media-utils.js";
 
 describe("cli/nodes-media-utils", () => {
   it("parses primitive helper values", () => {

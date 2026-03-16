@@ -1,7 +1,7 @@
-import { fetchDiscord } from './api';
-import { listGuilds, type DiscordGuildSummary } from './guilds';
-import { normalizeDiscordSlug } from './monitor/allow-list';
-import { normalizeDiscordToken } from './token';
+import { fetchDiscord } from "./api.js";
+import { listGuilds, type DiscordGuildSummary } from "./guilds.js";
+import { normalizeDiscordSlug } from "./monitor/allow-list.js";
+import { normalizeDiscordToken } from "./token.js";
 
 type DiscordUser = {
   id: string;

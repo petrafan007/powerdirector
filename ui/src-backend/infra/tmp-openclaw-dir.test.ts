@@ -1,6 +1,6 @@
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { POSIX_POWERDIRECTOR_TMP_DIR, resolvePreferredPowerDirectorTmpDir } from './tmp-powerdirector-dir';
+import { POSIX_POWERDIRECTOR_TMP_DIR, resolvePreferredPowerDirectorTmpDir } from "./tmp-powerdirector-dir.js";
 
 type TmpDirOptions = NonNullable<Parameters<typeof resolvePreferredPowerDirectorTmpDir>[0]>;
 

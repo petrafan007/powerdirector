@@ -8,7 +8,7 @@ import {
   convertTableToFlexBubble,
   convertCodeBlockToFlexBubble,
   hasMarkdownToConvert,
-} from './markdown-to-line';
+} from "./markdown-to-line.js";
 
 describe("extractMarkdownTables", () => {
   it("extracts a simple 2-column table", () => {

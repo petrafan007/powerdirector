@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { isToolAllowed, resolveSandboxToolPolicyForAgent } from './sandbox/tool-policy';
-import type { SandboxToolPolicy } from './sandbox/types';
-import { TOOL_POLICY_CONFORMANCE } from './tool-policy.conformance';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { isToolAllowed, resolveSandboxToolPolicyForAgent } from "./sandbox/tool-policy.js";
+import type { SandboxToolPolicy } from "./sandbox/types.js";
+import { TOOL_POLICY_CONFORMANCE } from "./tool-policy.conformance.js";
 import {
   applyOwnerOnlyToolPolicy,
   expandToolGroups,
@@ -10,8 +10,8 @@ import {
   normalizeToolName,
   resolveToolProfilePolicy,
   TOOL_GROUPS,
-} from './tool-policy';
-import type { AnyAgentTool } from './tools/common';
+} from "./tool-policy.js";
+import type { AnyAgentTool } from "./tools/common.js";
 
 function createOwnerPolicyTools() {
   return [

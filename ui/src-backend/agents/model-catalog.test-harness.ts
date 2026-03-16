@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, vi } from "vitest";
-import { __setModelCatalogImportForTest, resetModelCatalogCacheForTest } from './model-catalog';
+import { __setModelCatalogImportForTest, resetModelCatalogCacheForTest } from "./model-catalog.js";
 
-export type PiSdkModule = typeof import('./pi-model-discovery');
+export type PiSdkModule = typeof import("./pi-model-discovery.js");
 
 vi.mock("./models-config.js", () => ({
   ensurePowerDirectorModelsJson: vi.fn().mockResolvedValue({ agentDir: "/tmp", wrote: false }),

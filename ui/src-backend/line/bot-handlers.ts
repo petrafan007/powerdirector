@@ -7,25 +7,25 @@ import type {
   LeaveEvent,
   PostbackEvent,
 } from "@line/bot-sdk";
-import type { PowerDirectorConfig } from '../config/config';
-import { danger, logVerbose } from '../globals';
-import { resolvePairingIdLabel } from '../pairing/pairing-labels';
-import { buildPairingReply } from '../pairing/pairing-messages';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { danger, logVerbose } from "../globals.js";
+import { resolvePairingIdLabel } from "../pairing/pairing-labels.js";
+import { buildPairingReply } from "../pairing/pairing-messages.js";
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from '../pairing/pairing-store';
-import type { RuntimeEnv } from '../runtime';
-import { firstDefined, isSenderAllowed, normalizeAllowFromWithStore } from './bot-access';
+} from "../pairing/pairing-store.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { firstDefined, isSenderAllowed, normalizeAllowFromWithStore } from "./bot-access.js";
 import {
   getLineSourceInfo,
   buildLineMessageContext,
   buildLinePostbackContext,
   type LineInboundContext,
-} from './bot-message-context';
-import { downloadLineMedia } from './download';
-import { pushMessageLine, replyMessageLine } from './send';
-import type { LineGroupConfig, ResolvedLineAccount } from './types';
+} from "./bot-message-context.js";
+import { downloadLineMedia } from "./download.js";
+import { pushMessageLine, replyMessageLine } from "./send.js";
+import type { LineGroupConfig, ResolvedLineAccount } from "./types.js";
 
 interface MediaRef {
   path: string;

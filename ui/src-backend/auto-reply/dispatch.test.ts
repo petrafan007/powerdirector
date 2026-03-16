@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { dispatchInboundMessage, withReplyDispatcher } from './dispatch';
-import type { ReplyDispatcher } from './reply/reply-dispatcher';
-import { buildTestCtx } from './reply/test-ctx';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { dispatchInboundMessage, withReplyDispatcher } from "./dispatch.js";
+import type { ReplyDispatcher } from "./reply/reply-dispatcher.js";
+import { buildTestCtx } from "./reply/test-ctx.js";
 
 function createDispatcher(record: string[]): ReplyDispatcher {
   return {

@@ -1,16 +1,16 @@
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { loadDotEnv } from '../infra/dotenv';
-import { normalizeEnv } from '../infra/env';
-import { formatUncaughtError } from '../infra/errors';
-import { isMainModule } from '../infra/is-main';
-import { ensurePowerDirectorCliOnPath } from '../infra/path-env';
-import { assertSupportedRuntime } from '../infra/runtime-guard';
-import { installUnhandledRejectionHandler } from '../infra/unhandled-rejections';
-import { enableConsoleCapture } from '../logging';
-import { getCommandPath, getPrimaryCommand, hasHelpOrVersion } from './argv';
-import { tryRouteCli } from './route';
-import { normalizeWindowsArgv } from './windows-argv';
+import { loadDotEnv } from "../infra/dotenv.js";
+import { normalizeEnv } from "../infra/env.js";
+import { formatUncaughtError } from "../infra/errors.js";
+import { isMainModule } from "../infra/is-main.js";
+import { ensurePowerDirectorCliOnPath } from "../infra/path-env.js";
+import { assertSupportedRuntime } from "../infra/runtime-guard.js";
+import { installUnhandledRejectionHandler } from "../infra/unhandled-rejections.js";
+import { enableConsoleCapture } from "../logging.js";
+import { getCommandPath, getPrimaryCommand, hasHelpOrVersion } from "./argv.js";
+import { tryRouteCli } from "./route.js";
+import { normalizeWindowsArgv } from "./windows-argv.js";
 
 export function rewriteUpdateFlagArgv(argv: string[]): string[] {
   const index = argv.indexOf("--update");
@@ -79,7 +79,7 @@ export async function runCli(argv: string[] = process.argv) {
   // Capture all console output into structured logs while keeping stdout/stderr behavior.
   enableConsoleCapture();
 
-  const { buildProgram } = await import('./program');
+  const { buildProgram } = await import("./program.js");
   const program = buildProgram();
 
   // Global error handlers to prevent silent crashes from unhandled rejections/exceptions.
@@ -96,13 +96,13 @@ export async function runCli(argv: string[] = process.argv) {
   // are correct even with lazy command registration.
   const primary = getPrimaryCommand(parseArgv);
   if (primary) {
-    const { getProgramContext } = await import('./program/program-context');
+    const { getProgramContext } = await import("./program/program-context.js");
     const ctx = getProgramContext(program);
     if (ctx) {
-      const { registerCoreCliByName } = await import('./program/command-registry');
+      const { registerCoreCliByName } = await import("./program/command-registry.js");
       await registerCoreCliByName(program, ctx, primary, parseArgv);
     }
-    const { registerSubCliByName } = await import('./program/register.subclis');
+    const { registerSubCliByName } = await import("./program/register.subclis.js");
     await registerSubCliByName(program, primary);
   }
 
@@ -115,8 +115,8 @@ export async function runCli(argv: string[] = process.argv) {
   });
   if (!shouldSkipPluginRegistration) {
     // Register plugin CLI commands before parsing
-    const { registerPluginCliCommands } = await import('../plugins/cli');
-    const { loadConfig } = await import('../config/config');
+    const { registerPluginCliCommands } = await import("../plugins/cli.js");
+    const { loadConfig } = await import("../config/config.js");
     registerPluginCliCommands(program, loadConfig());
   }
 

@@ -1,12 +1,12 @@
-import { resolveAgentModelPrimary } from '../agents/agent-scope';
-import { ensureAuthProfileStore, listProfilesForProvider } from '../agents/auth-profiles';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
-import { getCustomProviderApiKey, resolveEnvApiKey } from '../agents/model-auth';
-import { loadModelCatalog } from '../agents/model-catalog';
-import { resolveConfiguredModelRef } from '../agents/model-selection';
-import type { PowerDirectorConfig } from '../config/config';
-import type { WizardPrompter } from '../wizard/prompts';
-import { OPENAI_CODEX_DEFAULT_MODEL } from './openai-codex-model-default';
+import { resolveAgentModelPrimary } from "../agents/agent-scope.js";
+import { ensureAuthProfileStore, listProfilesForProvider } from "../agents/auth-profiles.js";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
+import { getCustomProviderApiKey, resolveEnvApiKey } from "../agents/model-auth.js";
+import { loadModelCatalog } from "../agents/model-catalog.js";
+import { resolveConfiguredModelRef } from "../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { WizardPrompter } from "../wizard/prompts.js";
+import { OPENAI_CODEX_DEFAULT_MODEL } from "./openai-codex-model-default.js";
 
 export async function warnIfModelConfigLooksOff(
   config: PowerDirectorConfig,

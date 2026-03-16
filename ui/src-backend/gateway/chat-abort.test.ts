@@ -3,7 +3,7 @@ import {
   abortChatRunById,
   type ChatAbortOps,
   type ChatAbortControllerEntry,
-} from './chat-abort';
+} from "./chat-abort.js";
 
 function createActiveEntry(sessionKey: string): ChatAbortControllerEntry {
   const now = Date.now();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../../config/config';
+import type { PowerDirectorConfig } from "../../config/config.js";
 import {
   createAgentToAgentPolicy,
   createSessionVisibilityGuard,
@@ -7,7 +7,7 @@ import {
   resolveSandboxSessionToolsVisibility,
   resolveSandboxedSessionToolContext,
   resolveSessionToolsVisibility,
-} from './sessions-access';
+} from "./sessions-access.js";
 
 describe("resolveSessionToolsVisibility", () => {
   it("defaults to tree when unset or invalid", () => {

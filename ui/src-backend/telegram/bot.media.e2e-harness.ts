@@ -1,5 +1,5 @@
 import { beforeEach, vi, type Mock } from "vitest";
-import { resetInboundDedupe } from '../auto-reply/reply/inbound-dedupe';
+import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe.js";
 
 export const useSpy: Mock = vi.fn();
 export const middlewareUseSpy: Mock = vi.fn();
@@ -47,7 +47,7 @@ vi.mock("@grammyjs/transformer-throttler", () => ({
 }));
 
 vi.mock("../media/store.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../media/store')>();
+  const actual = await importOriginal<typeof import("../media/store.js")>();
   return {
     ...actual,
     saveMediaBuffer: vi.fn(async (buffer: Buffer, contentType?: string) => ({
@@ -60,7 +60,7 @@ vi.mock("../media/store.js", async (importOriginal) => {
 });
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => ({
@@ -70,7 +70,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 });
 
 vi.mock("../config/sessions.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/sessions')>();
+  const actual = await importOriginal<typeof import("../config/sessions.js")>();
   return {
     ...actual,
     updateLastRoute: vi.fn(async () => undefined),

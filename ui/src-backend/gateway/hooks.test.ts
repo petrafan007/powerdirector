@@ -1,10 +1,10 @@
 import type { IncomingMessage } from "node:http";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import type { ChannelPlugin } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { setActivePluginRegistry } from '../plugins/runtime';
-import { createTestRegistry } from '../test-utils/channel-plugins';
-import { createIMessageTestPlugin } from '../test-utils/imessage-test-plugin';
+import type { ChannelPlugin } from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { setActivePluginRegistry } from "../plugins/runtime.js";
+import { createTestRegistry } from "../test-utils/channel-plugins.js";
+import { createIMessageTestPlugin } from "../test-utils/imessage-test-plugin.js";
 import {
   extractHookToken,
   isHookAgentAllowed,
@@ -13,7 +13,7 @@ import {
   normalizeAgentPayload,
   normalizeWakePayload,
   resolveHooksConfig,
-} from './hooks';
+} from "./hooks.js";
 
 describe("gateway hooks helpers", () => {
   const resolveHooksConfigOrThrow = (cfg: PowerDirectorConfig) => {

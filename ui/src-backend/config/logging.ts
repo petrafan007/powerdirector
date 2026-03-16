@@ -1,6 +1,6 @@
-import type { RuntimeEnv } from '../runtime';
-import { displayPath } from '../utils';
-import { CONFIG_PATH } from './paths';
+import type { RuntimeEnv } from "../runtime.js";
+import { displayPath } from "../utils.js";
+import { CONFIG_PATH } from "./paths.js";
 
 type LogConfigUpdatedOptions = {
   path?: string;

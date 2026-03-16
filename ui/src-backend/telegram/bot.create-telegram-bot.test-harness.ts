@@ -1,9 +1,9 @@
 import { beforeEach, vi } from "vitest";
-import { resetInboundDedupe } from '../auto-reply/reply/inbound-dedupe';
-import type { MsgContext } from '../auto-reply/templating';
-import type { GetReplyOptions, ReplyPayload } from '../auto-reply/types';
-import type { PowerDirectorConfig } from '../config/config';
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe.js";
+import type { MsgContext } from "../auto-reply/templating.js";
+import type { GetReplyOptions, ReplyPayload } from "../auto-reply/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { MockFn } from "../test-utils/vitest-mock-fn.js";
 
 type AnyMock = MockFn<(...args: unknown[]) => unknown>;
 type AnyAsyncMock = MockFn<(...args: unknown[]) => Promise<unknown>>;
@@ -32,7 +32,7 @@ export function getLoadConfigMock(): AnyMock {
   return loadConfig;
 }
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig,
@@ -40,7 +40,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 });
 
 vi.mock("../config/sessions.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/sessions')>();
+  const actual = await importOriginal<typeof import("../config/sessions.js")>();
   return {
     ...actual,
     resolveStorePath: vi.fn((storePath) => storePath ?? sessionStorePath),

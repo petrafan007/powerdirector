@@ -1,5 +1,5 @@
-import type { ExecAsk, ExecHost, ExecSecurity } from '../../../infra/exec-approvals';
-import { skipDirectiveArgPrefix, takeDirectiveToken } from '../directive-parsing';
+import type { ExecAsk, ExecHost, ExecSecurity } from "../../../infra/exec-approvals.js";
+import { skipDirectiveArgPrefix, takeDirectiveToken } from "../directive-parsing.js";
 
 type ExecDirectiveParse = {
   cleaned: string;

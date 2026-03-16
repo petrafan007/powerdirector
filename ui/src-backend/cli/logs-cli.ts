@@ -1,14 +1,14 @@
 import { setTimeout as delay } from "node:timers/promises";
 import type { Command } from "commander";
-import { buildGatewayConnectionDetails } from '../gateway/call';
-import { parseLogLine } from '../logging/parse-log-line';
-import { formatLocalIsoWithOffset } from '../logging/timestamps';
-import { formatDocsLink } from '../terminal/links';
-import { clearActiveProgressLine } from '../terminal/progress-line';
-import { createSafeStreamWriter } from '../terminal/stream-writer';
-import { colorize, isRich, theme } from '../terminal/theme';
-import { formatCliCommand } from './command-format';
-import { addGatewayClientOptions, callGatewayFromCli } from './gateway-rpc';
+import { buildGatewayConnectionDetails } from "../gateway/call.js";
+import { parseLogLine } from "../logging/parse-log-line.js";
+import { formatLocalIsoWithOffset } from "../logging/timestamps.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { clearActiveProgressLine } from "../terminal/progress-line.js";
+import { createSafeStreamWriter } from "../terminal/stream-writer.js";
+import { colorize, isRich, theme } from "../terminal/theme.js";
+import { formatCliCommand } from "./command-format.js";
+import { addGatewayClientOptions, callGatewayFromCli } from "./gateway-rpc.js";
 
 type LogsTailPayload = {
   file?: string;

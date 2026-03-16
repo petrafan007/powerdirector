@@ -6,16 +6,16 @@ import {
   saveExecApprovals,
   type ExecApprovalsAgent,
   type ExecApprovalsFile,
-} from '../infra/exec-approvals';
+} from "../infra/exec-approvals.js";
 import { formatTimeAgo } from "../infra/format-time/format-relative.ts";
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { renderTable } from '../terminal/table';
-import { isRich, theme } from '../terminal/theme';
-import { describeUnknownError } from './gateway-cli/shared';
-import { callGatewayFromCli } from './gateway-rpc';
-import { nodesCallOpts, resolveNodeId } from './nodes-cli/rpc';
-import type { NodesRpcOpts } from './nodes-cli/types';
+import { defaultRuntime } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { renderTable } from "../terminal/table.js";
+import { isRich, theme } from "../terminal/theme.js";
+import { describeUnknownError } from "./gateway-cli/shared.js";
+import { callGatewayFromCli } from "./gateway-rpc.js";
+import { nodesCallOpts, resolveNodeId } from "./nodes-cli/rpc.js";
+import type { NodesRpcOpts } from "./nodes-cli/types.js";
 
 type ExecApprovalsSnapshot = {
   path: string;

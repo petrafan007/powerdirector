@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   applyModelAllowlist,
   applyModelFallbacksFromSelection,
   promptDefaultModel,
   promptModelAllowlist,
-} from './model-picker';
-import { makePrompter } from './onboarding/__tests__/test-utils';
+} from "./model-picker.js";
+import { makePrompter } from "./onboarding/__tests__/test-utils.js";
 
 const loadModelCatalog = vi.hoisted(() => vi.fn());
 vi.mock("../agents/model-catalog.js", () => ({

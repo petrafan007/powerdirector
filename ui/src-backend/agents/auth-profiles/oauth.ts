@@ -4,16 +4,16 @@ import {
   type OAuthCredentials,
   type OAuthProvider,
 } from "@mariozechner/pi-ai";
-import type { PowerDirectorConfig } from '../../config/config';
-import { withFileLock } from '../../infra/file-lock';
-import { refreshQwenPortalCredentials } from '../../providers/qwen-portal-oauth';
-import { refreshChutesTokens } from '../chutes-oauth';
-import { AUTH_STORE_LOCK_OPTIONS, log } from './constants';
-import { formatAuthDoctorHint } from './doctor';
-import { ensureAuthStoreFile, resolveAuthStorePath } from './paths';
-import { suggestOAuthProfileIdForLegacyDefault } from './repair';
-import { ensureAuthProfileStore, saveAuthProfileStore } from './store';
-import type { AuthProfileStore } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { withFileLock } from "../../infra/file-lock.js";
+import { refreshQwenPortalCredentials } from "../../providers/qwen-portal-oauth.js";
+import { refreshChutesTokens } from "../chutes-oauth.js";
+import { AUTH_STORE_LOCK_OPTIONS, log } from "./constants.js";
+import { formatAuthDoctorHint } from "./doctor.js";
+import { ensureAuthStoreFile, resolveAuthStorePath } from "./paths.js";
+import { suggestOAuthProfileIdForLegacyDefault } from "./repair.js";
+import { ensureAuthProfileStore, saveAuthProfileStore } from "./store.js";
+import type { AuthProfileStore } from "./types.js";
 
 const OAUTH_PROVIDER_IDS = new Set<string>(getOAuthProviders().map((provider) => provider.id));
 

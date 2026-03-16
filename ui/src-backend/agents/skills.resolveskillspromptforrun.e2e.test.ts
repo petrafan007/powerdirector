@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { resolveSkillsPromptForRun } from './skills';
-import type { SkillEntry } from './skills/types';
+import { resolveSkillsPromptForRun } from "./skills.js";
+import type { SkillEntry } from "./skills/types.js";
 
 describe("resolveSkillsPromptForRun", () => {
   it("prefers snapshot prompt when available", () => {

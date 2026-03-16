@@ -1,6 +1,6 @@
-import { isPlainObject } from '../utils';
-import { parseConfigPath, setConfigValueAtPath, unsetConfigValueAtPath } from './config-paths';
-import type { PowerDirectorConfig } from './types';
+import { isPlainObject } from "../utils.js";
+import { parseConfigPath, setConfigValueAtPath, unsetConfigValueAtPath } from "./config-paths.js";
+import type { PowerDirectorConfig } from "./types.js";
 
 type OverrideTree = Record<string, unknown>;
 

@@ -1,6 +1,6 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ProcessSession } from './bash-process-registry';
+import type { ProcessSession } from "./bash-process-registry.js";
 import {
   addSession,
   appendOutput,
@@ -9,8 +9,8 @@ import {
   markBackgrounded,
   markExited,
   resetProcessRegistryForTests,
-} from './bash-process-registry';
-import { createProcessSessionFixture } from './bash-process-registry.test-helpers';
+} from "./bash-process-registry.js";
+import { createProcessSessionFixture } from "./bash-process-registry.test-helpers.js";
 
 describe("bash process registry", () => {
   function createRegistrySession(params: {

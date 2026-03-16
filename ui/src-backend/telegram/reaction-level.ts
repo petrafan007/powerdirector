@@ -1,10 +1,10 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   resolveReactionLevel,
   type ReactionLevel,
   type ResolvedReactionLevel as BaseResolvedReactionLevel,
-} from '../utils/reaction-level';
-import { resolveTelegramAccount } from './accounts';
+} from "../utils/reaction-level.js";
+import { resolveTelegramAccount } from "./accounts.js";
 
 export type TelegramReactionLevel = ReactionLevel;
 export type ResolvedReactionLevel = BaseResolvedReactionLevel;

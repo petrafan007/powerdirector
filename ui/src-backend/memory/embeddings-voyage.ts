@@ -1,6 +1,6 @@
-import { resolveRemoteEmbeddingBearerClient } from './embeddings-remote-client';
-import { fetchRemoteEmbeddingVectors } from './embeddings-remote-fetch';
-import type { EmbeddingProvider, EmbeddingProviderOptions } from './embeddings';
+import { resolveRemoteEmbeddingBearerClient } from "./embeddings-remote-client.js";
+import { fetchRemoteEmbeddingVectors } from "./embeddings-remote-fetch.js";
+import type { EmbeddingProvider, EmbeddingProviderOptions } from "./embeddings.js";
 
 export type VoyageEmbeddingClient = {
   baseUrl: string;

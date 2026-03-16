@@ -90,12 +90,12 @@ vi.mock("node:fs/promises", async (importOriginal) => {
 });
 
 describe("resolvePowerDirectorPackageRoot", () => {
-  let resolvePowerDirectorPackageRoot: typeof import('./powerdirector-root').resolvePowerDirectorPackageRoot;
-  let resolvePowerDirectorPackageRootSync: typeof import('./powerdirector-root').resolvePowerDirectorPackageRootSync;
+  let resolvePowerDirectorPackageRoot: typeof import("./powerdirector-root.js").resolvePowerDirectorPackageRoot;
+  let resolvePowerDirectorPackageRootSync: typeof import("./powerdirector-root.js").resolvePowerDirectorPackageRootSync;
 
   beforeAll(async () => {
     ({ resolvePowerDirectorPackageRoot, resolvePowerDirectorPackageRootSync } =
-      await import('./powerdirector-root'));
+      await import("./powerdirector-root.js"));
   });
 
   beforeEach(() => {
@@ -124,7 +124,7 @@ describe("resolvePowerDirectorPackageRoot", () => {
   });
 
   it("falls back when argv1 realpath throws", async () => {
-    const { resolvePowerDirectorPackageRootSync } = await import('./powerdirector-root');
+    const { resolvePowerDirectorPackageRootSync } = await import("./powerdirector-root.js");
 
     const project = fx("realpath-throw-scenario");
     const argv1 = path.join(project, "node_modules", ".bin", "powerdirector");
@@ -158,7 +158,7 @@ describe("resolvePowerDirectorPackageRoot", () => {
   });
 
   it("async resolver returns null when no package roots exist", async () => {
-    const { resolvePowerDirectorPackageRoot } = await import('./powerdirector-root');
+    const { resolvePowerDirectorPackageRoot } = await import("./powerdirector-root.js");
 
     await expect(resolvePowerDirectorPackageRoot({ cwd: fx("missing") })).resolves.toBeNull();
   });

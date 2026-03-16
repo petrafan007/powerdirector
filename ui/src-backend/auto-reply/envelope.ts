@@ -1,7 +1,7 @@
-import { resolveUserTimezone } from '../agents/date-time';
-import { normalizeChatType } from '../channels/chat-type';
-import { resolveSenderLabel, type SenderLabelParams } from '../channels/sender-label';
-import type { PowerDirectorConfig } from '../config/config';
+import { resolveUserTimezone } from "../agents/date-time.js";
+import { normalizeChatType } from "../channels/chat-type.js";
+import { resolveSenderLabel, type SenderLabelParams } from "../channels/sender-label.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   resolveTimezone,
   formatUtcTimestamp,

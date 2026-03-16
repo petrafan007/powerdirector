@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { resolveSandboxBrowserConfig } from '../agents/sandbox/config';
-import { validateConfigObject } from './config';
+import { resolveSandboxBrowserConfig } from "../agents/sandbox/config.js";
+import { validateConfigObject } from "./config.js";
 
 describe("sandbox docker config", () => {
   it("accepts safe binds array in sandbox.docker config", () => {

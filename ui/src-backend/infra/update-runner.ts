@@ -2,26 +2,26 @@ import fs from "node:fs/promises";
 import type { Dirent } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { type CommandOptions, runCommandWithTimeout } from '../process/exec';
+import { type CommandOptions, runCommandWithTimeout } from "../process/exec.js";
 import {
   resolveControlUiDistIndexHealth,
   resolveControlUiDistIndexPathForRoot,
-} from './control-ui-assets';
-import { detectPackageManager as detectPackageManagerImpl } from './detect-package-manager';
-import { readPackageName, readPackageVersion } from './package-json';
-import { trimLogTail } from './restart-sentinel';
+} from "./control-ui-assets.js";
+import { detectPackageManager as detectPackageManagerImpl } from "./detect-package-manager.js";
+import { readPackageName, readPackageVersion } from "./package-json.js";
+import { trimLogTail } from "./restart-sentinel.js";
 import {
   channelToNpmTag,
   DEFAULT_PACKAGE_CHANNEL,
   DEV_BRANCH,
   type UpdateChannel,
-} from './update-channels';
-import { compareSemverStrings } from './update-check';
+} from "./update-channels.js";
+import { compareSemverStrings } from "./update-check.js";
 import {
   cleanupGlobalRenameDirs,
   detectGlobalInstallManagerForRoot,
   globalInstallArgs,
-} from './update-global';
+} from "./update-global.js";
 import {
   buildGitDirtyCheckArgv,
   createGitRuntimeBackup,
@@ -32,8 +32,8 @@ import {
   restorePreservedGitRuntimeFiles,
   snapshotPreservedGitRuntimeFiles,
   type GitRuntimeBackup,
-} from './update-git-runtime-files';
-import { resolveGitChannelTag } from './update-git-channel';
+} from "./update-git-runtime-files.js";
+import { resolveGitChannelTag } from "./update-git-channel.js";
 
 export type UpdateStepResult = {
   name: string;

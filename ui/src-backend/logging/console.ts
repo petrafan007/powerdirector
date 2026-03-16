@@ -1,12 +1,12 @@
 import util from "node:util";
-import type { PowerDirectorConfig } from '../config/types';
-import { isVerbose } from '../globals';
-import { stripAnsi } from '../terminal/ansi';
-import { readLoggingConfig } from './config';
-import { type LogLevel, normalizeLogLevel } from './levels';
-import { getLogger, type LoggerSettings } from './logger';
-import { loggingState } from './state';
-import { formatLocalIsoWithOffset } from './timestamps';
+import type { PowerDirectorConfig } from "../config/types.js";
+import { isVerbose } from "../globals.js";
+import { stripAnsi } from "../terminal/ansi.js";
+import { readLoggingConfig } from "./config.js";
+import { type LogLevel, normalizeLogLevel } from "./levels.js";
+import { getLogger, type LoggerSettings } from "./logger.js";
+import { loggingState } from "./state.js";
+import { formatLocalIsoWithOffset } from "./timestamps.js";
 
 export type ConsoleStyle = "pretty" | "compact" | "json";
 type ConsoleSettings = {

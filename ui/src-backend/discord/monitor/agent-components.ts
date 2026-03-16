@@ -17,29 +17,29 @@ import {
 } from "@buape/carbon";
 import type { APIStringSelectComponent } from "discord-api-types/v10";
 import { ButtonStyle, ChannelType } from "discord-api-types/v10";
-import { resolveHumanDelayConfig } from '../../agents/identity';
-import { resolveChunkMode, resolveTextChunkLimit } from '../../auto-reply/chunk';
-import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from '../../auto-reply/envelope';
-import { finalizeInboundContext } from '../../auto-reply/reply/inbound-context';
-import { dispatchReplyWithBufferedBlockDispatcher } from '../../auto-reply/reply/provider-dispatcher';
-import { createReplyReferencePlanner } from '../../auto-reply/reply/reply-reference';
-import { createReplyPrefixOptions } from '../../channels/reply-prefix';
-import { recordInboundSession } from '../../channels/session';
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveMarkdownTableMode } from '../../config/markdown-tables';
-import { readSessionUpdatedAt, resolveStorePath } from '../../config/sessions';
-import type { DiscordAccountConfig } from '../../config/types.discord';
-import { logVerbose } from '../../globals';
-import { enqueueSystemEvent } from '../../infra/system-events';
-import { logDebug, logError } from '../../logger';
-import { buildPairingReply } from '../../pairing/pairing-messages';
+import { resolveHumanDelayConfig } from "../../agents/identity.js";
+import { resolveChunkMode, resolveTextChunkLimit } from "../../auto-reply/chunk.js";
+import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from "../../auto-reply/envelope.js";
+import { finalizeInboundContext } from "../../auto-reply/reply/inbound-context.js";
+import { dispatchReplyWithBufferedBlockDispatcher } from "../../auto-reply/reply/provider-dispatcher.js";
+import { createReplyReferencePlanner } from "../../auto-reply/reply/reply-reference.js";
+import { createReplyPrefixOptions } from "../../channels/reply-prefix.js";
+import { recordInboundSession } from "../../channels/session.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveMarkdownTableMode } from "../../config/markdown-tables.js";
+import { readSessionUpdatedAt, resolveStorePath } from "../../config/sessions.js";
+import type { DiscordAccountConfig } from "../../config/types.discord.js";
+import { logVerbose } from "../../globals.js";
+import { enqueueSystemEvent } from "../../infra/system-events.js";
+import { logDebug, logError } from "../../logger.js";
+import { buildPairingReply } from "../../pairing/pairing-messages.js";
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from '../../pairing/pairing-store';
-import { resolveAgentRoute } from '../../routing/resolve-route';
-import { createNonExitingRuntime, type RuntimeEnv } from '../../runtime';
-import { resolveDiscordComponentEntry, resolveDiscordModalEntry } from '../components-registry';
+} from "../../pairing/pairing-store.js";
+import { resolveAgentRoute } from "../../routing/resolve-route.js";
+import { createNonExitingRuntime, type RuntimeEnv } from "../../runtime.js";
+import { resolveDiscordComponentEntry, resolveDiscordModalEntry } from "../components-registry.js";
 import {
   createDiscordFormModal,
   formatDiscordComponentEventText,
@@ -49,7 +49,7 @@ import {
   parseDiscordModalCustomIdForCarbon,
   type DiscordComponentEntry,
   type DiscordModalEntry,
-} from '../components';
+} from "../components.js";
 import {
   type DiscordGuildEntryResolved,
   normalizeDiscordAllowList,
@@ -59,11 +59,11 @@ import {
   resolveDiscordGuildEntry,
   resolveDiscordMemberAccessState,
   resolveDiscordOwnerAllowFrom,
-} from './allow-list';
-import { formatDiscordUserTag } from './format';
-import { buildDirectLabel, buildGuildLabel } from './reply-context';
-import { deliverDiscordReply } from './reply-delivery';
-import { sendTyping } from './typing';
+} from "./allow-list.js";
+import { formatDiscordUserTag } from "./format.js";
+import { buildDirectLabel, buildGuildLabel } from "./reply-context.js";
+import { deliverDiscordReply } from "./reply-delivery.js";
+import { sendTyping } from "./typing.js";
 
 const AGENT_BUTTON_KEY = "agent";
 const AGENT_SELECT_KEY = "agentsel";

@@ -6,8 +6,8 @@ import {
   default as contextPruningExtension,
   DEFAULT_CONTEXT_PRUNING_SETTINGS,
   pruneContextMessages,
-} from './context-pruning';
-import { getContextPruningRuntime, setContextPruningRuntime } from './context-pruning/runtime';
+} from "./context-pruning.js";
+import { getContextPruningRuntime, setContextPruningRuntime } from "./context-pruning/runtime.js";
 
 function toolText(msg: AgentMessage): string {
   if (msg.role !== "toolResult") {

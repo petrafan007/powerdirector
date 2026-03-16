@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { spawn } from 'node:child_process';
-import { getRuntimeLogger } from './logger';
+import { getRuntimeLogger } from './logger.js';
+import { getConfigManager } from '../config/config-manager.js';
+import { resolvePowerDirectorRoot } from '../config/paths.js';
 
 type MdnsDiscoveryMode = 'off' | 'minimal' | 'full';
 
@@ -49,6 +51,11 @@ export class DiscoveryManager {
 
     public async start(servicePort: number): Promise<void> {
         if (this.started) return;
+
+        const config = getConfigManager().get();
+        if (!config) {
+            this.logger.error(`[DiscoveryManager] Missing config. CWD: ${process.cwd()}, Root: ${resolvePowerDirectorRoot()}, ConfigPath: ${getConfigManager().getConfigPath()}`);
+        }
         this.started = true;
 
         if (this.mdnsMode !== 'off') {

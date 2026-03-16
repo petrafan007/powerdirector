@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { AgentDefaultsSchema } from './zod-schema.agent-defaults';
-import { AgentEntrySchema } from './zod-schema.agent-runtime';
-import { TranscribeAudioSchema } from './zod-schema.core';
+import { AgentDefaultsSchema } from "./zod-schema.agent-defaults.js";
+import { AgentEntrySchema } from "./zod-schema.agent-runtime.js";
+import { TranscribeAudioSchema } from "./zod-schema.core.js";
 
 export const AgentsSchema = z
   .object({

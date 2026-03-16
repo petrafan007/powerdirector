@@ -1,25 +1,25 @@
-import { resolveSessionAgentId } from '../../agents/agent-scope';
-import { getChannelPlugin, normalizeChannelId } from '../../channels/plugins/index';
-import { DEFAULT_CHAT_CHANNEL } from '../../channels/registry';
-import { createOutboundSendDeps } from '../../cli/deps';
-import { loadConfig } from '../../config/config';
-import { deliverOutboundPayloads } from '../../infra/outbound/deliver';
+import { resolveSessionAgentId } from "../../agents/agent-scope.js";
+import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index.js";
+import { DEFAULT_CHAT_CHANNEL } from "../../channels/registry.js";
+import { createOutboundSendDeps } from "../../cli/deps.js";
+import { loadConfig } from "../../config/config.js";
+import { deliverOutboundPayloads } from "../../infra/outbound/deliver.js";
 import {
   ensureOutboundSessionEntry,
   resolveOutboundSessionRoute,
-} from '../../infra/outbound/outbound-session';
-import { normalizeReplyPayloadsForDelivery } from '../../infra/outbound/payloads';
-import { resolveOutboundTarget } from '../../infra/outbound/targets';
-import { normalizePollInput } from '../../polls';
+} from "../../infra/outbound/outbound-session.js";
+import { normalizeReplyPayloadsForDelivery } from "../../infra/outbound/payloads.js";
+import { resolveOutboundTarget } from "../../infra/outbound/targets.js";
+import { normalizePollInput } from "../../polls.js";
 import {
   ErrorCodes,
   errorShape,
   formatValidationErrors,
   validatePollParams,
   validateSendParams,
-} from '../protocol/index';
-import { formatForLog } from '../ws-log';
-import type { GatewayRequestContext, GatewayRequestHandlers } from './types';
+} from "../protocol/index.js";
+import { formatForLog } from "../ws-log.js";
+import type { GatewayRequestContext, GatewayRequestHandlers } from "./types.js";
 
 type InflightResult = {
   ok: boolean;

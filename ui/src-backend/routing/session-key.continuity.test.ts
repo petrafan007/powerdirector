@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildAgentSessionKey } from './resolve-route';
+import { buildAgentSessionKey } from "./resolve-route.js";
 
 describe("Discord Session Key Continuity", () => {
   const agentId = "main";

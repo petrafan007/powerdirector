@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { escapeRegExp, formatEnvelopeTimestamp } from '../../test/helpers/envelope-timestamp';
-import { expectInboundContextContract } from '../../test/helpers/inbound-contract';
+import { escapeRegExp, formatEnvelopeTimestamp } from "../../test/helpers/envelope-timestamp.js";
+import { expectInboundContextContract } from "../../test/helpers/inbound-contract.js";
 import {
   listNativeCommandSpecs,
   listNativeCommandSpecsForConfig,
-} from '../auto-reply/commands-registry';
-import { normalizeTelegramCommandName } from '../config/telegram-custom-commands';
+} from "../auto-reply/commands-registry.js";
+import { normalizeTelegramCommandName } from "../config/telegram-custom-commands.js";
 import {
   answerCallbackQuerySpy,
   commandSpy,
@@ -20,8 +20,8 @@ import {
   sendMessageSpy,
   setMyCommandsSpy,
   wasSentByBot,
-} from './bot.create-telegram-bot.test-harness';
-import { createTelegramBot } from './bot';
+} from "./bot.create-telegram-bot.test-harness.js";
+import { createTelegramBot } from "./bot.js";
 
 const loadConfig = getLoadConfigMock();
 const readChannelAllowFromStore = getReadChannelAllowFromStoreMock();

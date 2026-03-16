@@ -1,4 +1,4 @@
-import type { ModelDefinitionConfig } from '../config/types';
+import type { ModelDefinitionConfig } from "../config/types.js";
 
 const DEFAULT_CONTEXT_WINDOW = 128_000;
 const DEFAULT_MAX_TOKENS = 8192;

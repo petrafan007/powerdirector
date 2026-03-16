@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildEmbeddedRunPayloads } from './payloads';
+import { buildEmbeddedRunPayloads } from "./payloads.js";
 
 type BuildPayloadParams = Parameters<typeof buildEmbeddedRunPayloads>[0];
 

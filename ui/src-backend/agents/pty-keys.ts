@@ -1,4 +1,4 @@
-import { escapeRegExp } from '../utils';
+import { escapeRegExp } from "../utils.js";
 
 const ESC = "\x1b";
 const CR = "\r";

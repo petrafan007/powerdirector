@@ -1,7 +1,7 @@
-import { parseDurationMs } from '../../../cli/parse-duration';
-import { skipDirectiveArgPrefix, takeDirectiveToken } from '../directive-parsing';
-import { normalizeQueueDropPolicy, normalizeQueueMode } from './normalize';
-import type { QueueDropPolicy, QueueMode } from './types';
+import { parseDurationMs } from "../../../cli/parse-duration.js";
+import { skipDirectiveArgPrefix, takeDirectiveToken } from "../directive-parsing.js";
+import { normalizeQueueDropPolicy, normalizeQueueMode } from "./normalize.js";
+import type { QueueDropPolicy, QueueMode } from "./types.js";
 
 function parseQueueDebounce(raw?: string): number | undefined {
   if (!raw) {

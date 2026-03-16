@@ -2,24 +2,24 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { GroupKeyResolution } from '../config/sessions';
-import { createInboundDebouncer } from './inbound-debounce';
-import { resolveGroupRequireMention } from './reply/groups';
-import { finalizeInboundContext } from './reply/inbound-context';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { GroupKeyResolution } from "../config/sessions.js";
+import { createInboundDebouncer } from "./inbound-debounce.js";
+import { resolveGroupRequireMention } from "./reply/groups.js";
+import { finalizeInboundContext } from "./reply/inbound-context.js";
 import {
   buildInboundDedupeKey,
   resetInboundDedupe,
   shouldSkipDuplicateInbound,
-} from './reply/inbound-dedupe';
-import { normalizeInboundTextNewlines } from './reply/inbound-text';
+} from "./reply/inbound-dedupe.js";
+import { normalizeInboundTextNewlines } from "./reply/inbound-text.js";
 import {
   buildMentionRegexes,
   matchesMentionPatterns,
   normalizeMentionText,
-} from './reply/mentions';
-import { initSessionState } from './reply/session';
-import { applyTemplate, type MsgContext, type TemplateContext } from './templating';
+} from "./reply/mentions.js";
+import { initSessionState } from "./reply/session.js";
+import { applyTemplate, type MsgContext, type TemplateContext } from "./templating.js";
 
 describe("applyTemplate", () => {
   it("renders primitive values", () => {

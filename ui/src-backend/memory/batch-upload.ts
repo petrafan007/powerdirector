@@ -2,8 +2,8 @@ import {
   buildBatchHeaders,
   normalizeBatchBaseUrl,
   type BatchHttpClientConfig,
-} from './batch-utils';
-import { hashText } from './internal';
+} from "./batch-utils.js";
+import { hashText } from "./internal.js";
 
 export async function uploadBatchJsonlFile(params: {
   client: BatchHttpClientConfig;

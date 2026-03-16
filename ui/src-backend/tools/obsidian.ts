@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 import fs from 'fs';
 import path from 'path';
 

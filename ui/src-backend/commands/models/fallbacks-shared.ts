@@ -1,8 +1,8 @@
-import { buildModelAliasIndex, resolveModelRefFromString } from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadConfig } from '../../config/config';
-import { logConfigUpdated } from '../../config/logging';
-import type { RuntimeEnv } from '../../runtime';
+import { buildModelAliasIndex, resolveModelRefFromString } from "../../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { loadConfig } from "../../config/config.js";
+import { logConfigUpdated } from "../../config/logging.js";
+import type { RuntimeEnv } from "../../runtime.js";
 import {
   DEFAULT_PROVIDER,
   ensureFlagCompatibility,
@@ -12,7 +12,7 @@ import {
   resolveModelTarget,
   resolveModelKeysFromEntries,
   updateConfig,
-} from './shared';
+} from "./shared.js";
 
 type DefaultsFallbackKey = "model" | "imageModel";
 

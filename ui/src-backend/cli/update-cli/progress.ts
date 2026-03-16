@@ -4,10 +4,10 @@ import type {
   UpdateRunResult,
   UpdateStepInfo,
   UpdateStepProgress,
-} from '../../infra/update-runner';
-import { defaultRuntime } from '../../runtime';
-import { theme } from '../../terminal/theme';
-import type { UpdateCommandOptions } from './shared';
+} from "../../infra/update-runner.js";
+import { defaultRuntime } from "../../runtime.js";
+import { theme } from "../../terminal/theme.js";
+import type { UpdateCommandOptions } from "./shared.js";
 
 const STEP_LABELS: Record<string, string> = {
   "clean check": "Working directory is clean",

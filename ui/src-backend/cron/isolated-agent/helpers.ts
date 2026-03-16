@@ -1,8 +1,8 @@
 import {
   DEFAULT_HEARTBEAT_ACK_MAX_CHARS,
   stripHeartbeatToken,
-} from '../../auto-reply/heartbeat';
-import { truncateUtf16Safe } from '../../utils';
+} from "../../auto-reply/heartbeat.js";
+import { truncateUtf16Safe } from "../../utils.js";
 
 type DeliveryPayload = {
   text?: string;

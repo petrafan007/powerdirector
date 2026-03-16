@@ -1,12 +1,12 @@
-import { filterToolsByPolicy } from './pi-tools.policy';
-import type { AnyAgentTool } from './pi-tools.types';
+import { filterToolsByPolicy } from "./pi-tools.policy.js";
+import type { AnyAgentTool } from "./pi-tools.types.js";
 import {
   buildPluginToolGroups,
   expandPolicyWithPluginGroups,
   normalizeToolName,
   stripPluginOnlyAllowlist,
   type ToolPolicyLike,
-} from './tool-policy';
+} from "./tool-policy.js";
 
 export type ToolPolicyPipelineStep = {
   policy: ToolPolicyLike | undefined;

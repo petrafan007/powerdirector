@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { encodePairingSetupCode, resolvePairingSetupFromConfig } from './setup-code';
+import { encodePairingSetupCode, resolvePairingSetupFromConfig } from "./setup-code.js";
 
 describe("pairing setup code", () => {
   beforeEach(() => {

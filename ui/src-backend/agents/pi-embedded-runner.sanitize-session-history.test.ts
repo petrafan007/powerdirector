@@ -1,6 +1,6 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import * as helpers from './pi-embedded-helpers';
+import * as helpers from "./pi-embedded-helpers.js";
 import {
   expectGoogleModelApiFullSanitizeCall,
   loadSanitizeSessionHistoryWithCleanMocks,
@@ -13,7 +13,7 @@ import {
   type SanitizeSessionHistoryFn,
   sanitizeWithOpenAIResponses,
   TEST_SESSION_ID,
-} from './pi-embedded-runner.sanitize-session-history.test-harness';
+} from "./pi-embedded-runner.sanitize-session-history.test-harness.js";
 
 let sanitizeSessionHistory: SanitizeSessionHistoryFn;
 

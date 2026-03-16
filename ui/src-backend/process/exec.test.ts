@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { captureEnv } from '../test-utils/env';
-import { runCommandWithTimeout, shouldSpawnWithShell } from './exec';
+import { captureEnv } from "../test-utils/env.js";
+import { runCommandWithTimeout, shouldSpawnWithShell } from "./exec.js";
 
 describe("runCommandWithTimeout", () => {
   it("never enables shell execution (Windows cmd.exe injection hardening)", () => {

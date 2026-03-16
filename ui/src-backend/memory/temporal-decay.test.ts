@@ -2,12 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { mergeHybridResults } from './hybrid';
+import { mergeHybridResults } from "./hybrid.js";
 import {
   applyTemporalDecayToHybridResults,
   applyTemporalDecayToScore,
   calculateTemporalDecayMultiplier,
-} from './temporal-decay';
+} from "./temporal-decay.js";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const NOW_MS = Date.UTC(2026, 1, 10, 0, 0, 0);

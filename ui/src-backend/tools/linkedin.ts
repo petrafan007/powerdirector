@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 // @ts-ignore - linkedin-api might not have types
 import { Client } from 'linkedin-api';
 

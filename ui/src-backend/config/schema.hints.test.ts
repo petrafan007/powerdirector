@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { __test__, isSensitiveConfigPath } from './schema.hints';
-import { PowerDirectorSchema } from './zod-schema';
-import { sensitive } from './zod-schema.sensitive';
+import { __test__, isSensitiveConfigPath } from "./schema.hints.js";
+import { PowerDirectorSchema } from "./zod-schema.js";
+import { sensitive } from "./zod-schema.sensitive.js";
 
 const { mapSensitivePaths } = __test__;
 

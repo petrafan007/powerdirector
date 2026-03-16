@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { RestartSentinelPayload } from '../../infra/restart-sentinel';
-import type { UpdateRunResult } from '../../infra/update-runner';
+import type { RestartSentinelPayload } from "../../infra/restart-sentinel.js";
+import type { UpdateRunResult } from "../../infra/update-runner.js";
 
 // Capture the sentinel payload written during update.run
 let capturedPayload: RestartSentinelPayload | undefined;
@@ -92,7 +92,7 @@ async function invokeUpdateRun(
   params: Record<string, unknown>,
   respond: ((ok: boolean, response?: unknown) => void) | undefined = undefined,
 ) {
-  const { updateHandlers } = await import('./update');
+  const { updateHandlers } = await import("./update.js");
   const onRespond = respond ?? (() => {});
   await updateHandlers["update.run"]({
     params,

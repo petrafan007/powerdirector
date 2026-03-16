@@ -3,7 +3,7 @@ import {
   isVoiceCompatibleAudio,
   TELEGRAM_VOICE_AUDIO_EXTENSIONS,
   TELEGRAM_VOICE_MIME_TYPES,
-} from './audio';
+} from "./audio.js";
 
 describe("isVoiceCompatibleAudio", () => {
   it.each([

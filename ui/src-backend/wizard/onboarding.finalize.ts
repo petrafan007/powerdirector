@@ -1,17 +1,17 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { DEFAULT_BOOTSTRAP_FILENAME } from '../agents/workspace';
-import { formatCliCommand } from '../cli/command-format';
+import { DEFAULT_BOOTSTRAP_FILENAME } from "../agents/workspace.js";
+import { formatCliCommand } from "../cli/command-format.js";
 import {
   buildGatewayInstallPlan,
   gatewayInstallErrorHint,
-} from '../commands/daemon-install-helpers';
+} from "../commands/daemon-install-helpers.js";
 import {
   DEFAULT_GATEWAY_DAEMON_RUNTIME,
   GATEWAY_DAEMON_RUNTIME_OPTIONS,
-} from '../commands/daemon-runtime';
-import { formatHealthCheckFailure } from '../commands/health-format';
-import { healthCommand } from '../commands/health';
+} from "../commands/daemon-runtime.js";
+import { formatHealthCheckFailure } from "../commands/health-format.js";
+import { healthCommand } from "../commands/health.js";
 import {
   detectBrowserOpenSupport,
   formatControlUiSshHint,
@@ -19,19 +19,19 @@ import {
   probeGatewayReachable,
   waitForGatewayReachable,
   resolveControlUiLinks,
-} from '../commands/onboard-helpers';
-import type { OnboardOptions } from '../commands/onboard-types';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveGatewayService } from '../daemon/service';
-import { isSystemdUserServiceAvailable } from '../daemon/systemd';
-import { ensureControlUiAssetsBuilt } from '../infra/control-ui-assets';
-import type { RuntimeEnv } from '../runtime';
-import { restoreTerminalState } from '../terminal/restore';
-import { runTui } from '../tui/tui';
-import { resolveUserPath } from '../utils';
-import { setupOnboardingShellCompletion } from './onboarding.completion';
-import type { GatewayWizardSettings, WizardFlow } from './onboarding.types';
-import type { WizardPrompter } from './prompts';
+} from "../commands/onboard-helpers.js";
+import type { OnboardOptions } from "../commands/onboard-types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveGatewayService } from "../daemon/service.js";
+import { isSystemdUserServiceAvailable } from "../daemon/systemd.js";
+import { ensureControlUiAssetsBuilt } from "../infra/control-ui-assets.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { restoreTerminalState } from "../terminal/restore.js";
+import { runTui } from "../tui/tui.js";
+import { resolveUserPath } from "../utils.js";
+import { setupOnboardingShellCompletion } from "./onboarding.completion.js";
+import type { GatewayWizardSettings, WizardFlow } from "./onboarding.types.js";
+import type { WizardPrompter } from "./prompts.js";
 
 type FinalizeOnboardingOptions = {
   flow: WizardFlow;
@@ -72,7 +72,7 @@ export async function finalizeOnboardingWizard(
   }
 
   if (process.platform === "linux" && systemdAvailable) {
-    const { ensureSystemdUserLingerInteractive } = await import('../commands/systemd-linger');
+    const { ensureSystemdUserLingerInteractive } = await import("../commands/systemd-linger.js");
     await ensureSystemdUserLingerInteractive({
       runtime,
       prompter: {

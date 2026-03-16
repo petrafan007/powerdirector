@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { emitAgentEvent } from '../infra/agent-events';
-import { emitHeartbeatEvent } from '../infra/heartbeat-events';
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
-import { startGatewayServerHarness, type GatewayServerHarness } from './server.e2e-ws-harness';
-import { installGatewayTestHooks, onceMessage } from './test-helpers';
+import { emitAgentEvent } from "../infra/agent-events.js";
+import { emitHeartbeatEvent } from "../infra/heartbeat-events.js";
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
+import { startGatewayServerHarness, type GatewayServerHarness } from "./server.e2e-ws-harness.js";
+import { installGatewayTestHooks, onceMessage } from "./test-helpers.js";
 
 installGatewayTestHooks({ scope: "suite" });
 

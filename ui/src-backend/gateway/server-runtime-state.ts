@@ -1,39 +1,39 @@
 import type { Server as HttpServer } from "node:http";
 import { WebSocketServer } from "ws";
-import { CANVAS_HOST_PATH } from '../canvas-host/a2ui';
-import { type CanvasHostHandler, createCanvasHostHandler } from '../canvas-host/server';
-import type { CliDeps } from '../cli/deps';
-import type { createSubsystemLogger } from '../logging/subsystem';
-import type { PluginRegistry } from '../plugins/registry';
-import type { RuntimeEnv } from '../runtime';
-import type { AuthRateLimiter } from './auth-rate-limit';
-import type { ResolvedGatewayAuth } from './auth';
-import type { ChatAbortControllerEntry } from './chat-abort';
-import type { ControlUiRootState } from './control-ui';
-import type { HooksConfigResolved } from './hooks';
-import { resolveGatewayListenHosts } from './net';
+import { CANVAS_HOST_PATH } from "../canvas-host/a2ui.js";
+import { type CanvasHostHandler, createCanvasHostHandler } from "../canvas-host/server.js";
+import type { CliDeps } from "../cli/deps.js";
+import type { createSubsystemLogger } from "../logging/subsystem.js";
+import type { PluginRegistry } from "../plugins/registry.js";
+import type { RuntimeEnv } from "../runtime.js";
+import type { AuthRateLimiter } from "./auth-rate-limit.js";
+import type { ResolvedGatewayAuth } from "./auth.js";
+import type { ChatAbortControllerEntry } from "./chat-abort.js";
+import type { ControlUiRootState } from "./control-ui.js";
+import type { HooksConfigResolved } from "./hooks.js";
+import { resolveGatewayListenHosts } from "./net.js";
 import {
   createGatewayBroadcaster,
   type GatewayBroadcastFn,
   type GatewayBroadcastToConnIdsFn,
-} from './server-broadcast';
+} from "./server-broadcast.js";
 import {
   type ChatRunEntry,
   createChatRunState,
   createToolEventRecipientRegistry,
-} from './server-chat';
-import { MAX_PAYLOAD_BYTES } from './server-constants';
-import { attachGatewayUpgradeHandler, createGatewayHttpServer } from './server-http';
-import type { DedupeEntry } from './server-shared';
-import { createGatewayHooksRequestHandler } from './server/hooks';
-import { listenGatewayHttpServer } from './server/http-listen';
-import { createGatewayPluginRequestHandler } from './server/plugins-http';
-import type { GatewayTlsRuntime } from './server/tls';
-import type { GatewayWsClient } from './server/ws-types';
+} from "./server-chat.js";
+import { MAX_PAYLOAD_BYTES } from "./server-constants.js";
+import { attachGatewayUpgradeHandler, createGatewayHttpServer } from "./server-http.js";
+import type { DedupeEntry } from "./server-shared.js";
+import { createGatewayHooksRequestHandler } from "./server/hooks.js";
+import { listenGatewayHttpServer } from "./server/http-listen.js";
+import { createGatewayPluginRequestHandler } from "./server/plugins-http.js";
+import type { GatewayTlsRuntime } from "./server/tls.js";
+import type { GatewayWsClient } from "./server/ws-types.js";
 
 export async function createGatewayRuntimeState(params: {
-  channelsHost: import('./server-channels').ChannelManager;
-  cfg: import('../config/config').PowerDirectorConfig;
+  channelsHost: import("./server-channels.js").ChannelManager;
+  cfg: import("../config/config.js").PowerDirectorConfig;
   bindHost: string;
   port: number;
   controlUiEnabled: boolean;
@@ -41,7 +41,7 @@ export async function createGatewayRuntimeState(params: {
   controlUiRoot?: ControlUiRootState;
   openAiChatCompletionsEnabled: boolean;
   openResponsesEnabled: boolean;
-  openResponsesConfig?: import('../config/types.gateway').GatewayHttpResponsesConfig;
+  openResponsesConfig?: import("../config/types.gateway.js").GatewayHttpResponsesConfig;
   resolvedAuth: ResolvedGatewayAuth;
   /** Optional rate limiter for auth brute-force protection. */
   rateLimiter?: AuthRateLimiter;

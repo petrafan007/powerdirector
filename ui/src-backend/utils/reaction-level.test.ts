@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveReactionLevel } from './reaction-level';
+import { resolveReactionLevel } from "./reaction-level.js";
 
 describe("resolveReactionLevel", () => {
   it("defaults when value is missing", () => {

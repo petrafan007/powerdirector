@@ -1,9 +1,9 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveCommandAuthorization } from '../command-auth';
-import { normalizeCommandBody } from '../commands-registry';
-import type { MsgContext } from '../templating';
-import type { CommandContext } from './commands-types';
-import { stripMentions } from './mentions';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveCommandAuthorization } from "../command-auth.js";
+import { normalizeCommandBody } from "../commands-registry.js";
+import type { MsgContext } from "../templating.js";
+import type { CommandContext } from "./commands-types.js";
+import { stripMentions } from "./mentions.js";
 
 export function buildCommandContext(params: {
   ctx: MsgContext;

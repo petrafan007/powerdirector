@@ -1,11 +1,11 @@
-import { logVerbose } from '../../globals';
-import { SILENT_REPLY_TOKEN } from '../tokens';
-import type { BlockReplyContext, ReplyPayload } from '../types';
-import type { BlockReplyPipeline } from './block-reply-pipeline';
-import { createBlockReplyPayloadKey } from './block-reply-pipeline';
-import { parseReplyDirectives } from './reply-directives';
-import { applyReplyTagsToPayload, isRenderablePayload } from './reply-payloads';
-import type { TypingSignaler } from './typing-mode';
+import { logVerbose } from "../../globals.js";
+import { SILENT_REPLY_TOKEN } from "../tokens.js";
+import type { BlockReplyContext, ReplyPayload } from "../types.js";
+import type { BlockReplyPipeline } from "./block-reply-pipeline.js";
+import { createBlockReplyPayloadKey } from "./block-reply-pipeline.js";
+import { parseReplyDirectives } from "./reply-directives.js";
+import { applyReplyTagsToPayload, isRenderablePayload } from "./reply-payloads.js";
+import type { TypingSignaler } from "./typing-mode.js";
 
 export type ReplyDirectiveParseMode = "always" | "auto" | "never";
 

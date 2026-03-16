@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PowerDirectorSchema } from './zod-schema';
+import { PowerDirectorSchema } from "./zod-schema.js";
 
 describe("skills entries config schema", () => {
   it("accepts custom fields under config", () => {

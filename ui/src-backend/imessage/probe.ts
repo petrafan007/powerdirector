@@ -1,13 +1,13 @@
-import type { BaseProbeResult } from '../channels/plugins/types';
-import { detectBinary } from '../commands/onboard-helpers';
-import { loadConfig } from '../config/config';
-import { runCommandWithTimeout } from '../process/exec';
-import type { RuntimeEnv } from '../runtime';
-import { createIMessageRpcClient } from './client';
-import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from './constants';
+import type { BaseProbeResult } from "../channels/plugins/types.js";
+import { detectBinary } from "../commands/onboard-helpers.js";
+import { loadConfig } from "../config/config.js";
+import { runCommandWithTimeout } from "../process/exec.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { createIMessageRpcClient } from "./client.js";
+import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from "./constants.js";
 
 // Re-export for backwards compatibility
-export { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from './constants';
+export { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from "./constants.js";
 
 export type IMessageProbe = BaseProbeResult & {
   fatal?: boolean;

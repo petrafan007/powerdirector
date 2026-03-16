@@ -1,15 +1,15 @@
-import { hasControlCommand } from '../../../auto-reply/command-detection';
-import { parseActivationCommand } from '../../../auto-reply/group-activation';
-import { recordPendingHistoryEntryIfEnabled } from '../../../auto-reply/reply/history';
-import { resolveMentionGating } from '../../../channels/mention-gating';
-import type { loadConfig } from '../../../config/config';
-import { normalizeE164 } from '../../../utils';
-import type { MentionConfig } from '../mentions';
-import { buildMentionConfig, debugMention, resolveOwnerList } from '../mentions';
-import type { WebInboundMsg } from '../types';
-import { stripMentionsForCommand } from './commands';
-import { resolveGroupActivationFor, resolveGroupPolicyFor } from './group-activation';
-import { noteGroupMember } from './group-members';
+import { hasControlCommand } from "../../../auto-reply/command-detection.js";
+import { parseActivationCommand } from "../../../auto-reply/group-activation.js";
+import { recordPendingHistoryEntryIfEnabled } from "../../../auto-reply/reply/history.js";
+import { resolveMentionGating } from "../../../channels/mention-gating.js";
+import type { loadConfig } from "../../../config/config.js";
+import { normalizeE164 } from "../../../utils.js";
+import type { MentionConfig } from "../mentions.js";
+import { buildMentionConfig, debugMention, resolveOwnerList } from "../mentions.js";
+import type { WebInboundMsg } from "../types.js";
+import { stripMentionsForCommand } from "./commands.js";
+import { resolveGroupActivationFor, resolveGroupPolicyFor } from "./group-activation.js";
+import { noteGroupMember } from "./group-members.js";
 
 export type GroupHistoryEntry = {
   sender: string;

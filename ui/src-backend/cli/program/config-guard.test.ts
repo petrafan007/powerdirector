@@ -31,7 +31,7 @@ function makeRuntime() {
 describe("ensureConfigReady", () => {
   async function runEnsureConfigReady(commandPath: string[]) {
     vi.resetModules();
-    const { ensureConfigReady } = await import('./config-guard');
+    const { ensureConfigReady } = await import("./config-guard.js");
     await ensureConfigReady({ runtime: makeRuntime() as never, commandPath });
   }
 

@@ -1,7 +1,7 @@
-import { resolveCommitHash } from '../infra/git-commit';
-import { visibleWidth } from '../terminal/ansi';
-import { isRich, theme } from '../terminal/theme';
-import { pickTagline, type TaglineOptions } from './tagline';
+import { resolveCommitHash } from "../infra/git-commit.js";
+import { visibleWidth } from "../terminal/ansi.js";
+import { isRich, theme } from "../terminal/theme.js";
+import { pickTagline, type TaglineOptions } from "./tagline.js";
 
 type BannerOptions = TaglineOptions & {
   argv?: string[];

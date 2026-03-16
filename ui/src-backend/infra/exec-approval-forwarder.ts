@@ -1,20 +1,20 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
-import { loadSessionStore, resolveStorePath } from '../config/sessions';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadConfig } from "../config/config.js";
+import { loadSessionStore, resolveStorePath } from "../config/sessions.js";
 import type {
   ExecApprovalForwardingConfig,
   ExecApprovalForwardTarget,
-} from '../config/types.approvals';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { parseAgentSessionKey } from '../routing/session-key';
-import { isDeliverableMessageChannel, normalizeMessageChannel } from '../utils/message-channel';
+} from "../config/types.approvals.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { parseAgentSessionKey } from "../routing/session-key.js";
+import { isDeliverableMessageChannel, normalizeMessageChannel } from "../utils/message-channel.js";
 import type {
   ExecApprovalDecision,
   ExecApprovalRequest,
   ExecApprovalResolved,
-} from './exec-approvals';
-import { deliverOutboundPayloads } from './outbound/deliver';
-import { resolveSessionDeliveryTarget } from './outbound/targets';
+} from "./exec-approvals.js";
+import { deliverOutboundPayloads } from "./outbound/deliver.js";
+import { resolveSessionDeliveryTarget } from "./outbound/targets.js";
 
 const log = createSubsystemLogger("gateway/exec-approvals");
 

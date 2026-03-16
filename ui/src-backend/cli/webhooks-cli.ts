@@ -1,11 +1,11 @@
 import type { Command } from "commander";
-import { danger } from '../globals';
+import { danger } from "../globals.js";
 import {
   type GmailRunOptions,
   type GmailSetupOptions,
   runGmailService,
   runGmailSetup,
-} from '../hooks/gmail-ops';
+} from "../hooks/gmail-ops.js";
 import {
   DEFAULT_GMAIL_LABEL,
   DEFAULT_GMAIL_MAX_BYTES,
@@ -15,10 +15,10 @@ import {
   DEFAULT_GMAIL_SERVE_PORT,
   DEFAULT_GMAIL_SUBSCRIPTION,
   DEFAULT_GMAIL_TOPIC,
-} from '../hooks/gmail';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
+} from "../hooks/gmail.js";
+import { defaultRuntime } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { theme } from "../terminal/theme.js";
 
 export function registerWebhooksCli(program: Command) {
   const webhooks = program

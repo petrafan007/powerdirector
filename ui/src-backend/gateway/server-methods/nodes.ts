@@ -1,5 +1,5 @@
-import { loadConfig } from '../../config/config';
-import { listDevicePairing } from '../../infra/device-pairing';
+import { loadConfig } from "../../config/config.js";
+import { listDevicePairing } from "../../infra/device-pairing.js";
 import {
   approveNodePairing,
   listNodePairing,
@@ -7,14 +7,14 @@ import {
   renamePairedNode,
   requestNodePairing,
   verifyNodeToken,
-} from '../../infra/node-pairing';
+} from "../../infra/node-pairing.js";
 import {
   loadApnsRegistration,
   resolveApnsAuthConfigFromEnv,
   sendApnsBackgroundWake,
-} from '../../infra/push-apns';
-import { isNodeCommandAllowed, resolveNodeCommandAllowlist } from '../node-command-policy';
-import { sanitizeNodeInvokeParamsForForwarding } from '../node-invoke-sanitize';
+} from "../../infra/push-apns.js";
+import { isNodeCommandAllowed, resolveNodeCommandAllowlist } from "../node-command-policy.js";
+import { sanitizeNodeInvokeParamsForForwarding } from "../node-invoke-sanitize.js";
 import {
   ErrorCodes,
   errorShape,
@@ -28,16 +28,16 @@ import {
   validateNodePairRequestParams,
   validateNodePairVerifyParams,
   validateNodeRenameParams,
-} from '../protocol/index';
-import { handleNodeInvokeResult } from './nodes.handlers.invoke-result';
+} from "../protocol/index.js";
+import { handleNodeInvokeResult } from "./nodes.handlers.invoke-result.js";
 import {
   respondInvalidParams,
   respondUnavailableOnNodeInvokeError,
   respondUnavailableOnThrow,
   safeParseJson,
   uniqueSortedStrings,
-} from './nodes.helpers';
-import type { GatewayRequestHandlers } from './types';
+} from "./nodes.helpers.js";
+import type { GatewayRequestHandlers } from "./types.js";
 
 const NODE_WAKE_RECONNECT_WAIT_MS = 3_000;
 const NODE_WAKE_RECONNECT_POLL_MS = 150;
@@ -563,7 +563,7 @@ export const nodeHandlers: GatewayRequestHandlers = {
           ? JSON.stringify(p.payload)
           : null;
     await respondUnavailableOnThrow(respond, async () => {
-      const { handleNodeEvent } = await import('../server-node-events');
+      const { handleNodeEvent } = await import("../server-node-events.js");
       const nodeId = client?.connect?.device?.id ?? client?.connect?.client?.id ?? "node";
       const nodeContext = {
         deps: context.deps,

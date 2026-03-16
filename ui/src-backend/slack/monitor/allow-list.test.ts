@@ -5,7 +5,7 @@ import {
   normalizeSlackSlug,
   resolveSlackAllowListMatch,
   resolveSlackUserAllowed,
-} from './allow-list';
+} from "./allow-list.js";
 
 describe("slack/allow-list", () => {
   it("normalizes lists and slugs", () => {

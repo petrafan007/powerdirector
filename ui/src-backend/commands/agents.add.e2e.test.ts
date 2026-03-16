@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { baseConfigSnapshot, createTestRuntime } from './test-runtime-config-helpers';
+import { baseConfigSnapshot, createTestRuntime } from "./test-runtime-config-helpers.js";
 
 const readConfigFileSnapshotMock = vi.hoisted(() => vi.fn());
 const writeConfigFileMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
@@ -9,7 +9,7 @@ const wizardMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => ({
-  ...(await importOriginal<typeof import('../config/config')>()),
+  ...(await importOriginal<typeof import("../config/config.js")>()),
   readConfigFileSnapshot: readConfigFileSnapshotMock,
   writeConfigFile: writeConfigFileMock,
 }));
@@ -18,8 +18,8 @@ vi.mock("../wizard/clack-prompter.js", () => ({
   createClackPrompter: wizardMocks.createClackPrompter,
 }));
 
-import { WizardCancelledError } from '../wizard/prompts';
-import { agentsAddCommand } from './agents';
+import { WizardCancelledError } from "../wizard/prompts.js";
+import { agentsAddCommand } from "./agents.js";
 
 const runtime = createTestRuntime();
 

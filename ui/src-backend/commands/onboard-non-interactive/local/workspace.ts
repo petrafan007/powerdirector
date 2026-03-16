@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../../../config/config';
-import { resolveUserPath } from '../../../utils';
-import type { OnboardOptions } from '../../onboard-types';
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import { resolveUserPath } from "../../../utils.js";
+import type { OnboardOptions } from "../../onboard-types.js";
 
 export function resolveNonInteractiveWorkspaceDir(params: {
   opts: OnboardOptions;

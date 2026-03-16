@@ -4,7 +4,7 @@ import {
   buildTrustedSafeBinDirs,
   getTrustedSafeBinDirs,
   isTrustedSafeBinPath,
-} from './exec-safe-bin-trust';
+} from "./exec-safe-bin-trust.js";
 
 describe("exec safe bin trust", () => {
   it("builds trusted dirs from defaults and injected PATH", () => {

@@ -1,16 +1,16 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { applyBootstrapHookOverrides } from './bootstrap-hooks';
-import type { EmbeddedContextFile } from './pi-embedded-helpers';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { applyBootstrapHookOverrides } from "./bootstrap-hooks.js";
+import type { EmbeddedContextFile } from "./pi-embedded-helpers.js";
 import {
   buildBootstrapContextFiles,
   resolveBootstrapMaxChars,
   resolveBootstrapTotalMaxChars,
-} from './pi-embedded-helpers';
+} from "./pi-embedded-helpers.js";
 import {
   filterBootstrapFilesForSession,
   loadWorkspaceBootstrapFiles,
   type WorkspaceBootstrapFile,
-} from './workspace';
+} from "./workspace.js";
 
 export function makeBootstrapWarn(params: {
   sessionLabel: string;

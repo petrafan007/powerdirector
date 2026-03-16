@@ -1,13 +1,13 @@
-import { upsertAuthProfile } from '../../../agents/auth-profiles';
-import { normalizeProviderId } from '../../../agents/model-selection';
-import { parseDurationMs } from '../../../cli/parse-duration';
-import type { PowerDirectorConfig } from '../../../config/config';
-import { upsertSharedEnvVar } from '../../../infra/env-file';
-import type { RuntimeEnv } from '../../../runtime';
-import { shortenHomePath } from '../../../utils';
-import { normalizeSecretInput } from '../../../utils/normalize-secret-input';
-import { buildTokenProfileId, validateAnthropicSetupToken } from '../../auth-token';
-import { applyGoogleGeminiModelDefault } from '../../google-gemini-model-default';
+import { upsertAuthProfile } from "../../../agents/auth-profiles.js";
+import { normalizeProviderId } from "../../../agents/model-selection.js";
+import { parseDurationMs } from "../../../cli/parse-duration.js";
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import { upsertSharedEnvVar } from "../../../infra/env-file.js";
+import type { RuntimeEnv } from "../../../runtime.js";
+import { shortenHomePath } from "../../../utils.js";
+import { normalizeSecretInput } from "../../../utils/normalize-secret-input.js";
+import { buildTokenProfileId, validateAnthropicSetupToken } from "../../auth-token.js";
+import { applyGoogleGeminiModelDefault } from "../../google-gemini-model-default.js";
 import {
   applyAuthProfileConfig,
   applyCloudflareAiGatewayConfig,
@@ -47,17 +47,17 @@ import {
   setVercelAiGatewayApiKey,
   setXiaomiApiKey,
   setZaiApiKey,
-} from '../../onboard-auth';
+} from "../../onboard-auth.js";
 import {
   applyCustomApiConfig,
   CustomApiError,
   parseNonInteractiveCustomApiFlags,
   resolveCustomProviderId,
-} from '../../onboard-custom';
-import type { AuthChoice, OnboardOptions } from '../../onboard-types';
-import { applyOpenAIConfig } from '../../openai-model-default';
-import { detectZaiEndpoint } from '../../zai-endpoint-detect';
-import { resolveNonInteractiveApiKey } from '../api-keys';
+} from "../../onboard-custom.js";
+import type { AuthChoice, OnboardOptions } from "../../onboard-types.js";
+import { applyOpenAIConfig } from "../../openai-model-default.js";
+import { detectZaiEndpoint } from "../../zai-endpoint-detect.js";
+import { resolveNonInteractiveApiKey } from "../api-keys.js";
 
 export async function applyNonInteractiveAuthChoice(params: {
   nextConfig: PowerDirectorConfig;

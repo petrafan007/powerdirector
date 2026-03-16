@@ -6,15 +6,15 @@ vi.mock("node:child_process", () => ({
   execFile: execFileMock,
 }));
 
-import { splitArgsPreservingQuotes } from './arg-split';
-import { parseSystemdExecStart } from './systemd-unit';
+import { splitArgsPreservingQuotes } from "./arg-split.js";
+import { parseSystemdExecStart } from "./systemd-unit.js";
 import {
   isSystemdUserServiceAvailable,
   parseSystemdShow,
   restartSystemdService,
   resolveSystemdUserUnitPath,
   stopSystemdService,
-} from './systemd';
+} from "./systemd.js";
 
 describe("systemd availability", () => {
   beforeEach(() => {

@@ -1,7 +1,7 @@
 // Shared helpers for parsing MEDIA tokens from command/stdout text.
 
-import { parseFenceSpans } from '../markdown/fences';
-import { parseAudioTag } from './audio-tags';
+import { parseFenceSpans } from "../markdown/fences.js";
+import { parseAudioTag } from "./audio-tags.js";
 
 // Allow optional wrapping backticks and punctuation after the token; capture the core token.
 export const MEDIA_TOKEN_RE = /\bMEDIA:\s*`?([^\n]+)`?/gi;

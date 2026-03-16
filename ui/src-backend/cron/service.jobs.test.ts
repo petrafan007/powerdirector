@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { applyJobPatch, createJob } from './service/jobs';
-import type { CronServiceState } from './service/state';
-import { DEFAULT_TOP_OF_HOUR_STAGGER_MS } from './stagger';
-import type { CronJob, CronJobPatch } from './types';
+import { applyJobPatch, createJob } from "./service/jobs.js";
+import type { CronServiceState } from "./service/state.js";
+import { DEFAULT_TOP_OF_HOUR_STAGGER_MS } from "./stagger.js";
+import type { CronJob, CronJobPatch } from "./types.js";
 
 describe("applyJobPatch", () => {
   const createIsolatedAgentTurnJob = (

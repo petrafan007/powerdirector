@@ -1,7 +1,7 @@
 import "./reply.directive.directive-behavior.e2e-mocks.js";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { loadSessionStore } from '../config/sessions';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadSessionStore } from "../config/sessions.js";
 import {
   AUTHORIZED_WHATSAPP_COMMAND,
   installDirectiveBehaviorE2EHooks,
@@ -11,8 +11,8 @@ import {
   runEmbeddedPiAgent,
   sessionStorePath,
   withTempHome,
-} from './reply.directive.directive-behavior.e2e-harness';
-import { getReplyFromConfig } from './reply';
+} from "./reply.directive.directive-behavior.e2e-harness.js";
+import { getReplyFromConfig } from "./reply.js";
 
 async function runAuthorizedCommand(home: string, body: string) {
   return getReplyFromConfig(

@@ -8,7 +8,7 @@ import {
   readVersionFromPackageJsonForModuleUrl,
   resolveRuntimeServiceVersion,
   resolveVersionFromModuleUrl,
-} from './version';
+} from "./version.js";
 
 async function withTempDir<T>(run: (dir: string) => Promise<T>): Promise<T> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-version-"));

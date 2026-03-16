@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createCliRuntimeCapture } from './test-runtime-capture';
+import { createCliRuntimeCapture } from "./test-runtime-capture.js";
 
 const callGateway = vi.fn(async (..._args: unknown[]) => ({ ok: true }));
 const resolveGatewayProgramArguments = vi.fn(async (_opts?: unknown) => ({
@@ -72,7 +72,7 @@ vi.mock("./progress.js", () => ({
   withProgress: async (_opts: unknown, fn: () => Promise<unknown>) => await fn(),
 }));
 
-const { registerDaemonCli } = await import('./daemon-cli');
+const { registerDaemonCli } = await import("./daemon-cli.js");
 
 function createDaemonProgram() {
   const program = new Command();

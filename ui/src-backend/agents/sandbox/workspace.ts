@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveUserPath } from '../../utils';
+import { resolveUserPath } from "../../utils.js";
 import {
   DEFAULT_AGENTS_FILENAME,
   DEFAULT_BOOTSTRAP_FILENAME,
@@ -10,7 +10,7 @@ import {
   DEFAULT_TOOLS_FILENAME,
   DEFAULT_USER_FILENAME,
   ensureAgentWorkspace,
-} from '../workspace';
+} from "../workspace.js";
 
 export async function ensureSandboxWorkspace(
   workspaceDir: string,

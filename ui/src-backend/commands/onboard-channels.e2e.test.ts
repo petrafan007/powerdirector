@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { WizardPrompter } from '../wizard/prompts';
-import { setDefaultChannelPluginRegistryForTests } from './channel-test-helpers';
-import { setupChannels } from './onboard-channels';
-import { createExitThrowingRuntime, createWizardPrompter } from './test-wizard-helpers';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { WizardPrompter } from "../wizard/prompts.js";
+import { setDefaultChannelPluginRegistryForTests } from "./channel-test-helpers.js";
+import { setupChannels } from "./onboard-channels.js";
+import { createExitThrowingRuntime, createWizardPrompter } from "./test-wizard-helpers.js";
 
 function createPrompter(overrides: Partial<WizardPrompter>): WizardPrompter {
   return createWizardPrompter(

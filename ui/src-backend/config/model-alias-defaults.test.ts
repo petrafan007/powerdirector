@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_CONTEXT_TOKENS } from '../agents/defaults';
-import { applyModelDefaults } from './defaults';
-import type { PowerDirectorConfig } from './types';
+import { DEFAULT_CONTEXT_TOKENS } from "../agents/defaults.js";
+import { applyModelDefaults } from "./defaults.js";
+import type { PowerDirectorConfig } from "./types.js";
 
 describe("applyModelDefaults", () => {
   function buildProxyProviderConfig(overrides?: { contextWindow?: number; maxTokens?: number }) {

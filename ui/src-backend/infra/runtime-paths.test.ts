@@ -5,7 +5,7 @@ import {
   resolveDefaultGeneratedDir,
   resolveDefaultMediaStorageDir,
   resolveDefaultTmpDir,
-} from './runtime-paths';
+} from "./runtime-paths.js";
 
 describe("runtime path defaults", () => {
   it("derives mutable paths from the PowerDirector state dir by default", () => {

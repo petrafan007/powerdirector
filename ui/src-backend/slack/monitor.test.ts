@@ -3,7 +3,7 @@ import {
   buildSlackSlashCommandMatcher,
   isSlackChannelAllowedByPolicy,
   resolveSlackThreadTs,
-} from './monitor';
+} from "./monitor.js";
 
 describe("slack groupPolicy gating", () => {
   it("allows when policy is open", () => {

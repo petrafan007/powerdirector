@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import type { MsgContext } from '../auto-reply/templating';
-import type { PowerDirectorConfig } from '../config/config';
+import type { MsgContext } from "../auto-reply/templating.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   buildProviderRegistry,
   createMediaAttachmentCache,
   normalizeMediaAttachments,
   runCapability,
-} from './runner';
+} from "./runner.js";
 
 const catalog = [
   {
@@ -18,7 +18,7 @@ const catalog = [
 ];
 
 vi.mock("../agents/model-catalog.js", async () => {
-  const actual = await vi.importActual<typeof import('../agents/model-catalog')>(
+  const actual = await vi.importActual<typeof import("../agents/model-catalog.js")>(
     "../agents/model-catalog.js",
   );
   return {

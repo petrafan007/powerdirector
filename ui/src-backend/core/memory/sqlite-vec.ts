@@ -4,8 +4,8 @@ import os from "node:os";
 import fs from "node:fs/promises";
 import fsSync from "node:fs";
 import Database from "better-sqlite3";
-import { createEmbeddingProvider, EmbeddingProvider } from './embeddings';
-import { ResolvedMemorySearchConfig } from './config';
+import { createEmbeddingProvider, EmbeddingProvider } from "./embeddings.js";
+import { ResolvedMemorySearchConfig } from "./config.js";
 import {
     MemoryEmbeddingProbeResult,
     MemoryProviderStatus,
@@ -13,15 +13,15 @@ import {
     MemorySearchResult,
     MemorySource,
     MemorySyncProgressUpdate,
-} from './types';
+} from "./types.js";
 import {
     buildMemoryFileEntry,
     chunkMarkdown,
     cosineSimilarity,
     hashText,
     listMemoryFiles,
-} from './internal';
-import { resolveUserPath } from './utils';
+} from "./internal.js";
+import { resolveUserPath } from "./utils.js";
 
 type ChunkRow = {
     id: string;

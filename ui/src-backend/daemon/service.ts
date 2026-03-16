@@ -6,7 +6,7 @@ import {
   restartLaunchAgent,
   stopLaunchAgent,
   uninstallLaunchAgent,
-} from './launchd';
+} from "./launchd.js";
 import {
   installScheduledTask,
   isScheduledTaskInstalled,
@@ -15,8 +15,8 @@ import {
   restartScheduledTask,
   stopScheduledTask,
   uninstallScheduledTask,
-} from './schtasks';
-import type { GatewayServiceRuntime } from './service-runtime';
+} from "./schtasks.js";
+import type { GatewayServiceRuntime } from "./service-runtime.js";
 import type {
   GatewayServiceCommandConfig,
   GatewayServiceControlArgs,
@@ -24,7 +24,7 @@ import type {
   GatewayServiceEnvArgs,
   GatewayServiceInstallArgs,
   GatewayServiceManageArgs,
-} from './service-types';
+} from "./service-types.js";
 import {
   installSystemdService,
   isSystemdServiceEnabled,
@@ -33,7 +33,7 @@ import {
   restartSystemdService,
   stopSystemdService,
   uninstallSystemdService,
-} from './systemd';
+} from "./systemd.js";
 export type {
   GatewayServiceCommandConfig,
   GatewayServiceControlArgs,
@@ -41,7 +41,7 @@ export type {
   GatewayServiceEnvArgs,
   GatewayServiceInstallArgs,
   GatewayServiceManageArgs,
-} from './service-types';
+} from "./service-types.js";
 
 function ignoreInstallResult(
   install: (args: GatewayServiceInstallArgs) => Promise<unknown>,

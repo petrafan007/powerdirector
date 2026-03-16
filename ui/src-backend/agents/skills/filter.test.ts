@@ -3,7 +3,7 @@ import {
   matchesSkillFilter,
   normalizeSkillFilter,
   normalizeSkillFilterForComparison,
-} from './filter';
+} from "./filter.js";
 
 describe("skills/filter", () => {
   it("normalizes configured filters with trimming", () => {

@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveSkillConfig } from './config';
-import { resolveSkillKey } from './frontmatter';
-import type { SkillEntry, SkillSnapshot } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveSkillConfig } from "./config.js";
+import { resolveSkillKey } from "./frontmatter.js";
+import type { SkillEntry, SkillSnapshot } from "./types.js";
 
 type EnvUpdate = { key: string; prev: string | undefined };
 type SkillConfig = NonNullable<ReturnType<typeof resolveSkillConfig>>;

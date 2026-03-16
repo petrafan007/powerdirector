@@ -3,39 +3,39 @@ import {
   chunkMarkdownTextWithMode,
   resolveChunkMode,
   resolveTextChunkLimit,
-} from '../../auto-reply/chunk';
-import type { ReplyPayload } from '../../auto-reply/types';
-import { resolveChannelMediaMaxBytes } from '../../channels/plugins/media-limits';
-import { loadChannelOutboundAdapter } from '../../channels/plugins/outbound/load';
+} from "../../auto-reply/chunk.js";
+import type { ReplyPayload } from "../../auto-reply/types.js";
+import { resolveChannelMediaMaxBytes } from "../../channels/plugins/media-limits.js";
+import { loadChannelOutboundAdapter } from "../../channels/plugins/outbound/load.js";
 import type {
   ChannelOutboundAdapter,
   ChannelOutboundContext,
-} from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveMarkdownTableMode } from '../../config/markdown-tables';
+} from "../../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveMarkdownTableMode } from "../../config/markdown-tables.js";
 import {
   appendAssistantMessageToSessionTranscript,
   resolveMirroredTranscriptText,
-} from '../../config/sessions';
-import type { sendMessageDiscord } from '../../discord/send';
-import { createInternalHookEvent, triggerInternalHook } from '../../hooks/internal-hooks';
-import type { sendMessageIMessage } from '../../imessage/send';
-import { getAgentScopedMediaLocalRoots } from '../../media/local-roots';
-import { getGlobalHookRunner } from '../../plugins/hook-runner-global';
-import { markdownToSignalTextChunks, type SignalTextStyleRange } from '../../signal/format';
-import { sendMessageSignal } from '../../signal/send';
-import type { sendMessageSlack } from '../../slack/send';
-import type { sendMessageTelegram } from '../../telegram/send';
-import type { sendMessageWhatsApp } from '../../web/outbound';
-import { throwIfAborted } from './abort';
-import { ackDelivery, enqueueDelivery, failDelivery } from './delivery-queue';
-import type { OutboundIdentity } from './identity';
-import type { NormalizedOutboundPayload } from './payloads';
-import { normalizeReplyPayloadsForDelivery } from './payloads';
-import type { OutboundChannel } from './targets';
+} from "../../config/sessions.js";
+import type { sendMessageDiscord } from "../../discord/send.js";
+import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
+import type { sendMessageIMessage } from "../../imessage/send.js";
+import { getAgentScopedMediaLocalRoots } from "../../media/local-roots.js";
+import { getGlobalHookRunner } from "../../plugins/hook-runner-global.js";
+import { markdownToSignalTextChunks, type SignalTextStyleRange } from "../../signal/format.js";
+import { sendMessageSignal } from "../../signal/send.js";
+import type { sendMessageSlack } from "../../slack/send.js";
+import type { sendMessageTelegram } from "../../telegram/send.js";
+import type { sendMessageWhatsApp } from "../../web/outbound.js";
+import { throwIfAborted } from "./abort.js";
+import { ackDelivery, enqueueDelivery, failDelivery } from "./delivery-queue.js";
+import type { OutboundIdentity } from "./identity.js";
+import type { NormalizedOutboundPayload } from "./payloads.js";
+import { normalizeReplyPayloadsForDelivery } from "./payloads.js";
+import type { OutboundChannel } from "./targets.js";
 
-export type { NormalizedOutboundPayload } from './payloads';
-export { normalizeOutboundPayloads } from './payloads';
+export type { NormalizedOutboundPayload } from "./payloads.js";
+export { normalizeOutboundPayloads } from "./payloads.js";
 
 type SendMatrixMessage = (
   to: string,

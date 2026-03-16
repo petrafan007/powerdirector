@@ -1,5 +1,5 @@
 import { Type, type TSchema } from "@sinclair/typebox";
-import { NonEmptyString } from './primitives';
+import { NonEmptyString } from "./primitives.js";
 
 function cronAgentTurnPayloadSchema(params: { message: TSchema }) {
   return Type.Object(

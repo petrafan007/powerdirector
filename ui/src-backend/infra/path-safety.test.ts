@@ -1,6 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { isWithinDir, resolveSafeBaseDir } from './path-safety';
+import { isWithinDir, resolveSafeBaseDir } from "./path-safety.js";
 
 describe("path-safety", () => {
   it("resolves safe base dir with trailing separator", () => {

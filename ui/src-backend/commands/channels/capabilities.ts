@@ -1,14 +1,14 @@
-import { resolveChannelDefaultAccountId } from '../../channels/plugins/helpers';
-import { getChannelPlugin, listChannelPlugins } from '../../channels/plugins/index';
-import type { ChannelCapabilities, ChannelPlugin } from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { fetchChannelPermissionsDiscord } from '../../discord/send';
-import { parseDiscordTarget } from '../../discord/targets';
-import { danger } from '../../globals';
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { fetchSlackScopes, type SlackScopesResult } from '../../slack/scopes';
-import { theme } from '../../terminal/theme';
-import { formatChannelAccountLabel, requireValidConfig } from './shared';
+import { resolveChannelDefaultAccountId } from "../../channels/plugins/helpers.js";
+import { getChannelPlugin, listChannelPlugins } from "../../channels/plugins/index.js";
+import type { ChannelCapabilities, ChannelPlugin } from "../../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { fetchChannelPermissionsDiscord } from "../../discord/send.js";
+import { parseDiscordTarget } from "../../discord/targets.js";
+import { danger } from "../../globals.js";
+import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
+import { fetchSlackScopes, type SlackScopesResult } from "../../slack/scopes.js";
+import { theme } from "../../terminal/theme.js";
+import { formatChannelAccountLabel, requireValidConfig } from "./shared.js";
 
 export type ChannelsCapabilitiesOptions = {
   channel?: string;

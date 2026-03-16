@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { isRecord } from '../utils';
-import type { PluginConfigUiHint, PluginKind } from './types';
+import { isRecord } from "../utils.js";
+import type { PluginConfigUiHint, PluginKind } from "./types.js";
 
 export const PLUGIN_MANIFEST_FILENAME = "powerdirector.plugin.json";
 export const PLUGIN_MANIFEST_FILENAMES = [PLUGIN_MANIFEST_FILENAME] as const;

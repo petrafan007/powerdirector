@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveUserPath } from '../utils';
-import { createCacheTrace } from './cache-trace';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveUserPath } from "../utils.js";
+import { createCacheTrace } from "./cache-trace.js";
 
 describe("createCacheTrace", () => {
   it("returns null when diagnostics cache tracing is disabled", () => {

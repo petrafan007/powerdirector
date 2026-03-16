@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { DevicePairingList, isNodePairingEntry } from './device-pairing';
-import { NodeInfo, NodeManager } from './manager';
+import { DevicePairingList, isNodePairingEntry } from './device-pairing.js';
+import { NodeInfo, NodeManager } from './manager.js';
 
 export type ListedNode = {
     nodeId: string;

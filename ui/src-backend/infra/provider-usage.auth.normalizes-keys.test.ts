@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { resolveProviderAuths } from './provider-usage.auth';
+import { resolveProviderAuths } from "./provider-usage.auth.js";
 
 describe("resolveProviderAuths key normalization", () => {
   let suiteRoot = "";

@@ -1,5 +1,5 @@
-import { logVerbose, shouldLogVerbose } from '../globals';
-import { runTasksWithConcurrency } from '../utils/run-with-concurrency';
+import { logVerbose, shouldLogVerbose } from "../globals.js";
+import { runTasksWithConcurrency } from "../utils/run-with-concurrency.js";
 
 export async function runWithConcurrency<T>(
   tasks: Array<() => Promise<T>>,

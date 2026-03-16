@@ -1,15 +1,15 @@
-import { formatCliCommand } from '../cli/command-format';
-import { collectConfigEnvVars } from '../config/env-vars';
-import type { PowerDirectorConfig } from '../config/types';
-import { resolveGatewayLaunchAgentLabel } from '../daemon/constants';
-import { resolveGatewayProgramArguments } from '../daemon/program-args';
-import { resolvePreferredNodePath } from '../daemon/runtime-paths';
-import { buildServiceEnvironment } from '../daemon/service-env';
+import { formatCliCommand } from "../cli/command-format.js";
+import { collectConfigEnvVars } from "../config/env-vars.js";
+import type { PowerDirectorConfig } from "../config/types.js";
+import { resolveGatewayLaunchAgentLabel } from "../daemon/constants.js";
+import { resolveGatewayProgramArguments } from "../daemon/program-args.js";
+import { resolvePreferredNodePath } from "../daemon/runtime-paths.js";
+import { buildServiceEnvironment } from "../daemon/service-env.js";
 import {
   emitNodeRuntimeWarning,
   type DaemonInstallWarnFn,
-} from './daemon-install-runtime-warning';
-import type { GatewayDaemonRuntime } from './daemon-runtime';
+} from "./daemon-install-runtime-warning.js";
+import type { GatewayDaemonRuntime } from "./daemon-runtime.js";
 
 export type GatewayInstallPlan = {
   programArguments: string[];

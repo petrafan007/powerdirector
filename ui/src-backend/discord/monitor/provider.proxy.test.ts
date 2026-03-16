@@ -70,10 +70,10 @@ vi.mock("ws", () => ({
 }));
 
 describe("createDiscordGatewayPlugin", () => {
-  let createDiscordGatewayPlugin: typeof import('./gateway-plugin').createDiscordGatewayPlugin;
+  let createDiscordGatewayPlugin: typeof import("./gateway-plugin.js").createDiscordGatewayPlugin;
 
   beforeAll(async () => {
-    ({ createDiscordGatewayPlugin } = await import('./gateway-plugin'));
+    ({ createDiscordGatewayPlugin } = await import("./gateway-plugin.js"));
   });
 
   function createRuntime() {

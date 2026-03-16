@@ -8,19 +8,19 @@ import {
   chunkMarkdownTextWithMode,
   resolveChunkMode,
   resolveTextChunkLimit,
-} from '../auto-reply/chunk';
-import { loadConfig } from '../config/config';
-import { resolveMarkdownTableMode } from '../config/markdown-tables';
-import { logVerbose } from '../globals';
-import { loadWebMedia } from '../web/media';
-import type { SlackTokenSource } from './accounts';
-import { resolveSlackAccount } from './accounts';
-import { buildSlackBlocksFallbackText } from './blocks-fallback';
-import { validateSlackBlocksArray } from './blocks-input';
-import { createSlackWebClient } from './client';
-import { markdownToSlackMrkdwnChunks } from './format';
-import { parseSlackTarget } from './targets';
-import { resolveSlackBotToken } from './token';
+} from "../auto-reply/chunk.js";
+import { loadConfig } from "../config/config.js";
+import { resolveMarkdownTableMode } from "../config/markdown-tables.js";
+import { logVerbose } from "../globals.js";
+import { loadWebMedia } from "../web/media.js";
+import type { SlackTokenSource } from "./accounts.js";
+import { resolveSlackAccount } from "./accounts.js";
+import { buildSlackBlocksFallbackText } from "./blocks-fallback.js";
+import { validateSlackBlocksArray } from "./blocks-input.js";
+import { createSlackWebClient } from "./client.js";
+import { markdownToSlackMrkdwnChunks } from "./format.js";
+import { parseSlackTarget } from "./targets.js";
+import { resolveSlackBotToken } from "./token.js";
 
 const SLACK_TEXT_LIMIT = 4000;
 

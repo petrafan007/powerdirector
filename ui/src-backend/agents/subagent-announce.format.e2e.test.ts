@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { SILENT_REPLY_TOKEN } from '../auto-reply/tokens';
+import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
 
 type AgentCallRequest = { method?: string; params?: Record<string, unknown> };
 type RequesterResolution = {
@@ -28,7 +28,7 @@ const chatHistoryMock = vi.fn(async (_sessionKey?: string) => ({
   messages: [] as Array<unknown>,
 }));
 let sessionStore: Record<string, Record<string, unknown>> = {};
-let configOverride: ReturnType<(typeof import('../config/config'))["loadConfig"]> = {
+let configOverride: ReturnType<(typeof import("../config/config.js"))["loadConfig"]> = {
   session: {
     mainKey: "main",
     scope: "per-sender",
@@ -105,7 +105,7 @@ vi.mock("./pi-embedded.js", () => embeddedRunMock);
 vi.mock("./subagent-registry.js", () => subagentRegistryMock);
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => configOverride,
@@ -136,7 +136,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("sends instructional message to main agent with status and findings", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     sessionStore = {
       "agent:main:subagent:test": {
         sessionId: "child-session-123",
@@ -178,7 +178,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("includes success status when outcome is ok", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     // Use waitForCompletion: false so it uses the provided outcome instead of calling agent.wait
     await runSubagentAnnounceFlow({
       childSessionKey: "agent:main:subagent:test",
@@ -194,7 +194,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("uses child-run announce identity for direct idempotency", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     await runSubagentAnnounceFlow({
       childSessionKey: "agent:main:subagent:worker",
       childRunId: "run-direct-idem",
@@ -215,7 +215,7 @@ describe("subagent announce formatting", () => {
   ] as const)(
     "falls back to latest $role output when assistant reply is empty",
     async (testCase) => {
-      const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+      const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
       chatHistoryMock.mockResolvedValueOnce({
         messages: [
           {
@@ -246,7 +246,7 @@ describe("subagent announce formatting", () => {
   );
 
   it("uses latest assistant text when it appears after a tool output", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     chatHistoryMock.mockResolvedValueOnce({
       messages: [
         {
@@ -276,7 +276,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("keeps full findings and includes compact stats", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     sessionStore = {
       "agent:main:subagent:test": {
         sessionId: "child-session-usage",
@@ -313,7 +313,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("sends deterministic completion message directly for manual spawn completion", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     sessionStore = {
       "agent:main:subagent:test": {
         sessionId: "child-session-direct",
@@ -354,7 +354,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("ignores stale session thread hints for manual completion direct-send", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     sessionStore = {
       "agent:main:subagent:test": {
         sessionId: "child-session-direct-thread",
@@ -390,7 +390,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("passes requesterOrigin.threadId for manual completion direct-send", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     sessionStore = {
       "agent:main:subagent:test": {
         sessionId: "child-session-direct-thread-pass",
@@ -428,7 +428,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("steers announcements into an active run when queue mode is steer", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(true);
     embeddedRunMock.queueEmbeddedPiMessage.mockReturnValue(true);
@@ -458,7 +458,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("queues announce delivery with origin account routing", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     sessionStore = {
@@ -488,7 +488,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("keeps queued idempotency unique for same-ms distinct child runs", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     sessionStore = {
@@ -542,7 +542,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("prefers direct delivery first for completion-mode and then queues on direct failure", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     sessionStore = {
@@ -583,7 +583,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("returns failure for completion-mode when direct delivery fails and queue fallback is unavailable", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(false);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     sessionStore = {
@@ -610,7 +610,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("uses assistant output for completion-mode when latest assistant text exists", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     chatHistoryMock.mockResolvedValueOnce({
       messages: [
         {
@@ -643,7 +643,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("falls back to latest tool output for completion-mode when assistant output is empty", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     chatHistoryMock.mockResolvedValueOnce({
       messages: [
         {
@@ -675,7 +675,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("queues announce delivery back into requester subagent session", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     sessionStore = {
@@ -724,7 +724,7 @@ describe("subagent announce formatting", () => {
       },
     },
   ] as const)("$testName", async (testCase) => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     sessionStore = {
@@ -755,7 +755,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("splits collect-mode queues when accountId differs", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     sessionStore = {
@@ -811,7 +811,7 @@ describe("subagent announce formatting", () => {
       expectedAccountId: "acct-987",
     },
   ] as const)("$testName", async (testCase) => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(false);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
 
@@ -835,7 +835,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("injects direct announce into requester subagent session instead of chat channel", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(false);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
 
@@ -857,7 +857,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("retries reading subagent output when early lifecycle completion had no text", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValueOnce(true).mockReturnValue(false);
     embeddedRunMock.waitForEmbeddedPiRunEnd.mockResolvedValue(true);
     readLatestAssistantReplyMock
@@ -893,7 +893,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("uses advisory guidance when sibling subagents are still active", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     subagentRegistryMock.countActiveDescendantRuns.mockImplementation((sessionKey: string) =>
       sessionKey === "agent:main:main" ? 2 : 0,
     );
@@ -916,7 +916,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("defers announce while the finished run still has active descendants", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     subagentRegistryMock.countActiveDescendantRuns.mockImplementation((sessionKey: string) =>
       sessionKey === "agent:main:subagent:parent" ? 1 : 0,
     );
@@ -934,7 +934,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("bubbles child announce to parent requester when requester subagent already ended", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     subagentRegistryMock.isSubagentSessionRunActive.mockReturnValue(false);
     subagentRegistryMock.resolveRequesterForChildSession.mockReturnValue({
       requesterSessionKey: "agent:main:main",
@@ -959,7 +959,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("keeps announce retryable when ended requester subagent has no fallback requester", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     subagentRegistryMock.isSubagentSessionRunActive.mockReturnValue(false);
     subagentRegistryMock.resolveRequesterForChildSession.mockReturnValue(null);
 
@@ -986,7 +986,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("defers announce when child run is still active after wait timeout", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.waitForEmbeddedPiRunEnd.mockResolvedValue(false);
     sessionStore = {
@@ -1014,7 +1014,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("prefers requesterOrigin channel over stale session lastChannel in queued announce", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(true);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
     // Session store has stale whatsapp channel, but the requesterOrigin says bluebubbles.
@@ -1049,7 +1049,7 @@ describe("subagent announce formatting", () => {
     // Scenario: Newton (depth-1) spawns Birdie (depth-2). Newton's agent turn ends
     // after spawning but Newton's SESSION still exists (waiting for Birdie's result).
     // Birdie completes → Birdie's announce should go to Newton, NOT to Jaris (depth-0).
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(false);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
 
@@ -1100,7 +1100,7 @@ describe("subagent announce formatting", () => {
 
   it("falls back to grandparent only when parent session is deleted (#18037)", async () => {
     // Scenario: Parent session was cleaned up. Only then should we fallback.
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(false);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
 
@@ -1144,7 +1144,7 @@ describe("subagent announce formatting", () => {
   });
 
   it("falls back when parent session is missing a sessionId (#18037)", async () => {
-    const { runSubagentAnnounceFlow } = await import('./subagent-announce');
+    const { runSubagentAnnounceFlow } = await import("./subagent-announce.js");
     embeddedRunMock.isEmbeddedPiRunActive.mockReturnValue(false);
     embeddedRunMock.isEmbeddedPiRunStreaming.mockReturnValue(false);
 

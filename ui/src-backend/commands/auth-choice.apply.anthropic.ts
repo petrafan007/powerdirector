@@ -1,13 +1,13 @@
-import { upsertAuthProfile } from '../agents/auth-profiles';
+import { upsertAuthProfile } from "../agents/auth-profiles.js";
 import {
   formatApiKeyPreview,
   normalizeApiKeyInput,
   validateApiKeyInput,
-} from './auth-choice.api-key';
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
-import { buildTokenProfileId, validateAnthropicSetupToken } from './auth-token';
-import { applyAgentDefaultModelPrimary } from './onboard-auth.config-shared';
-import { applyAuthProfileConfig, setAnthropicApiKey } from './onboard-auth';
+} from "./auth-choice.api-key.js";
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
+import { buildTokenProfileId, validateAnthropicSetupToken } from "./auth-token.js";
+import { applyAgentDefaultModelPrimary } from "./onboard-auth.config-shared.js";
+import { applyAuthProfileConfig, setAnthropicApiKey } from "./onboard-auth.js";
 
 const DEFAULT_ANTHROPIC_MODEL = "anthropic/claude-sonnet-4-6";
 

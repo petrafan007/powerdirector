@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import type { PowerDirectorConfig } from '../config/config';
-import type { BackoffPolicy } from '../infra/backoff';
-import { computeBackoff, sleepWithAbort } from '../infra/backoff';
-import { clamp } from '../utils';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { BackoffPolicy } from "../infra/backoff.js";
+import { computeBackoff, sleepWithAbort } from "../infra/backoff.js";
+import { clamp } from "../utils.js";
 
 export type ReconnectPolicy = BackoffPolicy & {
   maxAttempts: number;

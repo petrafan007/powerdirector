@@ -1,5 +1,5 @@
 import type { RequestClient } from "@buape/carbon";
-import type { RetryConfig } from '../infra/retry';
+import type { RetryConfig } from "../infra/retry.js";
 
 export class DiscordSendError extends Error {
   kind?: "missing-permissions" | "dm-blocked";

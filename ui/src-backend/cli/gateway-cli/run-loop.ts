@@ -1,19 +1,19 @@
-import type { startGatewayServer } from '../../gateway/server';
-import { acquireGatewayLock } from '../../infra/gateway-lock';
-import { restartGatewayProcessWithFreshPid } from '../../infra/process-respawn';
+import type { startGatewayServer } from "../../gateway/server.js";
+import { acquireGatewayLock } from "../../infra/gateway-lock.js";
+import { restartGatewayProcessWithFreshPid } from "../../infra/process-respawn.js";
 import {
   consumeGatewaySigusr1RestartAuthorization,
   isGatewaySigusr1RestartExternallyAllowed,
   markGatewaySigusr1RestartHandled,
-} from '../../infra/restart';
-import { createSubsystemLogger } from '../../logging/subsystem';
+} from "../../infra/restart.js";
+import { createSubsystemLogger } from "../../logging/subsystem.js";
 import {
   getActiveTaskCount,
   resetAllLanes,
   waitForActiveTasks,
-} from '../../process/command-queue';
-import { createRestartIterationHook } from '../../process/restart-recovery';
-import type { defaultRuntime } from '../../runtime';
+} from "../../process/command-queue.js";
+import { createRestartIterationHook } from "../../process/restart-recovery.js";
+import type { defaultRuntime } from "../../runtime.js";
 
 const gatewayLog = createSubsystemLogger("gateway");
 

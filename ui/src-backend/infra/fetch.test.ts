@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { withFetchPreconnect } from '../test-utils/fetch-mock';
-import { resolveFetch, wrapFetchWithAbortSignal } from './fetch';
+import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
+import { resolveFetch, wrapFetchWithAbortSignal } from "./fetch.js";
 
 async function waitForMicrotaskTurn(): Promise<void> {
   await new Promise<void>((resolve) => queueMicrotask(resolve));

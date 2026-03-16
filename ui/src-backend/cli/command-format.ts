@@ -1,5 +1,5 @@
-import { replaceCliName, resolveCliName } from './cli-name';
-import { normalizeProfileName } from './profile-utils';
+import { replaceCliName, resolveCliName } from "./cli-name.js";
+import { normalizeProfileName } from "./profile-utils.js";
 
 const CLI_PREFIX_RE = /^(?:pnpm|npm|bunx|npx)\s+(?:powerdirector|pdir)\b|^(?:powerdirector|pdir)\b/;
 const PROFILE_FLAG_RE = /(?:^|\s)--profile(?:\s|=|$)/;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractLocationData, extractMediaPlaceholder, extractText } from './inbound';
+import { extractLocationData, extractMediaPlaceholder, extractText } from "./inbound.js";
 
 describe("web inbound helpers", () => {
   it("prefers the main conversation body", () => {

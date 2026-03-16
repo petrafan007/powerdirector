@@ -12,7 +12,7 @@ vi.mock("../agent-scope.js", () => ({
   resolveSessionAgentId: () => "agent-123",
 }));
 
-import { createCronTool } from './cron-tool';
+import { createCronTool } from "./cron-tool.js";
 
 describe("cron tool", () => {
   async function executeAddAndReadDelivery(params: {

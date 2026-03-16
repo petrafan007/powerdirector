@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createCliRuntimeCapture } from './test-runtime-capture';
+import { createCliRuntimeCapture } from "./test-runtime-capture.js";
 
 const callGatewayFromCli = vi.fn(async (method: string, _opts: unknown, params?: unknown) => {
   if (method.endsWith(".get")) {
@@ -34,7 +34,7 @@ vi.mock("./gateway-rpc.js", () => ({
 }));
 
 vi.mock("./nodes-cli/rpc.js", async () => {
-  const actual = await vi.importActual<typeof import('./nodes-cli/rpc')>("./nodes-cli/rpc.js");
+  const actual = await vi.importActual<typeof import("./nodes-cli/rpc.js")>("./nodes-cli/rpc.js");
   return {
     ...actual,
     resolveNodeId: vi.fn(async () => "node-1"),
@@ -46,7 +46,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 vi.mock("../infra/exec-approvals.js", async () => {
-  const actual = await vi.importActual<typeof import('../infra/exec-approvals')>(
+  const actual = await vi.importActual<typeof import("../infra/exec-approvals.js")>(
     "../infra/exec-approvals.js",
   );
   return {
@@ -56,8 +56,8 @@ vi.mock("../infra/exec-approvals.js", async () => {
   };
 });
 
-const { registerExecApprovalsCli } = await import('./exec-approvals-cli');
-const execApprovals = await import('../infra/exec-approvals');
+const { registerExecApprovalsCli } = await import("./exec-approvals-cli.js");
+const execApprovals = await import("../infra/exec-approvals.js");
 
 describe("exec approvals CLI", () => {
   const createProgram = () => {

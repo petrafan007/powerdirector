@@ -7,11 +7,11 @@ import {
   getCachedSticker,
   getCacheStats,
   searchStickers,
-} from './sticker-cache';
+} from "./sticker-cache.js";
 
 // Mock the state directory to use a temp location
 vi.mock("../config/paths.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/paths')>();
+  const actual = await importOriginal<typeof import("../config/paths.js")>();
   return {
     ...actual,
     STATE_DIR: "/tmp/powerdirector-test-sticker-cache",

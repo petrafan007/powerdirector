@@ -1,4 +1,4 @@
-import type { MediaUnderstandingOutput } from './types';
+import type { MediaUnderstandingOutput } from "./types.js";
 
 const MEDIA_PLACEHOLDER_RE = /^<media:[^>]+>(\s*\([^)]*\))?$/i;
 const MEDIA_PLACEHOLDER_TOKEN_RE = /^<media:[^>]+>(\s*\([^)]*\))?\s*/i;

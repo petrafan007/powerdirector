@@ -1,13 +1,13 @@
-import { emitAgentEvent } from '../infra/agent-events';
-import { createInlineCodeState } from '../markdown/code-spans';
-import { formatAssistantErrorText } from './pi-embedded-helpers';
-import type { EmbeddedPiSubscribeContext } from './pi-embedded-subscribe.handlers.types';
-import { isAssistantMessage } from './pi-embedded-utils';
+import { emitAgentEvent } from "../infra/agent-events.js";
+import { createInlineCodeState } from "../markdown/code-spans.js";
+import { formatAssistantErrorText } from "./pi-embedded-helpers.js";
+import type { EmbeddedPiSubscribeContext } from "./pi-embedded-subscribe.handlers.types.js";
+import { isAssistantMessage } from "./pi-embedded-utils.js";
 
 export {
   handleAutoCompactionEnd,
   handleAutoCompactionStart,
-} from './pi-embedded-subscribe.handlers.compaction';
+} from "./pi-embedded-subscribe.handlers.compaction.js";
 
 export function handleAgentStart(ctx: EmbeddedPiSubscribeContext) {
   ctx.log.debug(`embedded run agent start: runId=${ctx.params.runId}`);

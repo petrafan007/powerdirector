@@ -13,7 +13,7 @@ import {
   renderSystemNodeWarning,
   resolvePreferredNodePath,
   resolveSystemNodeInfo,
-} from './runtime-paths';
+} from "./runtime-paths.js";
 
 afterEach(() => {
   vi.resetAllMocks();

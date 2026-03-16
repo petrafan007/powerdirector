@@ -1,7 +1,7 @@
 import os from "node:os";
 import path from "node:path";
-import { resolveRequiredHomeDir } from '../infra/home-dir';
-import { isValidProfileName } from './profile-utils';
+import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { isValidProfileName } from "./profile-utils.js";
 
 export type CliProfileParseResult =
   | { ok: true; profile: string | null; argv: string[] }

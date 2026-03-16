@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildHistoryContextFromEntries } from '../auto-reply/reply/history';
-import { buildAgentMessageFromConversationEntries } from './agent-prompt';
+import { buildHistoryContextFromEntries } from "../auto-reply/reply/history.js";
+import { buildAgentMessageFromConversationEntries } from "./agent-prompt.js";
 
 describe("gateway agent prompt", () => {
   it("returns empty for no entries", () => {

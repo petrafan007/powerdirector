@@ -1,7 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { fetch as realFetch } from "undici";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { isAuthorizedBrowserRequest } from './http-auth';
+import { isAuthorizedBrowserRequest } from "./http-auth.js";
 
 let server: ReturnType<typeof createServer> | null = null;
 let port = 0;

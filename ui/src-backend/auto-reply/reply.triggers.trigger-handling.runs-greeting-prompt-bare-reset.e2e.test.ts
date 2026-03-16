@@ -6,11 +6,11 @@ import {
   installTriggerHandlingE2eTestHooks,
   runGreetingPromptForBareNewOrReset,
   withTempHome,
-} from './reply.triggers.trigger-handling.test-harness';
+} from "./reply.triggers.trigger-handling.test-harness.js";
 
-let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import('./reply'));
+  ({ getReplyFromConfig } = await import("./reply.js"));
 });
 
 installTriggerHandlingE2eTestHooks();
@@ -18,7 +18,7 @@ installTriggerHandlingE2eTestHooks();
 async function expectResetBlockedForNonOwner(params: {
   home: string;
   commandAuthorized: boolean;
-  getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+  getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 }): Promise<void> {
   const { home, commandAuthorized, getReplyFromConfig } = params;
   const res = await getReplyFromConfig(

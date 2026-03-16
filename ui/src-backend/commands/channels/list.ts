@@ -1,13 +1,13 @@
-import { loadAuthProfileStore } from '../../agents/auth-profiles';
-import { listChannelPlugins } from '../../channels/plugins/index';
-import { buildChannelAccountSnapshot } from '../../channels/plugins/status';
-import type { ChannelAccountSnapshot, ChannelPlugin } from '../../channels/plugins/types';
-import { withProgress } from '../../cli/progress';
-import { formatUsageReportLines, loadProviderUsageSummary } from '../../infra/provider-usage';
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { formatDocsLink } from '../../terminal/links';
-import { theme } from '../../terminal/theme';
-import { formatChannelAccountLabel, requireValidConfig } from './shared';
+import { loadAuthProfileStore } from "../../agents/auth-profiles.js";
+import { listChannelPlugins } from "../../channels/plugins/index.js";
+import { buildChannelAccountSnapshot } from "../../channels/plugins/status.js";
+import type { ChannelAccountSnapshot, ChannelPlugin } from "../../channels/plugins/types.js";
+import { withProgress } from "../../cli/progress.js";
+import { formatUsageReportLines, loadProviderUsageSummary } from "../../infra/provider-usage.js";
+import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
+import { formatDocsLink } from "../../terminal/links.js";
+import { theme } from "../../terminal/theme.js";
+import { formatChannelAccountLabel, requireValidConfig } from "./shared.js";
 
 export type ChannelsListOptions = {
   json?: boolean;

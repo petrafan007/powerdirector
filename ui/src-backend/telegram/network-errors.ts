@@ -1,4 +1,4 @@
-import { extractErrorCode, formatErrorMessage } from '../infra/errors';
+import { extractErrorCode, formatErrorMessage } from "../infra/errors.js";
 
 const RECOVERABLE_ERROR_CODES = new Set([
   "ECONNRESET",

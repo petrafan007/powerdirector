@@ -1,12 +1,12 @@
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import type { TSchema } from "@sinclair/typebox";
-import type { MsgContext } from '../../auto-reply/templating';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { PollInput } from '../../polls';
-import type { GatewayClientMode, GatewayClientName } from '../../utils/message-channel';
-import type { ChatType } from '../chat-type';
-import type { ChatChannelId } from '../registry';
-import type { ChannelMessageActionName as ChannelMessageActionNameFromList } from './message-action-names';
+import type { MsgContext } from "../../auto-reply/templating.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { PollInput } from "../../polls.js";
+import type { GatewayClientMode, GatewayClientName } from "../../utils/message-channel.js";
+import type { ChatType } from "../chat-type.js";
+import type { ChatChannelId } from "../registry.js";
+import type { ChannelMessageActionName as ChannelMessageActionNameFromList } from "./message-action-names.js";
 
 export type ChannelId = ChatChannelId | (string & {});
 

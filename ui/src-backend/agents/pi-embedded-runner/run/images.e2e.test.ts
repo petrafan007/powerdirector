@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { createHostSandboxFsBridge } from '../../test-helpers/host-sandbox-fs-bridge';
+import { createHostSandboxFsBridge } from "../../test-helpers/host-sandbox-fs-bridge.js";
 import {
   detectAndLoadPromptImages,
   detectImageReferences,
   loadImageFromRef,
   modelSupportsImages,
-} from './images';
+} from "./images.js";
 
 describe("detectImageReferences", () => {
   it("detects absolute file paths with common extensions", () => {

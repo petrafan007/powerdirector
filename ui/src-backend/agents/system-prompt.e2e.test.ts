@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { SILENT_REPLY_TOKEN } from '../auto-reply/tokens';
-import { buildSubagentSystemPrompt } from './subagent-announce';
-import { buildAgentSystemPrompt, buildRuntimeLine } from './system-prompt';
+import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
+import { buildSubagentSystemPrompt } from "./subagent-announce.js";
+import { buildAgentSystemPrompt, buildRuntimeLine } from "./system-prompt.js";
 
 describe("buildAgentSystemPrompt", () => {
   it("includes owner numbers when provided", () => {

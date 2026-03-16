@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { buildSystemPromptParams } from './system-prompt-params';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { buildSystemPromptParams } from "./system-prompt-params.js";
 
 async function makeTempDir(label: string): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), `powerdirector-${label}-`));

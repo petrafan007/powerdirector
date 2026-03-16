@@ -4,17 +4,17 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { emitAgentEvent } from '../../infra/agent-events';
-import { formatZonedTimestamp } from '../../infra/format-time/format-datetime';
-import { resetLogger, setLoggerOverride } from '../../logging';
-import { ExecApprovalManager } from '../exec-approval-manager';
-import { validateExecApprovalRequestParams } from '../protocol/index';
-import { waitForAgentJob } from './agent-job';
-import { injectTimestamp, timestampOptsFromConfig } from './agent-timestamp';
-import { normalizeRpcAttachmentsToChatAttachments } from './attachment-normalize';
-import { sanitizeChatSendMessageInput } from './chat';
-import { createExecApprovalHandlers } from './exec-approval';
-import { logsHandlers } from './logs';
+import { emitAgentEvent } from "../../infra/agent-events.js";
+import { formatZonedTimestamp } from "../../infra/format-time/format-datetime.js";
+import { resetLogger, setLoggerOverride } from "../../logging.js";
+import { ExecApprovalManager } from "../exec-approval-manager.js";
+import { validateExecApprovalRequestParams } from "../protocol/index.js";
+import { waitForAgentJob } from "./agent-job.js";
+import { injectTimestamp, timestampOptsFromConfig } from "./agent-timestamp.js";
+import { normalizeRpcAttachmentsToChatAttachments } from "./attachment-normalize.js";
+import { sanitizeChatSendMessageInput } from "./chat.js";
+import { createExecApprovalHandlers } from "./exec-approval.js";
+import { logsHandlers } from "./logs.js";
 
 vi.mock("../../commands/status.js", () => ({
   getStatusSummary: vi.fn().mockResolvedValue({ ok: true }),
@@ -462,12 +462,12 @@ describe("exec approval handlers", () => {
 });
 
 describe("gateway healthHandlers.status scope handling", () => {
-  let statusModule: typeof import('../../commands/status');
-  let healthHandlers: typeof import('./health').healthHandlers;
+  let statusModule: typeof import("../../commands/status.js");
+  let healthHandlers: typeof import("./health.js").healthHandlers;
 
   beforeAll(async () => {
-    statusModule = await import('../../commands/status');
-    ({ healthHandlers } = await import('./health'));
+    statusModule = await import("../../commands/status.js");
+    ({ healthHandlers } = await import("./health.js"));
   });
 
   beforeEach(() => {

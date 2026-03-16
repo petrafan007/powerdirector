@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   getCompactionSafeguardRuntime,
   setCompactionSafeguardRuntime,
-} from './compaction-safeguard-runtime';
-import { __testing } from './compaction-safeguard';
+} from "./compaction-safeguard-runtime.js";
+import { __testing } from "./compaction-safeguard.js";
 
 const {
   collectToolFailures,

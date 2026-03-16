@@ -1,5 +1,5 @@
 import type { AnyMessageContent } from "@whiskeysockets/baileys";
-import type { NormalizedLocation } from '../../channels/location';
+import type { NormalizedLocation } from "../../channels/location.js";
 
 export type WebListenerCloseReason = {
   status?: number;

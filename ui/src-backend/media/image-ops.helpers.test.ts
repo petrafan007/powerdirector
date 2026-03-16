@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildImageResizeSideGrid, IMAGE_REDUCE_QUALITY_STEPS } from './image-ops';
+import { buildImageResizeSideGrid, IMAGE_REDUCE_QUALITY_STEPS } from "./image-ops.js";
 
 describe("buildImageResizeSideGrid", () => {
   it("returns descending unique sides capped by maxSide", () => {

@@ -5,16 +5,16 @@ import {
   resolveGatewayServiceDescription,
   resolveGatewayLaunchAgentLabel,
   resolveLegacyGatewayLaunchAgentLabels,
-} from './constants';
-import { execFileUtf8 } from './exec-file';
+} from "./constants.js";
+import { execFileUtf8 } from "./exec-file.js";
 import {
   buildLaunchAgentPlist as buildLaunchAgentPlistImpl,
   readLaunchAgentProgramArgumentsFromFile,
-} from './launchd-plist';
-import { formatLine, toPosixPath, writeFormattedLines } from './output';
-import { resolveGatewayStateDir, resolveHomeDir } from './paths';
-import { parseKeyValueOutput } from './runtime-parse';
-import type { GatewayServiceRuntime } from './service-runtime';
+} from "./launchd-plist.js";
+import { formatLine, toPosixPath, writeFormattedLines } from "./output.js";
+import { resolveGatewayStateDir, resolveHomeDir } from "./paths.js";
+import { parseKeyValueOutput } from "./runtime-parse.js";
+import type { GatewayServiceRuntime } from "./service-runtime.js";
 import type {
   GatewayServiceCommandConfig,
   GatewayServiceControlArgs,
@@ -22,7 +22,7 @@ import type {
   GatewayServiceEnvArgs,
   GatewayServiceInstallArgs,
   GatewayServiceManageArgs,
-} from './service-types';
+} from "./service-types.js";
 
 function resolveLaunchAgentLabel(args?: { env?: Record<string, string | undefined> }): string {
   const envLabel = args?.env?.POWERDIRECTOR_LAUNCHD_LABEL?.trim();

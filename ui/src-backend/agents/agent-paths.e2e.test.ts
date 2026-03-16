@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { captureEnv } from '../test-utils/env';
-import { resolvePowerDirectorAgentDir } from './agent-paths';
+import { captureEnv } from "../test-utils/env.js";
+import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
 
 describe("resolvePowerDirectorAgentDir", () => {
   const env = captureEnv(["POWERDIRECTOR_STATE_DIR", "POWERDIRECTOR_AGENT_DIR", "PI_CODING_AGENT_DIR"]);

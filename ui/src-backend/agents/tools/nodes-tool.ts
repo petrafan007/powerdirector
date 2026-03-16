@@ -9,23 +9,23 @@ import {
   writeCameraClipPayloadToFile,
   writeBase64ToFile,
   writeUrlToFile,
-} from '../../cli/nodes-camera';
-import { parseEnvPairs, parseTimeoutMs } from '../../cli/nodes-run';
+} from "../../cli/nodes-camera.js";
+import { parseEnvPairs, parseTimeoutMs } from "../../cli/nodes-run.js";
 import {
   parseScreenRecordPayload,
   screenRecordTempPath,
   writeScreenRecordToFile,
-} from '../../cli/nodes-screen';
-import { parseDurationMs } from '../../cli/parse-duration';
-import type { PowerDirectorConfig } from '../../config/config';
-import { imageMimeFromFormat } from '../../media/mime';
-import { resolveSessionAgentId } from '../agent-scope';
-import { resolveImageSanitizationLimits } from '../image-sanitization';
-import { optionalStringEnum, stringEnum } from '../schema/typebox';
-import { sanitizeToolResultImages } from '../tool-images';
-import { type AnyAgentTool, jsonResult, readStringParam } from './common';
-import { callGatewayTool, readGatewayCallOptions } from './gateway';
-import { listNodes, resolveNodeIdFromList, resolveNodeId } from './nodes-utils';
+} from "../../cli/nodes-screen.js";
+import { parseDurationMs } from "../../cli/parse-duration.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { imageMimeFromFormat } from "../../media/mime.js";
+import { resolveSessionAgentId } from "../agent-scope.js";
+import { resolveImageSanitizationLimits } from "../image-sanitization.js";
+import { optionalStringEnum, stringEnum } from "../schema/typebox.js";
+import { sanitizeToolResultImages } from "../tool-images.js";
+import { type AnyAgentTool, jsonResult, readStringParam } from "./common.js";
+import { callGatewayTool, readGatewayCallOptions } from "./gateway.js";
+import { listNodes, resolveNodeIdFromList, resolveNodeId } from "./nodes-utils.js";
 
 const NODES_TOOL_ACTIONS = [
   "status",

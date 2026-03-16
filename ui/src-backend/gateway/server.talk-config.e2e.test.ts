@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { connectOk, installGatewayTestHooks, rpcReq } from './test-helpers';
-import { withServer } from './test-with-server';
+import { connectOk, installGatewayTestHooks, rpcReq } from "./test-helpers.js";
+import { withServer } from "./test-with-server.js";
 
 installGatewayTestHooks({ scope: "suite" });
 
 describe("gateway talk.config", () => {
   it("returns redacted talk config for read scope", async () => {
-    const { writeConfigFile } = await import('../config/config');
+    const { writeConfigFile } = await import("../config/config.js");
     await writeConfigFile({
       talk: {
         voiceId: "voice-123",
@@ -34,7 +34,7 @@ describe("gateway talk.config", () => {
   });
 
   it("requires operator.talk.secrets for includeSecrets", async () => {
-    const { writeConfigFile } = await import('../config/config');
+    const { writeConfigFile } = await import("../config/config.js");
     await writeConfigFile({
       talk: {
         apiKey: "secret-key-abc",
@@ -50,7 +50,7 @@ describe("gateway talk.config", () => {
   });
 
   it("returns secrets for operator.talk.secrets scope", async () => {
-    const { writeConfigFile } = await import('../config/config');
+    const { writeConfigFile } = await import("../config/config.js");
     await writeConfigFile({
       talk: {
         apiKey: "secret-key-abc",

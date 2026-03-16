@@ -7,17 +7,17 @@ export {
   readConfigFileSnapshotForWrite,
   resolveConfigSnapshotHash,
   writeConfigFile,
-} from './io';
-export { migrateLegacyConfig } from './legacy-migrate';
-export * from './paths';
-export * from './runtime-overrides';
-export * from './types';
+} from "./io.js";
+export { migrateLegacyConfig } from "./legacy-migrate.js";
+export * from "./paths.js";
+export * from "./runtime-overrides.js";
+export * from "./types.js";
 export {
   validateConfigObject,
   validateConfigObjectRaw,
   validateConfigObjectRawWithPlugins,
   validateConfigObjectWithPlugins,
-} from './validation';
-export { PowerDirectorSchema } from './zod-schema';
-export type { PowerDirectorConfig } from './types.powerdirector';
-export type { PowerDirectorConfig as powerdirectorConfig } from './types.powerdirector';
+} from "./validation.js";
+export { PowerDirectorSchema } from "./zod-schema.js";
+export type { PowerDirectorConfig } from "./types.powerdirector.js";
+export type { PowerDirectorConfig as powerdirectorConfig } from "./types.powerdirector.js";

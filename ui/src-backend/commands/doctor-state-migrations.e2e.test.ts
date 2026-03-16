@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   autoMigrateLegacyStateDir,
   autoMigrateLegacyState,
@@ -10,7 +10,7 @@ import {
   resetAutoMigrateLegacyStateDirForTest,
   resetAutoMigrateLegacyStateForTest,
   runLegacyStateMigrations,
-} from './doctor-state-migrations';
+} from "./doctor-state-migrations.js";
 
 let tempRoot: string | null = null;
 

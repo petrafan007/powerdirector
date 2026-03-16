@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveDiscordToken } from './token';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveDiscordToken } from "./token.js";
 
 describe("resolveDiscordToken", () => {
   afterEach(() => {

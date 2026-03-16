@@ -1,4 +1,4 @@
-import { sleep } from '../../src/utils';
+import { sleep } from "../../src/utils.js";
 
 export type PollOptions = {
   timeoutMs?: number;

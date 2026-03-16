@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveLegacyDaemonCliAccessors } from './daemon-cli-compat';
+import { resolveLegacyDaemonCliAccessors } from "./daemon-cli-compat.js";
 
 describe("resolveLegacyDaemonCliAccessors", () => {
   it("resolves aliased daemon-cli exports from a bundled chunk", () => {

@@ -1,12 +1,12 @@
-import { resolveChannelDefaultAccountId } from '../channels/plugins/helpers';
-import { listChannelPlugins } from '../channels/plugins/index';
-import type { ChannelId } from '../channels/plugins/types';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig, GatewayBindMode } from '../config/config';
-import { resolveGatewayAuth } from '../gateway/auth';
-import { isLoopbackHost, resolveGatewayBindHost } from '../gateway/net';
-import { resolveDmAllowState } from '../security/dm-policy-shared';
-import { note } from '../terminal/note';
+import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
+import { listChannelPlugins } from "../channels/plugins/index.js";
+import type { ChannelId } from "../channels/plugins/types.js";
+import { formatCliCommand } from "../cli/command-format.js";
+import type { PowerDirectorConfig, GatewayBindMode } from "../config/config.js";
+import { resolveGatewayAuth } from "../gateway/auth.js";
+import { isLoopbackHost, resolveGatewayBindHost } from "../gateway/net.js";
+import { resolveDmAllowState } from "../security/dm-policy-shared.js";
+import { note } from "../terminal/note.js";
 
 export async function noteSecurityWarnings(cfg: PowerDirectorConfig) {
   const warnings: string[] = [];

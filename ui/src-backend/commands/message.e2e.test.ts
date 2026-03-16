@@ -3,15 +3,15 @@ import type {
   ChannelMessageActionAdapter,
   ChannelOutboundAdapter,
   ChannelPlugin,
-} from '../channels/plugins/types';
-import type { CliDeps } from '../cli/deps';
-import type { RuntimeEnv } from '../runtime';
-import { createTestRegistry } from '../test-utils/channel-plugins';
-const loadMessageCommand = async () => await import('./message');
+} from "../channels/plugins/types.js";
+import type { CliDeps } from "../cli/deps.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { createTestRegistry } from "../test-utils/channel-plugins.js";
+const loadMessageCommand = async () => await import("./message.js");
 
 let testConfig: Record<string, unknown> = {};
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => testConfig,
@@ -53,7 +53,7 @@ const originalTelegramToken = process.env.TELEGRAM_BOT_TOKEN;
 const originalDiscordToken = process.env.DISCORD_BOT_TOKEN;
 
 const setRegistry = async (registry: ReturnType<typeof createTestRegistry>) => {
-  const { setActivePluginRegistry } = await import('../plugins/runtime');
+  const { setActivePluginRegistry } = await import("../plugins/runtime.js");
   setActivePluginRegistry(registry);
 };
 

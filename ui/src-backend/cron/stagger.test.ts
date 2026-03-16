@@ -4,7 +4,7 @@ import {
   isRecurringTopOfHourCronExpr,
   normalizeCronStaggerMs,
   resolveCronStaggerMs,
-} from './stagger';
+} from "./stagger.js";
 
 describe("cron stagger helpers", () => {
   it("detects recurring top-of-hour cron expressions for 5-field and 6-field cron", () => {

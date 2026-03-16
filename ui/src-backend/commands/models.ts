@@ -1,33 +1,33 @@
-export { githubCopilotLoginCommand } from '../providers/github-copilot-auth';
+export { githubCopilotLoginCommand } from "../providers/github-copilot-auth.js";
 export {
   modelsAliasesAddCommand,
   modelsAliasesListCommand,
   modelsAliasesRemoveCommand,
-} from './models/aliases';
+} from "./models/aliases.js";
 export {
   modelsAuthAddCommand,
   modelsAuthLoginCommand,
   modelsAuthPasteTokenCommand,
   modelsAuthSetupTokenCommand,
-} from './models/auth';
+} from "./models/auth.js";
 export {
   modelsAuthOrderClearCommand,
   modelsAuthOrderGetCommand,
   modelsAuthOrderSetCommand,
-} from './models/auth-order';
+} from "./models/auth-order.js";
 export {
   modelsFallbacksAddCommand,
   modelsFallbacksClearCommand,
   modelsFallbacksListCommand,
   modelsFallbacksRemoveCommand,
-} from './models/fallbacks';
+} from "./models/fallbacks.js";
 export {
   modelsImageFallbacksAddCommand,
   modelsImageFallbacksClearCommand,
   modelsImageFallbacksListCommand,
   modelsImageFallbacksRemoveCommand,
-} from './models/image-fallbacks';
-export { modelsListCommand, modelsStatusCommand } from './models/list';
-export { modelsScanCommand } from './models/scan';
-export { modelsSetCommand } from './models/set';
-export { modelsSetImageCommand } from './models/set-image';
+} from "./models/image-fallbacks.js";
+export { modelsListCommand, modelsStatusCommand } from "./models/list.js";
+export { modelsScanCommand } from "./models/scan.js";
+export { modelsSetCommand } from "./models/set.js";
+export { modelsSetImageCommand } from "./models/set-image.js";

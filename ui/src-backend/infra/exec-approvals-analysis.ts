@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import { splitShellArgs } from '../utils/shell-argv';
-import type { ExecAllowlistEntry } from './exec-approvals';
-import { expandHomePrefix } from './home-dir';
+import { splitShellArgs } from "../utils/shell-argv.js";
+import type { ExecAllowlistEntry } from "./exec-approvals.js";
+import { expandHomePrefix } from "./home-dir.js";
 
 export const DEFAULT_SAFE_BINS = ["jq", "cut", "uniq", "head", "tail", "tr", "wc"];
 

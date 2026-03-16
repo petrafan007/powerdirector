@@ -1,34 +1,34 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { ModelDefinitionConfig } from '../config/types.models';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { ModelDefinitionConfig } from "../config/types.models.js";
 import {
   DEFAULT_COPILOT_API_BASE_URL,
   resolveCopilotApiToken,
-} from '../providers/github-copilot-token';
-import { ensureAuthProfileStore, listProfilesForProvider } from './auth-profiles';
-import { discoverBedrockModels } from './bedrock-discovery';
+} from "../providers/github-copilot-token.js";
+import { ensureAuthProfileStore, listProfilesForProvider } from "./auth-profiles.js";
+import { discoverBedrockModels } from "./bedrock-discovery.js";
 import {
   buildCloudflareAiGatewayModelDefinition,
   resolveCloudflareAiGatewayBaseUrl,
-} from './cloudflare-ai-gateway';
+} from "./cloudflare-ai-gateway.js";
 import {
   discoverHuggingfaceModels,
   HUGGINGFACE_BASE_URL,
   HUGGINGFACE_MODEL_CATALOG,
   buildHuggingfaceModelDefinition,
-} from './huggingface-models';
-import { resolveAwsSdkEnvVarName, resolveEnvApiKey } from './model-auth';
-import { OLLAMA_NATIVE_BASE_URL } from './ollama-stream';
+} from "./huggingface-models.js";
+import { resolveAwsSdkEnvVarName, resolveEnvApiKey } from "./model-auth.js";
+import { OLLAMA_NATIVE_BASE_URL } from "./ollama-stream.js";
 import {
   buildSyntheticModelDefinition,
   SYNTHETIC_BASE_URL,
   SYNTHETIC_MODEL_CATALOG,
-} from './synthetic-models';
+} from "./synthetic-models.js";
 import {
   TOGETHER_BASE_URL,
   TOGETHER_MODEL_CATALOG,
   buildTogetherModelDefinition,
-} from './together-models';
-import { discoverVeniceModels, VENICE_BASE_URL } from './venice-models';
+} from "./together-models.js";
+import { discoverVeniceModels, VENICE_BASE_URL } from "./venice-models.js";
 
 type ModelsConfig = NonNullable<PowerDirectorConfig["models"]>;
 export type ProviderConfig = NonNullable<ModelsConfig["providers"]>[string];

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildSystemPromptReport } from './system-prompt-report';
-import type { WorkspaceBootstrapFile } from './workspace';
+import { buildSystemPromptReport } from "./system-prompt-report.js";
+import type { WorkspaceBootstrapFile } from "./workspace.js";
 
 function makeBootstrapFile(overrides: Partial<WorkspaceBootstrapFile>): WorkspaceBootstrapFile {
   return {

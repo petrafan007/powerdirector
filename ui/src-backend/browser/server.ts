@@ -1,18 +1,18 @@
 import type { Server } from "node:http";
 import express from "express";
-import { loadConfig } from '../config/config';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { resolveBrowserConfig } from './config';
-import { ensureBrowserControlAuth, resolveBrowserControlAuth } from './control-auth';
-import { isPwAiLoaded } from './pw-ai-state';
-import { registerBrowserRoutes } from './routes/index';
-import type { BrowserRouteRegistrar } from './routes/types';
-import { type BrowserServerState, createBrowserRouteContext } from './server-context';
-import { ensureExtensionRelayForProfiles, stopKnownBrowserProfiles } from './server-lifecycle';
+import { loadConfig } from "../config/config.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { resolveBrowserConfig } from "./config.js";
+import { ensureBrowserControlAuth, resolveBrowserControlAuth } from "./control-auth.js";
+import { isPwAiLoaded } from "./pw-ai-state.js";
+import { registerBrowserRoutes } from "./routes/index.js";
+import type { BrowserRouteRegistrar } from "./routes/types.js";
+import { type BrowserServerState, createBrowserRouteContext } from "./server-context.js";
+import { ensureExtensionRelayForProfiles, stopKnownBrowserProfiles } from "./server-lifecycle.js";
 import {
   installBrowserAuthMiddleware,
   installBrowserCommonMiddleware,
-} from './server-middleware';
+} from "./server-middleware.js";
 
 let state: BrowserServerState | null = null;
 const log = createSubsystemLogger("browser");
@@ -101,7 +101,7 @@ export async function stopBrowserControlServer(): Promise<void> {
   // Optional: avoid importing heavy Playwright bridge when this process never used it.
   if (isPwAiLoaded()) {
     try {
-      const mod = await import('./pw-ai');
+      const mod = await import("./pw-ai.js");
       await mod.closePlaywrightBrowserConnection();
     } catch {
       // ignore

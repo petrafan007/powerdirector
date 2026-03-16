@@ -3,8 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import type { AssistantMessage } from "@mariozechner/pi-ai";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { EmbeddedRunAttemptResult } from './pi-embedded-runner/run/types';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { EmbeddedRunAttemptResult } from "./pi-embedded-runner/run/types.js";
 
 const runEmbeddedAttemptMock = vi.fn<(params: unknown) => Promise<EmbeddedRunAttemptResult>>();
 
@@ -12,10 +12,10 @@ vi.mock("./pi-embedded-runner/run/attempt.js", () => ({
   runEmbeddedAttempt: (params: unknown) => runEmbeddedAttemptMock(params),
 }));
 
-let runEmbeddedPiAgent: typeof import('./pi-embedded-runner').runEmbeddedPiAgent;
+let runEmbeddedPiAgent: typeof import("./pi-embedded-runner.js").runEmbeddedPiAgent;
 
 beforeAll(async () => {
-  ({ runEmbeddedPiAgent } = await import('./pi-embedded-runner'));
+  ({ runEmbeddedPiAgent } = await import("./pi-embedded-runner.js"));
 });
 
 beforeEach(() => {

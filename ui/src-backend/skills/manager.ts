@@ -3,12 +3,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { getRuntimeLogger } from '../core/logger.ts';
-import { Skill, SkillEntry, SkillSnapshot } from './types';
-import { SkillLoader } from './loader';
-import { SkillFormatter } from './formatter';
-import { shouldIncludeSkill } from './config';
+import { Skill, SkillEntry, SkillSnapshot } from './types.js';
+import { SkillLoader } from './loader.js';
+import { SkillFormatter } from './formatter.js';
+import { shouldIncludeSkill } from './config.js';
 import { Tool, ToolResult } from '../tools/base.ts';
-import { resolveConfigPathCandidate } from '../config/paths';
+import { resolveConfigPathCandidate, resolvePowerDirectorRoot } from '../config/paths.js';
 
 
 type NodeManager = 'npm' | 'yarn' | 'pnpm';
@@ -166,7 +166,10 @@ export class SkillsManager {
         const sources: Array<{ dir: string; source: SkillSource }> = [];
         const seen = new Set<string>();
 
+        const projectRoot = resolvePowerDirectorRoot(this.baseDir);
         const bundledRoots = [
+            path.join(projectRoot, 'src', 'skills'),
+            path.join(projectRoot, 'skills'),
             path.join(this.baseDir, 'src', 'skills'),
             path.join(this.baseDir, 'skills'),
         ];
@@ -485,7 +488,7 @@ export class SkillsManager {
     }
 
     private resolveRunner(skillDir: string): RunnerSpec | null {
-        // ... (existing implementation)
+        this.logger.info(`[SkillsManager] Resolving runner for: ${skillDir}`);
         const runSh = path.join(skillDir, 'run.sh');
         if (fs.existsSync(runSh)) {
             return { command: '/bin/sh', args: [runSh] };

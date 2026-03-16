@@ -1,4 +1,4 @@
-import { sanitizeGoogleTurnOrdering } from './bootstrap';
+import { sanitizeGoogleTurnOrdering } from "./bootstrap.js";
 
 export function isGoogleModelApi(api?: string | null): boolean {
   return (

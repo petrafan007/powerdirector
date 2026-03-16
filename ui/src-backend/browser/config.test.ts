@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveBrowserConfig, resolveProfile, shouldStartLocalBrowserServer } from './config';
+import { resolveBrowserConfig, resolveProfile, shouldStartLocalBrowserServer } from "./config.js";
 
 describe("browser config", () => {
   it("defaults to enabled with loopback defaults and lobster-orange color", () => {

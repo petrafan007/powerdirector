@@ -1,8 +1,8 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolveAgentWorkspaceDir } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveMemoryBackendConfig } from './backend-config';
+import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveMemoryBackendConfig } from "./backend-config.js";
 
 describe("resolveMemoryBackendConfig", () => {
   it("defaults to builtin backend when config missing", () => {

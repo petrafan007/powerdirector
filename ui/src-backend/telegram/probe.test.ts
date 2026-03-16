@@ -1,6 +1,6 @@
 import { type Mock, describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { withFetchPreconnect } from '../test-utils/fetch-mock';
-import { probeTelegram } from './probe';
+import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
+import { probeTelegram } from "./probe.js";
 
 describe("probeTelegram retry logic", () => {
   const token = "test-token";

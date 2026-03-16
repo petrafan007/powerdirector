@@ -1,24 +1,24 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { WizardPrompter } from '../wizard/prompts';
-import { applyDefaultModelChoice } from './auth-choice.default-model';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { WizardPrompter } from "../wizard/prompts.js";
+import { applyDefaultModelChoice } from "./auth-choice.default-model.js";
 import {
   applyGoogleGeminiModelDefault,
   GOOGLE_GEMINI_DEFAULT_MODEL,
-} from './google-gemini-model-default';
+} from "./google-gemini-model-default.js";
 import {
   applyOpenAICodexModelDefault,
   OPENAI_CODEX_DEFAULT_MODEL,
-} from './openai-codex-model-default';
+} from "./openai-codex-model-default.js";
 import {
   applyOpenAIConfig,
   applyOpenAIProviderConfig,
   OPENAI_DEFAULT_MODEL,
-} from './openai-model-default';
+} from "./openai-model-default.js";
 import {
   applyOpencodeZenModelDefault,
   OPENCODE_ZEN_DEFAULT_MODEL,
-} from './opencode-zen-model-default';
+} from "./opencode-zen-model-default.js";
 
 function makePrompter(): WizardPrompter {
   return {

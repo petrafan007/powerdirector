@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createProviderUsageFetch, makeResponse } from '../test-utils/provider-usage-fetch';
-import { fetchMinimaxUsage } from './provider-usage.fetch.minimax';
+import { createProviderUsageFetch, makeResponse } from "../test-utils/provider-usage-fetch.js";
+import { fetchMinimaxUsage } from "./provider-usage.fetch.minimax.js";
 
 describe("fetchMinimaxUsage", () => {
   it("returns HTTP errors for failed requests", async () => {

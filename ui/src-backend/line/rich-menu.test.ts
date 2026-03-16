@@ -6,7 +6,7 @@ import {
   postbackAction,
   datetimePickerAction,
   createDefaultMenuConfig,
-} from './rich-menu';
+} from "./rich-menu.js";
 
 describe("messageAction", () => {
   it("creates a message action", () => {

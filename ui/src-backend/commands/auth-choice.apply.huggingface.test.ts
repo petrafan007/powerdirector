@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { WizardPrompter } from '../wizard/prompts';
-import { applyAuthChoiceHuggingface } from './auth-choice.apply.huggingface';
+import type { WizardPrompter } from "../wizard/prompts.js";
+import { applyAuthChoiceHuggingface } from "./auth-choice.apply.huggingface.js";
 import {
   createAuthTestLifecycle,
   createExitThrowingRuntime,
   createWizardPrompter,
   readAuthProfilesForAgent,
   setupAuthTestEnv,
-} from './test-wizard-helpers';
+} from "./test-wizard-helpers.js";
 
 function createHuggingfacePrompter(params: {
   text: WizardPrompter["text"];

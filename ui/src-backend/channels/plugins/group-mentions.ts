@@ -1,16 +1,16 @@
-import type { PowerDirectorConfig } from '../../config/config';
+import type { PowerDirectorConfig } from "../../config/config.js";
 import {
   resolveChannelGroupRequireMention,
   resolveChannelGroupToolsPolicy,
   resolveToolsBySender,
-} from '../../config/group-policy';
-import type { DiscordConfig } from '../../config/types';
+} from "../../config/group-policy.js";
+import type { DiscordConfig } from "../../config/types.js";
 import type {
   GroupToolPolicyBySenderConfig,
   GroupToolPolicyConfig,
-} from '../../config/types.tools';
-import { normalizeAtHashSlug, normalizeHyphenSlug } from '../../shared/string-normalization';
-import { resolveSlackAccount } from '../../slack/accounts';
+} from "../../config/types.tools.js";
+import { normalizeAtHashSlug, normalizeHyphenSlug } from "../../shared/string-normalization.js";
+import { resolveSlackAccount } from "../../slack/accounts.js";
 
 type GroupMentionParams = {
   cfg: PowerDirectorConfig;

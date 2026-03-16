@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { isYes, setVerbose, setYes } from '../globals';
+import { isYes, setVerbose, setYes } from "../globals.js";
 
 vi.mock("node:readline/promises", () => {
   const question = vi.fn(async () => "");
@@ -17,7 +17,7 @@ type ReadlineMock = {
   };
 };
 
-const { promptYesNo } = await import('./prompt');
+const { promptYesNo } = await import("./prompt.js");
 const readline = (await import("node:readline/promises")) as unknown as ReadlineMock;
 
 describe("promptYesNo", () => {

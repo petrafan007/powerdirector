@@ -1,19 +1,19 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveOAuthDir, resolveStateDir } from '../config/paths';
+import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveOAuthDir, resolveStateDir } from "../config/paths.js";
 import {
   loadSessionStore,
   resolveMainSessionKey,
   resolveSessionFilePath,
   resolveSessionTranscriptsDirForAgent,
   resolveStorePath,
-} from '../config/sessions';
-import { resolveRequiredHomeDir } from '../infra/home-dir';
-import { note } from '../terminal/note';
-import { shortenHomePath } from '../utils';
+} from "../config/sessions.js";
+import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { note } from "../terminal/note.js";
+import { shortenHomePath } from "../utils.js";
 
 type DoctorPrompterLike = {
   confirmSkipInNonInteractive: (params: {

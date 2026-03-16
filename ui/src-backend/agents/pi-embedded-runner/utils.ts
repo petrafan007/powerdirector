@@ -1,5 +1,5 @@
 import type { ThinkingLevel } from "@mariozechner/pi-agent-core";
-import type { ReasoningLevel, ThinkLevel } from '../../auto-reply/thinking';
+import type { ReasoningLevel, ThinkLevel } from "../../auto-reply/thinking.js";
 
 export function mapThinkingLevel(level?: ThinkLevel): ThinkingLevel {
   // pi-agent-core supports "xhigh"; PowerDirector enables it for specific models.

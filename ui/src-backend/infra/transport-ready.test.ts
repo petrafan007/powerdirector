@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { waitForTransportReady } from './transport-ready';
+import { waitForTransportReady } from "./transport-ready.js";
 
 // Perf: `sleepWithAbort` uses `node:timers/promises` which isn't controlled by fake timers.
 // Route sleeps through global `setTimeout` so tests can advance time deterministically.

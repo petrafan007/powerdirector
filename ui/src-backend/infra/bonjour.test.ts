@@ -1,6 +1,6 @@
 import os from "node:os";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import * as logging from '../logging';
+import * as logging from "../logging.js";
 
 const mocks = vi.hoisted(() => ({
   createService: vi.fn(),
@@ -47,7 +47,7 @@ function mockCiaoService(params?: {
 }
 
 vi.mock("../logger.js", async () => {
-  const actual = await vi.importActual<typeof import('../logger')>("../logger.js");
+  const actual = await vi.importActual<typeof import("../logger.js")>("../logger.js");
   return {
     ...actual,
     logWarn: (message: string) => logWarn(message),
@@ -75,7 +75,7 @@ vi.mock("./unhandled-rejections.js", () => {
   };
 });
 
-const { startGatewayBonjourAdvertiser } = await import('./bonjour');
+const { startGatewayBonjourAdvertiser } = await import("./bonjour.js");
 
 describe("gateway bonjour advertiser", () => {
   type ServiceCall = {

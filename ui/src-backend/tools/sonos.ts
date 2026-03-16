@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 import axios from 'axios';
 
 export class SonosTool implements Tool {

@@ -2,13 +2,13 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import type { Command } from "commander";
-import { loadConfig } from '../config/config';
-import { pickPrimaryTailnetIPv4, pickPrimaryTailnetIPv6 } from '../infra/tailnet';
-import { getWideAreaZonePath, resolveWideAreaDiscoveryDomain } from '../infra/widearea-dns';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { renderTable } from '../terminal/table';
-import { theme } from '../terminal/theme';
+import { loadConfig } from "../config/config.js";
+import { pickPrimaryTailnetIPv4, pickPrimaryTailnetIPv6 } from "../infra/tailnet.js";
+import { getWideAreaZonePath, resolveWideAreaDiscoveryDomain } from "../infra/widearea-dns.js";
+import { defaultRuntime } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { renderTable } from "../terminal/table.js";
+import { theme } from "../terminal/theme.js";
 
 type RunOpts = { allowFailure?: boolean; inherit?: boolean };
 

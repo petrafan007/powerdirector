@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PowerDirectorSchema } from './zod-schema';
+import { PowerDirectorSchema } from "./zod-schema.js";
 
 describe("telegram custom commands schema", () => {
   it("normalizes custom commands", () => {

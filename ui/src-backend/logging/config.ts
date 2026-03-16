@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import json5 from "json5";
-import { resolveConfigPath } from '../config/paths';
-import type { PowerDirectorConfig } from '../config/types';
+import { resolveConfigPath } from "../config/paths.js";
+import type { PowerDirectorConfig } from "../config/types.js";
 
 type LoggingConfig = PowerDirectorConfig["logging"];
 

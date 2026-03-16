@@ -32,10 +32,10 @@ vi.mock("../../runtime.js", () => ({
   defaultRuntime: runtime,
 }));
 
-let registerMaintenanceCommands: typeof import('./register.maintenance').registerMaintenanceCommands;
+let registerMaintenanceCommands: typeof import("./register.maintenance.js").registerMaintenanceCommands;
 
 beforeAll(async () => {
-  ({ registerMaintenanceCommands } = await import('./register.maintenance'));
+  ({ registerMaintenanceCommands } = await import("./register.maintenance.js"));
 });
 
 describe("registerMaintenanceCommands doctor action", () => {

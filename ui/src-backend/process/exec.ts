@@ -1,9 +1,9 @@
 import { execFile, spawn } from "node:child_process";
 import path from "node:path";
 import { promisify } from "node:util";
-import { danger, shouldLogVerbose } from '../globals';
-import { logDebug, logError } from '../logger';
-import { resolveCommandStdio } from './spawn-utils';
+import { danger, shouldLogVerbose } from "../globals.js";
+import { logDebug, logError } from "../logger.js";
+import { resolveCommandStdio } from "./spawn-utils.js";
 
 const execFileAsync = promisify(execFile);
 

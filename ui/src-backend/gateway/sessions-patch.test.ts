@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionEntry } from '../config/sessions';
-import { applySessionsPatchToStore } from './sessions-patch';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SessionEntry } from "../config/sessions.js";
+import { applySessionsPatchToStore } from "./sessions-patch.js";
 
 const SUBAGENT_MODEL = "synthetic/hf:moonshotai/Kimi-K2.5";
 const KIMI_SUBAGENT_KEY = "agent:kimi:subagent:child";

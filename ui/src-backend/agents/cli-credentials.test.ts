@@ -6,11 +6,11 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 const execSyncMock = vi.fn();
 const execFileSyncMock = vi.fn();
 const CLI_CREDENTIALS_CACHE_TTL_MS = 15 * 60 * 1000;
-let readClaudeCliCredentialsCached: typeof import('./cli-credentials').readClaudeCliCredentialsCached;
-let resetCliCredentialCachesForTest: typeof import('./cli-credentials').resetCliCredentialCachesForTest;
-let writeClaudeCliKeychainCredentials: typeof import('./cli-credentials').writeClaudeCliKeychainCredentials;
-let writeClaudeCliCredentials: typeof import('./cli-credentials').writeClaudeCliCredentials;
-let readCodexCliCredentials: typeof import('./cli-credentials').readCodexCliCredentials;
+let readClaudeCliCredentialsCached: typeof import("./cli-credentials.js").readClaudeCliCredentialsCached;
+let resetCliCredentialCachesForTest: typeof import("./cli-credentials.js").resetCliCredentialCachesForTest;
+let writeClaudeCliKeychainCredentials: typeof import("./cli-credentials.js").writeClaudeCliKeychainCredentials;
+let writeClaudeCliCredentials: typeof import("./cli-credentials.js").writeClaudeCliCredentials;
+let readCodexCliCredentials: typeof import("./cli-credentials.js").readCodexCliCredentials;
 
 function mockExistingClaudeKeychainItem() {
   execFileSyncMock.mockImplementation((file: unknown, args: unknown) => {
@@ -54,7 +54,7 @@ describe("cli credentials", () => {
       writeClaudeCliKeychainCredentials,
       writeClaudeCliCredentials,
       readCodexCliCredentials,
-    } = await import('./cli-credentials'));
+    } = await import("./cli-credentials.js"));
   });
 
   beforeEach(() => {

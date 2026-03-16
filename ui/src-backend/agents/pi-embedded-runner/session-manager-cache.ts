@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import fs from "node:fs/promises";
-import { isCacheEnabled, resolveCacheTtlMs } from '../../config/cache-utils';
+import { isCacheEnabled, resolveCacheTtlMs } from "../../config/cache-utils.js";
 
 type SessionManagerCacheEntry = {
   sessionFile: string;

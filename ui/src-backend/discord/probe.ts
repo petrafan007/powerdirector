@@ -1,7 +1,7 @@
-import type { BaseProbeResult } from '../channels/plugins/types';
-import { resolveFetch } from '../infra/fetch';
-import { fetchWithTimeout } from '../utils/fetch-timeout';
-import { normalizeDiscordToken } from './token';
+import type { BaseProbeResult } from "../channels/plugins/types.js";
+import { resolveFetch } from "../infra/fetch.js";
+import { fetchWithTimeout } from "../utils/fetch-timeout.js";
+import { normalizeDiscordToken } from "./token.js";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";
 

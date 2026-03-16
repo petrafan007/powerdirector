@@ -1,10 +1,10 @@
-import { shouldAckReactionForWhatsApp } from '../../../channels/ack-reactions';
-import type { loadConfig } from '../../../config/config';
-import { logVerbose } from '../../../globals';
-import { sendReactionWhatsApp } from '../../outbound';
-import { formatError } from '../../session';
-import type { WebInboundMsg } from '../types';
-import { resolveGroupActivationFor } from './group-activation';
+import { shouldAckReactionForWhatsApp } from "../../../channels/ack-reactions.js";
+import type { loadConfig } from "../../../config/config.js";
+import { logVerbose } from "../../../globals.js";
+import { sendReactionWhatsApp } from "../../outbound.js";
+import { formatError } from "../../session.js";
+import type { WebInboundMsg } from "../types.js";
+import { resolveGroupActivationFor } from "./group-activation.js";
 
 export function maybeSendAckReaction(params: {
   cfg: ReturnType<typeof loadConfig>;

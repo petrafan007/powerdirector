@@ -1,14 +1,14 @@
-import { resolveAgentDir, resolveDefaultAgentId } from '../../agents/agent-scope';
+import { resolveAgentDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
 import {
   type AuthProfileStore,
   ensureAuthProfileStore,
   setAuthProfileOrder,
-} from '../../agents/auth-profiles';
-import { normalizeProviderId } from '../../agents/model-selection';
-import { loadConfig } from '../../config/config';
-import type { RuntimeEnv } from '../../runtime';
-import { shortenHomePath } from '../../utils';
-import { resolveKnownAgentId } from './shared';
+} from "../../agents/auth-profiles.js";
+import { normalizeProviderId } from "../../agents/model-selection.js";
+import { loadConfig } from "../../config/config.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import { shortenHomePath } from "../../utils.js";
+import { resolveKnownAgentId } from "./shared.js";
 
 function resolveTargetAgent(
   cfg: ReturnType<typeof loadConfig>,

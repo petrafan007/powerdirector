@@ -1,6 +1,6 @@
-import { resolveUserTimezone } from '../agents/date-time';
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentDefaultsConfig } from '../config/types.agent-defaults';
+import { resolveUserTimezone } from "../agents/date-time.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { AgentDefaultsConfig } from "../config/types.agent-defaults.js";
 
 type HeartbeatConfig = AgentDefaultsConfig["heartbeat"];
 

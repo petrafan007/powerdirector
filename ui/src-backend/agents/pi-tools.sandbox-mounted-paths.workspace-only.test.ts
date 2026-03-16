@@ -2,15 +2,15 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { createPowerDirectorCodingTools } from './pi-tools';
-import type { SandboxContext } from './sandbox';
-import type { SandboxFsBridge, SandboxResolvedPath } from './sandbox/fs-bridge';
-import { createSandboxFsBridgeFromResolver } from './test-helpers/host-sandbox-fs-bridge';
-import { createPiToolsSandboxContext } from './test-helpers/pi-tools-sandbox-context';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { createPowerDirectorCodingTools } from "./pi-tools.js";
+import type { SandboxContext } from "./sandbox.js";
+import type { SandboxFsBridge, SandboxResolvedPath } from "./sandbox/fs-bridge.js";
+import { createSandboxFsBridgeFromResolver } from "./test-helpers/host-sandbox-fs-bridge.js";
+import { createPiToolsSandboxContext } from "./test-helpers/pi-tools-sandbox-context.js";
 
 vi.mock("../infra/shell-env.js", async (importOriginal) => {
-  const mod = await importOriginal<typeof import('../infra/shell-env')>();
+  const mod = await importOriginal<typeof import("../infra/shell-env.js")>();
   return { ...mod, getShellPathFromLoginShell: () => null };
 });
 

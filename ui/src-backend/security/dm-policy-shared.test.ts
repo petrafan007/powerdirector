@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveDmAllowState } from './dm-policy-shared';
+import { resolveDmAllowState } from "./dm-policy-shared.js";
 
 describe("security/dm-policy-shared", () => {
   it("normalizes config + store allow entries and counts distinct senders", async () => {

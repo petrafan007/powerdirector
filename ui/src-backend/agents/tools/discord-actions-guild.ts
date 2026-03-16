@@ -1,6 +1,6 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { DiscordActionConfig } from '../../config/config';
-import { getPresence } from '../../discord/monitor/presence-cache';
+import type { DiscordActionConfig } from "../../config/config.js";
+import { getPresence } from "../../discord/monitor/presence-cache.js";
 import {
   addRoleDiscord,
   createChannelDiscord,
@@ -20,14 +20,14 @@ import {
   setChannelPermissionDiscord,
   uploadEmojiDiscord,
   uploadStickerDiscord,
-} from '../../discord/send';
+} from "../../discord/send.js";
 import {
   type ActionGate,
   jsonResult,
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from './common';
+} from "./common.js";
 
 function readParentIdParam(params: Record<string, unknown>): string | null | undefined {
   if (params.clearParent === true) {

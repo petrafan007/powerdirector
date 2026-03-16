@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createSessionsSpawnTool } from './tools/sessions-spawn-tool';
+import { createSessionsSpawnTool } from "./tools/sessions-spawn-tool.js";
 
 vi.mock("../config/config.js", async () => {
   const actual = await vi.importActual("../config/config.js");
@@ -36,7 +36,7 @@ vi.mock("../gateway/call.js", () => {
 type GatewayCall = { method: string; params?: Record<string, unknown> };
 
 async function getGatewayCalls(): Promise<GatewayCall[]> {
-  const { callGateway } = await import('../gateway/call');
+  const { callGateway } = await import("../gateway/call.js");
   return (callGateway as unknown as ReturnType<typeof vi.fn>).mock.calls.map(
     (call) => call[0] as GatewayCall,
   );

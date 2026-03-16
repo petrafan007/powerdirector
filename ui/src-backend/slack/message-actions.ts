@@ -1,7 +1,7 @@
-import { createActionGate } from '../agents/tools/common';
-import type { ChannelMessageActionName, ChannelToolSend } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { listEnabledSlackAccounts } from './accounts';
+import { createActionGate } from "../agents/tools/common.js";
+import type { ChannelMessageActionName, ChannelToolSend } from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { listEnabledSlackAccounts } from "./accounts.js";
 
 export function listSlackMessageActions(cfg: PowerDirectorConfig): ChannelMessageActionName[] {
   const accounts = listEnabledSlackAccounts(cfg).filter(

@@ -1,7 +1,7 @@
-import { createAccountListHelpers } from '../channels/plugins/account-helpers';
-import type { PowerDirectorConfig } from '../config/config';
-import type { IMessageAccountConfig } from '../config/types';
-import { normalizeAccountId } from '../routing/session-key';
+import { createAccountListHelpers } from "../channels/plugins/account-helpers.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { IMessageAccountConfig } from "../config/types.js";
+import { normalizeAccountId } from "../routing/session-key.js";
 
 export type ResolvedIMessageAccount = {
   accountId: string;

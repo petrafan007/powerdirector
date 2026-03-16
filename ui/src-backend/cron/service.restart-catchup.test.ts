@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { CronService } from './service';
+import { CronService } from "./service.js";
 import {
   createCronStoreHarness,
   createNoopLogger,
   installCronTestHooks,
-} from './service.test-harness';
+} from "./service.test-harness.js";
 
 const noopLogger = createNoopLogger();
 const { makeStorePath } = createCronStoreHarness({ prefix: "powerdirector-cron-" });

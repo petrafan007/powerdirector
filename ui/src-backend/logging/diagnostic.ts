@@ -1,4 +1,4 @@
-import { emitDiagnosticEvent } from '../infra/diagnostic-events';
+import { emitDiagnosticEvent } from "../infra/diagnostic-events.js";
 import {
   diagnosticSessionStates,
   getDiagnosticSessionState,
@@ -7,8 +7,8 @@ import {
   resetDiagnosticSessionStateForTest,
   type SessionRef,
   type SessionStateValue,
-} from './diagnostic-session-state';
-import { createSubsystemLogger } from './subsystem';
+} from "./diagnostic-session-state.js";
+import { createSubsystemLogger } from "./subsystem.js";
 
 const diag = createSubsystemLogger("diagnostic");
 
@@ -350,7 +350,7 @@ export function startDiagnosticHeartbeat() {
       queued: totalQueued,
     });
 
-    import('../agents/command-poll-backoff')
+    import("../agents/command-poll-backoff.js")
       .then(({ pruneStaleCommandPolls }) => {
         for (const [, state] of diagnosticSessionStates) {
           pruneStaleCommandPolls(state);

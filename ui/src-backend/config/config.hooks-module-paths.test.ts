@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateConfigObjectWithPlugins } from './config';
+import { validateConfigObjectWithPlugins } from "./config.js";
 
 describe("config hooks module paths", () => {
   it("rejects absolute hooks.mappings[].transform.module", () => {

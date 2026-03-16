@@ -1451,15 +1451,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 );
             }
 
-            // Handle "Image saved:" or "Generated image:" patterns
-            const imageSavedMatch = part.match(/^(?:Image|Saved|Generated)[^:\n\r]*:\s*(.+\.(?:png|jpe?g|webp|gif|svg))(?:\s+\(.*?\))?$/i);
-            if (imageSavedMatch && imageSavedMatch[1]) {
-                const imagePath = imageSavedMatch[1].trim();
+            // Handle "Image saved:", "Image found:", or "MEDIA:" patterns
+            const imageMatch = part.match(/^(?:Image|Saved|Generated|MEDIA|Found)[^:\n\r]*:\s*(.+\.(?:png|jpe?g|webp|gif|svg))(?:\s+\(.*?\))?$/i);
+            if (imageMatch && imageMatch[1]) {
+                const imagePath = imageMatch[1].trim();
+                // If it's already a full URL, use it directly, otherwise use the media API
+                const finalSrc = imagePath.startsWith('http') 
+                    ? imagePath 
+                    : `/api/media?path=${encodeURIComponent(imagePath)}`;
+                
                 return (
                     <div key={pi} className="my-3 relative w-full max-w-sm rounded-xl border shadow-inner overflow-hidden flex justify-center items-center" style={{ borderColor: 'var(--pd-border)' }}>
                         <img
-                            src={`/api/media?path=${encodeURIComponent(imagePath)}`}
-                            alt="Generated Asset"
+                            src={finalSrc}
+                            alt="Visual Asset"
                             className="w-full h-auto max-h-[400px] object-contain"
                             onError={(e) => {
                                 (e.target as HTMLImageElement).parentElement?.style && ((e.target as HTMLImageElement).parentElement!.style.display = 'none');

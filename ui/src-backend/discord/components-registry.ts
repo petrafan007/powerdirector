@@ -1,4 +1,4 @@
-import type { DiscordComponentEntry, DiscordModalEntry } from './components';
+import type { DiscordComponentEntry, DiscordModalEntry } from "./components.js";
 
 const DEFAULT_COMPONENT_TTL_MS = 30 * 60 * 1000;
 

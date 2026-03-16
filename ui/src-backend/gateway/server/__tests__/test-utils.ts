@@ -1,4 +1,4 @@
-import { createEmptyPluginRegistry, type PluginRegistry } from '../../../plugins/registry';
+import { createEmptyPluginRegistry, type PluginRegistry } from "../../../plugins/registry.js";
 
 export const createTestRegistry = (overrides: Partial<PluginRegistry> = {}): PluginRegistry => {
   const merged = { ...createEmptyPluginRegistry(), ...overrides };

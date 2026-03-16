@@ -1,6 +1,6 @@
-import { loadConfig } from '../io';
-import { resolveStorePath } from './paths';
-import { loadSessionStore } from './store';
+import { loadConfig } from "../io.js";
+import { resolveStorePath } from "./paths.js";
+import { loadSessionStore } from "./store.js";
 
 /**
  * Extract deliveryContext and threadId from a sessionKey.

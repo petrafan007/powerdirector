@@ -1,4 +1,4 @@
-import type { CommandArgValues } from './commands-registry.types';
+import type { CommandArgValues } from "./commands-registry.types.js";
 
 export type CommandArgsFormatter = (values: CommandArgValues) => string | undefined;
 

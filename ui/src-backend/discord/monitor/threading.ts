@@ -1,13 +1,13 @@
 import { ChannelType, type Client } from "@buape/carbon";
 import { Routes } from "discord-api-types/v10";
-import { createReplyReferencePlanner } from '../../auto-reply/reply/reply-reference';
-import type { ReplyToMode } from '../../config/config';
-import { logVerbose } from '../../globals';
-import { buildAgentSessionKey } from '../../routing/resolve-route';
-import { truncateUtf16Safe } from '../../utils';
-import type { DiscordChannelConfigResolved } from './allow-list';
-import type { DiscordMessageEvent } from './listeners';
-import { resolveDiscordChannelInfo, resolveDiscordMessageChannelId } from './message-utils';
+import { createReplyReferencePlanner } from "../../auto-reply/reply/reply-reference.js";
+import type { ReplyToMode } from "../../config/config.js";
+import { logVerbose } from "../../globals.js";
+import { buildAgentSessionKey } from "../../routing/resolve-route.js";
+import { truncateUtf16Safe } from "../../utils.js";
+import type { DiscordChannelConfigResolved } from "./allow-list.js";
+import type { DiscordMessageEvent } from "./listeners.js";
+import { resolveDiscordChannelInfo, resolveDiscordMessageChannelId } from "./message-utils.js";
 
 export type DiscordThreadChannel = {
   id: string;
@@ -88,7 +88,7 @@ function isDiscordThreadType(type: ChannelType | undefined): boolean {
 export function resolveDiscordThreadChannel(params: {
   isGuildMessage: boolean;
   message: DiscordMessageEvent["message"];
-  channelInfo: import('./message-utils').DiscordChannelInfo | null;
+  channelInfo: import("./message-utils.js").DiscordChannelInfo | null;
   messageChannelId?: string;
 }): DiscordThreadChannel | null {
   if (!params.isGuildMessage) {
@@ -128,7 +128,7 @@ export function resolveDiscordThreadChannel(params: {
 export async function resolveDiscordThreadParentInfo(params: {
   client: Client;
   threadChannel: DiscordThreadChannel;
-  channelInfo: import('./message-utils').DiscordChannelInfo | null;
+  channelInfo: import("./message-utils.js").DiscordChannelInfo | null;
 }): Promise<DiscordThreadParentInfo> {
   const { threadChannel, channelInfo, client } = params;
   const parentId =

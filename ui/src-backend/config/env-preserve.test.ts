@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { restoreEnvVarRefs } from './env-preserve';
+import { restoreEnvVarRefs } from "./env-preserve.js";
 
 describe("restoreEnvVarRefs", () => {
   const env = {

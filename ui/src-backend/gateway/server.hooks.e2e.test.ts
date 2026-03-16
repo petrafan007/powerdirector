@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
-import { resolveMainSessionKeyFromConfig } from '../config/sessions';
-import { drainSystemEvents, peekSystemEvents } from '../infra/system-events';
+import { resolveMainSessionKeyFromConfig } from "../config/sessions.js";
+import { drainSystemEvents, peekSystemEvents } from "../infra/system-events.js";
 import {
   cronIsolatedRun,
   installGatewayTestHooks,
   testState,
   withGatewayServer,
   waitForSystemEvent,
-} from './test-helpers';
+} from "./test-helpers.js";
 
 installGatewayTestHooks({ scope: "suite" });
 

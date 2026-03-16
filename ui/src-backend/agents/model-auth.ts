@@ -1,13 +1,13 @@
 import path from "node:path";
 import { type Api, getEnvApiKey, type Model } from "@mariozechner/pi-ai";
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import type { ModelProviderAuthMode, ModelProviderConfig } from '../config/types';
-import { getShellEnvAppliedKeys } from '../infra/shell-env';
+import { formatCliCommand } from "../cli/command-format.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { ModelProviderAuthMode, ModelProviderConfig } from "../config/types.js";
+import { getShellEnvAppliedKeys } from "../infra/shell-env.js";
 import {
   normalizeOptionalSecretInput,
   normalizeSecretInput,
-} from '../utils/normalize-secret-input';
+} from "../utils/normalize-secret-input.js";
 import {
   type AuthProfileStore,
   ensureAuthProfileStore,
@@ -15,10 +15,10 @@ import {
   resolveApiKeyForProfile,
   resolveAuthProfileOrder,
   resolveAuthStorePathForDisplay,
-} from './auth-profiles';
-import { normalizeProviderId } from './model-selection';
+} from "./auth-profiles.js";
+import { normalizeProviderId } from "./model-selection.js";
 
-export { ensureAuthProfileStore, resolveAuthProfileOrder } from './auth-profiles';
+export { ensureAuthProfileStore, resolveAuthProfileOrder } from "./auth-profiles.js";
 
 const AWS_BEARER_ENV = "AWS_BEARER_TOKEN_BEDROCK";
 const AWS_ACCESS_KEY_ENV = "AWS_ACCESS_KEY_ID";

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { RuntimeEnv } from '../../runtime';
+import type { RuntimeEnv } from "../../runtime.js";
 
 const sendMessageIMessageMock = vi.hoisted(() =>
   vi.fn().mockResolvedValue({ messageId: "imsg-1" }),
@@ -31,11 +31,11 @@ vi.mock("../../markdown/tables.js", () => ({
   convertMarkdownTables: (text: string) => convertMarkdownTablesMock(text),
 }));
 
-import { deliverReplies } from './deliver';
+import { deliverReplies } from "./deliver.js";
 
 describe("deliverReplies", () => {
   const runtime = { log: vi.fn(), error: vi.fn() } as unknown as RuntimeEnv;
-  const client = {} as Awaited<ReturnType<typeof import('../client').createIMessageRpcClient>>;
+  const client = {} as Awaited<ReturnType<typeof import("../client.js").createIMessageRpcClient>>;
 
   beforeEach(() => {
     vi.clearAllMocks();

@@ -1,8 +1,8 @@
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig, ConfigFileSnapshot } from '../config/types.powerdirector';
-import type { UpdateRunResult } from '../infra/update-runner';
-import { captureEnv } from '../test-utils/env';
+import type { PowerDirectorConfig, ConfigFileSnapshot } from "../config/types.powerdirector.js";
+import type { UpdateRunResult } from "../infra/update-runner.js";
+import { captureEnv } from "../test-utils/env.js";
 
 const confirm = vi.fn();
 const select = vi.fn();
@@ -39,7 +39,7 @@ vi.mock("../config/config.js", () => ({
 }));
 
 vi.mock("../infra/update-check.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../infra/update-check')>();
+  const actual = await importOriginal<typeof import("../infra/update-check.js")>();
   return {
     ...actual,
     checkUpdateStatus: vi.fn(),
@@ -68,7 +68,7 @@ vi.mock("../process/exec.js", () => ({
 }));
 
 vi.mock("./update-cli/shared.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./update-cli/shared')>();
+  const actual = await importOriginal<typeof import("./update-cli/shared.js")>();
   return {
     ...actual,
     readPackageName,
@@ -107,17 +107,17 @@ vi.mock("../runtime.js", () => ({
   },
 }));
 
-const { runGatewayUpdate } = await import('../infra/update-runner');
-const { resolvePowerDirectorPackageRoot } = await import('../infra/powerdirector-root');
-const { readConfigFileSnapshot, writeConfigFile } = await import('../config/config');
+const { runGatewayUpdate } = await import("../infra/update-runner.js");
+const { resolvePowerDirectorPackageRoot } = await import("../infra/powerdirector-root.js");
+const { readConfigFileSnapshot, writeConfigFile } = await import("../config/config.js");
 const { checkUpdateStatus, fetchNpmTagVersion, resolveNpmChannelTag } =
-  await import('../infra/update-check');
-const { runCommandWithTimeout } = await import('../process/exec');
-const { runDaemonRestart, runDaemonInstall } = await import('./daemon-cli');
-const { doctorCommand } = await import('../commands/doctor');
-const { defaultRuntime } = await import('../runtime');
+  await import("../infra/update-check.js");
+const { runCommandWithTimeout } = await import("../process/exec.js");
+const { runDaemonRestart, runDaemonInstall } = await import("./daemon-cli.js");
+const { doctorCommand } = await import("../commands/doctor.js");
+const { defaultRuntime } = await import("../runtime.js");
 const { updateCommand, registerUpdateCli, updateStatusCommand, updateWizardCommand } =
-  await import('./update-cli');
+  await import("./update-cli.js");
 
 describe("update-cli", () => {
   const fixtureRoot = "/tmp/powerdirector-update-tests";

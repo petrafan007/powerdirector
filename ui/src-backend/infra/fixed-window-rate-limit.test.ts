@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createFixedWindowRateLimiter } from './fixed-window-rate-limit';
+import { createFixedWindowRateLimiter } from "./fixed-window-rate-limit.js";
 
 describe("fixed-window rate limiter", () => {
   it("blocks after max requests until window reset", () => {

@@ -1,19 +1,19 @@
 import { z } from "zod";
-import { isSafeScpRemoteHost } from '../infra/scp-host';
-import { isValidInboundPathRootPattern } from '../media/inbound-path-policy';
+import { isSafeScpRemoteHost } from "../infra/scp-host.js";
+import { isValidInboundPathRootPattern } from "../media/inbound-path-policy.js";
 import {
   resolveDiscordPreviewStreamMode,
   resolveSlackNativeStreaming,
   resolveSlackStreamingMode,
   resolveTelegramPreviewStreamMode,
-} from './discord-preview-streaming';
+} from "./discord-preview-streaming.js";
 import {
   normalizeTelegramCommandDescription,
   normalizeTelegramCommandName,
   resolveTelegramCustomCommands,
-} from './telegram-custom-commands';
-import { ToolPolicySchema } from './zod-schema.agent-runtime';
-import { ChannelHeartbeatVisibilitySchema } from './zod-schema.channels';
+} from "./telegram-custom-commands.js";
+import { ToolPolicySchema } from "./zod-schema.agent-runtime.js";
+import { ChannelHeartbeatVisibilitySchema } from "./zod-schema.channels.js";
 import {
   BlockStreamingChunkSchema,
   BlockStreamingCoalesceSchema,
@@ -29,8 +29,8 @@ import {
   RetryConfigSchema,
   TtsConfigSchema,
   requireOpenAllowFrom,
-} from './zod-schema.core';
-import { sensitive } from './zod-schema.sensitive';
+} from "./zod-schema.core.js";
+import { sensitive } from "./zod-schema.sensitive.js";
 
 const ToolPolicyBySenderSchema = z.record(z.string(), ToolPolicySchema).optional();
 

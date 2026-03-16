@@ -5,7 +5,7 @@ vi.mock("../../infra/channel-activity.js", () => ({
   recordChannelActivity: (...args: unknown[]) => recordChannelActivity(...args),
 }));
 
-import { createWebSendApi } from './send-api';
+import { createWebSendApi } from "./send-api.js";
 
 describe("createWebSendApi", () => {
   const sendMessage = vi.fn(async () => ({ key: { id: "msg-1" } }));

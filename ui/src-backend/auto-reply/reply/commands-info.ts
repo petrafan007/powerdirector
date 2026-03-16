@@ -1,14 +1,14 @@
-import { logVerbose } from '../../globals';
-import { listSkillCommandsForAgents } from '../skill-commands';
+import { logVerbose } from "../../globals.js";
+import { listSkillCommandsForAgents } from "../skill-commands.js";
 import {
   buildCommandsMessage,
   buildCommandsMessagePaginated,
   buildHelpMessage,
-} from '../status';
-import { buildContextReply } from './commands-context-report';
-import { buildExportSessionReply } from './commands-export-session';
-import { buildStatusReply } from './commands-status';
-import type { CommandHandler } from './commands-types';
+} from "../status.js";
+import { buildContextReply } from "./commands-context-report.js";
+import { buildExportSessionReply } from "./commands-export-session.js";
+import { buildStatusReply } from "./commands-status.js";
+import type { CommandHandler } from "./commands-types.js";
 
 export const handleHelpCommand: CommandHandler = async (params, allowTextCommands) => {
   if (!allowTextCommands) {

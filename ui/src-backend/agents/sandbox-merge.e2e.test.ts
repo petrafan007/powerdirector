@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 describe("sandbox config merges", () => {
   it("resolves sandbox scope deterministically", { timeout: 60_000 }, async () => {
-    const { resolveSandboxScope } = await import('./sandbox');
+    const { resolveSandboxScope } = await import("./sandbox.js");
 
     expect(resolveSandboxScope({})).toBe("agent");
     expect(resolveSandboxScope({ perSession: true })).toBe("session");
@@ -11,7 +11,7 @@ describe("sandbox config merges", () => {
   });
 
   it("merges sandbox docker env and ulimits (agent wins)", async () => {
-    const { resolveSandboxDockerConfig } = await import('./sandbox');
+    const { resolveSandboxDockerConfig } = await import("./sandbox.js");
 
     const resolved = resolveSandboxDockerConfig({
       scope: "agent",
@@ -33,7 +33,7 @@ describe("sandbox config merges", () => {
   });
 
   it("merges sandbox docker binds (global + agent combined)", async () => {
-    const { resolveSandboxDockerConfig } = await import('./sandbox');
+    const { resolveSandboxDockerConfig } = await import("./sandbox.js");
 
     const resolved = resolveSandboxDockerConfig({
       scope: "agent",
@@ -52,7 +52,7 @@ describe("sandbox config merges", () => {
   });
 
   it("returns undefined binds when neither global nor agent has binds", async () => {
-    const { resolveSandboxDockerConfig } = await import('./sandbox');
+    const { resolveSandboxDockerConfig } = await import("./sandbox.js");
 
     const resolved = resolveSandboxDockerConfig({
       scope: "agent",
@@ -64,7 +64,7 @@ describe("sandbox config merges", () => {
   });
 
   it("ignores agent binds under shared scope", async () => {
-    const { resolveSandboxDockerConfig } = await import('./sandbox');
+    const { resolveSandboxDockerConfig } = await import("./sandbox.js");
 
     const resolved = resolveSandboxDockerConfig({
       scope: "shared",
@@ -80,7 +80,7 @@ describe("sandbox config merges", () => {
   });
 
   it("ignores agent docker overrides under shared scope", async () => {
-    const { resolveSandboxDockerConfig } = await import('./sandbox');
+    const { resolveSandboxDockerConfig } = await import("./sandbox.js");
 
     const resolved = resolveSandboxDockerConfig({
       scope: "shared",
@@ -92,7 +92,7 @@ describe("sandbox config merges", () => {
   });
 
   it("applies per-agent browser and prune overrides (ignored under shared scope)", async () => {
-    const { resolveSandboxBrowserConfig, resolveSandboxPruneConfig } = await import('./sandbox');
+    const { resolveSandboxBrowserConfig, resolveSandboxPruneConfig } = await import("./sandbox.js");
 
     const browser = resolveSandboxBrowserConfig({
       scope: "agent",

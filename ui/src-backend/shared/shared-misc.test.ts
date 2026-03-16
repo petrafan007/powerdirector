@@ -1,12 +1,12 @@
 import { describe, expect, it, test } from "vitest";
-import { extractTextFromChatContent } from './chat-content';
+import { extractTextFromChatContent } from "./chat-content.js";
 import {
   getFrontmatterString,
   normalizeStringList,
   parseFrontmatterBool,
   resolvePowerDirectorManifestBlock,
-} from './frontmatter';
-import { resolveNodeIdFromCandidates } from './node-match';
+} from "./frontmatter.js";
+import { resolveNodeIdFromCandidates } from "./node-match.js";
 
 describe("extractTextFromChatContent", () => {
   it("normalizes string content", () => {

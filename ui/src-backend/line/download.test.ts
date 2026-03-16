@@ -19,7 +19,7 @@ vi.mock("../globals.js", () => ({
   logVerbose: () => {},
 }));
 
-import { downloadLineMedia } from './download';
+import { downloadLineMedia } from "./download.js";
 
 async function* chunks(parts: Buffer[]): AsyncGenerator<Buffer> {
   for (const part of parts) {

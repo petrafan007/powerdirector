@@ -7,32 +7,32 @@ import {
 import { createServer as createHttpsServer } from "node:https";
 import type { TlsOptions } from "node:tls";
 import type { WebSocketServer } from "ws";
-import { resolveAgentAvatar } from '../agents/identity-avatar';
+import { resolveAgentAvatar } from "../agents/identity-avatar.js";
 import {
   A2UI_PATH,
   CANVAS_HOST_PATH,
   CANVAS_WS_PATH,
   handleA2uiHttpRequest,
-} from '../canvas-host/a2ui';
-import type { CanvasHostHandler } from '../canvas-host/server';
-import { loadConfig } from '../config/config';
-import type { createSubsystemLogger } from '../logging/subsystem';
-import { safeEqualSecret } from '../security/secret-equal';
-import { handleSlackHttpRequest } from '../slack/http/index';
-import type { AuthRateLimiter } from './auth-rate-limit';
+} from "../canvas-host/a2ui.js";
+import type { CanvasHostHandler } from "../canvas-host/server.js";
+import { loadConfig } from "../config/config.js";
+import type { createSubsystemLogger } from "../logging/subsystem.js";
+import { safeEqualSecret } from "../security/secret-equal.js";
+import { handleSlackHttpRequest } from "../slack/http/index.js";
+import type { AuthRateLimiter } from "./auth-rate-limit.js";
 import {
   authorizeGatewayConnect,
   isLocalDirectRequest,
   type GatewayAuthResult,
   type ResolvedGatewayAuth,
-} from './auth';
-import { CANVAS_CAPABILITY_TTL_MS, normalizeCanvasScopedUrl } from './canvas-capability';
+} from "./auth.js";
+import { CANVAS_CAPABILITY_TTL_MS, normalizeCanvasScopedUrl } from "./canvas-capability.js";
 import {
   handleControlUiAvatarRequest,
   handleControlUiHttpRequest,
   type ControlUiRootState,
-} from './control-ui';
-import { applyHookMappings } from './hooks-mapping';
+} from "./control-ui.js";
+import { applyHookMappings } from "./hooks-mapping.js";
 import {
   extractHookToken,
   getHookAgentPolicyError,
@@ -48,16 +48,16 @@ import {
   resolveHookTargetAgentId,
   resolveHookChannel,
   resolveHookDeliver,
-} from './hooks';
-import { sendGatewayAuthFailure, setDefaultSecurityHeaders } from './http-common';
-import { getBearerToken } from './http-utils';
-import { handleOpenAiHttpRequest } from './openai-http';
-import { handleOpenResponsesHttpRequest } from './openresponses-http';
-import { GATEWAY_CLIENT_MODES, normalizeGatewayClientMode } from './protocol/client-info';
-import type { GatewayWsClient } from './server/ws-types';
-import { handleToolsInvokeHttpRequest } from './tools-invoke-http';
-import { handleChannelsHttpRequest } from './server-channels-http';
-import type { ChannelManager } from './server-channels';
+} from "./hooks.js";
+import { sendGatewayAuthFailure, setDefaultSecurityHeaders } from "./http-common.js";
+import { getBearerToken } from "./http-utils.js";
+import { handleOpenAiHttpRequest } from "./openai-http.js";
+import { handleOpenResponsesHttpRequest } from "./openresponses-http.js";
+import { GATEWAY_CLIENT_MODES, normalizeGatewayClientMode } from "./protocol/client-info.js";
+import type { GatewayWsClient } from "./server/ws-types.js";
+import { handleToolsInvokeHttpRequest } from "./tools-invoke-http.js";
+import { handleChannelsHttpRequest } from "./server-channels-http.js";
+import type { ChannelManager } from "./server-channels.js";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 type HookAuthFailure = { count: number; windowStartedAtMs: number };
@@ -459,7 +459,7 @@ export function createGatewayHttpServer(opts: {
   controlUiRoot?: ControlUiRootState;
   openAiChatCompletionsEnabled: boolean;
   openResponsesEnabled: boolean;
-  openResponsesConfig?: import('../config/types.gateway').GatewayHttpResponsesConfig;
+  openResponsesConfig?: import("../config/types.gateway.js").GatewayHttpResponsesConfig;
   handleHooksRequest: HooksRequestHandler;
   handlePluginRequest?: HooksRequestHandler;
   resolvedAuth: ResolvedGatewayAuth;

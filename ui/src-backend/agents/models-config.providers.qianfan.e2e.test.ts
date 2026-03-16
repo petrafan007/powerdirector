@@ -2,8 +2,8 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { captureEnv } from '../test-utils/env';
-import { resolveImplicitProviders } from './models-config.providers';
+import { captureEnv } from "../test-utils/env.js";
+import { resolveImplicitProviders } from "./models-config.providers.js";
 
 describe("Qianfan provider", () => {
   it("should include qianfan when QIANFAN_API_KEY is configured", async () => {

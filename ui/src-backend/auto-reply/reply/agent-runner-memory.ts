@@ -1,28 +1,28 @@
 import crypto from "node:crypto";
-import { runWithModelFallback } from '../../agents/model-fallback';
-import { isCliProvider } from '../../agents/model-selection';
-import { runEmbeddedPiAgent } from '../../agents/pi-embedded';
-import { resolveSandboxConfigForAgent, resolveSandboxRuntimeStatus } from '../../agents/sandbox';
-import type { PowerDirectorConfig } from '../../config/config';
-import { type SessionEntry, updateSessionStoreEntry } from '../../config/sessions';
-import { logVerbose } from '../../globals';
-import { registerAgentRunContext } from '../../infra/agent-events';
-import type { TemplateContext } from '../templating';
-import type { VerboseLevel } from '../thinking';
-import type { GetReplyOptions } from '../types';
+import { runWithModelFallback } from "../../agents/model-fallback.js";
+import { isCliProvider } from "../../agents/model-selection.js";
+import { runEmbeddedPiAgent } from "../../agents/pi-embedded.js";
+import { resolveSandboxConfigForAgent, resolveSandboxRuntimeStatus } from "../../agents/sandbox.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { type SessionEntry, updateSessionStoreEntry } from "../../config/sessions.js";
+import { logVerbose } from "../../globals.js";
+import { registerAgentRunContext } from "../../infra/agent-events.js";
+import type { TemplateContext } from "../templating.js";
+import type { VerboseLevel } from "../thinking.js";
+import type { GetReplyOptions } from "../types.js";
 import {
   buildEmbeddedRunBaseParams,
   buildEmbeddedRunContexts,
   resolveModelFallbackOptions,
-} from './agent-runner-utils';
+} from "./agent-runner-utils.js";
 import {
   resolveMemoryFlushContextWindowTokens,
   resolveMemoryFlushPromptForRun,
   resolveMemoryFlushSettings,
   shouldRunMemoryFlush,
-} from './memory-flush';
-import type { FollowupRun } from './queue';
-import { incrementCompactionCount } from './session-updates';
+} from "./memory-flush.js";
+import type { FollowupRun } from "./queue.js";
+import { incrementCompactionCount } from "./session-updates.js";
 
 export async function runMemoryFlushIfNeeded(params: {
   cfg: PowerDirectorConfig;

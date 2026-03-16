@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownToSlackMrkdwn } from './format';
+import { markdownToSlackMrkdwn } from "./format.js";
 
 describe("markdownToSlackMrkdwn", () => {
   it("converts bold from double asterisks to single", () => {

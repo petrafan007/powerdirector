@@ -1,10 +1,10 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   resolveReactionLevel,
   type ReactionLevel,
   type ResolvedReactionLevel,
-} from '../utils/reaction-level';
-import { resolveSignalAccount } from './accounts';
+} from "../utils/reaction-level.js";
+import { resolveSignalAccount } from "./accounts.js";
 
 export type SignalReactionLevel = ReactionLevel;
 export type ResolvedSignalReactionLevel = ResolvedReactionLevel;

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { createSlackEditTestClient, installSlackBlockTestMocks } from './blocks.test-helpers';
+import { createSlackEditTestClient, installSlackBlockTestMocks } from "./blocks.test-helpers.js";
 
 installSlackBlockTestMocks();
-const { editSlackMessage } = await import('./actions');
+const { editSlackMessage } = await import("./actions.js");
 
 describe("editSlackMessage blocks", () => {
   it("updates with valid blocks", async () => {

@@ -3,10 +3,10 @@ import {
   normalizeApnsEnvironment,
   resolveApnsAuthConfigFromEnv,
   sendApnsAlert,
-} from '../../infra/push-apns';
-import { ErrorCodes, errorShape, validatePushTestParams } from '../protocol/index';
-import { respondInvalidParams, respondUnavailableOnThrow } from './nodes.helpers';
-import type { GatewayRequestHandlers } from './types';
+} from "../../infra/push-apns.js";
+import { ErrorCodes, errorShape, validatePushTestParams } from "../protocol/index.js";
+import { respondInvalidParams, respondUnavailableOnThrow } from "./nodes.helpers.js";
+import type { GatewayRequestHandlers } from "./types.js";
 
 function normalizeOptionalString(value: unknown): string | undefined {
   if (typeof value !== "string") {

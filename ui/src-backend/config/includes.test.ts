@@ -8,7 +8,7 @@ import {
   deepMerge,
   type IncludeResolver,
   resolveConfigIncludes,
-} from './includes';
+} from "./includes.js";
 
 const ROOT_DIR = path.parse(process.cwd()).root;
 const CONFIG_DIR = path.join(ROOT_DIR, "config");

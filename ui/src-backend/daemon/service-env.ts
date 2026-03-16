@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import { VERSION } from '../version';
+import { VERSION } from "../version.js";
 import {
   GATEWAY_SERVICE_KIND,
   GATEWAY_SERVICE_MARKER,
@@ -12,7 +12,7 @@ import {
   resolveNodeLaunchAgentLabel,
   resolveNodeSystemdServiceName,
   resolveNodeWindowsTaskName,
-} from './constants';
+} from "./constants.js";
 
 export type MinimalServicePathOptions = {
   platform?: NodeJS.Platform;

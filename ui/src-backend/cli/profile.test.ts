@@ -1,7 +1,7 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { formatCliCommand } from './command-format';
-import { applyCliProfileEnv, parseCliProfileArgs } from './profile';
+import { formatCliCommand } from "./command-format.js";
+import { applyCliProfileEnv, parseCliProfileArgs } from "./profile.js";
 
 describe("parseCliProfileArgs", () => {
   it("leaves gateway --dev for subcommands", () => {

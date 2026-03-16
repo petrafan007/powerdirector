@@ -1,44 +1,44 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
-import { runCliAgent } from '../../agents/cli-runner';
-import { getCliSessionId } from '../../agents/cli-session';
-import { runWithModelFallback } from '../../agents/model-fallback';
-import { isCliProvider } from '../../agents/model-selection';
+import { runCliAgent } from "../../agents/cli-runner.js";
+import { getCliSessionId } from "../../agents/cli-session.js";
+import { runWithModelFallback } from "../../agents/model-fallback.js";
+import { isCliProvider } from "../../agents/model-selection.js";
 import {
   isCompactionFailureError,
   isContextOverflowError,
   isLikelyContextOverflowError,
   isTransientHttpError,
   sanitizeUserFacingText,
-} from '../../agents/pi-embedded-helpers';
-import { runEmbeddedPiAgent } from '../../agents/pi-embedded';
+} from "../../agents/pi-embedded-helpers.js";
+import { runEmbeddedPiAgent } from "../../agents/pi-embedded.js";
 import {
   resolveGroupSessionKey,
   resolveSessionTranscriptPath,
   type SessionEntry,
   updateSessionStore,
-} from '../../config/sessions';
-import { logVerbose } from '../../globals';
-import { emitAgentEvent, registerAgentRunContext } from '../../infra/agent-events';
-import { defaultRuntime } from '../../runtime';
+} from "../../config/sessions.js";
+import { logVerbose } from "../../globals.js";
+import { emitAgentEvent, registerAgentRunContext } from "../../infra/agent-events.js";
+import { defaultRuntime } from "../../runtime.js";
 import {
   isMarkdownCapableMessageChannel,
   resolveMessageChannel,
-} from '../../utils/message-channel';
-import { stripHeartbeatToken } from '../heartbeat';
-import type { TemplateContext } from '../templating';
-import type { VerboseLevel } from '../thinking';
-import { isSilentReplyText, SILENT_REPLY_TOKEN } from '../tokens';
-import type { GetReplyOptions, ReplyPayload } from '../types';
+} from "../../utils/message-channel.js";
+import { stripHeartbeatToken } from "../heartbeat.js";
+import type { TemplateContext } from "../templating.js";
+import type { VerboseLevel } from "../thinking.js";
+import { isSilentReplyText, SILENT_REPLY_TOKEN } from "../tokens.js";
+import type { GetReplyOptions, ReplyPayload } from "../types.js";
 import {
   buildEmbeddedRunBaseParams,
   buildEmbeddedRunContexts,
   resolveModelFallbackOptions,
-} from './agent-runner-utils';
-import { type BlockReplyPipeline } from './block-reply-pipeline';
-import type { FollowupRun } from './queue';
-import { createBlockReplyDeliveryHandler } from './reply-delivery';
-import type { TypingSignaler } from './typing-mode';
+} from "./agent-runner-utils.js";
+import { type BlockReplyPipeline } from "./block-reply-pipeline.js";
+import type { FollowupRun } from "./queue.js";
+import { createBlockReplyDeliveryHandler } from "./reply-delivery.js";
+import type { TypingSignaler } from "./typing-mode.js";
 
 export type AgentRunLoopResult =
   | {

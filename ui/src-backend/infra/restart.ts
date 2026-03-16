@@ -2,8 +2,8 @@ import { spawnSync } from "node:child_process";
 import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
-} from '../daemon/constants';
-import { createSubsystemLogger } from '../logging/subsystem';
+} from "../daemon/constants.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
 
 export type RestartAttempt = {
   ok: boolean;

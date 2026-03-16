@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { appendCdpPath, getHeadersWithAuth } from './cdp.helpers';
-import { __test } from './client-fetch';
-import { resolveBrowserConfig, resolveProfile } from './config';
-import { shouldRejectBrowserMutation } from './csrf';
-import { toBoolean } from './routes/utils';
-import type { BrowserServerState } from './server-context';
-import { listKnownProfileNames } from './server-context';
-import { resolveTargetIdFromTabs } from './target-id';
+import { appendCdpPath, getHeadersWithAuth } from "./cdp.helpers.js";
+import { __test } from "./client-fetch.js";
+import { resolveBrowserConfig, resolveProfile } from "./config.js";
+import { shouldRejectBrowserMutation } from "./csrf.js";
+import { toBoolean } from "./routes/utils.js";
+import type { BrowserServerState } from "./server-context.js";
+import { listKnownProfileNames } from "./server-context.js";
+import { resolveTargetIdFromTabs } from "./target-id.js";
 
 describe("toBoolean", () => {
   it("parses yes/no and 1/0", () => {

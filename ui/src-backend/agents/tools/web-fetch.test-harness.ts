@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, vi } from "vitest";
-import * as ssrf from '../../infra/net/ssrf';
+import * as ssrf from "../../infra/net/ssrf.js";
 
 export function installWebFetchSsrfHarness() {
   const lookupMock = vi.fn();

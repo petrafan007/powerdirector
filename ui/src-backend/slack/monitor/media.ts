@@ -1,9 +1,9 @@
 import type { WebClient as SlackWebClient } from "@slack/web-api";
-import { normalizeHostname } from '../../infra/net/hostname';
-import type { FetchLike } from '../../media/fetch';
-import { fetchRemoteMedia } from '../../media/fetch';
-import { saveMediaBuffer } from '../../media/store';
-import type { SlackAttachment, SlackFile } from '../types';
+import { normalizeHostname } from "../../infra/net/hostname.js";
+import type { FetchLike } from "../../media/fetch.js";
+import { fetchRemoteMedia } from "../../media/fetch.js";
+import { saveMediaBuffer } from "../../media/store.js";
+import type { SlackAttachment, SlackFile } from "../types.js";
 
 function isSlackHostname(hostname: string): boolean {
   const normalized = normalizeHostname(hostname);

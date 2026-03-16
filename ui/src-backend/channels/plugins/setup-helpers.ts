@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../routing/session-key';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../routing/session-key.js";
 
 type ChannelSectionBase = {
   name?: string;

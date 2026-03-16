@@ -3,7 +3,7 @@ import {
   createParagraphChunkedBlockReplyHarness,
   emitAssistantTextDeltaAndEnd,
   expectFencedChunks,
-} from './pi-embedded-subscribe.e2e-harness';
+} from "./pi-embedded-subscribe.e2e-harness.js";
 
 describe("subscribeEmbeddedPiSession", () => {
   it("reopens fenced blocks when splitting inside them", () => {

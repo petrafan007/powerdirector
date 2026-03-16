@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { startBrowserBridgeServer, stopBrowserBridgeServer } from './bridge-server';
-import type { ResolvedBrowserConfig } from './config';
+import { startBrowserBridgeServer, stopBrowserBridgeServer } from "./bridge-server.js";
+import type { ResolvedBrowserConfig } from "./config.js";
 import {
   DEFAULT_POWERDIRECTOR_BROWSER_COLOR,
   DEFAULT_POWERDIRECTOR_BROWSER_PROFILE_NAME,
-} from './constants';
+} from "./constants.js";
 
 function buildResolvedConfig(): ResolvedBrowserConfig {
   return {

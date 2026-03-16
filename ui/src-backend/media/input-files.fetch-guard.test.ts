@@ -10,13 +10,13 @@ async function waitForMicrotaskTurn(): Promise<void> {
   await new Promise<void>((resolve) => queueMicrotask(resolve));
 }
 
-let fetchWithGuard: typeof import('./input-files').fetchWithGuard;
-let extractImageContentFromSource: typeof import('./input-files').extractImageContentFromSource;
-let extractFileContentFromSource: typeof import('./input-files').extractFileContentFromSource;
+let fetchWithGuard: typeof import("./input-files.js").fetchWithGuard;
+let extractImageContentFromSource: typeof import("./input-files.js").extractImageContentFromSource;
+let extractFileContentFromSource: typeof import("./input-files.js").extractFileContentFromSource;
 
 beforeAll(async () => {
   ({ fetchWithGuard, extractImageContentFromSource, extractFileContentFromSource } =
-    await import('./input-files'));
+    await import("./input-files.js"));
 });
 
 describe("fetchWithGuard", () => {

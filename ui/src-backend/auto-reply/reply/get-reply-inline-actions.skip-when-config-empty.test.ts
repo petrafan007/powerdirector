@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import type { TemplateContext } from '../templating';
-import { clearInlineDirectives } from './get-reply-directives-utils';
-import { buildTestCtx } from './test-ctx';
-import type { TypingController } from './typing';
+import type { TemplateContext } from "../templating.js";
+import { clearInlineDirectives } from "./get-reply-directives-utils.js";
+import { buildTestCtx } from "./test-ctx.js";
+import type { TypingController } from "./typing.js";
 
 const handleCommandsMock = vi.fn();
 
@@ -13,7 +13,7 @@ vi.mock("./commands.js", () => ({
 }));
 
 // Import after mocks.
-const { handleInlineActions } = await import('./get-reply-inline-actions');
+const { handleInlineActions } = await import("./get-reply-inline-actions.js");
 
 describe("handleInlineActions", () => {
   it("skips whatsapp replies when config is empty and From !== To", async () => {

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ErrorCodes } from '../protocol/index';
-import { nodeHandlers } from './nodes';
+import { ErrorCodes } from "../protocol/index.js";
+import { nodeHandlers } from "./nodes.js";
 
 const mocks = vi.hoisted(() => ({
   loadConfig: vi.fn(() => ({})),

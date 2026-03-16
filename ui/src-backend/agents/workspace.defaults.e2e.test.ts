@@ -1,6 +1,6 @@
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { resolveDefaultAgentWorkspaceDir } from './workspace';
+import { resolveDefaultAgentWorkspaceDir } from "./workspace.js";
 
 afterEach(() => {
   vi.unstubAllEnvs();

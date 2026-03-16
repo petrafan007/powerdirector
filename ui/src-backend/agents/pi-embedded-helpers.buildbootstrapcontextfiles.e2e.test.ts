@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   buildBootstrapContextFiles,
   DEFAULT_BOOTSTRAP_MAX_CHARS,
   DEFAULT_BOOTSTRAP_TOTAL_MAX_CHARS,
   resolveBootstrapMaxChars,
   resolveBootstrapTotalMaxChars,
-} from './pi-embedded-helpers';
-import type { WorkspaceBootstrapFile } from './workspace';
-import { DEFAULT_AGENTS_FILENAME } from './workspace';
+} from "./pi-embedded-helpers.js";
+import type { WorkspaceBootstrapFile } from "./workspace.js";
+import { DEFAULT_AGENTS_FILENAME } from "./workspace.js";
 
 const makeFile = (overrides: Partial<WorkspaceBootstrapFile>): WorkspaceBootstrapFile => ({
   name: DEFAULT_AGENTS_FILENAME,

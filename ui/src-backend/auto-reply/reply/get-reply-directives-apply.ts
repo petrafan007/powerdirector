@@ -1,20 +1,20 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import type { MsgContext } from '../templating';
-import type { ElevatedLevel } from '../thinking';
-import type { ReplyPayload } from '../types';
-import { buildStatusReply } from './commands';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { SessionEntry } from "../../config/sessions.js";
+import type { MsgContext } from "../templating.js";
+import type { ElevatedLevel } from "../thinking.js";
+import type { ReplyPayload } from "../types.js";
+import { buildStatusReply } from "./commands.js";
 import {
   applyInlineDirectivesFastLane,
   handleDirectiveOnly,
   type InlineDirectives,
   isDirectiveOnly,
   persistInlineDirectives,
-} from './directive-handling';
-import { resolveCurrentDirectiveLevels } from './directive-handling.levels';
-import { clearInlineDirectives } from './get-reply-directives-utils';
-import type { createModelSelectionState } from './model-selection';
-import type { TypingController } from './typing';
+} from "./directive-handling.js";
+import { resolveCurrentDirectiveLevels } from "./directive-handling.levels.js";
+import { clearInlineDirectives } from "./get-reply-directives-utils.js";
+import type { createModelSelectionState } from "./model-selection.js";
+import type { TypingController } from "./typing.js";
 
 type AgentDefaults = NonNullable<PowerDirectorConfig["agents"]>["defaults"];
 

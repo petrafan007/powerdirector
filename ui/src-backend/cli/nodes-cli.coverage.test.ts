@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { createCliRuntimeCapture } from './test-runtime-capture';
+import { createCliRuntimeCapture } from "./test-runtime-capture.js";
 
 type NodeInvokeCall = {
   method?: string;
@@ -97,7 +97,7 @@ describe("nodes-cli coverage", () => {
   };
 
   beforeAll(async () => {
-    ({ registerNodesCli } = await import('./nodes-cli'));
+    ({ registerNodesCli } = await import("./nodes-cli.js"));
   });
 
   beforeEach(() => {

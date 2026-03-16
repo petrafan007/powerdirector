@@ -2,9 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   clearAllDispatchers,
   getTotalPendingReplies,
-} from '../auto-reply/reply/dispatcher-registry';
-import { createReplyDispatcher } from '../auto-reply/reply/reply-dispatcher';
-import { getTotalQueueSize } from '../process/command-queue';
+} from "../auto-reply/reply/dispatcher-registry.js";
+import { createReplyDispatcher } from "../auto-reply/reply/reply-dispatcher.js";
+import { getTotalQueueSize } from "../process/command-queue.js";
 
 async function flushMicrotasks(count = 10): Promise<void> {
   for (let i = 0; i < count; i += 1) {

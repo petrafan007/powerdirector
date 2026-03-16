@@ -1,6 +1,6 @@
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { InternalHookEvent } from '../../internal-hooks';
+import type { InternalHookEvent } from "../../internal-hooks.js";
 
 const runBootOnce = vi.fn();
 const listAgentIds = vi.fn();
@@ -22,7 +22,7 @@ vi.mock("../../../logging/subsystem.js", () => ({
   }),
 }));
 
-const { default: runBootChecklist } = await import('./handler');
+const { default: runBootChecklist } = await import("./handler.js");
 
 function makeEvent(overrides?: Partial<InternalHookEvent>): InternalHookEvent {
   return {

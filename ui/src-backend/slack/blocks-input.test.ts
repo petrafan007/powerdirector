@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseSlackBlocksInput } from './blocks-input';
+import { parseSlackBlocksInput } from "./blocks-input.js";
 
 describe("parseSlackBlocksInput", () => {
   it("returns undefined when blocks are missing", () => {

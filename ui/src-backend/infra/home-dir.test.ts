@@ -1,6 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { expandHomePrefix, resolveEffectiveHomeDir, resolveRequiredHomeDir } from './home-dir';
+import { expandHomePrefix, resolveEffectiveHomeDir, resolveRequiredHomeDir } from "./home-dir.js";
 
 describe("resolveEffectiveHomeDir", () => {
   it("prefers POWERDIRECTOR_HOME over HOME and USERPROFILE", () => {

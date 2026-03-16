@@ -1,15 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_COPILOT_API_BASE_URL } from '../providers/github-copilot-token';
-import { captureEnv } from '../test-utils/env';
+import { DEFAULT_COPILOT_API_BASE_URL } from "../providers/github-copilot-token.js";
+import { captureEnv } from "../test-utils/env.js";
 import {
   installModelsConfigTestHooks,
   mockCopilotTokenExchangeSuccess,
   withUnsetCopilotTokenEnv,
   withModelsTempHome as withTempHome,
-} from './models-config.e2e-harness';
-import { ensurePowerDirectorModelsJson } from './models-config';
+} from "./models-config.e2e-harness.js";
+import { ensurePowerDirectorModelsJson } from "./models-config.js";
 
 installModelsConfigTestHooks({ restoreFetch: true });
 

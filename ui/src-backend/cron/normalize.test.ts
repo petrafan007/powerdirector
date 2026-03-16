@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { normalizeCronJobCreate, normalizeCronJobPatch } from './normalize';
-import { DEFAULT_TOP_OF_HOUR_STAGGER_MS } from './stagger';
+import { normalizeCronJobCreate, normalizeCronJobPatch } from "./normalize.js";
+import { DEFAULT_TOP_OF_HOUR_STAGGER_MS } from "./stagger.js";
 
 function expectNormalizedAtSchedule(scheduleInput: Record<string, unknown>) {
   const normalized = normalizeCronJobCreate({

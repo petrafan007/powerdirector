@@ -1,28 +1,28 @@
-import { resolveAuthStorePathForDisplay } from '../../agents/auth-profiles';
+import { resolveAuthStorePathForDisplay } from "../../agents/auth-profiles.js";
 import {
   type ModelAliasIndex,
   modelKey,
   normalizeProviderId,
   resolveConfiguredModelRef,
   resolveModelRefFromString,
-} from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import { buildBrowseProvidersButton } from '../../telegram/model-buttons';
-import { shortenHomePath } from '../../utils';
-import type { ReplyPayload } from '../types';
-import { resolveModelsCommandReply } from './commands-models';
+} from "../../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { buildBrowseProvidersButton } from "../../telegram/model-buttons.js";
+import { shortenHomePath } from "../../utils.js";
+import type { ReplyPayload } from "../types.js";
+import { resolveModelsCommandReply } from "./commands-models.js";
 import {
   formatAuthLabel,
   type ModelAuthDetailMode,
   resolveAuthLabel,
   resolveProfileOverride,
-} from './directive-handling.auth';
+} from "./directive-handling.auth.js";
 import {
   type ModelPickerCatalogEntry,
   resolveProviderEndpointLabel,
-} from './directive-handling.model-picker';
-import type { InlineDirectives } from './directive-handling.parse';
-import { type ModelDirectiveSelection, resolveModelDirectiveSelection } from './model-selection';
+} from "./directive-handling.model-picker.js";
+import type { InlineDirectives } from "./directive-handling.parse.js";
+import { type ModelDirectiveSelection, resolveModelDirectiveSelection } from "./model-selection.js";
 
 function pushUniqueCatalogEntry(params: {
   keys: Set<string>;

@@ -1,9 +1,9 @@
-import { getChannelDock } from '../../channels/dock';
-import { normalizeChannelId } from '../../channels/plugins/index';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { ReplyToMode } from '../../config/types';
-import type { OriginatingChannelType } from '../templating';
-import type { ReplyPayload } from '../types';
+import { getChannelDock } from "../../channels/dock.js";
+import { normalizeChannelId } from "../../channels/plugins/index.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { ReplyToMode } from "../../config/types.js";
+import type { OriginatingChannelType } from "../templating.js";
+import type { ReplyPayload } from "../types.js";
 
 export function resolveReplyToMode(
   cfg: PowerDirectorConfig,

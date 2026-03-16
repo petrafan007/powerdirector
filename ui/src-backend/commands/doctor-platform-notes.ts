@@ -3,9 +3,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import type { PowerDirectorConfig } from '../config/config';
-import { note } from '../terminal/note';
-import { shortenHomePath } from '../utils';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { note } from "../terminal/note.js";
+import { shortenHomePath } from "../utils.js";
 
 const execFileAsync = promisify(execFile);
 

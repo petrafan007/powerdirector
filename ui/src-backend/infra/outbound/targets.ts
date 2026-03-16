@@ -1,22 +1,22 @@
-import { getChannelPlugin, normalizeChannelId } from '../../channels/plugins/index';
-import type { ChannelOutboundTargetMode } from '../../channels/plugins/types';
-import { formatCliCommand } from '../../cli/command-format';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import type { AgentDefaultsConfig } from '../../config/types.agent-defaults';
-import { normalizeAccountId } from '../../routing/session-key';
-import { parseTelegramTarget } from '../../telegram/targets';
-import { deliveryContextFromSession } from '../../utils/delivery-context';
+import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index.js";
+import type { ChannelOutboundTargetMode } from "../../channels/plugins/types.js";
+import { formatCliCommand } from "../../cli/command-format.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { SessionEntry } from "../../config/sessions.js";
+import type { AgentDefaultsConfig } from "../../config/types.agent-defaults.js";
+import { normalizeAccountId } from "../../routing/session-key.js";
+import { parseTelegramTarget } from "../../telegram/targets.js";
+import { deliveryContextFromSession } from "../../utils/delivery-context.js";
 import type {
   DeliverableMessageChannel,
   GatewayMessageChannel,
-} from '../../utils/message-channel';
+} from "../../utils/message-channel.js";
 import {
   INTERNAL_MESSAGE_CHANNEL,
   isDeliverableMessageChannel,
   normalizeMessageChannel,
-} from '../../utils/message-channel';
-import { missingTargetError } from './target-errors';
+} from "../../utils/message-channel.js";
+import { missingTargetError } from "./target-errors.js";
 
 export type OutboundChannel = DeliverableMessageChannel | "none";
 

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { UpdateCheckResult } from '../infra/update-check';
-import { VERSION } from '../version';
+import type { UpdateCheckResult } from "../infra/update-check.js";
+import { VERSION } from "../version.js";
 import {
   formatUpdateAvailableHint,
   formatUpdateOneLiner,
   resolveUpdateAvailability,
-} from './status.update';
+} from "./status.update.js";
 
 function buildUpdate(partial: Partial<UpdateCheckResult>): UpdateCheckResult {
   return {

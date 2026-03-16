@@ -1,46 +1,46 @@
 import { Type } from "@sinclair/typebox";
-import { normalizeGroupActivation } from '../../auto-reply/group-activation';
-import { getFollowupQueueDepth, resolveQueueSettings } from '../../auto-reply/reply/queue';
-import { buildStatusMessage } from '../../auto-reply/status';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadConfig } from '../../config/config';
+import { normalizeGroupActivation } from "../../auto-reply/group-activation.js";
+import { getFollowupQueueDepth, resolveQueueSettings } from "../../auto-reply/reply/queue.js";
+import { buildStatusMessage } from "../../auto-reply/status.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { loadConfig } from "../../config/config.js";
 import {
   loadSessionStore,
   resolveStorePath,
   type SessionEntry,
   updateSessionStore,
-} from '../../config/sessions';
-import { loadCombinedSessionStoreForGateway } from '../../gateway/session-utils';
+} from "../../config/sessions.js";
+import { loadCombinedSessionStoreForGateway } from "../../gateway/session-utils.js";
 import {
   formatUsageWindowSummary,
   loadProviderUsageSummary,
   resolveUsageProviderId,
-} from '../../infra/provider-usage';
+} from "../../infra/provider-usage.js";
 import {
   buildAgentMainSessionKey,
   DEFAULT_AGENT_ID,
   resolveAgentIdFromSessionKey,
-} from '../../routing/session-key';
-import { applyModelOverrideToSessionEntry } from '../../sessions/model-overrides';
-import { resolveAgentDir } from '../agent-scope';
-import { formatUserTime, resolveUserTimeFormat, resolveUserTimezone } from '../date-time';
-import { resolveModelAuthLabel } from '../model-auth-label';
-import { loadModelCatalog } from '../model-catalog';
+} from "../../routing/session-key.js";
+import { applyModelOverrideToSessionEntry } from "../../sessions/model-overrides.js";
+import { resolveAgentDir } from "../agent-scope.js";
+import { formatUserTime, resolveUserTimeFormat, resolveUserTimezone } from "../date-time.js";
+import { resolveModelAuthLabel } from "../model-auth-label.js";
+import { loadModelCatalog } from "../model-catalog.js";
 import {
   buildAllowedModelSet,
   buildModelAliasIndex,
   modelKey,
   resolveDefaultModelForAgent,
   resolveModelRefFromString,
-} from '../model-selection';
-import type { AnyAgentTool } from './common';
-import { readStringParam } from './common';
+} from "../model-selection.js";
+import type { AnyAgentTool } from "./common.js";
+import { readStringParam } from "./common.js";
 import {
   shouldResolveSessionIdInput,
   resolveInternalSessionKey,
   resolveMainSessionAlias,
   createAgentToAgentPolicy,
-} from './sessions-helpers';
+} from "./sessions-helpers.js";
 
 const SessionStatusToolSchema = Type.Object({
   sessionKey: Type.Optional(Type.String()),

@@ -9,7 +9,7 @@ let mockConfig: Record<string, unknown> = {
   session: { mainKey: "main", scope: "per-sender" },
 };
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => mockConfig,
@@ -18,7 +18,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 });
 
 import "./test-helpers/fast-core-tools.js";
-import { createPowerDirectorTools } from './powerdirector-tools';
+import { createPowerDirectorTools } from "./powerdirector-tools.js";
 
 function getSessionsHistoryTool(options?: { sandboxed?: boolean }) {
   const tool = createPowerDirectorTools({

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Skill } from './types';
+import { Skill } from './types.js';
 
 export class SkillFormatter {
     public formatSkillsForPrompt(skills: Skill[]): string {

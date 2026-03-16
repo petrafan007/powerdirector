@@ -1,21 +1,21 @@
 import { rmSync } from "node:fs";
 import { completeSimple, type TextContent } from "@mariozechner/pi-ai";
 import { EdgeTTS } from "node-edge-tts";
-import { getApiKeyForModel, requireApiKey } from '../agents/model-auth';
+import { getApiKeyForModel, requireApiKey } from "../agents/model-auth.js";
 import {
   buildModelAliasIndex,
   resolveDefaultModelForAgent,
   resolveModelRefFromString,
   type ModelRef,
-} from '../agents/model-selection';
-import { resolveModel } from '../agents/pi-embedded-runner/model';
-import type { PowerDirectorConfig } from '../config/config';
+} from "../agents/model-selection.js";
+import { resolveModel } from "../agents/pi-embedded-runner/model.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import type {
   ResolvedTtsConfig,
   ResolvedTtsModelOverrides,
   TtsDirectiveOverrides,
   TtsDirectiveParseResult,
-} from './tts';
+} from "./tts.js";
 
 const DEFAULT_ELEVENLABS_BASE_URL = "https://api.elevenlabs.io";
 const TEMP_FILE_CLEANUP_DELAY_MS = 5 * 60 * 1000; // 5 minutes

@@ -1,27 +1,27 @@
-import { collectTextContentBlocks } from '../../agents/content-blocks';
-import { createPowerDirectorTools } from '../../agents/powerdirector-tools';
-import type { SkillCommandSpec } from '../../agents/skills';
-import { applyOwnerOnlyToolPolicy } from '../../agents/tool-policy';
-import { getChannelDock } from '../../channels/dock';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import { logVerbose } from '../../globals';
-import { resolveGatewayMessageChannel } from '../../utils/message-channel';
+import { collectTextContentBlocks } from "../../agents/content-blocks.js";
+import { createPowerDirectorTools } from "../../agents/powerdirector-tools.js";
+import type { SkillCommandSpec } from "../../agents/skills.js";
+import { applyOwnerOnlyToolPolicy } from "../../agents/tool-policy.js";
+import { getChannelDock } from "../../channels/dock.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { SessionEntry } from "../../config/sessions.js";
+import { logVerbose } from "../../globals.js";
+import { resolveGatewayMessageChannel } from "../../utils/message-channel.js";
 import {
   listReservedChatSlashCommandNames,
   listSkillCommandsForWorkspace,
   resolveSkillCommandInvocation,
-} from '../skill-commands';
-import type { MsgContext, TemplateContext } from '../templating';
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../thinking';
-import type { GetReplyOptions, ReplyPayload } from '../types';
-import { getAbortMemory } from './abort';
-import { buildStatusReply, handleCommands } from './commands';
-import type { InlineDirectives } from './directive-handling';
-import { isDirectiveOnly } from './directive-handling';
-import type { createModelSelectionState } from './model-selection';
-import { extractInlineSimpleCommand } from './reply-inline';
-import type { TypingController } from './typing';
+} from "../skill-commands.js";
+import type { MsgContext, TemplateContext } from "../templating.js";
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../thinking.js";
+import type { GetReplyOptions, ReplyPayload } from "../types.js";
+import { getAbortMemory } from "./abort.js";
+import { buildStatusReply, handleCommands } from "./commands.js";
+import type { InlineDirectives } from "./directive-handling.js";
+import { isDirectiveOnly } from "./directive-handling.js";
+import type { createModelSelectionState } from "./model-selection.js";
+import { extractInlineSimpleCommand } from "./reply-inline.js";
+import type { TypingController } from "./typing.js";
 
 const builtinSlashCommands = (() => {
   return listReservedChatSlashCommandNames([

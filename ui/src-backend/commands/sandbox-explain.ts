@@ -1,28 +1,28 @@
-import { resolveAgentConfig } from '../agents/agent-scope';
+import { resolveAgentConfig } from "../agents/agent-scope.js";
 import {
   resolveSandboxConfigForAgent,
   resolveSandboxToolPolicyForAgent,
-} from '../agents/sandbox';
-import { normalizeAnyChannelId } from '../channels/registry';
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
+} from "../agents/sandbox.js";
+import { normalizeAnyChannelId } from "../channels/registry.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadConfig } from "../config/config.js";
 import {
   loadSessionStore,
   resolveAgentMainSessionKey,
   resolveMainSessionKey,
   resolveStorePath,
-} from '../config/sessions';
+} from "../config/sessions.js";
 import {
   buildAgentMainSessionKey,
   normalizeAgentId,
   normalizeMainKey,
   parseAgentSessionKey,
   resolveAgentIdFromSessionKey,
-} from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { colorize, isRich, theme } from '../terminal/theme';
-import { INTERNAL_MESSAGE_CHANNEL } from '../utils/message-channel';
+} from "../routing/session-key.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { colorize, isRich, theme } from "../terminal/theme.js";
+import { INTERNAL_MESSAGE_CHANNEL } from "../utils/message-channel.js";
 
 type SandboxExplainOptions = {
   session?: string;

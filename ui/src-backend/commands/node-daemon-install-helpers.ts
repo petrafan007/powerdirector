@@ -1,13 +1,13 @@
-import { formatNodeServiceDescription } from '../daemon/constants';
-import { resolveNodeProgramArguments } from '../daemon/program-args';
-import { resolvePreferredNodePath } from '../daemon/runtime-paths';
-import { buildNodeServiceEnvironment } from '../daemon/service-env';
-import { resolveGatewayDevMode } from './daemon-install-helpers';
+import { formatNodeServiceDescription } from "../daemon/constants.js";
+import { resolveNodeProgramArguments } from "../daemon/program-args.js";
+import { resolvePreferredNodePath } from "../daemon/runtime-paths.js";
+import { buildNodeServiceEnvironment } from "../daemon/service-env.js";
+import { resolveGatewayDevMode } from "./daemon-install-helpers.js";
 import {
   emitNodeRuntimeWarning,
   type DaemonInstallWarnFn,
-} from './daemon-install-runtime-warning';
-import type { NodeDaemonRuntime } from './node-daemon-runtime';
+} from "./daemon-install-runtime-warning.js";
+import type { NodeDaemonRuntime } from "./node-daemon-runtime.js";
 
 export type NodeInstallPlan = {
   programArguments: string[];

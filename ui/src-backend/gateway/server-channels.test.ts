@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { type ChannelId, type ChannelPlugin } from '../channels/plugins/types';
+import { type ChannelId, type ChannelPlugin } from "../channels/plugins/types.js";
 import {
   createSubsystemLogger,
   type SubsystemLogger,
   runtimeForLogger,
-} from '../logging/subsystem';
-import { createEmptyPluginRegistry, type PluginRegistry } from '../plugins/registry';
-import { getActivePluginRegistry, setActivePluginRegistry } from '../plugins/runtime';
-import { DEFAULT_ACCOUNT_ID } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { createChannelManager } from './server-channels';
+} from "../logging/subsystem.js";
+import { createEmptyPluginRegistry, type PluginRegistry } from "../plugins/registry.js";
+import { getActivePluginRegistry, setActivePluginRegistry } from "../plugins/runtime.js";
+import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { createChannelManager } from "./server-channels.js";
 
 const hoisted = vi.hoisted(() => {
   const computeBackoff = vi.fn(() => 10);

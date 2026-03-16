@@ -1,27 +1,27 @@
-import { resolveSessionAgentId } from '../../agents/agent-scope';
-import { AGENT_LANE_NESTED } from '../../agents/lanes';
-import { getChannelPlugin, normalizeChannelId } from '../../channels/plugins/index';
-import { createOutboundSendDeps, type CliDeps } from '../../cli/outbound-send-deps';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
+import { resolveSessionAgentId } from "../../agents/agent-scope.js";
+import { AGENT_LANE_NESTED } from "../../agents/lanes.js";
+import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index.js";
+import { createOutboundSendDeps, type CliDeps } from "../../cli/outbound-send-deps.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { SessionEntry } from "../../config/sessions.js";
 import {
   resolveAgentDeliveryPlan,
   resolveAgentOutboundTarget,
-} from '../../infra/outbound/agent-delivery';
-import { deliverOutboundPayloads } from '../../infra/outbound/deliver';
-import { buildOutboundResultEnvelope } from '../../infra/outbound/envelope';
+} from "../../infra/outbound/agent-delivery.js";
+import { deliverOutboundPayloads } from "../../infra/outbound/deliver.js";
+import { buildOutboundResultEnvelope } from "../../infra/outbound/envelope.js";
 import {
   formatOutboundPayloadLog,
   type NormalizedOutboundPayload,
   normalizeOutboundPayloads,
   normalizeOutboundPayloadsForJson,
-} from '../../infra/outbound/payloads';
-import type { RuntimeEnv } from '../../runtime';
-import { isInternalMessageChannel } from '../../utils/message-channel';
-import type { AgentCommandOpts } from './types';
+} from "../../infra/outbound/payloads.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import { isInternalMessageChannel } from "../../utils/message-channel.js";
+import type { AgentCommandOpts } from "./types.js";
 
 type RunResult = Awaited<
-  ReturnType<(typeof import('../../agents/pi-embedded'))["runEmbeddedPiAgent"]>
+  ReturnType<(typeof import("../../agents/pi-embedded.js"))["runEmbeddedPiAgent"]>
 >;
 
 const NESTED_LOG_PREFIX = "[agent:nested]";

@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { clearSessionStoreCacheForTest, loadSessionStore, saveSessionStore } from './store';
-import type { SessionEntry } from './types';
+import { clearSessionStoreCacheForTest, loadSessionStore, saveSessionStore } from "./store.js";
+import type { SessionEntry } from "./types.js";
 
 // Keep integration tests deterministic: never read a real powerdirector.config.json.
 vi.mock("../config.js", () => ({
@@ -62,7 +62,7 @@ describe("Integration: saveSessionStore with pruning", () => {
     process.env.POWERDIRECTOR_SESSION_CACHE_TTL_MS = "0";
     clearSessionStoreCacheForTest();
 
-    const configModule = await import('../config');
+    const configModule = await import("../config.js");
     mockLoadConfig = configModule.loadConfig as ReturnType<typeof vi.fn>;
   });
 

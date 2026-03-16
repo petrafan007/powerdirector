@@ -7,7 +7,7 @@ import {
   createCarousel,
   createEventCard,
   createDeviceControlCard,
-} from './flex-templates';
+} from "./flex-templates.js";
 
 describe("createInfoCard", () => {
   it("includes footer when provided", () => {

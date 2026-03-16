@@ -9,7 +9,7 @@ import {
   requestDevicePairing,
   rotateDeviceToken,
   verifyDeviceToken,
-} from './device-pairing';
+} from "./device-pairing.js";
 
 async function setupPairedOperatorDevice(baseDir: string, scopes: string[]) {
   const request = await requestDevicePairing(

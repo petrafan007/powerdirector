@@ -8,13 +8,13 @@
 
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { ClientToolDefinition } from '../agents/pi-embedded-runner/run/params';
-import { createDefaultDeps } from '../cli/deps';
-import { agentCommand } from '../commands/agent';
-import type { ImageContent } from '../commands/agent/types';
-import type { GatewayHttpResponsesConfig } from '../config/types.gateway';
-import { emitAgentEvent, onAgentEvent } from '../infra/agent-events';
-import { logWarn } from '../logger';
+import type { ClientToolDefinition } from "../agents/pi-embedded-runner/run/params.js";
+import { createDefaultDeps } from "../cli/deps.js";
+import { agentCommand } from "../commands/agent.js";
+import type { ImageContent } from "../commands/agent/types.js";
+import type { GatewayHttpResponsesConfig } from "../config/types.gateway.js";
+import { emitAgentEvent, onAgentEvent } from "../infra/agent-events.js";
+import { logWarn } from "../logger.js";
 import {
   DEFAULT_INPUT_IMAGE_MAX_BYTES,
   DEFAULT_INPUT_IMAGE_MIMES,
@@ -27,18 +27,18 @@ import {
   type InputFileLimits,
   type InputImageLimits,
   type InputImageSource,
-} from '../media/input-files';
-import { defaultRuntime } from '../runtime';
-import { resolveAssistantStreamDeltaText } from './agent-event-assistant-text';
+} from "../media/input-files.js";
+import { defaultRuntime } from "../runtime.js";
+import { resolveAssistantStreamDeltaText } from "./agent-event-assistant-text.js";
 import {
   buildAgentMessageFromConversationEntries,
   type ConversationEntry,
-} from './agent-prompt';
-import type { AuthRateLimiter } from './auth-rate-limit';
-import type { ResolvedGatewayAuth } from './auth';
-import { sendJson, setSseHeaders, writeDone } from './http-common';
-import { handleGatewayPostJsonEndpoint } from './http-endpoint-helpers';
-import { resolveAgentIdForRequest, resolveSessionKey } from './http-utils';
+} from "./agent-prompt.js";
+import type { AuthRateLimiter } from "./auth-rate-limit.js";
+import type { ResolvedGatewayAuth } from "./auth.js";
+import { sendJson, setSseHeaders, writeDone } from "./http-common.js";
+import { handleGatewayPostJsonEndpoint } from "./http-endpoint-helpers.js";
+import { resolveAgentIdForRequest, resolveSessionKey } from "./http-utils.js";
 import {
   CreateResponseBodySchema,
   type ContentPart,
@@ -48,7 +48,7 @@ import {
   type ResponseResource,
   type StreamingEvent,
   type Usage,
-} from './open-responses.schema';
+} from "./open-responses.schema.js";
 
 type OpenResponsesHttpOptions = {
   auth: ResolvedGatewayAuth;

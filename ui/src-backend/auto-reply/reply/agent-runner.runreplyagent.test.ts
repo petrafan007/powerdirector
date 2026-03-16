@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { SessionEntry } from '../../config/sessions';
-import * as sessions from '../../config/sessions';
-import type { TypingMode } from '../../config/types';
-import type { TemplateContext } from '../templating';
-import type { GetReplyOptions } from '../types';
-import type { FollowupRun, QueueSettings } from './queue';
-import { createMockTypingController } from './test-helpers';
+import type { SessionEntry } from "../../config/sessions.js";
+import * as sessions from "../../config/sessions.js";
+import type { TypingMode } from "../../config/types.js";
+import type { TemplateContext } from "../templating.js";
+import type { GetReplyOptions } from "../types.js";
+import type { FollowupRun, QueueSettings } from "./queue.js";
+import { createMockTypingController } from "./test-helpers.js";
 
 type AgentRunParams = {
   onPartialReply?: (payload: { text?: string }) => Promise<void> | void;
@@ -31,12 +31,12 @@ const state = vi.hoisted(() => ({
 }));
 
 let runReplyAgentPromise:
-  | Promise<(typeof import('./agent-runner'))["runReplyAgent"]>
+  | Promise<(typeof import("./agent-runner.js"))["runReplyAgent"]>
   | undefined;
 
 async function getRunReplyAgent() {
   if (!runReplyAgentPromise) {
-    runReplyAgentPromise = import('./agent-runner').then((m) => m.runReplyAgent);
+    runReplyAgentPromise = import("./agent-runner.js").then((m) => m.runReplyAgent);
   }
   return await runReplyAgentPromise;
 }

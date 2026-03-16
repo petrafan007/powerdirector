@@ -1,5 +1,5 @@
-import { formatCliCommand } from '../../cli/command-format';
-import type { ElevatedLevel, ReasoningLevel } from './directives';
+import { formatCliCommand } from "../../cli/command-format.js";
+import type { ElevatedLevel, ReasoningLevel } from "./directives.js";
 
 export const SYSTEM_MARK = "⚙️";
 

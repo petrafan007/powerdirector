@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { withFetchPreconnect } from '../../test-utils/fetch-mock';
-import { createWebFetchTool, createWebSearchTool } from './web-tools';
+import { withFetchPreconnect } from "../../test-utils/fetch-mock.js";
+import { createWebFetchTool, createWebSearchTool } from "./web-tools.js";
 
 function installMockFetch(payload: unknown) {
   const mockFetch = vi.fn((_input?: unknown, _init?: unknown) =>

@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { PluginRecord } from './registry';
-import { defaultSlotIdForKey } from './slots';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { PluginRecord } from "./registry.js";
+import { defaultSlotIdForKey } from "./slots.js";
 
 export type NormalizedPluginsConfig = {
   enabled: boolean;

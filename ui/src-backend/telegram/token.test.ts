@@ -3,9 +3,9 @@ import fsPromises from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveTelegramToken } from './token';
-import { readTelegramUpdateOffset, writeTelegramUpdateOffset } from './update-offset-store';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveTelegramToken } from "./token.js";
+import { readTelegramUpdateOffset, writeTelegramUpdateOffset } from "./update-offset-store.js";
 
 function withTempDir(): string {
   return fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-telegram-token-"));

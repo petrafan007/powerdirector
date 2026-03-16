@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import type { ModelCatalogEntry } from '../agents/model-catalog';
+import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import type { ModelCatalogEntry } from "../agents/model-catalog.js";
 import {
   resolveAllowedModelRef,
   resolveDefaultModelForAgent,
   resolveSubagentConfiguredModelSelection,
-} from '../agents/model-selection';
-import { normalizeGroupActivation } from '../auto-reply/group-activation';
+} from "../agents/model-selection.js";
+import { normalizeGroupActivation } from "../auto-reply/group-activation.js";
 import {
   formatThinkingLevels,
   formatXHighModelHint,
@@ -15,24 +15,24 @@ import {
   normalizeThinkLevel,
   normalizeUsageDisplay,
   supportsXHighThinking,
-} from '../auto-reply/thinking';
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionEntry } from '../config/sessions';
+} from "../auto-reply/thinking.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SessionEntry } from "../config/sessions.js";
 import {
   isSubagentSessionKey,
   normalizeAgentId,
   parseAgentSessionKey,
-} from '../routing/session-key';
-import { applyVerboseOverride, parseVerboseOverride } from '../sessions/level-overrides';
-import { applyModelOverrideToSessionEntry } from '../sessions/model-overrides';
-import { normalizeSendPolicy } from '../sessions/send-policy';
-import { parseSessionLabel } from '../sessions/session-label';
+} from "../routing/session-key.js";
+import { applyVerboseOverride, parseVerboseOverride } from "../sessions/level-overrides.js";
+import { applyModelOverrideToSessionEntry } from "../sessions/model-overrides.js";
+import { normalizeSendPolicy } from "../sessions/send-policy.js";
+import { parseSessionLabel } from "../sessions/session-label.js";
 import {
   ErrorCodes,
   type ErrorShape,
   errorShape,
   type SessionsPatchParams,
-} from './protocol/index';
+} from "./protocol/index.js";
 
 function invalid(message: string): { ok: false; error: ErrorShape } {
   return { ok: false, error: errorShape(ErrorCodes.INVALID_REQUEST, message) };

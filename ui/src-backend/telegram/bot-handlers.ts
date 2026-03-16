@@ -1,52 +1,52 @@
 import type { Message, ReactionTypeEmoji } from "@grammyjs/types";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import { hasControlCommand } from '../auto-reply/command-detection';
+import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { hasControlCommand } from "../auto-reply/command-detection.js";
 import {
   createInboundDebouncer,
   resolveInboundDebounceMs,
-} from '../auto-reply/inbound-debounce';
-import { buildCommandsPaginationKeyboard } from '../auto-reply/reply/commands-info';
-import { buildModelsProviderData } from '../auto-reply/reply/commands-models';
-import { resolveStoredModelOverride } from '../auto-reply/reply/model-selection';
-import { listSkillCommandsForAgents } from '../auto-reply/skill-commands';
-import { buildCommandsMessagePaginated } from '../auto-reply/status';
-import { resolveChannelConfigWrites } from '../channels/plugins/config-writes';
-import { loadConfig } from '../config/config';
-import { writeConfigFile } from '../config/io';
-import { loadSessionStore, resolveStorePath } from '../config/sessions';
-import type { TelegramGroupConfig, TelegramTopicConfig } from '../config/types';
-import { danger, logVerbose, warn } from '../globals';
-import { enqueueSystemEvent } from '../infra/system-events';
-import { readChannelAllowFromStore } from '../pairing/pairing-store';
-import { resolveAgentRoute } from '../routing/resolve-route';
-import { resolveThreadSessionKeys } from '../routing/session-key';
-import { withTelegramApiErrorLogging } from './api-logging';
+} from "../auto-reply/inbound-debounce.js";
+import { buildCommandsPaginationKeyboard } from "../auto-reply/reply/commands-info.js";
+import { buildModelsProviderData } from "../auto-reply/reply/commands-models.js";
+import { resolveStoredModelOverride } from "../auto-reply/reply/model-selection.js";
+import { listSkillCommandsForAgents } from "../auto-reply/skill-commands.js";
+import { buildCommandsMessagePaginated } from "../auto-reply/status.js";
+import { resolveChannelConfigWrites } from "../channels/plugins/config-writes.js";
+import { loadConfig } from "../config/config.js";
+import { writeConfigFile } from "../config/io.js";
+import { loadSessionStore, resolveStorePath } from "../config/sessions.js";
+import type { TelegramGroupConfig, TelegramTopicConfig } from "../config/types.js";
+import { danger, logVerbose, warn } from "../globals.js";
+import { enqueueSystemEvent } from "../infra/system-events.js";
+import { readChannelAllowFromStore } from "../pairing/pairing-store.js";
+import { resolveAgentRoute } from "../routing/resolve-route.js";
+import { resolveThreadSessionKeys } from "../routing/session-key.js";
+import { withTelegramApiErrorLogging } from "./api-logging.js";
 import {
   isSenderAllowed,
   normalizeAllowFromWithStore,
   type NormalizedAllowFrom,
-} from './bot-access';
-import type { TelegramMediaRef } from './bot-message-context';
-import { RegisterTelegramHandlerParams } from './bot-native-commands';
+} from "./bot-access.js";
+import type { TelegramMediaRef } from "./bot-message-context.js";
+import { RegisterTelegramHandlerParams } from "./bot-native-commands.js";
 import {
   MEDIA_GROUP_TIMEOUT_MS,
   type MediaGroupEntry,
   type TelegramUpdateKeyContext,
-} from './bot-updates';
-import { resolveMedia } from './bot/delivery';
+} from "./bot-updates.js";
+import { resolveMedia } from "./bot/delivery.js";
 import {
   buildTelegramGroupPeerId,
   buildTelegramParentPeer,
   resolveTelegramForumThreadId,
   resolveTelegramGroupAllowFromContext,
-} from './bot/helpers';
-import type { TelegramContext } from './bot/types';
+} from "./bot/helpers.js";
+import type { TelegramContext } from "./bot/types.js";
 import {
   evaluateTelegramGroupBaseAccess,
   evaluateTelegramGroupPolicyAccess,
-} from './group-access';
-import { migrateTelegramGroupConfig } from './group-migration';
-import { resolveTelegramInlineButtonsScope } from './inline-buttons';
+} from "./group-access.js";
+import { migrateTelegramGroupConfig } from "./group-migration.js";
+import { resolveTelegramInlineButtonsScope } from "./inline-buttons.js";
 import {
   buildModelsKeyboard,
   buildProviderKeyboard,
@@ -54,9 +54,9 @@ import {
   getModelsPageSize,
   parseModelCallbackData,
   type ProviderInfo,
-} from './model-buttons';
-import { buildInlineKeyboard } from './send';
-import { wasSentByBot } from './sent-message-cache';
+} from "./model-buttons.js";
+import { buildInlineKeyboard } from "./send.js";
+import { wasSentByBot } from "./sent-message-cache.js";
 
 export const registerTelegramHandlers = ({
   cfg,

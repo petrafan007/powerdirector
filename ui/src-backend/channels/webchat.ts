@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage } from './base';
+import { Channel, ChannelMessage } from './base.js';
 import http from 'node:http';
 
 interface WebChatClient {

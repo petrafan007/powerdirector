@@ -1,11 +1,11 @@
 import path from "node:path";
 import { Type } from "@sinclair/typebox";
-import { loadConfig } from '../../config/config';
-import { resolveSessionFilePath } from '../../config/sessions';
-import { callGateway } from '../../gateway/call';
-import { resolveAgentIdFromSessionKey } from '../../routing/session-key';
-import type { AnyAgentTool } from './common';
-import { jsonResult, readStringArrayParam } from './common';
+import { loadConfig } from "../../config/config.js";
+import { resolveSessionFilePath } from "../../config/sessions.js";
+import { callGateway } from "../../gateway/call.js";
+import { resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
+import type { AnyAgentTool } from "./common.js";
+import { jsonResult, readStringArrayParam } from "./common.js";
 import {
   createSessionVisibilityGuard,
   createAgentToAgentPolicy,
@@ -17,7 +17,7 @@ import {
   resolveSandboxedSessionToolContext,
   type SessionListRow,
   stripToolMessages,
-} from './sessions-helpers';
+} from "./sessions-helpers.js";
 
 const SessionsListToolSchema = Type.Object({
   kinds: Type.Optional(Type.Array(Type.String())),

@@ -1,13 +1,13 @@
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage } from "node:http";
-import { listAgentIds, resolveDefaultAgentId } from '../agents/agent-scope';
-import { listChannelPlugins } from '../channels/plugins/index';
-import type { ChannelId } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { readJsonBodyWithLimit, requestBodyErrorToText } from '../infra/http-body';
-import { normalizeAgentId } from '../routing/session-key';
-import { normalizeMessageChannel } from '../utils/message-channel';
-import { type HookMappingResolved, resolveHookMappings } from './hooks-mapping';
+import { listAgentIds, resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { listChannelPlugins } from "../channels/plugins/index.js";
+import type { ChannelId } from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { readJsonBodyWithLimit, requestBodyErrorToText } from "../infra/http-body.js";
+import { normalizeAgentId } from "../routing/session-key.js";
+import { normalizeMessageChannel } from "../utils/message-channel.js";
+import { type HookMappingResolved, resolveHookMappings } from "./hooks-mapping.js";
 
 const DEFAULT_HOOKS_PATH = "/hooks";
 const DEFAULT_HOOKS_MAX_BODY_BYTES = 256 * 1024;

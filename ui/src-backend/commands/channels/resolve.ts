@@ -1,9 +1,9 @@
-import { getChannelPlugin } from '../../channels/plugins/index';
-import type { ChannelResolveKind, ChannelResolveResult } from '../../channels/plugins/types';
-import { loadConfig } from '../../config/config';
-import { danger } from '../../globals';
-import { resolveMessageChannelSelection } from '../../infra/outbound/channel-selection';
-import type { RuntimeEnv } from '../../runtime';
+import { getChannelPlugin } from "../../channels/plugins/index.js";
+import type { ChannelResolveKind, ChannelResolveResult } from "../../channels/plugins/types.js";
+import { loadConfig } from "../../config/config.js";
+import { danger } from "../../globals.js";
+import { resolveMessageChannelSelection } from "../../infra/outbound/channel-selection.js";
+import type { RuntimeEnv } from "../../runtime.js";
 
 export type ChannelsResolveOptions = {
   channel?: string;

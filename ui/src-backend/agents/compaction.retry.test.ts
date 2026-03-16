@@ -2,7 +2,7 @@ import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { ExtensionContext } from "@mariozechner/pi-coding-agent";
 import * as piCodingAgent from "@mariozechner/pi-coding-agent";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { retryAsync } from '../infra/retry';
+import { retryAsync } from "../infra/retry.js";
 
 // Mock the external generateSummary function
 vi.mock("@mariozechner/pi-coding-agent", async (importOriginal) => {

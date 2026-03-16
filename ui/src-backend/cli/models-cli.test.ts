@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { runRegisteredCli } from '../test-utils/command-runner';
+import { runRegisteredCli } from "../test-utils/command-runner.js";
 
 const githubCopilotLoginCommand = vi.fn();
 const modelsStatusCommand = vi.fn().mockResolvedValue(undefined);
@@ -34,11 +34,11 @@ vi.mock("../commands/models.js", () => ({
 }));
 
 describe("models cli", () => {
-  let registerModelsCli: (typeof import('./models-cli'))["registerModelsCli"];
+  let registerModelsCli: (typeof import("./models-cli.js"))["registerModelsCli"];
 
   beforeAll(async () => {
     // Load once; vi.mock above ensures command handlers are already mocked.
-    ({ registerModelsCli } = await import('./models-cli'));
+    ({ registerModelsCli } = await import("./models-cli.js"));
   });
 
   beforeEach(() => {

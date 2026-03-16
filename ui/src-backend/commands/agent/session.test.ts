@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../../config/config';
+import type { PowerDirectorConfig } from "../../config/config.js";
 
 const mocks = vi.hoisted(() => ({
   loadSessionStore: vi.fn(),
@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../../config/sessions.js", async () => {
-  const actual = await vi.importActual<typeof import('../../config/sessions')>(
+  const actual = await vi.importActual<typeof import("../../config/sessions.js")>(
     "../../config/sessions.js",
   );
   return {
@@ -22,7 +22,7 @@ vi.mock("../../agents/agent-scope.js", () => ({
   listAgentIds: mocks.listAgentIds,
 }));
 
-const { resolveSessionKeyForRequest } = await import('./session');
+const { resolveSessionKeyForRequest } = await import("./session.js");
 
 describe("resolveSessionKeyForRequest", () => {
   const MAIN_STORE_PATH = "/tmp/main-store.json";

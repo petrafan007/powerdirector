@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { attachIMessageMonitorAbortHandler } from './monitor/abort-handler';
+import { attachIMessageMonitorAbortHandler } from "./monitor/abort-handler.js";
 
 describe("monitorIMessageProvider", () => {
   it("does not trigger unhandledRejection when aborting during shutdown", async () => {

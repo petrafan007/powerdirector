@@ -1,13 +1,13 @@
-import type { PowerDirectorConfig, SkillConfig } from '../../config/config';
+import type { PowerDirectorConfig, SkillConfig } from "../../config/config.js";
 import {
   evaluateRuntimeRequires,
   hasBinary,
   isConfigPathTruthyWithDefaults,
   resolveConfigPath,
   resolveRuntimePlatform,
-} from '../../shared/config-eval';
-import { resolveSkillKey } from './frontmatter';
-import type { SkillEligibilityContext, SkillEntry } from './types';
+} from "../../shared/config-eval.js";
+import { resolveSkillKey } from "./frontmatter.js";
+import type { SkillEligibilityContext, SkillEntry } from "./types.js";
 
 const DEFAULT_CONFIG_VALUES: Record<string, boolean> = {
   "browser.enabled": true,

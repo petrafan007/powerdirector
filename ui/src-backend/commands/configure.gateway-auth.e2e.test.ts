@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildGatewayAuthConfig } from './configure';
+import { buildGatewayAuthConfig } from "./configure.js";
 
 function expectGeneratedTokenFromInput(token: string | undefined, literalToAvoid = "undefined") {
   const result = buildGatewayAuthConfig({

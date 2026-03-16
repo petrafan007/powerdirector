@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
-import type { PowerDirectorConfig } from '../config/config';
-import type { UpdateChannel } from '../infra/update-channels';
-import { resolveUserPath } from '../utils';
-import { discoverPowerDirectorPlugins } from './discovery';
-import { installPluginFromNpmSpec, resolvePluginInstallDir } from './install';
-import { recordPluginInstall } from './installs';
-import { loadPluginManifest } from './manifest';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { UpdateChannel } from "../infra/update-channels.js";
+import { resolveUserPath } from "../utils.js";
+import { discoverPowerDirectorPlugins } from "./discovery.js";
+import { installPluginFromNpmSpec, resolvePluginInstallDir } from "./install.js";
+import { recordPluginInstall } from "./installs.js";
+import { loadPluginManifest } from "./manifest.js";
 
 export type PluginUpdateLogger = {
   info?: (message: string) => void;

@@ -1,11 +1,11 @@
 import type { RequestClient } from "@buape/carbon";
-import type { ChunkMode } from '../../auto-reply/chunk';
-import type { ReplyPayload } from '../../auto-reply/types';
-import type { MarkdownTableMode } from '../../config/types.base';
-import { convertMarkdownTables } from '../../markdown/tables';
-import type { RuntimeEnv } from '../../runtime';
-import { chunkDiscordTextWithMode } from '../chunk';
-import { sendMessageDiscord, sendVoiceMessageDiscord } from '../send';
+import type { ChunkMode } from "../../auto-reply/chunk.js";
+import type { ReplyPayload } from "../../auto-reply/types.js";
+import type { MarkdownTableMode } from "../../config/types.base.js";
+import { convertMarkdownTables } from "../../markdown/tables.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import { chunkDiscordTextWithMode } from "../chunk.js";
+import { sendMessageDiscord, sendVoiceMessageDiscord } from "../send.js";
 
 export async function deliverDiscordReply(params: {
   replies: ReplyPayload[];

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { SessionState } from '../logging/diagnostic-session-state';
+import type { SessionState } from "../logging/diagnostic-session-state.js";
 import {
   calculateBackoffMs,
   getCommandPollSuggestion,
   pruneStaleCommandPolls,
   recordCommandPoll,
   resetCommandPollCount,
-} from './command-poll-backoff';
+} from "./command-poll-backoff.js";
 
 describe("command-poll-backoff", () => {
   describe("calculateBackoffMs", () => {

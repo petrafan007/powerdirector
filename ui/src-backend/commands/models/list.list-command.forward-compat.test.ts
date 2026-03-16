@@ -41,7 +41,7 @@ vi.mock("../../config/config.js", () => ({
 }));
 
 vi.mock("../../agents/auth-profiles.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../agents/auth-profiles')>();
+  const actual = await importOriginal<typeof import("../../agents/auth-profiles.js")>();
   return {
     ...actual,
     ensureAuthProfileStore: mocks.ensureAuthProfileStore,
@@ -50,7 +50,7 @@ vi.mock("../../agents/auth-profiles.js", async (importOriginal) => {
 });
 
 vi.mock("./list.registry.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./list.registry')>();
+  const actual = await importOriginal<typeof import("./list.registry.js")>();
   return {
     ...actual,
     loadModelRegistry: mocks.loadModelRegistry,
@@ -66,14 +66,14 @@ vi.mock("./list.table.js", () => ({
 }));
 
 vi.mock("../../agents/model-forward-compat.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../agents/model-forward-compat')>();
+  const actual = await importOriginal<typeof import("../../agents/model-forward-compat.js")>();
   return {
     ...actual,
     resolveForwardCompatModel: mocks.resolveForwardCompatModel,
   };
 });
 
-import { modelsListCommand } from './list.list-command';
+import { modelsListCommand } from "./list.list-command.js";
 
 describe("modelsListCommand forward-compat", () => {
   it("does not mark configured codex model as missing when forward-compat can build a fallback", async () => {

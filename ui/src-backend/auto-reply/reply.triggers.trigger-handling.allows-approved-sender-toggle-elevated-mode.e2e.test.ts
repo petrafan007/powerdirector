@@ -9,9 +9,9 @@ import {
   requireSessionStorePath,
   runDirectElevatedToggleAndLoadStore,
   withTempHome,
-} from './reply.triggers.trigger-handling.test-harness';
+} from "./reply.triggers.trigger-handling.test-harness.js";
 
-let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 beforeAll(async () => {
   getReplyFromConfig = await loadGetReplyFromConfig();
 });

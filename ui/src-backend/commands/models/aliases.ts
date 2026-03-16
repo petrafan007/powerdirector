@@ -1,12 +1,12 @@
-import { loadConfig } from '../../config/config';
-import { logConfigUpdated } from '../../config/logging';
-import type { RuntimeEnv } from '../../runtime';
+import { loadConfig } from "../../config/config.js";
+import { logConfigUpdated } from "../../config/logging.js";
+import type { RuntimeEnv } from "../../runtime.js";
 import {
   ensureFlagCompatibility,
   normalizeAlias,
   resolveModelTarget,
   updateConfig,
-} from './shared';
+} from "./shared.js";
 
 export async function modelsAliasesListCommand(
   opts: { json?: boolean; plain?: boolean },

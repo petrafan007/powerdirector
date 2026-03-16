@@ -1,12 +1,12 @@
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   filterToolsByPolicy,
   isToolAllowedByPolicyName,
   resolveSubagentToolPolicy,
-} from './pi-tools.policy';
+} from "./pi-tools.policy.js";
 
 function createStubTool(name: string): AgentTool {
   return {

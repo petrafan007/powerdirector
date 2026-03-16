@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { RuntimeEnv } from '../../runtime';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { RuntimeEnv } from "../../runtime.js";
 
 export type IMessageAttachment = {
   original_path?: string | null;

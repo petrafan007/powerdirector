@@ -1,4 +1,4 @@
-import type { ReplyPayload } from './types';
+import type { ReplyPayload } from "./types.js";
 
 export function resolveHeartbeatReplyPayload(
   replyResult: ReplyPayload | ReplyPayload[] | undefined,

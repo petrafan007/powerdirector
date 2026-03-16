@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchTelegramChatId } from './api';
+import { fetchTelegramChatId } from "./api.js";
 
 describe("fetchTelegramChatId", () => {
   it("returns stringified id when Telegram getChat succeeds", async () => {

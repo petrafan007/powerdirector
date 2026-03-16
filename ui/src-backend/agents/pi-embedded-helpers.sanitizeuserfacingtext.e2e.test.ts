@@ -6,7 +6,7 @@ import {
   sanitizeToolCallId,
   sanitizeUserFacingText,
   stripThoughtSignatures,
-} from './pi-embedded-helpers';
+} from "./pi-embedded-helpers.js";
 
 describe("sanitizeUserFacingText", () => {
   it("strips final tags", () => {

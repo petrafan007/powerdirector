@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from '../../config/config';
-import { truncateUtf16Safe } from '../../utils';
-import type { WorkspaceBootstrapFile } from '../workspace';
-import type { EmbeddedContextFile } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { truncateUtf16Safe } from "../../utils.js";
+import type { WorkspaceBootstrapFile } from "../workspace.js";
+import type { EmbeddedContextFile } from "./types.js";
 
 type ContentBlockWithSignature = {
   thought_signature?: unknown;

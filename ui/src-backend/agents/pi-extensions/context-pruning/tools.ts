@@ -1,5 +1,5 @@
-import { compileGlobPatterns, matchesAnyGlobPattern } from '../../glob-pattern';
-import type { ContextPruningToolMatch } from './settings';
+import { compileGlobPatterns, matchesAnyGlobPattern } from "../../glob-pattern.js";
+import type { ContextPruningToolMatch } from "./settings.js";
 
 function normalizeGlob(value: string) {
   return String(value ?? "")

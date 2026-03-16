@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createMockIncomingRequest } from '../../test/helpers/mock-incoming-request';
-import { readLineWebhookRequestBody } from './webhook-node';
+import { createMockIncomingRequest } from "../../test/helpers/mock-incoming-request.js";
+import { readLineWebhookRequestBody } from "./webhook-node.js";
 
 describe("readLineWebhookRequestBody", () => {
   it("reads body within limit", async () => {

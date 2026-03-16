@@ -7,83 +7,83 @@ import {
   SessionManager,
   SettingsManager,
 } from "@mariozechner/pi-coding-agent";
-import { resolveHeartbeatPrompt } from '../../auto-reply/heartbeat';
-import type { ReasoningLevel, ThinkLevel } from '../../auto-reply/thinking';
-import { resolveChannelCapabilities } from '../../config/channel-capabilities';
-import type { PowerDirectorConfig } from '../../config/config';
-import { getMachineDisplayName } from '../../infra/machine-name';
-import { getGlobalHookRunner } from '../../plugins/hook-runner-global';
-import { type enqueueCommand, enqueueCommandInLane } from '../../process/command-queue';
-import { isCronSessionKey, isSubagentSessionKey } from '../../routing/session-key';
-import { resolveSignalReactionLevel } from '../../signal/reaction-level';
-import { resolveTelegramInlineButtonsScope } from '../../telegram/inline-buttons';
-import { resolveTelegramReactionLevel } from '../../telegram/reaction-level';
-import { buildTtsSystemPromptHint } from '../../tts/tts';
-import { resolveUserPath } from '../../utils';
-import { normalizeMessageChannel } from '../../utils/message-channel';
-import { isReasoningTagProvider } from '../../utils/provider-utils';
-import { resolvePowerDirectorAgentDir } from '../agent-paths';
-import { resolveSessionAgentIds } from '../agent-scope';
-import type { ExecElevatedDefaults } from '../bash-tools';
-import { makeBootstrapWarn, resolveBootstrapContextForRun } from '../bootstrap-files';
-import { listChannelSupportedActions, resolveChannelMessageToolHints } from '../channel-tools';
-import { formatUserTime, resolveUserTimeFormat, resolveUserTimezone } from '../date-time';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../defaults';
-import { resolvePowerDirectorDocsPath } from '../docs-path';
-import { getApiKeyForModel, resolveModelAuthMode } from '../model-auth';
-import { ensurePowerDirectorModelsJson } from '../models-config';
+import { resolveHeartbeatPrompt } from "../../auto-reply/heartbeat.js";
+import type { ReasoningLevel, ThinkLevel } from "../../auto-reply/thinking.js";
+import { resolveChannelCapabilities } from "../../config/channel-capabilities.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { getMachineDisplayName } from "../../infra/machine-name.js";
+import { getGlobalHookRunner } from "../../plugins/hook-runner-global.js";
+import { type enqueueCommand, enqueueCommandInLane } from "../../process/command-queue.js";
+import { isCronSessionKey, isSubagentSessionKey } from "../../routing/session-key.js";
+import { resolveSignalReactionLevel } from "../../signal/reaction-level.js";
+import { resolveTelegramInlineButtonsScope } from "../../telegram/inline-buttons.js";
+import { resolveTelegramReactionLevel } from "../../telegram/reaction-level.js";
+import { buildTtsSystemPromptHint } from "../../tts/tts.js";
+import { resolveUserPath } from "../../utils.js";
+import { normalizeMessageChannel } from "../../utils/message-channel.js";
+import { isReasoningTagProvider } from "../../utils/provider-utils.js";
+import { resolvePowerDirectorAgentDir } from "../agent-paths.js";
+import { resolveSessionAgentIds } from "../agent-scope.js";
+import type { ExecElevatedDefaults } from "../bash-tools.js";
+import { makeBootstrapWarn, resolveBootstrapContextForRun } from "../bootstrap-files.js";
+import { listChannelSupportedActions, resolveChannelMessageToolHints } from "../channel-tools.js";
+import { formatUserTime, resolveUserTimeFormat, resolveUserTimezone } from "../date-time.js";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../defaults.js";
+import { resolvePowerDirectorDocsPath } from "../docs-path.js";
+import { getApiKeyForModel, resolveModelAuthMode } from "../model-auth.js";
+import { ensurePowerDirectorModelsJson } from "../models-config.js";
 import {
   ensureSessionHeader,
   validateAnthropicTurns,
   validateGeminiTurns,
-} from '../pi-embedded-helpers';
+} from "../pi-embedded-helpers.js";
 import {
   ensurePiCompactionReserveTokens,
   resolveCompactionReserveTokensFloor,
-} from '../pi-settings';
-import { createPowerDirectorCodingTools } from '../pi-tools';
-import { resolveSandboxContext } from '../sandbox';
-import { repairSessionFileIfNeeded } from '../session-file-repair';
-import { guardSessionManager } from '../session-tool-result-guard-wrapper';
-import { sanitizeToolUseResultPairing } from '../session-transcript-repair';
+} from "../pi-settings.js";
+import { createPowerDirectorCodingTools } from "../pi-tools.js";
+import { resolveSandboxContext } from "../sandbox.js";
+import { repairSessionFileIfNeeded } from "../session-file-repair.js";
+import { guardSessionManager } from "../session-tool-result-guard-wrapper.js";
+import { sanitizeToolUseResultPairing } from "../session-transcript-repair.js";
 import {
   acquireSessionWriteLock,
   resolveSessionLockMaxHoldFromTimeout,
-} from '../session-write-lock';
-import { detectRuntimeShell } from '../shell-utils';
+} from "../session-write-lock.js";
+import { detectRuntimeShell } from "../shell-utils.js";
 import {
   applySkillEnvOverrides,
   applySkillEnvOverridesFromSnapshot,
   loadWorkspaceSkillEntries,
   resolveSkillsPromptForRun,
   type SkillSnapshot,
-} from '../skills';
-import { resolveTranscriptPolicy } from '../transcript-policy';
+} from "../skills.js";
+import { resolveTranscriptPolicy } from "../transcript-policy.js";
 import {
   compactWithSafetyTimeout,
   EMBEDDED_COMPACTION_TIMEOUT_MS,
-} from './compaction-safety-timeout';
-import { buildEmbeddedExtensionPaths } from './extensions';
+} from "./compaction-safety-timeout.js";
+import { buildEmbeddedExtensionPaths } from "./extensions.js";
 import {
   logToolSchemasForGoogle,
   sanitizeSessionHistory,
   sanitizeToolsForGoogle,
-} from './google';
-import { getDmHistoryLimitFromSessionKey, limitHistoryTurns } from './history';
-import { resolveGlobalLane, resolveSessionLane } from './lanes';
-import { log } from './logger';
-import { buildModelAliasLines, resolveModel } from './model';
-import { buildEmbeddedSandboxInfo } from './sandbox-info';
-import { prewarmSessionFile, trackSessionManagerAccess } from './session-manager-cache';
+} from "./google.js";
+import { getDmHistoryLimitFromSessionKey, limitHistoryTurns } from "./history.js";
+import { resolveGlobalLane, resolveSessionLane } from "./lanes.js";
+import { log } from "./logger.js";
+import { buildModelAliasLines, resolveModel } from "./model.js";
+import { buildEmbeddedSandboxInfo } from "./sandbox-info.js";
+import { prewarmSessionFile, trackSessionManagerAccess } from "./session-manager-cache.js";
 import {
   applySystemPromptOverrideToSession,
   buildEmbeddedSystemPrompt,
   createSystemPromptOverride,
-} from './system-prompt';
-import { splitSdkTools } from './tool-split';
-import type { EmbeddedPiCompactResult } from './types';
-import { describeUnknownError, mapThinkingLevel } from './utils';
-import { flushPendingToolResultsAfterIdle } from './wait-for-idle-before-flush';
+} from "./system-prompt.js";
+import { splitSdkTools } from "./tool-split.js";
+import type { EmbeddedPiCompactResult } from "./types.js";
+import { describeUnknownError, mapThinkingLevel } from "./utils.js";
+import { flushPendingToolResultsAfterIdle } from "./wait-for-idle-before-flush.js";
 
 export type CompactEmbeddedPiSessionParams = {
   sessionId: string;
@@ -298,7 +298,7 @@ export async function compactEmbeddedPiSessionDirect(
         );
       }
     } else if (model.provider === "github-copilot") {
-      const { resolveCopilotApiToken } = await import('../../providers/github-copilot-token');
+      const { resolveCopilotApiToken } = await import("../../providers/github-copilot-token.js");
       const copilotToken = await resolveCopilotApiToken({
         githubToken: apiKeyInfo.apiKey,
       });

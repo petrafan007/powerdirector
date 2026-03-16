@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createQuickReplyItems } from './send';
+import { createQuickReplyItems } from "./send.js";
 
 describe("createQuickReplyItems", () => {
   it("limits items to 13 (LINE maximum)", () => {

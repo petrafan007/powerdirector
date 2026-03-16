@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { requestJsonlSocket } from './jsonl-socket';
+import { requestJsonlSocket } from "./jsonl-socket.js";
 
 export type ExecHostRequest = {
   command: string[];

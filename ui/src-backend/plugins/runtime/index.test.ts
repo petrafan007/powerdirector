@@ -6,7 +6,7 @@ vi.mock("../../process/exec.js", () => ({
   runCommandWithTimeout: (...args: unknown[]) => runCommandWithTimeoutMock(...args),
 }));
 
-import { createPluginRuntime } from './index';
+import { createPluginRuntime } from "./index.js";
 
 describe("plugin runtime command execution", () => {
   beforeEach(() => {

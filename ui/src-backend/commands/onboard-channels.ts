@@ -1,36 +1,36 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import { listChannelPluginCatalogEntries } from '../channels/plugins/catalog';
-import { resolveChannelDefaultAccountId } from '../channels/plugins/helpers';
-import { listChannelPlugins, getChannelPlugin } from '../channels/plugins/index';
-import type { ChannelMeta } from '../channels/plugins/types';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { listChannelPluginCatalogEntries } from "../channels/plugins/catalog.js";
+import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
+import { listChannelPlugins, getChannelPlugin } from "../channels/plugins/index.js";
+import type { ChannelMeta } from "../channels/plugins/types.js";
 import {
   formatChannelPrimerLine,
   formatChannelSelectionLine,
   listChatChannels,
-} from '../channels/registry';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import { isChannelConfigured } from '../config/plugin-auto-enable';
-import type { DmPolicy } from '../config/types';
-import { enablePluginInConfig } from '../plugins/enable';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import type { WizardPrompter, WizardSelectOption } from '../wizard/prompts';
-import type { ChannelChoice } from './onboard-types';
+} from "../channels/registry.js";
+import { formatCliCommand } from "../cli/command-format.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { isChannelConfigured } from "../config/plugin-auto-enable.js";
+import type { DmPolicy } from "../config/types.js";
+import { enablePluginInConfig } from "../plugins/enable.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import type { WizardPrompter, WizardSelectOption } from "../wizard/prompts.js";
+import type { ChannelChoice } from "./onboard-types.js";
 import {
   ensureOnboardingPluginInstalled,
   reloadOnboardingPluginRegistry,
-} from './onboarding/plugin-install';
+} from "./onboarding/plugin-install.js";
 import {
   getChannelOnboardingAdapter,
   listChannelOnboardingAdapters,
-} from './onboarding/registry';
+} from "./onboarding/registry.js";
 import type {
   ChannelOnboardingDmPolicy,
   ChannelOnboardingStatus,
   SetupChannelsOptions,
-} from './onboarding/types';
+} from "./onboarding/types.js";
 
 type ConfiguredChannelAction = "update" | "disable" | "delete" | "skip";
 

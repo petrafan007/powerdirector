@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { prependSystemEvents } from '../auto-reply/reply/session-updates';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveMainSessionKey } from '../config/sessions';
-import { isCronSystemEvent } from './heartbeat-runner';
-import { enqueueSystemEvent, peekSystemEvents, resetSystemEventsForTest } from './system-events';
+import { prependSystemEvents } from "../auto-reply/reply/session-updates.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveMainSessionKey } from "../config/sessions.js";
+import { isCronSystemEvent } from "./heartbeat-runner.js";
+import { enqueueSystemEvent, peekSystemEvents, resetSystemEventsForTest } from "./system-events.js";
 
 const cfg = {} as unknown as PowerDirectorConfig;
 const mainKey = resolveMainSessionKey(cfg);

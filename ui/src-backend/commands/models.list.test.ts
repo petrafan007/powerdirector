@@ -1,8 +1,8 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-let modelsListCommand: typeof import('./models/list.list-command').modelsListCommand;
-let loadModelRegistry: typeof import('./models/list.registry').loadModelRegistry;
-let toModelRow: typeof import('./models/list.registry').toModelRow;
+let modelsListCommand: typeof import("./models/list.list-command.js").modelsListCommand;
+let loadModelRegistry: typeof import("./models/list.registry.js").loadModelRegistry;
+let toModelRow: typeof import("./models/list.registry.js").toModelRow;
 
 const loadConfig = vi.fn();
 const ensurePowerDirectorModelsJson = vi.fn().mockResolvedValue(undefined);
@@ -275,8 +275,8 @@ describe("models list/status", () => {
   }
 
   beforeAll(async () => {
-    ({ modelsListCommand } = await import('./models/list.list-command'));
-    ({ loadModelRegistry, toModelRow } = await import('./models/list.registry'));
+    ({ modelsListCommand } = await import("./models/list.list-command.js"));
+    ({ loadModelRegistry, toModelRow } = await import("./models/list.registry.js"));
   });
 
   it("models list syncs auth-profiles into auth.json before availability checks", async () => {

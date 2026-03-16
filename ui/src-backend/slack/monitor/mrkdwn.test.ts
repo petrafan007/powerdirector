@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { escapeSlackMrkdwn } from './mrkdwn';
+import { escapeSlackMrkdwn } from "./mrkdwn.js";
 
 describe("escapeSlackMrkdwn", () => {
   it("returns plain text unchanged", () => {

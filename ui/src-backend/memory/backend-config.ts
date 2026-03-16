@@ -1,17 +1,17 @@
 import path from "node:path";
-import { resolveAgentWorkspaceDir } from '../agents/agent-scope';
-import { parseDurationMs } from '../cli/parse-duration';
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionSendPolicyConfig } from '../config/types.base';
+import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
+import { parseDurationMs } from "../cli/parse-duration.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SessionSendPolicyConfig } from "../config/types.base.js";
 import type {
   MemoryBackend,
   MemoryCitationsMode,
   MemoryQmdConfig,
   MemoryQmdIndexPath,
   MemoryQmdSearchMode,
-} from '../config/types.memory';
-import { resolveUserPath } from '../utils';
-import { splitShellArgs } from '../utils/shell-argv';
+} from "../config/types.memory.js";
+import { resolveUserPath } from "../utils.js";
+import { splitShellArgs } from "../utils/shell-argv.js";
 
 export type ResolvedMemoryBackendConfig = {
   backend: MemoryBackend;

@@ -1,1 +1,1 @@
-export { registerGatewayCli } from './gateway-cli/register';
+export { registerGatewayCli } from "./gateway-cli/register.js";

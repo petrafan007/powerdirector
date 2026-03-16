@@ -1,6 +1,6 @@
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
-import { normalizeBrowserScreenshot } from './screenshot';
+import { normalizeBrowserScreenshot } from "./screenshot.js";
 
 describe("browser screenshot normalization", () => {
   it("shrinks oversized images to <=2000x2000 and <=5MB", async () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maskApiKey } from './mask-api-key';
+import { maskApiKey } from "./mask-api-key.js";
 
 describe("maskApiKey", () => {
   it("returns missing for empty values", () => {

@@ -7,14 +7,14 @@
  * across multiple providers.
  */
 
-import { resolveSessionAgentId } from '../../agents/agent-scope';
-import { resolveEffectiveMessagesConfig } from '../../agents/identity';
-import { normalizeChannelId } from '../../channels/plugins/index';
-import type { PowerDirectorConfig } from '../../config/config';
-import { INTERNAL_MESSAGE_CHANNEL, normalizeMessageChannel } from '../../utils/message-channel';
-import type { OriginatingChannelType } from '../templating';
-import type { ReplyPayload } from '../types';
-import { normalizeReplyPayload } from './normalize-reply';
+import { resolveSessionAgentId } from "../../agents/agent-scope.js";
+import { resolveEffectiveMessagesConfig } from "../../agents/identity.js";
+import { normalizeChannelId } from "../../channels/plugins/index.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { INTERNAL_MESSAGE_CHANNEL, normalizeMessageChannel } from "../../utils/message-channel.js";
+import type { OriginatingChannelType } from "../templating.js";
+import type { ReplyPayload } from "../types.js";
+import { normalizeReplyPayload } from "./normalize-reply.js";
 
 export type RouteReplyParams = {
   /** The reply payload to send. */
@@ -117,7 +117,7 @@ export async function routeReply(params: RouteReplyParams): Promise<RouteReplyRe
   try {
     // Provider docking: this is an execution boundary (we're about to send).
     // Keep the module cheap to import by loading outbound plumbing lazily.
-    const { deliverOutboundPayloads } = await import('../../infra/outbound/deliver');
+    const { deliverOutboundPayloads } = await import("../../infra/outbound/deliver.js");
     const results = await deliverOutboundPayloads({
       cfg,
       channel: channelId,

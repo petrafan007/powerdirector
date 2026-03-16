@@ -1,33 +1,33 @@
 import type { Bot } from "grammy";
-import { resolveAgentDir } from '../agents/agent-scope';
+import { resolveAgentDir } from "../agents/agent-scope.js";
 import {
   findModelInCatalog,
   loadModelCatalog,
   modelSupportsVision,
-} from '../agents/model-catalog';
-import { resolveDefaultModelForAgent } from '../agents/model-selection';
-import { EmbeddedBlockChunker } from '../agents/pi-embedded-block-chunker';
-import { resolveChunkMode } from '../auto-reply/chunk';
-import { clearHistoryEntriesIfEnabled } from '../auto-reply/reply/history';
-import { dispatchReplyWithBufferedBlockDispatcher } from '../auto-reply/reply/provider-dispatcher';
-import { removeAckReactionAfterReply } from '../channels/ack-reactions';
-import { logAckFailure, logTypingFailure } from '../channels/logging';
-import { createReplyPrefixOptions } from '../channels/reply-prefix';
-import { createTypingCallbacks } from '../channels/typing';
-import { resolveMarkdownTableMode } from '../config/markdown-tables';
-import type { PowerDirectorConfig, ReplyToMode, TelegramAccountConfig } from '../config/types';
-import { danger, logVerbose } from '../globals';
-import { getAgentScopedMediaLocalRoots } from '../media/local-roots';
-import type { RuntimeEnv } from '../runtime';
-import type { TelegramMessageContext } from './bot-message-context';
-import type { TelegramBotOptions } from './bot';
-import { deliverReplies } from './bot/delivery';
-import type { TelegramStreamMode } from './bot/types';
-import type { TelegramInlineButtons } from './button-types';
-import { resolveTelegramDraftStreamingChunking } from './draft-chunking';
-import { createTelegramDraftStream } from './draft-stream';
-import { editMessageTelegram } from './send';
-import { cacheSticker, describeStickerImage } from './sticker-cache';
+} from "../agents/model-catalog.js";
+import { resolveDefaultModelForAgent } from "../agents/model-selection.js";
+import { EmbeddedBlockChunker } from "../agents/pi-embedded-block-chunker.js";
+import { resolveChunkMode } from "../auto-reply/chunk.js";
+import { clearHistoryEntriesIfEnabled } from "../auto-reply/reply/history.js";
+import { dispatchReplyWithBufferedBlockDispatcher } from "../auto-reply/reply/provider-dispatcher.js";
+import { removeAckReactionAfterReply } from "../channels/ack-reactions.js";
+import { logAckFailure, logTypingFailure } from "../channels/logging.js";
+import { createReplyPrefixOptions } from "../channels/reply-prefix.js";
+import { createTypingCallbacks } from "../channels/typing.js";
+import { resolveMarkdownTableMode } from "../config/markdown-tables.js";
+import type { PowerDirectorConfig, ReplyToMode, TelegramAccountConfig } from "../config/types.js";
+import { danger, logVerbose } from "../globals.js";
+import { getAgentScopedMediaLocalRoots } from "../media/local-roots.js";
+import type { RuntimeEnv } from "../runtime.js";
+import type { TelegramMessageContext } from "./bot-message-context.js";
+import type { TelegramBotOptions } from "./bot.js";
+import { deliverReplies } from "./bot/delivery.js";
+import type { TelegramStreamMode } from "./bot/types.js";
+import type { TelegramInlineButtons } from "./button-types.js";
+import { resolveTelegramDraftStreamingChunking } from "./draft-chunking.js";
+import { createTelegramDraftStream } from "./draft-stream.js";
+import { editMessageTelegram } from "./send.js";
+import { cacheSticker, describeStickerImage } from "./sticker-cache.js";
 
 const EMPTY_RESPONSE_FALLBACK = "No response generated. Please try again.";
 

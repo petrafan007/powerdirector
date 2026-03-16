@@ -7,14 +7,14 @@
 
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { PowerDirectorConfig } from '../config/config';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { isPathInsideWithRealpath } from '../security/scan-paths';
-import { resolveHookConfig } from './config';
-import { shouldIncludeHook } from './config';
-import type { InternalHookHandler } from './internal-hooks';
-import { registerInternalHook } from './internal-hooks';
-import { loadWorkspaceHookEntries } from './workspace';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { isPathInsideWithRealpath } from "../security/scan-paths.js";
+import { resolveHookConfig } from "./config.js";
+import { shouldIncludeHook } from "./config.js";
+import type { InternalHookHandler } from "./internal-hooks.js";
+import { registerInternalHook } from "./internal-hooks.js";
+import { loadWorkspaceHookEntries } from "./workspace.js";
 
 const log = createSubsystemLogger("hooks:loader");
 

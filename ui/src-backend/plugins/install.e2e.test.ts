@@ -5,11 +5,11 @@ import path from "node:path";
 import JSZip from "jszip";
 import * as tar from "tar";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import * as skillScanner from '../security/skill-scanner';
+import * as skillScanner from "../security/skill-scanner.js";
 import {
   expectSingleNpmInstallIgnoreScriptsCall,
   expectSingleNpmPackIgnoreScriptsCall,
-} from '../test-utils/exec-assertions';
+} from "../test-utils/exec-assertions.js";
 
 vi.mock("../process/exec.js", () => ({
   runCommandWithTimeout: vi.fn(),
@@ -120,7 +120,7 @@ function setupPluginInstallDirs() {
 }
 
 async function installFromDirWithWarnings(params: { pluginDir: string; extensionsDir: string }) {
-  const { installPluginFromDir } = await import('./install');
+  const { installPluginFromDir } = await import("./install.js");
   const warnings: string[] = [];
   const result = await installPluginFromDir({
     dirPath: params.pluginDir,
@@ -159,7 +159,7 @@ async function expectArchiveInstallReservedSegmentRejection(params: {
   });
 
   const extensionsDir = path.join(stateDir, "extensions");
-  const { installPluginFromArchive } = await import('./install');
+  const { installPluginFromArchive } = await import("./install.js");
   const result = await installPluginFromArchive({
     archivePath,
     extensionsDir,
@@ -193,7 +193,7 @@ describe("installPluginFromArchive", () => {
       version: "0.0.1",
     });
 
-    const { installPluginFromArchive } = await import('./install');
+    const { installPluginFromArchive } = await import("./install.js");
     const result = await installPluginFromArchive({
       archivePath,
       extensionsDir,
@@ -212,7 +212,7 @@ describe("installPluginFromArchive", () => {
       version: "0.0.1",
     });
 
-    const { installPluginFromArchive } = await import('./install');
+    const { installPluginFromArchive } = await import("./install.js");
     const first = await installPluginFromArchive({
       archivePath,
       extensionsDir,
@@ -249,7 +249,7 @@ describe("installPluginFromArchive", () => {
     fs.writeFileSync(archivePath, buffer);
 
     const extensionsDir = path.join(stateDir, "extensions");
-    const { installPluginFromArchive } = await import('./install');
+    const { installPluginFromArchive } = await import("./install.js");
     const result = await installPluginFromArchive({
       archivePath,
       extensionsDir,
@@ -278,7 +278,7 @@ describe("installPluginFromArchive", () => {
     });
 
     const extensionsDir = path.join(stateDir, "extensions");
-    const { installPluginFromArchive } = await import('./install');
+    const { installPluginFromArchive } = await import("./install.js");
     const first = await installPluginFromArchive({
       archivePath: archiveV1,
       extensionsDir,
@@ -332,7 +332,7 @@ describe("installPluginFromArchive", () => {
     });
 
     const extensionsDir = path.join(stateDir, "extensions");
-    const { installPluginFromArchive } = await import('./install');
+    const { installPluginFromArchive } = await import("./install.js");
     const result = await installPluginFromArchive({
       archivePath,
       extensionsDir,
@@ -433,7 +433,7 @@ describe("installPluginFromDir", () => {
     );
     fs.writeFileSync(path.join(pluginDir, "dist", "index.js"), "export {};", "utf-8");
 
-    const { runCommandWithTimeout } = await import('../process/exec');
+    const { runCommandWithTimeout } = await import("../process/exec.js");
     const run = vi.mocked(runCommandWithTimeout);
     run.mockResolvedValue({
       code: 0,
@@ -444,7 +444,7 @@ describe("installPluginFromDir", () => {
       termination: "exit",
     });
 
-    const { installPluginFromDir } = await import('./install');
+    const { installPluginFromDir } = await import("./install.js");
     const res = await installPluginFromDir({
       dirPath: pluginDir,
       extensionsDir: path.join(stateDir, "extensions"),
@@ -480,7 +480,7 @@ describe("installPluginFromNpmSpec", () => {
     const extensionsDir = path.join(stateDir, "extensions");
     fs.mkdirSync(extensionsDir, { recursive: true });
 
-    const { runCommandWithTimeout } = await import('../process/exec');
+    const { runCommandWithTimeout } = await import("../process/exec.js");
     const run = vi.mocked(runCommandWithTimeout);
 
     let packTmpDir = "";
@@ -510,7 +510,7 @@ describe("installPluginFromNpmSpec", () => {
       throw new Error(`unexpected command: ${argv.join(" ")}`);
     });
 
-    const { installPluginFromNpmSpec } = await import('./install');
+    const { installPluginFromNpmSpec } = await import("./install.js");
     const result = await installPluginFromNpmSpec({
       spec: "@powerdirector/voice-call@0.0.1",
       extensionsDir,
@@ -533,7 +533,7 @@ describe("installPluginFromNpmSpec", () => {
   });
 
   it("rejects non-registry npm specs", async () => {
-    const { installPluginFromNpmSpec } = await import('./install');
+    const { installPluginFromNpmSpec } = await import("./install.js");
     const result = await installPluginFromNpmSpec({ spec: "github:evil/evil" });
     expect(result.ok).toBe(false);
     if (result.ok) {
@@ -543,7 +543,7 @@ describe("installPluginFromNpmSpec", () => {
   });
 
   it("aborts when integrity drift callback rejects the fetched artifact", async () => {
-    const { runCommandWithTimeout } = await import('../process/exec');
+    const { runCommandWithTimeout } = await import("../process/exec.js");
     const run = vi.mocked(runCommandWithTimeout);
     run.mockResolvedValue({
       code: 0,
@@ -564,7 +564,7 @@ describe("installPluginFromNpmSpec", () => {
     });
 
     const onIntegrityDrift = vi.fn(async () => false);
-    const { installPluginFromNpmSpec } = await import('./install');
+    const { installPluginFromNpmSpec } = await import("./install.js");
     const result = await installPluginFromNpmSpec({
       spec: "@powerdirector/voice-call@0.0.1",
       expectedIntegrity: "sha512-old",

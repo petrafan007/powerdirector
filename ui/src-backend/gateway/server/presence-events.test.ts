@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { broadcastPresenceSnapshot } from './presence-events';
+import { broadcastPresenceSnapshot } from "./presence-events.js";
 
 describe("broadcastPresenceSnapshot", () => {
   it("increments version and broadcasts presence with state versions", () => {

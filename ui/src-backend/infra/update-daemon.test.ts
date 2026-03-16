@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { UpdateDaemon } from './update-daemon';
-import { resolveStateDir } from '../config/paths';
-import type { loadConfig } from '../config/config';
+import { UpdateDaemon } from "./update-daemon.js";
+import { resolveStateDir } from "../config/paths.js";
+import type { loadConfig } from "../config/config.js";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -36,8 +36,8 @@ vi.mock("./update-runner.js", () => ({
     runGatewayUpdate: vi.fn().mockResolvedValue({ status: "success" }),
 }));
 
-import { runGatewayUpdateCheck, getUpdateAvailable } from './update-startup';
-import { runGatewayUpdate } from './update-runner';
+import { runGatewayUpdateCheck, getUpdateAvailable } from "./update-startup.js";
+import { runGatewayUpdate } from "./update-runner.js";
 
 const STATE_DIR = "/mock/state/dir";
 

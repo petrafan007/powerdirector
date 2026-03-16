@@ -1,5 +1,5 @@
-import { listChannelPlugins } from '../channels/plugins/index';
-import { GATEWAY_EVENT_UPDATE_AVAILABLE } from './events';
+import { listChannelPlugins } from "../channels/plugins/index.js";
+import { GATEWAY_EVENT_UPDATE_AVAILABLE } from "./events.js";
 
 const BASE_METHODS = [
   "health",

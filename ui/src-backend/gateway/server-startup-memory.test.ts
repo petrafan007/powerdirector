@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 const { getMemorySearchManagerMock } = vi.hoisted(() => ({
   getMemorySearchManagerMock: vi.fn(),
@@ -9,7 +9,7 @@ vi.mock("../memory/index.js", () => ({
   getMemorySearchManager: getMemorySearchManagerMock,
 }));
 
-import { startGatewayMemoryBackend } from './server-startup-memory';
+import { startGatewayMemoryBackend } from "./server-startup-memory.js";
 
 describe("startGatewayMemoryBackend", () => {
   beforeEach(() => {

@@ -7,8 +7,8 @@ vi.mock("./send.js", () => ({
 describe("discord audit", () => {
   it("collects numeric channel ids and counts unresolved keys", async () => {
     const { collectDiscordAuditChannelIds, auditDiscordChannelPermissions } =
-      await import('./audit');
-    const { fetchChannelPermissionsDiscord } = await import('./send');
+      await import("./audit.js");
+    const { fetchChannelPermissionsDiscord } = await import("./send.js");
 
     const cfg = {
       channels: {
@@ -27,7 +27,7 @@ describe("discord audit", () => {
           },
         },
       },
-    } as unknown as import('../config/config').PowerDirectorConfig;
+    } as unknown as import("../config/config.js").PowerDirectorConfig;
 
     const collected = collectDiscordAuditChannelIds({
       cfg,

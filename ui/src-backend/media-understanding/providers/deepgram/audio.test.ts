@@ -3,8 +3,8 @@ import {
   createAuthCaptureJsonFetch,
   createRequestCaptureJsonFetch,
   installPinnedHostnameTestHooks,
-} from '../audio.test-helpers';
-import { transcribeDeepgramAudio } from './audio';
+} from "../audio.test-helpers.js";
+import { transcribeDeepgramAudio } from "./audio.js";
 
 installPinnedHostnameTestHooks();
 

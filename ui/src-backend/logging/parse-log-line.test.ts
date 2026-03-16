@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseLogLine } from './parse-log-line';
+import { parseLogLine } from "./parse-log-line.js";
 
 describe("parseLogLine", () => {
   it("parses structured JSON log lines", () => {

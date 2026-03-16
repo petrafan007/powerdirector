@@ -3,11 +3,11 @@ import {
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from '../../../../agents/tools/common';
-import { handleDiscordAction } from '../../../../agents/tools/discord-actions';
-import { resolveDiscordChannelId } from '../../../../discord/targets';
-import type { ChannelMessageActionContext } from '../../types';
-import { tryHandleDiscordMessageActionGuildAdmin } from './handle-action.guild-admin';
+} from "../../../../agents/tools/common.js";
+import { handleDiscordAction } from "../../../../agents/tools/discord-actions.js";
+import { resolveDiscordChannelId } from "../../../../discord/targets.js";
+import type { ChannelMessageActionContext } from "../../types.js";
+import { tryHandleDiscordMessageActionGuildAdmin } from "./handle-action.guild-admin.js";
 
 const providerId = "discord";
 

@@ -1,12 +1,12 @@
 import net from "node:net";
-import { danger, info, shouldLogVerbose, warn } from '../globals';
-import { logDebug } from '../logger';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { isErrno } from './errors';
-import { formatPortDiagnostics } from './ports-format';
-import { inspectPortUsage } from './ports-inspect';
-import type { PortListener, PortListenerKind, PortUsage, PortUsageStatus } from './ports-types';
+import { danger, info, shouldLogVerbose, warn } from "../globals.js";
+import { logDebug } from "../logger.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { defaultRuntime } from "../runtime.js";
+import { isErrno } from "./errors.js";
+import { formatPortDiagnostics } from "./ports-format.js";
+import { inspectPortUsage } from "./ports-inspect.js";
+import type { PortListener, PortListenerKind, PortUsage, PortUsageStatus } from "./ports-types.js";
 
 class PortInUseError extends Error {
   port: number;
@@ -94,5 +94,5 @@ export async function handlePortError(
 
 export { PortInUseError };
 export type { PortListener, PortListenerKind, PortUsage, PortUsageStatus };
-export { buildPortHints, classifyPortListener, formatPortDiagnostics } from './ports-format';
-export { inspectPortUsage } from './ports-inspect';
+export { buildPortHints, classifyPortListener, formatPortDiagnostics } from "./ports-format.js";
+export { inspectPortUsage } from "./ports-inspect.js";

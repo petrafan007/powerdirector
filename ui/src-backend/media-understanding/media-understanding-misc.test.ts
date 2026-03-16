@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { withFetchPreconnect } from '../test-utils/fetch-mock';
-import { MediaAttachmentCache } from './attachments';
-import { normalizeMediaUnderstandingChatType, resolveMediaUnderstandingScope } from './scope';
+import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
+import { MediaAttachmentCache } from "./attachments.js";
+import { normalizeMediaUnderstandingChatType, resolveMediaUnderstandingScope } from "./scope.js";
 
 describe("media understanding scope", () => {
   it("normalizes chatType", () => {

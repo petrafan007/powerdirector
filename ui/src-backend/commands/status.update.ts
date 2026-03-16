@@ -1,11 +1,11 @@
-import { formatCliCommand } from '../cli/command-format';
-import { resolvePowerDirectorPackageRoot } from '../infra/powerdirector-root';
+import { formatCliCommand } from "../cli/command-format.js";
+import { resolvePowerDirectorPackageRoot } from "../infra/powerdirector-root.js";
 import {
   checkUpdateStatus,
   compareSemverStrings,
   type UpdateCheckResult,
-} from '../infra/update-check';
-import { VERSION } from '../version';
+} from "../infra/update-check.js";
+import { VERSION } from "../version.js";
 
 export async function getUpdateCheckResult(params: {
   timeoutMs: number;

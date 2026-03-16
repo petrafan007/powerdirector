@@ -1,9 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveBrowserConfig } from './config';
+import { resolveBrowserConfig } from "./config.js";
 import {
   refreshResolvedBrowserConfigFromDisk,
   resolveBrowserProfileWithHotReload,
-} from './resolved-config-refresh';
+} from "./resolved-config-refresh.js";
 
 let cfgProfiles: Record<string, { cdpPort?: number; cdpUrl?: string; color?: string }> = {};
 
@@ -40,10 +40,10 @@ vi.mock("../config/config.js", () => ({
 }));
 
 describe("server-context hot-reload profiles", () => {
-  let loadConfig: typeof import('../config/config').loadConfig;
+  let loadConfig: typeof import("../config/config.js").loadConfig;
 
   beforeAll(async () => {
-    ({ loadConfig } = await import('../config/config'));
+    ({ loadConfig } = await import("../config/config.js"));
   });
 
   beforeEach(() => {

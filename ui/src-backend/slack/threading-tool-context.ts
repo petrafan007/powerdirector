@@ -1,9 +1,9 @@
 import type {
   ChannelThreadingContext,
   ChannelThreadingToolContext,
-} from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveSlackAccount, resolveSlackReplyToMode } from './accounts';
+} from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveSlackAccount, resolveSlackReplyToMode } from "./accounts.js";
 
 export function buildSlackThreadingToolContext(params: {
   cfg: PowerDirectorConfig;

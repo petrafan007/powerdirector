@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { packNpmSpecToArchive, withTempDir } from './install-source-utils';
-import { installFromNpmSpecArchive } from './npm-pack-install';
+import { packNpmSpecToArchive, withTempDir } from "./install-source-utils.js";
+import { installFromNpmSpecArchive } from "./npm-pack-install.js";
 
 vi.mock("./install-source-utils.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./install-source-utils')>();
+  const actual = await importOriginal<typeof import("./install-source-utils.js")>();
   return {
     ...actual,
     withTempDir: vi.fn(async (_prefix: string, fn: (tmpDir: string) => Promise<unknown>) => {

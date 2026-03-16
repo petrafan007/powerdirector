@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   parseModelRef,
   resolveModelRefFromString,
@@ -7,7 +7,7 @@ import {
   buildModelAliasIndex,
   normalizeProviderId,
   modelKey,
-} from './model-selection';
+} from "./model-selection.js";
 
 describe("model-selection", () => {
   describe("normalizeProviderId", () => {

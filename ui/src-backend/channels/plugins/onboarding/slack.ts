@@ -1,18 +1,18 @@
-import type { PowerDirectorConfig } from '../../../config/config';
-import type { DmPolicy } from '../../../config/types';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../../routing/session-key';
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import type { DmPolicy } from "../../../config/types.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../../routing/session-key.js";
 import {
   listSlackAccountIds,
   resolveDefaultSlackAccountId,
   resolveSlackAccount,
-} from '../../../slack/accounts';
-import { resolveSlackChannelAllowlist } from '../../../slack/resolve-channels';
-import { resolveSlackUserAllowlist } from '../../../slack/resolve-users';
-import { formatDocsLink } from '../../../terminal/links';
-import type { WizardPrompter } from '../../../wizard/prompts';
-import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from '../onboarding-types';
-import { promptChannelAccessConfig } from './channel-access';
-import { addWildcardAllowFrom, promptAccountId, promptResolvedAllowFrom } from './helpers';
+} from "../../../slack/accounts.js";
+import { resolveSlackChannelAllowlist } from "../../../slack/resolve-channels.js";
+import { resolveSlackUserAllowlist } from "../../../slack/resolve-users.js";
+import { formatDocsLink } from "../../../terminal/links.js";
+import type { WizardPrompter } from "../../../wizard/prompts.js";
+import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from "../onboarding-types.js";
+import { promptChannelAccessConfig } from "./channel-access.js";
+import { addWildcardAllowFrom, promptAccountId, promptResolvedAllowFrom } from "./helpers.js";
 
 const channel = "slack" as const;
 

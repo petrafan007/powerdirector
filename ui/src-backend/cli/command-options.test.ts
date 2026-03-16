@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { describe, expect, it } from "vitest";
-import { inheritOptionFromParent } from './command-options';
+import { inheritOptionFromParent } from "./command-options.js";
 
 function attachRunCommandAndCaptureInheritedToken(command: Command) {
   let inherited: string | undefined;

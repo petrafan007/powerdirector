@@ -10,8 +10,8 @@ import {
   replyTexts,
   runEmbeddedPiAgent,
   withTempHome,
-} from './reply.directive.directive-behavior.e2e-harness';
-import { getReplyFromConfig } from './reply';
+} from "./reply.directive.directive-behavior.e2e-harness.js";
+import { getReplyFromConfig } from "./reply.js";
 
 async function runReplyToCurrentCase(home: string, text: string) {
   vi.mocked(runEmbeddedPiAgent).mockResolvedValue(makeEmbeddedTextResult(text));

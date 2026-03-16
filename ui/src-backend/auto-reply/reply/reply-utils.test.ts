@@ -1,19 +1,19 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { SILENT_REPLY_TOKEN } from '../tokens';
-import { parseAudioTag } from './audio-tags';
-import { createBlockReplyCoalescer } from './block-reply-coalescer';
-import { matchesMentionWithExplicit } from './mentions';
-import { normalizeReplyPayload } from './normalize-reply';
-import { createReplyReferencePlanner } from './reply-reference';
+import { SILENT_REPLY_TOKEN } from "../tokens.js";
+import { parseAudioTag } from "./audio-tags.js";
+import { createBlockReplyCoalescer } from "./block-reply-coalescer.js";
+import { matchesMentionWithExplicit } from "./mentions.js";
+import { normalizeReplyPayload } from "./normalize-reply.js";
+import { createReplyReferencePlanner } from "./reply-reference.js";
 import {
   extractShortModelName,
   hasTemplateVariables,
   resolveResponsePrefixTemplate,
-} from './response-prefix-template';
-import { createStreamingDirectiveAccumulator } from './streaming-directives';
-import { createMockTypingController } from './test-helpers';
-import { createTypingSignaler, resolveTypingMode } from './typing-mode';
-import { createTypingController } from './typing';
+} from "./response-prefix-template.js";
+import { createStreamingDirectiveAccumulator } from "./streaming-directives.js";
+import { createMockTypingController } from "./test-helpers.js";
+import { createTypingSignaler, resolveTypingMode } from "./typing-mode.js";
+import { createTypingController } from "./typing.js";
 
 describe("matchesMentionWithExplicit", () => {
   const mentionRegexes = [/\bpowerdirector\b/i];

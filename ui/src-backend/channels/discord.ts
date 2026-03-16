@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
-import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base';
+import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.js';
 
 export class DiscordChannel implements Channel {
     public id = 'discord';

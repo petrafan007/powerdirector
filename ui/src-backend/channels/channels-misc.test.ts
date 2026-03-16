@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import * as channelWeb from '../channel-web';
-import { normalizeChatType } from './chat-type';
-import * as webEntry from './web/index';
+import * as channelWeb from "../channel-web.js";
+import { normalizeChatType } from "./chat-type.js";
+import * as webEntry from "./web/index.js";
 
 describe("channel-web barrel", () => {
   it("exports the expected web helpers", () => {

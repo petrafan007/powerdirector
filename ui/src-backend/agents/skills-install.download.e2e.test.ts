@@ -4,8 +4,8 @@ import path from "node:path";
 import JSZip from "jszip";
 import * as tar from "tar";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { setTempStateDir, writeDownloadSkill } from './skills-install.download-test-utils';
-import { installSkill } from './skills-install';
+import { setTempStateDir, writeDownloadSkill } from "./skills-install.download-test-utils.js";
+import { installSkill } from "./skills-install.js";
 
 const runCommandWithTimeoutMock = vi.fn();
 const scanDirectoryWithSummaryMock = vi.fn();
@@ -30,7 +30,7 @@ vi.mock("../infra/net/fetch-guard.js", () => ({
 }));
 
 vi.mock("../security/skill-scanner.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../security/skill-scanner')>();
+  const actual = await importOriginal<typeof import("../security/skill-scanner.js")>();
   return {
     ...actual,
     scanDirectoryWithSummary: (...args: unknown[]) => scanDirectoryWithSummaryMock(...args),

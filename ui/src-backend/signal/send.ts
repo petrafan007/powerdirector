@@ -1,11 +1,11 @@
-import { loadConfig } from '../config/config';
-import { resolveMarkdownTableMode } from '../config/markdown-tables';
-import { mediaKindFromMime } from '../media/constants';
-import { resolveOutboundAttachmentFromUrl } from '../media/outbound-attachment';
-import { resolveSignalAccount } from './accounts';
-import { signalRpcRequest } from './client';
-import { markdownToSignalText, type SignalTextStyleRange } from './format';
-import { resolveSignalRpcContext } from './rpc-context';
+import { loadConfig } from "../config/config.js";
+import { resolveMarkdownTableMode } from "../config/markdown-tables.js";
+import { mediaKindFromMime } from "../media/constants.js";
+import { resolveOutboundAttachmentFromUrl } from "../media/outbound-attachment.js";
+import { resolveSignalAccount } from "./accounts.js";
+import { signalRpcRequest } from "./client.js";
+import { markdownToSignalText, type SignalTextStyleRange } from "./format.js";
+import { resolveSignalRpcContext } from "./rpc-context.js";
 
 export type SignalSendOpts = {
   baseUrl?: string;

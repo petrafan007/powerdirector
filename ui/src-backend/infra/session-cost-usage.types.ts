@@ -1,4 +1,4 @@
-import type { NormalizedUsage } from '../agents/usage';
+import type { NormalizedUsage } from "../agents/usage.js";
 
 export type CostBreakdown = {
   total?: number;

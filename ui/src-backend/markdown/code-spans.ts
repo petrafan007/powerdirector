@@ -1,4 +1,4 @@
-import { parseFenceSpans, type FenceSpan } from './fences';
+import { parseFenceSpans, type FenceSpan } from "./fences.js";
 
 export type InlineCodeState = {
   open: boolean;

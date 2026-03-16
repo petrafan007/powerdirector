@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 import si from 'systeminformation';
 
 export class SystemTool implements Tool {

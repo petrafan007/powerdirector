@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownToSignalTextChunks } from './format';
+import { markdownToSignalTextChunks } from "./format.js";
 
 describe("splitSignalFormattedText", () => {
   // We test the internal chunking behavior via markdownToSignalTextChunks with

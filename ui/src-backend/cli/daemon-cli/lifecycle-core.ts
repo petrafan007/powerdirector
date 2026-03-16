@@ -1,18 +1,18 @@
-import { loadConfig } from '../../config/config';
-import { resolveIsNixMode } from '../../config/paths';
-import { checkTokenDrift } from '../../daemon/service-audit';
-import type { GatewayService } from '../../daemon/service';
-import { renderSystemdUnavailableHints } from '../../daemon/systemd-hints';
-import { isSystemdUserServiceAvailable } from '../../daemon/systemd';
-import { isWSL } from '../../infra/wsl';
-import { defaultRuntime } from '../../runtime';
+import { loadConfig } from "../../config/config.js";
+import { resolveIsNixMode } from "../../config/paths.js";
+import { checkTokenDrift } from "../../daemon/service-audit.js";
+import type { GatewayService } from "../../daemon/service.js";
+import { renderSystemdUnavailableHints } from "../../daemon/systemd-hints.js";
+import { isSystemdUserServiceAvailable } from "../../daemon/systemd.js";
+import { isWSL } from "../../infra/wsl.js";
+import { defaultRuntime } from "../../runtime.js";
 import {
   buildDaemonServiceSnapshot,
   createNullWriter,
   type DaemonAction,
   type DaemonActionResponse,
   emitDaemonActionJson,
-} from './response';
+} from "./response.js";
 
 type DaemonLifecycleOptions = {
   json?: boolean;

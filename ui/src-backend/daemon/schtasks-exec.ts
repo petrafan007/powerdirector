@@ -1,4 +1,4 @@
-import { execFileUtf8 } from './exec-file';
+import { execFileUtf8 } from "./exec-file.js";
 
 export async function execSchtasks(
   args: string[],

@@ -1,6 +1,6 @@
-import { promptAccountId as promptAccountIdSdk } from '../../../plugin-sdk/onboarding';
-import type { WizardPrompter } from '../../../wizard/prompts';
-import type { PromptAccountId, PromptAccountIdParams } from '../onboarding-types';
+import { promptAccountId as promptAccountIdSdk } from "../../../plugin-sdk/onboarding.js";
+import type { WizardPrompter } from "../../../wizard/prompts.js";
+import type { PromptAccountId, PromptAccountIdParams } from "../onboarding-types.js";
 
 export const promptAccountId: PromptAccountId = async (params: PromptAccountIdParams) => {
   return await promptAccountIdSdk(params);

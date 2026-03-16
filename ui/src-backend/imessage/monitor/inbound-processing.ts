@@ -1,32 +1,32 @@
-import { hasControlCommand } from '../../auto-reply/command-detection';
+import { hasControlCommand } from "../../auto-reply/command-detection.js";
 import {
   formatInboundEnvelope,
   formatInboundFromLabel,
   resolveEnvelopeFormatOptions,
   type EnvelopeFormatOptions,
-} from '../../auto-reply/envelope';
+} from "../../auto-reply/envelope.js";
 import {
   buildPendingHistoryContextFromMap,
   recordPendingHistoryEntryIfEnabled,
   type HistoryEntry,
-} from '../../auto-reply/reply/history';
-import { finalizeInboundContext } from '../../auto-reply/reply/inbound-context';
-import { buildMentionRegexes, matchesMentionPatterns } from '../../auto-reply/reply/mentions';
-import { resolveControlCommandGate } from '../../channels/command-gating';
-import { logInboundDrop } from '../../channels/logging';
-import type { PowerDirectorConfig } from '../../config/config';
+} from "../../auto-reply/reply/history.js";
+import { finalizeInboundContext } from "../../auto-reply/reply/inbound-context.js";
+import { buildMentionRegexes, matchesMentionPatterns } from "../../auto-reply/reply/mentions.js";
+import { resolveControlCommandGate } from "../../channels/command-gating.js";
+import { logInboundDrop } from "../../channels/logging.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
 import {
   resolveChannelGroupPolicy,
   resolveChannelGroupRequireMention,
-} from '../../config/group-policy';
-import { resolveAgentRoute } from '../../routing/resolve-route';
-import { truncateUtf16Safe } from '../../utils';
+} from "../../config/group-policy.js";
+import { resolveAgentRoute } from "../../routing/resolve-route.js";
+import { truncateUtf16Safe } from "../../utils.js";
 import {
   formatIMessageChatTarget,
   isAllowedIMessageSender,
   normalizeIMessageHandle,
-} from '../targets';
-import type { MonitorIMessageOpts, IMessagePayload } from './types';
+} from "../targets.js";
+import type { MonitorIMessageOpts, IMessagePayload } from "./types.js";
 
 type IMessageReplyContext = {
   id?: string;

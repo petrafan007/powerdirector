@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { TypingController } from './typing';
+import type { TypingController } from "./typing.js";
 
 export function createMockTypingController(
   overrides: Partial<TypingController> = {},

@@ -3,15 +3,15 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { isVerbose, isYes, logVerbose, setVerbose, setYes } from './globals';
-import { logDebug, logError, logInfo, logSuccess, logWarn } from './logger';
+import { isVerbose, isYes, logVerbose, setVerbose, setYes } from "./globals.js";
+import { logDebug, logError, logInfo, logSuccess, logWarn } from "./logger.js";
 import {
   DEFAULT_LOG_DIR,
   resetLogger,
   setLoggerOverride,
   stripRedundantSubsystemPrefixForConsole,
-} from './logging';
-import type { RuntimeEnv } from './runtime';
+} from "./logging.js";
+import type { RuntimeEnv } from "./runtime.js";
 
 describe("logger helpers", () => {
   afterEach(() => {

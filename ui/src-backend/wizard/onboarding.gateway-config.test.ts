@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
-import type { RuntimeEnv } from '../runtime';
-import type { WizardPrompter, WizardSelectParams } from './prompts';
+import type { RuntimeEnv } from "../runtime.js";
+import type { WizardPrompter, WizardSelectParams } from "./prompts.js";
 
 const mocks = vi.hoisted(() => ({
   randomToken: vi.fn(),
 }));
 
 vi.mock("../commands/onboard-helpers.js", async (importActual) => {
-  const actual = await importActual<typeof import('../commands/onboard-helpers')>();
+  const actual = await importActual<typeof import("../commands/onboard-helpers.js")>();
   return {
     ...actual,
     randomToken: mocks.randomToken,
@@ -18,7 +18,7 @@ vi.mock("../infra/tailscale.js", () => ({
   findTailscaleBinary: vi.fn(async () => undefined),
 }));
 
-import { configureGatewayForOnboarding } from './onboarding.gateway-config';
+import { configureGatewayForOnboarding } from "./onboarding.gateway-config.js";
 
 describe("configureGatewayForOnboarding", () => {
   function createPrompter(params: { selectQueue: string[]; textQueue: Array<string | undefined> }) {

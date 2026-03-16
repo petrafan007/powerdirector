@@ -1,6 +1,6 @@
-import type { AuthProfileStore } from '../agents/auth-profiles';
-import { AUTH_CHOICE_LEGACY_ALIASES_FOR_CLI } from './auth-choice-legacy';
-import type { AuthChoice, AuthChoiceGroupId } from './onboard-types';
+import type { AuthProfileStore } from "../agents/auth-profiles.js";
+import { AUTH_CHOICE_LEGACY_ALIASES_FOR_CLI } from "./auth-choice-legacy.js";
+import type { AuthChoice, AuthChoiceGroupId } from "./onboard-types.js";
 
 export type { AuthChoiceGroupId };
 

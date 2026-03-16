@@ -1,7 +1,7 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import { SessionManager } from "@mariozechner/pi-coding-agent";
 import { describe, expect, it } from "vitest";
-import { sanitizeSessionHistory } from './google';
+import { sanitizeSessionHistory } from "./google.js";
 
 describe("sanitizeSessionHistory toolResult details stripping", () => {
   it("strips toolResult.details so untrusted payloads are not fed back to the model", async () => {

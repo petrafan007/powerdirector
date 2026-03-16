@@ -12,7 +12,7 @@ vi.mock("node:fs/promises", () => ({
   realpath: fsMocks.realpath,
 }));
 
-import { resolveGatewayProgramArguments } from './program-args';
+import { resolveGatewayProgramArguments } from "./program-args.js";
 
 const originalArgv = [...process.argv];
 

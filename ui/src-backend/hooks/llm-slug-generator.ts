@@ -9,9 +9,9 @@ import {
   resolveDefaultAgentId,
   resolveAgentWorkspaceDir,
   resolveAgentDir,
-} from '../agents/agent-scope';
-import { runEmbeddedPiAgent } from '../agents/pi-embedded';
-import type { PowerDirectorConfig } from '../config/config';
+} from "../agents/agent-scope.js";
+import { runEmbeddedPiAgent } from "../agents/pi-embedded.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 
 /**
  * Generate a short 1-2 word filename slug from session content using LLM

@@ -8,8 +8,8 @@ import {
   resolveGatewayPort,
   resolveIsNixMode,
   resolveStateDir,
-} from './config';
-import { withTempHome } from './test-helpers';
+} from "./config.js";
+import { withTempHome } from "./test-helpers.js";
 
 function envWith(overrides: Record<string, string | undefined>): NodeJS.ProcessEnv {
   // Hermetic env: don't inherit process.env because other tests may mutate it.

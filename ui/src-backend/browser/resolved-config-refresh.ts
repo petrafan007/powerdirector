@@ -1,6 +1,6 @@
-import { createConfigIO, loadConfig } from '../config/config';
-import { resolveBrowserConfig, resolveProfile, type ResolvedBrowserProfile } from './config';
-import type { BrowserServerState } from './server-context.types';
+import { createConfigIO, loadConfig } from "../config/config.js";
+import { resolveBrowserConfig, resolveProfile, type ResolvedBrowserProfile } from "./config.js";
+import type { BrowserServerState } from "./server-context.types.js";
 
 function applyResolvedConfig(
   current: BrowserServerState,

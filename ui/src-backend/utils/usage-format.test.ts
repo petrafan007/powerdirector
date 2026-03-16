@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   estimateUsageCost,
   formatTokenCount,
   formatUsd,
   resolveModelCostConfig,
-} from './usage-format';
+} from "./usage-format.js";
 
 describe("usage-format", () => {
   it("formats token counts", () => {

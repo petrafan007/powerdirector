@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { WindowsAclEntry, WindowsAclSummary } from './windows-acl';
+import type { WindowsAclEntry, WindowsAclSummary } from "./windows-acl.js";
 
 const MOCK_USERNAME = "MockUser";
 
@@ -16,7 +16,7 @@ const {
   parseIcaclsOutput,
   resolveWindowsUserPrincipal,
   summarizeWindowsAcl,
-} = await import('./windows-acl');
+} = await import("./windows-acl.js");
 
 describe("windows-acl", () => {
   describe("resolveWindowsUserPrincipal", () => {

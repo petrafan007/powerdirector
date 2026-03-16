@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { closePlaywrightBrowserConnection, getPageForTargetId } from './pw-session';
+import { closePlaywrightBrowserConnection, getPageForTargetId } from "./pw-session.js";
 
 const connectOverCdpMock = vi.fn();
 const getChromeWebSocketUrlMock = vi.fn();

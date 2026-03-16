@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { captureEnv } from './env';
+import { captureEnv } from "./env.js";
 
 const HOME_ENV_KEYS = [
   "HOME",

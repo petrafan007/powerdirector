@@ -1,36 +1,36 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Command } from "commander";
-import type { GatewayAuthMode, GatewayTailscaleMode } from '../../config/config';
+import type { GatewayAuthMode, GatewayTailscaleMode } from "../../config/config.js";
 import {
   CONFIG_PATH,
   loadConfig,
   readConfigFileSnapshot,
   resolveStateDir,
   resolveGatewayPort,
-} from '../../config/config';
-import { resolveGatewayAuth } from '../../gateway/auth';
-import { startGatewayServer } from '../../gateway/server';
-import type { GatewayWsLogStyle } from '../../gateway/ws-logging';
-import { setGatewayWsLogStyle } from '../../gateway/ws-logging';
-import { setVerbose } from '../../globals';
-import { GatewayLockError } from '../../infra/gateway-lock';
-import { formatPortDiagnostics, inspectPortUsage } from '../../infra/ports';
-import { setConsoleSubsystemFilter, setConsoleTimestampPrefix } from '../../logging/console';
-import { createSubsystemLogger } from '../../logging/subsystem';
-import { defaultRuntime } from '../../runtime';
-import { formatCliCommand } from '../command-format';
-import { inheritOptionFromParent } from '../command-options';
-import { forceFreePortAndWait } from '../ports';
-import { ensureDevGatewayConfig } from './dev';
-import { runGatewayLoop } from './run-loop';
+} from "../../config/config.js";
+import { resolveGatewayAuth } from "../../gateway/auth.js";
+import { startGatewayServer } from "../../gateway/server.js";
+import type { GatewayWsLogStyle } from "../../gateway/ws-logging.js";
+import { setGatewayWsLogStyle } from "../../gateway/ws-logging.js";
+import { setVerbose } from "../../globals.js";
+import { GatewayLockError } from "../../infra/gateway-lock.js";
+import { formatPortDiagnostics, inspectPortUsage } from "../../infra/ports.js";
+import { setConsoleSubsystemFilter, setConsoleTimestampPrefix } from "../../logging/console.js";
+import { createSubsystemLogger } from "../../logging/subsystem.js";
+import { defaultRuntime } from "../../runtime.js";
+import { formatCliCommand } from "../command-format.js";
+import { inheritOptionFromParent } from "../command-options.js";
+import { forceFreePortAndWait } from "../ports.js";
+import { ensureDevGatewayConfig } from "./dev.js";
+import { runGatewayLoop } from "./run-loop.js";
 import {
   describeUnknownError,
   extractGatewayMiskeys,
   maybeExplainGatewayServiceStop,
   parsePort,
   toOptionString,
-} from './shared';
+} from "./shared.js";
 
 type GatewayRunOpts = {
   port?: unknown;

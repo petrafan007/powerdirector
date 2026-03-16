@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveAckReaction } from './identity';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveAckReaction } from "./identity.js";
 
 describe("resolveAckReaction", () => {
   it("prefers account-level overrides", () => {

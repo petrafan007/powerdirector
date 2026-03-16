@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Logger as TsLogger } from "tslog";
-import type { PowerDirectorConfig } from '../config/types';
-import { resolvePreferredPowerDirectorTmpDir } from '../infra/tmp-powerdirector-dir';
-import { readLoggingConfig } from './config';
-import type { ConsoleStyle } from './console';
-import { type LogLevel, levelToMinLevel, normalizeLogLevel } from './levels';
-import { loggingState } from './state';
+import type { PowerDirectorConfig } from "../config/types.js";
+import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir.js";
+import { readLoggingConfig } from "./config.js";
+import type { ConsoleStyle } from "./console.js";
+import { type LogLevel, levelToMinLevel, normalizeLogLevel } from "./levels.js";
+import { loggingState } from "./state.js";
 
 export const DEFAULT_LOG_DIR = resolvePreferredPowerDirectorTmpDir();
 export const DEFAULT_LOG_FILE = path.join(DEFAULT_LOG_DIR, "powerdirector.log"); // legacy single-file path

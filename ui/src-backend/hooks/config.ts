@@ -1,13 +1,13 @@
-import type { PowerDirectorConfig, HookConfig } from '../config/config';
+import type { PowerDirectorConfig, HookConfig } from "../config/config.js";
 import {
   evaluateRuntimeRequires,
   hasBinary,
   isConfigPathTruthyWithDefaults,
   resolveConfigPath,
   resolveRuntimePlatform,
-} from '../shared/config-eval';
-import { resolveHookKey } from './frontmatter';
-import type { HookEligibilityContext, HookEntry } from './types';
+} from "../shared/config-eval.js";
+import { resolveHookKey } from "./frontmatter.js";
+import type { HookEligibilityContext, HookEntry } from "./types.js";
 
 const DEFAULT_CONFIG_VALUES: Record<string, boolean> = {
   "browser.enabled": true,

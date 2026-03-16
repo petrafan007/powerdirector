@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 const DIAGNOSTICS_ENV = "POWERDIRECTOR_DIAGNOSTICS";
 

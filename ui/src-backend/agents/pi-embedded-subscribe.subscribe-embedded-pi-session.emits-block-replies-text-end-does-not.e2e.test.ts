@@ -4,7 +4,7 @@ import {
   createTextEndBlockReplyHarness,
   emitAssistantTextDelta,
   emitAssistantTextEnd,
-} from './pi-embedded-subscribe.e2e-harness';
+} from "./pi-embedded-subscribe.e2e-harness.js";
 
 describe("subscribeEmbeddedPiSession", () => {
   it("emits block replies on text_end and does not duplicate on message_end", () => {

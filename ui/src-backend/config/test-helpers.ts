@@ -1,4 +1,4 @@
-import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
+import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 
 export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   return withTempHomeBase(fn, { prefix: "powerdirector-config-" });

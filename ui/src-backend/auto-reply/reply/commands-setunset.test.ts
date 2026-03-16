@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { parseStandardSetUnsetSlashCommand } from './commands-setunset-standard';
+import { parseStandardSetUnsetSlashCommand } from "./commands-setunset-standard.js";
 import {
   parseSetUnsetCommand,
   parseSetUnsetCommandAction,
   parseSlashCommandWithSetUnset,
-} from './commands-setunset';
+} from "./commands-setunset.js";
 
 type ParsedSetUnsetAction =
   | { action: "set"; path: string; value: unknown }

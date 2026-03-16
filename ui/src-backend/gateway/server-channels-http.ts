@@ -1,11 +1,11 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { authorizeGatewayConnect, type ResolvedGatewayAuth } from './auth';
-import { getBearerToken } from './http-utils';
-import { sendGatewayAuthFailure } from './http-common';
-import { type ChannelManager } from './server-channels';
-import { listChannelPlugins } from '../channels/plugins/index';
-import { loadConfig } from '../config/config';
-import type { AuthRateLimiter } from './auth-rate-limit';
+import { authorizeGatewayConnect, type ResolvedGatewayAuth } from "./auth.js";
+import { getBearerToken } from "./http-utils.js";
+import { sendGatewayAuthFailure } from "./http-common.js";
+import { type ChannelManager } from "./server-channels.js";
+import { listChannelPlugins } from "../channels/plugins/index.js";
+import { loadConfig } from "../config/config.js";
+import type { AuthRateLimiter } from "./auth-rate-limit.js";
 
 function sendJson(res: ServerResponse, status: number, body: unknown) {
     res.statusCode = status;

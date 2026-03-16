@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   formatSandboxToolPolicyBlockedMessage,
   resolveSandboxConfigForAgent,
   resolveSandboxToolPolicyForAgent,
-} from './sandbox';
+} from "./sandbox.js";
 
 describe("sandbox explain helpers", () => {
   it("prefers agent overrides > global > defaults (sandbox tool policy)", () => {

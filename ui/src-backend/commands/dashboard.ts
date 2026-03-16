@@ -1,13 +1,13 @@
-import { readConfigFileSnapshot, resolveGatewayPort } from '../config/config';
-import { copyToClipboard } from '../infra/clipboard';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
+import { readConfigFileSnapshot, resolveGatewayPort } from "../config/config.js";
+import { copyToClipboard } from "../infra/clipboard.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { defaultRuntime } from "../runtime.js";
 import {
   detectBrowserOpenSupport,
   formatControlUiSshHint,
   openUrl,
   resolveControlUiLinks,
-} from './onboard-helpers';
+} from "./onboard-helpers.js";
 
 type DashboardOptions = {
   noOpen?: boolean;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveSlackThreadContext, resolveSlackThreadTargets } from './threading';
+import { resolveSlackThreadContext, resolveSlackThreadTargets } from "./threading.js";
 
 describe("resolveSlackThreadTargets", () => {
   it("threads replies when message is already threaded", () => {

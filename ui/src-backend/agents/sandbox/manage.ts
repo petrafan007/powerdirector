@@ -1,8 +1,8 @@
-import { stopBrowserBridgeServer } from '../../browser/bridge-server';
-import { loadConfig } from '../../config/config';
-import { BROWSER_BRIDGES } from './browser-bridges';
-import { resolveSandboxConfigForAgent } from './config';
-import { dockerContainerState, execDocker } from './docker';
+import { stopBrowserBridgeServer } from "../../browser/bridge-server.js";
+import { loadConfig } from "../../config/config.js";
+import { BROWSER_BRIDGES } from "./browser-bridges.js";
+import { resolveSandboxConfigForAgent } from "./config.js";
+import { dockerContainerState, execDocker } from "./docker.js";
 import {
   readBrowserRegistry,
   readRegistry,
@@ -10,8 +10,8 @@ import {
   removeRegistryEntry,
   type SandboxBrowserRegistryEntry,
   type SandboxRegistryEntry,
-} from './registry';
-import { resolveSandboxAgentId } from './shared';
+} from "./registry.js";
+import { resolveSandboxAgentId } from "./shared.js";
 
 export type SandboxContainerInfo = SandboxRegistryEntry & {
   running: boolean;

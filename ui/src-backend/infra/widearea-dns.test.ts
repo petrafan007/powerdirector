@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { renderWideAreaGatewayZoneText } from './widearea-dns';
+import { renderWideAreaGatewayZoneText } from "./widearea-dns.js";
 
 describe("wide-area DNS-SD zone rendering", () => {
   it("renders a zone with gateway PTR/SRV/TXT records", () => {

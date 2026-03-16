@@ -1,15 +1,15 @@
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { signalOutbound } from '../../channels/plugins/outbound/signal';
-import { telegramOutbound } from '../../channels/plugins/outbound/telegram';
-import { whatsappOutbound } from '../../channels/plugins/outbound/whatsapp';
-import type { PowerDirectorConfig } from '../../config/config';
-import { STATE_DIR } from '../../config/paths';
-import { setActivePluginRegistry } from '../../plugins/runtime';
-import { markdownToSignalTextChunks } from '../../signal/format';
-import { createOutboundTestPlugin, createTestRegistry } from '../../test-utils/channel-plugins';
-import { createIMessageTestPlugin } from '../../test-utils/imessage-test-plugin';
-import { createInternalHookEventPayload } from '../../test-utils/internal-hook-event-payload';
+import { signalOutbound } from "../../channels/plugins/outbound/signal.js";
+import { telegramOutbound } from "../../channels/plugins/outbound/telegram.js";
+import { whatsappOutbound } from "../../channels/plugins/outbound/whatsapp.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { STATE_DIR } from "../../config/paths.js";
+import { setActivePluginRegistry } from "../../plugins/runtime.js";
+import { markdownToSignalTextChunks } from "../../signal/format.js";
+import { createOutboundTestPlugin, createTestRegistry } from "../../test-utils/channel-plugins.js";
+import { createIMessageTestPlugin } from "../../test-utils/imessage-test-plugin.js";
+import { createInternalHookEventPayload } from "../../test-utils/internal-hook-event-payload.js";
 
 const mocks = vi.hoisted(() => ({
   appendAssistantMessageToSessionTranscript: vi.fn(async () => ({ ok: true, sessionFile: "x" })),
@@ -31,7 +31,7 @@ const queueMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../../config/sessions.js", async () => {
-  const actual = await vi.importActual<typeof import('../../config/sessions')>(
+  const actual = await vi.importActual<typeof import("../../config/sessions.js")>(
     "../../config/sessions.js",
   );
   return {
@@ -52,7 +52,7 @@ vi.mock("./delivery-queue.js", () => ({
   failDelivery: queueMocks.failDelivery,
 }));
 
-const { deliverOutboundPayloads, normalizeOutboundPayloads } = await import('./deliver');
+const { deliverOutboundPayloads, normalizeOutboundPayloads } = await import("./deliver.js");
 
 const telegramChunkConfig: PowerDirectorConfig = {
   channels: { telegram: { botToken: "tok-1", textChunkLimit: 2 } },

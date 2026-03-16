@@ -1,7 +1,7 @@
 import { Separator, TextDisplay, type TopLevelComponents } from "@buape/carbon";
-import type { ChannelId } from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { DiscordUiContainer } from '../../discord/ui';
+import type { ChannelId } from "../../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { DiscordUiContainer } from "../../discord/ui.js";
 
 export type CrossContextComponentsBuilder = (message: string) => TopLevelComponents[];
 

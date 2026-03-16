@@ -1,9 +1,9 @@
-import { applyMMRToHybridResults, type MMRConfig, DEFAULT_MMR_CONFIG } from './mmr';
+import { applyMMRToHybridResults, type MMRConfig, DEFAULT_MMR_CONFIG } from "./mmr.js";
 import {
   applyTemporalDecayToHybridResults,
   type TemporalDecayConfig,
   DEFAULT_TEMPORAL_DECAY_CONFIG,
-} from './temporal-decay';
+} from "./temporal-decay.js";
 
 export type HybridSource = string;
 

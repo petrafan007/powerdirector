@@ -1,7 +1,7 @@
-import { clearSessionAuthProfileOverride } from '../../agents/auth-profiles/session-override';
-import { lookupContextTokens } from '../../agents/context';
-import { DEFAULT_CONTEXT_TOKENS } from '../../agents/defaults';
-import { loadModelCatalog } from '../../agents/model-catalog';
+import { clearSessionAuthProfileOverride } from "../../agents/auth-profiles/session-override.js";
+import { lookupContextTokens } from "../../agents/context.js";
+import { DEFAULT_CONTEXT_TOKENS } from "../../agents/defaults.js";
+import { loadModelCatalog } from "../../agents/model-catalog.js";
 import {
   buildAllowedModelSet,
   type ModelAliasIndex,
@@ -9,12 +9,12 @@ import {
   normalizeProviderId,
   resolveModelRefFromString,
   resolveThinkingDefault,
-} from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import { type SessionEntry, updateSessionStore } from '../../config/sessions';
-import { applyModelOverrideToSessionEntry } from '../../sessions/model-overrides';
-import { resolveThreadParentSessionKey } from '../../sessions/session-key-utils';
-import type { ThinkLevel } from './directives';
+} from "../../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { type SessionEntry, updateSessionStore } from "../../config/sessions.js";
+import { applyModelOverrideToSessionEntry } from "../../sessions/model-overrides.js";
+import { resolveThreadParentSessionKey } from "../../sessions/session-key-utils.js";
+import type { ThinkLevel } from "./directives.js";
 
 export type ModelDirectiveSelection = {
   provider: string;
@@ -360,7 +360,7 @@ export async function createModelSelectionState(params: {
   }
 
   if (sessionEntry && sessionStore && sessionKey && sessionEntry.authProfileOverride) {
-    const { ensureAuthProfileStore } = await import('../../agents/auth-profiles');
+    const { ensureAuthProfileStore } = await import("../../agents/auth-profiles.js");
     const store = ensureAuthProfileStore(undefined, {
       allowKeychainPrompt: false,
     });

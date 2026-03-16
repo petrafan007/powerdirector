@@ -1,5 +1,5 @@
-import { diagnosticLogger as diag, logLaneDequeue, logLaneEnqueue } from '../logging/diagnostic';
-import { CommandLane } from './lanes';
+import { diagnosticLogger as diag, logLaneDequeue, logLaneEnqueue } from "../logging/diagnostic.js";
+import { CommandLane } from "./lanes.js";
 /**
  * Dedicated error type thrown when a queued command is rejected because
  * its lane was cleared.  Callers that fire-and-forget enqueued tasks can

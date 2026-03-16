@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { PowerDirectorConfig } from '../config/config';
-import type { PluginInstallRecord } from '../config/types.plugins';
-import { resolvePluginInstallDir } from './install';
-import { defaultSlotIdForKey } from './slots';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { PluginInstallRecord } from "../config/types.plugins.js";
+import { resolvePluginInstallDir } from "./install.js";
+import { defaultSlotIdForKey } from "./slots.js";
 
 export type UninstallActions = {
   entry: boolean;

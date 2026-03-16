@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createEditorSubmitHandler } from './tui';
+import { createEditorSubmitHandler } from "./tui.js";
 
 function createSubmitHarness() {
   const editor = {

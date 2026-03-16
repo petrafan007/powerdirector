@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from './types';
+import type { PowerDirectorConfig } from "./types.js";
 
 export const DEFAULT_AGENT_MAX_CONCURRENT = 4;
 export const DEFAULT_SUBAGENT_MAX_CONCURRENT = 8;

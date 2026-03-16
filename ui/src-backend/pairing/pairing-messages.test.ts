@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { captureEnv } from '../test-utils/env';
-import { buildPairingReply } from './pairing-messages';
+import { captureEnv } from "../test-utils/env.js";
+import { buildPairingReply } from "./pairing-messages.js";
 
 describe("buildPairingReply", () => {
   let envSnapshot: ReturnType<typeof captureEnv>;

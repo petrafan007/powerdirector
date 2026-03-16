@@ -1,15 +1,15 @@
 import type { Command } from "commander";
-import { defaultRuntime } from '../../runtime';
-import { shortenHomePath } from '../../utils';
+import { defaultRuntime } from "../../runtime.js";
+import { shortenHomePath } from "../../utils.js";
 import {
   parseScreenRecordPayload,
   screenRecordTempPath,
   writeScreenRecordToFile,
-} from '../nodes-screen';
-import { parseDurationMs } from '../parse-duration';
-import { runNodesCommand } from './cli-utils';
-import { buildNodeInvokeParams, callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
-import type { NodesRpcOpts } from './types';
+} from "../nodes-screen.js";
+import { parseDurationMs } from "../parse-duration.js";
+import { runNodesCommand } from "./cli-utils.js";
+import { buildNodeInvokeParams, callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc.js";
+import type { NodesRpcOpts } from "./types.js";
 
 export function registerNodesScreenCommands(nodes: Command) {
   const screen = nodes

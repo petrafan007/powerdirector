@@ -1,6 +1,6 @@
 import process from "node:process";
 import { describe, it, expect, vi, beforeAll, afterAll, beforeEach, afterEach } from "vitest";
-import { installUnhandledRejectionHandler } from './unhandled-rejections';
+import { installUnhandledRejectionHandler } from "./unhandled-rejections.js";
 
 describe("installUnhandledRejectionHandler - fatal detection", () => {
   let exitCalls: Array<string | number | null> = [];

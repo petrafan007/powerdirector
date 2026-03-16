@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeEnvVars } from './sanitize-env-vars';
+import { sanitizeEnvVars } from "./sanitize-env-vars.js";
 
 describe("sanitizeEnvVars", () => {
   it("keeps normal env vars and blocks obvious credentials", () => {

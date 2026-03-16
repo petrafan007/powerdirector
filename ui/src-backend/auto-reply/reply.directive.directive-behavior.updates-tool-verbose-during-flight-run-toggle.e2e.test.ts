@@ -1,6 +1,6 @@
 import "./reply.directive.directive-behavior.e2e-mocks.js";
 import { describe, expect, it, vi } from "vitest";
-import { loadSessionStore, resolveSessionKey, saveSessionStore } from '../config/sessions';
+import { loadSessionStore, resolveSessionKey, saveSessionStore } from "../config/sessions.js";
 import {
   installDirectiveBehaviorE2EHooks,
   makeEmbeddedTextResult,
@@ -10,8 +10,8 @@ import {
   runEmbeddedPiAgent,
   sessionStorePath,
   withTempHome,
-} from './reply.directive.directive-behavior.e2e-harness';
-import { getReplyFromConfig } from './reply';
+} from "./reply.directive.directive-behavior.e2e-harness.js";
+import { getReplyFromConfig } from "./reply.js";
 
 function makeRunConfig(home: string, storePath: string) {
   return makeWhatsAppDirectiveConfig(

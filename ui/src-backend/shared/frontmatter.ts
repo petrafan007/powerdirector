@@ -1,5 +1,5 @@
 import JSON5 from "json5";
-import { parseBooleanValue } from '../utils/boolean';
+import { parseBooleanValue } from "../utils/boolean.js";
 
 const POWERDIRECTOR_MANIFEST_KEY = "powerdirector";
 

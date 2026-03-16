@@ -1,9 +1,9 @@
-import { logDebug, logWarn } from '../logger';
-import { getLogger } from '../logging';
-import { ignoreCiaoCancellationRejection } from './bonjour-ciao';
-import { formatBonjourError } from './bonjour-errors';
-import { isTruthyEnvValue } from './env';
-import { registerUnhandledRejectionHandler } from './unhandled-rejections';
+import { logDebug, logWarn } from "../logger.js";
+import { getLogger } from "../logging.js";
+import { ignoreCiaoCancellationRejection } from "./bonjour-ciao.js";
+import { formatBonjourError } from "./bonjour-errors.js";
+import { isTruthyEnvValue } from "./env.js";
+import { registerUnhandledRejectionHandler } from "./unhandled-rejections.js";
 
 export type GatewayBonjourAdvertiser = {
   stop: () => Promise<void>;

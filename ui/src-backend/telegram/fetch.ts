@@ -1,8 +1,8 @@
 import * as net from "node:net";
-import type { TelegramNetworkConfig } from '../config/types.telegram';
-import { resolveFetch } from '../infra/fetch';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { resolveTelegramAutoSelectFamilyDecision } from './network-config';
+import type { TelegramNetworkConfig } from "../config/types.telegram.js";
+import { resolveFetch } from "../infra/fetch.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { resolveTelegramAutoSelectFamilyDecision } from "./network-config.js";
 
 let appliedAutoSelectFamily: boolean | null = null;
 const log = createSubsystemLogger("telegram/network");

@@ -1,16 +1,16 @@
 import { confirm, isCancel } from "@clack/prompts";
-import { readConfigFileSnapshot } from '../../config/config';
+import { readConfigFileSnapshot } from "../../config/config.js";
 import {
   formatUpdateChannelLabel,
   normalizeUpdateChannel,
   resolveEffectiveUpdateChannel,
-} from '../../infra/update-channels';
-import { checkUpdateStatus } from '../../infra/update-check';
-import { defaultRuntime } from '../../runtime';
-import { selectStyled } from '../../terminal/prompt-select-styled';
-import { stylePromptMessage } from '../../terminal/prompt-style';
-import { theme } from '../../terminal/theme';
-import { pathExists } from '../../utils';
+} from "../../infra/update-channels.js";
+import { checkUpdateStatus } from "../../infra/update-check.js";
+import { defaultRuntime } from "../../runtime.js";
+import { selectStyled } from "../../terminal/prompt-select-styled.js";
+import { stylePromptMessage } from "../../terminal/prompt-style.js";
+import { theme } from "../../terminal/theme.js";
+import { pathExists } from "../../utils.js";
 import {
   isEmptyDir,
   isGitCheckout,
@@ -18,8 +18,8 @@ import {
   resolveGitInstallDir,
   resolveUpdateRoot,
   type UpdateWizardOptions,
-} from './shared';
-import { updateCommand } from './update-command';
+} from "./shared.js";
+import { updateCommand } from "./update-command.js";
 
 export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promise<void> {
   if (!process.stdin.isTTY) {

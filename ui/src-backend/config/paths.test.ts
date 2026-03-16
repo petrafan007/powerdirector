@@ -9,7 +9,7 @@ import {
   resolveOAuthDir,
   resolveOAuthPath,
   resolveStateDir,
-} from './paths';
+} from "./paths.js";
 
 describe("oauth paths", () => {
   it("prefers POWERDIRECTOR_OAUTH_DIR over POWERDIRECTOR_STATE_DIR", () => {

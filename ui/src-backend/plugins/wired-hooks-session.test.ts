@@ -4,8 +4,8 @@
  * Tests the hook runner methods directly since session init is deeply integrated.
  */
 import { describe, expect, it, vi } from "vitest";
-import { createHookRunner } from './hooks';
-import { createMockPluginRegistry } from './hooks.test-helpers';
+import { createHookRunner } from "./hooks.js";
+import { createMockPluginRegistry } from "./hooks.test-helpers.js";
 
 describe("session hook runner methods", () => {
   it("runSessionStart invokes registered session_start hooks", async () => {

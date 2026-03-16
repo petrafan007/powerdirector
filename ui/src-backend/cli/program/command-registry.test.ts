@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { describe, expect, it, vi } from "vitest";
-import type { ProgramContext } from './context';
+import type { ProgramContext } from "./context.js";
 
 // Perf: `registerCoreCliByName(...)` dynamically imports registrar modules.
 // Mock the heavy registrars so this suite stays focused on command-registry wiring.
@@ -21,7 +21,7 @@ vi.mock("./register.maintenance.js", () => ({
 }));
 
 const { getCoreCliCommandNames, registerCoreCliByName, registerCoreCliCommands } =
-  await import('./command-registry');
+  await import("./command-registry.js");
 
 vi.mock("./register.status-health-sessions.js", () => ({
   registerStatusHealthSessionsCommands: (program: Command) => {

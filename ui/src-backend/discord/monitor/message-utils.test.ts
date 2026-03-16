@@ -22,7 +22,7 @@ const {
   resolveDiscordMessageChannelId,
   resolveDiscordMessageText,
   resolveForwardedMediaList,
-} = await import('./message-utils');
+} = await import("./message-utils.js");
 
 function asMessage(payload: Record<string, unknown>): Message {
   return payload as unknown as Message;

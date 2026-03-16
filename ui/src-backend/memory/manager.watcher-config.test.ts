@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { getMemorySearchManager, type MemoryIndexManager } from './index';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { getMemorySearchManager, type MemoryIndexManager } from "./index.js";
 
 const { watchMock } = vi.hoisted(() => ({
   watchMock: vi.fn(() => ({

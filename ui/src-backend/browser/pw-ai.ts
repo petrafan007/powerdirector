@@ -1,4 +1,4 @@
-import { markPwAiLoaded } from './pw-ai-state';
+import { markPwAiLoaded } from "./pw-ai-state.js";
 
 markPwAiLoaded();
 
@@ -14,7 +14,7 @@ export {
   listPagesViaPlaywright,
   refLocator,
   type WithSnapshotForAI,
-} from './pw-session';
+} from "./pw-session.js";
 
 export {
   armDialogViaPlaywright,
@@ -62,4 +62,4 @@ export {
   typeViaPlaywright,
   waitForDownloadViaPlaywright,
   waitForViaPlaywright,
-} from './pw-tools-core';
+} from "./pw-tools-core.js";

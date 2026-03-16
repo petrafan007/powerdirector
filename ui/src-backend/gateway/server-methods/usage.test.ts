@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../../config/config';
+import type { PowerDirectorConfig } from "../../config/config.js";
 
 vi.mock("../../infra/session-cost-usage.js", async () => {
-  const actual = await vi.importActual<typeof import('../../infra/session-cost-usage')>(
+  const actual = await vi.importActual<typeof import("../../infra/session-cost-usage.js")>(
     "../../infra/session-cost-usage.js",
   );
   return {
@@ -17,8 +17,8 @@ vi.mock("../../infra/session-cost-usage.js", async () => {
   };
 });
 
-import { loadCostUsageSummary } from '../../infra/session-cost-usage';
-import { __test } from './usage';
+import { loadCostUsageSummary } from "../../infra/session-cost-usage.js";
+import { __test } from "./usage.js";
 
 describe("gateway usage helpers", () => {
   beforeEach(() => {

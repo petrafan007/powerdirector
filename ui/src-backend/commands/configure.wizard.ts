@@ -1,23 +1,23 @@
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import { readConfigFileSnapshot, resolveGatewayPort, writeConfigFile } from '../config/config';
-import { logConfigUpdated } from '../config/logging';
-import { ensureControlUiAssetsBuilt } from '../infra/control-ui-assets';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { note } from '../terminal/note';
-import { resolveUserPath } from '../utils';
-import { createClackPrompter } from '../wizard/clack-prompter';
-import { WizardCancelledError } from '../wizard/prompts';
-import { removeChannelConfigWizard } from './configure.channels';
-import { maybeInstallDaemon } from './configure.daemon';
-import { promptAuthConfig } from './configure.gateway-auth';
-import { promptGatewayConfig } from './configure.gateway';
+import { formatCliCommand } from "../cli/command-format.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { readConfigFileSnapshot, resolveGatewayPort, writeConfigFile } from "../config/config.js";
+import { logConfigUpdated } from "../config/logging.js";
+import { ensureControlUiAssetsBuilt } from "../infra/control-ui-assets.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { defaultRuntime } from "../runtime.js";
+import { note } from "../terminal/note.js";
+import { resolveUserPath } from "../utils.js";
+import { createClackPrompter } from "../wizard/clack-prompter.js";
+import { WizardCancelledError } from "../wizard/prompts.js";
+import { removeChannelConfigWizard } from "./configure.channels.js";
+import { maybeInstallDaemon } from "./configure.daemon.js";
+import { promptAuthConfig } from "./configure.gateway-auth.js";
+import { promptGatewayConfig } from "./configure.gateway.js";
 import type {
   ChannelsWizardMode,
   ConfigureWizardParams,
   WizardSection,
-} from './configure.shared';
+} from "./configure.shared.js";
 import {
   CONFIGURE_SECTION_OPTIONS,
   confirm,
@@ -25,10 +25,10 @@ import {
   outro,
   select,
   text,
-} from './configure.shared';
-import { formatHealthCheckFailure } from './health-format';
-import { healthCommand } from './health';
-import { noteChannelStatus, setupChannels } from './onboard-channels';
+} from "./configure.shared.js";
+import { formatHealthCheckFailure } from "./health-format.js";
+import { healthCommand } from "./health.js";
+import { noteChannelStatus, setupChannels } from "./onboard-channels.js";
 import {
   applyWizardMetadata,
   DEFAULT_WORKSPACE,
@@ -39,9 +39,9 @@ import {
   resolveControlUiLinks,
   summarizeExistingConfig,
   waitForGatewayReachable,
-} from './onboard-helpers';
-import { promptRemoteGatewayConfig } from './onboard-remote';
-import { setupSkills } from './onboard-skills';
+} from "./onboard-helpers.js";
+import { promptRemoteGatewayConfig } from "./onboard-remote.js";
+import { setupSkills } from "./onboard-skills.js";
 
 type ConfigureSectionChoice = WizardSection | "__continue";
 

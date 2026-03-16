@@ -1,6 +1,6 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { DiscordActionConfig } from '../../config/config';
-import { readDiscordComponentSpec } from '../../discord/components';
+import type { DiscordActionConfig } from "../../config/config.js";
+import { readDiscordComponentSpec } from "../../discord/components.js";
 import {
   createThreadDiscord,
   deleteMessageDiscord,
@@ -22,18 +22,18 @@ import {
   sendStickerDiscord,
   sendVoiceMessageDiscord,
   unpinMessageDiscord,
-} from '../../discord/send';
-import type { DiscordSendComponents, DiscordSendEmbeds } from '../../discord/send.shared';
-import { resolveDiscordChannelId } from '../../discord/targets';
-import { withNormalizedTimestamp } from '../date-time';
-import { assertMediaNotDataUrl } from '../sandbox-paths';
+} from "../../discord/send.js";
+import type { DiscordSendComponents, DiscordSendEmbeds } from "../../discord/send.shared.js";
+import { resolveDiscordChannelId } from "../../discord/targets.js";
+import { withNormalizedTimestamp } from "../date-time.js";
+import { assertMediaNotDataUrl } from "../sandbox-paths.js";
 import {
   type ActionGate,
   jsonResult,
   readReactionParams,
   readStringArrayParam,
   readStringParam,
-} from './common';
+} from "./common.js";
 
 function parseDiscordMessageLink(link: string) {
   const normalized = link.trim();

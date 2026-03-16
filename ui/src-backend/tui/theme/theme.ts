@@ -6,8 +6,8 @@ import type {
 } from "@mariozechner/pi-tui";
 import chalk from "chalk";
 import { highlight, supportsLanguage } from "cli-highlight";
-import type { SearchableSelectListTheme } from '../components/searchable-select-list';
-import { createSyntaxTheme } from './syntax-theme';
+import type { SearchableSelectListTheme } from "../components/searchable-select-list.js";
+import { createSyntaxTheme } from "./syntax-theme.js";
 
 const palette = {
   text: "#E8E3D5",

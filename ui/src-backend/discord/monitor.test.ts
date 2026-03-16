@@ -16,8 +16,8 @@ import {
   resolveGroupDmAllow,
   sanitizeDiscordThreadName,
   shouldEmitDiscordReactionNotification,
-} from './monitor';
-import { DiscordMessageListener, DiscordReactionListener } from './monitor/listeners';
+} from "./monitor.js";
+import { DiscordMessageListener, DiscordReactionListener } from "./monitor/listeners.js";
 
 const fakeGuild = (id: string, name: string) => ({ id, name }) as Guild;
 
@@ -79,7 +79,7 @@ describe("DiscordMessageListener", () => {
     const listener = new DiscordMessageListener(handler);
 
     await listener.handle(
-      {} as unknown as import('./monitor/listeners').DiscordMessageEvent,
+      {} as unknown as import("./monitor/listeners.js").DiscordMessageEvent,
       {} as unknown as import("@buape/carbon").Client,
     );
 
@@ -97,14 +97,14 @@ describe("DiscordMessageListener", () => {
     const logger = {
       warn: vi.fn(),
       error: vi.fn(),
-    } as unknown as ReturnType<typeof import('../logging/subsystem').createSubsystemLogger>;
+    } as unknown as ReturnType<typeof import("../logging/subsystem.js").createSubsystemLogger>;
     const handler = vi.fn(async () => {
       throw new Error("boom");
     });
     const listener = new DiscordMessageListener(handler, logger);
 
     await listener.handle(
-      {} as unknown as import('./monitor/listeners').DiscordMessageEvent,
+      {} as unknown as import("./monitor/listeners.js").DiscordMessageEvent,
       {} as unknown as import("@buape/carbon").Client,
     );
     await Promise.resolve();
@@ -125,11 +125,11 @@ describe("DiscordMessageListener", () => {
       const logger = {
         warn: vi.fn(),
         error: vi.fn(),
-      } as unknown as ReturnType<typeof import('../logging/subsystem').createSubsystemLogger>;
+      } as unknown as ReturnType<typeof import("../logging/subsystem.js").createSubsystemLogger>;
       const listener = new DiscordMessageListener(handler, logger);
 
       await listener.handle(
-        {} as unknown as import('./monitor/listeners').DiscordMessageEvent,
+        {} as unknown as import("./monitor/listeners.js").DiscordMessageEvent,
         {} as unknown as import("@buape/carbon").Client,
       );
 
@@ -843,9 +843,9 @@ function makeReactionListenerParams(overrides?: {
   guildEntries?: Record<string, DiscordGuildEntryResolved>;
 }) {
   return {
-    cfg: {} as ReturnType<typeof import('../config/config').loadConfig>,
+    cfg: {} as ReturnType<typeof import("../config/config.js").loadConfig>,
     accountId: "acc-1",
-    runtime: {} as import('../runtime').RuntimeEnv,
+    runtime: {} as import("../runtime.js").RuntimeEnv,
     botUserId: overrides?.botUserId ?? "bot-1",
     guildEntries: overrides?.guildEntries,
     logger: {
@@ -853,7 +853,7 @@ function makeReactionListenerParams(overrides?: {
       warn: vi.fn(),
       error: vi.fn(),
       debug: vi.fn(),
-    } as unknown as ReturnType<typeof import('../logging/subsystem').createSubsystemLogger>,
+    } as unknown as ReturnType<typeof import("../logging/subsystem.js").createSubsystemLogger>,
   };
 }
 

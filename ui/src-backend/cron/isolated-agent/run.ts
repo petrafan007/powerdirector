@@ -4,14 +4,14 @@ import {
   resolveAgentModelFallbacksOverride,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from '../../agents/agent-scope';
-import { runCliAgent } from '../../agents/cli-runner';
-import { getCliSessionId, setCliSessionId } from '../../agents/cli-session';
-import { lookupContextTokens } from '../../agents/context';
-import { resolveCronStyleNow } from '../../agents/current-time';
-import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from '../../agents/defaults';
-import { loadModelCatalog } from '../../agents/model-catalog';
-import { runWithModelFallback } from '../../agents/model-fallback';
+} from "../../agents/agent-scope.js";
+import { runCliAgent } from "../../agents/cli-runner.js";
+import { getCliSessionId, setCliSessionId } from "../../agents/cli-session.js";
+import { lookupContextTokens } from "../../agents/context.js";
+import { resolveCronStyleNow } from "../../agents/current-time.js";
+import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../agents/defaults.js";
+import { loadModelCatalog } from "../../agents/model-catalog.js";
+import { runWithModelFallback } from "../../agents/model-fallback.js";
 import {
   getModelRefStatus,
   isCliProvider,
@@ -19,43 +19,43 @@ import {
   resolveConfiguredModelRef,
   resolveHooksGmailModel,
   resolveThinkingDefault,
-} from '../../agents/model-selection';
-import type { MessagingToolSend } from '../../agents/pi-embedded-messaging';
-import { runEmbeddedPiAgent } from '../../agents/pi-embedded';
-import { runSubagentAnnounceFlow } from '../../agents/subagent-announce';
-import { countActiveDescendantRuns } from '../../agents/subagent-registry';
-import { resolveAgentTimeoutMs } from '../../agents/timeout';
-import { deriveSessionTotalTokens, hasNonzeroUsage } from '../../agents/usage';
-import { ensureAgentWorkspace } from '../../agents/workspace';
+} from "../../agents/model-selection.js";
+import type { MessagingToolSend } from "../../agents/pi-embedded-messaging.js";
+import { runEmbeddedPiAgent } from "../../agents/pi-embedded.js";
+import { runSubagentAnnounceFlow } from "../../agents/subagent-announce.js";
+import { countActiveDescendantRuns } from "../../agents/subagent-registry.js";
+import { resolveAgentTimeoutMs } from "../../agents/timeout.js";
+import { deriveSessionTotalTokens, hasNonzeroUsage } from "../../agents/usage.js";
+import { ensureAgentWorkspace } from "../../agents/workspace.js";
 import {
   normalizeThinkLevel,
   normalizeVerboseLevel,
   supportsXHighThinking,
-} from '../../auto-reply/thinking';
-import { SILENT_REPLY_TOKEN } from '../../auto-reply/tokens';
-import { createOutboundSendDeps, type CliDeps } from '../../cli/outbound-send-deps';
-import type { PowerDirectorConfig } from '../../config/config';
+} from "../../auto-reply/thinking.js";
+import { SILENT_REPLY_TOKEN } from "../../auto-reply/tokens.js";
+import { createOutboundSendDeps, type CliDeps } from "../../cli/outbound-send-deps.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
 import {
   resolveAgentMainSessionKey,
   resolveSessionTranscriptPath,
   updateSessionStore,
-} from '../../config/sessions';
-import type { AgentDefaultsConfig } from '../../config/types';
-import { registerAgentRunContext } from '../../infra/agent-events';
-import { deliverOutboundPayloads } from '../../infra/outbound/deliver';
-import { resolveAgentOutboundIdentity } from '../../infra/outbound/identity';
-import { resolveOutboundSessionRoute } from '../../infra/outbound/outbound-session';
-import { logWarn } from '../../logger';
-import { buildAgentMainSessionKey, normalizeAgentId } from '../../routing/session-key';
+} from "../../config/sessions.js";
+import type { AgentDefaultsConfig } from "../../config/types.js";
+import { registerAgentRunContext } from "../../infra/agent-events.js";
+import { deliverOutboundPayloads } from "../../infra/outbound/deliver.js";
+import { resolveAgentOutboundIdentity } from "../../infra/outbound/identity.js";
+import { resolveOutboundSessionRoute } from "../../infra/outbound/outbound-session.js";
+import { logWarn } from "../../logger.js";
+import { buildAgentMainSessionKey, normalizeAgentId } from "../../routing/session-key.js";
 import {
   buildSafeExternalPrompt,
   detectSuspiciousPatterns,
   getHookType,
   isExternalHookSession,
-} from '../../security/external-content';
-import { resolveCronDeliveryPlan } from '../delivery';
-import type { CronJob, CronRunOutcome, CronRunTelemetry } from '../types';
-import { resolveDeliveryTarget } from './delivery-target';
+} from "../../security/external-content.js";
+import { resolveCronDeliveryPlan } from "../delivery.js";
+import type { CronJob, CronRunOutcome, CronRunTelemetry } from "../types.js";
+import { resolveDeliveryTarget } from "./delivery-target.js";
 import {
   isHeartbeatOnlyResponse,
   pickLastDeliverablePayload,
@@ -63,15 +63,15 @@ import {
   pickSummaryFromOutput,
   pickSummaryFromPayloads,
   resolveHeartbeatAckMaxChars,
-} from './helpers';
-import { resolveCronSession } from './session';
-import { resolveCronSkillsSnapshot } from './skills-snapshot';
+} from "./helpers.js";
+import { resolveCronSession } from "./session.js";
+import { resolveCronSkillsSnapshot } from "./skills-snapshot.js";
 import {
   expectsSubagentFollowup,
   isLikelyInterimCronMessage,
   readDescendantSubagentFallbackReply,
   waitForDescendantSubagentSummary,
-} from './subagent-followup';
+} from "./subagent-followup.js";
 
 function matchesMessagingToolDeliveryTarget(
   target: MessagingToolSend,

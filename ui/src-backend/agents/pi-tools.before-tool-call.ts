@@ -1,10 +1,10 @@
-import type { ToolLoopDetectionConfig } from '../config/types.tools';
-import type { SessionState } from '../logging/diagnostic-session-state';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { getGlobalHookRunner } from '../plugins/hook-runner-global';
-import { isPlainObject } from '../utils';
-import { normalizeToolName } from './tool-policy';
-import type { AnyAgentTool } from './tools/common';
+import type { ToolLoopDetectionConfig } from "../config/types.tools.js";
+import type { SessionState } from "../logging/diagnostic-session-state.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
+import { isPlainObject } from "../utils.js";
+import { normalizeToolName } from "./tool-policy.js";
+import type { AnyAgentTool } from "./tools/common.js";
 
 export type HookContext = {
   agentId?: string;
@@ -52,8 +52,8 @@ async function recordLoopOutcome(args: {
     return;
   }
   try {
-    const { getDiagnosticSessionState } = await import('../logging/diagnostic-session-state');
-    const { recordToolCallOutcome } = await import('./tool-loop-detection');
+    const { getDiagnosticSessionState } = await import("../logging/diagnostic-session-state.js");
+    const { recordToolCallOutcome } = await import("./tool-loop-detection.js");
     const sessionState = getDiagnosticSessionState({
       sessionKey: args.ctx.sessionKey,
       sessionId: args.ctx?.agentId,
@@ -81,9 +81,9 @@ export async function runBeforeToolCallHook(args: {
   const params = args.params;
 
   if (args.ctx?.sessionKey) {
-    const { getDiagnosticSessionState } = await import('../logging/diagnostic-session-state');
-    const { logToolLoopAction } = await import('../logging/diagnostic');
-    const { detectToolCallLoop, recordToolCall } = await import('./tool-loop-detection');
+    const { getDiagnosticSessionState } = await import("../logging/diagnostic-session-state.js");
+    const { logToolLoopAction } = await import("../logging/diagnostic.js");
+    const { detectToolCallLoop, recordToolCall } = await import("./tool-loop-detection.js");
 
     const sessionState = getDiagnosticSessionState({
       sessionKey: args.ctx.sessionKey,

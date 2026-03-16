@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isSlackStreamingEnabled, resolveSlackStreamingThreadHint } from './dispatch';
+import { isSlackStreamingEnabled, resolveSlackStreamingThreadHint } from "./dispatch.js";
 
 describe("slack native streaming defaults", () => {
   it("is enabled when config is undefined", () => {

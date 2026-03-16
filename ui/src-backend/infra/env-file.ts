@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { escapeRegExp, resolveConfigDir } from '../utils';
+import { escapeRegExp, resolveConfigDir } from "../utils.js";
 
 export function upsertSharedEnvVar(params: {
   key: string;

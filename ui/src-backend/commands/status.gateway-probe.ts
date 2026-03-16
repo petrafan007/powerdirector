@@ -1,5 +1,5 @@
-import type { loadConfig } from '../config/config';
-export { pickGatewaySelfPresence } from './gateway-presence';
+import type { loadConfig } from "../config/config.js";
+export { pickGatewaySelfPresence } from "./gateway-presence.js";
 
 export function resolveGatewayProbeAuth(cfg: ReturnType<typeof loadConfig>): {
   token?: string;

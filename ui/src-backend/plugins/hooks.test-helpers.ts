@@ -1,4 +1,4 @@
-import type { PluginRegistry } from './registry';
+import type { PluginRegistry } from "./registry.js";
 
 export function createMockPluginRegistry(
   hooks: Array<{ hookName: string; handler: (...args: unknown[]) => unknown }>,

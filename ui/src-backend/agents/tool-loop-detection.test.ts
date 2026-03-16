@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { ToolLoopDetectionConfig } from '../config/types.tools';
-import type { SessionState } from '../logging/diagnostic-session-state';
+import type { ToolLoopDetectionConfig } from "../config/types.tools.js";
+import type { SessionState } from "../logging/diagnostic-session-state.js";
 import {
   CRITICAL_THRESHOLD,
   GLOBAL_CIRCUIT_BREAKER_THRESHOLD,
@@ -11,7 +11,7 @@ import {
   hashToolCall,
   recordToolCall,
   recordToolCallOutcome,
-} from './tool-loop-detection';
+} from "./tool-loop-detection.js";
 
 function createState(): SessionState {
   return {

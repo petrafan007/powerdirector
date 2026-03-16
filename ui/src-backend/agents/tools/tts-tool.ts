@@ -1,11 +1,11 @@
 import { Type } from "@sinclair/typebox";
-import { SILENT_REPLY_TOKEN } from '../../auto-reply/tokens';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadConfig } from '../../config/config';
-import { textToSpeech } from '../../tts/tts';
-import type { GatewayMessageChannel } from '../../utils/message-channel';
-import type { AnyAgentTool } from './common';
-import { readStringParam } from './common';
+import { SILENT_REPLY_TOKEN } from "../../auto-reply/tokens.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { loadConfig } from "../../config/config.js";
+import { textToSpeech } from "../../tts/tts.js";
+import type { GatewayMessageChannel } from "../../utils/message-channel.js";
+import type { AnyAgentTool } from "./common.js";
+import { readStringParam } from "./common.js";
 
 const TtsToolSchema = Type.Object({
   text: Type.String({ description: "Text to convert to speech." }),

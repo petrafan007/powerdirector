@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { getEmbedBatchMock, resetEmbeddingMocks } from './embedding.test-mocks';
-import type { MemoryIndexManager } from './index';
-import { getRequiredMemoryIndexManager } from './test-manager-helpers';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { getEmbedBatchMock, resetEmbeddingMocks } from "./embedding.test-mocks.js";
+import type { MemoryIndexManager } from "./index.js";
+import { getRequiredMemoryIndexManager } from "./test-manager-helpers.js";
 
 describe("memory manager sync failures", () => {
   let workspaceDir: string;

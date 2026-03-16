@@ -2,25 +2,25 @@ import {
   resolveAgentDir,
   resolveDefaultAgentId,
   resolveSessionAgentId,
-} from '../../agents/agent-scope';
-import { lookupContextTokens } from '../../agents/context';
-import { DEFAULT_CONTEXT_TOKENS } from '../../agents/defaults';
+} from "../../agents/agent-scope.js";
+import { lookupContextTokens } from "../../agents/context.js";
+import { DEFAULT_CONTEXT_TOKENS } from "../../agents/defaults.js";
 import {
   buildModelAliasIndex,
   type ModelAliasIndex,
   modelKey,
   resolveDefaultModelForAgent,
   resolveModelRefFromString,
-} from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import { type SessionEntry, updateSessionStore } from '../../config/sessions';
-import { enqueueSystemEvent } from '../../infra/system-events';
-import { applyVerboseOverride } from '../../sessions/level-overrides';
-import { applyModelOverrideToSessionEntry } from '../../sessions/model-overrides';
-import { resolveProfileOverride } from './directive-handling.auth';
-import type { InlineDirectives } from './directive-handling.parse';
-import { enqueueModeSwitchEvents } from './directive-handling.shared';
-import type { ElevatedLevel, ReasoningLevel } from './directives';
+} from "../../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { type SessionEntry, updateSessionStore } from "../../config/sessions.js";
+import { enqueueSystemEvent } from "../../infra/system-events.js";
+import { applyVerboseOverride } from "../../sessions/level-overrides.js";
+import { applyModelOverrideToSessionEntry } from "../../sessions/model-overrides.js";
+import { resolveProfileOverride } from "./directive-handling.auth.js";
+import type { InlineDirectives } from "./directive-handling.parse.js";
+import { enqueueModeSwitchEvents } from "./directive-handling.shared.js";
+import type { ElevatedLevel, ReasoningLevel } from "./directives.js";
 
 export async function persistInlineDirectives(params: {
   directives: InlineDirectives;

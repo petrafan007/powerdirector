@@ -6,27 +6,27 @@ import {
   loadSkillsFromDir,
   type Skill,
 } from "@mariozechner/pi-coding-agent";
-import type { PowerDirectorConfig } from '../../config/config';
-import { createSubsystemLogger } from '../../logging/subsystem';
-import { CONFIG_DIR, resolveUserPath } from '../../utils';
-import { resolveSandboxPath } from '../sandbox-paths';
-import { resolveBundledSkillsDir } from './bundled-dir';
-import { shouldIncludeSkill } from './config';
-import { normalizeSkillFilter } from './filter';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { createSubsystemLogger } from "../../logging/subsystem.js";
+import { CONFIG_DIR, resolveUserPath } from "../../utils.js";
+import { resolveSandboxPath } from "../sandbox-paths.js";
+import { resolveBundledSkillsDir } from "./bundled-dir.js";
+import { shouldIncludeSkill } from "./config.js";
+import { normalizeSkillFilter } from "./filter.js";
 import {
   parseFrontmatter,
   resolvePowerDirectorMetadata,
   resolveSkillInvocationPolicy,
-} from './frontmatter';
-import { resolvePluginSkillDirs } from './plugin-skills';
-import { serializeByKey } from './serialize';
+} from "./frontmatter.js";
+import { resolvePluginSkillDirs } from "./plugin-skills.js";
+import { serializeByKey } from "./serialize.js";
 import type {
   ParsedSkillFrontmatter,
   SkillEligibilityContext,
   SkillCommandSpec,
   SkillEntry,
   SkillSnapshot,
-} from './types';
+} from "./types.js";
 
 const fsp = fs.promises;
 const skillsLogger = createSubsystemLogger("skills");

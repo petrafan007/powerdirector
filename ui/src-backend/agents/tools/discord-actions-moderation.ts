@@ -1,17 +1,17 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { DiscordActionConfig } from '../../config/config';
+import type { DiscordActionConfig } from "../../config/config.js";
 import {
   banMemberDiscord,
   hasAnyGuildPermissionDiscord,
   kickMemberDiscord,
   timeoutMemberDiscord,
-} from '../../discord/send';
-import { type ActionGate, jsonResult, readStringParam } from './common';
+} from "../../discord/send.js";
+import { type ActionGate, jsonResult, readStringParam } from "./common.js";
 import {
   isDiscordModerationAction,
   readDiscordModerationCommand,
   requiredGuildPermissionForModerationAction,
-} from './discord-actions-moderation-shared';
+} from "./discord-actions-moderation-shared.js";
 
 async function verifySenderModerationPermission(params: {
   guildId: string;

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 let mockCfg: unknown = {};
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: vi.fn().mockImplementation(() => mockCfg),
@@ -25,7 +25,7 @@ describe("sandbox explain command", () => {
       session: { store: "/tmp/powerdirector-test-sessions-{agentId}.json" },
     };
 
-    const { sandboxExplainCommand } = await import('./sandbox-explain');
+    const { sandboxExplainCommand } = await import("./sandbox-explain.js");
 
     const logs: string[] = [];
     await sandboxExplainCommand({ json: true, session: "agent:main:main" }, {

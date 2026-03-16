@@ -8,7 +8,7 @@ vi.mock("./gmail-watcher.js", () => ({
   startGmailWatcher: startGmailWatcherMock,
 }));
 
-import { startGmailWatcherWithLogs } from './gmail-watcher-lifecycle';
+import { startGmailWatcherWithLogs } from "./gmail-watcher-lifecycle.js";
 
 describe("startGmailWatcherWithLogs", () => {
   const log = {

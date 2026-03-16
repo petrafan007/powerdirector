@@ -10,7 +10,7 @@ vi.mock("../daemon/runtime-paths.js", () => ({
   renderSystemNodeWarning: mocks.renderSystemNodeWarning,
 }));
 
-import { emitNodeRuntimeWarning } from './daemon-install-runtime-warning';
+import { emitNodeRuntimeWarning } from "./daemon-install-runtime-warning.js";
 
 afterEach(() => {
   vi.resetAllMocks();

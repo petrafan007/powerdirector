@@ -1,6 +1,6 @@
-import { DEFAULT_PROVIDER } from '../agents/defaults';
-import { resolveAllowlistModelKey } from '../agents/model-selection';
-import type { PowerDirectorConfig } from '../config/config';
+import { DEFAULT_PROVIDER } from "../agents/defaults.js";
+import { resolveAllowlistModelKey } from "../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 
 export function ensureModelAllowlistEntry(params: {
   cfg: PowerDirectorConfig;

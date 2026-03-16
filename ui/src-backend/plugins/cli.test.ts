@@ -25,7 +25,7 @@ vi.mock("./loader.js", () => ({
   }),
 }));
 
-import { registerPluginCliCommands } from './cli';
+import { registerPluginCliCommands } from "./cli.js";
 
 describe("registerPluginCliCommands", () => {
   beforeEach(() => {

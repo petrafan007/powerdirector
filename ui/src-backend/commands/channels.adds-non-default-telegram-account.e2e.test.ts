@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { setDefaultChannelPluginRegistryForTests } from './channel-test-helpers';
-import { configMocks, offsetMocks } from './channels.mock-harness';
-import { baseConfigSnapshot, createTestRuntime } from './test-runtime-config-helpers';
+import { setDefaultChannelPluginRegistryForTests } from "./channel-test-helpers.js";
+import { configMocks, offsetMocks } from "./channels.mock-harness.js";
+import { baseConfigSnapshot, createTestRuntime } from "./test-runtime-config-helpers.js";
 
 const authMocks = vi.hoisted(() => ({
   loadAuthProfileStore: vi.fn(),
 }));
 
 vi.mock("../agents/auth-profiles.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../agents/auth-profiles')>();
+  const actual = await importOriginal<typeof import("../agents/auth-profiles.js")>();
   return {
     ...actual,
     loadAuthProfileStore: authMocks.loadAuthProfileStore,
@@ -20,7 +20,7 @@ import {
   channelsListCommand,
   channelsRemoveCommand,
   formatGatewayChannelsStatusLines,
-} from './channels';
+} from "./channels.js";
 
 const runtime = createTestRuntime();
 
@@ -176,7 +176,7 @@ describe("channels command", () => {
     });
 
     const prompt = { confirm: vi.fn().mockResolvedValue(true) };
-    const prompterModule = await import('../wizard/clack-prompter');
+    const prompterModule = await import("../wizard/clack-prompter.js");
     const promptSpy = vi
       .spyOn(prompterModule, "createClackPrompter")
       .mockReturnValue(prompt as never);
@@ -498,7 +498,7 @@ describe("channels command", () => {
     });
 
     const prompt = { confirm: vi.fn().mockResolvedValue(true) };
-    const prompterModule = await import('../wizard/clack-prompter');
+    const prompterModule = await import("../wizard/clack-prompter.js");
     const promptSpy = vi
       .spyOn(prompterModule, "createClackPrompter")
       .mockReturnValue(prompt as never);

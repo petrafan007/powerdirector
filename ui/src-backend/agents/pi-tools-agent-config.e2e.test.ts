@@ -3,10 +3,10 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import type { PowerDirectorConfig } from '../config/config';
-import { createPowerDirectorCodingTools } from './pi-tools';
-import type { SandboxDockerConfig } from './sandbox';
-import type { SandboxFsBridge } from './sandbox/fs-bridge';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { createPowerDirectorCodingTools } from "./pi-tools.js";
+import type { SandboxDockerConfig } from "./sandbox.js";
+import type { SandboxFsBridge } from "./sandbox/fs-bridge.js";
 
 type ToolWithExecute = {
   execute: (toolCallId: string, args: unknown, signal?: AbortSignal) => Promise<unknown>;

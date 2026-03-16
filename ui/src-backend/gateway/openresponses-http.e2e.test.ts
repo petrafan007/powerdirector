@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { HISTORY_CONTEXT_MARKER } from '../auto-reply/reply/history';
-import { CURRENT_MESSAGE_MARKER } from '../auto-reply/reply/mentions';
-import { emitAgentEvent } from '../infra/agent-events';
-import { buildAssistantDeltaResult } from './test-helpers.agent-results';
-import { agentCommand, getFreePort, installGatewayTestHooks } from './test-helpers';
+import { HISTORY_CONTEXT_MARKER } from "../auto-reply/reply/history.js";
+import { CURRENT_MESSAGE_MARKER } from "../auto-reply/reply/mentions.js";
+import { emitAgentEvent } from "../infra/agent-events.js";
+import { buildAssistantDeltaResult } from "./test-helpers.agent-results.js";
+import { agentCommand, getFreePort, installGatewayTestHooks } from "./test-helpers.js";
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -22,7 +22,7 @@ afterAll(async () => {
 });
 
 async function startServer(port: number, opts?: { openResponsesEnabled?: boolean }) {
-  const { startGatewayServer } = await import('./server');
+  const { startGatewayServer } = await import("./server.js");
   const serverOpts = {
     host: "127.0.0.1",
     auth: { mode: "token", token: "secret" },

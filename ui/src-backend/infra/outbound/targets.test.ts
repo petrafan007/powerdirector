@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveSessionDeliveryTarget } from './targets';
+import { resolveSessionDeliveryTarget } from "./targets.js";
 
 describe("resolveSessionDeliveryTarget", () => {
   it("derives implicit delivery from the last route", () => {

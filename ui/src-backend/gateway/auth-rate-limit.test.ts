@@ -4,7 +4,7 @@ import {
   AUTH_RATE_LIMIT_SCOPE_SHARED_SECRET,
   createAuthRateLimiter,
   type AuthRateLimiter,
-} from './auth-rate-limit';
+} from "./auth-rate-limit.js";
 
 describe("auth rate limiter", () => {
   let limiter: AuthRateLimiter;

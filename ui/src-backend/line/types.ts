@@ -7,7 +7,7 @@ import type {
   StickerMessage,
   LocationMessage,
 } from "@line/bot-sdk";
-import type { BaseProbeResult } from '../channels/plugins/types';
+import type { BaseProbeResult } from "../channels/plugins/types.js";
 
 export type LineTokenSource = "config" | "env" | "file" | "none";
 

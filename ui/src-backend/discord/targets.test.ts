@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { normalizeDiscordMessagingTarget } from '../channels/plugins/normalize/discord';
-import type { PowerDirectorConfig } from '../config/config';
-import { listDiscordDirectoryPeersLive } from './directory-live';
-import { parseDiscordTarget, resolveDiscordChannelId, resolveDiscordTarget } from './targets';
+import { normalizeDiscordMessagingTarget } from "../channels/plugins/normalize/discord.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { listDiscordDirectoryPeersLive } from "./directory-live.js";
+import { parseDiscordTarget, resolveDiscordChannelId, resolveDiscordTarget } from "./targets.js";
 
 vi.mock("./directory-live.js", () => ({
   listDiscordDirectoryPeersLive: vi.fn(),

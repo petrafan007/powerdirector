@@ -1,35 +1,35 @@
-import { hasControlCommand } from '../../auto-reply/command-detection';
-import { resolveInboundDebounceMs } from '../../auto-reply/inbound-debounce';
-import { getReplyFromConfig } from '../../auto-reply/reply';
-import { DEFAULT_GROUP_HISTORY_LIMIT } from '../../auto-reply/reply/history';
-import { formatCliCommand } from '../../cli/command-format';
-import { waitForever } from '../../cli/wait';
-import { loadConfig } from '../../config/config';
-import { logVerbose } from '../../globals';
+import { hasControlCommand } from "../../auto-reply/command-detection.js";
+import { resolveInboundDebounceMs } from "../../auto-reply/inbound-debounce.js";
+import { getReplyFromConfig } from "../../auto-reply/reply.js";
+import { DEFAULT_GROUP_HISTORY_LIMIT } from "../../auto-reply/reply/history.js";
+import { formatCliCommand } from "../../cli/command-format.js";
+import { waitForever } from "../../cli/wait.js";
+import { loadConfig } from "../../config/config.js";
+import { logVerbose } from "../../globals.js";
 import { formatDurationPrecise } from "../../infra/format-time/format-duration.ts";
-import { enqueueSystemEvent } from '../../infra/system-events';
-import { registerUnhandledRejectionHandler } from '../../infra/unhandled-rejections';
-import { getChildLogger } from '../../logging';
-import { resolveAgentRoute } from '../../routing/resolve-route';
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { resolveWhatsAppAccount } from '../accounts';
-import { setActiveWebListener } from '../active-listener';
-import { monitorWebInbox } from '../inbound';
+import { enqueueSystemEvent } from "../../infra/system-events.js";
+import { registerUnhandledRejectionHandler } from "../../infra/unhandled-rejections.js";
+import { getChildLogger } from "../../logging.js";
+import { resolveAgentRoute } from "../../routing/resolve-route.js";
+import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
+import { resolveWhatsAppAccount } from "../accounts.js";
+import { setActiveWebListener } from "../active-listener.js";
+import { monitorWebInbox } from "../inbound.js";
 import {
   computeBackoff,
   newConnectionId,
   resolveHeartbeatSeconds,
   resolveReconnectPolicy,
   sleepWithAbort,
-} from '../reconnect';
-import { formatError, getWebAuthAgeMs, readWebSelfId } from '../session';
-import { DEFAULT_WEB_MEDIA_BYTES } from './constants';
-import { whatsappHeartbeatLog, whatsappLog } from './loggers';
-import { buildMentionConfig } from './mentions';
-import { createEchoTracker } from './monitor/echo';
-import { createWebOnMessageHandler } from './monitor/on-message';
-import type { WebChannelStatus, WebInboundMsg, WebMonitorTuning } from './types';
-import { isLikelyWhatsAppCryptoError } from './util';
+} from "../reconnect.js";
+import { formatError, getWebAuthAgeMs, readWebSelfId } from "../session.js";
+import { DEFAULT_WEB_MEDIA_BYTES } from "./constants.js";
+import { whatsappHeartbeatLog, whatsappLog } from "./loggers.js";
+import { buildMentionConfig } from "./mentions.js";
+import { createEchoTracker } from "./monitor/echo.js";
+import { createWebOnMessageHandler } from "./monitor/on-message.js";
+import type { WebChannelStatus, WebInboundMsg, WebMonitorTuning } from "./types.js";
+import { isLikelyWhatsAppCryptoError } from "./util.js";
 
 export async function monitorWebChannel(
   verbose: boolean,

@@ -1,10 +1,10 @@
 import type { Command } from "commander";
-import { danger } from '../globals';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import type { GatewayRpcOpts } from './gateway-rpc';
-import { addGatewayClientOptions, callGatewayFromCli } from './gateway-rpc';
+import { danger } from "../globals.js";
+import { defaultRuntime } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { theme } from "../terminal/theme.js";
+import type { GatewayRpcOpts } from "./gateway-rpc.js";
+import { addGatewayClientOptions, callGatewayFromCli } from "./gateway-rpc.js";
 
 type SystemEventOpts = GatewayRpcOpts & { text?: string; mode?: string; json?: boolean };
 

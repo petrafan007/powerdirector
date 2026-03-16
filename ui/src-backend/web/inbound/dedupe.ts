@@ -1,4 +1,4 @@
-import { createDedupeCache } from '../../infra/dedupe';
+import { createDedupeCache } from "../../infra/dedupe.js";
 
 const RECENT_WEB_MESSAGE_TTL_MS = 20 * 60_000;
 const RECENT_WEB_MESSAGE_MAX = 5000;

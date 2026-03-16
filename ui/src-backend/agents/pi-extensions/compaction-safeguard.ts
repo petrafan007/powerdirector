@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { ExtensionAPI, FileOperations } from "@mariozechner/pi-coding-agent";
-import { extractSections } from '../../auto-reply/reply/post-compaction-context';
+import { extractSections } from "../../auto-reply/reply/post-compaction-context.js";
 import {
   BASE_CHUNK_RATIO,
   MIN_CHUNK_RATIO,
@@ -13,9 +13,9 @@ import {
   pruneHistoryForContextShare,
   resolveContextWindowTokens,
   summarizeInStages,
-} from '../compaction';
-import { collectTextContentBlocks } from '../content-blocks';
-import { getCompactionSafeguardRuntime } from './compaction-safeguard-runtime';
+} from "../compaction.js";
+import { collectTextContentBlocks } from "../content-blocks.js";
+import { getCompactionSafeguardRuntime } from "./compaction-safeguard-runtime.js";
 const FALLBACK_SUMMARY =
   "Summary unavailable due to context limits. Older messages were truncated.";
 const TURN_PREFIX_INSTRUCTIONS =

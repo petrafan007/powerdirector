@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   autoMigrateLegacyStateDir,
   resetAutoMigrateLegacyStateDirForTest,
-} from './state-migrations';
+} from "./state-migrations.js";
 
 let tempRoot: string | null = null;
 

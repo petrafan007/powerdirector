@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import type { ChatType } from '../channels/chat-type';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveAgentRoute } from './resolve-route';
+import type { ChatType } from "../channels/chat-type.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveAgentRoute } from "./resolve-route.js";
 
 describe("resolveAgentRoute", () => {
   test("defaults to main/default when no bindings exist", () => {

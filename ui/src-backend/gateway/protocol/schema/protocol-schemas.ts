@@ -8,7 +8,7 @@ import {
   PollParamsSchema,
   SendParamsSchema,
   WakeParamsSchema,
-} from './agent';
+} from "./agent.js";
 import {
   AgentSummarySchema,
   AgentsCreateParamsSchema,
@@ -34,7 +34,7 @@ import {
   SkillsInstallParamsSchema,
   SkillsStatusParamsSchema,
   SkillsUpdateParamsSchema,
-} from './agents-models-skills';
+} from "./agents-models-skills.js";
 import {
   ChannelsLogoutParamsSchema,
   TalkConfigParamsSchema,
@@ -44,7 +44,7 @@ import {
   TalkModeParamsSchema,
   WebLoginStartParamsSchema,
   WebLoginWaitParamsSchema,
-} from './channels';
+} from "./channels.js";
 import {
   ConfigApplyParamsSchema,
   ConfigGetParamsSchema,
@@ -53,7 +53,7 @@ import {
   ConfigSchemaResponseSchema,
   ConfigSetParamsSchema,
   UpdateRunParamsSchema,
-} from './config';
+} from "./config.js";
 import {
   CronAddParamsSchema,
   CronJobSchema,
@@ -64,7 +64,7 @@ import {
   CronRunsParamsSchema,
   CronStatusParamsSchema,
   CronUpdateParamsSchema,
-} from './cron';
+} from "./cron.js";
 import {
   DevicePairApproveParamsSchema,
   DevicePairListParamsSchema,
@@ -74,7 +74,7 @@ import {
   DevicePairResolvedEventSchema,
   DeviceTokenRevokeParamsSchema,
   DeviceTokenRotateParamsSchema,
-} from './devices';
+} from "./devices.js";
 import {
   ExecApprovalsGetParamsSchema,
   ExecApprovalsNodeGetParamsSchema,
@@ -83,7 +83,7 @@ import {
   ExecApprovalsSnapshotSchema,
   ExecApprovalRequestParamsSchema,
   ExecApprovalResolveParamsSchema,
-} from './exec-approvals';
+} from "./exec-approvals.js";
 import {
   ConnectParamsSchema,
   ErrorShapeSchema,
@@ -94,7 +94,7 @@ import {
   ResponseFrameSchema,
   ShutdownEventSchema,
   TickEventSchema,
-} from './frames';
+} from "./frames.js";
 import {
   ChatAbortParamsSchema,
   ChatEventSchema,
@@ -103,7 +103,7 @@ import {
   ChatSendParamsSchema,
   LogsTailParamsSchema,
   LogsTailResultSchema,
-} from './logs-chat';
+} from "./logs-chat.js";
 import {
   NodeDescribeParamsSchema,
   NodeEventParamsSchema,
@@ -117,8 +117,8 @@ import {
   NodePairRequestParamsSchema,
   NodePairVerifyParamsSchema,
   NodeRenameParamsSchema,
-} from './nodes';
-import { PushTestParamsSchema, PushTestResultSchema } from './push';
+} from "./nodes.js";
+import { PushTestParamsSchema, PushTestResultSchema } from "./push.js";
 import {
   SessionsCompactParamsSchema,
   SessionsDeleteParamsSchema,
@@ -128,8 +128,8 @@ import {
   SessionsResetParamsSchema,
   SessionsResolveParamsSchema,
   SessionsUsageParamsSchema,
-} from './sessions';
-import { PresenceEntrySchema, SnapshotSchema, StateVersionSchema } from './snapshot';
+} from "./sessions.js";
+import { PresenceEntrySchema, SnapshotSchema, StateVersionSchema } from "./snapshot.js";
 import {
   WizardCancelParamsSchema,
   WizardNextParamsSchema,
@@ -139,7 +139,7 @@ import {
   WizardStatusParamsSchema,
   WizardStatusResultSchema,
   WizardStepSchema,
-} from './wizard';
+} from "./wizard.js";
 
 export const ProtocolSchemas: Record<string, TSchema> = {
   ConnectParams: ConnectParamsSchema,

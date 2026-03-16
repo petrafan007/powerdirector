@@ -6,7 +6,7 @@ export {
   resolveBootstrapMaxChars,
   resolveBootstrapTotalMaxChars,
   stripThoughtSignatures,
-} from './pi-embedded-helpers/bootstrap';
+} from "./pi-embedded-helpers/bootstrap.js";
 export {
   BILLING_ERROR_USER_MESSAGE,
   formatBillingErrorMessage,
@@ -37,28 +37,28 @@ export {
   isTimeoutErrorMessage,
   parseImageDimensionError,
   parseImageSizeError,
-} from './pi-embedded-helpers/errors';
-export { isGoogleModelApi, sanitizeGoogleTurnOrdering } from './pi-embedded-helpers/google';
+} from "./pi-embedded-helpers/errors.js";
+export { isGoogleModelApi, sanitizeGoogleTurnOrdering } from "./pi-embedded-helpers/google.js";
 
-export { downgradeOpenAIReasoningBlocks } from './pi-embedded-helpers/openai';
+export { downgradeOpenAIReasoningBlocks } from "./pi-embedded-helpers/openai.js";
 export {
   isEmptyAssistantMessageContent,
   sanitizeSessionMessagesImages,
-} from './pi-embedded-helpers/images';
+} from "./pi-embedded-helpers/images.js";
 export {
   isMessagingToolDuplicate,
   isMessagingToolDuplicateNormalized,
   normalizeTextForComparison,
-} from './pi-embedded-helpers/messaging-dedupe';
+} from "./pi-embedded-helpers/messaging-dedupe.js";
 
-export { pickFallbackThinkingLevel } from './pi-embedded-helpers/thinking';
+export { pickFallbackThinkingLevel } from "./pi-embedded-helpers/thinking.js";
 
 export {
   mergeConsecutiveUserTurns,
   validateAnthropicTurns,
   validateGeminiTurns,
-} from './pi-embedded-helpers/turns';
-export type { EmbeddedContextFile, FailoverReason } from './pi-embedded-helpers/types';
+} from "./pi-embedded-helpers/turns.js";
+export type { EmbeddedContextFile, FailoverReason } from "./pi-embedded-helpers/types.js";
 
-export type { ToolCallIdMode } from './tool-call-id';
-export { isValidCloudCodeAssistToolId, sanitizeToolCallId } from './tool-call-id';
+export type { ToolCallIdMode } from "./tool-call-id.js";
+export { isValidCloudCodeAssistToolId, sanitizeToolCallId } from "./tool-call-id.js";

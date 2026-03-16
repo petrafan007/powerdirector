@@ -1,26 +1,26 @@
-import { chunkTextWithMode, resolveChunkMode, resolveTextChunkLimit } from '../auto-reply/chunk';
-import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from '../auto-reply/reply/history';
-import type { ReplyPayload } from '../auto-reply/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
-import type { SignalReactionNotificationMode } from '../config/types';
-import { waitForTransportReady } from '../infra/transport-ready';
-import { saveMediaBuffer } from '../media/store';
-import { createNonExitingRuntime, type RuntimeEnv } from '../runtime';
-import { normalizeStringEntries } from '../shared/string-normalization';
-import { normalizeE164 } from '../utils';
-import { resolveSignalAccount } from './accounts';
-import { signalCheck, signalRpcRequest } from './client';
-import { spawnSignalDaemon } from './daemon';
-import { isSignalSenderAllowed, type resolveSignalSender } from './identity';
-import { createSignalEventHandler } from './monitor/event-handler';
+import { chunkTextWithMode, resolveChunkMode, resolveTextChunkLimit } from "../auto-reply/chunk.js";
+import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "../auto-reply/reply/history.js";
+import type { ReplyPayload } from "../auto-reply/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadConfig } from "../config/config.js";
+import type { SignalReactionNotificationMode } from "../config/types.js";
+import { waitForTransportReady } from "../infra/transport-ready.js";
+import { saveMediaBuffer } from "../media/store.js";
+import { createNonExitingRuntime, type RuntimeEnv } from "../runtime.js";
+import { normalizeStringEntries } from "../shared/string-normalization.js";
+import { normalizeE164 } from "../utils.js";
+import { resolveSignalAccount } from "./accounts.js";
+import { signalCheck, signalRpcRequest } from "./client.js";
+import { spawnSignalDaemon } from "./daemon.js";
+import { isSignalSenderAllowed, type resolveSignalSender } from "./identity.js";
+import { createSignalEventHandler } from "./monitor/event-handler.js";
 import type {
   SignalAttachment,
   SignalReactionMessage,
   SignalReactionTarget,
-} from './monitor/event-handler.types';
-import { sendMessageSignal } from './send';
-import { runSignalSseLoop } from './sse-reconnect';
+} from "./monitor/event-handler.types.js";
+import { sendMessageSignal } from "./send.js";
+import { runSignalSseLoop } from "./sse-reconnect.js";
 
 export type MonitorSignalOpts = {
   runtime?: RuntimeEnv;

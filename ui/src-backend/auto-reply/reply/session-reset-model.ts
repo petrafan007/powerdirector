@@ -1,17 +1,17 @@
-import { loadModelCatalog } from '../../agents/model-catalog';
+import { loadModelCatalog } from "../../agents/model-catalog.js";
 import {
   buildAllowedModelSet,
   modelKey,
   normalizeProviderId,
   resolveModelRefFromString,
   type ModelAliasIndex,
-} from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import { updateSessionStore } from '../../config/sessions';
-import { applyModelOverrideToSessionEntry } from '../../sessions/model-overrides';
-import type { MsgContext, TemplateContext } from '../templating';
-import { resolveModelDirectiveSelection, type ModelDirectiveSelection } from './model-selection';
+} from "../../agents/model-selection.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { SessionEntry } from "../../config/sessions.js";
+import { updateSessionStore } from "../../config/sessions.js";
+import { applyModelOverrideToSessionEntry } from "../../sessions/model-overrides.js";
+import type { MsgContext, TemplateContext } from "../templating.js";
+import { resolveModelDirectiveSelection, type ModelDirectiveSelection } from "./model-selection.js";
 
 type ResetModelResult = {
   selection?: ModelDirectiveSelection;

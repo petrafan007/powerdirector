@@ -7,12 +7,12 @@ import {
   listProfilesForProvider,
   resolveApiKeyForProfile,
   resolveAuthProfileOrder,
-} from '../agents/auth-profiles';
-import { getCustomProviderApiKey } from '../agents/model-auth';
-import { normalizeProviderId } from '../agents/model-selection';
-import { loadConfig } from '../config/config';
-import { normalizeSecretInput } from '../utils/normalize-secret-input';
-import type { UsageProviderId } from './provider-usage.types';
+} from "../agents/auth-profiles.js";
+import { getCustomProviderApiKey } from "../agents/model-auth.js";
+import { normalizeProviderId } from "../agents/model-selection.js";
+import { loadConfig } from "../config/config.js";
+import { normalizeSecretInput } from "../utils/normalize-secret-input.js";
+import type { UsageProviderId } from "./provider-usage.types.js";
 
 export type ProviderAuth = {
   provider: UsageProviderId;

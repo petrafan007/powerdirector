@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, vi } from "vitest";
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import type { MockFn } from "../test-utils/vitest-mock-fn.js";
 
 let originalIsTTY: boolean | undefined;
 let originalStateDir: string | undefined;
@@ -184,7 +184,7 @@ vi.mock("../plugins/loader.js", () => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     CONFIG_PATH: "/tmp/powerdirector.config.json",
@@ -210,7 +210,7 @@ vi.mock("../daemon/program-args.js", () => ({
 }));
 
 vi.mock("../gateway/call.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../gateway/call')>();
+  const actual = await importOriginal<typeof import("../gateway/call.js")>();
   return {
     ...actual,
     callGateway,
@@ -231,7 +231,7 @@ vi.mock("../infra/update-runner.js", () => ({
 }));
 
 vi.mock("../agents/auth-profiles.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../agents/auth-profiles')>();
+  const actual = await importOriginal<typeof import("../agents/auth-profiles.js")>();
   return {
     ...actual,
     ensureAuthProfileStore,
@@ -273,7 +273,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 vi.mock("../utils.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../utils')>();
+  const actual = await importOriginal<typeof import("../utils.js")>();
   return {
     ...actual,
     resolveUserPath: (value: string) => value,
@@ -334,7 +334,7 @@ export async function arrangeLegacyStateMigrationTest(): Promise<{
 }> {
   mockDoctorConfigSnapshot();
 
-  const { doctorCommand } = await import('./doctor');
+  const { doctorCommand } = await import("./doctor.js");
   const runtime = createDoctorRuntime();
 
   detectLegacyStateMigrations.mockClear();

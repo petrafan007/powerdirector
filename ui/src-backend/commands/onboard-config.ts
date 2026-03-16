@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 export function applyOnboardingLocalWorkspaceConfig(
   baseConfig: PowerDirectorConfig,

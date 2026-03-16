@@ -3,7 +3,7 @@ import {
   addSubagentRunForTests,
   listSubagentRunsForRequester,
   resetSubagentRegistryForTests,
-} from './subagent-registry';
+} from "./subagent-registry.js";
 
 const callGatewayMock = vi.fn();
 vi.mock("../gateway/call.js", () => ({
@@ -11,7 +11,7 @@ vi.mock("../gateway/call.js", () => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => ({
@@ -30,7 +30,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 });
 
 import "./test-helpers/fast-core-tools.js";
-import { createPowerDirectorTools } from './powerdirector-tools';
+import { createPowerDirectorTools } from "./powerdirector-tools.js";
 
 const waitForCalls = async (getCount: () => number, count: number, timeoutMs = 2000) => {
   await vi.waitFor(
@@ -765,7 +765,7 @@ describe("sessions tools", () => {
       startedAt: now - 2 * 60_000,
     });
 
-    const sessionsModule = await import('../config/sessions');
+    const sessionsModule = await import("../config/sessions.js");
     const loadSessionStoreSpy = vi
       .spyOn(sessionsModule, "loadSessionStore")
       .mockImplementation(() => ({
@@ -825,7 +825,7 @@ describe("sessions tools", () => {
       startedAt: Date.now() - 60_000,
     });
 
-    const sessionsModule = await import('../config/sessions');
+    const sessionsModule = await import("../config/sessions.js");
     const loadSessionStoreSpy = vi
       .spyOn(sessionsModule, "loadSessionStore")
       .mockImplementation(() => ({

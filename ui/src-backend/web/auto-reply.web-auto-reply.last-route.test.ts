@@ -1,12 +1,12 @@
 import "./test-helpers.js";
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { installWebAutoReplyUnitTestHooks, makeSessionStore } from './auto-reply.test-harness';
-import { buildMentionConfig } from './auto-reply/mentions';
-import { createEchoTracker } from './auto-reply/monitor/echo';
-import { awaitBackgroundTasks } from './auto-reply/monitor/last-route';
-import { createWebOnMessageHandler } from './auto-reply/monitor/on-message';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { installWebAutoReplyUnitTestHooks, makeSessionStore } from "./auto-reply.test-harness.js";
+import { buildMentionConfig } from "./auto-reply/mentions.js";
+import { createEchoTracker } from "./auto-reply/monitor/echo.js";
+import { awaitBackgroundTasks } from "./auto-reply/monitor/last-route.js";
+import { createWebOnMessageHandler } from "./auto-reply/monitor/on-message.js";
 
 function makeCfg(storePath: string): PowerDirectorConfig {
   return {

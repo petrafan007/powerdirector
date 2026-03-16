@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CliDeps } from '../cli/deps';
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionEntry } from '../config/sessions';
-import type { RuntimeEnv } from '../runtime';
+import type { CliDeps } from "../cli/deps.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SessionEntry } from "../config/sessions.js";
+import type { RuntimeEnv } from "../runtime.js";
 
 const mocks = vi.hoisted(() => ({
   deliverOutboundPayloads: vi.fn(async () => []),
@@ -20,7 +20,7 @@ vi.mock("../infra/outbound/deliver.js", () => ({
 }));
 
 vi.mock("../infra/outbound/targets.js", async () => {
-  const actual = await vi.importActual<typeof import('../infra/outbound/targets')>(
+  const actual = await vi.importActual<typeof import("../infra/outbound/targets.js")>(
     "../infra/outbound/targets.js",
   );
   return {
@@ -54,7 +54,7 @@ describe("deliverAgentCommandResult", () => {
     const deps = {} as CliDeps;
     const runtime = params.runtime ?? createRuntime();
     const result = createResult(params.resultText);
-    const { deliverAgentCommandResult } = await import('./agent/delivery');
+    const { deliverAgentCommandResult } = await import("./agent/delivery.js");
 
     await deliverAgentCommandResult({
       cfg,

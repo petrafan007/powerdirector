@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import type { ChannelAgentTool } from '../types';
+import type { ChannelAgentTool } from "../types.js";
 
 export function createWhatsAppLoginTool(): ChannelAgentTool {
   return {
@@ -18,7 +18,7 @@ export function createWhatsAppLoginTool(): ChannelAgentTool {
       force: Type.Optional(Type.Boolean()),
     }),
     execute: async (_toolCallId, args) => {
-      const { startWebLoginWithQr, waitForWebLogin } = await import('../../../web/login-qr');
+      const { startWebLoginWithQr, waitForWebLogin } = await import("../../../web/login-qr.js");
       const action = (args as { action?: string })?.action ?? "start";
       if (action === "wait") {
         const result = await waitForWebLogin({

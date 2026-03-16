@@ -1,9 +1,9 @@
 import {
   countActiveDescendantRuns,
   listDescendantRunsForRequester,
-} from '../../agents/subagent-registry';
-import { readLatestAssistantReply } from '../../agents/tools/agent-step';
-import { SILENT_REPLY_TOKEN } from '../../auto-reply/tokens';
+} from "../../agents/subagent-registry.js";
+import { readLatestAssistantReply } from "../../agents/tools/agent-step.js";
+import { SILENT_REPLY_TOKEN } from "../../auto-reply/tokens.js";
 
 const CRON_SUBAGENT_WAIT_POLL_MS = 500;
 const CRON_SUBAGENT_WAIT_MIN_MS = 30_000;

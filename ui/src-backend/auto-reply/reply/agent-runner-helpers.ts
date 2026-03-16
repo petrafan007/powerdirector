@@ -1,9 +1,9 @@
-import { loadSessionStore } from '../../config/sessions';
-import { isAudioFileName } from '../../media/mime';
-import { normalizeVerboseLevel, type VerboseLevel } from '../thinking';
-import type { ReplyPayload } from '../types';
-import { scheduleFollowupDrain } from './queue';
-import type { TypingSignaler } from './typing-mode';
+import { loadSessionStore } from "../../config/sessions.js";
+import { isAudioFileName } from "../../media/mime.js";
+import { normalizeVerboseLevel, type VerboseLevel } from "../thinking.js";
+import type { ReplyPayload } from "../types.js";
+import { scheduleFollowupDrain } from "./queue.js";
+import type { TypingSignaler } from "./typing-mode.js";
 
 const hasAudioMedia = (urls?: string[]): boolean =>
   Boolean(urls?.some((url) => isAudioFileName(url)));

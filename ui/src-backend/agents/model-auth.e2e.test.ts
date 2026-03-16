@@ -3,9 +3,9 @@ import os from "node:os";
 import path from "node:path";
 import type { Api, Model } from "@mariozechner/pi-ai";
 import { describe, expect, it } from "vitest";
-import { captureEnv } from '../test-utils/env';
-import { ensureAuthProfileStore } from './auth-profiles';
-import { getApiKeyForModel, resolveApiKeyForProvider, resolveEnvApiKey } from './model-auth';
+import { captureEnv } from "../test-utils/env.js";
+import { ensureAuthProfileStore } from "./auth-profiles.js";
+import { getApiKeyForModel, resolveApiKeyForProvider, resolveEnvApiKey } from "./model-auth.js";
 
 const oauthFixture = {
   access: "access-token",

@@ -1,10 +1,10 @@
 import { Type } from "@sinclair/typebox";
-import { loadConfig } from '../../config/config';
-import { callGateway } from '../../gateway/call';
-import { capArrayByJsonBytes } from '../../gateway/session-utils.fs';
-import { truncateUtf16Safe } from '../../utils';
-import type { AnyAgentTool } from './common';
-import { jsonResult, readStringParam } from './common';
+import { loadConfig } from "../../config/config.js";
+import { callGateway } from "../../gateway/call.js";
+import { capArrayByJsonBytes } from "../../gateway/session-utils.fs.js";
+import { truncateUtf16Safe } from "../../utils.js";
+import type { AnyAgentTool } from "./common.js";
+import { jsonResult, readStringParam } from "./common.js";
 import {
   createSessionVisibilityGuard,
   createAgentToAgentPolicy,
@@ -13,7 +13,7 @@ import {
   resolveSessionReference,
   resolveSandboxedSessionToolContext,
   stripToolMessages,
-} from './sessions-helpers';
+} from "./sessions-helpers.js";
 
 const SessionsHistoryToolSchema = Type.Object({
   sessionKey: Type.String(),

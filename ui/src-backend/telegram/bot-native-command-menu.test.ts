@@ -3,7 +3,7 @@ import {
   buildCappedTelegramMenuCommands,
   buildPluginTelegramMenuCommands,
   syncTelegramMenuCommands,
-} from './bot-native-command-menu';
+} from "./bot-native-command-menu.js";
 
 describe("bot-native-command-menu", () => {
   it("caps menu entries to Telegram limit", () => {

@@ -1,38 +1,38 @@
-import { buildNodeInstallPlan } from '../../commands/node-daemon-install-helpers';
+import { buildNodeInstallPlan } from "../../commands/node-daemon-install-helpers.js";
 import {
   DEFAULT_NODE_DAEMON_RUNTIME,
   isNodeDaemonRuntime,
-} from '../../commands/node-daemon-runtime';
-import { resolveIsNixMode } from '../../config/paths';
+} from "../../commands/node-daemon-runtime.js";
+import { resolveIsNixMode } from "../../config/paths.js";
 import {
   resolveNodeLaunchAgentLabel,
   resolveNodeSystemdServiceName,
   resolveNodeWindowsTaskName,
-} from '../../daemon/constants';
-import { resolveGatewayLogPaths } from '../../daemon/launchd';
-import { resolveNodeService } from '../../daemon/node-service';
-import type { GatewayServiceRuntime } from '../../daemon/service-runtime';
-import { loadNodeHostConfig } from '../../node-host/config';
-import { defaultRuntime } from '../../runtime';
-import { colorize } from '../../terminal/theme';
-import { formatCliCommand } from '../command-format';
+} from "../../daemon/constants.js";
+import { resolveGatewayLogPaths } from "../../daemon/launchd.js";
+import { resolveNodeService } from "../../daemon/node-service.js";
+import type { GatewayServiceRuntime } from "../../daemon/service-runtime.js";
+import { loadNodeHostConfig } from "../../node-host/config.js";
+import { defaultRuntime } from "../../runtime.js";
+import { colorize } from "../../terminal/theme.js";
+import { formatCliCommand } from "../command-format.js";
 import {
   runServiceRestart,
   runServiceStart,
   runServiceStop,
   runServiceUninstall,
-} from '../daemon-cli/lifecycle-core';
+} from "../daemon-cli/lifecycle-core.js";
 import {
   buildDaemonServiceSnapshot,
   createDaemonActionContext,
   installDaemonServiceAndEmit,
-} from '../daemon-cli/response';
+} from "../daemon-cli/response.js";
 import {
   createCliStatusTextStyles,
   formatRuntimeStatus,
   parsePort,
   resolveRuntimeStatusColor,
-} from '../daemon-cli/shared';
+} from "../daemon-cli/shared.js";
 
 type NodeDaemonInstallOptions = {
   host?: string;

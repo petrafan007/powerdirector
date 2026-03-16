@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyMergePatch } from './merge-patch';
+import { applyMergePatch } from "./merge-patch.js";
 
 describe("applyMergePatch", () => {
   function makeAgentListBaseAndPatch() {

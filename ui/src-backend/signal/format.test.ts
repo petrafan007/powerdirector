@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownToSignalText } from './format';
+import { markdownToSignalText } from "./format.js";
 
 describe("markdownToSignalText", () => {
   it("renders inline styles", () => {

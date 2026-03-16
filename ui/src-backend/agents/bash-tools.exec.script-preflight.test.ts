@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { createExecTool } from './bash-tools.exec';
+import { createExecTool } from "./bash-tools.exec.js";
 
 const isWin = process.platform === "win32";
 

@@ -1,19 +1,19 @@
-import { ensureAuthProfileStore, resolveAuthProfileOrder } from '../agents/auth-profiles';
-import { resolveEnvApiKey } from '../agents/model-auth';
+import { ensureAuthProfileStore, resolveAuthProfileOrder } from "../agents/auth-profiles.js";
+import { resolveEnvApiKey } from "../agents/model-auth.js";
 import {
   formatApiKeyPreview,
   normalizeApiKeyInput,
   validateApiKeyInput,
-} from './auth-choice.api-key';
-import { createAuthChoiceAgentModelNoter } from './auth-choice.apply-helpers';
-import { applyAuthChoiceHuggingface } from './auth-choice.apply.huggingface';
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
-import { applyAuthChoiceOpenRouter } from './auth-choice.apply.openrouter';
-import { applyDefaultModelChoice } from './auth-choice.default-model';
+} from "./auth-choice.api-key.js";
+import { createAuthChoiceAgentModelNoter } from "./auth-choice.apply-helpers.js";
+import { applyAuthChoiceHuggingface } from "./auth-choice.apply.huggingface.js";
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
+import { applyAuthChoiceOpenRouter } from "./auth-choice.apply.openrouter.js";
+import { applyDefaultModelChoice } from "./auth-choice.default-model.js";
 import {
   applyGoogleGeminiModelDefault,
   GOOGLE_GEMINI_DEFAULT_MODEL,
-} from './google-gemini-model-default';
+} from "./google-gemini-model-default.js";
 import {
   applyAuthProfileConfig,
   applyCloudflareAiGatewayConfig,
@@ -66,9 +66,9 @@ import {
   setXiaomiApiKey,
   setZaiApiKey,
   ZAI_DEFAULT_MODEL_REF,
-} from './onboard-auth';
-import { OPENCODE_ZEN_DEFAULT_MODEL } from './opencode-zen-model-default';
-import { detectZaiEndpoint } from './zai-endpoint-detect';
+} from "./onboard-auth.js";
+import { OPENCODE_ZEN_DEFAULT_MODEL } from "./opencode-zen-model-default.js";
+import { detectZaiEndpoint } from "./zai-endpoint-detect.js";
 
 export async function applyAuthChoiceApiProviders(
   params: ApplyAuthChoiceParams,

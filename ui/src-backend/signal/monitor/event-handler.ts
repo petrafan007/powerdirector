@@ -1,42 +1,42 @@
-import { resolveHumanDelayConfig } from '../../agents/identity';
-import { hasControlCommand } from '../../auto-reply/command-detection';
-import { dispatchInboundMessage } from '../../auto-reply/dispatch';
+import { resolveHumanDelayConfig } from "../../agents/identity.js";
+import { hasControlCommand } from "../../auto-reply/command-detection.js";
+import { dispatchInboundMessage } from "../../auto-reply/dispatch.js";
 import {
   formatInboundEnvelope,
   formatInboundFromLabel,
   resolveEnvelopeFormatOptions,
-} from '../../auto-reply/envelope';
+} from "../../auto-reply/envelope.js";
 import {
   createInboundDebouncer,
   resolveInboundDebounceMs,
-} from '../../auto-reply/inbound-debounce';
+} from "../../auto-reply/inbound-debounce.js";
 import {
   buildPendingHistoryContextFromMap,
   clearHistoryEntriesIfEnabled,
   recordPendingHistoryEntryIfEnabled,
-} from '../../auto-reply/reply/history';
-import { finalizeInboundContext } from '../../auto-reply/reply/inbound-context';
-import { buildMentionRegexes, matchesMentionPatterns } from '../../auto-reply/reply/mentions';
-import { createReplyDispatcherWithTyping } from '../../auto-reply/reply/reply-dispatcher';
-import { resolveControlCommandGate } from '../../channels/command-gating';
-import { logInboundDrop, logTypingFailure } from '../../channels/logging';
-import { resolveMentionGatingWithBypass } from '../../channels/mention-gating';
-import { normalizeSignalMessagingTarget } from '../../channels/plugins/normalize/signal';
-import { createReplyPrefixOptions } from '../../channels/reply-prefix';
-import { recordInboundSession } from '../../channels/session';
-import { createTypingCallbacks } from '../../channels/typing';
-import { resolveChannelGroupRequireMention } from '../../config/group-policy';
-import { readSessionUpdatedAt, resolveStorePath } from '../../config/sessions';
-import { danger, logVerbose, shouldLogVerbose } from '../../globals';
-import { enqueueSystemEvent } from '../../infra/system-events';
-import { mediaKindFromMime } from '../../media/constants';
-import { buildPairingReply } from '../../pairing/pairing-messages';
+} from "../../auto-reply/reply/history.js";
+import { finalizeInboundContext } from "../../auto-reply/reply/inbound-context.js";
+import { buildMentionRegexes, matchesMentionPatterns } from "../../auto-reply/reply/mentions.js";
+import { createReplyDispatcherWithTyping } from "../../auto-reply/reply/reply-dispatcher.js";
+import { resolveControlCommandGate } from "../../channels/command-gating.js";
+import { logInboundDrop, logTypingFailure } from "../../channels/logging.js";
+import { resolveMentionGatingWithBypass } from "../../channels/mention-gating.js";
+import { normalizeSignalMessagingTarget } from "../../channels/plugins/normalize/signal.js";
+import { createReplyPrefixOptions } from "../../channels/reply-prefix.js";
+import { recordInboundSession } from "../../channels/session.js";
+import { createTypingCallbacks } from "../../channels/typing.js";
+import { resolveChannelGroupRequireMention } from "../../config/group-policy.js";
+import { readSessionUpdatedAt, resolveStorePath } from "../../config/sessions.js";
+import { danger, logVerbose, shouldLogVerbose } from "../../globals.js";
+import { enqueueSystemEvent } from "../../infra/system-events.js";
+import { mediaKindFromMime } from "../../media/constants.js";
+import { buildPairingReply } from "../../pairing/pairing-messages.js";
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from '../../pairing/pairing-store';
-import { resolveAgentRoute } from '../../routing/resolve-route';
-import { normalizeE164 } from '../../utils';
+} from "../../pairing/pairing-store.js";
+import { resolveAgentRoute } from "../../routing/resolve-route.js";
+import { normalizeE164 } from "../../utils.js";
 import {
   formatSignalPairingIdLine,
   formatSignalSenderDisplay,
@@ -45,10 +45,10 @@ import {
   resolveSignalPeerId,
   resolveSignalRecipient,
   resolveSignalSender,
-} from '../identity';
-import { sendMessageSignal, sendReadReceiptSignal, sendTypingSignal } from '../send';
-import type { SignalEventHandlerDeps, SignalReceivePayload } from './event-handler.types';
-import { renderSignalMentions } from './mentions';
+} from "../identity.js";
+import { sendMessageSignal, sendReadReceiptSignal, sendTypingSignal } from "../send.js";
+import type { SignalEventHandlerDeps, SignalReceivePayload } from "./event-handler.types.js";
+import { renderSignalMentions } from "./mentions.js";
 export function createSignalEventHandler(deps: SignalEventHandlerDeps) {
   const inboundDebounceMs = resolveInboundDebounceMs({ cfg: deps.cfg, channel: "signal" });
 

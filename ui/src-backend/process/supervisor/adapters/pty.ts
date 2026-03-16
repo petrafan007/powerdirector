@@ -1,6 +1,6 @@
-import { killProcessTree } from '../../kill-tree';
-import type { ManagedRunStdin } from '../types';
-import { toStringEnv } from './env';
+import { killProcessTree } from "../../kill-tree.js";
+import type { ManagedRunStdin } from "../types.js";
+import { toStringEnv } from "./env.js";
 
 const FORCE_KILL_WAIT_FALLBACK_MS = 4000;
 

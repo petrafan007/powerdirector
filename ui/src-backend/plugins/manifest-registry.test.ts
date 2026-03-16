@@ -3,8 +3,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { PluginCandidate } from './discovery';
-import { loadPluginManifestRegistry } from './manifest-registry';
+import type { PluginCandidate } from "./discovery.js";
+import { loadPluginManifestRegistry } from "./manifest-registry.js";
 
 const tempDirs: string[] = [];
 

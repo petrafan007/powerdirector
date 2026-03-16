@@ -1,6 +1,6 @@
 import type { User } from "@buape/carbon";
-import type { PluralKitMessageInfo } from '../pluralkit';
-import { formatDiscordUserTag } from './format';
+import type { PluralKitMessageInfo } from "../pluralkit.js";
+import { formatDiscordUserTag } from "./format.js";
 
 export type DiscordSenderIdentity = {
   id: string;

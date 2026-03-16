@@ -1,6 +1,6 @@
-import type { AuthProfileCredential } from '../agents/auth-profiles/types';
-import type { PowerDirectorConfig } from '../config/config';
-import type { ProviderAuthResult } from '../plugins/types';
+import type { AuthProfileCredential } from "../agents/auth-profiles/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { ProviderAuthResult } from "../plugins/types.js";
 
 export function buildOauthProviderAuthResult(params: {
   providerId: string;

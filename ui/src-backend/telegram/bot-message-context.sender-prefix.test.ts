@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildTelegramMessageContext } from './bot-message-context';
+import { buildTelegramMessageContext } from "./bot-message-context.js";
 
 describe("buildTelegramMessageContext sender prefix", () => {
   async function buildCtx(params: {

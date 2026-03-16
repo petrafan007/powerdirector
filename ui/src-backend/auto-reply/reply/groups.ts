@@ -1,10 +1,10 @@
-import { getChannelDock } from '../../channels/dock';
-import { getChannelPlugin, normalizeChannelId } from '../../channels/plugins/index';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { GroupKeyResolution, SessionEntry } from '../../config/sessions';
-import { isInternalMessageChannel } from '../../utils/message-channel';
-import { normalizeGroupActivation } from '../group-activation';
-import type { TemplateContext } from '../templating';
+import { getChannelDock } from "../../channels/dock.js";
+import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { GroupKeyResolution, SessionEntry } from "../../config/sessions.js";
+import { isInternalMessageChannel } from "../../utils/message-channel.js";
+import { normalizeGroupActivation } from "../group-activation.js";
+import type { TemplateContext } from "../templating.js";
 
 function extractGroupId(raw: string | undefined | null): string | undefined {
   const trimmed = (raw ?? "").trim();

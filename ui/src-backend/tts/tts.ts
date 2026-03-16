@@ -11,21 +11,21 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import type { ReplyPayload } from '../auto-reply/types';
-import { normalizeChannelId } from '../channels/plugins/index';
-import type { ChannelId } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
+import type { ReplyPayload } from "../auto-reply/types.js";
+import { normalizeChannelId } from "../channels/plugins/index.js";
+import type { ChannelId } from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import type {
   TtsConfig,
   TtsAutoMode,
   TtsMode,
   TtsProvider,
   TtsModelOverrideConfig,
-} from '../config/types.tts';
-import { logVerbose } from '../globals';
-import { stripMarkdown } from '../line/markdown-to-line';
-import { isVoiceCompatibleAudio } from '../media/audio';
-import { CONFIG_DIR, resolveUserPath } from '../utils';
+} from "../config/types.tts.js";
+import { logVerbose } from "../globals.js";
+import { stripMarkdown } from "../line/markdown-to-line.js";
+import { isVoiceCompatibleAudio } from "../media/audio.js";
+import { CONFIG_DIR, resolveUserPath } from "../utils.js";
 import {
   edgeTTS,
   elevenLabsTTS,
@@ -39,8 +39,8 @@ import {
   parseTtsDirectives,
   scheduleCleanup,
   summarizeText,
-} from './tts-core';
-export { OPENAI_TTS_MODELS, OPENAI_TTS_VOICES } from './tts-core';
+} from "./tts-core.js";
+export { OPENAI_TTS_MODELS, OPENAI_TTS_VOICES } from "./tts-core.js";
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 const DEFAULT_TTS_MAX_LENGTH = 1500;

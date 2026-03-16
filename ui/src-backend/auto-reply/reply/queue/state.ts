@@ -1,5 +1,5 @@
-import { applyQueueRuntimeSettings } from '../../../utils/queue-helpers';
-import type { FollowupRun, QueueDropPolicy, QueueMode, QueueSettings } from './types';
+import { applyQueueRuntimeSettings } from "../../../utils/queue-helpers.js";
+import type { FollowupRun, QueueDropPolicy, QueueMode, QueueSettings } from "./types.js";
 
 export type FollowupQueueState = {
   items: FollowupRun[];

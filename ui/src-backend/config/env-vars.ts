@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from './types';
+import type { PowerDirectorConfig } from "./types.js";
 
 export function collectConfigEnvVars(cfg?: PowerDirectorConfig): Record<string, string> {
   const envConfig = cfg?.env;

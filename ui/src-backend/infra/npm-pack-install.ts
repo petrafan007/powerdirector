@@ -3,11 +3,11 @@ import {
   type NpmSpecResolution,
   packNpmSpecToArchive,
   withTempDir,
-} from './install-source-utils';
+} from "./install-source-utils.js";
 import {
   type NpmIntegrityDriftPayload,
   resolveNpmIntegrityDriftWithDefaultMessage,
-} from './npm-integrity';
+} from "./npm-integrity.js";
 
 export type NpmSpecArchiveInstallFlowResult<TResult extends { ok: boolean }> =
   | {

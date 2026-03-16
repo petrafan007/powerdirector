@@ -1,18 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertMediaNotDataUrl, resolveSandboxedMediaSource } from '../../agents/sandbox-paths';
-import { readStringParam } from '../../agents/tools/common';
+import { assertMediaNotDataUrl, resolveSandboxedMediaSource } from "../../agents/sandbox-paths.js";
+import { readStringParam } from "../../agents/tools/common.js";
 import type {
   ChannelId,
   ChannelMessageActionName,
   ChannelThreadingToolContext,
-} from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { extensionForMime } from '../../media/mime';
-import { parseSlackTarget } from '../../slack/targets';
-import { parseTelegramTarget } from '../../telegram/targets';
-import { loadWebMedia } from '../../web/media';
+} from "../../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { extensionForMime } from "../../media/mime.js";
+import { parseSlackTarget } from "../../slack/targets.js";
+import { parseTelegramTarget } from "../../telegram/targets.js";
+import { loadWebMedia } from "../../web/media.js";
 
 export function readBooleanParam(
   params: Record<string, unknown>,

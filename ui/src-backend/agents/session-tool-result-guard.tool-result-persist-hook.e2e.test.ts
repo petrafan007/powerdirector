@@ -7,9 +7,9 @@ import { describe, expect, it, afterEach } from "vitest";
 import {
   initializeGlobalHookRunner,
   resetGlobalHookRunner,
-} from '../plugins/hook-runner-global';
-import { loadPowerDirectorPlugins } from '../plugins/loader';
-import { guardSessionManager } from './session-tool-result-guard-wrapper';
+} from "../plugins/hook-runner-global.js";
+import { loadPowerDirectorPlugins } from "../plugins/loader.js";
+import { guardSessionManager } from "./session-tool-result-guard-wrapper.js";
 
 const EMPTY_PLUGIN_SCHEMA = { type: "object", additionalProperties: false, properties: {} };
 

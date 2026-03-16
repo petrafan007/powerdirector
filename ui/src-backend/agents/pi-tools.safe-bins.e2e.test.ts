@@ -2,9 +2,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { ExecApprovalsResolved } from '../infra/exec-approvals';
-import { captureEnv } from '../test-utils/env';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { ExecApprovalsResolved } from "../infra/exec-approvals.js";
+import { captureEnv } from "../test-utils/env.js";
 
 const bundledPluginsDirSnapshot = captureEnv(["POWERDIRECTOR_BUNDLED_PLUGINS_DIR"]);
 
@@ -20,7 +20,7 @@ afterAll(() => {
 });
 
 vi.mock("../infra/shell-env.js", async (importOriginal) => {
-  const mod = await importOriginal<typeof import('../infra/shell-env')>();
+  const mod = await importOriginal<typeof import("../infra/shell-env.js")>();
   return {
     ...mod,
     getShellPathFromLoginShell: vi.fn(() => null),
@@ -34,7 +34,7 @@ vi.mock("../plugins/tools.js", () => ({
 }));
 
 vi.mock("../infra/exec-approvals.js", async (importOriginal) => {
-  const mod = await importOriginal<typeof import('../infra/exec-approvals')>();
+  const mod = await importOriginal<typeof import("../infra/exec-approvals.js")>();
   const approvals: ExecApprovalsResolved = {
     path: "/tmp/exec-approvals.json",
     socketPath: "/tmp/exec-approvals.sock",
@@ -88,7 +88,7 @@ async function createSafeBinsExecTool(params: {
   safeBins: string[];
   files?: Array<{ name: string; contents: string }>;
 }): Promise<{ tmpDir: string; execTool: ExecTool }> {
-  const { createPowerDirectorCodingTools } = await import('./pi-tools');
+  const { createPowerDirectorCodingTools } = await import("./pi-tools.js");
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), params.tmpPrefix));
   for (const file of params.files ?? []) {
     fs.writeFileSync(path.join(tmpDir, file.name), file.contents, "utf8");

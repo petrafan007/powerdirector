@@ -1,6 +1,6 @@
 import { loadSkillsFromDir } from "@mariozechner/pi-coding-agent";
-import { createSubsystemLogger } from '../../logging/subsystem';
-import { resolveBundledSkillsDir, type BundledSkillsResolveOptions } from './bundled-dir';
+import { createSubsystemLogger } from "../../logging/subsystem.js";
+import { resolveBundledSkillsDir, type BundledSkillsResolveOptions } from "./bundled-dir.js";
 
 const skillsLogger = createSubsystemLogger("skills");
 let hasWarnedMissingBundledDir = false;

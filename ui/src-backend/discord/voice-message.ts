@@ -16,8 +16,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import type { RequestClient } from "@buape/carbon";
-import type { RetryRunner } from '../infra/retry-policy';
-import { resolvePreferredPowerDirectorTmpDir } from '../infra/tmp-powerdirector-dir';
+import type { RetryRunner } from "../infra/retry-policy.js";
+import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir.js";
 
 const execFileAsync = promisify(execFile);
 

@@ -1,7 +1,7 @@
-import type { MediaUnderstandingProvider } from '../../types';
-import { describeImageWithModel } from '../image';
-import { transcribeGeminiAudio } from './audio';
-import { describeGeminiVideo } from './video';
+import type { MediaUnderstandingProvider } from "../../types.js";
+import { describeImageWithModel } from "../image.js";
+import { transcribeGeminiAudio } from "./audio.js";
+import { describeGeminiVideo } from "./video.js";
 
 export const googleProvider: MediaUnderstandingProvider = {
   id: "google",

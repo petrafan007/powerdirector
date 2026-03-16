@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import { createPowerDirectorCodingTools } from './pi-tools';
+import { createPowerDirectorCodingTools } from "./pi-tools.js";
 
 vi.mock("./channel-tools.js", () => {
   const stubTool = (name: string) => ({

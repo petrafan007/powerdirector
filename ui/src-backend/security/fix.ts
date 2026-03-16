@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { createConfigIO } from '../config/config';
-import { collectIncludePathsRecursive } from '../config/includes-scan';
-import { resolveConfigPath, resolveOAuthDir, resolveStateDir } from '../config/paths';
-import { readChannelAllowFromStore } from '../pairing/pairing-store';
-import { runExec } from '../process/exec';
-import { normalizeAgentId } from '../routing/session-key';
-import { createIcaclsResetCommand, formatIcaclsResetCommand, type ExecFn } from './windows-acl';
+import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { createConfigIO } from "../config/config.js";
+import { collectIncludePathsRecursive } from "../config/includes-scan.js";
+import { resolveConfigPath, resolveOAuthDir, resolveStateDir } from "../config/paths.js";
+import { readChannelAllowFromStore } from "../pairing/pairing-store.js";
+import { runExec } from "../process/exec.js";
+import { normalizeAgentId } from "../routing/session-key.js";
+import { createIcaclsResetCommand, formatIcaclsResetCommand, type ExecFn } from "./windows-acl.js";
 
 export type SecurityFixChmodAction = {
   kind: "chmod";

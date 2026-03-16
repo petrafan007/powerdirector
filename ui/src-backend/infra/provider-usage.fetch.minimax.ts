@@ -1,11 +1,11 @@
-import { isRecord } from '../utils';
+import { isRecord } from "../utils.js";
 import {
   buildUsageHttpErrorSnapshot,
   fetchJson,
   parseFiniteNumber,
-} from './provider-usage.fetch.shared';
-import { clampPercent, PROVIDER_LABELS } from './provider-usage.shared';
-import type { ProviderUsageSnapshot, UsageWindow } from './provider-usage.types';
+} from "./provider-usage.fetch.shared.js";
+import { clampPercent, PROVIDER_LABELS } from "./provider-usage.shared.js";
+import type { ProviderUsageSnapshot, UsageWindow } from "./provider-usage.types.js";
 
 type MinimaxBaseResp = {
   status_code?: number;

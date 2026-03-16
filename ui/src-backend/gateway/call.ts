@@ -1,28 +1,28 @@
 import { randomUUID } from "node:crypto";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   loadConfig,
   resolveConfigPath,
   resolveGatewayPort,
   resolveStateDir,
-} from '../config/config';
-import { loadOrCreateDeviceIdentity } from '../infra/device-identity';
-import { pickPrimaryTailnetIPv4 } from '../infra/tailnet';
-import { loadGatewayTlsRuntime } from '../infra/tls/gateway';
+} from "../config/config.js";
+import { loadOrCreateDeviceIdentity } from "../infra/device-identity.js";
+import { pickPrimaryTailnetIPv4 } from "../infra/tailnet.js";
+import { loadGatewayTlsRuntime } from "../infra/tls/gateway.js";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
   type GatewayClientMode,
   type GatewayClientName,
-} from '../utils/message-channel';
-import { GatewayClient } from './client';
+} from "../utils/message-channel.js";
+import { GatewayClient } from "./client.js";
 import {
   CLI_DEFAULT_OPERATOR_SCOPES,
   resolveLeastPrivilegeOperatorScopesForMethod,
   type OperatorScope,
-} from './method-scopes';
-import { isSecureWebSocketUrl, pickPrimaryLanIPv4 } from './net';
-import { PROTOCOL_VERSION } from './protocol/index';
+} from "./method-scopes.js";
+import { isSecureWebSocketUrl, pickPrimaryLanIPv4 } from "./net.js";
+import { PROTOCOL_VERSION } from "./protocol/index.js";
 
 type CallGatewayBaseOptions = {
   url?: string;

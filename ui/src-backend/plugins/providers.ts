@@ -1,7 +1,7 @@
-import { createSubsystemLogger } from '../logging/subsystem';
-import { loadPowerDirectorPlugins, type PluginLoadOptions } from './loader';
-import { createPluginLoaderLogger } from './logger';
-import type { ProviderPlugin } from './types';
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { loadPowerDirectorPlugins, type PluginLoadOptions } from "./loader.js";
+import { createPluginLoaderLogger } from "./logger.js";
+import type { ProviderPlugin } from "./types.js";
 
 const log = createSubsystemLogger("plugins");
 

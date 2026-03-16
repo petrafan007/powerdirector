@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 const mocks = vi.hoisted(() => ({
   readCommand: vi.fn(),
@@ -49,7 +49,7 @@ vi.mock("./daemon-install-helpers.js", () => ({
   buildGatewayInstallPlan: mocks.buildGatewayInstallPlan,
 }));
 
-import { maybeRepairGatewayServiceConfig } from './doctor-gateway-services';
+import { maybeRepairGatewayServiceConfig } from "./doctor-gateway-services.js";
 
 function makeDoctorIo() {
   return { log: vi.fn(), error: vi.fn(), exit: vi.fn() };

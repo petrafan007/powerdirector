@@ -1,4 +1,4 @@
-import type { VerboseLevel } from '../auto-reply/thinking';
+import type { VerboseLevel } from "../auto-reply/thinking.js";
 
 export type AgentEventStream = "lifecycle" | "tool" | "assistant" | "error" | (string & {});
 

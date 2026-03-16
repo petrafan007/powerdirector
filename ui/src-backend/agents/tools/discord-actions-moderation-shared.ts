@@ -1,5 +1,5 @@
 import { PermissionFlagsBits } from "discord-api-types/v10";
-import { readNumberParam, readStringParam } from './common';
+import { readNumberParam, readStringParam } from "./common.js";
 
 export type DiscordModerationAction = "timeout" | "kick" | "ban";
 

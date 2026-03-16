@@ -1,6 +1,6 @@
-import type { BaseProbeResult } from '../channels/plugins/types';
-import { withTimeout } from '../utils/with-timeout';
-import { createSlackWebClient } from './client';
+import type { BaseProbeResult } from "../channels/plugins/types.js";
+import { withTimeout } from "../utils/with-timeout.js";
+import { createSlackWebClient } from "./client.js";
 
 export type SlackProbe = BaseProbeResult & {
   status?: number | null;

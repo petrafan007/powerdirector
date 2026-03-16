@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { buildTelegramMessageContext } from './bot-message-context';
+import { buildTelegramMessageContext } from "./bot-message-context.js";
 
 export const baseTelegramMessageContextConfig = {
   agents: { defaults: { model: "anthropic/claude-opus-4-5", workspace: "/tmp/powerdirector" } },

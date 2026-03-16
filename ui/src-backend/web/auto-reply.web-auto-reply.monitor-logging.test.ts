@@ -1,12 +1,12 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import { setLoggerOverride } from '../logging';
+import { setLoggerOverride } from "../logging.js";
 import {
   installWebAutoReplyTestHomeHooks,
   installWebAutoReplyUnitTestHooks,
-} from './auto-reply.test-harness';
-import { monitorWebChannel } from './auto-reply/monitor';
+} from "./auto-reply.test-harness.js";
+import { monitorWebChannel } from "./auto-reply/monitor.js";
 
 installWebAutoReplyTestHomeHooks();
 
@@ -61,10 +61,10 @@ describe("web auto-reply monitor logging", () => {
     setLoggerOverride({ level: "trace", file: logPath });
 
     let capturedOnMessage:
-      | ((msg: import('./inbound').WebInboundMessage) => Promise<void>)
+      | ((msg: import("./inbound.js").WebInboundMessage) => Promise<void>)
       | undefined;
     const listenerFactory = async (opts: {
-      onMessage: (msg: import('./inbound').WebInboundMessage) => Promise<void>;
+      onMessage: (msg: import("./inbound.js").WebInboundMessage) => Promise<void>;
     }) => {
       capturedOnMessage = opts.onMessage;
       return { close: vi.fn() };

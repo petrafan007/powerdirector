@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { createHookRunner } from './hooks';
-import { createMockPluginRegistry } from './hooks.test-helpers';
+import { createHookRunner } from "./hooks.js";
+import { createMockPluginRegistry } from "./hooks.test-helpers.js";
 
 describe("llm hook runner methods", () => {
   it("runLlmInput invokes registered llm_input hooks", async () => {

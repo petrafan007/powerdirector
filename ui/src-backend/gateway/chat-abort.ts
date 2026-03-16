@@ -1,4 +1,4 @@
-import { isAbortTrigger } from '../auto-reply/reply/abort';
+import { isAbortTrigger } from "../auto-reply/reply/abort.js";
 
 export type ChatAbortControllerEntry = {
   controller: AbortController;

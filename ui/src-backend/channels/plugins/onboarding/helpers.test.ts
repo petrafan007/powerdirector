@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { promptResolvedAllowFrom } from './helpers';
+import { promptResolvedAllowFrom } from "./helpers.js";
 
 function createPrompter(inputs: string[]) {
   return {

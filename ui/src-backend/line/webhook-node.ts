@@ -1,14 +1,14 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { WebhookRequestBody } from "@line/bot-sdk";
-import { danger, logVerbose } from '../globals';
+import { danger, logVerbose } from "../globals.js";
 import {
   isRequestBodyLimitError,
   readRequestBodyWithLimit,
   requestBodyErrorToText,
-} from '../infra/http-body';
-import type { RuntimeEnv } from '../runtime';
-import { validateLineSignature } from './signature';
-import { isLineWebhookVerificationRequest, parseLineWebhookBody } from './webhook-utils';
+} from "../infra/http-body.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { validateLineSignature } from "./signature.js";
+import { isLineWebhookVerificationRequest, parseLineWebhookBody } from "./webhook-utils.js";
 
 const LINE_WEBHOOK_MAX_BODY_BYTES = 1024 * 1024;
 const LINE_WEBHOOK_BODY_TIMEOUT_MS = 30_000;

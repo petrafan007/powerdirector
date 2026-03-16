@@ -1,19 +1,19 @@
-import type { SsrFPolicy } from '../infra/net/ssrf';
-import { type AriaSnapshotNode, formatAriaSnapshot, type RawAXNode } from './cdp';
-import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from './navigation-guard';
+import type { SsrFPolicy } from "../infra/net/ssrf.js";
+import { type AriaSnapshotNode, formatAriaSnapshot, type RawAXNode } from "./cdp.js";
+import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from "./navigation-guard.js";
 import {
   buildRoleSnapshotFromAiSnapshot,
   buildRoleSnapshotFromAriaSnapshot,
   getRoleSnapshotStats,
   type RoleSnapshotOptions,
   type RoleRefMap,
-} from './pw-role-snapshot';
+} from "./pw-role-snapshot.js";
 import {
   ensurePageState,
   getPageForTargetId,
   storeRoleRefsForTarget,
   type WithSnapshotForAI,
-} from './pw-session';
+} from "./pw-session.js";
 
 export async function snapshotAriaViaPlaywright(opts: {
   cdpUrl: string;

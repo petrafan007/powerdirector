@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { stripAnsi } from '../terminal/ansi';
-import { formatHealthCheckFailure } from './health-format';
-import type { HealthSummary } from './health';
-import { formatHealthChannelLines, healthCommand } from './health';
+import { stripAnsi } from "../terminal/ansi.js";
+import { formatHealthCheckFailure } from "./health-format.js";
+import type { HealthSummary } from "./health.js";
+import { formatHealthChannelLines, healthCommand } from "./health.js";
 
 const runtime = {
   log: vi.fn(),

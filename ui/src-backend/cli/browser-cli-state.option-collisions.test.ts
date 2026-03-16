@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { BrowserParentOpts } from './browser-cli-shared';
-import { registerBrowserStateCommands } from './browser-cli-state';
+import type { BrowserParentOpts } from "./browser-cli-shared.js";
+import { registerBrowserStateCommands } from "./browser-cli-state.js";
 
 const mocks = vi.hoisted(() => ({
   callBrowserRequest: vi.fn(async (..._args: unknown[]) => ({ ok: true })),

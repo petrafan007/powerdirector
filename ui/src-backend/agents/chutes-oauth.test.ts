@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generateChutesPkce, parseOAuthCallbackInput } from './chutes-oauth';
+import { generateChutesPkce, parseOAuthCallbackInput } from "./chutes-oauth.js";
 
 describe("parseOAuthCallbackInput", () => {
   it("rejects code-only input (state required)", () => {

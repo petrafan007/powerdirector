@@ -1,19 +1,19 @@
-import type { getReplyFromConfig } from '../../../auto-reply/reply';
-import type { MsgContext } from '../../../auto-reply/templating';
-import { loadConfig } from '../../../config/config';
-import { logVerbose } from '../../../globals';
-import { resolveAgentRoute } from '../../../routing/resolve-route';
-import { buildGroupHistoryKey } from '../../../routing/session-key';
-import { normalizeE164 } from '../../../utils';
-import type { MentionConfig } from '../mentions';
-import type { WebInboundMsg } from '../types';
-import { maybeBroadcastMessage } from './broadcast';
-import type { EchoTracker } from './echo';
-import type { GroupHistoryEntry } from './group-gating';
-import { applyGroupGating } from './group-gating';
-import { updateLastRouteInBackground } from './last-route';
-import { resolvePeerId } from './peer';
-import { processMessage } from './process-message';
+import type { getReplyFromConfig } from "../../../auto-reply/reply.js";
+import type { MsgContext } from "../../../auto-reply/templating.js";
+import { loadConfig } from "../../../config/config.js";
+import { logVerbose } from "../../../globals.js";
+import { resolveAgentRoute } from "../../../routing/resolve-route.js";
+import { buildGroupHistoryKey } from "../../../routing/session-key.js";
+import { normalizeE164 } from "../../../utils.js";
+import type { MentionConfig } from "../mentions.js";
+import type { WebInboundMsg } from "../types.js";
+import { maybeBroadcastMessage } from "./broadcast.js";
+import type { EchoTracker } from "./echo.js";
+import type { GroupHistoryEntry } from "./group-gating.js";
+import { applyGroupGating } from "./group-gating.js";
+import { updateLastRouteInBackground } from "./last-route.js";
+import { resolvePeerId } from "./peer.js";
+import { processMessage } from "./process-message.js";
 
 export function createWebOnMessageHandler(params: {
   cfg: ReturnType<typeof loadConfig>;
@@ -26,7 +26,7 @@ export function createWebOnMessageHandler(params: {
   echoTracker: EchoTracker;
   backgroundTasks: Set<Promise<unknown>>;
   replyResolver: typeof getReplyFromConfig;
-  replyLogger: ReturnType<(typeof import('../../../logging'))["getChildLogger"]>;
+  replyLogger: ReturnType<(typeof import("../../../logging.js"))["getChildLogger"]>;
   baseMentionConfig: MentionConfig;
   account: { authDir?: string; accountId?: string };
 }) {

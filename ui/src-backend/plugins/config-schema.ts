@@ -1,4 +1,4 @@
-import type { PowerDirectorPluginConfigSchema } from './types';
+import type { PowerDirectorPluginConfigSchema } from "./types.js";
 
 type Issue = { path: Array<string | number>; message: string };
 

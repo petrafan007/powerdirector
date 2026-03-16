@@ -1,10 +1,10 @@
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import type { ChatType } from '../channels/chat-type';
-import { normalizeChatType } from '../channels/chat-type';
-import type { PowerDirectorConfig } from '../config/config';
-import { shouldLogVerbose } from '../globals';
-import { logDebug } from '../logger';
-import { listBindings } from './bindings';
+import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import type { ChatType } from "../channels/chat-type.js";
+import { normalizeChatType } from "../channels/chat-type.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { shouldLogVerbose } from "../globals.js";
+import { logDebug } from "../logger.js";
+import { listBindings } from "./bindings.js";
 import {
   buildAgentMainSessionKey,
   buildAgentPeerSessionKey,
@@ -12,7 +12,7 @@ import {
   DEFAULT_MAIN_KEY,
   normalizeAgentId,
   sanitizeAgentId,
-} from './session-key';
+} from "./session-key.js";
 
 /** @deprecated Use ChatType from channels/chat-type.js */
 export type RoutePeerKind = ChatType;
@@ -55,7 +55,7 @@ export type ResolvedAgentRoute = {
     | "default";
 };
 
-export { DEFAULT_ACCOUNT_ID, DEFAULT_AGENT_ID } from './session-key';
+export { DEFAULT_ACCOUNT_ID, DEFAULT_AGENT_ID } from "./session-key.js";
 
 function normalizeToken(value: string | undefined | null): string {
   return (value ?? "").trim().toLowerCase();

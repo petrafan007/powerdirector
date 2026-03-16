@@ -1,6 +1,6 @@
-import type { ChannelMessageActionName as ChannelMessageActionNameFromList } from './message-action-names';
+import type { ChannelMessageActionName as ChannelMessageActionNameFromList } from "./message-action-names.js";
 
-export { CHANNEL_MESSAGE_ACTION_NAMES } from './message-action-names';
+export { CHANNEL_MESSAGE_ACTION_NAMES } from "./message-action-names.js";
 
 export type ChannelMessageActionName = ChannelMessageActionNameFromList;
 
@@ -27,7 +27,7 @@ export type {
   ChannelSecurityAdapter,
   ChannelSetupAdapter,
   ChannelStatusAdapter,
-} from './types.adapters';
+} from "./types.adapters.js";
 export type {
   ChannelAccountSnapshot,
   ChannelAccountState,
@@ -60,6 +60,6 @@ export type {
   ChannelToolSend,
   BaseProbeResult,
   BaseTokenResolution,
-} from './types.core';
+} from "./types.core.js";
 
-export type { ChannelPlugin } from './types.plugin';
+export type { ChannelPlugin } from "./types.plugin.js";

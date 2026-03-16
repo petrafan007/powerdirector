@@ -1,8 +1,8 @@
 import crypto from "node:crypto";
 import os from "node:os";
 import path from "node:path";
-import { resolveRequiredHomeDir } from '../infra/home-dir';
-import { resolveStateDir } from './paths';
+import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { resolveStateDir } from "./paths.js";
 
 function envHomedir(env: NodeJS.ProcessEnv): () => string {
   return () => resolveRequiredHomeDir(env, os.homedir);

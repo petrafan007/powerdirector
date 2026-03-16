@@ -9,7 +9,7 @@ import {
   buildWorkspaceSkillsPrompt,
   buildWorkspaceSkillSnapshot,
   loadWorkspaceSkillEntries,
-} from './skills';
+} from "./skills.js";
 
 type SkillFixture = {
   dir: string;

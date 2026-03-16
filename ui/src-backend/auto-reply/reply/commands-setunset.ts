@@ -1,5 +1,5 @@
-import { parseSlashCommandOrNull } from './commands-slash-parse';
-import { parseConfigValue } from './config-value';
+import { parseSlashCommandOrNull } from "./commands-slash-parse.js";
+import { parseConfigValue } from "./config-value.js";
 
 export type SetUnsetParseResult =
   | { kind: "set"; path: string; value: unknown }

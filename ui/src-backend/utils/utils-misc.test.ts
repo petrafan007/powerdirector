@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { parseBooleanValue } from './boolean';
-import { isReasoningTagProvider } from './provider-utils';
-import { splitShellArgs } from './shell-argv';
+import { parseBooleanValue } from "./boolean.js";
+import { isReasoningTagProvider } from "./provider-utils.js";
+import { splitShellArgs } from "./shell-argv.js";
 
 describe("parseBooleanValue", () => {
   it("handles boolean inputs", () => {

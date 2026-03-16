@@ -5,7 +5,7 @@ import {
   recordRemoteNodeBins,
   recordRemoteNodeInfo,
   removeRemoteNodeInfo,
-} from './skills-remote';
+} from "./skills-remote.js";
 
 describe("skills-remote", () => {
   it("removes disconnected nodes from remote skill eligibility", () => {

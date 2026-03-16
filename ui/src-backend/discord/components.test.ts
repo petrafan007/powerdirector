@@ -5,12 +5,12 @@ import {
   registerDiscordComponentEntries,
   resolveDiscordComponentEntry,
   resolveDiscordModalEntry,
-} from './components-registry';
+} from "./components-registry.js";
 import {
   buildDiscordComponentMessage,
   buildDiscordComponentMessageFlags,
   readDiscordComponentSpec,
-} from './components';
+} from "./components.js";
 
 describe("discord components", () => {
   it("builds v2 containers with modal trigger", () => {

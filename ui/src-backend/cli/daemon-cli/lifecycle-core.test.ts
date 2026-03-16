@@ -38,11 +38,11 @@ vi.mock("../../runtime.js", () => ({
   defaultRuntime,
 }));
 
-let runServiceRestart: typeof import('./lifecycle-core').runServiceRestart;
+let runServiceRestart: typeof import("./lifecycle-core.js").runServiceRestart;
 
 describe("runServiceRestart token drift", () => {
   beforeAll(async () => {
-    ({ runServiceRestart } = await import('./lifecycle-core'));
+    ({ runServiceRestart } = await import("./lifecycle-core.js"));
   });
 
   beforeEach(() => {

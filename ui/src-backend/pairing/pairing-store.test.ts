@@ -3,15 +3,15 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { resolveOAuthDir } from '../config/paths';
-import { captureEnv } from '../test-utils/env';
+import { resolveOAuthDir } from "../config/paths.js";
+import { captureEnv } from "../test-utils/env.js";
 import {
   addChannelAllowFromStoreEntry,
   approveChannelPairingCode,
   listChannelPairingRequests,
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from './pairing-store';
+} from "./pairing-store.js";
 
 let fixtureRoot = "";
 let caseId = 0;

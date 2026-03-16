@@ -1,17 +1,17 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   ensureAuthProfileStore,
   getSoonestCooldownExpiry,
   isProfileInCooldown,
   resolveAuthProfileOrder,
-} from './auth-profiles';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from './defaults';
+} from "./auth-profiles.js";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "./defaults.js";
 import {
   coerceToFailoverError,
   describeFailoverError,
   isFailoverError,
   isTimeoutError,
-} from './failover-error';
+} from "./failover-error.js";
 import {
   buildConfiguredAllowlistKeys,
   buildModelAliasIndex,
@@ -19,9 +19,9 @@ import {
   normalizeModelRef,
   resolveConfiguredModelRef,
   resolveModelRefFromString,
-} from './model-selection';
-import type { FailoverReason } from './pi-embedded-helpers';
-import { isLikelyContextOverflowError } from './pi-embedded-helpers';
+} from "./model-selection.js";
+import type { FailoverReason } from "./pi-embedded-helpers.js";
+import { isLikelyContextOverflowError } from "./pi-embedded-helpers.js";
 
 type ModelCandidate = {
   provider: string;

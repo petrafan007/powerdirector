@@ -5,15 +5,15 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("./targets.js", async () => {
-  const actual = await vi.importActual<typeof import('./targets')>("./targets.js");
+  const actual = await vi.importActual<typeof import("./targets.js")>("./targets.js");
   return {
     ...actual,
     resolveOutboundTarget: mocks.resolveOutboundTarget,
   };
 });
 
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveAgentDeliveryPlan, resolveAgentOutboundTarget } from './agent-delivery';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveAgentDeliveryPlan, resolveAgentOutboundTarget } from "./agent-delivery.js";
 
 describe("agent delivery helpers", () => {
   it("builds a delivery plan from session delivery context", () => {

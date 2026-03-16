@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveMentionGating, resolveMentionGatingWithBypass } from './mention-gating';
+import { resolveMentionGating, resolveMentionGatingWithBypass } from "./mention-gating.js";
 
 describe("resolveMentionGating", () => {
   it("combines explicit, implicit, and bypass mentions", () => {

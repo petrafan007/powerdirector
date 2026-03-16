@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 import OpenAI from 'openai';
 import axios from 'axios';
 import fs from 'fs';
@@ -12,8 +12,8 @@ import {
     isImageGenConfigured,
     type ImageGenModelConfig,
     type ImageGenRouterConfig,
-} from './image-gen-router';
-import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths';
+} from './image-gen-router.js';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
 
 interface ImageGenToolOptions {
     enabled?: boolean;

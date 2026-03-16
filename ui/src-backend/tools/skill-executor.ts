@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { getRuntimeLogger } from '../core/logger.ts';
-import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
 
 /**
  * Result from executing a skill
@@ -62,7 +62,7 @@ export async function executeSkill(
             
             // The manager returns a string output
             // For image generation skills, we need to parse the output path
-            const pathMatch = result.match(/(?:saved to|output:|generated:)\s*(.+\.(png|jpg|jpeg|webp))/i);
+            const pathMatch = result.match(/(?:saved to|output:|generated:|MEDIA:)\s*(.+\.(png|jpg|jpeg|webp))/i);
             if (pathMatch) {
                 return {
                     outputPath: pathMatch[1].trim(),

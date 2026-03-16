@@ -9,7 +9,7 @@ const upsertPairingRequestMock = vi.fn().mockResolvedValue({ code: "PAIRCODE", c
 const saveMediaBufferSpy = vi.fn();
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: vi.fn().mockReturnValue({
@@ -32,7 +32,7 @@ vi.mock("../pairing/pairing-store.js", () => ({
 }));
 
 vi.mock("../media/store.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../media/store')>();
+  const actual = await importOriginal<typeof import("../media/store.js")>();
   return {
     ...actual,
     saveMediaBuffer: vi.fn(async (...args: Parameters<typeof actual.saveMediaBuffer>) => {
@@ -86,8 +86,8 @@ vi.mock("./session.js", () => {
   };
 });
 
-import { monitorWebInbox, resetWebInboundDedupe } from './inbound';
-let createWaSocket: typeof import('./session').createWaSocket;
+import { monitorWebInbox, resetWebInboundDedupe } from "./inbound.js";
+let createWaSocket: typeof import("./session.js").createWaSocket;
 
 async function waitForMessage(onMessage: ReturnType<typeof vi.fn>) {
   await vi.waitFor(() => expect(onMessage).toHaveBeenCalledTimes(1), {
@@ -110,7 +110,7 @@ describe("web inbound media saves with extension", () => {
   });
 
   beforeAll(async () => {
-    ({ createWaSocket } = await import('./session'));
+    ({ createWaSocket } = await import("./session.js"));
     await fs.rm(HOME, { recursive: true, force: true });
   });
 

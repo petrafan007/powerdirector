@@ -1,5 +1,5 @@
-import { escapeRegExp } from '../utils';
-import { HEARTBEAT_TOKEN } from './tokens';
+import { escapeRegExp } from "../utils.js";
+import { HEARTBEAT_TOKEN } from "./tokens.js";
 
 // Default heartbeat prompt (used when config.agents.defaults.heartbeat.prompt is unset).
 // Keep it tight and avoid encouraging the model to invent/rehash "open loops" from prior chat context.

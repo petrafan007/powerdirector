@@ -1,6 +1,6 @@
 import type { Bot } from "grammy";
-import { createDraftStreamLoop } from '../channels/draft-stream-loop';
-import { buildTelegramThreadParams, type TelegramThreadSpec } from './bot/helpers';
+import { createDraftStreamLoop } from "../channels/draft-stream-loop.js";
+import { buildTelegramThreadParams, type TelegramThreadSpec } from "./bot/helpers.js";
 
 const TELEGRAM_STREAM_MAX_CHARS = 4096;
 const DEFAULT_THROTTLE_MS = 1000;

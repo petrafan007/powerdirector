@@ -4,8 +4,8 @@ import path from "node:path";
 import JSZip from "jszip";
 import * as tar from "tar";
 import { describe, expect, it } from "vitest";
-import type { ReleaseAsset } from './signal-install';
-import { extractSignalCliArchive, looksLikeArchive, pickAsset } from './signal-install';
+import type { ReleaseAsset } from "./signal-install.js";
+import { extractSignalCliArchive, looksLikeArchive, pickAsset } from "./signal-install.js";
 
 // Realistic asset list modelled after an actual signal-cli GitHub release.
 const SAMPLE_ASSETS: ReleaseAsset[] = [

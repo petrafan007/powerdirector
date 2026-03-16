@@ -1,10 +1,10 @@
-import type { RuntimeEnv } from '../../runtime';
+import type { RuntimeEnv } from "../../runtime.js";
 import {
   addFallbackCommand,
   clearFallbacksCommand,
   listFallbacksCommand,
   removeFallbackCommand,
-} from './fallbacks-shared';
+} from "./fallbacks-shared.js";
 
 export async function modelsImageFallbacksListCommand(
   opts: { json?: boolean; plain?: boolean },

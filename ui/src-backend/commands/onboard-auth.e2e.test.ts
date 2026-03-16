@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { OAuthCredentials } from "@mariozechner/pi-ai";
 import { afterEach, describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   applyAuthProfileConfig,
   applyLitellmProviderConfig,
@@ -28,12 +28,12 @@ import {
   writeOAuthCredentials,
   ZAI_CODING_CN_BASE_URL,
   ZAI_GLOBAL_BASE_URL,
-} from './onboard-auth';
+} from "./onboard-auth.js";
 import {
   createAuthTestLifecycle,
   readAuthProfilesForAgent,
   setupAuthTestEnv,
-} from './test-wizard-helpers';
+} from "./test-wizard-helpers.js";
 
 function createLegacyProviderConfig(params: {
   providerId: string;

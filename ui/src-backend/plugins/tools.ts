@@ -1,10 +1,10 @@
-import { normalizeToolName } from '../agents/tool-policy';
-import type { AnyAgentTool } from '../agents/tools/common';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { applyTestPluginDefaults, normalizePluginsConfig } from './config-state';
-import { loadPowerDirectorPlugins } from './loader';
-import { createPluginLoaderLogger } from './logger';
-import type { PowerDirectorPluginToolContext } from './types';
+import { normalizeToolName } from "../agents/tool-policy.js";
+import type { AnyAgentTool } from "../agents/tools/common.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { applyTestPluginDefaults, normalizePluginsConfig } from "./config-state.js";
+import { loadPowerDirectorPlugins } from "./loader.js";
+import { createPluginLoaderLogger } from "./logger.js";
+import type { PowerDirectorPluginToolContext } from "./types.js";
 
 const log = createSubsystemLogger("plugins");
 

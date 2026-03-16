@@ -1,17 +1,17 @@
-import { normalizeProviderId } from '../agents/model-selection';
+import { normalizeProviderId } from "../agents/model-selection.js";
 import {
   getChannelPluginCatalogEntry,
   listChannelPluginCatalogEntries,
-} from '../channels/plugins/catalog';
+} from "../channels/plugins/catalog.js";
 import {
   getChatChannelMeta,
   listChatChannels,
   normalizeChatChannelId,
-} from '../channels/registry';
-import { isRecord } from '../utils';
-import { hasAnyWhatsAppAuth } from '../web/accounts';
-import type { PowerDirectorConfig } from './config';
-import { ensurePluginAllowlisted } from './plugins-allowlist';
+} from "../channels/registry.js";
+import { isRecord } from "../utils.js";
+import { hasAnyWhatsAppAuth } from "../web/accounts.js";
+import type { PowerDirectorConfig } from "./config.js";
+import { ensurePluginAllowlisted } from "./plugins-allowlist.js";
 
 type PluginEnableChange = {
   pluginId: string;

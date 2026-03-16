@@ -1,4 +1,4 @@
-import { normalizeE164 } from '../../../utils';
+import { normalizeE164 } from "../../../utils.js";
 
 export function noteGroupMember(
   groupMemberNames: Map<string, Map<string, string>>,

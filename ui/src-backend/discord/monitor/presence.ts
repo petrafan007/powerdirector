@@ -1,5 +1,5 @@
 import type { Activity, UpdatePresenceData } from "@buape/carbon/gateway";
-import type { DiscordAccountConfig } from '../../config/config';
+import type { DiscordAccountConfig } from "../../config/config.js";
 
 const DEFAULT_CUSTOM_ACTIVITY_TYPE = 4;
 const CUSTOM_STATUS_NAME = "Custom Status";

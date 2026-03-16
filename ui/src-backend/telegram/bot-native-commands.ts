@@ -1,6 +1,6 @@
 import type { Bot, Context } from "grammy";
-import { resolveChunkMode } from '../auto-reply/chunk';
-import type { CommandArgs } from '../auto-reply/commands-registry';
+import { resolveChunkMode } from "../auto-reply/chunk.js";
+import type { CommandArgs } from "../auto-reply/commands-registry.js";
 import {
   buildCommandTextFromArgs,
   findCommandByNativeName,
@@ -8,47 +8,47 @@ import {
   listNativeCommandSpecsForConfig,
   parseCommandArgs,
   resolveCommandArgMenu,
-} from '../auto-reply/commands-registry';
-import { finalizeInboundContext } from '../auto-reply/reply/inbound-context';
-import { dispatchReplyWithBufferedBlockDispatcher } from '../auto-reply/reply/provider-dispatcher';
-import { listSkillCommandsForAgents } from '../auto-reply/skill-commands';
-import { resolveCommandAuthorizedFromAuthorizers } from '../channels/command-gating';
-import { createReplyPrefixOptions } from '../channels/reply-prefix';
-import type { PowerDirectorConfig } from '../config/config';
-import type { ChannelGroupPolicy } from '../config/group-policy';
-import { resolveMarkdownTableMode } from '../config/markdown-tables';
+} from "../auto-reply/commands-registry.js";
+import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.js";
+import { dispatchReplyWithBufferedBlockDispatcher } from "../auto-reply/reply/provider-dispatcher.js";
+import { listSkillCommandsForAgents } from "../auto-reply/skill-commands.js";
+import { resolveCommandAuthorizedFromAuthorizers } from "../channels/command-gating.js";
+import { createReplyPrefixOptions } from "../channels/reply-prefix.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { ChannelGroupPolicy } from "../config/group-policy.js";
+import { resolveMarkdownTableMode } from "../config/markdown-tables.js";
 import {
   normalizeTelegramCommandName,
   resolveTelegramCustomCommands,
   TELEGRAM_COMMAND_NAME_PATTERN,
-} from '../config/telegram-custom-commands';
+} from "../config/telegram-custom-commands.js";
 import type {
   ReplyToMode,
   TelegramAccountConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from '../config/types';
-import { danger, logVerbose } from '../globals';
-import { getChildLogger } from '../logging';
-import { getAgentScopedMediaLocalRoots } from '../media/local-roots';
+} from "../config/types.js";
+import { danger, logVerbose } from "../globals.js";
+import { getChildLogger } from "../logging.js";
+import { getAgentScopedMediaLocalRoots } from "../media/local-roots.js";
 import {
   executePluginCommand,
   getPluginCommandSpecs,
   matchPluginCommand,
-} from '../plugins/commands';
-import { resolveAgentRoute } from '../routing/resolve-route';
-import { resolveThreadSessionKeys } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { withTelegramApiErrorLogging } from './api-logging';
-import { firstDefined, isSenderAllowed, normalizeAllowFromWithStore } from './bot-access';
+} from "../plugins/commands.js";
+import { resolveAgentRoute } from "../routing/resolve-route.js";
+import { resolveThreadSessionKeys } from "../routing/session-key.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { withTelegramApiErrorLogging } from "./api-logging.js";
+import { firstDefined, isSenderAllowed, normalizeAllowFromWithStore } from "./bot-access.js";
 import {
   buildCappedTelegramMenuCommands,
   buildPluginTelegramMenuCommands,
   syncTelegramMenuCommands,
-} from './bot-native-command-menu';
-import { TelegramUpdateKeyContext } from './bot-updates';
-import { TelegramBotOptions } from './bot';
-import { deliverReplies } from './bot/delivery';
+} from "./bot-native-command-menu.js";
+import { TelegramUpdateKeyContext } from "./bot-updates.js";
+import { TelegramBotOptions } from "./bot.js";
+import { deliverReplies } from "./bot/delivery.js";
 import {
   buildTelegramThreadParams,
   buildSenderName,
@@ -57,13 +57,13 @@ import {
   buildTelegramParentPeer,
   resolveTelegramGroupAllowFromContext,
   resolveTelegramThreadSpec,
-} from './bot/helpers';
-import type { TelegramContext } from './bot/types';
+} from "./bot/helpers.js";
+import type { TelegramContext } from "./bot/types.js";
 import {
   evaluateTelegramGroupBaseAccess,
   evaluateTelegramGroupPolicyAccess,
-} from './group-access';
-import { buildInlineKeyboard } from './send';
+} from "./group-access.js";
+import { buildInlineKeyboard } from "./send.js";
 
 const EMPTY_RESPONSE_FALLBACK = "No response generated. Please try again.";
 

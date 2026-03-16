@@ -11,11 +11,11 @@ import {
   isChromeReachable,
   resolveBrowserExecutableForPlatform,
   stopPowerDirectorChrome,
-} from './chrome';
+} from "./chrome.js";
 import {
   DEFAULT_POWERDIRECTOR_BROWSER_COLOR,
   DEFAULT_POWERDIRECTOR_BROWSER_PROFILE_NAME,
-} from './constants';
+} from "./constants.js";
 
 async function readJson(filePath: string): Promise<Record<string, unknown>> {
   const raw = await fsp.readFile(filePath, "utf-8");

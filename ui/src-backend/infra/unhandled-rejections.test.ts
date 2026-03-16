@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isAbortError, isTransientNetworkError } from './unhandled-rejections';
+import { isAbortError, isTransientNetworkError } from "./unhandled-rejections.js";
 
 describe("isAbortError", () => {
   it("returns true for error with name AbortError", () => {

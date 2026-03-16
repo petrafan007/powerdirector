@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resetInboundDedupe } from '../auto-reply/reply/inbound-dedupe';
+import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe.js";
 import {
   flush,
   getSlackClient,
@@ -8,9 +8,9 @@ import {
   resetSlackTestState,
   startSlackMonitor,
   stopSlackMonitor,
-} from './monitor.test-helpers';
+} from "./monitor.test-helpers.js";
 
-const { monitorSlackProvider } = await import('./monitor');
+const { monitorSlackProvider } = await import("./monitor.js");
 
 const slackTestState = getSlackTestState();
 

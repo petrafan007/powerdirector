@@ -1,22 +1,22 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveGatewayPort } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveGatewayPort } from "../config/config.js";
 import {
   TAILSCALE_DOCS_LINES,
   TAILSCALE_EXPOSURE_OPTIONS,
   TAILSCALE_MISSING_BIN_NOTE_LINES,
-} from '../gateway/gateway-config-prompts.shared';
-import { findTailscaleBinary } from '../infra/tailscale';
-import type { RuntimeEnv } from '../runtime';
-import { validateIPv4AddressInput } from '../shared/net/ipv4';
-import { note } from '../terminal/note';
-import { buildGatewayAuthConfig } from './configure.gateway-auth';
-import { confirm, select, text } from './configure.shared';
+} from "../gateway/gateway-config-prompts.shared.js";
+import { findTailscaleBinary } from "../infra/tailscale.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { validateIPv4AddressInput } from "../shared/net/ipv4.js";
+import { note } from "../terminal/note.js";
+import { buildGatewayAuthConfig } from "./configure.gateway-auth.js";
+import { confirm, select, text } from "./configure.shared.js";
 import {
   guardCancel,
   normalizeGatewayTokenInput,
   randomToken,
   validateGatewayPasswordInput,
-} from './onboard-helpers';
+} from "./onboard-helpers.js";
 
 type GatewayAuthChoice = "token" | "password" | "trusted-proxy";
 

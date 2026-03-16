@@ -1,13 +1,13 @@
 import type { Command } from "commander";
 import JSON5 from "json5";
-import { readConfigFileSnapshot, writeConfigFile } from '../config/config';
-import { danger, info } from '../globals';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { shortenHomePath } from '../utils';
-import { formatCliCommand } from './command-format';
+import { readConfigFileSnapshot, writeConfigFile } from "../config/config.js";
+import { danger, info } from "../globals.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { defaultRuntime } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { theme } from "../terminal/theme.js";
+import { shortenHomePath } from "../utils.js";
+import { formatCliCommand } from "./command-format.js";
 
 type PathSegment = string;
 
@@ -295,7 +295,7 @@ export function registerConfigCli(program: Command) {
       [] as string[],
     )
     .action(async (opts) => {
-      const { configureCommandFromSectionsArg } = await import('../commands/configure');
+      const { configureCommandFromSectionsArg } = await import("../commands/configure.js");
       await configureCommandFromSectionsArg(opts.section, defaultRuntime);
     });
 

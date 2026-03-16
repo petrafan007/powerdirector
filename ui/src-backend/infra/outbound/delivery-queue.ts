@@ -1,10 +1,10 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import type { ReplyPayload } from '../../auto-reply/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveStateDir } from '../../config/paths';
-import type { OutboundChannel } from './targets';
+import type { ReplyPayload } from "../../auto-reply/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveStateDir } from "../../config/paths.js";
+import type { OutboundChannel } from "./targets.js";
 
 const QUEUE_DIRNAME = "delivery-queue";
 const FAILED_DIRNAME = "failed";

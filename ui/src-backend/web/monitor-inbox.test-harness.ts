@@ -3,7 +3,7 @@ import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, vi } from "vitest";
-import { resetLogger, setLoggerOverride } from '../logging';
+import { resetLogger, setLoggerOverride } from "../logging.js";
 
 // Avoid exporting vitest mock types (TS2742 under pnpm + d.ts emit).
 // oxlint-disable-next-line typescript/no-explicit-any
@@ -78,7 +78,7 @@ vi.mock("../media/store.js", () => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => mockLoadConfig(),
@@ -120,7 +120,7 @@ export function installWebMonitorInboxUnitTestHooks(opts?: { authDir?: boolean }
       code: "PAIRCODE",
       created: true,
     });
-    const { resetWebInboundDedupe } = await import('./inbound');
+    const { resetWebInboundDedupe } = await import("./inbound.js");
     resetWebInboundDedupe();
     if (createAuthDir) {
       authDir = fsSync.mkdtempSync(path.join(os.tmpdir(), "powerdirector-auth-"));

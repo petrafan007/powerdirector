@@ -3,7 +3,7 @@ import {
   getBrowserControlServerBaseUrl,
   installBrowserControlServerHooks,
   startBrowserControlServerFromConfig,
-} from './server.control-server.test-harness';
+} from "./server.control-server.test-harness.js";
 
 export function installAgentContractHooks() {
   installBrowserControlServerHooks();

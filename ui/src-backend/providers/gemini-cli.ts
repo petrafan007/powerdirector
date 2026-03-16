@@ -118,11 +118,13 @@ export class GeminiCLIProvider implements Provider {
         if (typeof configured === 'string' && configured.trim().length > 0) {
             return configured.trim();
         }
-        return '/usr/local/bin/gemini';
+        return '/home/jcavallarojr/.npm-global/bin/gemini';
     }
 
     private buildSpawnEnv(): NodeJS.ProcessEnv {
         const spawnEnv: Record<string, string | undefined> = {
+            HOME: process.env.HOME || '/home/jcavallarojr',
+            PATH: process.env.PATH || '/home/jcavallarojr/.npm-global/bin:/usr/local/bin:/usr/bin:/bin',
             ...process.env,
             ...(this.runtimeEnv || {}),
             ...(this.backendConfig?.env || {}),
@@ -188,6 +190,36 @@ export class GeminiCLIProvider implements Provider {
     }
 
     async *completionStream(prompt: string, model?: string, options?: { attachments?: any[], signal?: AbortSignal }): AsyncIterable<string> {
+        let attempt = 0;
+        const maxAttempts = 2;
+        const logger = getRuntimeLogger();
+
+        while (attempt < maxAttempts) {
+            attempt++;
+            let hasOutput = false;
+            try {
+                for await (const chunk of this.runCli(prompt, model, options)) {
+                    if (chunk.length > 0) {
+                        hasOutput = true;
+                    }
+                    yield chunk;
+                }
+                if (hasOutput) return;
+                
+                if (attempt < maxAttempts) {
+                    logger.warn(`[GeminiCLIProvider] Empty response on attempt ${attempt}, retrying...`);
+                    await new Promise(r => setTimeout(r, 1500));
+                    continue;
+                }
+            } catch (err: any) {
+                if (attempt >= maxAttempts) throw err;
+                logger.warn(`[GeminiCLIProvider] Error on attempt ${attempt}: ${err.message}, retrying...`);
+                await new Promise(r => setTimeout(r, 1500));
+            }
+        }
+    }
+
+    private async *runCli(prompt: string, model?: string, options?: { attachments?: any[], signal?: AbortSignal }): AsyncIterable<string> {
         const logger = getRuntimeLogger();
         const workspaceDir = ((this.runtimeEnv as any)?.WORKSPACE_DIR || process.cwd()) as string;
         const inputMode = this.resolveInputMode();
@@ -198,7 +230,11 @@ export class GeminiCLIProvider implements Provider {
         const outputFormat = this.backendConfig?.output || 'text';
         const baseArgs = Array.isArray(this.backendConfig?.args) && this.backendConfig!.args!.length > 0
             ? [...this.backendConfig!.args!]
-            : ['--output-format', outputFormat, '--tool-mode', 'none'];
+            : ['--output-format', outputFormat, '--approval-mode', 'plan'];
+        
+        if (inputMode === 'stdin') {
+            baseArgs.push('-p', '-');
+        }
         const spawnEnv = this.buildSpawnEnv();
         const modelToUse = this.resolveModel(model);
 
@@ -263,7 +299,7 @@ ${prompt}`;
             args.push(this.resolvePromptArg(finalPrompt));
         }
 
-        logger.info(`[GeminiCLIProvider] Spawning gemini with input=${inputMode} model=${modelToUse}`);
+        logger.info(`[GeminiCLIProvider] Spawning gemini with input=${inputMode} model=${modelToUse} command=${command} args=${JSON.stringify(args)}`);
 
         const child = spawn(command, args, {
             env: spawnEnv,
@@ -359,12 +395,6 @@ ${prompt}`;
         child.stderr.on('data', (chunk: Buffer) => {
             const text = chunk.toString();
             stderr += text;
-            if (/(?:429|capacity|resource_exhausted)/i.test(text)) {
-                logger.warn(`[GeminiCLIProvider] Intercepted 429 Resource Exhausted on stderr`);
-                try { child.kill('SIGTERM'); } catch { }
-                fail(new Error(`[GeminiCLIProvider] Resource Exhausted (429): No capacity available.`));
-                return;
-            }
             if (!sawStdout && text.trim()) {
                 const now = Date.now();
                 if (now - heartbeatSentAt >= 1000) {
@@ -387,6 +417,11 @@ ${prompt}`;
         child.on('close', (code) => {
             cleanupAbortHandler();
             logger.info(`[GeminiCLIProvider] Process closed with code ${code}`);
+            if (code !== 0 && !finished) {
+                logger.error(`[GeminiCLIProvider] Process failed with code ${code}. Stderr: ${stderr}`);
+                fail(new Error(`[GeminiCLIProvider] Process closed with code ${code}`));
+                return;
+            }
             const diagnostics = summarizeGeminiCliStderr(stderr);
             if (diagnostics.length > 0) {
                 logger.warn(`[GeminiCLIProvider] stderr diagnostics: ${diagnostics.join(' | ')}`);

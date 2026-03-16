@@ -3,8 +3,8 @@ import {
   authorizeOperatorScopesForMethod,
   isGatewayMethodClassified,
   resolveLeastPrivilegeOperatorScopesForMethod,
-} from './method-scopes';
-import { coreGatewayHandlers } from './server-methods';
+} from "./method-scopes.js";
+import { coreGatewayHandlers } from "./server-methods.js";
 
 describe("method scope resolution", () => {
   it("classifies sessions.resolve as read and poll as write", () => {

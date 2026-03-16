@@ -4,37 +4,37 @@ import path from "node:path";
 import {
   collectProviderApiKeysForExecution,
   executeWithApiKeyRotation,
-} from '../agents/api-key-rotation';
-import { requireApiKey, resolveApiKeyForProvider } from '../agents/model-auth';
-import type { MsgContext } from '../auto-reply/templating';
-import { applyTemplate } from '../auto-reply/templating';
-import type { PowerDirectorConfig } from '../config/config';
+} from "../agents/api-key-rotation.js";
+import { requireApiKey, resolveApiKeyForProvider } from "../agents/model-auth.js";
+import type { MsgContext } from "../auto-reply/templating.js";
+import { applyTemplate } from "../auto-reply/templating.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import type {
   MediaUnderstandingConfig,
   MediaUnderstandingModelConfig,
-} from '../config/types.tools';
-import { logVerbose, shouldLogVerbose } from '../globals';
-import { runExec } from '../process/exec';
-import { MediaAttachmentCache } from './attachments';
+} from "../config/types.tools.js";
+import { logVerbose, shouldLogVerbose } from "../globals.js";
+import { runExec } from "../process/exec.js";
+import { MediaAttachmentCache } from "./attachments.js";
 import {
   CLI_OUTPUT_MAX_BUFFER,
   DEFAULT_AUDIO_MODELS,
   DEFAULT_TIMEOUT_SECONDS,
-} from './defaults';
-import { MediaUnderstandingSkipError } from './errors';
-import { fileExists } from './fs';
-import { extractGeminiResponse } from './output-extract';
-import { describeImageWithModel } from './providers/image';
-import { getMediaUnderstandingProvider, normalizeMediaProviderId } from './providers/index';
-import { resolveMaxBytes, resolveMaxChars, resolvePrompt, resolveTimeoutMs } from './resolve';
+} from "./defaults.js";
+import { MediaUnderstandingSkipError } from "./errors.js";
+import { fileExists } from "./fs.js";
+import { extractGeminiResponse } from "./output-extract.js";
+import { describeImageWithModel } from "./providers/image.js";
+import { getMediaUnderstandingProvider, normalizeMediaProviderId } from "./providers/index.js";
+import { resolveMaxBytes, resolveMaxChars, resolvePrompt, resolveTimeoutMs } from "./resolve.js";
 import type {
   MediaUnderstandingCapability,
   MediaUnderstandingDecision,
   MediaUnderstandingModelDecision,
   MediaUnderstandingOutput,
   MediaUnderstandingProvider,
-} from './types';
-import { estimateBase64Size, resolveVideoMaxBase64Bytes } from './video';
+} from "./types.js";
+import { estimateBase64Size, resolveVideoMaxBase64Bytes } from "./video.js";
 
 export type ProviderRegistry = Map<string, MediaUnderstandingProvider>;
 

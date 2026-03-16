@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { ChannelAccountSnapshot, ChannelPlugin } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { ChannelAccountSnapshot, ChannelPlugin } from "./types.js";
 
 // Channel docking: status snapshots flow through plugin.status hooks here.
 export async function buildChannelAccountSnapshot<ResolvedAccount>(params: {

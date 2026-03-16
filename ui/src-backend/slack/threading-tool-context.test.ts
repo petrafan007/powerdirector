@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { buildSlackThreadingToolContext } from './threading-tool-context';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { buildSlackThreadingToolContext } from "./threading-tool-context.js";
 
 const emptyCfg = {} as PowerDirectorConfig;
 

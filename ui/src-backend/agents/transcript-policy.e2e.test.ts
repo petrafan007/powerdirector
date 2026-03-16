@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveTranscriptPolicy } from './transcript-policy';
+import { resolveTranscriptPolicy } from "./transcript-policy.js";
 
 describe("resolveTranscriptPolicy e2e smoke", () => {
   it("uses images-only sanitization without tool-call id rewriting for OpenAI models", () => {

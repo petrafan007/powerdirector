@@ -1,10 +1,10 @@
 import path from "node:path";
-import type { CliBackendConfig } from '../../config/types';
+import type { CliBackendConfig } from "../../config/types.js";
 import {
   CLI_FRESH_WATCHDOG_DEFAULTS,
   CLI_RESUME_WATCHDOG_DEFAULTS,
   CLI_WATCHDOG_MIN_TIMEOUT_MS,
-} from '../cli-watchdog-defaults';
+} from "../cli-watchdog-defaults.js";
 
 function pickWatchdogProfile(
   backend: CliBackendConfig,

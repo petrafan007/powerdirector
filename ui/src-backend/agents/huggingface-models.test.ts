@@ -4,7 +4,7 @@ import {
   HUGGINGFACE_MODEL_CATALOG,
   buildHuggingfaceModelDefinition,
   isHuggingfacePolicyLocked,
-} from './huggingface-models';
+} from "./huggingface-models.js";
 
 describe("huggingface-models", () => {
   it("buildHuggingfaceModelDefinition returns config with required fields", () => {

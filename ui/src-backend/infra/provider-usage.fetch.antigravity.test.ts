@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createProviderUsageFetch, makeResponse } from '../test-utils/provider-usage-fetch';
-import { fetchAntigravityUsage } from './provider-usage.fetch.antigravity';
+import { createProviderUsageFetch, makeResponse } from "../test-utils/provider-usage-fetch.js";
+import { fetchAntigravityUsage } from "./provider-usage.fetch.antigravity.js";
 
 const getRequestBody = (init?: Parameters<typeof fetch>[1]) =>
   typeof init?.body === "string" ? init.body : undefined;

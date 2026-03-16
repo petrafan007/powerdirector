@@ -2,11 +2,11 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import type { MockFn } from '../test-utils/vitest-mock-fn';
-import type { CronEvent } from './service';
-import { CronService } from './service';
-import { createCronServiceState } from './service/state';
-import type { CronJob } from './types';
+import type { MockFn } from "../test-utils/vitest-mock-fn.js";
+import type { CronEvent } from "./service.js";
+import { CronService } from "./service.js";
+import { createCronServiceState } from "./service/state.js";
+import type { CronJob } from "./types.js";
 
 export type NoopLogger = {
   debug: MockFn;

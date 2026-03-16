@@ -1,5 +1,5 @@
-import type { ChannelId } from '../channels/plugins/types';
-import type { GatewayDaemonRuntime } from './daemon-runtime';
+import type { ChannelId } from "../channels/plugins/types.js";
+import type { GatewayDaemonRuntime } from "./daemon-runtime.js";
 
 export type OnboardMode = "local" | "remote";
 export type AuthChoice =

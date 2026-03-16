@@ -4,23 +4,23 @@ import type { ZodIssue } from "zod";
 import {
   isNumericTelegramUserId,
   normalizeTelegramAllowFromEntry,
-} from '../channels/telegram/allow-from';
-import { fetchTelegramChatId } from '../channels/telegram/api';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
+} from "../channels/telegram/allow-from.js";
+import { fetchTelegramChatId } from "../channels/telegram/api.js";
+import { formatCliCommand } from "../cli/command-format.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   PowerDirectorSchema,
   CONFIG_PATH,
   migrateLegacyConfig,
   readConfigFileSnapshot,
-} from '../config/config';
-import { applyPluginAutoEnable } from '../config/plugin-auto-enable';
-import { listTelegramAccountIds, resolveTelegramAccount } from '../telegram/accounts';
-import { note } from '../terminal/note';
-import { isRecord, resolveHomeDir } from '../utils';
-import { normalizeLegacyConfigValues } from './doctor-legacy-config';
-import type { DoctorOptions } from './doctor-prompter';
-import { autoMigrateLegacyStateDir } from './doctor-state-migrations';
+} from "../config/config.js";
+import { applyPluginAutoEnable } from "../config/plugin-auto-enable.js";
+import { listTelegramAccountIds, resolveTelegramAccount } from "../telegram/accounts.js";
+import { note } from "../terminal/note.js";
+import { isRecord, resolveHomeDir } from "../utils.js";
+import { normalizeLegacyConfigValues } from "./doctor-legacy-config.js";
+import type { DoctorOptions } from "./doctor-prompter.js";
+import { autoMigrateLegacyStateDir } from "./doctor-state-migrations.js";
 
 type UnrecognizedKeysIssue = ZodIssue & {
   code: "unrecognized_keys";

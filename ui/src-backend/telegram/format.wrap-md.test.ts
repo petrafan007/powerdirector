@@ -4,7 +4,7 @@ import {
   markdownToTelegramHtml,
   renderTelegramHtmlText,
   wrapFileReferencesInHtml,
-} from './format';
+} from "./format.js";
 
 describe("wrapFileReferencesInHtml", () => {
   it("wraps .md filenames in code tags", () => {

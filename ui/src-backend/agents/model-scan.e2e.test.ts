@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { captureEnv } from '../test-utils/env';
-import { withFetchPreconnect } from '../test-utils/fetch-mock';
-import { scanOpenRouterModels } from './model-scan';
+import { captureEnv } from "../test-utils/env.js";
+import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
+import { scanOpenRouterModels } from "./model-scan.js";
 
 function createFetchFixture(payload: unknown): typeof fetch {
   return withFetchPreconnect(

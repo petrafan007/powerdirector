@@ -1,10 +1,10 @@
-import { normalizeVerboseLevel } from '../auto-reply/thinking';
-import { isSilentReplyText, SILENT_REPLY_TOKEN } from '../auto-reply/tokens';
-import { loadConfig } from '../config/config';
-import { type AgentEventPayload, getAgentRunContext } from '../infra/agent-events';
-import { resolveHeartbeatVisibility } from '../infra/heartbeat-visibility';
-import { loadSessionEntry } from './session-utils';
-import { formatForLog } from './ws-log';
+import { normalizeVerboseLevel } from "../auto-reply/thinking.js";
+import { isSilentReplyText, SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
+import { loadConfig } from "../config/config.js";
+import { type AgentEventPayload, getAgentRunContext } from "../infra/agent-events.js";
+import { resolveHeartbeatVisibility } from "../infra/heartbeat-visibility.js";
+import { loadSessionEntry } from "./session-utils.js";
+import { formatForLog } from "./ws-log.js";
 
 /**
  * Check if webchat broadcasts should be suppressed for heartbeat runs.

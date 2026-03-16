@@ -1,8 +1,8 @@
 export {
   SYNTHETIC_DEFAULT_MODEL_ID,
   SYNTHETIC_DEFAULT_MODEL_REF,
-} from '../agents/synthetic-models';
-export { VENICE_DEFAULT_MODEL_ID, VENICE_DEFAULT_MODEL_REF } from '../agents/venice-models';
+} from "../agents/synthetic-models.js";
+export { VENICE_DEFAULT_MODEL_ID, VENICE_DEFAULT_MODEL_REF } from "../agents/venice-models.js";
 export {
   applyAuthProfileConfig,
   applyCloudflareAiGatewayConfig,
@@ -35,7 +35,7 @@ export {
   applyXiaomiProviderConfig,
   applyZaiConfig,
   applyZaiProviderConfig,
-} from './onboard-auth.config-core';
+} from "./onboard-auth.config-core.js";
 export {
   applyMinimaxApiConfig,
   applyMinimaxApiConfigCn,
@@ -45,12 +45,12 @@ export {
   applyMinimaxHostedConfig,
   applyMinimaxHostedProviderConfig,
   applyMinimaxProviderConfig,
-} from './onboard-auth.config-minimax';
+} from "./onboard-auth.config-minimax.js";
 
 export {
   applyOpencodeZenConfig,
   applyOpencodeZenProviderConfig,
-} from './onboard-auth.config-opencode';
+} from "./onboard-auth.config-opencode.js";
 export {
   CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF,
   LITELLM_DEFAULT_MODEL_REF,
@@ -80,7 +80,7 @@ export {
   ZAI_DEFAULT_MODEL_REF,
   TOGETHER_DEFAULT_MODEL_REF,
   XAI_DEFAULT_MODEL_REF,
-} from './onboard-auth.credentials';
+} from "./onboard-auth.credentials.js";
 export {
   buildMinimaxApiModelDefinition,
   buildMinimaxModelDefinition,
@@ -106,4 +106,4 @@ export {
   ZAI_CODING_GLOBAL_BASE_URL,
   ZAI_CN_BASE_URL,
   ZAI_GLOBAL_BASE_URL,
-} from './onboard-auth.models';
+} from "./onboard-auth.models.js";

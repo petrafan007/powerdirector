@@ -4,25 +4,25 @@ import {
   formatThinkingLevels,
   normalizeUsageDisplay,
   resolveResponseUsageMode,
-} from '../auto-reply/thinking';
-import type { SessionsPatchResult } from '../gateway/protocol/index';
+} from "../auto-reply/thinking.js";
+import type { SessionsPatchResult } from "../gateway/protocol/index.js";
 import { formatRelativeTimestamp } from "../infra/format-time/format-relative.ts";
-import { normalizeAgentId } from '../routing/session-key';
-import { helpText, parseCommand } from './commands';
-import type { ChatLog } from './components/chat-log';
+import { normalizeAgentId } from "../routing/session-key.js";
+import { helpText, parseCommand } from "./commands.js";
+import type { ChatLog } from "./components/chat-log.js";
 import {
   createFilterableSelectList,
   createSearchableSelectList,
   createSettingsList,
-} from './components/selectors';
-import type { GatewayChatClient } from './gateway-chat';
-import { formatStatusSummary } from './tui-status-summary';
+} from "./components/selectors.js";
+import type { GatewayChatClient } from "./gateway-chat.js";
+import { formatStatusSummary } from "./tui-status-summary.js";
 import type {
   AgentSummary,
   GatewayStatusSummary,
   TuiOptions,
   TuiStateAccess,
-} from './tui-types';
+} from "./tui-types.js";
 
 type CommandHandlerContext = {
   client: GatewayChatClient;

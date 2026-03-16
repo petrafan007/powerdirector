@@ -1,11 +1,11 @@
 import fs from "node:fs";
-import { loadConfig } from '../../config/config';
+import { loadConfig } from "../../config/config.js";
 import {
   resolveSessionFilePath,
   resolveSessionFilePathOptions,
-} from '../../config/sessions/paths';
-import type { SessionEntry, SessionSystemPromptReport } from '../../config/sessions/types';
-import { loadProviderUsageSummary } from '../../infra/provider-usage';
+} from "../../config/sessions/paths.js";
+import type { SessionEntry, SessionSystemPromptReport } from "../../config/sessions/types.js";
+import { loadProviderUsageSummary } from "../../infra/provider-usage.js";
 import type {
   CostUsageSummary,
   SessionCostSummary,
@@ -15,28 +15,28 @@ import type {
   SessionLatencyStats,
   SessionModelUsage,
   SessionToolUsage,
-} from '../../infra/session-cost-usage';
+} from "../../infra/session-cost-usage.js";
 import {
   loadCostUsageSummary,
   loadSessionCostSummary,
   loadSessionUsageTimeSeries,
   discoverAllSessions,
   type DiscoveredSession,
-} from '../../infra/session-cost-usage';
-import { parseAgentSessionKey } from '../../routing/session-key';
-import { buildUsageAggregateTail } from '../../shared/usage-aggregates';
+} from "../../infra/session-cost-usage.js";
+import { parseAgentSessionKey } from "../../routing/session-key.js";
+import { buildUsageAggregateTail } from "../../shared/usage-aggregates.js";
 import {
   ErrorCodes,
   errorShape,
   formatValidationErrors,
   validateSessionsUsageParams,
-} from '../protocol/index';
+} from "../protocol/index.js";
 import {
   listAgentsForGateway,
   loadCombinedSessionStoreForGateway,
   loadSessionEntry,
-} from '../session-utils';
-import type { GatewayRequestHandlers, RespondFn } from './types';
+} from "../session-utils.js";
+import type { GatewayRequestHandlers, RespondFn } from "./types.js";
 
 const COST_USAGE_CACHE_TTL_MS = 30_000;
 
@@ -832,7 +832,7 @@ export const usageHandlers: GatewayRequestHandlers = {
     }
     const { config, entry, agentId, sessionId, sessionFile } = resolved;
 
-    const { loadSessionLogs } = await import('../../infra/session-cost-usage');
+    const { loadSessionLogs } = await import("../../infra/session-cost-usage.js");
     const logs = await loadSessionLogs({
       sessionId,
       sessionEntry: entry,

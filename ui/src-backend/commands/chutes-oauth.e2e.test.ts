@@ -1,8 +1,8 @@
 import net from "node:net";
 import { describe, expect, it, vi } from "vitest";
-import { CHUTES_TOKEN_ENDPOINT, CHUTES_USERINFO_ENDPOINT } from '../agents/chutes-oauth';
-import { withFetchPreconnect } from '../test-utils/fetch-mock';
-import { loginChutes } from './chutes-oauth';
+import { CHUTES_TOKEN_ENDPOINT, CHUTES_USERINFO_ENDPOINT } from "../agents/chutes-oauth.js";
+import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
+import { loginChutes } from "./chutes-oauth.js";
 
 async function getFreePort(): Promise<number> {
   return await new Promise((resolve, reject) => {

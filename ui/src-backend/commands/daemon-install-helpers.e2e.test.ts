@@ -26,7 +26,7 @@ import {
   buildGatewayInstallPlan,
   gatewayInstallErrorHint,
   resolveGatewayDevMode,
-} from './daemon-install-helpers';
+} from "./daemon-install-helpers.js";
 
 afterEach(() => {
   vi.resetAllMocks();

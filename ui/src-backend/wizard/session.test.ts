@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { WizardSession } from './session';
+import { WizardSession } from "./session.js";
 
 function noteRunner() {
   return new WizardSession(async (prompter) => {

@@ -33,7 +33,7 @@ vi.mock("node:fs", async (importOriginal) => {
   return { ...wrapped, default: wrapped };
 });
 
-let ensurePowerDirectorCliOnPath: typeof import('./path-env').ensurePowerDirectorCliOnPath;
+let ensurePowerDirectorCliOnPath: typeof import("./path-env.js").ensurePowerDirectorCliOnPath;
 
 describe("ensurePowerDirectorCliOnPath", () => {
   const envKeys = [
@@ -48,7 +48,7 @@ describe("ensurePowerDirectorCliOnPath", () => {
   let envSnapshot: Record<(typeof envKeys)[number], string | undefined>;
 
   beforeAll(async () => {
-    ({ ensurePowerDirectorCliOnPath } = await import('./path-env'));
+    ({ ensurePowerDirectorCliOnPath } = await import("./path-env.js"));
   });
 
   beforeEach(() => {

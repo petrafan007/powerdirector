@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { formatCliCommand } from '../cli/command-format';
+import { formatCliCommand } from "../cli/command-format.js";
 import {
   type PowerDirectorConfig,
   CONFIG_PATH,
@@ -8,10 +8,10 @@ import {
   resolveGatewayPort,
   validateConfigObjectWithPlugins,
   writeConfigFile,
-} from '../config/config';
-import { runCommandWithTimeout } from '../process/exec';
-import { defaultRuntime } from '../runtime';
-import { displayPath } from '../utils';
+} from "../config/config.js";
+import { runCommandWithTimeout } from "../process/exec.js";
+import { defaultRuntime } from "../runtime.js";
+import { displayPath } from "../utils.js";
 import {
   ensureDependency,
   ensureGcloudAuth,
@@ -20,7 +20,7 @@ import {
   ensureTopic,
   resolveProjectIdFromGogCredentials,
   runGcloud,
-} from './gmail-setup-utils';
+} from "./gmail-setup-utils.js";
 import {
   buildDefaultHookUrl,
   buildGogWatchServeArgs,
@@ -42,7 +42,7 @@ import {
   normalizeServePath,
   parseTopicPath,
   resolveGmailHookRuntimeConfig,
-} from './gmail';
+} from "./gmail.js";
 
 type GmailCommonOptions = {
   topic?: string;

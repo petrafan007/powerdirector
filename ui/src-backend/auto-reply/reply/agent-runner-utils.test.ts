@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { FollowupRun } from './queue';
+import type { FollowupRun } from "./queue.js";
 
 const hoisted = vi.hoisted(() => {
   const resolveAgentModelFallbacksOverrideMock = vi.fn();
@@ -22,7 +22,7 @@ const {
   buildEmbeddedRunContexts,
   resolveModelFallbackOptions,
   resolveProviderScopedAuthProfile,
-} = await import('./agent-runner-utils');
+} = await import("./agent-runner-utils.js");
 
 function makeRun(overrides: Partial<FollowupRun["run"]> = {}): FollowupRun["run"] {
   return {

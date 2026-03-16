@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   selectCompactionTimeoutSnapshot,
   shouldFlagCompactionTimeout,
-} from './compaction-timeout';
+} from "./compaction-timeout.js";
 
 describe("compaction-timeout helpers", () => {
   it("flags compaction timeout consistently for internal and external timeout sources", () => {

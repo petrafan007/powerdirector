@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { formatForLog, shortId, summarizeAgentEventForWsLog } from './ws-log';
+import { formatForLog, shortId, summarizeAgentEventForWsLog } from "./ws-log.js";
 
 describe("gateway ws log helpers", () => {
   test("shortId compacts uuids and long strings", () => {

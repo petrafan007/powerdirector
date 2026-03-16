@@ -1,11 +1,11 @@
-import { callGateway } from '../../gateway/call';
-import { logVerbose } from '../../globals';
+import { callGateway } from "../../gateway/call.js";
+import { logVerbose } from "../../globals.js";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
   isInternalMessageChannel,
-} from '../../utils/message-channel';
-import type { CommandHandler } from './commands-types';
+} from "../../utils/message-channel.js";
+import type { CommandHandler } from "./commands-types.js";
 
 const COMMAND = "/approve";
 

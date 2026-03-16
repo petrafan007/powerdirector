@@ -6,11 +6,11 @@ import {
   MAIN_SESSION_KEY,
   makeCfg,
   withTempHome,
-} from './reply.triggers.trigger-handling.test-harness';
+} from "./reply.triggers.trigger-handling.test-harness.js";
 
-let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import('./reply'));
+  ({ getReplyFromConfig } = await import("./reply.js"));
 });
 
 installTriggerHandlingE2eTestHooks();
@@ -51,7 +51,7 @@ function requireSessionStorePath(cfg: { session?: { store?: string } }): string 
 async function runInlineUnauthorizedCommand(params: {
   home: string;
   command: "/status" | "/help";
-  getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+  getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 }) {
   const cfg = makeUnauthorizedWhatsAppCfg(params.home);
   const res = await params.getReplyFromConfig(

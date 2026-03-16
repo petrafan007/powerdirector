@@ -1,4 +1,4 @@
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../thinking';
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../thinking.js";
 
 export async function resolveCurrentDirectiveLevels(params: {
   sessionEntry?: {

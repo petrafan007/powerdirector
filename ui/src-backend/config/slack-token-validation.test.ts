@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateConfigObject } from './config';
+import { validateConfigObject } from "./config.js";
 
 describe("Slack token config fields", () => {
   it("accepts user token config fields", () => {

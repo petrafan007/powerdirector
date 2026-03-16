@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { listChannelPlugins } from '../../channels/plugins/index';
-import type { ChannelPlugin } from '../../channels/plugins/types';
-import { buildChannelsTable } from './channels';
+import { listChannelPlugins } from "../../channels/plugins/index.js";
+import type { ChannelPlugin } from "../../channels/plugins/types.js";
+import { buildChannelsTable } from "./channels.js";
 
 vi.mock("../../channels/plugins/index.js", () => ({
   listChannelPlugins: vi.fn(),

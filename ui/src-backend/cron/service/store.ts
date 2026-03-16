@@ -3,15 +3,15 @@ import {
   buildDeliveryFromLegacyPayload,
   hasLegacyDeliveryHints,
   stripLegacyDeliveryFields,
-} from '../legacy-delivery';
-import { parseAbsoluteTimeMs } from '../parse';
-import { migrateLegacyCronPayload } from '../payload-migration';
-import { normalizeCronStaggerMs, resolveDefaultCronStaggerMs } from '../stagger';
-import { loadCronStore, saveCronStore } from '../store';
-import type { CronJob } from '../types';
-import { recomputeNextRuns } from './jobs';
-import { inferLegacyName, normalizeOptionalText } from './normalize';
-import type { CronServiceState } from './state';
+} from "../legacy-delivery.js";
+import { parseAbsoluteTimeMs } from "../parse.js";
+import { migrateLegacyCronPayload } from "../payload-migration.js";
+import { normalizeCronStaggerMs, resolveDefaultCronStaggerMs } from "../stagger.js";
+import { loadCronStore, saveCronStore } from "../store.js";
+import type { CronJob } from "../types.js";
+import { recomputeNextRuns } from "./jobs.js";
+import { inferLegacyName, normalizeOptionalText } from "./normalize.js";
+import type { CronServiceState } from "./state.js";
 
 function buildDeliveryPatchFromLegacyPayload(payload: Record<string, unknown>) {
   const deliver = payload.deliver;

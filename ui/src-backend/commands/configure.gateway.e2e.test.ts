@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { RuntimeEnv } from '../runtime';
+import type { RuntimeEnv } from "../runtime.js";
 
 const mocks = vi.hoisted(() => ({
   text: vi.fn(),
@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../config/config.js", async (importActual) => {
-  const actual = await importActual<typeof import('../config/config')>();
+  const actual = await importActual<typeof import("../config/config.js")>();
   return {
     ...actual,
     resolveGatewayPort: mocks.resolveGatewayPort,
@@ -38,14 +38,14 @@ vi.mock("../infra/tailscale.js", () => ({
 }));
 
 vi.mock("./onboard-helpers.js", async (importActual) => {
-  const actual = await importActual<typeof import('./onboard-helpers')>();
+  const actual = await importActual<typeof import("./onboard-helpers.js")>();
   return {
     ...actual,
     randomToken: mocks.randomToken,
   };
 });
 
-import { promptGatewayConfig } from './configure.gateway';
+import { promptGatewayConfig } from "./configure.gateway.js";
 
 function makeRuntime(): RuntimeEnv {
   return {

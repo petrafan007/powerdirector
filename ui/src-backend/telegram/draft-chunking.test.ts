@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveTelegramDraftStreamingChunking } from './draft-chunking';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveTelegramDraftStreamingChunking } from "./draft-chunking.js";
 
 describe("resolveTelegramDraftStreamingChunking", () => {
   it("uses smaller defaults than block streaming", () => {

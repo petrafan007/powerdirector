@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
-import type { PowerDirectorConfig } from '../config/config';
-import type { CronJob } from './types';
+import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { CronJob } from "./types.js";
 
 export async function withTempCronHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   return withTempHomeBase(fn, { prefix: "powerdirector-cron-" });

@@ -27,7 +27,7 @@ vi.mock("../infra/runtime-guard.js", () => ({
   assertSupportedRuntime: assertRuntimeMock,
 }));
 
-const { runCli } = await import('./run-main');
+const { runCli } = await import("./run-main.js");
 
 describe("runCli exit behavior", () => {
   beforeEach(() => {

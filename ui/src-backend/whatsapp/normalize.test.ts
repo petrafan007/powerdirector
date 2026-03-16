@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isWhatsAppGroupJid, isWhatsAppUserTarget, normalizeWhatsAppTarget } from './normalize';
+import { isWhatsAppGroupJid, isWhatsAppUserTarget, normalizeWhatsAppTarget } from "./normalize.js";
 
 describe("normalizeWhatsAppTarget", () => {
   it("preserves group JIDs", () => {

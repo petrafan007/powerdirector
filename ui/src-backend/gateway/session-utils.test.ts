@@ -2,8 +2,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, test } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionEntry } from '../config/sessions';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SessionEntry } from "../config/sessions.js";
 import {
   capArrayByJsonBytes,
   classifySessionKey,
@@ -14,7 +14,7 @@ import {
   resolveGatewaySessionStoreTarget,
   resolveSessionModelRef,
   resolveSessionStoreKey,
-} from './session-utils';
+} from "./session-utils.js";
 
 describe("gateway session utils", () => {
   test("capArrayByJsonBytes trims from the front", () => {

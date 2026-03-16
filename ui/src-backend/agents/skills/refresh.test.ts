@@ -15,7 +15,7 @@ vi.mock("chokidar", () => {
 
 describe("ensureSkillsWatcher", () => {
   it("ignores node_modules, dist, .git, and Python venvs by default", async () => {
-    const mod = await import('./refresh');
+    const mod = await import("./refresh.js");
     mod.ensureSkillsWatcher({ workspaceDir: "/tmp/workspace" });
 
     expect(watchMock).toHaveBeenCalledTimes(1);

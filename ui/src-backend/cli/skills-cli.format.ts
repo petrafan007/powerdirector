@@ -1,8 +1,8 @@
-import type { SkillStatusEntry, SkillStatusReport } from '../agents/skills-status';
-import { renderTable } from '../terminal/table';
-import { theme } from '../terminal/theme';
-import { shortenHomePath } from '../utils';
-import { formatCliCommand } from './command-format';
+import type { SkillStatusEntry, SkillStatusReport } from "../agents/skills-status.js";
+import { renderTable } from "../terminal/table.js";
+import { theme } from "../terminal/theme.js";
+import { shortenHomePath } from "../utils.js";
+import { formatCliCommand } from "./command-format.js";
 
 export type SkillsListOptions = {
   json?: boolean;

@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { resolveUserPath } from '../utils';
+import { resolveUserPath } from "../utils.js";
 
 export function readSecretFromFile(filePath: string, label: string): string {
   const resolvedPath = resolveUserPath(filePath.trim());

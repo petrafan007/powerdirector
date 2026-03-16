@@ -6,12 +6,12 @@ import { SessionManager } from "@mariozechner/pi-coding-agent";
 import {
   resolveDefaultSessionStorePath,
   resolveSessionFilePath,
-} from '../../config/sessions/paths';
-import { loadSessionStore } from '../../config/sessions/store';
-import type { SessionEntry } from '../../config/sessions/types';
-import type { ReplyPayload } from '../types';
-import { resolveCommandsSystemPromptBundle } from './commands-system-prompt';
-import type { HandleCommandsParams } from './commands-types';
+} from "../../config/sessions/paths.js";
+import { loadSessionStore } from "../../config/sessions/store.js";
+import type { SessionEntry } from "../../config/sessions/types.js";
+import type { ReplyPayload } from "../types.js";
+import { resolveCommandsSystemPromptBundle } from "./commands-system-prompt.js";
+import type { HandleCommandsParams } from "./commands-types.js";
 
 // Export HTML templates are bundled with this module
 const EXPORT_HTML_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "export-html");

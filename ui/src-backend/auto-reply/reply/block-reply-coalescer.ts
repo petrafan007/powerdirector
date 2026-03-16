@@ -1,5 +1,5 @@
-import type { ReplyPayload } from '../types';
-import type { BlockStreamingCoalescing } from './block-streaming';
+import type { ReplyPayload } from "../types.js";
+import type { BlockStreamingCoalescing } from "./block-streaming.js";
 
 export type BlockReplyCoalescer = {
   enqueue: (payload: ReplyPayload) => void;

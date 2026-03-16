@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createTestRegistry } from '../../test-utils/channel-plugins';
-import { extractAssistantText, sanitizeTextContent } from './sessions-helpers';
+import { createTestRegistry } from "../../test-utils/channel-plugins.js";
+import { extractAssistantText, sanitizeTextContent } from "./sessions-helpers.js";
 
 const callGatewayMock = vi.fn();
 vi.mock("../../gateway/call.js", () => ({
@@ -8,7 +8,7 @@ vi.mock("../../gateway/call.js", () => ({
 }));
 
 vi.mock("../../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../config/config')>();
+  const actual = await importOriginal<typeof import("../../config/config.js")>();
   return {
     ...actual,
     loadConfig: () =>
@@ -19,13 +19,13 @@ vi.mock("../../config/config.js", async (importOriginal) => {
   };
 });
 
-import { createSessionsListTool } from './sessions-list-tool';
-import { createSessionsSendTool } from './sessions-send-tool';
+import { createSessionsListTool } from "./sessions-list-tool.js";
+import { createSessionsSendTool } from "./sessions-send-tool.js";
 
-const loadResolveAnnounceTarget = async () => await import('./sessions-announce-target');
+const loadResolveAnnounceTarget = async () => await import("./sessions-announce-target.js");
 
 const installRegistry = async () => {
-  const { setActivePluginRegistry } = await import('../../plugins/runtime');
+  const { setActivePluginRegistry } = await import("../../plugins/runtime.js");
   setActivePluginRegistry(
     createTestRegistry([
       {

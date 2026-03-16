@@ -20,15 +20,15 @@ vi.mock("../agents/agent-scope.js", () => ({
   resolveDefaultAgentId,
 }));
 
-let registerMemoryCli: typeof import('./memory-cli').registerMemoryCli;
-let defaultRuntime: typeof import('../runtime').defaultRuntime;
-let isVerbose: typeof import('../globals').isVerbose;
-let setVerbose: typeof import('../globals').setVerbose;
+let registerMemoryCli: typeof import("./memory-cli.js").registerMemoryCli;
+let defaultRuntime: typeof import("../runtime.js").defaultRuntime;
+let isVerbose: typeof import("../globals.js").isVerbose;
+let setVerbose: typeof import("../globals.js").setVerbose;
 
 beforeAll(async () => {
-  ({ registerMemoryCli } = await import('./memory-cli'));
-  ({ defaultRuntime } = await import('../runtime'));
-  ({ isVerbose, setVerbose } = await import('../globals'));
+  ({ registerMemoryCli } = await import("./memory-cli.js"));
+  ({ defaultRuntime } = await import("../runtime.js"));
+  ({ isVerbose, setVerbose } = await import("../globals.js"));
 });
 
 afterEach(() => {

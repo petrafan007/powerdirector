@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { captureEnv } from '../test-utils/env';
+import { captureEnv } from "../test-utils/env.js";
 
 let envSnapshot: ReturnType<typeof captureEnv>;
 
@@ -233,11 +233,11 @@ vi.mock("../gateway/probe.js", () => ({
   probeGateway: mocks.probeGateway,
 }));
 vi.mock("../gateway/call.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../gateway/call')>();
+  const actual = await importOriginal<typeof import("../gateway/call.js")>();
   return { ...actual, callGateway: mocks.callGateway };
 });
 vi.mock("../gateway/session-utils.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../gateway/session-utils')>();
+  const actual = await importOriginal<typeof import("../gateway/session-utils.js")>();
   return {
     ...actual,
     listAgentsForGateway: mocks.listAgentsForGateway,
@@ -280,7 +280,7 @@ vi.mock("../infra/update-check.js", () => ({
   compareSemverStrings: vi.fn(() => 0),
 }));
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => ({ session: {} }),
@@ -316,7 +316,7 @@ vi.mock("../security/audit.js", () => ({
   runSecurityAudit: mocks.runSecurityAudit,
 }));
 
-import { statusCommand } from './status';
+import { statusCommand } from "./status.js";
 
 const runtime = {
   log: vi.fn(),

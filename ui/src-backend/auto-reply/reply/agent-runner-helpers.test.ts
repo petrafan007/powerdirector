@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ReplyPayload } from '../types';
-import type { TypingSignaler } from './typing-mode';
+import type { ReplyPayload } from "../types.js";
+import type { TypingSignaler } from "./typing-mode.js";
 
 const hoisted = vi.hoisted(() => {
   const loadSessionStoreMock = vi.fn();
@@ -9,7 +9,7 @@ const hoisted = vi.hoisted(() => {
 });
 
 vi.mock("../../config/sessions.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../config/sessions')>();
+  const actual = await importOriginal<typeof import("../../config/sessions.js")>();
   return {
     ...actual,
     loadSessionStore: (...args: unknown[]) => hoisted.loadSessionStoreMock(...args),
@@ -17,7 +17,7 @@ vi.mock("../../config/sessions.js", async (importOriginal) => {
 });
 
 vi.mock("./queue.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./queue')>();
+  const actual = await importOriginal<typeof import("./queue.js")>();
   return {
     ...actual,
     scheduleFollowupDrain: (...args: unknown[]) => hoisted.scheduleFollowupDrainMock(...args),
@@ -30,7 +30,7 @@ const {
   finalizeWithFollowup,
   isAudioPayload,
   signalTypingIfNeeded,
-} = await import('./agent-runner-helpers');
+} = await import("./agent-runner-helpers.js");
 
 describe("agent runner helpers", () => {
   beforeEach(() => {

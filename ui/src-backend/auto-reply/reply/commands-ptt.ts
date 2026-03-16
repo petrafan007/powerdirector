@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { callGateway, randomIdempotencyKey } from '../../gateway/call';
-import { logVerbose } from '../../globals';
-import type { CommandHandler } from './commands-types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { callGateway, randomIdempotencyKey } from "../../gateway/call.js";
+import { logVerbose } from "../../globals.js";
+import type { CommandHandler } from "./commands-types.js";
 
 type NodeSummary = {
   nodeId: string;

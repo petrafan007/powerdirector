@@ -1,5 +1,5 @@
-import { isRecord } from '../utils';
-import { normalizeSecretInput } from '../utils/normalize-secret-input';
+import { isRecord } from "../utils.js";
+import { normalizeSecretInput } from "../utils/normalize-secret-input.js";
 
 type MinimaxBaseResp = {
   status_code?: number;

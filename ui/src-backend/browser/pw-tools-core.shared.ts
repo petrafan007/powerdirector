@@ -1,4 +1,4 @@
-import { parseRoleRef } from './pw-role-snapshot';
+import { parseRoleRef } from "./pw-role-snapshot.js";
 
 let nextUploadArmId = 0;
 let nextDialogArmId = 0;

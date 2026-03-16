@@ -1,6 +1,6 @@
-import { formatCliCommand } from '../cli/command-format';
-import { ensurePageState, getPageForTargetId } from './pw-session';
-import { normalizeTimeoutMs } from './pw-tools-core.shared';
+import { formatCliCommand } from "../cli/command-format.js";
+import { ensurePageState, getPageForTargetId } from "./pw-session.js";
+import { normalizeTimeoutMs } from "./pw-tools-core.shared.js";
 
 function matchUrlPattern(pattern: string, url: string): boolean {
   const p = pattern.trim();

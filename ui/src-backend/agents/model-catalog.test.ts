@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { __setModelCatalogImportForTest, loadModelCatalog } from './model-catalog';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { __setModelCatalogImportForTest, loadModelCatalog } from "./model-catalog.js";
 import {
   installModelCatalogTestHooks,
   mockCatalogImportFailThenRecover,
   type PiSdkModule,
-} from './model-catalog.test-harness';
+} from "./model-catalog.test-harness.js";
 
 describe("loadModelCatalog", () => {
   installModelCatalogTestHooks();

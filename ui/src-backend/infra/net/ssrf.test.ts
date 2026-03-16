@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { normalizeFingerprint } from '../tls/fingerprint';
-import { isBlockedHostnameOrIp, isPrivateIpAddress } from './ssrf';
+import { normalizeFingerprint } from "../tls/fingerprint.js";
+import { isBlockedHostnameOrIp, isPrivateIpAddress } from "./ssrf.js";
 
 const privateIpCases = [
   "::ffff:127.0.0.1",

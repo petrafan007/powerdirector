@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ChannelPlugin } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { setActivePluginRegistry } from '../plugins/runtime';
-import { defaultRuntime } from '../runtime';
-import { createTestRegistry } from '../test-utils/channel-plugins';
-import { __testing, listAllChannelSupportedActions } from './channel-tools';
+import type { ChannelPlugin } from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { setActivePluginRegistry } from "../plugins/runtime.js";
+import { defaultRuntime } from "../runtime.js";
+import { createTestRegistry } from "../test-utils/channel-plugins.js";
+import { __testing, listAllChannelSupportedActions } from "./channel-tools.js";
 
 describe("channel tools", () => {
   const errorSpy = vi.spyOn(defaultRuntime, "error").mockImplementation(() => undefined);

@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from '../config/types';
+import type { PowerDirectorConfig } from "../config/types.js";
 
 export type CommandScope = "text" | "native" | "both";
 

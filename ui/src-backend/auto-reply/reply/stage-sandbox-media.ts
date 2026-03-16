@@ -2,18 +2,18 @@ import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertSandboxPath } from '../../agents/sandbox-paths';
-import { ensureSandboxWorkspaceForSession } from '../../agents/sandbox';
-import type { PowerDirectorConfig } from '../../config/config';
-import { logVerbose } from '../../globals';
-import { normalizeScpRemoteHost } from '../../infra/scp-host';
+import { assertSandboxPath } from "../../agents/sandbox-paths.js";
+import { ensureSandboxWorkspaceForSession } from "../../agents/sandbox.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { logVerbose } from "../../globals.js";
+import { normalizeScpRemoteHost } from "../../infra/scp-host.js";
 import {
   isInboundPathAllowed,
   resolveIMessageRemoteAttachmentRoots,
-} from '../../media/inbound-path-policy';
-import { getMediaDir } from '../../media/store';
-import { CONFIG_DIR } from '../../utils';
-import type { MsgContext, TemplateContext } from '../templating';
+} from "../../media/inbound-path-policy.js";
+import { getMediaDir } from "../../media/store.js";
+import { CONFIG_DIR } from "../../utils.js";
+import type { MsgContext, TemplateContext } from "../templating.js";
 
 export async function stageSandboxMedia(params: {
   ctx: MsgContext;

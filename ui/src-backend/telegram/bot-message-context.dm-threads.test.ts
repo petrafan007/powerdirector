@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildTelegramMessageContextForTest } from './bot-message-context.test-harness';
+import { buildTelegramMessageContextForTest } from "./bot-message-context.test-harness.js";
 
 describe("buildTelegramMessageContext dm thread sessions", () => {
   const buildContext = async (message: Record<string, unknown>) =>

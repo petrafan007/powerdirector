@@ -1,5 +1,5 @@
-import { hashTextSha256 } from './hash';
-import type { SandboxBrowserConfig, SandboxDockerConfig, SandboxWorkspaceAccess } from './types';
+import { hashTextSha256 } from "./hash.js";
+import type { SandboxBrowserConfig, SandboxDockerConfig, SandboxWorkspaceAccess } from "./types.js";
 
 type SandboxHashInput = {
   docker: SandboxDockerConfig;

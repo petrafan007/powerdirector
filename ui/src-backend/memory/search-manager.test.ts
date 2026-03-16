@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 const mockPrimary = {
   search: vi.fn(async () => []),
@@ -68,8 +68,8 @@ vi.mock("./manager.js", () => ({
   },
 }));
 
-import { QmdMemoryManager } from './qmd-manager';
-import { getMemorySearchManager } from './search-manager';
+import { QmdMemoryManager } from "./qmd-manager.js";
+import { getMemorySearchManager } from "./search-manager.js";
 // eslint-disable-next-line @typescript-eslint/unbound-method -- mocked static function
 const createQmdManagerMock = vi.mocked(QmdMemoryManager.create);
 

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import * as tailscale from './tailscale';
+import * as tailscale from "./tailscale.js";
 
 const {
   ensureGoInstalled,

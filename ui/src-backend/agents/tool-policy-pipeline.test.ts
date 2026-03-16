@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { applyToolPolicyPipeline } from './tool-policy-pipeline';
+import { applyToolPolicyPipeline } from "./tool-policy-pipeline.js";
 
 type DummyTool = { name: string };
 

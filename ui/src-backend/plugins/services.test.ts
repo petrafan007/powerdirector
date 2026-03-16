@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createEmptyPluginRegistry } from './registry';
-import type { PowerDirectorPluginService, PowerDirectorPluginServiceContext } from './types';
+import { createEmptyPluginRegistry } from "./registry.js";
+import type { PowerDirectorPluginService, PowerDirectorPluginServiceContext } from "./types.js";
 
 const mockedLogger = vi.hoisted(() => ({
   info: vi.fn<(msg: string) => void>(),
@@ -13,8 +13,8 @@ vi.mock("../logging/subsystem.js", () => ({
   createSubsystemLogger: () => mockedLogger,
 }));
 
-import { STATE_DIR } from '../config/paths';
-import { startPluginServices } from './services';
+import { STATE_DIR } from "../config/paths.js";
+import { startPluginServices } from "./services.js";
 
 function createRegistry(services: PowerDirectorPluginService[]) {
   const registry = createEmptyPluginRegistry();

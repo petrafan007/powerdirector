@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { theme } from '../../terminal/theme';
-import { resolveRuntimeStatusColor } from './shared';
+import { theme } from "../../terminal/theme.js";
+import { resolveRuntimeStatusColor } from "./shared.js";
 
 describe("resolveRuntimeStatusColor", () => {
   it("maps known runtime states to expected theme colors", () => {

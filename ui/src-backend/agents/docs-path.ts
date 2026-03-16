@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolvePowerDirectorPackageRoot } from '../infra/powerdirector-root';
+import { resolvePowerDirectorPackageRoot } from "../infra/powerdirector-root.js";
 
 export async function resolvePowerDirectorDocsPath(params: {
   workspaceDir?: string;

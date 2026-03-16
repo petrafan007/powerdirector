@@ -4,18 +4,18 @@ import path from "node:path";
 import { serializePayload, type MessagePayloadObject, type RequestClient } from "@buape/carbon";
 import type { APIChannel } from "discord-api-types/v10";
 import { ChannelType, Routes } from "discord-api-types/v10";
-import { resolveChunkMode } from '../auto-reply/chunk';
-import { loadConfig } from '../config/config';
-import { resolveMarkdownTableMode } from '../config/markdown-tables';
-import { recordChannelActivity } from '../infra/channel-activity';
-import type { RetryConfig } from '../infra/retry';
-import { resolvePreferredPowerDirectorTmpDir } from '../infra/tmp-powerdirector-dir';
-import { convertMarkdownTables } from '../markdown/tables';
-import { maxBytesForKind } from '../media/constants';
-import { extensionForMime } from '../media/mime';
-import type { PollInput } from '../polls';
-import { loadWebMediaRaw } from '../web/media';
-import { resolveDiscordAccount } from './accounts';
+import { resolveChunkMode } from "../auto-reply/chunk.js";
+import { loadConfig } from "../config/config.js";
+import { resolveMarkdownTableMode } from "../config/markdown-tables.js";
+import { recordChannelActivity } from "../infra/channel-activity.js";
+import type { RetryConfig } from "../infra/retry.js";
+import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir.js";
+import { convertMarkdownTables } from "../markdown/tables.js";
+import { maxBytesForKind } from "../media/constants.js";
+import { extensionForMime } from "../media/mime.js";
+import type { PollInput } from "../polls.js";
+import { loadWebMediaRaw } from "../web/media.js";
+import { resolveDiscordAccount } from "./accounts.js";
 import {
   buildDiscordMessagePayload,
   buildDiscordSendError,
@@ -33,13 +33,13 @@ import {
   SUPPRESS_NOTIFICATIONS_FLAG,
   type DiscordSendComponents,
   type DiscordSendEmbeds,
-} from './send.shared';
-import type { DiscordSendResult } from './send.types';
+} from "./send.shared.js";
+import type { DiscordSendResult } from "./send.types.js";
 import {
   ensureOggOpus,
   getVoiceMessageMetadata,
   sendDiscordVoiceMessage,
-} from './voice-message';
+} from "./voice-message.js";
 
 type DiscordSendOpts = {
   token?: string;

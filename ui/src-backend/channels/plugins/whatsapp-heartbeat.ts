@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadSessionStore, resolveStorePath } from '../../config/sessions';
-import { normalizeE164 } from '../../utils';
-import { normalizeChatChannelId } from '../registry';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { loadSessionStore, resolveStorePath } from "../../config/sessions.js";
+import { normalizeE164 } from "../../utils.js";
+import { normalizeChatChannelId } from "../registry.js";
 
 type HeartbeatRecipientsResult = { recipients: string[]; source: string };
 type HeartbeatRecipientsOpts = { to?: string; all?: boolean };

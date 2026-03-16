@@ -1,16 +1,16 @@
 import type { WebhookRequestBody } from "@line/bot-sdk";
-import { chunkMarkdownText } from '../auto-reply/chunk';
-import { dispatchReplyWithBufferedBlockDispatcher } from '../auto-reply/reply/provider-dispatcher';
-import { createReplyPrefixOptions } from '../channels/reply-prefix';
-import type { PowerDirectorConfig } from '../config/config';
-import { danger, logVerbose } from '../globals';
-import { normalizePluginHttpPath } from '../plugins/http-path';
-import { registerPluginHttpRoute } from '../plugins/http-registry';
-import type { RuntimeEnv } from '../runtime';
-import { deliverLineAutoReply } from './auto-reply-delivery';
-import { createLineBot } from './bot';
-import { processLineMessage } from './markdown-to-line';
-import { sendLineReplyChunks } from './reply-chunks';
+import { chunkMarkdownText } from "../auto-reply/chunk.js";
+import { dispatchReplyWithBufferedBlockDispatcher } from "../auto-reply/reply/provider-dispatcher.js";
+import { createReplyPrefixOptions } from "../channels/reply-prefix.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { danger, logVerbose } from "../globals.js";
+import { normalizePluginHttpPath } from "../plugins/http-path.js";
+import { registerPluginHttpRoute } from "../plugins/http-registry.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { deliverLineAutoReply } from "./auto-reply-delivery.js";
+import { createLineBot } from "./bot.js";
+import { processLineMessage } from "./markdown-to-line.js";
+import { sendLineReplyChunks } from "./reply-chunks.js";
 import {
   replyMessageLine,
   showLoadingAnimation,
@@ -23,10 +23,10 @@ import {
   createFlexMessage,
   createImageMessage,
   createLocationMessage,
-} from './send';
-import { buildTemplateMessageFromPayload } from './template-messages';
-import type { LineChannelData, ResolvedLineAccount } from './types';
-import { createLineNodeWebhookHandler } from './webhook-node';
+} from "./send.js";
+import { buildTemplateMessageFromPayload } from "./template-messages.js";
+import type { LineChannelData, ResolvedLineAccount } from "./types.js";
+import { createLineNodeWebhookHandler } from "./webhook-node.js";
 
 export interface MonitorLineProviderOptions {
   channelAccessToken: string;

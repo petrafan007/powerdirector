@@ -3,7 +3,7 @@ import {
   extractShellCommandFromArgv,
   formatExecCommand,
   validateSystemRunCommandConsistency,
-} from './system-run-command';
+} from "./system-run-command.js";
 
 describe("system run command helpers", () => {
   test("formatExecCommand quotes args with spaces", () => {

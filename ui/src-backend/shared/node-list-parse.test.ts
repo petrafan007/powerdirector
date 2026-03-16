@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseNodeList, parsePairingList } from './node-list-parse';
+import { parseNodeList, parsePairingList } from "./node-list-parse.js";
 
 describe("shared/node-list-parse", () => {
   it("parses node.list payloads", () => {

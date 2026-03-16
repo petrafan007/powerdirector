@@ -1,4 +1,4 @@
-import { captureEnv } from '../test-utils/env';
+import { captureEnv } from "../test-utils/env.js";
 
 export function snapshotStateDirEnv() {
   return captureEnv(["POWERDIRECTOR_STATE_DIR", "CLAWDBOT_STATE_DIR"]);

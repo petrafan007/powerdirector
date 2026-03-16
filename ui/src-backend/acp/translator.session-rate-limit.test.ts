@@ -5,9 +5,9 @@ import type {
   PromptRequest,
 } from "@agentclientprotocol/sdk";
 import { describe, expect, it, vi } from "vitest";
-import type { GatewayClient } from '../gateway/client';
-import { createInMemorySessionStore } from './session';
-import { AcpGatewayAgent } from './translator';
+import type { GatewayClient } from "../gateway/client.js";
+import { createInMemorySessionStore } from "./session.js";
+import { AcpGatewayAgent } from "./translator.js";
 
 function createConnection(): AgentSideConnection {
   return {

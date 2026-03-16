@@ -1,4 +1,4 @@
-import { CURRENT_MESSAGE_MARKER } from './mentions';
+import { CURRENT_MESSAGE_MARKER } from "./mentions.js";
 
 export const HISTORY_CONTEXT_MARKER = "[Chat messages since your last reply - for context]";
 export const DEFAULT_GROUP_HISTORY_LIMIT = 50;

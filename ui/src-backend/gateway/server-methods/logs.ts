@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getResolvedLoggerSettings } from '../../logging';
-import { clamp } from '../../utils';
+import { getResolvedLoggerSettings } from "../../logging.js";
+import { clamp } from "../../utils.js";
 import {
   ErrorCodes,
   errorShape,
   formatValidationErrors,
   validateLogsTailParams,
-} from '../protocol/index';
-import type { GatewayRequestHandlers } from './types';
+} from "../protocol/index.js";
+import type { GatewayRequestHandlers } from "./types.js";
 
 const DEFAULT_LIMIT = 500;
 const DEFAULT_MAX_BYTES = 250_000;

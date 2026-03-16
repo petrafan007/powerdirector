@@ -1,6 +1,6 @@
-import { deriveSessionTotalTokens, type NormalizedUsage } from '../../agents/usage';
-import { incrementCompactionCount } from './session-updates';
-import { persistSessionUsageUpdate } from './session-usage';
+import { deriveSessionTotalTokens, type NormalizedUsage } from "../../agents/usage.js";
+import { incrementCompactionCount } from "./session-updates.js";
+import { persistSessionUsageUpdate } from "./session-usage.js";
 
 type PersistRunSessionUsageParams = Parameters<typeof persistSessionUsageUpdate>[0];
 

@@ -1,5 +1,5 @@
-import type { QueueDropPolicy, QueueMode, QueueModeByProvider } from './types.queue';
-import type { TtsConfig } from './types.tts';
+import type { QueueDropPolicy, QueueMode, QueueModeByProvider } from "./types.queue.js";
+import type { TtsConfig } from "./types.tts.js";
 
 export type GroupChatConfig = {
   mentionPatterns?: string[];

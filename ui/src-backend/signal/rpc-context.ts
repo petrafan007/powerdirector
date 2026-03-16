@@ -1,5 +1,5 @@
-import { loadConfig } from '../config/config';
-import { resolveSignalAccount } from './accounts';
+import { loadConfig } from "../config/config.js";
+import { resolveSignalAccount } from "./accounts.js";
 
 export function resolveSignalRpcContext(
   opts: { baseUrl?: string; account?: string; accountId?: string },

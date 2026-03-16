@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hasBalancedFences } from '../test-utils/chunk-test-helpers';
+import { hasBalancedFences } from "../test-utils/chunk-test-helpers.js";
 import {
   chunkByNewline,
   chunkMarkdownText,
@@ -8,7 +8,7 @@ import {
   chunkTextWithMode,
   resolveChunkMode,
   resolveTextChunkLimit,
-} from './chunk';
+} from "./chunk.js";
 
 function expectFencesBalanced(chunks: string[]) {
   for (const chunk of chunks) {

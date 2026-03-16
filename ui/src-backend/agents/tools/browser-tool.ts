@@ -7,7 +7,7 @@ import {
   browserNavigate,
   browserPdfSave,
   browserScreenshotAction,
-} from '../../browser/client-actions';
+} from "../../browser/client-actions.js";
 import {
   browserCloseTab,
   browserFocusTab,
@@ -18,17 +18,17 @@ import {
   browserStatus,
   browserStop,
   browserTabs,
-} from '../../browser/client';
-import { resolveBrowserConfig } from '../../browser/config';
-import { DEFAULT_AI_SNAPSHOT_MAX_CHARS } from '../../browser/constants';
-import { DEFAULT_UPLOAD_DIR, resolvePathsWithinRoot } from '../../browser/paths';
-import { applyBrowserProxyPaths, persistBrowserProxyFiles } from '../../browser/proxy-files';
-import { loadConfig } from '../../config/config';
-import { wrapExternalContent } from '../../security/external-content';
-import { BrowserToolSchema } from './browser-tool.schema';
-import { type AnyAgentTool, imageResultFromFile, jsonResult, readStringParam } from './common';
-import { callGatewayTool } from './gateway';
-import { listNodes, resolveNodeIdFromList, type NodeListNode } from './nodes-utils';
+} from "../../browser/client.js";
+import { resolveBrowserConfig } from "../../browser/config.js";
+import { DEFAULT_AI_SNAPSHOT_MAX_CHARS } from "../../browser/constants.js";
+import { DEFAULT_UPLOAD_DIR, resolvePathsWithinRoot } from "../../browser/paths.js";
+import { applyBrowserProxyPaths, persistBrowserProxyFiles } from "../../browser/proxy-files.js";
+import { loadConfig } from "../../config/config.js";
+import { wrapExternalContent } from "../../security/external-content.js";
+import { BrowserToolSchema } from "./browser-tool.schema.js";
+import { type AnyAgentTool, imageResultFromFile, jsonResult, readStringParam } from "./common.js";
+import { callGatewayTool } from "./gateway.js";
+import { listNodes, resolveNodeIdFromList, type NodeListNode } from "./nodes-utils.js";
 
 function wrapBrowserExternalJson(params: {
   kind: "snapshot" | "console" | "tabs";

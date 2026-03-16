@@ -5,12 +5,12 @@ import {
   DEFAULT_SANDBOX_COMMON_IMAGE,
   DEFAULT_SANDBOX_IMAGE,
   resolveSandboxScope,
-} from '../agents/sandbox';
-import type { PowerDirectorConfig } from '../config/config';
-import { runCommandWithTimeout, runExec } from '../process/exec';
-import type { RuntimeEnv } from '../runtime';
-import { note } from '../terminal/note';
-import type { DoctorPrompter } from './doctor-prompter';
+} from "../agents/sandbox.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { runCommandWithTimeout, runExec } from "../process/exec.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { note } from "../terminal/note.js";
+import type { DoctorPrompter } from "./doctor-prompter.js";
 
 type SandboxScriptInfo = {
   scriptPath: string;

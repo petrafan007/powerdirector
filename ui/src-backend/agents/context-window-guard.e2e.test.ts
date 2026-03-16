@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   CONTEXT_WINDOW_HARD_MIN_TOKENS,
   CONTEXT_WINDOW_WARN_BELOW_TOKENS,
   evaluateContextWindowGuard,
   resolveContextWindowInfo,
-} from './context-window-guard';
+} from "./context-window-guard.js";
 
 describe("context-window-guard", () => {
   it("blocks below 16k (model metadata)", () => {

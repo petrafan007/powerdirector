@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import type { RuntimeEnv } from '../../../runtime';
-import type { WizardPrompter } from '../../../wizard/prompts';
+import type { RuntimeEnv } from "../../../runtime.js";
+import type { WizardPrompter } from "../../../wizard/prompts.js";
 
 export const makeRuntime = (overrides: Partial<RuntimeEnv> = {}): RuntimeEnv => ({
   log: vi.fn(),

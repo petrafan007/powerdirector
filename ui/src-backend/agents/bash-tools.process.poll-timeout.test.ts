@@ -1,13 +1,13 @@
 import { afterEach, expect, test, vi } from "vitest";
-import { resetDiagnosticSessionStateForTest } from '../logging/diagnostic-session-state';
+import { resetDiagnosticSessionStateForTest } from "../logging/diagnostic-session-state.js";
 import {
   addSession,
   appendOutput,
   markExited,
   resetProcessRegistryForTests,
-} from './bash-process-registry';
-import { createProcessSessionFixture } from './bash-process-registry.test-helpers';
-import { createProcessTool } from './bash-tools.process';
+} from "./bash-process-registry.js";
+import { createProcessSessionFixture } from "./bash-process-registry.test-helpers.js";
+import { createProcessTool } from "./bash-tools.process.js";
 
 afterEach(() => {
   resetProcessRegistryForTests();

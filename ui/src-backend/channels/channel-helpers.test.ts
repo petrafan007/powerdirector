@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
-import type { MsgContext } from '../auto-reply/templating';
-import { resolveConversationLabel } from './conversation-label';
+import type { MsgContext } from "../auto-reply/templating.js";
+import { resolveConversationLabel } from "./conversation-label.js";
 import {
   formatChannelSelectionLine,
   listChatChannels,
   normalizeChatChannelId,
-} from './registry';
-import { buildMessagingTarget, ensureTargetId, requireTargetKind } from './targets';
-import { createTypingCallbacks } from './typing';
+} from "./registry.js";
+import { buildMessagingTarget, ensureTargetId, requireTargetKind } from "./targets.js";
+import { createTypingCallbacks } from "./typing.js";
 
 const flushMicrotasks = async () => {
   await Promise.resolve();

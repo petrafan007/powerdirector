@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resetSubagentRegistryForTests } from '../../agents/subagent-registry';
-import type { SpawnSubagentResult } from '../../agents/subagent-spawn';
-import type { PowerDirectorConfig } from '../../config/config';
+import { resetSubagentRegistryForTests } from "../../agents/subagent-registry.js";
+import type { SpawnSubagentResult } from "../../agents/subagent-spawn.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
 
 const hoisted = vi.hoisted(() => {
   const spawnSubagentDirectMock = vi.fn();
@@ -18,7 +18,7 @@ vi.mock("../../gateway/call.js", () => ({
 }));
 
 vi.mock("../../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../config/config')>();
+  const actual = await importOriginal<typeof import("../../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => ({}),
@@ -31,8 +31,8 @@ vi.mock("../../discord/monitor/gateway-plugin.js", () => ({
 }));
 
 // Dynamic import to ensure mocks are installed first.
-const { handleSubagentsCommand } = await import('./commands-subagents');
-const { buildCommandTestParams } = await import('./commands-spawn.test-harness');
+const { handleSubagentsCommand } = await import("./commands-subagents.js");
+const { buildCommandTestParams } = await import("./commands-spawn.test-harness.js");
 
 const { spawnSubagentDirectMock } = hoisted;
 

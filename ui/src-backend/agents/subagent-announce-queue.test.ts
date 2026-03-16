@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { enqueueAnnounce, resetAnnounceQueuesForTests } from './subagent-announce-queue';
+import { enqueueAnnounce, resetAnnounceQueuesForTests } from "./subagent-announce-queue.js";
 
 function createRetryingSend() {
   const prompts: string[] = [];

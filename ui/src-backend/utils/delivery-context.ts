@@ -1,5 +1,5 @@
-import { normalizeAccountId } from './account-id';
-import { normalizeMessageChannel } from './message-channel';
+import { normalizeAccountId } from "./account-id.js";
+import { normalizeMessageChannel } from "./message-channel.js";
 
 export type DeliveryContext = {
   channel?: string;

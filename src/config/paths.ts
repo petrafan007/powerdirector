@@ -46,6 +46,10 @@ function findProjectRoot(): string | null {
   return null;
 }
 
+export function resolvePowerDirectorRoot(): string {
+  return findProjectRoot() || process.cwd();
+}
+
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);
 }

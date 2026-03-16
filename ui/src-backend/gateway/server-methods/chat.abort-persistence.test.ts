@@ -14,7 +14,7 @@ const sessionEntryState = vi.hoisted(() => ({
 }));
 
 vi.mock("../session-utils.js", async (importOriginal) => {
-  const original = await importOriginal<typeof import('../session-utils')>();
+  const original = await importOriginal<typeof import("../session-utils.js")>();
   return {
     ...original,
     loadSessionEntry: () => ({
@@ -29,7 +29,7 @@ vi.mock("../session-utils.js", async (importOriginal) => {
   };
 });
 
-const { chatHandlers } = await import('./chat');
+const { chatHandlers } = await import("./chat.js");
 
 function createActiveRun(sessionKey: string, sessionId: string) {
   const now = Date.now();

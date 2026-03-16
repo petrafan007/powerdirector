@@ -1,26 +1,26 @@
 import type { AnyMessageContent, proto, WAMessage } from "@whiskeysockets/baileys";
 import { DisconnectReason, isJidGroup } from "@whiskeysockets/baileys";
-import { createInboundDebouncer } from '../../auto-reply/inbound-debounce';
-import { formatLocationText } from '../../channels/location';
-import { logVerbose, shouldLogVerbose } from '../../globals';
-import { recordChannelActivity } from '../../infra/channel-activity';
-import { getChildLogger } from '../../logging/logger';
-import { createSubsystemLogger } from '../../logging/subsystem';
-import { saveMediaBuffer } from '../../media/store';
-import { jidToE164, resolveJidToE164 } from '../../utils';
-import { createWaSocket, getStatusCode, waitForWaConnection } from '../session';
-import { checkInboundAccessControl } from './access-control';
-import { isRecentInboundMessage } from './dedupe';
+import { createInboundDebouncer } from "../../auto-reply/inbound-debounce.js";
+import { formatLocationText } from "../../channels/location.js";
+import { logVerbose, shouldLogVerbose } from "../../globals.js";
+import { recordChannelActivity } from "../../infra/channel-activity.js";
+import { getChildLogger } from "../../logging/logger.js";
+import { createSubsystemLogger } from "../../logging/subsystem.js";
+import { saveMediaBuffer } from "../../media/store.js";
+import { jidToE164, resolveJidToE164 } from "../../utils.js";
+import { createWaSocket, getStatusCode, waitForWaConnection } from "../session.js";
+import { checkInboundAccessControl } from "./access-control.js";
+import { isRecentInboundMessage } from "./dedupe.js";
 import {
   describeReplyContext,
   extractLocationData,
   extractMediaPlaceholder,
   extractMentionedJids,
   extractText,
-} from './extract';
-import { downloadInboundMedia } from './media';
-import { createWebSendApi } from './send-api';
-import type { WebInboundMessage, WebListenerCloseReason } from './types';
+} from "./extract.js";
+import { downloadInboundMedia } from "./media.js";
+import { createWebSendApi } from "./send-api.js";
+import type { WebInboundMessage, WebListenerCloseReason } from "./types.js";
 
 export async function monitorWebInbox(options: {
   verbose: boolean;

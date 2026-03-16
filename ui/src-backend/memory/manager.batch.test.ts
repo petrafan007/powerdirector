@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { getMemorySearchManager, type MemoryIndexManager } from './index';
-import { createOpenAIEmbeddingProviderMock } from './test-embeddings-mock';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { getMemorySearchManager, type MemoryIndexManager } from "./index.js";
+import { createOpenAIEmbeddingProviderMock } from "./test-embeddings-mock.js";
 import "./test-runtime-mocks.js";
 
 const embedBatch = vi.fn(async (_texts: string[]) => [] as number[][]);

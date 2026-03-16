@@ -1,5 +1,5 @@
 import type { OAuthCredentials } from "@mariozechner/pi-ai";
-import { formatCliCommand } from '../cli/command-format';
+import { formatCliCommand } from "../cli/command-format.js";
 
 const QWEN_OAUTH_BASE_URL = "https://chat.qwen.ai";
 const QWEN_OAUTH_TOKEN_ENDPOINT = `${QWEN_OAUTH_BASE_URL}/api/v1/oauth2/token`;

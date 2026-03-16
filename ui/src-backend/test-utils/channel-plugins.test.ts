@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createChannelTestPluginBase, createOutboundTestPlugin } from './channel-plugins';
+import { createChannelTestPluginBase, createOutboundTestPlugin } from "./channel-plugins.js";
 
 describe("createChannelTestPluginBase", () => {
   it("builds a plugin base with defaults", () => {

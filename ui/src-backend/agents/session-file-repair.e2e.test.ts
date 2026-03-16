@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { repairSessionFileIfNeeded } from './session-file-repair';
+import { repairSessionFileIfNeeded } from "./session-file-repair.js";
 
 function buildSessionHeaderAndMessage() {
   const header = {

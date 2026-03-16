@@ -1,5 +1,5 @@
-import { normalizeProviderId } from '../agents/model-selection';
-import type { UsageProviderId } from './provider-usage.types';
+import { normalizeProviderId } from "../agents/model-selection.js";
+import type { UsageProviderId } from "./provider-usage.types.js";
 
 export const DEFAULT_TIMEOUT_MS = 5000;
 

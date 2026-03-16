@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { readConfigFileSnapshot, writeConfigFile } from './doctor.e2e-harness';
+import { readConfigFileSnapshot, writeConfigFile } from "./doctor.e2e-harness.js";
 
 describe("doctor command", () => {
   it("migrates Slack/Discord dm.policy keys to dmPolicy aliases", { timeout: 60_000 }, async () => {
@@ -26,7 +26,7 @@ describe("doctor command", () => {
       legacyIssues: [],
     });
 
-    const { doctorCommand } = await import('./doctor');
+    const { doctorCommand } = await import("./doctor.js");
     const runtime = { log: vi.fn(), error: vi.fn(), exit: vi.fn() };
 
     await doctorCommand(runtime, { nonInteractive: true, repair: true });

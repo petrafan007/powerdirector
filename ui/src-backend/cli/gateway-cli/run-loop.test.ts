@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { GatewayBonjourBeacon } from '../../infra/bonjour-discovery';
-import { pickBeaconHost, pickGatewayPort } from './discover';
+import type { GatewayBonjourBeacon } from "../../infra/bonjour-discovery.js";
+import { pickBeaconHost, pickGatewayPort } from "./discover.js";
 
 const acquireGatewayLock = vi.fn(async () => ({
   release: vi.fn(async () => {}),
@@ -98,7 +98,7 @@ describe("runGatewayLoop", () => {
       process.listeners("SIGUSR1") as Array<(...args: unknown[]) => void>,
     );
 
-    const { runGatewayLoop } = await import('./run-loop');
+    const { runGatewayLoop } = await import("./run-loop.js");
     const runtime = {
       log: vi.fn(),
       error: vi.fn(),

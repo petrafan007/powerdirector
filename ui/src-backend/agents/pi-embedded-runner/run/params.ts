@@ -1,13 +1,13 @@
 import type { ImageContent } from "@mariozechner/pi-ai";
-import type { ReasoningLevel, ThinkLevel, VerboseLevel } from '../../../auto-reply/thinking';
-import type { AgentStreamParams } from '../../../commands/agent/types';
-import type { PowerDirectorConfig } from '../../../config/config';
-import type { enqueueCommand } from '../../../process/command-queue';
-import type { InputProvenance } from '../../../sessions/input-provenance';
-import type { ExecElevatedDefaults, ExecToolDefaults } from '../../bash-tools';
-import type { BlockReplyPayload } from '../../pi-embedded-payloads';
-import type { BlockReplyChunking, ToolResultFormat } from '../../pi-embedded-subscribe';
-import type { SkillSnapshot } from '../../skills';
+import type { ReasoningLevel, ThinkLevel, VerboseLevel } from "../../../auto-reply/thinking.js";
+import type { AgentStreamParams } from "../../../commands/agent/types.js";
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import type { enqueueCommand } from "../../../process/command-queue.js";
+import type { InputProvenance } from "../../../sessions/input-provenance.js";
+import type { ExecElevatedDefaults, ExecToolDefaults } from "../../bash-tools.js";
+import type { BlockReplyPayload } from "../../pi-embedded-payloads.js";
+import type { BlockReplyChunking, ToolResultFormat } from "../../pi-embedded-subscribe.js";
+import type { SkillSnapshot } from "../../skills.js";
 
 // Simplified tool definition for client-provided tools (OpenResponses hosted tools)
 export type ClientToolDefinition = {

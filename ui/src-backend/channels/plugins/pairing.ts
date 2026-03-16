@@ -1,12 +1,12 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { RuntimeEnv } from '../../runtime';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { RuntimeEnv } from "../../runtime.js";
 import {
   type ChannelId,
   getChannelPlugin,
   listChannelPlugins,
   normalizeChannelId,
-} from './index';
-import type { ChannelPairingAdapter } from './types';
+} from "./index.js";
+import type { ChannelPairingAdapter } from "./types.js";
 
 export function listPairingChannels(): ChannelId[] {
   // Channel docking: pairing support is declared via plugin.pairing.

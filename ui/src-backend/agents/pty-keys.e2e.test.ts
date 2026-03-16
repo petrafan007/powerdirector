@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
-import { buildCursorPositionResponse, stripDsrRequests } from './pty-dsr';
+import { buildCursorPositionResponse, stripDsrRequests } from "./pty-dsr.js";
 import {
   BRACKETED_PASTE_END,
   BRACKETED_PASTE_START,
   encodeKeySequence,
   encodePaste,
-} from './pty-keys';
+} from "./pty-keys.js";
 
 test("encodeKeySequence maps common keys and modifiers", () => {
   const enter = encodeKeySequence({ keys: ["Enter"] });

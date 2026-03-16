@@ -1,16 +1,16 @@
-import { listChannelPlugins } from '../../channels/plugins/index';
-import { buildChannelAccountSnapshot } from '../../channels/plugins/status';
-import type { ChannelAccountSnapshot } from '../../channels/plugins/types';
-import { formatCliCommand } from '../../cli/command-format';
-import { withProgress } from '../../cli/progress';
-import { type PowerDirectorConfig, readConfigFileSnapshot } from '../../config/config';
-import { callGateway } from '../../gateway/call';
-import { collectChannelStatusIssues } from '../../infra/channels-status-issues';
+import { listChannelPlugins } from "../../channels/plugins/index.js";
+import { buildChannelAccountSnapshot } from "../../channels/plugins/status.js";
+import type { ChannelAccountSnapshot } from "../../channels/plugins/types.js";
+import { formatCliCommand } from "../../cli/command-format.js";
+import { withProgress } from "../../cli/progress.js";
+import { type PowerDirectorConfig, readConfigFileSnapshot } from "../../config/config.js";
+import { callGateway } from "../../gateway/call.js";
+import { collectChannelStatusIssues } from "../../infra/channels-status-issues.js";
 import { formatTimeAgo } from "../../infra/format-time/format-relative.ts";
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { formatDocsLink } from '../../terminal/links';
-import { theme } from '../../terminal/theme';
-import { type ChatChannel, formatChannelAccountLabel, requireValidConfig } from './shared';
+import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
+import { formatDocsLink } from "../../terminal/links.js";
+import { theme } from "../../terminal/theme.js";
+import { type ChatChannel, formatChannelAccountLabel, requireValidConfig } from "./shared.js";
 
 export type ChannelsStatusOptions = {
   json?: boolean;

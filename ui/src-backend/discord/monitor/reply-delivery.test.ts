@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { RuntimeEnv } from '../../runtime';
-import { deliverDiscordReply } from './reply-delivery';
+import type { RuntimeEnv } from "../../runtime.js";
+import { deliverDiscordReply } from "./reply-delivery.js";
 
 const sendMessageDiscordMock = vi.hoisted(() => vi.fn());
 const sendVoiceMessageDiscordMock = vi.hoisted(() => vi.fn());

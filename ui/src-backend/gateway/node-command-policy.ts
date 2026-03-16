@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { NodeSession } from './node-registry';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { NodeSession } from "./node-registry.js";
 
 const CANVAS_COMMANDS = [
   "canvas.present",

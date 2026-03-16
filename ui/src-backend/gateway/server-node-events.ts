@@ -1,26 +1,26 @@
 import { randomUUID } from "node:crypto";
-import { resolveSessionAgentId } from '../agents/agent-scope';
-import { normalizeChannelId } from '../channels/plugins/index';
-import { createOutboundSendDeps } from '../cli/outbound-send-deps';
-import { agentCommand } from '../commands/agent';
-import { loadConfig } from '../config/config';
-import { updateSessionStore } from '../config/sessions';
-import { requestHeartbeatNow } from '../infra/heartbeat-wake';
-import { deliverOutboundPayloads } from '../infra/outbound/deliver';
-import { resolveOutboundTarget } from '../infra/outbound/targets';
-import { registerApnsToken } from '../infra/push-apns';
-import { enqueueSystemEvent } from '../infra/system-events';
-import { normalizeMainKey } from '../routing/session-key';
-import { defaultRuntime } from '../runtime';
-import { parseMessageWithAttachments } from './chat-attachments';
-import { normalizeRpcAttachmentsToChatAttachments } from './server-methods/attachment-normalize';
-import type { NodeEvent, NodeEventContext } from './server-node-events-types';
+import { resolveSessionAgentId } from "../agents/agent-scope.js";
+import { normalizeChannelId } from "../channels/plugins/index.js";
+import { createOutboundSendDeps } from "../cli/outbound-send-deps.js";
+import { agentCommand } from "../commands/agent.js";
+import { loadConfig } from "../config/config.js";
+import { updateSessionStore } from "../config/sessions.js";
+import { requestHeartbeatNow } from "../infra/heartbeat-wake.js";
+import { deliverOutboundPayloads } from "../infra/outbound/deliver.js";
+import { resolveOutboundTarget } from "../infra/outbound/targets.js";
+import { registerApnsToken } from "../infra/push-apns.js";
+import { enqueueSystemEvent } from "../infra/system-events.js";
+import { normalizeMainKey } from "../routing/session-key.js";
+import { defaultRuntime } from "../runtime.js";
+import { parseMessageWithAttachments } from "./chat-attachments.js";
+import { normalizeRpcAttachmentsToChatAttachments } from "./server-methods/attachment-normalize.js";
+import type { NodeEvent, NodeEventContext } from "./server-node-events-types.js";
 import {
   loadSessionEntry,
   pruneLegacyStoreKeys,
   resolveGatewaySessionStoreTarget,
-} from './session-utils';
-import { formatForLog } from './ws-log';
+} from "./session-utils.js";
+import { formatForLog } from "./ws-log.js";
 
 const MAX_EXEC_EVENT_OUTPUT_CHARS = 180;
 const VOICE_TRANSCRIPT_DEDUPE_WINDOW_MS = 1500;

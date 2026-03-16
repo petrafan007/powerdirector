@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 import axios from 'axios';
 
 interface WebSearchToolConfig {
@@ -174,6 +174,7 @@ export class WebSearchTool implements Tool {
 
         const abstract = response.data?.AbstractText || '';
         const abstractUrl = response.data?.AbstractURL || '';
+        const image = response.data?.Image || '';
         const related = Array.isArray(response.data?.RelatedTopics) ? response.data.RelatedTopics : [];
 
         const relatedLines = related
@@ -184,6 +185,7 @@ export class WebSearchTool implements Tool {
 
         const body = [
             `Provider "${provider}" currently uses a fallback backend in this build.`,
+            image ? `Image found: ${image.startsWith('http') ? image : 'https://duckduckgo.com' + image}` : '',
             abstract ? `Summary: ${abstract}` : 'Summary: (none)',
             abstractUrl ? `Source: ${abstractUrl}` : '',
             relatedLines.length ? `Related:\n${relatedLines.join('\n\n')}` : ''

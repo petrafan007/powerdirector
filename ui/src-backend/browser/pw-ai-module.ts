@@ -1,6 +1,6 @@
-import { extractErrorCode, formatErrorMessage } from '../infra/errors';
+import { extractErrorCode, formatErrorMessage } from "../infra/errors.js";
 
-export type PwAiModule = typeof import('./pw-ai');
+export type PwAiModule = typeof import("./pw-ai.js");
 
 type PwAiLoadMode = "soft" | "strict";
 
@@ -24,7 +24,7 @@ function isModuleNotFoundError(err: unknown): boolean {
 
 async function loadPwAiModule(mode: PwAiLoadMode): Promise<PwAiModule | null> {
   try {
-    return await import('./pw-ai');
+    return await import("./pw-ai.js");
   } catch (err) {
     if (mode === "soft") {
       return null;

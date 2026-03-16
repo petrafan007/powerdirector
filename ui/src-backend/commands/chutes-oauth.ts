@@ -1,14 +1,14 @@
 import { randomBytes } from "node:crypto";
 import { createServer } from "node:http";
 import type { OAuthCredentials } from "@mariozechner/pi-ai";
-import type { ChutesOAuthAppConfig } from '../agents/chutes-oauth';
+import type { ChutesOAuthAppConfig } from "../agents/chutes-oauth.js";
 import {
   CHUTES_AUTHORIZE_ENDPOINT,
   exchangeChutesCodeForTokens,
   generateChutesPkce,
   parseOAuthCallbackInput,
-} from '../agents/chutes-oauth';
-import { isLoopbackHost } from '../gateway/net';
+} from "../agents/chutes-oauth.js";
+import { isLoopbackHost } from "../gateway/net.js";
 
 type OAuthPrompt = {
   message: string;

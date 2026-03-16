@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveSlackGroupRequireMention, resolveSlackGroupToolPolicy } from './group-mentions';
+import { resolveSlackGroupRequireMention, resolveSlackGroupToolPolicy } from "./group-mentions.js";
 
 const cfg = {
   channels: {

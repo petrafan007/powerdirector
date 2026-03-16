@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadConfig } from './config';
-import { withTempHome } from './test-helpers';
+import { loadConfig } from "./config.js";
+import { withTempHome } from "./test-helpers.js";
 
 async function writeConfigForTest(home: string, config: unknown): Promise<void> {
   const configDir = path.join(home, ".powerdirector");

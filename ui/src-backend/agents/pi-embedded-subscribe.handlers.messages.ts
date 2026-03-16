@@ -1,14 +1,14 @@
 import type { AgentEvent, AgentMessage } from "@mariozechner/pi-agent-core";
-import { parseReplyDirectives } from '../auto-reply/reply/reply-directives';
-import { SILENT_REPLY_TOKEN } from '../auto-reply/tokens';
-import { emitAgentEvent } from '../infra/agent-events';
-import { createInlineCodeState } from '../markdown/code-spans';
+import { parseReplyDirectives } from "../auto-reply/reply/reply-directives.js";
+import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
+import { emitAgentEvent } from "../infra/agent-events.js";
+import { createInlineCodeState } from "../markdown/code-spans.js";
 import {
   isMessagingToolDuplicateNormalized,
   normalizeTextForComparison,
-} from './pi-embedded-helpers';
-import type { EmbeddedPiSubscribeContext } from './pi-embedded-subscribe.handlers.types';
-import { appendRawStream } from './pi-embedded-subscribe.raw-stream';
+} from "./pi-embedded-helpers.js";
+import type { EmbeddedPiSubscribeContext } from "./pi-embedded-subscribe.handlers.types.js";
+import { appendRawStream } from "./pi-embedded-subscribe.raw-stream.js";
 import {
   extractAssistantText,
   extractAssistantThinking,
@@ -16,7 +16,7 @@ import {
   extractThinkingFromTaggedText,
   formatReasoningMessage,
   promoteThinkingTagsToBlocks,
-} from './pi-embedded-utils';
+} from "./pi-embedded-utils.js";
 
 const stripTrailingDirective = (text: string): string => {
   const openIndex = text.lastIndexOf("[[");

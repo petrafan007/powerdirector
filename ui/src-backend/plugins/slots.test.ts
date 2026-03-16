@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { applyExclusiveSlotSelection } from './slots';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { applyExclusiveSlotSelection } from "./slots.js";
 
 describe("applyExclusiveSlotSelection", () => {
   it("selects the slot and disables other entries for the same kind", () => {

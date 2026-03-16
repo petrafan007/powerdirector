@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { TuiStreamAssembler } from './tui-stream-assembler';
+import { TuiStreamAssembler } from "./tui-stream-assembler.js";
 
 describe("TuiStreamAssembler", () => {
   it("keeps thinking before content even when thinking arrives later", () => {

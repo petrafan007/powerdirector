@@ -6,10 +6,10 @@ import {
   DEFAULT_SUBAGENT_MAX_CONCURRENT,
   resolveAgentMaxConcurrent,
   resolveSubagentMaxConcurrent,
-} from './agent-limits';
-import { loadConfig } from './config';
-import { withTempHome } from './test-helpers';
-import { PowerDirectorSchema } from './zod-schema';
+} from "./agent-limits.js";
+import { loadConfig } from "./config.js";
+import { withTempHome } from "./test-helpers.js";
+import { PowerDirectorSchema } from "./zod-schema.js";
 
 describe("agent concurrency defaults", () => {
   it("resolves defaults when unset", () => {

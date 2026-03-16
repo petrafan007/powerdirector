@@ -16,7 +16,7 @@ vi.mock("../../kill-tree.js", () => ({
   killProcessTree: (...args: unknown[]) => killProcessTreeMock(...args),
 }));
 
-let createChildAdapter: typeof import('./child').createChildAdapter;
+let createChildAdapter: typeof import("./child.js").createChildAdapter;
 
 function createStubChild(pid = 1234) {
   const child = new EventEmitter() as ChildProcess;
@@ -50,7 +50,7 @@ async function createAdapterHarness(params?: {
 
 describe("createChildAdapter", () => {
   beforeAll(async () => {
-    ({ createChildAdapter } = await import('./child'));
+    ({ createChildAdapter } = await import("./child.js"));
   });
 
   beforeEach(() => {

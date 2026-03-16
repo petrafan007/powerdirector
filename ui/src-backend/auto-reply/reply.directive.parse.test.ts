@@ -7,8 +7,8 @@ import {
   extractReplyToTag,
   extractThinkDirective,
   extractVerboseDirective,
-} from './reply';
-import { extractStatusDirective } from './reply/directives';
+} from "./reply.js";
+import { extractStatusDirective } from "./reply/directives.js";
 
 describe("directive parsing", () => {
   it("ignores verbose directive inside URL", () => {

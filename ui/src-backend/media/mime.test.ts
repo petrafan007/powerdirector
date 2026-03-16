@@ -1,13 +1,13 @@
 import JSZip from "jszip";
 import { describe, expect, it } from "vitest";
-import { mediaKindFromMime } from './constants';
+import { mediaKindFromMime } from "./constants.js";
 import {
   detectMime,
   extensionForMime,
   imageMimeFromFormat,
   isAudioFileName,
   normalizeMimeType,
-} from './mime';
+} from "./mime.js";
 
 async function makeOoxmlZip(opts: { mainMime: string; partPath: string }): Promise<Buffer> {
   const zip = new JSZip();

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { resolveBrowserExecutableForPlatform } from './chrome.executables';
+import { resolveBrowserExecutableForPlatform } from "./chrome.executables.js";
 
 vi.mock("node:child_process", () => ({
   execFileSync: vi.fn(),

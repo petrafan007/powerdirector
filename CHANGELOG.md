@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0-beta.3] - 2026-03-15
 
 ### Fixed
+- **[Hotfix 14] Image Rendering & Web Search**: Expanded UI regex support for `MEDIA:` and `Image found:` patterns to seamlessly render images inside chat bubbles. Enhanced the Web Search tool to output direct image URLs from DuckDuckGo Instant Answers.
+- **[Hotfix 14] NANO BANANA Generator**: Restored functionality to the `nano-banana-pro` skill by introducing a dedicated `run.sh` entrypoint, fixing path resolution to properly execute the internal `image.py` script, and upgrading the configured Google GenAI model to the available `imagen-4.0-generate-001`.
 - **[Hotfix 14] Resolved UI Crash**: Fixed a critical circular dependency between `agent-instance.ts` and `registry/tools.ts` that caused `PowerDirectorService` to be undefined during API requests.
 - **[Hotfix 14] Robust Root Resolution**: Implemented explicit search paths for the project root in both `ui/lib/paths.ts` and `src/config/paths.ts` to ensure consistent configuration loading across varied environments (standard vs. QA test directories).
 - **[Hotfix 14] Personal Instance Recovery**: Successfully recovered the personal instance UI by nuking orphaned gateway processes and rebuilding the Next.js server with the latest Hotfix 13/14 fixes.

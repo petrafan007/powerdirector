@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { ExecApprovalsResolved } from '../infra/exec-approvals';
-import { sanitizeBinaryOutput } from './shell-utils';
+import type { ExecApprovalsResolved } from "../infra/exec-approvals.js";
+import { sanitizeBinaryOutput } from "./shell-utils.js";
 
 const isWin = process.platform === "win32";
 
 vi.mock("../infra/shell-env.js", async (importOriginal) => {
-  const mod = await importOriginal<typeof import('../infra/shell-env')>();
+  const mod = await importOriginal<typeof import("../infra/shell-env.js")>();
   return {
     ...mod,
     getShellPathFromLoginShell: vi.fn(() => "/custom/bin:/opt/bin"),
@@ -14,7 +14,7 @@ vi.mock("../infra/shell-env.js", async (importOriginal) => {
 });
 
 vi.mock("../infra/exec-approvals.js", async (importOriginal) => {
-  const mod = await importOriginal<typeof import('../infra/exec-approvals')>();
+  const mod = await importOriginal<typeof import("../infra/exec-approvals.js")>();
   const approvals: ExecApprovalsResolved = {
     path: "/tmp/exec-approvals.json",
     socketPath: "/tmp/exec-approvals.sock",
@@ -72,8 +72,8 @@ describe("exec PATH login shell merge", () => {
     }
     process.env.PATH = "/usr/bin";
 
-    const { createExecTool } = await import('./bash-tools.exec');
-    const { getShellPathFromLoginShell } = await import('../infra/shell-env');
+    const { createExecTool } = await import("./bash-tools.exec.js");
+    const { getShellPathFromLoginShell } = await import("../infra/shell-env.js");
     const shellPathMock = vi.mocked(getShellPathFromLoginShell);
     shellPathMock.mockClear();
     shellPathMock.mockReturnValue("/custom/bin:/opt/bin");
@@ -92,8 +92,8 @@ describe("exec PATH login shell merge", () => {
     }
     process.env.PATH = "/usr/bin";
 
-    const { createExecTool } = await import('./bash-tools.exec');
-    const { getShellPathFromLoginShell } = await import('../infra/shell-env');
+    const { createExecTool } = await import("./bash-tools.exec.js");
+    const { getShellPathFromLoginShell } = await import("../infra/shell-env.js");
     const shellPathMock = vi.mocked(getShellPathFromLoginShell);
     shellPathMock.mockClear();
 
@@ -112,7 +112,7 @@ describe("exec PATH login shell merge", () => {
 
 describe("exec host env validation", () => {
   it("blocks LD_/DYLD_ env vars on host execution", async () => {
-    const { createExecTool } = await import('./bash-tools.exec');
+    const { createExecTool } = await import("./bash-tools.exec.js");
     const tool = createExecTool({ host: "gateway", security: "full", ask: "off" });
 
     await expect(

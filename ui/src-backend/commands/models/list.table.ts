@@ -1,8 +1,8 @@
-import type { RuntimeEnv } from '../../runtime';
-import { colorize, theme } from '../../terminal/theme';
-import { formatTag, isRich, pad, truncate } from './list.format';
-import type { ModelRow } from './list.types';
-import { formatTokenK } from './shared';
+import type { RuntimeEnv } from "../../runtime.js";
+import { colorize, theme } from "../../terminal/theme.js";
+import { formatTag, isRich, pad, truncate } from "./list.format.js";
+import type { ModelRow } from "./list.types.js";
+import { formatTokenK } from "./shared.js";
 
 const MODEL_PAD = 42;
 const INPUT_PAD = 10;

@@ -1,36 +1,36 @@
-import { resolveQueueSettings } from '../auto-reply/reply/queue';
-import { SILENT_REPLY_TOKEN } from '../auto-reply/tokens';
-import { loadConfig } from '../config/config';
+import { resolveQueueSettings } from "../auto-reply/reply/queue.js";
+import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
+import { loadConfig } from "../config/config.js";
 import {
   loadSessionStore,
   resolveAgentIdFromSessionKey,
   resolveMainSessionKey,
   resolveStorePath,
-} from '../config/sessions';
-import { callGateway } from '../gateway/call';
-import { normalizeMainKey } from '../routing/session-key';
-import { defaultRuntime } from '../runtime';
-import { extractTextFromChatContent } from '../shared/chat-content';
+} from "../config/sessions.js";
+import { callGateway } from "../gateway/call.js";
+import { normalizeMainKey } from "../routing/session-key.js";
+import { defaultRuntime } from "../runtime.js";
+import { extractTextFromChatContent } from "../shared/chat-content.js";
 import {
   type DeliveryContext,
   deliveryContextFromSession,
   mergeDeliveryContext,
   normalizeDeliveryContext,
-} from '../utils/delivery-context';
-import { isDeliverableMessageChannel } from '../utils/message-channel';
+} from "../utils/delivery-context.js";
+import { isDeliverableMessageChannel } from "../utils/message-channel.js";
 import {
   buildAnnounceIdFromChildRun,
   buildAnnounceIdempotencyKey,
   resolveQueueAnnounceId,
-} from './announce-idempotency';
+} from "./announce-idempotency.js";
 import {
   isEmbeddedPiRunActive,
   queueEmbeddedPiMessage,
   waitForEmbeddedPiRunEnd,
-} from './pi-embedded';
-import { type AnnounceQueueItem, enqueueAnnounce } from './subagent-announce-queue';
-import { getSubagentDepthFromSessionStore } from './subagent-depth';
-import { sanitizeTextContent, extractAssistantText } from './tools/sessions-helpers';
+} from "./pi-embedded.js";
+import { type AnnounceQueueItem, enqueueAnnounce } from "./subagent-announce-queue.js";
+import { getSubagentDepthFromSessionStore } from "./subagent-depth.js";
+import { sanitizeTextContent, extractAssistantText } from "./tools/sessions-helpers.js";
 
 type ToolResultMessage = {
   role?: unknown;
@@ -818,7 +818,7 @@ export async function runSubagentAnnounceFlow(params: {
 
     let activeChildDescendantRuns = 0;
     try {
-      const { countActiveDescendantRuns } = await import('./subagent-registry');
+      const { countActiveDescendantRuns } = await import("./subagent-registry.js");
       activeChildDescendantRuns = Math.max(0, countActiveDescendantRuns(params.childSessionKey));
     } catch {
       // Best-effort only; fall back to direct announce behavior when unavailable.
@@ -858,7 +858,7 @@ export async function runSubagentAnnounceFlow(params: {
     // still receive the announce — injecting will start a new agent turn.
     if (requesterIsSubagent) {
       const { isSubagentSessionRunActive, resolveRequesterForChildSession } =
-        await import('./subagent-registry');
+        await import("./subagent-registry.js");
       if (!isSubagentSessionRunActive(targetRequesterSessionKey)) {
         // Parent run has ended. Check if parent SESSION still exists.
         // If it does, the parent may be waiting for child results — inject there.
@@ -891,7 +891,7 @@ export async function runSubagentAnnounceFlow(params: {
 
     let remainingActiveSubagentRuns = 0;
     try {
-      const { countActiveDescendantRuns } = await import('./subagent-registry');
+      const { countActiveDescendantRuns } = await import("./subagent-registry.js");
       remainingActiveSubagentRuns = Math.max(
         0,
         countActiveDescendantRuns(targetRequesterSessionKey),

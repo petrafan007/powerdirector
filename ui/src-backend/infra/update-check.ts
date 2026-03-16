@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { runCommandWithTimeout } from '../process/exec';
-import { fetchWithTimeout } from '../utils/fetch-timeout';
-import { detectPackageManager as detectPackageManagerImpl } from './detect-package-manager';
-import { parseSemver } from './runtime-guard';
-import { buildGitDirtyCheckArgv, filterBlockingGitDirtyStatus } from './update-git-runtime-files';
-import { channelToNpmTag, type UpdateChannel } from './update-channels';
+import { runCommandWithTimeout } from "../process/exec.js";
+import { fetchWithTimeout } from "../utils/fetch-timeout.js";
+import { detectPackageManager as detectPackageManagerImpl } from "./detect-package-manager.js";
+import { parseSemver } from "./runtime-guard.js";
+import { buildGitDirtyCheckArgv, filterBlockingGitDirtyStatus } from "./update-git-runtime-files.js";
+import { channelToNpmTag, type UpdateChannel } from "./update-channels.js";
 
 export type PackageManager = "pnpm" | "bun" | "npm" | "unknown";
 

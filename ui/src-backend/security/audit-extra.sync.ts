@@ -1,24 +1,24 @@
-import { isToolAllowedByPolicies } from '../agents/pi-tools.policy';
+import { isToolAllowedByPolicies } from "../agents/pi-tools.policy.js";
 import {
   resolveSandboxConfigForAgent,
   resolveSandboxToolPolicyForAgent,
-} from '../agents/sandbox';
+} from "../agents/sandbox.js";
 /**
  * Synchronous security audit collector functions.
  *
  * These functions analyze config-based security properties without I/O.
  */
-import type { SandboxToolPolicy } from '../agents/sandbox/types';
-import { getBlockedBindReason } from '../agents/sandbox/validate-sandbox-security';
-import { resolveToolProfilePolicy } from '../agents/tool-policy';
-import { resolveBrowserConfig } from '../browser/config';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentToolsConfig } from '../config/types.tools';
-import { resolveGatewayAuth } from '../gateway/auth';
-import { resolveNodeCommandAllowlist } from '../gateway/node-command-policy';
-import { inferParamBFromIdOrName } from '../shared/model-param-b';
-import { pickSandboxToolPolicy } from './audit-tool-policy';
+import type { SandboxToolPolicy } from "../agents/sandbox/types.js";
+import { getBlockedBindReason } from "../agents/sandbox/validate-sandbox-security.js";
+import { resolveToolProfilePolicy } from "../agents/tool-policy.js";
+import { resolveBrowserConfig } from "../browser/config.js";
+import { formatCliCommand } from "../cli/command-format.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { AgentToolsConfig } from "../config/types.tools.js";
+import { resolveGatewayAuth } from "../gateway/auth.js";
+import { resolveNodeCommandAllowlist } from "../gateway/node-command-policy.js";
+import { inferParamBFromIdOrName } from "../shared/model-param-b.js";
+import { pickSandboxToolPolicy } from "./audit-tool-policy.js";
 
 export type SecurityAuditFinding = {
   checkId: string;

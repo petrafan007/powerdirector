@@ -2,8 +2,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { getSubagentDepthFromSessionStore } from './subagent-depth';
-import { resolveAgentTimeoutMs } from './timeout';
+import { getSubagentDepthFromSessionStore } from "./subagent-depth.js";
+import { resolveAgentTimeoutMs } from "./timeout.js";
 
 describe("getSubagentDepthFromSessionStore", () => {
   it("uses spawnDepth from the session store when available", () => {

@@ -5,12 +5,12 @@ export {
   moveChannelDiscord,
   removeChannelPermissionDiscord,
   setChannelPermissionDiscord,
-} from './send.channels';
+} from "./send.channels.js";
 export {
   listGuildEmojisDiscord,
   uploadEmojiDiscord,
   uploadStickerDiscord,
-} from './send.emojis-stickers';
+} from "./send.emojis-stickers.js";
 export {
   addRoleDiscord,
   banMemberDiscord,
@@ -24,7 +24,7 @@ export {
   listScheduledEventsDiscord,
   removeRoleDiscord,
   timeoutMemberDiscord,
-} from './send.guild';
+} from "./send.guild.js";
 export {
   createThreadDiscord,
   deleteMessageDiscord,
@@ -36,26 +36,26 @@ export {
   readMessagesDiscord,
   searchMessagesDiscord,
   unpinMessageDiscord,
-} from './send.messages';
+} from "./send.messages.js";
 export {
   sendMessageDiscord,
   sendPollDiscord,
   sendStickerDiscord,
   sendVoiceMessageDiscord,
-} from './send.outbound';
-export { sendDiscordComponentMessage } from './send.components';
+} from "./send.outbound.js";
+export { sendDiscordComponentMessage } from "./send.components.js";
 export {
   fetchChannelPermissionsDiscord,
   hasAllGuildPermissionsDiscord,
   hasAnyGuildPermissionDiscord,
   fetchMemberGuildPermissionsDiscord,
-} from './send.permissions';
+} from "./send.permissions.js";
 export {
   fetchReactionsDiscord,
   reactMessageDiscord,
   removeOwnReactionsDiscord,
   removeReactionDiscord,
-} from './send.reactions';
+} from "./send.reactions.js";
 export type {
   DiscordChannelCreate,
   DiscordChannelEdit,
@@ -76,5 +76,5 @@ export type {
   DiscordThreadCreate,
   DiscordThreadList,
   DiscordTimeoutTarget,
-} from './send.types';
-export { DiscordSendError } from './send.types';
+} from "./send.types.js";
+export { DiscordSendError } from "./send.types.js";

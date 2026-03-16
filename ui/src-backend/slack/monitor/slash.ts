@@ -1,30 +1,30 @@
 import type { SlackActionMiddlewareArgs, SlackCommandMiddlewareArgs } from "@slack/bolt";
-import type { ChatCommandDefinition, CommandArgs } from '../../auto-reply/commands-registry';
-import type { ReplyPayload } from '../../auto-reply/types';
-import { formatAllowlistMatchMeta } from '../../channels/allowlist-match';
-import { resolveCommandAuthorizedFromAuthorizers } from '../../channels/command-gating';
-import { resolveNativeCommandsEnabled, resolveNativeSkillsEnabled } from '../../config/commands';
-import { danger, logVerbose } from '../../globals';
-import { buildPairingReply } from '../../pairing/pairing-messages';
+import type { ChatCommandDefinition, CommandArgs } from "../../auto-reply/commands-registry.js";
+import type { ReplyPayload } from "../../auto-reply/types.js";
+import { formatAllowlistMatchMeta } from "../../channels/allowlist-match.js";
+import { resolveCommandAuthorizedFromAuthorizers } from "../../channels/command-gating.js";
+import { resolveNativeCommandsEnabled, resolveNativeSkillsEnabled } from "../../config/commands.js";
+import { danger, logVerbose } from "../../globals.js";
+import { buildPairingReply } from "../../pairing/pairing-messages.js";
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from '../../pairing/pairing-store';
-import { chunkItems } from '../../utils/chunk-items';
-import type { ResolvedSlackAccount } from '../accounts';
+} from "../../pairing/pairing-store.js";
+import { chunkItems } from "../../utils/chunk-items.js";
+import type { ResolvedSlackAccount } from "../accounts.js";
 import {
   normalizeAllowList,
   normalizeAllowListLower,
   resolveSlackAllowListMatch,
   resolveSlackUserAllowed,
-} from './allow-list';
-import { resolveSlackChannelConfig, type SlackChannelConfigResolved } from './channel-config';
-import { buildSlackSlashCommandMatcher, resolveSlackSlashCommandConfig } from './commands';
-import type { SlackMonitorContext } from './context';
-import { normalizeSlackChannelType } from './context';
-import { escapeSlackMrkdwn } from './mrkdwn';
-import { isSlackChannelAllowedByPolicy } from './policy';
-import { resolveSlackRoomContextHints } from './room-context';
+} from "./allow-list.js";
+import { resolveSlackChannelConfig, type SlackChannelConfigResolved } from "./channel-config.js";
+import { buildSlackSlashCommandMatcher, resolveSlackSlashCommandConfig } from "./commands.js";
+import type { SlackMonitorContext } from "./context.js";
+import { normalizeSlackChannelType } from "./context.js";
+import { escapeSlackMrkdwn } from "./mrkdwn.js";
+import { isSlackChannelAllowedByPolicy } from "./policy.js";
+import { resolveSlackRoomContextHints } from "./room-context.js";
 
 type SlackBlock = { type: string; [key: string]: unknown };
 
@@ -100,11 +100,11 @@ function readSlackExternalArgMenuToken(raw: unknown): string | undefined {
   return token.length > 0 ? token : undefined;
 }
 
-type CommandsRegistry = typeof import('../../auto-reply/commands-registry');
+type CommandsRegistry = typeof import("../../auto-reply/commands-registry.js");
 let commandsRegistry: CommandsRegistry | undefined;
 async function getCommandsRegistry(): Promise<CommandsRegistry> {
   if (!commandsRegistry) {
-    commandsRegistry = await import('../../auto-reply/commands-registry');
+    commandsRegistry = await import("../../auto-reply/commands-registry.js");
   }
   return commandsRegistry;
 }
@@ -532,13 +532,13 @@ export async function registerSlackMonitorSlashCommands(params: {
       const roomLabel = channelName ? `#${channelName}` : `#${command.channel_id}`;
       const [{ resolveAgentRoute }, { finalizeInboundContext }, { dispatchReplyWithDispatcher }] =
         await Promise.all([
-          import('../../routing/resolve-route'),
-          import('../../auto-reply/reply/inbound-context'),
-          import('../../auto-reply/reply/provider-dispatcher'),
+          import("../../routing/resolve-route.js"),
+          import("../../auto-reply/reply/inbound-context.js"),
+          import("../../auto-reply/reply/provider-dispatcher.js"),
         ]);
       const [{ resolveConversationLabel }, { createReplyPrefixOptions }] = await Promise.all([
-        import('../../channels/conversation-label'),
-        import('../../channels/reply-prefix'),
+        import("../../channels/conversation-label.js"),
+        import("../../channels/reply-prefix.js"),
       ]);
 
       const route = resolveAgentRoute({
@@ -612,9 +612,9 @@ export async function registerSlackMonitorSlashCommands(params: {
       const deliverSlashPayloads = async (replies: ReplyPayload[]) => {
         const [{ deliverSlackSlashReplies }, { resolveChunkMode }, { resolveMarkdownTableMode }] =
           await Promise.all([
-            import('./replies'),
-            import('../../auto-reply/chunk'),
-            import('../../config/markdown-tables'),
+            import("./replies.js"),
+            import("../../auto-reply/chunk.js"),
+            import("../../config/markdown-tables.js"),
           ]);
         await deliverSlackSlashReplies({
           replies,
@@ -673,7 +673,7 @@ export async function registerSlackMonitorSlashCommands(params: {
   if (nativeEnabled) {
     reg = await getCommandsRegistry();
     const skillCommands = nativeSkillsEnabled
-      ? (await import('../../auto-reply/skill-commands')).listSkillCommandsForAgents({ cfg })
+      ? (await import("../../auto-reply/skill-commands.js")).listSkillCommandsForAgents({ cfg })
       : [];
     nativeCommands = reg.listNativeCommandSpecsForConfig(cfg, { skillCommands, provider: "slack" });
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSandboxCreateArgs, type SandboxDockerConfig } from './sandbox';
+import { buildSandboxCreateArgs, type SandboxDockerConfig } from "./sandbox.js";
 
 describe("buildSandboxCreateArgs", () => {
   it("includes hardening and resource flags", () => {

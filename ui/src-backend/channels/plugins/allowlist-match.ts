@@ -1,2 +1,2 @@
-export type { AllowlistMatch, AllowlistMatchSource } from '../allowlist-match';
-export { formatAllowlistMatchMeta, resolveAllowlistMatchSimple } from '../allowlist-match';
+export type { AllowlistMatch, AllowlistMatchSource } from "../allowlist-match.js";
+export { formatAllowlistMatchMeta, resolveAllowlistMatchSimple } from "../allowlist-match.js";

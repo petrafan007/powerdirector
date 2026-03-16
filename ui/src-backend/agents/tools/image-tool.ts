@@ -1,27 +1,27 @@
 import path from "node:path";
 import { type Api, type Context, complete, type Model } from "@mariozechner/pi-ai";
 import { Type } from "@sinclair/typebox";
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveUserPath } from '../../utils';
-import { getDefaultLocalRoots, loadWebMedia } from '../../web/media';
-import { ensureAuthProfileStore, listProfilesForProvider } from '../auth-profiles';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../defaults';
-import { minimaxUnderstandImage } from '../minimax-vlm';
-import { getApiKeyForModel, requireApiKey, resolveEnvApiKey } from '../model-auth';
-import { runWithImageModelFallback } from '../model-fallback';
-import { resolveConfiguredModelRef } from '../model-selection';
-import { ensurePowerDirectorModelsJson } from '../models-config';
-import { discoverAuthStorage, discoverModels } from '../pi-model-discovery';
-import type { SandboxFsBridge } from '../sandbox/fs-bridge';
-import { normalizeWorkspaceDir } from '../workspace-dir';
-import type { AnyAgentTool } from './common';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveUserPath } from "../../utils.js";
+import { getDefaultLocalRoots, loadWebMedia } from "../../web/media.js";
+import { ensureAuthProfileStore, listProfilesForProvider } from "../auth-profiles.js";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../defaults.js";
+import { minimaxUnderstandImage } from "../minimax-vlm.js";
+import { getApiKeyForModel, requireApiKey, resolveEnvApiKey } from "../model-auth.js";
+import { runWithImageModelFallback } from "../model-fallback.js";
+import { resolveConfiguredModelRef } from "../model-selection.js";
+import { ensurePowerDirectorModelsJson } from "../models-config.js";
+import { discoverAuthStorage, discoverModels } from "../pi-model-discovery.js";
+import type { SandboxFsBridge } from "../sandbox/fs-bridge.js";
+import { normalizeWorkspaceDir } from "../workspace-dir.js";
+import type { AnyAgentTool } from "./common.js";
 import {
   coerceImageAssistantText,
   coerceImageModelConfig,
   decodeDataUrl,
   type ImageModelConfig,
   resolveProviderVisionModelFromConfig,
-} from './image-tool.helpers';
+} from "./image-tool.helpers.js";
 
 const DEFAULT_PROMPT = "Describe the image.";
 const ANTHROPIC_IMAGE_PRIMARY = "anthropic/claude-opus-4-6";

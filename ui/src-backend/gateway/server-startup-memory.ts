@@ -1,7 +1,7 @@
-import { listAgentIds } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveMemoryBackendConfig } from '../memory/backend-config';
-import { getMemorySearchManager } from '../memory/index';
+import { listAgentIds } from "../agents/agent-scope.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveMemoryBackendConfig } from "../memory/backend-config.js";
+import { getMemorySearchManager } from "../memory/index.js";
 
 export async function startGatewayMemoryBackend(params: {
   cfg: PowerDirectorConfig;

@@ -8,7 +8,7 @@ import {
   createImageCarouselColumn,
   createProductCarousel,
   messageAction,
-} from './template-messages';
+} from "./template-messages.js";
 
 describe("createConfirmTemplate", () => {
   it("truncates text to 240 characters", () => {

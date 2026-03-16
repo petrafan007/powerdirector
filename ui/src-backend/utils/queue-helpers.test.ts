@@ -5,7 +5,7 @@ import {
   clearQueueSummaryState,
   drainCollectItemIfNeeded,
   previewQueueSummaryPrompt,
-} from './queue-helpers';
+} from "./queue-helpers.js";
 
 describe("applyQueueRuntimeSettings", () => {
   it("updates runtime queue settings with normalization", () => {

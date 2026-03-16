@@ -11,7 +11,7 @@ vi.mock("./bot-message-dispatch.js", () => ({
   dispatchTelegramMessage,
 }));
 
-import { createTelegramMessageProcessor } from './bot-message';
+import { createTelegramMessageProcessor } from "./bot-message.js";
 
 describe("telegram bot message processor", () => {
   beforeEach(() => {

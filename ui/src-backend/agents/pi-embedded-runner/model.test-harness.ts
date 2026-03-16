@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import type { ModelDefinitionConfig } from '../../config/types';
-import { discoverModels } from '../pi-model-discovery';
+import type { ModelDefinitionConfig } from "../../config/types.js";
+import { discoverModels } from "../pi-model-discovery.js";
 
 export const makeModel = (id: string): ModelDefinitionConfig => ({
   id,

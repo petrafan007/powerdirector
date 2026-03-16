@@ -1,4 +1,4 @@
-import type { MediaUnderstandingCapability } from './types';
+import type { MediaUnderstandingCapability } from "./types.js";
 
 const MB = 1024 * 1024;
 

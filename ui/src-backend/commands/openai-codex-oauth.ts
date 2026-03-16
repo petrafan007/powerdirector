@@ -1,8 +1,8 @@
 import type { OAuthCredentials } from "@mariozechner/pi-ai";
 import { loginOpenAICodex } from "@mariozechner/pi-ai";
-import type { RuntimeEnv } from '../runtime';
-import type { WizardPrompter } from '../wizard/prompts';
-import { createVpsAwareOAuthHandlers } from './oauth-flow';
+import type { RuntimeEnv } from "../runtime.js";
+import type { WizardPrompter } from "../wizard/prompts.js";
+import { createVpsAwareOAuthHandlers } from "./oauth-flow.js";
 
 export async function loginOpenAICodexOAuth(params: {
   prompter: WizardPrompter;

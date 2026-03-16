@@ -1,4 +1,4 @@
-import { parseSlashCommandWithSetUnset } from './commands-setunset';
+import { parseSlashCommandWithSetUnset } from "./commands-setunset.js";
 
 export function parseStandardSetUnsetSlashCommand<T>(params: {
   raw: string;

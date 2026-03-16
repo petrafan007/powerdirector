@@ -4,15 +4,15 @@ export {
   resolveSandboxDockerConfig,
   resolveSandboxPruneConfig,
   resolveSandboxScope,
-} from './sandbox/config';
+} from "./sandbox/config.js";
 export {
   DEFAULT_SANDBOX_BROWSER_IMAGE,
   DEFAULT_SANDBOX_COMMON_IMAGE,
   DEFAULT_SANDBOX_IMAGE,
-} from './sandbox/constants';
-export { ensureSandboxWorkspaceForSession, resolveSandboxContext } from './sandbox/context';
+} from "./sandbox/constants.js";
+export { ensureSandboxWorkspaceForSession, resolveSandboxContext } from "./sandbox/context.js";
 
-export { buildSandboxCreateArgs } from './sandbox/docker';
+export { buildSandboxCreateArgs } from "./sandbox/docker.js";
 export {
   listSandboxBrowsers,
   listSandboxContainers,
@@ -20,13 +20,13 @@ export {
   removeSandboxContainer,
   type SandboxBrowserInfo,
   type SandboxContainerInfo,
-} from './sandbox/manage';
+} from "./sandbox/manage.js";
 export {
   formatSandboxToolPolicyBlockedMessage,
   resolveSandboxRuntimeStatus,
-} from './sandbox/runtime-status';
+} from "./sandbox/runtime-status.js";
 
-export { resolveSandboxToolPolicyForAgent } from './sandbox/tool-policy';
+export { resolveSandboxToolPolicyForAgent } from "./sandbox/tool-policy.js";
 
 export type {
   SandboxBrowserConfig,
@@ -41,4 +41,4 @@ export type {
   SandboxToolPolicySource,
   SandboxWorkspaceAccess,
   SandboxWorkspaceInfo,
-} from './sandbox/types';
+} from "./sandbox/types.js";

@@ -1,3 +1,3 @@
-export { monitorIMessageProvider } from './monitor';
-export { probeIMessage } from './probe';
-export { sendMessageIMessage } from './send';
+export { monitorIMessageProvider } from "./monitor.js";
+export { probeIMessage } from "./probe.js";
+export { sendMessageIMessage } from "./send.js";

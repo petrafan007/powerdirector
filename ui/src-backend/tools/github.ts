@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Octokit } from 'octokit';
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 
 export class GitHubTool implements Tool {
     public name = 'github';

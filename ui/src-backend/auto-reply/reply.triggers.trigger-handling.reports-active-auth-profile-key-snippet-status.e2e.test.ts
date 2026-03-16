@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { resolveSessionKey } from '../config/sessions';
+import { resolveSessionKey } from "../config/sessions.js";
 import {
   createBlockReplyCollector,
   getRunEmbeddedPiAgentMock,
@@ -11,9 +11,9 @@ import {
   mockRunEmbeddedPiAgentOk,
   requireSessionStorePath,
   withTempHome,
-} from './reply.triggers.trigger-handling.test-harness';
+} from "./reply.triggers.trigger-handling.test-harness.js";
 
-let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 beforeAll(async () => {
   getReplyFromConfig = await loadGetReplyFromConfig();
 });

@@ -21,7 +21,7 @@ const { nodesAction, registerNodesCli } = vi.hoisted(() => {
 vi.mock("../acp-cli.js", () => ({ registerAcpCli }));
 vi.mock("../nodes-cli.js", () => ({ registerNodesCli }));
 
-const { registerSubCliByName, registerSubCliCommands } = await import('./register.subclis');
+const { registerSubCliByName, registerSubCliCommands } = await import("./register.subclis.js");
 
 describe("registerSubCliCommands", () => {
   const originalArgv = process.argv;

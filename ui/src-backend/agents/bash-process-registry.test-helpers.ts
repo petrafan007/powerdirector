@@ -1,5 +1,5 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
-import type { ProcessSession } from './bash-process-registry';
+import type { ProcessSession } from "./bash-process-registry.js";
 
 export function createProcessSessionFixture(params: {
   id: string;

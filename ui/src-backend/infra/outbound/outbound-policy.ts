@@ -2,14 +2,14 @@ import type {
   ChannelId,
   ChannelMessageActionName,
   ChannelThreadingToolContext,
-} from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
+} from "../../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
 import {
   getChannelMessageAdapter,
   type CrossContextComponentsBuilder,
-} from './channel-adapters';
-import { normalizeTargetForProvider } from './target-normalization';
-import { formatTargetDisplay, lookupDirectoryDisplay } from './target-resolver';
+} from "./channel-adapters.js";
+import { normalizeTargetForProvider } from "./target-normalization.js";
+import { formatTargetDisplay, lookupDirectoryDisplay } from "./target-resolver.js";
 
 export type CrossContextDecoration = {
   prefix: string;

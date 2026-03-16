@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { resolveAuthProfileOrder } from './auth-profiles/order';
-import type { AuthProfileStore } from './auth-profiles/types';
-import { isProfileInCooldown } from './auth-profiles/usage';
+import { resolveAuthProfileOrder } from "./auth-profiles/order.js";
+import type { AuthProfileStore } from "./auth-profiles/types.js";
+import { isProfileInCooldown } from "./auth-profiles/usage.js";
 
 /**
  * Integration tests for cooldown auto-expiry through resolveAuthProfileOrder.

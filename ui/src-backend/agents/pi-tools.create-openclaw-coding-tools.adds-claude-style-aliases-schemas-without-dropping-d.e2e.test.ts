@@ -4,9 +4,9 @@ import path from "node:path";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import { createPowerDirectorCodingTools } from './pi-tools';
-import { createHostSandboxFsBridge } from './test-helpers/host-sandbox-fs-bridge';
-import { createPiToolsSandboxContext } from './test-helpers/pi-tools-sandbox-context';
+import { createPowerDirectorCodingTools } from "./pi-tools.js";
+import { createHostSandboxFsBridge } from "./test-helpers/host-sandbox-fs-bridge.js";
+import { createPiToolsSandboxContext } from "./test-helpers/pi-tools-sandbox-context.js";
 
 const defaultTools = createPowerDirectorCodingTools();
 

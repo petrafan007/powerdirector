@@ -3,13 +3,13 @@ export {
   createLineWebhookCallback,
   type LineBot,
   type LineBotOptions,
-} from './bot';
+} from "./bot.js";
 export {
   monitorLineProvider,
   getLineRuntimeState,
   type MonitorLineProviderOptions,
   type LineProviderMonitor,
-} from './monitor';
+} from "./monitor.js";
 export {
   sendMessageLine,
   pushMessageLine,
@@ -28,30 +28,30 @@ export {
   pushFlexMessage,
   pushTemplateMessage,
   pushTextMessageWithQuickReplies,
-} from './send';
+} from "./send.js";
 export {
   startLineWebhook,
   createLineWebhookMiddleware,
   type LineWebhookOptions,
   type StartLineWebhookOptions,
-} from './webhook';
+} from "./webhook.js";
 export {
   handleLineHttpRequest,
   registerLineHttpHandler,
   normalizeLineWebhookPath,
-} from './http-registry';
+} from "./http-registry.js";
 export {
   resolveLineAccount,
   listLineAccountIds,
   resolveDefaultLineAccountId,
   normalizeAccountId,
   DEFAULT_ACCOUNT_ID,
-} from './accounts';
-export { probeLineBot } from './probe';
-export { downloadLineMedia } from './download';
-export { LineConfigSchema, type LineConfigSchemaType } from './config-schema';
-export { buildLineMessageContext } from './bot-message-context';
-export { handleLineWebhookEvents, type LineHandlerContext } from './bot-handlers';
+} from "./accounts.js";
+export { probeLineBot } from "./probe.js";
+export { downloadLineMedia } from "./download.js";
+export { LineConfigSchema, type LineConfigSchemaType } from "./config-schema.js";
+export { buildLineMessageContext } from "./bot-message-context.js";
+export { handleLineWebhookEvents, type LineHandlerContext } from "./bot-handlers.js";
 
 // Flex Message templates
 export {
@@ -72,7 +72,7 @@ export {
   type FlexContainer,
   type FlexBubble,
   type FlexCarousel,
-} from './flex-templates';
+} from "./flex-templates.js";
 
 // Markdown to LINE conversion
 export {
@@ -89,7 +89,7 @@ export {
   type MarkdownTable,
   type CodeBlock,
   type MarkdownLink,
-} from './markdown-to-line';
+} from "./markdown-to-line.js";
 
 // Rich Menu operations
 export {
@@ -117,7 +117,7 @@ export {
   type CreateRichMenuParams,
   type RichMenuSize,
   type RichMenuAreaRequest,
-} from './rich-menu';
+} from "./rich-menu.js";
 
 // Template messages (Button, Confirm, Carousel)
 export {
@@ -140,7 +140,7 @@ export {
   type ButtonsTemplate,
   type CarouselTemplate,
   type CarouselColumn,
-} from './template-messages';
+} from "./template-messages.js";
 
 export type {
   LineConfig,
@@ -152,4 +152,4 @@ export type {
   LineWebhookContext,
   LineSendResult,
   LineProbeResult,
-} from './types';
+} from "./types.js";

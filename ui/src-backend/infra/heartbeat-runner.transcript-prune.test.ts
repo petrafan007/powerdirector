@@ -1,15 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { telegramPlugin } from '../../extensions/telegram/src/channel';
-import { setTelegramRuntime } from '../../extensions/telegram/src/runtime';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveMainSessionKey } from '../config/sessions';
-import { setActivePluginRegistry } from '../plugins/runtime';
-import { createPluginRuntime } from '../plugins/runtime/index';
-import { createTestRegistry } from '../test-utils/channel-plugins';
-import { runHeartbeatOnce } from './heartbeat-runner';
-import { seedSessionStore, withTempHeartbeatSandbox } from './heartbeat-runner.test-utils';
+import { telegramPlugin } from "../../extensions/telegram/src/channel.js";
+import { setTelegramRuntime } from "../../extensions/telegram/src/runtime.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveMainSessionKey } from "../config/sessions.js";
+import { setActivePluginRegistry } from "../plugins/runtime.js";
+import { createPluginRuntime } from "../plugins/runtime/index.js";
+import { createTestRegistry } from "../test-utils/channel-plugins.js";
+import { runHeartbeatOnce } from "./heartbeat-runner.js";
+import { seedSessionStore, withTempHeartbeatSandbox } from "./heartbeat-runner.test-utils.js";
 
 // Avoid pulling optional runtime deps during isolated runs.
 vi.mock("jiti", () => ({ createJiti: () => () => ({}) }));

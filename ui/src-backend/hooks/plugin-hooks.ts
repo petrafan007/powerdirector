@@ -1,10 +1,10 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { PowerDirectorPluginApi } from '../plugins/types';
-import { shouldIncludeHook } from './config';
-import type { InternalHookHandler } from './internal-hooks';
-import type { HookEntry } from './types';
-import { loadHookEntriesFromDir } from './workspace';
+import type { PowerDirectorPluginApi } from "../plugins/types.js";
+import { shouldIncludeHook } from "./config.js";
+import type { InternalHookHandler } from "./internal-hooks.js";
+import type { HookEntry } from "./types.js";
+import { loadHookEntriesFromDir } from "./workspace.js";
 
 export type PluginHookLoadResult = {
   hooks: HookEntry[];

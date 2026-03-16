@@ -1,11 +1,11 @@
 import type { Command } from "commander";
-import { runAcpClientInteractive } from '../acp/client';
-import { readSecretFromFile } from '../acp/secret-file';
-import { serveAcpGateway } from '../acp/server';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { inheritOptionFromParent } from './command-options';
+import { runAcpClientInteractive } from "../acp/client.js";
+import { readSecretFromFile } from "../acp/secret-file.js";
+import { serveAcpGateway } from "../acp/server.js";
+import { defaultRuntime } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { theme } from "../terminal/theme.js";
+import { inheritOptionFromParent } from "./command-options.js";
 
 function resolveSecretOption(params: {
   direct?: string;

@@ -6,7 +6,7 @@ import {
   ensureTailscaleEndpoint,
   resetGmailSetupUtilsCachesForTest,
   resolvePythonExecutablePath,
-} from './gmail-setup-utils';
+} from "./gmail-setup-utils.js";
 
 const itUnix = process.platform === "win32" ? it.skip : it;
 const runCommandWithTimeoutMock = vi.fn();

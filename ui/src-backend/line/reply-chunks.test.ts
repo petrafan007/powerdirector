@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { sendLineReplyChunks } from './reply-chunks';
+import { sendLineReplyChunks } from "./reply-chunks.js";
 
 function createReplyChunksHarness() {
   const replyMessageLine = vi.fn(async () => ({}));

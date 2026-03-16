@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
-import { formatCliCommand } from '../cli/command-format';
-import { ensurePortAvailable, PortInUseError } from '../infra/ports';
-import { getTailnetHostname } from '../infra/tailscale';
-import { logInfo } from '../logger';
-import { defaultRuntime, type RuntimeEnv } from '../runtime';
-import { startMediaServer } from './server';
-import { saveMediaSource } from './store';
+import { formatCliCommand } from "../cli/command-format.js";
+import { ensurePortAvailable, PortInUseError } from "../infra/ports.js";
+import { getTailnetHostname } from "../infra/tailscale.js";
+import { logInfo } from "../logger.js";
+import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
+import { startMediaServer } from "./server.js";
+import { saveMediaSource } from "./store.js";
 
 const DEFAULT_PORT = 42873;
 const TTL_MS = 2 * 60 * 1000;

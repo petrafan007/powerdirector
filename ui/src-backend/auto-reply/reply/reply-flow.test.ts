@@ -1,16 +1,16 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { expectInboundContextContract } from '../../../test/helpers/inbound-contract';
-import type { PowerDirectorConfig } from '../../config/config';
-import { defaultRuntime } from '../../runtime';
-import type { MsgContext } from '../templating';
-import { HEARTBEAT_TOKEN, SILENT_REPLY_TOKEN } from '../tokens';
-import { finalizeInboundContext } from './inbound-context';
-import { normalizeInboundTextNewlines } from './inbound-text';
-import { parseLineDirectives, hasLineDirectives } from './line-directives';
-import type { FollowupRun, QueueSettings } from './queue';
-import { enqueueFollowupRun, scheduleFollowupDrain } from './queue';
-import { createReplyDispatcher } from './reply-dispatcher';
-import { createReplyToModeFilter, resolveReplyToMode } from './reply-threading';
+import { expectInboundContextContract } from "../../../test/helpers/inbound-contract.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { defaultRuntime } from "../../runtime.js";
+import type { MsgContext } from "../templating.js";
+import { HEARTBEAT_TOKEN, SILENT_REPLY_TOKEN } from "../tokens.js";
+import { finalizeInboundContext } from "./inbound-context.js";
+import { normalizeInboundTextNewlines } from "./inbound-text.js";
+import { parseLineDirectives, hasLineDirectives } from "./line-directives.js";
+import type { FollowupRun, QueueSettings } from "./queue.js";
+import { enqueueFollowupRun, scheduleFollowupDrain } from "./queue.js";
+import { createReplyDispatcher } from "./reply-dispatcher.js";
+import { createReplyToModeFilter, resolveReplyToMode } from "./reply-threading.js";
 
 describe("normalizeInboundTextNewlines", () => {
   it("converts CRLF to LF", () => {

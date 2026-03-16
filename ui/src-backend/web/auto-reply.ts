@@ -1,1 +1,1 @@
-export * from './auto-reply.impl';
+export * from "./auto-reply.impl.js";

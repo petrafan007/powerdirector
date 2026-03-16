@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 
 const note = vi.hoisted(() => vi.fn());
 const pluginRegistry = vi.hoisted(() => ({ list: [] as unknown[] }));
@@ -12,7 +12,7 @@ vi.mock("../channels/plugins/index.js", () => ({
   listChannelPlugins: () => pluginRegistry.list,
 }));
 
-import { noteSecurityWarnings } from './doctor-security';
+import { noteSecurityWarnings } from "./doctor-security.js";
 
 describe("noteSecurityWarnings gateway exposure", () => {
   let prevToken: string | undefined;

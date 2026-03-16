@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolveConfigBackupBasePath } from './artifact-paths';
-import { rotateConfigBackups } from './backup-rotation';
-import { withTempHome } from './test-helpers';
-import type { PowerDirectorConfig } from './types';
+import { resolveConfigBackupBasePath } from "./artifact-paths.js";
+import { rotateConfigBackups } from "./backup-rotation.js";
+import { withTempHome } from "./test-helpers.js";
+import type { PowerDirectorConfig } from "./types.js";
 
 describe("config backup rotation", () => {
   it("keeps a 5-deep backup ring for config writes", async () => {

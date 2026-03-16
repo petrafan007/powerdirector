@@ -1,6 +1,6 @@
-import type { ChatType } from '../channels/chat-type';
-import type { SessionEntry } from '../config/sessions';
-import type { DeliveryContext } from '../utils/delivery-context';
+import type { ChatType } from "../channels/chat-type.js";
+import type { SessionEntry } from "../config/sessions.js";
+import type { DeliveryContext } from "../utils/delivery-context.js";
 
 export type GatewaySessionsDefaults = {
   modelProvider: string | null;

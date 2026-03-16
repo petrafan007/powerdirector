@@ -1,13 +1,13 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { resolveCliName } from './cli-name';
+import { resolveCliName } from "./cli-name.js";
 import {
   asBoolean,
   asNumber,
   asRecord,
   asString,
   resolveTempPathParts,
-} from './nodes-media-utils';
+} from "./nodes-media-utils.js";
 
 const MAX_CAMERA_URL_DOWNLOAD_BYTES = 250 * 1024 * 1024;
 

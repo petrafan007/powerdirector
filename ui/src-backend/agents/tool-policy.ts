@@ -1,4 +1,4 @@
-import { type AnyAgentTool, wrapOwnerOnlyToolExecution } from './tools/common';
+import { type AnyAgentTool, wrapOwnerOnlyToolExecution } from "./tools/common.js";
 
 export type ToolProfileId = "minimal" | "coding" | "messaging" | "full";
 

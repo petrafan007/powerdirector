@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../../config/config';
-import { createModelSelectionState } from './model-selection';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { createModelSelectionState } from "./model-selection.js";
 
 vi.mock("../../agents/model-catalog.js", () => ({
   loadModelCatalog: vi.fn(async () => [

@@ -1,12 +1,12 @@
-import { getChannelPlugin, listChannelPlugins } from '../channels/plugins/index';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import { CONFIG_PATH } from '../config/config';
-import type { RuntimeEnv } from '../runtime';
-import { note } from '../terminal/note';
-import { shortenHomePath } from '../utils';
-import { confirm, select } from './configure.shared';
-import { guardCancel } from './onboard-helpers';
+import { getChannelPlugin, listChannelPlugins } from "../channels/plugins/index.js";
+import { formatCliCommand } from "../cli/command-format.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { CONFIG_PATH } from "../config/config.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { note } from "../terminal/note.js";
+import { shortenHomePath } from "../utils.js";
+import { confirm, select } from "./configure.shared.js";
+import { guardCancel } from "./onboard-helpers.js";
 
 export async function removeChannelConfigWizard(
   cfg: PowerDirectorConfig,

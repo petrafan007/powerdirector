@@ -4,7 +4,7 @@ import {
   formatWindowsAclSummary,
   inspectWindowsAcl,
   type ExecFn,
-} from './windows-acl';
+} from "./windows-acl.js";
 
 export type PermissionCheck = {
   ok: boolean;

@@ -1,17 +1,17 @@
-import { resolveChannelDefaultAccountId } from '../channels/plugins/helpers';
-import type { listChannelPlugins } from '../channels/plugins/index';
-import type { ChannelId } from '../channels/plugins/types';
+import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
+import type { listChannelPlugins } from "../channels/plugins/index.js";
+import type { ChannelId } from "../channels/plugins/types.js";
 import {
   isNumericTelegramUserId,
   normalizeTelegramAllowFromEntry,
-} from '../channels/telegram/allow-from';
-import { formatCliCommand } from '../cli/command-format';
-import { resolveNativeCommandsEnabled, resolveNativeSkillsEnabled } from '../config/commands';
-import type { PowerDirectorConfig } from '../config/config';
-import { readChannelAllowFromStore } from '../pairing/pairing-store';
-import { normalizeStringEntries } from '../shared/string-normalization';
-import type { SecurityAuditFinding, SecurityAuditSeverity } from './audit';
-import { resolveDmAllowState } from './dm-policy-shared';
+} from "../channels/telegram/allow-from.js";
+import { formatCliCommand } from "../cli/command-format.js";
+import { resolveNativeCommandsEnabled, resolveNativeSkillsEnabled } from "../config/commands.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { readChannelAllowFromStore } from "../pairing/pairing-store.js";
+import { normalizeStringEntries } from "../shared/string-normalization.js";
+import type { SecurityAuditFinding, SecurityAuditSeverity } from "./audit.js";
+import { resolveDmAllowState } from "./dm-policy-shared.js";
 
 function normalizeAllowFromList(list: Array<string | number> | undefined | null): string[] {
   return normalizeStringEntries(Array.isArray(list) ? list : undefined);

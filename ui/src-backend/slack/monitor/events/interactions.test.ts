@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { registerSlackInteractionEvents } from './interactions';
+import { registerSlackInteractionEvents } from "./interactions.js";
 
 const enqueueSystemEventMock = vi.fn();
 

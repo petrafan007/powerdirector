@@ -1,4 +1,4 @@
-import { isTruthyEnvValue } from '../infra/env';
+import { isTruthyEnvValue } from "../infra/env.js";
 
 export type BrowserControlServer = {
   stop: () => Promise<void>;
@@ -11,7 +11,7 @@ export async function startBrowserControlServerIfEnabled(): Promise<BrowserContr
   // Lazy import: keeps startup fast, but still bundles for the embedded
   // gateway (bun --compile) via the static specifier path.
   const override = process.env.POWERDIRECTOR_BROWSER_CONTROL_MODULE?.trim();
-  const mod = override ? await import(override) : await import('../browser/control-service');
+  const mod = override ? await import(override) : await import("../browser/control-service.js");
   const start =
     typeof (mod as { startBrowserControlServiceFromConfig?: unknown })
       .startBrowserControlServiceFromConfig === "function"

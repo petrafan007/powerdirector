@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildUsageErrorSnapshot,
   buildUsageHttpErrorSnapshot,
-} from './provider-usage.fetch.shared';
+} from "./provider-usage.fetch.shared.js";
 
 describe("provider usage fetch shared helpers", () => {
   it("builds a provider error snapshot", () => {

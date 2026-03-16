@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MissingEnvVarError, resolveConfigEnvVars } from './env-substitution';
+import { MissingEnvVarError, resolveConfigEnvVars } from "./env-substitution.js";
 
 describe("resolveConfigEnvVars", () => {
   describe("basic substitution", () => {

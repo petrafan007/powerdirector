@@ -1,8 +1,8 @@
 import type { Command } from "commander";
-import { danger } from '../../globals';
-import { defaultRuntime } from '../../runtime';
-import { addGatewayClientOptions, callGatewayFromCli } from '../gateway-rpc';
-import { warnIfCronSchedulerDisabled } from './shared';
+import { danger } from "../../globals.js";
+import { defaultRuntime } from "../../runtime.js";
+import { addGatewayClientOptions, callGatewayFromCli } from "../gateway-rpc.js";
+import { warnIfCronSchedulerDisabled } from "./shared.js";
 
 function registerCronToggleCommand(params: {
   cron: Command;

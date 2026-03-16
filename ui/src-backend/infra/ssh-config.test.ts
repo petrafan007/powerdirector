@@ -40,12 +40,12 @@ vi.mock("node:child_process", () => {
 
 const spawnMock = vi.mocked(spawn);
 
-let parseSshConfigOutput: typeof import('./ssh-config').parseSshConfigOutput;
-let resolveSshConfig: typeof import('./ssh-config').resolveSshConfig;
+let parseSshConfigOutput: typeof import("./ssh-config.js").parseSshConfigOutput;
+let resolveSshConfig: typeof import("./ssh-config.js").resolveSshConfig;
 
 describe("ssh-config", () => {
   beforeAll(async () => {
-    ({ parseSshConfigOutput, resolveSshConfig } = await import('./ssh-config'));
+    ({ parseSshConfigOutput, resolveSshConfig } = await import("./ssh-config.js"));
   });
 
   it("parses ssh -G output", () => {

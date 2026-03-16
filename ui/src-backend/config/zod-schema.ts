@@ -1,20 +1,20 @@
 import { z } from "zod";
-import { parseByteSize } from '../cli/parse-bytes';
-import { parseDurationMs } from '../cli/parse-duration';
-import { ToolsSchema } from './zod-schema.agent-runtime';
-import { AgentsSchema, AudioSchema, BindingsSchema, BroadcastSchema } from './zod-schema.agents';
-import { ApprovalsSchema } from './zod-schema.approvals';
-import { HexColorSchema, ModelsConfigSchema } from './zod-schema.core';
-import { HookMappingSchema, HooksGmailSchema, InternalHooksSchema } from './zod-schema.hooks';
-import { InstallRecordShape } from './zod-schema.installs';
-import { ChannelsSchema } from './zod-schema.providers';
-import { sensitive } from './zod-schema.sensitive';
+import { parseByteSize } from "../cli/parse-bytes.js";
+import { parseDurationMs } from "../cli/parse-duration.js";
+import { ToolsSchema } from "./zod-schema.agent-runtime.js";
+import { AgentsSchema, AudioSchema, BindingsSchema, BroadcastSchema } from "./zod-schema.agents.js";
+import { ApprovalsSchema } from "./zod-schema.approvals.js";
+import { HexColorSchema, ModelsConfigSchema } from "./zod-schema.core.js";
+import { HookMappingSchema, HooksGmailSchema, InternalHooksSchema } from "./zod-schema.hooks.js";
+import { InstallRecordShape } from "./zod-schema.installs.js";
+import { ChannelsSchema } from "./zod-schema.providers.js";
+import { sensitive } from "./zod-schema.sensitive.js";
 import {
   CommandsSchema,
   MessagesSchema,
   SessionSchema,
   SessionSendPolicySchema,
-} from './zod-schema.session';
+} from "./zod-schema.session.js";
 
 const BrowserSnapshotDefaultsSchema = z
   .object({

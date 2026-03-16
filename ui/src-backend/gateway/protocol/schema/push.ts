@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import { NonEmptyString } from './primitives';
+import { NonEmptyString } from "./primitives.js";
 
 const ApnsEnvironmentSchema = Type.String({ enum: ["sandbox", "production"] });
 

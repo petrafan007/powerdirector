@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { classifySignalCliLogLine } from './daemon';
-import { probeSignal } from './probe';
+import { classifySignalCliLogLine } from "./daemon.js";
+import { probeSignal } from "./probe.js";
 
 const signalCheckMock = vi.fn();
 const signalRpcRequestMock = vi.fn();

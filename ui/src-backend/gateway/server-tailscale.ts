@@ -4,7 +4,7 @@ import {
   enableTailscaleFunnel,
   enableTailscaleServe,
   getTailnetHostname,
-} from '../infra/tailscale';
+} from "../infra/tailscale.js";
 
 export async function startGatewayTailscaleExposure(params: {
   tailscaleMode: "off" | "serve" | "funnel";

@@ -1,5 +1,5 @@
 import { select } from "@clack/prompts";
-import { stylePromptHint, stylePromptMessage } from './prompt-style';
+import { stylePromptHint, stylePromptMessage } from "./prompt-style.js";
 
 export function selectStyled<T>(params: Parameters<typeof select<T>>[0]) {
   return select({

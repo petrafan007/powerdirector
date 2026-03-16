@@ -47,16 +47,16 @@ vi.mock("../pi-embedded-helpers.js", async () => {
   };
 });
 
-import { compactEmbeddedPiSessionDirect } from './compact';
-import { log } from './logger';
-import { runEmbeddedPiAgent } from './run';
-import { makeAttemptResult, mockOverflowRetrySuccess } from './run.overflow-compaction.fixture';
-import { runEmbeddedAttempt } from './run/attempt';
-import type { EmbeddedRunAttemptResult } from './run/types';
+import { compactEmbeddedPiSessionDirect } from "./compact.js";
+import { log } from "./logger.js";
+import { runEmbeddedPiAgent } from "./run.js";
+import { makeAttemptResult, mockOverflowRetrySuccess } from "./run.overflow-compaction.fixture.js";
+import { runEmbeddedAttempt } from "./run/attempt.js";
+import type { EmbeddedRunAttemptResult } from "./run/types.js";
 import {
   sessionLikelyHasOversizedToolResults,
   truncateOversizedToolResultsInSession,
-} from './tool-result-truncation';
+} from "./tool-result-truncation.js";
 
 const mockedRunEmbeddedAttempt = vi.mocked(runEmbeddedAttempt);
 const mockedCompactDirect = vi.mocked(compactEmbeddedPiSessionDirect);

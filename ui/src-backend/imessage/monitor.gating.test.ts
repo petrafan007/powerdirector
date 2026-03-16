@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   buildIMessageInboundContext,
   resolveIMessageInboundDecision,
-} from './monitor/inbound-processing';
-import { parseIMessageNotification } from './monitor/parse-notification';
-import type { IMessagePayload } from './monitor/types';
+} from "./monitor/inbound-processing.js";
+import { parseIMessageNotification } from "./monitor/parse-notification.js";
+import type { IMessagePayload } from "./monitor/types.js";
 
 function baseCfg(): PowerDirectorConfig {
   return {

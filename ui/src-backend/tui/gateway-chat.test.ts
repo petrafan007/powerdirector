@@ -9,7 +9,7 @@ const originalEnvToken = process.env.POWERDIRECTOR_GATEWAY_TOKEN;
 const originalEnvPassword = process.env.POWERDIRECTOR_GATEWAY_PASSWORD;
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig,
@@ -22,7 +22,7 @@ vi.mock("../infra/tailnet.js", () => ({
 }));
 
 vi.mock("../gateway/net.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../gateway/net')>();
+  const actual = await importOriginal<typeof import("../gateway/net.js")>();
   return {
     ...actual,
     pickPrimaryLanIPv4,
@@ -31,7 +31,7 @@ vi.mock("../gateway/net.js", async (importOriginal) => {
   };
 });
 
-const { resolveGatewayConnection } = await import('./gateway-chat');
+const { resolveGatewayConnection } = await import("./gateway-chat.js");
 
 describe("resolveGatewayConnection", () => {
   beforeEach(() => {

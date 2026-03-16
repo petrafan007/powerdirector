@@ -2,11 +2,11 @@ export {
   configureCommand,
   configureCommandFromSectionsArg,
   configureCommandWithSections,
-} from './configure.commands';
-export { buildGatewayAuthConfig } from './configure.gateway-auth';
+} from "./configure.commands.js";
+export { buildGatewayAuthConfig } from "./configure.gateway-auth.js";
 export {
   CONFIGURE_WIZARD_SECTIONS,
   parseConfigureWizardSections,
   type WizardSection,
-} from './configure.shared';
-export { runConfigureWizard } from './configure.wizard';
+} from "./configure.shared.js";
+export { runConfigureWizard } from "./configure.wizard.js";

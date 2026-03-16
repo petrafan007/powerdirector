@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveAgentAvatar } from './identity-avatar';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveAgentAvatar } from "./identity-avatar.js";
 
 async function writeFile(filePath: string, contents = "avatar") {
   await fs.mkdir(path.dirname(filePath), { recursive: true });

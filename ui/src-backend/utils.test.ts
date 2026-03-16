@@ -18,7 +18,7 @@ import {
   sleep,
   toWhatsappJid,
   withWhatsAppPrefix,
-} from './utils';
+} from "./utils.js";
 
 describe("normalizePath", () => {
   it("adds leading slash when missing", () => {

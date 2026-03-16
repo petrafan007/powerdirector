@@ -15,7 +15,7 @@ vi.mock("./message.js", () => ({
   sendPoll: (...args: unknown[]) => mocks.sendPoll(...args),
 }));
 
-import { executePollAction, executeSendAction } from './outbound-send-service';
+import { executePollAction, executeSendAction } from "./outbound-send-service.js";
 
 describe("executeSendAction", () => {
   beforeEach(() => {

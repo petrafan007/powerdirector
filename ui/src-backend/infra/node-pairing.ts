@@ -6,8 +6,8 @@ import {
   resolvePairingPaths,
   upsertPendingPairingRequest,
   writeJsonAtomic,
-} from './pairing-files';
-import { generatePairingToken, verifyPairingToken } from './pairing-token';
+} from "./pairing-files.js";
+import { generatePairingToken, verifyPairingToken } from "./pairing-token.js";
 
 export type NodePairingPendingRequest = {
   requestId: string;

@@ -1,5 +1,5 @@
-import { isBlockedHostnameOrIp } from '../infra/net/ssrf';
-import { DEFAULT_MAX_LINKS } from './defaults';
+import { isBlockedHostnameOrIp } from "../infra/net/ssrf.js";
+import { DEFAULT_MAX_LINKS } from "./defaults.js";
 
 // Remove markdown link syntax so only bare URLs are considered.
 const MARKDOWN_LINK_RE = /\[[^\]]*]\((https?:\/\/\S+?)\)/gi;

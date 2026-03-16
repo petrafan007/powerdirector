@@ -22,7 +22,7 @@ const { resolveTelegramFetch } = vi.hoisted(() => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig,
@@ -51,7 +51,7 @@ vi.mock("grammy", () => ({
   InputFile: class {},
 }));
 
-import { deleteMessageTelegram, reactMessageTelegram, sendMessageTelegram } from './send';
+import { deleteMessageTelegram, reactMessageTelegram, sendMessageTelegram } from "./send.js";
 
 describe("telegram proxy client", () => {
   const proxyUrl = "http://proxy.test:8080";

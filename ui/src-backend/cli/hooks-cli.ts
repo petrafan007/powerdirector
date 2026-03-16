@@ -2,31 +2,31 @@ import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 import type { Command } from "commander";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig, writeConfigFile } from '../config/io';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadConfig, writeConfigFile } from "../config/io.js";
 import {
   buildWorkspaceHookStatus,
   type HookStatusEntry,
   type HookStatusReport,
-} from '../hooks/hooks-status';
+} from "../hooks/hooks-status.js";
 import {
   installHooksFromNpmSpec,
   installHooksFromPath,
   resolveHookInstallDir,
-} from '../hooks/install';
-import { recordHookInstall } from '../hooks/installs';
-import type { HookEntry } from '../hooks/types';
-import { loadWorkspaceHookEntries } from '../hooks/workspace';
-import { resolveArchiveKind } from '../infra/archive';
-import { buildPluginStatusReport } from '../plugins/status';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { renderTable } from '../terminal/table';
-import { theme } from '../terminal/theme';
-import { resolveUserPath, shortenHomePath } from '../utils';
-import { formatCliCommand } from './command-format';
-import { promptYesNo } from './prompt';
+} from "../hooks/install.js";
+import { recordHookInstall } from "../hooks/installs.js";
+import type { HookEntry } from "../hooks/types.js";
+import { loadWorkspaceHookEntries } from "../hooks/workspace.js";
+import { resolveArchiveKind } from "../infra/archive.js";
+import { buildPluginStatusReport } from "../plugins/status.js";
+import { defaultRuntime } from "../runtime.js";
+import { formatDocsLink } from "../terminal/links.js";
+import { renderTable } from "../terminal/table.js";
+import { theme } from "../terminal/theme.js";
+import { resolveUserPath, shortenHomePath } from "../utils.js";
+import { formatCliCommand } from "./command-format.js";
+import { promptYesNo } from "./prompt.js";
 
 export type HooksListOptions = {
   json?: boolean;

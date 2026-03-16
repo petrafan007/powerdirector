@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { installProcessWarningFilter, shouldIgnoreWarning } from './warning-filter';
+import { installProcessWarningFilter, shouldIgnoreWarning } from "./warning-filter.js";
 
 const warningFilterKey = Symbol.for("powerdirector.warning-filter");
 const baseEmitWarning = process.emitWarning.bind(process);

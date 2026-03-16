@@ -3,7 +3,7 @@ import {
   buildAuthHealthSummary,
   DEFAULT_OAUTH_WARN_MS,
   formatRemainingShort,
-} from './auth-health';
+} from "./auth-health.js";
 
 describe("buildAuthHealthSummary", () => {
   const now = 1_700_000_000_000;

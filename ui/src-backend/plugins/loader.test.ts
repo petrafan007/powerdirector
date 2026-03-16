@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
-import { loadPowerDirectorPlugins } from './loader';
+import { loadPowerDirectorPlugins } from "./loader.js";
 
 type TempPlugin = { dir: string; file: string; id: string };
 

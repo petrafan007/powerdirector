@@ -2,7 +2,7 @@
 import { spawn, type ChildProcessWithoutNullStreams, execFile } from 'node:child_process';
 import { createInterface, type Interface } from 'node:readline';
 import { promisify } from 'node:util';
-import { Channel, ChannelMessage } from './base';
+import { Channel, ChannelMessage } from './base.js';
 
 const execFileAsync = promisify(execFile);
 

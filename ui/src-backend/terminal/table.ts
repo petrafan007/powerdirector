@@ -1,5 +1,5 @@
-import { displayString } from '../utils';
-import { visibleWidth } from './ansi';
+import { displayString } from "../utils.js";
+import { visibleWidth } from "./ansi.js";
 
 type Align = "left" | "right" | "center";
 

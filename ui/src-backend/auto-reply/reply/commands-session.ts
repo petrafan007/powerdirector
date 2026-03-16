@@ -1,24 +1,24 @@
-import { abortEmbeddedPiRun } from '../../agents/pi-embedded';
-import { isRestartEnabled } from '../../config/commands';
-import type { SessionEntry } from '../../config/sessions';
-import { updateSessionStore } from '../../config/sessions';
-import { logVerbose } from '../../globals';
-import { createInternalHookEvent, triggerInternalHook } from '../../hooks/internal-hooks';
-import { scheduleGatewaySigusr1Restart, triggerPowerDirectorRestart } from '../../infra/restart';
-import { loadCostUsageSummary, loadSessionCostSummary } from '../../infra/session-cost-usage';
-import { formatTokenCount, formatUsd } from '../../utils/usage-format';
-import { parseActivationCommand } from '../group-activation';
-import { parseSendPolicyCommand } from '../send-policy';
-import { normalizeUsageDisplay, resolveResponseUsageMode } from '../thinking';
+import { abortEmbeddedPiRun } from "../../agents/pi-embedded.js";
+import { isRestartEnabled } from "../../config/commands.js";
+import type { SessionEntry } from "../../config/sessions.js";
+import { updateSessionStore } from "../../config/sessions.js";
+import { logVerbose } from "../../globals.js";
+import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
+import { scheduleGatewaySigusr1Restart, triggerPowerDirectorRestart } from "../../infra/restart.js";
+import { loadCostUsageSummary, loadSessionCostSummary } from "../../infra/session-cost-usage.js";
+import { formatTokenCount, formatUsd } from "../../utils/usage-format.js";
+import { parseActivationCommand } from "../group-activation.js";
+import { parseSendPolicyCommand } from "../send-policy.js";
+import { normalizeUsageDisplay, resolveResponseUsageMode } from "../thinking.js";
 import {
   formatAbortReplyText,
   isAbortTrigger,
   resolveSessionEntryForKey,
   setAbortMemory,
   stopSubagentsForRequester,
-} from './abort';
-import type { CommandHandler } from './commands-types';
-import { clearSessionQueues } from './queue';
+} from "./abort.js";
+import type { CommandHandler } from "./commands-types.js";
+import { clearSessionQueues } from "./queue.js";
 
 function resolveAbortTarget(params: {
   ctx: { CommandTargetSessionKey?: string | null };

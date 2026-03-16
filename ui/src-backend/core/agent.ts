@@ -5,7 +5,7 @@ import { ProviderExecutionMetadata, ProviderRouter } from '../reliability/router
 import { ContextPruner } from '../context/pruner.ts';
 import { ToolRegistry } from '../tools/base.ts';
 import { Message } from '../context/types.ts';
-import { MemoryManager } from './memory';
+import { MemoryManager } from './memory.js';
 
 interface AgentOptions {
     runTimeoutMs?: number;

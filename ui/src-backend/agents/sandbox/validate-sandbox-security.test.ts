@@ -9,7 +9,7 @@ import {
   validateSeccompProfile,
   validateApparmorProfile,
   validateSandboxSecurity,
-} from './validate-sandbox-security';
+} from "./validate-sandbox-security.js";
 
 describe("getBlockedBindReason", () => {
   it("blocks common Docker socket directories", () => {

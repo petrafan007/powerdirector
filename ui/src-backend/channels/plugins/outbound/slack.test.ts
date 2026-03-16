@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../../../config/config';
+import type { PowerDirectorConfig } from "../../../config/config.js";
 
 vi.mock("../../../slack/send.js", () => ({
   sendMessageSlack: vi.fn().mockResolvedValue({ messageId: "1234.5678", channelId: "C123" }),
@@ -9,9 +9,9 @@ vi.mock("../../../plugins/hook-runner-global.js", () => ({
   getGlobalHookRunner: vi.fn(),
 }));
 
-import { getGlobalHookRunner } from '../../../plugins/hook-runner-global';
-import { sendMessageSlack } from '../../../slack/send';
-import { slackOutbound } from './slack';
+import { getGlobalHookRunner } from "../../../plugins/hook-runner-global.js";
+import { sendMessageSlack } from "../../../slack/send.js";
+import { slackOutbound } from "./slack.js";
 
 const sendSlackText = async (ctx: {
   to: string;

@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { DeviceIdentity } from '../infra/device-identity';
+import type { DeviceIdentity } from "../infra/device-identity.js";
 
 const wsInstances = vi.hoisted((): MockWebSocket[] => []);
 const clearDeviceAuthTokenMock = vi.hoisted(() => vi.fn());
@@ -61,7 +61,7 @@ vi.mock("ws", () => ({
 }));
 
 vi.mock("../infra/device-auth-store.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../infra/device-auth-store')>();
+  const actual = await importOriginal<typeof import("../infra/device-auth-store.js")>();
   return {
     ...actual,
     clearDeviceAuthToken: (...args: unknown[]) => clearDeviceAuthTokenMock(...args),
@@ -69,14 +69,14 @@ vi.mock("../infra/device-auth-store.js", async (importOriginal) => {
 });
 
 vi.mock("../logger.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../logger')>();
+  const actual = await importOriginal<typeof import("../logger.js")>();
   return {
     ...actual,
     logDebug: (...args: unknown[]) => logDebugMock(...args),
   };
 });
 
-const { GatewayClient } = await import('./client');
+const { GatewayClient } = await import("./client.js");
 
 function getLatestWs(): MockWebSocket {
   const ws = wsInstances.at(-1);

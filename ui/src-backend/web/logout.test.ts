@@ -13,11 +13,11 @@ const runtime = {
 describe("web logout", () => {
   let fixtureRoot = "";
   let caseId = 0;
-  let logoutWeb: typeof import('./auth-store').logoutWeb;
+  let logoutWeb: typeof import("./auth-store.js").logoutWeb;
 
   beforeAll(async () => {
     fixtureRoot = await fsPromises.mkdtemp(path.join(os.tmpdir(), "powerdirector-test-web-logout-"));
-    ({ logoutWeb } = await import('./auth-store'));
+    ({ logoutWeb } = await import("./auth-store.js"));
   });
 
   afterAll(async () => {

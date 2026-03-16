@@ -2,12 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ChannelPlugin } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { collectPluginsCodeSafetyFindings } from './audit-extra';
-import type { SecurityAuditOptions, SecurityAuditReport } from './audit';
-import { runSecurityAudit } from './audit';
-import * as skillScanner from './skill-scanner';
+import type { ChannelPlugin } from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { collectPluginsCodeSafetyFindings } from "./audit-extra.js";
+import type { SecurityAuditOptions, SecurityAuditReport } from "./audit.js";
+import { runSecurityAudit } from "./audit.js";
+import * as skillScanner from "./skill-scanner.js";
 
 const isWindows = process.platform === "win32";
 

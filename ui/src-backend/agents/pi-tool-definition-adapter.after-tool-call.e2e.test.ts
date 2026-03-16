@@ -1,7 +1,7 @@
 import type { AgentTool } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { toToolDefinitions } from './pi-tool-definition-adapter';
+import { toToolDefinitions } from "./pi-tool-definition-adapter.js";
 
 const hookMocks = vi.hoisted(() => ({
   runner: {

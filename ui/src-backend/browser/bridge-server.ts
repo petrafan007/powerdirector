@@ -1,20 +1,20 @@
 import type { Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import express from "express";
-import { isLoopbackHost } from '../gateway/net';
-import { deleteBridgeAuthForPort, setBridgeAuthForPort } from './bridge-auth-registry';
-import type { ResolvedBrowserConfig } from './config';
-import { registerBrowserRoutes } from './routes/index';
-import type { BrowserRouteRegistrar } from './routes/types';
+import { isLoopbackHost } from "../gateway/net.js";
+import { deleteBridgeAuthForPort, setBridgeAuthForPort } from "./bridge-auth-registry.js";
+import type { ResolvedBrowserConfig } from "./config.js";
+import { registerBrowserRoutes } from "./routes/index.js";
+import type { BrowserRouteRegistrar } from "./routes/types.js";
 import {
   type BrowserServerState,
   createBrowserRouteContext,
   type ProfileContext,
-} from './server-context';
+} from "./server-context.js";
 import {
   installBrowserAuthMiddleware,
   installBrowserCommonMiddleware,
-} from './server-middleware';
+} from "./server-middleware.js";
 
 export type BrowserBridge = {
   server: Server;

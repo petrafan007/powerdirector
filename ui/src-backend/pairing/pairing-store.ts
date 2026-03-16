@@ -2,12 +2,12 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { getPairingAdapter } from '../channels/plugins/pairing';
-import type { ChannelId, ChannelPairingAdapter } from '../channels/plugins/types';
-import { resolveOAuthDir, resolveStateDir } from '../config/paths';
-import { withFileLock as withPathLock } from '../infra/file-lock';
-import { resolveRequiredHomeDir } from '../infra/home-dir';
-import { readJsonFileWithFallback, writeJsonFileAtomically } from '../plugin-sdk/json-store';
+import { getPairingAdapter } from "../channels/plugins/pairing.js";
+import type { ChannelId, ChannelPairingAdapter } from "../channels/plugins/types.js";
+import { resolveOAuthDir, resolveStateDir } from "../config/paths.js";
+import { withFileLock as withPathLock } from "../infra/file-lock.js";
+import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { readJsonFileWithFallback, writeJsonFileAtomically } from "../plugin-sdk/json-store.js";
 
 const PAIRING_CODE_LENGTH = 8;
 const PAIRING_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

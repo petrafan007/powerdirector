@@ -1,7 +1,7 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import { SessionManager } from "@mariozechner/pi-coding-agent";
 import { describe, expect, it, vi } from "vitest";
-import { applyGoogleTurnOrderingFix } from './pi-embedded-runner';
+import { applyGoogleTurnOrderingFix } from "./pi-embedded-runner.js";
 
 describe("applyGoogleTurnOrderingFix", () => {
   const makeAssistantFirst = (): AgentMessage[] => [

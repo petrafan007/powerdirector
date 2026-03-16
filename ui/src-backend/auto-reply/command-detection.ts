@@ -1,11 +1,11 @@
-import type { PowerDirectorConfig } from '../config/types';
+import type { PowerDirectorConfig } from "../config/types.js";
 import {
   type CommandNormalizeOptions,
   listChatCommands,
   listChatCommandsForConfig,
   normalizeCommandBody,
-} from './commands-registry';
-import { isAbortTrigger } from './reply/abort';
+} from "./commands-registry.js";
+import { isAbortTrigger } from "./reply/abort.js";
 
 export function hasControlCommand(
   text?: string,

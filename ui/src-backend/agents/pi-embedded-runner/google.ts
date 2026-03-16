@@ -2,30 +2,30 @@ import { EventEmitter } from "node:events";
 import type { AgentMessage, AgentTool } from "@mariozechner/pi-agent-core";
 import type { SessionManager } from "@mariozechner/pi-coding-agent";
 import type { TSchema } from "@sinclair/typebox";
-import type { PowerDirectorConfig } from '../../config/config';
-import { registerUnhandledRejectionHandler } from '../../infra/unhandled-rejections';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { registerUnhandledRejectionHandler } from "../../infra/unhandled-rejections.js";
 import {
   hasInterSessionUserProvenance,
   normalizeInputProvenance,
-} from '../../sessions/input-provenance';
-import { resolveImageSanitizationLimits } from '../image-sanitization';
+} from "../../sessions/input-provenance.js";
+import { resolveImageSanitizationLimits } from "../image-sanitization.js";
 import {
   downgradeOpenAIReasoningBlocks,
   isCompactionFailureError,
   isGoogleModelApi,
   sanitizeGoogleTurnOrdering,
   sanitizeSessionMessagesImages,
-} from '../pi-embedded-helpers';
-import { cleanToolSchemaForGemini } from '../pi-tools.schema';
+} from "../pi-embedded-helpers.js";
+import { cleanToolSchemaForGemini } from "../pi-tools.schema.js";
 import {
   sanitizeToolCallInputs,
   stripToolResultDetails,
   sanitizeToolUseResultPairing,
-} from '../session-transcript-repair';
-import type { TranscriptPolicy } from '../transcript-policy';
-import { resolveTranscriptPolicy } from '../transcript-policy';
-import { log } from './logger';
-import { describeUnknownError } from './utils';
+} from "../session-transcript-repair.js";
+import type { TranscriptPolicy } from "../transcript-policy.js";
+import { resolveTranscriptPolicy } from "../transcript-policy.js";
+import { log } from "./logger.js";
+import { describeUnknownError } from "./utils.js";
 
 const GOOGLE_TURN_ORDERING_CUSTOM_TYPE = "google-turn-ordering-bootstrap";
 const GOOGLE_SCHEMA_UNSUPPORTED_KEYWORDS = new Set([

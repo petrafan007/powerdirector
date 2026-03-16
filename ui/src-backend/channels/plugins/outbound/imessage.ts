@@ -1,7 +1,7 @@
-import { chunkText } from '../../../auto-reply/chunk';
-import { sendMessageIMessage } from '../../../imessage/send';
-import { resolveChannelMediaMaxBytes } from '../media-limits';
-import type { ChannelOutboundAdapter } from '../types';
+import { chunkText } from "../../../auto-reply/chunk.js";
+import { sendMessageIMessage } from "../../../imessage/send.js";
+import { resolveChannelMediaMaxBytes } from "../media-limits.js";
+import type { ChannelOutboundAdapter } from "../types.js";
 
 function resolveIMessageMaxBytes(params: {
   cfg: Parameters<typeof resolveChannelMediaMaxBytes>[0]["cfg"];

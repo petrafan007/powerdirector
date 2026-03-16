@@ -2,13 +2,13 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { Page } from "playwright-core";
-import { resolvePreferredPowerDirectorTmpDir } from '../infra/tmp-powerdirector-dir';
+import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir.js";
 import {
   ensurePageState,
   getPageForTargetId,
   refLocator,
   restoreRoleRefsForTarget,
-} from './pw-session';
+} from "./pw-session.js";
 import {
   bumpDialogArmId,
   bumpDownloadArmId,
@@ -16,7 +16,7 @@ import {
   normalizeTimeoutMs,
   requireRef,
   toAIFriendlyError,
-} from './pw-tools-core.shared';
+} from "./pw-tools-core.shared.js";
 
 function sanitizeDownloadFileName(fileName: string): string {
   const trimmed = String(fileName ?? "").trim();

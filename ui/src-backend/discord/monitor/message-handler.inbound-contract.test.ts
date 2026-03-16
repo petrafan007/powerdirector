@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildDispatchInboundContextCapture } from '../../../test/helpers/inbound-contract-capture';
-import { expectInboundContextContract } from '../../../test/helpers/inbound-contract';
-import type { MsgContext } from '../../auto-reply/templating';
+import { buildDispatchInboundContextCapture } from "../../../test/helpers/inbound-contract-capture.js";
+import { expectInboundContextContract } from "../../../test/helpers/inbound-contract.js";
+import type { MsgContext } from "../../auto-reply/templating.js";
 
 const capture = vi.hoisted(() => ({ ctx: undefined as MsgContext | undefined }));
 
@@ -9,9 +9,9 @@ vi.mock("../../auto-reply/dispatch.js", async (importOriginal) => {
   return await buildDispatchInboundContextCapture(importOriginal, capture);
 });
 
-import type { DiscordMessagePreflightContext } from './message-handler.preflight';
-import { processDiscordMessage } from './message-handler.process';
-import { createBaseDiscordMessageContext } from './message-handler.test-harness';
+import type { DiscordMessagePreflightContext } from "./message-handler.preflight.js";
+import { processDiscordMessage } from "./message-handler.process.js";
+import { createBaseDiscordMessageContext } from "./message-handler.test-harness.js";
 
 describe("discord processDiscordMessage inbound contract", () => {
   it("passes a finalized MsgContext to dispatchInboundMessage", async () => {

@@ -3,8 +3,8 @@ import type {
   ChannelId,
   ChannelOutboundAdapter,
   ChannelPlugin,
-} from '../channels/plugins/types';
-import type { PluginRegistry } from '../plugins/registry';
+} from "../channels/plugins/types.js";
+import type { PluginRegistry } from "../plugins/registry.js";
 
 type TestChannelRegistration = {
   pluginId: string;

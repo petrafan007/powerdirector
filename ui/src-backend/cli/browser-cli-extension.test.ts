@@ -102,13 +102,13 @@ vi.mock("../runtime.js", () => ({
   defaultRuntime: runtime,
 }));
 
-let resolveBundledExtensionRootDir: typeof import('./browser-cli-extension').resolveBundledExtensionRootDir;
-let installChromeExtension: typeof import('./browser-cli-extension').installChromeExtension;
-let registerBrowserExtensionCommands: typeof import('./browser-cli-extension').registerBrowserExtensionCommands;
+let resolveBundledExtensionRootDir: typeof import("./browser-cli-extension.js").resolveBundledExtensionRootDir;
+let installChromeExtension: typeof import("./browser-cli-extension.js").installChromeExtension;
+let registerBrowserExtensionCommands: typeof import("./browser-cli-extension.js").registerBrowserExtensionCommands;
 
 beforeAll(async () => {
   ({ resolveBundledExtensionRootDir, installChromeExtension, registerBrowserExtensionCommands } =
-    await import('./browser-cli-extension'));
+    await import("./browser-cli-extension.js"));
 });
 
 beforeEach(() => {

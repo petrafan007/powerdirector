@@ -1,6 +1,6 @@
 import { completeSimple, type Model } from "@mariozechner/pi-ai";
 import { describe, expect, it } from "vitest";
-import { isTruthyEnvValue } from '../infra/env';
+import { isTruthyEnvValue } from "../infra/env.js";
 
 const MINIMAX_KEY = process.env.MINIMAX_API_KEY ?? "";
 const MINIMAX_BASE_URL = process.env.MINIMAX_BASE_URL?.trim() || "https://api.minimax.io/anthropic";

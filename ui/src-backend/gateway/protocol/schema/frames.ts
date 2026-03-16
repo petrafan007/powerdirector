@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
-import { GatewayClientIdSchema, GatewayClientModeSchema, NonEmptyString } from './primitives';
-import { SnapshotSchema, StateVersionSchema } from './snapshot';
+import { GatewayClientIdSchema, GatewayClientModeSchema, NonEmptyString } from "./primitives.js";
+import { SnapshotSchema, StateVersionSchema } from "./snapshot.js";
 
 export const TickEventSchema = Type.Object(
   {

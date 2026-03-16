@@ -1,1 +1,1 @@
-export { registerBrowserActionInputCommands } from './browser-cli-actions-input/register';
+export { registerBrowserActionInputCommands } from "./browser-cli-actions-input/register.js";

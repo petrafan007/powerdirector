@@ -5,7 +5,7 @@
  * error handling, priority ordering, and async support.
  */
 
-import type { PluginRegistry } from './registry';
+import type { PluginRegistry } from "./registry.js";
 import type {
   PluginHookAfterCompactionEvent,
   PluginHookAfterToolCallEvent,
@@ -42,7 +42,7 @@ import type {
   PluginHookToolResultPersistResult,
   PluginHookBeforeMessageWriteEvent,
   PluginHookBeforeMessageWriteResult,
-} from './types';
+} from "./types.js";
 
 // Re-export types for consumers
 export type {

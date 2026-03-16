@@ -5,10 +5,10 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { WebSocket } from "ws";
-import { rawDataToString } from '../infra/ws';
-import { defaultRuntime } from '../runtime';
-import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH, injectCanvasLiveReload } from './a2ui';
-import { createCanvasHostHandler, startCanvasHost } from './server';
+import { rawDataToString } from "../infra/ws.js";
+import { defaultRuntime } from "../runtime.js";
+import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH, injectCanvasLiveReload } from "./a2ui.js";
+import { createCanvasHostHandler, startCanvasHost } from "./server.js";
 
 const chokidarMockState = vi.hoisted(() => ({
   watchers: [] as Array<{

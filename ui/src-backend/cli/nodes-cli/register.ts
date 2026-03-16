@@ -1,16 +1,16 @@
 import type { Command } from "commander";
-import { formatDocsLink } from '../../terminal/links';
-import { theme } from '../../terminal/theme';
-import { formatHelpExamples } from '../help-format';
-import { registerNodesCameraCommands } from './register.camera';
-import { registerNodesCanvasCommands } from './register.canvas';
-import { registerNodesInvokeCommands } from './register.invoke';
-import { registerNodesLocationCommands } from './register.location';
-import { registerNodesNotifyCommand } from './register.notify';
-import { registerNodesPairingCommands } from './register.pairing';
-import { registerNodesPushCommand } from './register.push';
-import { registerNodesScreenCommands } from './register.screen';
-import { registerNodesStatusCommands } from './register.status';
+import { formatDocsLink } from "../../terminal/links.js";
+import { theme } from "../../terminal/theme.js";
+import { formatHelpExamples } from "../help-format.js";
+import { registerNodesCameraCommands } from "./register.camera.js";
+import { registerNodesCanvasCommands } from "./register.canvas.js";
+import { registerNodesInvokeCommands } from "./register.invoke.js";
+import { registerNodesLocationCommands } from "./register.location.js";
+import { registerNodesNotifyCommand } from "./register.notify.js";
+import { registerNodesPairingCommands } from "./register.pairing.js";
+import { registerNodesPushCommand } from "./register.push.js";
+import { registerNodesScreenCommands } from "./register.screen.js";
+import { registerNodesStatusCommands } from "./register.status.js";
 
 export function registerNodesCli(program: Command) {
   const nodes = program

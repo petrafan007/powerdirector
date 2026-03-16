@@ -1,12 +1,12 @@
-import { normalizeProviderId } from '../../agents/model-selection';
-import type { MediaUnderstandingProvider } from '../types';
-import { anthropicProvider } from './anthropic/index';
-import { deepgramProvider } from './deepgram/index';
-import { googleProvider } from './google/index';
-import { groqProvider } from './groq/index';
-import { minimaxProvider } from './minimax/index';
-import { openaiProvider } from './openai/index';
-import { zaiProvider } from './zai/index';
+import { normalizeProviderId } from "../../agents/model-selection.js";
+import type { MediaUnderstandingProvider } from "../types.js";
+import { anthropicProvider } from "./anthropic/index.js";
+import { deepgramProvider } from "./deepgram/index.js";
+import { googleProvider } from "./google/index.js";
+import { groqProvider } from "./groq/index.js";
+import { minimaxProvider } from "./minimax/index.js";
+import { openaiProvider } from "./openai/index.js";
+import { zaiProvider } from "./zai/index.js";
 
 const PROVIDERS: MediaUnderstandingProvider[] = [
   groqProvider,

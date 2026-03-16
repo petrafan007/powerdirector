@@ -1,8 +1,8 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import { resolveAgentIdentity } from '../agents/identity';
-import { loadAgentIdentity } from '../commands/agents.config';
-import type { PowerDirectorConfig } from '../config/config';
-import { normalizeAgentId } from '../routing/session-key';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { resolveAgentIdentity } from "../agents/identity.js";
+import { loadAgentIdentity } from "../commands/agents.config.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { normalizeAgentId } from "../routing/session-key.js";
 
 const MAX_ASSISTANT_NAME = 50;
 const MAX_ASSISTANT_AVATAR = 200;

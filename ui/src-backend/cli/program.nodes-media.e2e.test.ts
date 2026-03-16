@@ -1,7 +1,7 @@
 import * as fs from "node:fs/promises";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { parseCameraSnapPayload, parseCameraClipPayload } from './nodes-camera';
-import { callGateway, installBaseProgramMocks, runTui, runtime } from './program.test-mocks';
+import { parseCameraSnapPayload, parseCameraClipPayload } from "./nodes-camera.js";
+import { callGateway, installBaseProgramMocks, runTui, runtime } from "./program.test-mocks.js";
 
 installBaseProgramMocks();
 
@@ -76,7 +76,7 @@ function mockNodeGateway(command?: string, payload?: Record<string, unknown>) {
   });
 }
 
-const { buildProgram } = await import('./program');
+const { buildProgram } = await import("./program.js");
 
 describe("cli program (nodes media)", () => {
   function createProgramWithCleanRuntimeLog() {

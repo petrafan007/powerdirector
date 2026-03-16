@@ -1,17 +1,17 @@
-import type { ExecApprovalForwarder } from '../../infra/exec-approval-forwarder';
+import type { ExecApprovalForwarder } from "../../infra/exec-approval-forwarder.js";
 import {
   DEFAULT_EXEC_APPROVAL_TIMEOUT_MS,
   type ExecApprovalDecision,
-} from '../../infra/exec-approvals';
-import type { ExecApprovalManager } from '../exec-approval-manager';
+} from "../../infra/exec-approvals.js";
+import type { ExecApprovalManager } from "../exec-approval-manager.js";
 import {
   ErrorCodes,
   errorShape,
   formatValidationErrors,
   validateExecApprovalRequestParams,
   validateExecApprovalResolveParams,
-} from '../protocol/index';
-import type { GatewayRequestHandlers } from './types';
+} from "../protocol/index.js";
+import type { GatewayRequestHandlers } from "./types.js";
 
 export function createExecApprovalHandlers(
   manager: ExecApprovalManager,
@@ -74,7 +74,7 @@ export function createExecApprovalHandlers(
       // Use register() to synchronously add to pending map before sending any response.
       // This ensures the approval ID is valid immediately after the "accepted" response.
       let decisionPromise: Promise<
-        import('../../infra/exec-approvals').ExecApprovalDecision | null
+        import("../../infra/exec-approvals.js").ExecApprovalDecision | null
       >;
       try {
         decisionPromise = manager.register(record, timeoutMs);

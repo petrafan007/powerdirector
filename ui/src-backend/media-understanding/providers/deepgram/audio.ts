@@ -1,5 +1,5 @@
-import type { AudioTranscriptionRequest, AudioTranscriptionResult } from '../../types';
-import { assertOkOrThrowHttpError, fetchWithTimeoutGuarded, normalizeBaseUrl } from '../shared';
+import type { AudioTranscriptionRequest, AudioTranscriptionResult } from "../../types.js";
+import { assertOkOrThrowHttpError, fetchWithTimeoutGuarded, normalizeBaseUrl } from "../shared.js";
 
 export const DEFAULT_DEEPGRAM_AUDIO_BASE_URL = "https://api.deepgram.com/v1";
 export const DEFAULT_DEEPGRAM_AUDIO_MODEL = "nova-3";

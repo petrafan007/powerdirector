@@ -1,8 +1,8 @@
 import type { Command } from "commander";
-import { getPrimaryCommand, hasHelpOrVersion } from '../argv';
-import { reparseProgramFromActionArgs } from './action-reparse';
-import type { ProgramContext } from './context';
-import { registerSubCliCommands } from './register.subclis';
+import { getPrimaryCommand, hasHelpOrVersion } from "../argv.js";
+import { reparseProgramFromActionArgs } from "./action-reparse.js";
+import type { ProgramContext } from "./context.js";
+import { registerSubCliCommands } from "./register.subclis.js";
 
 type CommandRegisterParams = {
   program: Command;
@@ -46,7 +46,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.setup');
+      const mod = await import("./register.setup.js");
       mod.registerSetupCommand(program);
     },
   },
@@ -59,7 +59,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.onboard');
+      const mod = await import("./register.onboard.js");
       mod.registerOnboardCommand(program);
     },
   },
@@ -73,7 +73,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.configure');
+      const mod = await import("./register.configure.js");
       mod.registerConfigureCommand(program);
     },
   },
@@ -87,7 +87,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('../config-cli');
+      const mod = await import("../config-cli.js");
       mod.registerConfigCli(program);
     },
   },
@@ -115,7 +115,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.maintenance');
+      const mod = await import("./register.maintenance.js");
       mod.registerMaintenanceCommands(program);
     },
   },
@@ -128,7 +128,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program, ctx }) => {
-      const mod = await import('./register.message');
+      const mod = await import("./register.message.js");
       mod.registerMessageCommands(program, ctx);
     },
   },
@@ -141,7 +141,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('../memory-cli');
+      const mod = await import("../memory-cli.js");
       mod.registerMemoryCli(program);
     },
   },
@@ -159,7 +159,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program, ctx }) => {
-      const mod = await import('./register.agent');
+      const mod = await import("./register.agent.js");
       mod.registerAgentCommands(program, {
         agentChannelOptions: ctx.agentChannelOptions,
       });
@@ -184,7 +184,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.status-health-sessions');
+      const mod = await import("./register.status-health-sessions.js");
       mod.registerStatusHealthSessionsCommands(program);
     },
   },
@@ -197,7 +197,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('../browser-cli');
+      const mod = await import("../browser-cli.js");
       mod.registerBrowserCli(program);
     },
   },

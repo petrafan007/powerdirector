@@ -1,5 +1,5 @@
-import type { MediaUnderstandingProvider } from '../../types';
-import { transcribeDeepgramAudio } from './audio';
+import type { MediaUnderstandingProvider } from "../../types.js";
+import { transcribeDeepgramAudio } from "./audio.js";
 
 export const deepgramProvider: MediaUnderstandingProvider = {
   id: "deepgram",

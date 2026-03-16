@@ -6,7 +6,7 @@ vi.mock("./progress-line.js", () => ({
   clearActiveProgressLine,
 }));
 
-import { restoreTerminalState } from './restore';
+import { restoreTerminalState } from "./restore.js";
 
 function configureTerminalIO(params: {
   stdinIsTTY: boolean;

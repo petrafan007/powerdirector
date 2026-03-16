@@ -1,5 +1,5 @@
 import type { ImageContent } from "@mariozechner/pi-ai";
-import type { TypingController } from './reply/typing';
+import type { TypingController } from "./reply/typing.js";
 
 export type BlockReplyContext = {
   abortSignal?: AbortSignal;

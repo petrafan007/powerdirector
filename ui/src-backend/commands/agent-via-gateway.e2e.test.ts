@@ -11,12 +11,12 @@ vi.mock("./agent.js", () => ({
   agentCommand: vi.fn(),
 }));
 
-import type { PowerDirectorConfig } from '../config/config';
-import * as configModule from '../config/config';
-import { callGateway } from '../gateway/call';
-import type { RuntimeEnv } from '../runtime';
-import { agentCliCommand } from './agent-via-gateway';
-import { agentCommand } from './agent';
+import type { PowerDirectorConfig } from "../config/config.js";
+import * as configModule from "../config/config.js";
+import { callGateway } from "../gateway/call.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { agentCliCommand } from "./agent-via-gateway.js";
+import { agentCommand } from "./agent.js";
 
 const runtime: RuntimeEnv = {
   log: vi.fn(),

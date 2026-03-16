@@ -1,9 +1,9 @@
-import { normalizeChatType } from '../channels/chat-type';
-import { createAccountListHelpers } from '../channels/plugins/account-helpers';
-import type { PowerDirectorConfig } from '../config/config';
-import type { SlackAccountConfig } from '../config/types';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../routing/session-key';
-import { resolveSlackAppToken, resolveSlackBotToken } from './token';
+import { normalizeChatType } from "../channels/chat-type.js";
+import { createAccountListHelpers } from "../channels/plugins/account-helpers.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SlackAccountConfig } from "../config/types.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
+import { resolveSlackAppToken, resolveSlackBotToken } from "./token.js";
 
 export type SlackTokenSource = "env" | "config" | "none";
 

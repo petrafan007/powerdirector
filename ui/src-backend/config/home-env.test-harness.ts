@@ -1,4 +1,4 @@
-import { createTempHomeEnv } from '../test-utils/temp-home';
+import { createTempHomeEnv } from "../test-utils/temp-home.js";
 
 export async function withTempHome<T>(
   prefix: string,

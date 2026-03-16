@@ -1,4 +1,4 @@
-import { parseExecArgvToken } from './exec-approvals-analysis';
+import { parseExecArgvToken } from "./exec-approvals-analysis.js";
 
 function isPathLikeToken(value: string): boolean {
   const trimmed = value.trim();

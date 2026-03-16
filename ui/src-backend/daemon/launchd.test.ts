@@ -6,7 +6,7 @@ import {
   parseLaunchctlPrint,
   repairLaunchAgentBootstrap,
   resolveLaunchAgentPlistPath,
-} from './launchd';
+} from "./launchd.js";
 
 const state = vi.hoisted(() => ({
   launchctlCalls: [] as string[][],

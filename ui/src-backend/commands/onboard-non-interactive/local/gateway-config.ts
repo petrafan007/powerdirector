@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from '../../../config/config';
-import type { RuntimeEnv } from '../../../runtime';
-import { randomToken } from '../../onboard-helpers';
-import type { OnboardOptions } from '../../onboard-types';
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import type { RuntimeEnv } from "../../../runtime.js";
+import { randomToken } from "../../onboard-helpers.js";
+import type { OnboardOptions } from "../../onboard-types.js";
 
 export function applyNonInteractiveGatewayConfig(params: {
   nextConfig: PowerDirectorConfig;

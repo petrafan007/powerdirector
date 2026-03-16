@@ -1,10 +1,10 @@
-import type { MsgContext } from '../auto-reply/templating';
+import type { MsgContext } from "../auto-reply/templating.js";
 import {
   recordSessionMetaFromInbound,
   type GroupKeyResolution,
   type SessionEntry,
   updateLastRoute,
-} from '../config/sessions';
+} from "../config/sessions.js";
 
 export type InboundLastRouteUpdate = {
   sessionKey: string;

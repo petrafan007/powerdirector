@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   isValidCloudCodeAssistToolId,
   sanitizeToolCallIdsForCloudCodeAssist,
-} from './tool-call-id';
+} from "./tool-call-id.js";
 
 const buildDuplicateIdCollisionInput = () =>
   [

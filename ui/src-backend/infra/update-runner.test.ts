@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { pathExists } from '../utils';
-import { runGatewayUpdate } from './update-runner';
+import { pathExists } from "../utils.js";
+import { runGatewayUpdate } from "./update-runner.js";
 
 type CommandResponse = { stdout?: string; stderr?: string; code?: number | null };
 type CommandResult = { stdout: string; stderr: string; code: number | null };

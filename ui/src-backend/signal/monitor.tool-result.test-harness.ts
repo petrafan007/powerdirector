@@ -1,7 +1,7 @@
 import { beforeEach, vi } from "vitest";
-import { resetInboundDedupe } from '../auto-reply/reply/inbound-dedupe';
-import { resetSystemEventsForTest } from '../infra/system-events';
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe.js";
+import { resetSystemEventsForTest } from "../infra/system-events.js";
+import type { MockFn } from "../test-utils/vitest-mock-fn.js";
 
 type SignalToolResultTestMocks = {
   waitForTransportReadyMock: MockFn;
@@ -48,7 +48,7 @@ export function setSignalToolResultTestConfig(next: Record<string, unknown>) {
 export const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => config,

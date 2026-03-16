@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { MockFn } from '../../test-utils/vitest-mock-fn';
+import type { MockFn } from "../../test-utils/vitest-mock-fn.js";
 
 export const callGatewayMock = vi.fn() as unknown as MockFn;
 

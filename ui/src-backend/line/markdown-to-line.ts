@@ -1,5 +1,5 @@
 import type { messagingApi } from "@line/bot-sdk";
-import { createReceiptCard, toFlexMessage, type FlexBubble } from './flex-templates';
+import { createReceiptCard, toFlexMessage, type FlexBubble } from "./flex-templates.js";
 
 type FlexMessage = messagingApi.FlexMessage;
 type FlexComponent = messagingApi.FlexComponent;

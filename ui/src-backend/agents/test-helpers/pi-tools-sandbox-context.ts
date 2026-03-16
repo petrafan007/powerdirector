@@ -1,5 +1,5 @@
-import type { SandboxContext, SandboxToolPolicy, SandboxWorkspaceAccess } from '../sandbox';
-import type { SandboxFsBridge } from '../sandbox/fs-bridge';
+import type { SandboxContext, SandboxToolPolicy, SandboxWorkspaceAccess } from "../sandbox.js";
+import type { SandboxFsBridge } from "../sandbox/fs-bridge.js";
 
 type PiToolsSandboxContextParams = {
   workspaceDir: string;

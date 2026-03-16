@@ -1,6 +1,6 @@
 import type { AgentTool } from "@mariozechner/pi-agent-core";
 import { describe, expect, it } from "vitest";
-import { sanitizeToolsForGoogle } from './google';
+import { sanitizeToolsForGoogle } from "./google.js";
 
 describe("sanitizeToolsForGoogle", () => {
   it("strips unsupported schema keywords for Google providers", () => {

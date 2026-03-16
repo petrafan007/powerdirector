@@ -1,8 +1,8 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { ImageContent, TextContent, ToolResultMessage } from "@mariozechner/pi-ai";
 import type { ExtensionContext } from "@mariozechner/pi-coding-agent";
-import type { EffectiveContextPruningSettings } from './settings';
-import { makeToolPrunablePredicate } from './tools';
+import type { EffectiveContextPruningSettings } from "./settings.js";
+import { makeToolPrunablePredicate } from "./tools.js";
 
 const CHARS_PER_TOKEN_ESTIMATE = 4;
 // We currently skip pruning tool results that contain images. Still, we count them (approx.) so

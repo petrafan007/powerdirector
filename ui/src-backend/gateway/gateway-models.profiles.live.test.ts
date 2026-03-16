@@ -5,31 +5,31 @@ import os from "node:os";
 import path from "node:path";
 import type { Api, Model } from "@mariozechner/pi-ai";
 import { describe, it } from "vitest";
-import { resolvePowerDirectorAgentDir } from '../agents/agent-paths';
-import { resolveAgentWorkspaceDir } from '../agents/agent-scope';
+import { resolvePowerDirectorAgentDir } from "../agents/agent-paths.js";
+import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
 import {
   type AuthProfileStore,
   ensureAuthProfileStore,
   saveAuthProfileStore,
-} from '../agents/auth-profiles';
+} from "../agents/auth-profiles.js";
 import {
   collectAnthropicApiKeys,
   isAnthropicBillingError,
   isAnthropicRateLimitError,
-} from '../agents/live-auth-keys';
-import { isModernModelRef } from '../agents/live-model-filter';
-import { getApiKeyForModel } from '../agents/model-auth';
-import { ensurePowerDirectorModelsJson } from '../agents/models-config';
-import { discoverAuthStorage, discoverModels } from '../agents/pi-model-discovery';
-import { loadConfig } from '../config/config';
-import type { ModelsConfig, PowerDirectorConfig, ModelProviderConfig } from '../config/types';
-import { isTruthyEnvValue } from '../infra/env';
-import { DEFAULT_AGENT_ID } from '../routing/session-key';
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
-import { GatewayClient } from './client';
-import { renderCatNoncePngBase64 } from './live-image-probe';
-import { startGatewayServer } from './server';
-import { extractPayloadText } from './test-helpers.agent-results';
+} from "../agents/live-auth-keys.js";
+import { isModernModelRef } from "../agents/live-model-filter.js";
+import { getApiKeyForModel } from "../agents/model-auth.js";
+import { ensurePowerDirectorModelsJson } from "../agents/models-config.js";
+import { discoverAuthStorage, discoverModels } from "../agents/pi-model-discovery.js";
+import { loadConfig } from "../config/config.js";
+import type { ModelsConfig, PowerDirectorConfig, ModelProviderConfig } from "../config/types.js";
+import { isTruthyEnvValue } from "../infra/env.js";
+import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
+import { GatewayClient } from "./client.js";
+import { renderCatNoncePngBase64 } from "./live-image-probe.js";
+import { startGatewayServer } from "./server.js";
+import { extractPayloadText } from "./test-helpers.agent-results.js";
 
 const LIVE = isTruthyEnvValue(process.env.LIVE) || isTruthyEnvValue(process.env.POWERDIRECTOR_LIVE_TEST);
 const GATEWAY_LIVE = isTruthyEnvValue(process.env.POWERDIRECTOR_LIVE_GATEWAY);

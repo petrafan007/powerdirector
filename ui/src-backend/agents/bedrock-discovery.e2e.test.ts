@@ -15,7 +15,7 @@ const baseActiveAnthropicSummary = {
 };
 
 async function loadDiscovery() {
-  const mod = await import('./bedrock-discovery');
+  const mod = await import("./bedrock-discovery.js");
   mod.resetBedrockDiscoveryCacheForTest();
   return mod;
 }

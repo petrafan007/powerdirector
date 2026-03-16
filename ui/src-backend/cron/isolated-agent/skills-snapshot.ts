@@ -1,9 +1,9 @@
-import { resolveAgentSkillsFilter } from '../../agents/agent-scope';
-import { buildWorkspaceSkillSnapshot, type SkillSnapshot } from '../../agents/skills';
-import { matchesSkillFilter } from '../../agents/skills/filter';
-import { getSkillsSnapshotVersion } from '../../agents/skills/refresh';
-import type { PowerDirectorConfig } from '../../config/config';
-import { getRemoteSkillEligibility } from '../../infra/skills-remote';
+import { resolveAgentSkillsFilter } from "../../agents/agent-scope.js";
+import { buildWorkspaceSkillSnapshot, type SkillSnapshot } from "../../agents/skills.js";
+import { matchesSkillFilter } from "../../agents/skills/filter.js";
+import { getSkillsSnapshotVersion } from "../../agents/skills/refresh.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { getRemoteSkillEligibility } from "../../infra/skills-remote.js";
 
 export function resolveCronSkillsSnapshot(params: {
   workspaceDir: string;

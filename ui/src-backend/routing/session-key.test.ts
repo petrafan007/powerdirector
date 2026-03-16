@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getSubagentDepth, isCronSessionKey } from '../sessions/session-key-utils';
-import { classifySessionKeyShape } from './session-key';
+import { getSubagentDepth, isCronSessionKey } from "../sessions/session-key-utils.js";
+import { classifySessionKeyShape } from "./session-key.js";
 
 describe("classifySessionKeyShape", () => {
   it("classifies empty keys as missing", () => {

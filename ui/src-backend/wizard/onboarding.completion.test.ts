@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { setupOnboardingShellCompletion } from './onboarding.completion';
+import { setupOnboardingShellCompletion } from "./onboarding.completion.js";
 
 function createPrompter(confirmValue = false) {
   return {

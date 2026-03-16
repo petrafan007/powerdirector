@@ -1,19 +1,19 @@
-import { formatCliCommand } from '../../../cli/command-format';
-import { detectBinary } from '../../../commands/onboard-helpers';
-import { installSignalCli } from '../../../commands/signal-install';
-import type { PowerDirectorConfig } from '../../../config/config';
-import type { DmPolicy } from '../../../config/types';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../../routing/session-key';
+import { formatCliCommand } from "../../../cli/command-format.js";
+import { detectBinary } from "../../../commands/onboard-helpers.js";
+import { installSignalCli } from "../../../commands/signal-install.js";
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import type { DmPolicy } from "../../../config/types.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../../routing/session-key.js";
 import {
   listSignalAccountIds,
   resolveDefaultSignalAccountId,
   resolveSignalAccount,
-} from '../../../signal/accounts';
-import { formatDocsLink } from '../../../terminal/links';
-import { normalizeE164 } from '../../../utils';
-import type { WizardPrompter } from '../../../wizard/prompts';
-import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from '../onboarding-types';
-import { addWildcardAllowFrom, mergeAllowFromEntries, promptAccountId } from './helpers';
+} from "../../../signal/accounts.js";
+import { formatDocsLink } from "../../../terminal/links.js";
+import { normalizeE164 } from "../../../utils.js";
+import type { WizardPrompter } from "../../../wizard/prompts.js";
+import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from "../onboarding-types.js";
+import { addWildcardAllowFrom, mergeAllowFromEntries, promptAccountId } from "./helpers.js";
 
 const channel = "signal" as const;
 const MIN_E164_DIGITS = 5;

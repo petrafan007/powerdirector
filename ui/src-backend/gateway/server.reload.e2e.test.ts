@@ -5,7 +5,7 @@ import {
   rpcReq,
   startServerWithClient,
   withGatewayServer,
-} from './test-helpers';
+} from "./test-helpers.js";
 
 const hoisted = vi.hoisted(() => {
   const cronInstances: Array<{

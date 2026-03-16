@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { tokenizedOptionFilter } from './clack-prompter';
+import { tokenizedOptionFilter } from "./clack-prompter.js";
 
 describe("tokenizedOptionFilter", () => {
   it("matches tokens regardless of order", () => {

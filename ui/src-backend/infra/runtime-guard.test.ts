@@ -6,7 +6,7 @@ import {
   parseSemver,
   type RuntimeDetails,
   runtimeSatisfies,
-} from './runtime-guard';
+} from "./runtime-guard.js";
 
 describe("runtime-guard", () => {
   it("parses semver with or without leading v", () => {

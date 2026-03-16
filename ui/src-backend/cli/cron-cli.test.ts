@@ -15,7 +15,7 @@ const defaultGatewayMock = async (
 const callGatewayFromCli = vi.fn(defaultGatewayMock);
 
 vi.mock("./gateway-rpc.js", async () => {
-  const actual = await vi.importActual<typeof import('./gateway-rpc')>("./gateway-rpc.js");
+  const actual = await vi.importActual<typeof import("./gateway-rpc.js")>("./gateway-rpc.js");
   return {
     ...actual,
     callGatewayFromCli: (method: string, opts: unknown, params?: unknown, extra?: unknown) =>
@@ -33,7 +33,7 @@ vi.mock("../runtime.js", () => ({
   },
 }));
 
-const { registerCronCli } = await import('./cron-cli');
+const { registerCronCli } = await import("./cron-cli.js");
 
 type CronUpdatePatch = {
   patch?: {

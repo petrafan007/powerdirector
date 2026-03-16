@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { callGateway } from '../../gateway/call';
-import { isAcpSessionKey, normalizeMainKey } from '../../routing/session-key';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { callGateway } from "../../gateway/call.js";
+import { isAcpSessionKey, normalizeMainKey } from "../../routing/session-key.js";
 
 function normalizeKey(value?: string) {
   const trimmed = value?.trim();

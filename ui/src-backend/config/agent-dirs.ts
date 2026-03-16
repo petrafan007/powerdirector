@@ -1,10 +1,10 @@
 import os from "node:os";
 import path from "node:path";
-import { resolveRequiredHomeDir } from '../infra/home-dir';
-import { DEFAULT_AGENT_ID, normalizeAgentId } from '../routing/session-key';
-import { resolveUserPath } from '../utils';
-import { resolveStateDir } from './paths';
-import type { PowerDirectorConfig } from './types';
+import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { DEFAULT_AGENT_ID, normalizeAgentId } from "../routing/session-key.js";
+import { resolveUserPath } from "../utils.js";
+import { resolveStateDir } from "./paths.js";
+import type { PowerDirectorConfig } from "./types.js";
 
 export type DuplicateAgentDir = {
   agentDir: string;

@@ -5,7 +5,7 @@ import {
   requestHeartbeatNow,
   resetHeartbeatWakeStateForTests,
   setHeartbeatWakeHandler,
-} from './heartbeat-wake';
+} from "./heartbeat-wake.js";
 
 describe("heartbeat-wake", () => {
   async function expectRetryAfterDefaultDelay(params: {

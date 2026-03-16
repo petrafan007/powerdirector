@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { ExecAsk, ExecHost, ExecSecurity } from '../../infra/exec-approvals';
-import { extractModelDirective } from '../model';
-import type { MsgContext } from '../templating';
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from './directives';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { ExecAsk, ExecHost, ExecSecurity } from "../../infra/exec-approvals.js";
+import { extractModelDirective } from "../model.js";
+import type { MsgContext } from "../templating.js";
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "./directives.js";
 import {
   extractElevatedDirective,
   extractExecDirective,
@@ -10,10 +10,10 @@ import {
   extractStatusDirective,
   extractThinkDirective,
   extractVerboseDirective,
-} from './directives';
-import { stripMentions, stripStructuralPrefixes } from './mentions';
-import type { QueueDropPolicy, QueueMode } from './queue';
-import { extractQueueDirective } from './queue';
+} from "./directives.js";
+import { stripMentions, stripStructuralPrefixes } from "./mentions.js";
+import type { QueueDropPolicy, QueueMode } from "./queue.js";
+import { extractQueueDirective } from "./queue.js";
 
 export type InlineDirectives = {
   cleaned: string;

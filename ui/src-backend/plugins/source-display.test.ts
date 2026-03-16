@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatPluginSourceForTable } from './source-display';
+import { formatPluginSourceForTable } from "./source-display.js";
 
 describe("formatPluginSourceForTable", () => {
   it("shortens bundled plugin sources under the stock root", () => {

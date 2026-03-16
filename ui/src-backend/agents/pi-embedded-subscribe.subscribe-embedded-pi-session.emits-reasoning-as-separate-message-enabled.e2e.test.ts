@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   THINKING_TAG_CASES,
   createStubSessionHarness,
-} from './pi-embedded-subscribe.e2e-harness';
-import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
+} from "./pi-embedded-subscribe.e2e-harness.js";
+import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
 
 describe("subscribeEmbeddedPiSession", () => {
   function createReasoningBlockReplyHarness() {

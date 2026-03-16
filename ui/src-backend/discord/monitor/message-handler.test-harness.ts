@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { DiscordMessagePreflightContext } from './message-handler.preflight';
+import type { DiscordMessagePreflightContext } from "./message-handler.preflight.js";
 
 export async function createBaseDiscordMessageContext(
   overrides: Record<string, unknown> = {},

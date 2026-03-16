@@ -5,7 +5,7 @@ import {
   extractThinkingFromMessage,
   isCommandMessage,
   sanitizeRenderableText,
-} from './tui-formatters';
+} from "./tui-formatters.js";
 
 describe("extractTextFromMessage", () => {
   it("renders errorMessage when assistant content is empty", () => {

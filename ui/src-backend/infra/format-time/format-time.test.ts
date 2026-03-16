@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { formatUtcTimestamp, formatZonedTimestamp, resolveTimezone } from './format-datetime';
+import { formatUtcTimestamp, formatZonedTimestamp, resolveTimezone } from "./format-datetime.js";
 import {
   formatDurationCompact,
   formatDurationHuman,
   formatDurationPrecise,
   formatDurationSeconds,
-} from './format-duration';
-import { formatTimeAgo, formatRelativeTimestamp } from './format-relative';
+} from "./format-duration.js";
+import { formatTimeAgo, formatRelativeTimestamp } from "./format-relative.js";
 
 describe("format-duration", () => {
   describe("formatDurationCompact", () => {

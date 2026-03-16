@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
-import type { ToolLoopDetectionConfig } from '../config/types.tools';
-import type { SessionState } from '../logging/diagnostic-session-state';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { isPlainObject } from '../utils';
+import type { ToolLoopDetectionConfig } from "../config/types.tools.js";
+import type { SessionState } from "../logging/diagnostic-session-state.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { isPlainObject } from "../utils.js";
 
 const log = createSubsystemLogger("agents/loop-detection");
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { collectAttackSurfaceSummaryFindings } from './audit-extra.sync';
-import { safeEqualSecret } from './secret-equal';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { collectAttackSurfaceSummaryFindings } from "./audit-extra.sync.js";
+import { safeEqualSecret } from "./secret-equal.js";
 
 describe("collectAttackSurfaceSummaryFindings", () => {
   it("distinguishes external webhooks from internal hooks when only internal hooks are enabled", () => {

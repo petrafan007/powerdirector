@@ -6,36 +6,36 @@ import {
   Text,
   TUI,
 } from "@mariozechner/pi-tui";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import { loadConfig } from '../config/config';
+import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { loadConfig } from "../config/config.js";
 import {
   buildAgentMainSessionKey,
   normalizeAgentId,
   normalizeMainKey,
   parseAgentSessionKey,
-} from '../routing/session-key';
-import { getSlashCommands } from './commands';
-import { ChatLog } from './components/chat-log';
-import { CustomEditor } from './components/custom-editor';
-import { GatewayChatClient } from './gateway-chat';
-import { editorTheme, theme } from './theme/theme';
-import { createCommandHandlers } from './tui-command-handlers';
-import { createEventHandlers } from './tui-event-handlers';
-import { formatTokens } from './tui-formatters';
-import { createLocalShellRunner } from './tui-local-shell';
-import { createOverlayHandlers } from './tui-overlays';
-import { createSessionActions } from './tui-session-actions';
+} from "../routing/session-key.js";
+import { getSlashCommands } from "./commands.js";
+import { ChatLog } from "./components/chat-log.js";
+import { CustomEditor } from "./components/custom-editor.js";
+import { GatewayChatClient } from "./gateway-chat.js";
+import { editorTheme, theme } from "./theme/theme.js";
+import { createCommandHandlers } from "./tui-command-handlers.js";
+import { createEventHandlers } from "./tui-event-handlers.js";
+import { formatTokens } from "./tui-formatters.js";
+import { createLocalShellRunner } from "./tui-local-shell.js";
+import { createOverlayHandlers } from "./tui-overlays.js";
+import { createSessionActions } from "./tui-session-actions.js";
 import type {
   AgentSummary,
   SessionInfo,
   SessionScope,
   TuiOptions,
   TuiStateAccess,
-} from './tui-types';
-import { buildWaitingStatusMessage, defaultWaitingPhrases } from './tui-waiting';
+} from "./tui-types.js";
+import { buildWaitingStatusMessage, defaultWaitingPhrases } from "./tui-waiting.js";
 
-export { resolveFinalAssistantText } from './tui-formatters';
-export type { TuiOptions } from './tui-types';
+export { resolveFinalAssistantText } from "./tui-formatters.js";
+export type { TuiOptions } from "./tui-types.js";
 
 export function createEditorSubmitHandler(params: {
   editor: {

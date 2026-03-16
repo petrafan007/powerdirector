@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base';
+import { Tool, ToolResult } from './base.js';
 import SpotifyWebApi from 'spotify-web-api-node';
 
 export class SpotifyTool implements Tool {

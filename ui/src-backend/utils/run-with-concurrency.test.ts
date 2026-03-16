@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { runTasksWithConcurrency } from './run-with-concurrency';
+import { runTasksWithConcurrency } from "./run-with-concurrency.js";
 
 describe("runTasksWithConcurrency", () => {
   it("preserves task order with bounded worker count", async () => {

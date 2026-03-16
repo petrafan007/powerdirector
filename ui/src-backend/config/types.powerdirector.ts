@@ -1,29 +1,29 @@
-import type { AgentBinding, AgentsConfig } from './types.agents';
-import type { ApprovalsConfig } from './types.approvals';
-import type { AuthConfig } from './types.auth';
-import type { DiagnosticsConfig, LoggingConfig, SessionConfig, WebConfig } from './types.base';
-import type { BrowserConfig } from './types.browser';
-import type { ChannelsConfig } from './types.channels';
-import type { CronConfig } from './types.cron';
+import type { AgentBinding, AgentsConfig } from "./types.agents.js";
+import type { ApprovalsConfig } from "./types.approvals.js";
+import type { AuthConfig } from "./types.auth.js";
+import type { DiagnosticsConfig, LoggingConfig, SessionConfig, WebConfig } from "./types.base.js";
+import type { BrowserConfig } from "./types.browser.js";
+import type { ChannelsConfig } from "./types.channels.js";
+import type { CronConfig } from "./types.cron.js";
 import type {
   CanvasHostConfig,
   DiscoveryConfig,
   GatewayConfig,
   TalkConfig,
-} from './types.gateway';
-import type { HooksConfig } from './types.hooks';
-import type { MemoryConfig } from './types.memory';
+} from "./types.gateway.js";
+import type { HooksConfig } from "./types.hooks.js";
+import type { MemoryConfig } from "./types.memory.js";
 import type {
   AudioConfig,
   BroadcastConfig,
   CommandsConfig,
   MessagesConfig,
-} from './types.messages';
-import type { ModelsConfig } from './types.models';
-import type { NodeHostConfig } from './types.node-host';
-import type { PluginsConfig } from './types.plugins';
-import type { SkillsConfig } from './types.skills';
-import type { ToolsConfig } from './types.tools';
+} from "./types.messages.js";
+import type { ModelsConfig } from "./types.models.js";
+import type { NodeHostConfig } from "./types.node-host.js";
+import type { PluginsConfig } from "./types.plugins.js";
+import type { SkillsConfig } from "./types.skills.js";
+import type { ToolsConfig } from "./types.tools.js";
 
 export type PowerDirectorConfig = {
   meta?: {

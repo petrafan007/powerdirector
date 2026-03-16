@@ -1,10 +1,10 @@
-import { loadAndMaybeMigrateDoctorConfig } from '../../commands/doctor-config-flow';
-import { readConfigFileSnapshot } from '../../config/config';
-import type { RuntimeEnv } from '../../runtime';
-import { colorize, isRich, theme } from '../../terminal/theme';
-import { shortenHomePath } from '../../utils';
-import { shouldMigrateStateFromPath } from '../argv';
-import { formatCliCommand } from '../command-format';
+import { loadAndMaybeMigrateDoctorConfig } from "../../commands/doctor-config-flow.js";
+import { readConfigFileSnapshot } from "../../config/config.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import { colorize, isRich, theme } from "../../terminal/theme.js";
+import { shortenHomePath } from "../../utils.js";
+import { shouldMigrateStateFromPath } from "../argv.js";
+import { formatCliCommand } from "../command-format.js";
 
 const ALLOWED_INVALID_COMMANDS = new Set(["doctor", "logs", "health", "help", "status"]);
 const ALLOWED_INVALID_GATEWAY_SUBCOMMANDS = new Set([

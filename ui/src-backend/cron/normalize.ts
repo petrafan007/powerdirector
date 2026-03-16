@@ -1,15 +1,15 @@
-import { sanitizeAgentId } from '../routing/session-key';
-import { isRecord } from '../utils';
+import { sanitizeAgentId } from "../routing/session-key.js";
+import { isRecord } from "../utils.js";
 import {
   buildDeliveryFromLegacyPayload,
   hasLegacyDeliveryHints,
   stripLegacyDeliveryFields,
-} from './legacy-delivery';
-import { parseAbsoluteTimeMs } from './parse';
-import { migrateLegacyCronPayload } from './payload-migration';
-import { inferLegacyName } from './service/normalize';
-import { normalizeCronStaggerMs, resolveDefaultCronStaggerMs } from './stagger';
-import type { CronJobCreate, CronJobPatch } from './types';
+} from "./legacy-delivery.js";
+import { parseAbsoluteTimeMs } from "./parse.js";
+import { migrateLegacyCronPayload } from "./payload-migration.js";
+import { inferLegacyName } from "./service/normalize.js";
+import { normalizeCronStaggerMs, resolveDefaultCronStaggerMs } from "./stagger.js";
+import type { CronJobCreate, CronJobPatch } from "./types.js";
 
 type UnknownRecord = Record<string, unknown>;
 

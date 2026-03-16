@@ -1,21 +1,21 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../../agents/agent-scope';
-import { listChannelPluginCatalogEntries } from '../../channels/plugins/catalog';
-import { getChannelPlugin, normalizeChannelId } from '../../channels/plugins/index';
-import type { ChannelId, ChannelSetupInput } from '../../channels/plugins/types';
-import { writeConfigFile, type PowerDirectorConfig } from '../../config/config';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../routing/session-key';
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { resolveTelegramAccount } from '../../telegram/accounts';
-import { deleteTelegramUpdateOffset } from '../../telegram/update-offset-store';
-import { createClackPrompter } from '../../wizard/clack-prompter';
-import { setupChannels } from '../onboard-channels';
-import type { ChannelChoice } from '../onboard-types';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
+import { listChannelPluginCatalogEntries } from "../../channels/plugins/catalog.js";
+import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index.js";
+import type { ChannelId, ChannelSetupInput } from "../../channels/plugins/types.js";
+import { writeConfigFile, type PowerDirectorConfig } from "../../config/config.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../routing/session-key.js";
+import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
+import { resolveTelegramAccount } from "../../telegram/accounts.js";
+import { deleteTelegramUpdateOffset } from "../../telegram/update-offset-store.js";
+import { createClackPrompter } from "../../wizard/clack-prompter.js";
+import { setupChannels } from "../onboard-channels.js";
+import type { ChannelChoice } from "../onboard-types.js";
 import {
   ensureOnboardingPluginInstalled,
   reloadOnboardingPluginRegistry,
-} from '../onboarding/plugin-install';
-import { applyAccountName, applyChannelAccountConfig } from './add-mutators';
-import { channelLabel, requireValidConfig, shouldUseWizard } from './shared';
+} from "../onboarding/plugin-install.js";
+import { applyAccountName, applyChannelAccountConfig } from "./add-mutators.js";
+import { channelLabel, requireValidConfig, shouldUseWizard } from "./shared.js";
 
 export type ChannelsAddOptions = {
   channel?: string;

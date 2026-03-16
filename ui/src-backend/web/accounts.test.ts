@@ -1,6 +1,6 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolveWhatsAppAuthDir } from './accounts';
+import { resolveWhatsAppAuthDir } from "./accounts.js";
 
 describe("resolveWhatsAppAuthDir", () => {
   const stubCfg = { channels: { whatsapp: { accounts: {} } } } as Parameters<

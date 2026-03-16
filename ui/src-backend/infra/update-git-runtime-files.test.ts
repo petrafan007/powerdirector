@@ -4,7 +4,7 @@ import {
   isIgnorableGitDirtyStatusLine,
   isSafeGitConfigArtifactRootPath,
   isSafeGitTempRootDirPath,
-} from './update-git-runtime-files';
+} from "./update-git-runtime-files.js";
 
 describe("update git runtime file helpers", () => {
   it("recognizes safe root temp directories", () => {

@@ -3,7 +3,7 @@ import {
   buildMessageWithAttachments,
   type ChatAttachment,
   parseMessageWithAttachments,
-} from './chat-attachments';
+} from "./chat-attachments.js";
 
 const PNG_1x1 =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/woAAn8B9FD5fHAAAAAASUVORK5CYII=";

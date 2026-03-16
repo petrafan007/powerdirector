@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { WizardPrompter } from '../wizard/prompts';
-import { ensureModelAllowlistEntry } from './model-allowlist';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { WizardPrompter } from "../wizard/prompts.js";
+import { ensureModelAllowlistEntry } from "./model-allowlist.js";
 
 export async function applyDefaultModelChoice(params: {
   config: PowerDirectorConfig;

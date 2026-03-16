@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { ChannelOnboardingAdapter } from './onboarding-types';
+import type { ChannelOnboardingAdapter } from "./onboarding-types.js";
 import type {
   ChannelAuthAdapter,
   ChannelCommandAdapter,
@@ -15,7 +15,7 @@ import type {
   ChannelSecurityAdapter,
   ChannelSetupAdapter,
   ChannelStatusAdapter,
-} from './types.adapters';
+} from "./types.adapters.js";
 import type {
   ChannelAgentTool,
   ChannelAgentToolFactory,
@@ -28,7 +28,7 @@ import type {
   ChannelMeta,
   ChannelStreamingAdapter,
   ChannelThreadingAdapter,
-} from './types.core';
+} from "./types.core.js";
 
 // Channel docking: implement this contract in src/channels/plugins/<id>.ts.
 export type ChannelConfigUiHint = {

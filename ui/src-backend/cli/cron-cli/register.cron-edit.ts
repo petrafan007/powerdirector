@@ -1,15 +1,15 @@
 import type { Command } from "commander";
-import type { CronJob } from '../../cron/types';
-import { danger } from '../../globals';
-import { sanitizeAgentId } from '../../routing/session-key';
-import { defaultRuntime } from '../../runtime';
-import { addGatewayClientOptions, callGatewayFromCli } from '../gateway-rpc';
+import type { CronJob } from "../../cron/types.js";
+import { danger } from "../../globals.js";
+import { sanitizeAgentId } from "../../routing/session-key.js";
+import { defaultRuntime } from "../../runtime.js";
+import { addGatewayClientOptions, callGatewayFromCli } from "../gateway-rpc.js";
 import {
   getCronChannelOptions,
   parseAt,
   parseDurationMs,
   warnIfCronSchedulerDisabled,
-} from './shared';
+} from "./shared.js";
 
 const assignIf = (
   target: Record<string, unknown>,

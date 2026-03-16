@@ -1,9 +1,9 @@
-import type { FinalizedMsgContext } from '../../../auto-reply/templating';
-import type { ResolvedAgentRoute } from '../../../routing/resolve-route';
-import type { ResolvedSlackAccount } from '../../accounts';
-import type { SlackMessageEvent } from '../../types';
-import type { SlackChannelConfigResolved } from '../channel-config';
-import type { SlackMonitorContext } from '../context';
+import type { FinalizedMsgContext } from "../../../auto-reply/templating.js";
+import type { ResolvedAgentRoute } from "../../../routing/resolve-route.js";
+import type { ResolvedSlackAccount } from "../../accounts.js";
+import type { SlackMessageEvent } from "../../types.js";
+import type { SlackChannelConfigResolved } from "../channel-config.js";
+import type { SlackMonitorContext } from "../context.js";
 
 export type PreparedSlackMessage = {
   ctx: SlackMonitorContext;

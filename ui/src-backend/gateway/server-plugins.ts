@@ -1,6 +1,6 @@
-import type { loadConfig } from '../config/config';
-import { loadPowerDirectorPlugins } from '../plugins/loader';
-import type { GatewayRequestHandler } from './server-methods/types';
+import type { loadConfig } from "../config/config.js";
+import { loadPowerDirectorPlugins } from "../plugins/loader.js";
+import type { GatewayRequestHandler } from "./server-methods/types.js";
 
 export function loadGatewayPlugins(params: {
   cfg: ReturnType<typeof loadConfig>;

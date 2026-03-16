@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { loadSessionStore } from '../config/sessions';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadSessionStore } from "../config/sessions.js";
 import {
   getAbortEmbeddedPiRunMock,
   getRunEmbeddedPiAgentMock,
@@ -10,12 +10,12 @@ import {
   MAIN_SESSION_KEY,
   makeCfg,
   withTempHome,
-} from './reply.triggers.trigger-handling.test-harness';
-import { enqueueFollowupRun, getFollowupQueueDepth, type FollowupRun } from './reply/queue';
+} from "./reply.triggers.trigger-handling.test-harness.js";
+import { enqueueFollowupRun, getFollowupQueueDepth, type FollowupRun } from "./reply/queue.js";
 
-let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import('./reply'));
+  ({ getReplyFromConfig } = await import("./reply.js"));
 });
 
 installTriggerHandlingE2eTestHooks();

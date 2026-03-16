@@ -1,17 +1,17 @@
 import crypto from "node:crypto";
-import { resolveUserTimezone } from '../../agents/date-time';
-import { buildWorkspaceSkillSnapshot } from '../../agents/skills';
-import { ensureSkillsWatcher, getSkillsSnapshotVersion } from '../../agents/skills/refresh';
-import type { PowerDirectorConfig } from '../../config/config';
-import { type SessionEntry, updateSessionStore } from '../../config/sessions';
-import { buildChannelSummary } from '../../infra/channel-summary';
+import { resolveUserTimezone } from "../../agents/date-time.js";
+import { buildWorkspaceSkillSnapshot } from "../../agents/skills.js";
+import { ensureSkillsWatcher, getSkillsSnapshotVersion } from "../../agents/skills/refresh.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { type SessionEntry, updateSessionStore } from "../../config/sessions.js";
+import { buildChannelSummary } from "../../infra/channel-summary.js";
 import {
   resolveTimezone,
   formatUtcTimestamp,
   formatZonedTimestamp,
 } from "../../infra/format-time/format-datetime.ts";
-import { getRemoteSkillEligibility } from '../../infra/skills-remote';
-import { drainSystemEventEntries } from '../../infra/system-events';
+import { getRemoteSkillEligibility } from "../../infra/skills-remote.js";
+import { drainSystemEventEntries } from "../../infra/system-events.js";
 
 export async function prependSystemEvents(params: {
   cfg: PowerDirectorConfig;

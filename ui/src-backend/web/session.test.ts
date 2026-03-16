@@ -2,11 +2,11 @@ import { EventEmitter } from "node:events";
 import fsSync from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resetLogger, setLoggerOverride } from '../logging';
-import { baileys, getLastSocket, resetBaileysMocks, resetLoadConfigMock } from './test-helpers';
+import { resetLogger, setLoggerOverride } from "../logging.js";
+import { baileys, getLastSocket, resetBaileysMocks, resetLoadConfigMock } from "./test-helpers.js";
 
 const { createWaSocket, formatError, logWebSelfId, waitForWaConnection } =
-  await import('./session');
+  await import("./session.js");
 const useMultiFileAuthStateMock = vi.mocked(baileys.useMultiFileAuthState);
 
 async function flushCredsUpdate() {

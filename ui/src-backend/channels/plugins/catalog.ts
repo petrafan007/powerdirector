@@ -1,13 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import { discoverPowerDirectorPlugins } from '../../plugins/discovery';
+import { discoverPowerDirectorPlugins } from "../../plugins/discovery.js";
 import {
   POWERDIRECTOR_MANIFEST_KEY,
   type PowerDirectorPackageManifest,
-} from '../../plugins/manifest';
-import type { PluginOrigin } from '../../plugins/types';
-import { CONFIG_DIR, isRecord, resolveUserPath } from '../../utils';
-import type { ChannelMeta } from './types';
+} from "../../plugins/manifest.js";
+import type { PluginOrigin } from "../../plugins/types.js";
+import { CONFIG_DIR, isRecord, resolveUserPath } from "../../utils.js";
+import type { ChannelMeta } from "./types.js";
 
 export type ChannelUiMetaEntry = {
   id: string;

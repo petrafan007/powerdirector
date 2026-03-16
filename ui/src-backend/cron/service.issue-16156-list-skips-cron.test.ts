@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { CronService } from './service';
-import { createStartedCronServiceWithFinishedBarrier } from './service.test-harness';
+import { CronService } from "./service.js";
+import { createStartedCronServiceWithFinishedBarrier } from "./service.test-harness.js";
 
 const noopLogger = {
   debug: vi.fn(),

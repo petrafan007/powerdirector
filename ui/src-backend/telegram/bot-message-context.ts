@@ -1,45 +1,45 @@
 import type { Bot } from "grammy";
-import { resolveAckReaction } from '../agents/identity';
+import { resolveAckReaction } from "../agents/identity.js";
 import {
   findModelInCatalog,
   loadModelCatalog,
   modelSupportsVision,
-} from '../agents/model-catalog';
-import { resolveDefaultModelForAgent } from '../agents/model-selection';
-import { hasControlCommand } from '../auto-reply/command-detection';
-import { normalizeCommandBody } from '../auto-reply/commands-registry';
-import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from '../auto-reply/envelope';
+} from "../agents/model-catalog.js";
+import { resolveDefaultModelForAgent } from "../agents/model-selection.js";
+import { hasControlCommand } from "../auto-reply/command-detection.js";
+import { normalizeCommandBody } from "../auto-reply/commands-registry.js";
+import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from "../auto-reply/envelope.js";
 import {
   buildPendingHistoryContextFromMap,
   recordPendingHistoryEntryIfEnabled,
   type HistoryEntry,
-} from '../auto-reply/reply/history';
-import { finalizeInboundContext } from '../auto-reply/reply/inbound-context';
-import { buildMentionRegexes, matchesMentionWithExplicit } from '../auto-reply/reply/mentions';
-import type { MsgContext } from '../auto-reply/templating';
-import { shouldAckReaction as shouldAckReactionGate } from '../channels/ack-reactions';
-import { resolveControlCommandGate } from '../channels/command-gating';
-import { formatLocationText, toLocationContext } from '../channels/location';
-import { logInboundDrop } from '../channels/logging';
-import { resolveMentionGatingWithBypass } from '../channels/mention-gating';
-import { recordInboundSession } from '../channels/session';
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
-import { readSessionUpdatedAt, resolveStorePath } from '../config/sessions';
-import type { DmPolicy, TelegramGroupConfig, TelegramTopicConfig } from '../config/types';
-import { logVerbose, shouldLogVerbose } from '../globals';
-import { recordChannelActivity } from '../infra/channel-activity';
-import { buildPairingReply } from '../pairing/pairing-messages';
-import { upsertChannelPairingRequest } from '../pairing/pairing-store';
-import { resolveAgentRoute } from '../routing/resolve-route';
-import { resolveThreadSessionKeys } from '../routing/session-key';
-import { withTelegramApiErrorLogging } from './api-logging';
+} from "../auto-reply/reply/history.js";
+import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.js";
+import { buildMentionRegexes, matchesMentionWithExplicit } from "../auto-reply/reply/mentions.js";
+import type { MsgContext } from "../auto-reply/templating.js";
+import { shouldAckReaction as shouldAckReactionGate } from "../channels/ack-reactions.js";
+import { resolveControlCommandGate } from "../channels/command-gating.js";
+import { formatLocationText, toLocationContext } from "../channels/location.js";
+import { logInboundDrop } from "../channels/logging.js";
+import { resolveMentionGatingWithBypass } from "../channels/mention-gating.js";
+import { recordInboundSession } from "../channels/session.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadConfig } from "../config/config.js";
+import { readSessionUpdatedAt, resolveStorePath } from "../config/sessions.js";
+import type { DmPolicy, TelegramGroupConfig, TelegramTopicConfig } from "../config/types.js";
+import { logVerbose, shouldLogVerbose } from "../globals.js";
+import { recordChannelActivity } from "../infra/channel-activity.js";
+import { buildPairingReply } from "../pairing/pairing-messages.js";
+import { upsertChannelPairingRequest } from "../pairing/pairing-store.js";
+import { resolveAgentRoute } from "../routing/resolve-route.js";
+import { resolveThreadSessionKeys } from "../routing/session-key.js";
+import { withTelegramApiErrorLogging } from "./api-logging.js";
 import {
   firstDefined,
   isSenderAllowed,
   normalizeAllowFromWithStore,
   resolveSenderAllowMatch,
-} from './bot-access';
+} from "./bot-access.js";
 import {
   buildGroupLabel,
   buildSenderLabel,
@@ -55,9 +55,9 @@ import {
   extractTelegramLocation,
   hasBotMention,
   resolveTelegramThreadSpec,
-} from './bot/helpers';
-import type { StickerMetadata, TelegramContext } from './bot/types';
-import { evaluateTelegramGroupBaseAccess } from './group-access';
+} from "./bot/helpers.js";
+import type { StickerMetadata, TelegramContext } from "./bot/types.js";
+import { evaluateTelegramGroupBaseAccess } from "./group-access.js";
 
 export type TelegramMediaRef = {
   path: string;
@@ -397,7 +397,7 @@ export const buildTelegramMessageContext = async ({
 
   if (needsPreflightTranscription) {
     try {
-      const { transcribeFirstAudio } = await import('../media-understanding/audio-preflight');
+      const { transcribeFirstAudio } = await import("../media-understanding/audio-preflight.js");
       // Build a minimal context for transcription
       const tempCtx: MsgContext = {
         MediaPaths: allMedia.length > 0 ? allMedia.map((m) => m.path) : undefined,

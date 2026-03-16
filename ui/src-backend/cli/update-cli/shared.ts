@@ -2,22 +2,22 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveStateDir } from '../../config/paths';
-import { resolvePowerDirectorPackageRoot } from '../../infra/powerdirector-root';
-import { readPackageName, readPackageVersion } from '../../infra/package-json';
-import { trimLogTail } from '../../infra/restart-sentinel';
-import { parseSemver } from '../../infra/runtime-guard';
-import { fetchNpmTagVersion } from '../../infra/update-check';
+import { resolveStateDir } from "../../config/paths.js";
+import { resolvePowerDirectorPackageRoot } from "../../infra/powerdirector-root.js";
+import { readPackageName, readPackageVersion } from "../../infra/package-json.js";
+import { trimLogTail } from "../../infra/restart-sentinel.js";
+import { parseSemver } from "../../infra/runtime-guard.js";
+import { fetchNpmTagVersion } from "../../infra/update-check.js";
 import {
   detectGlobalInstallManagerByPresence,
   detectGlobalInstallManagerForRoot,
   type GlobalInstallManager,
-} from '../../infra/update-global';
-import type { UpdateStepProgress, UpdateStepResult } from '../../infra/update-runner';
-import { runCommandWithTimeout } from '../../process/exec';
-import { defaultRuntime } from '../../runtime';
-import { theme } from '../../terminal/theme';
-import { pathExists } from '../../utils';
+} from "../../infra/update-global.js";
+import type { UpdateStepProgress, UpdateStepResult } from "../../infra/update-runner.js";
+import { runCommandWithTimeout } from "../../process/exec.js";
+import { defaultRuntime } from "../../runtime.js";
+import { theme } from "../../terminal/theme.js";
+import { pathExists } from "../../utils.js";
 
 export type UpdateCommandOptions = {
   json?: boolean;

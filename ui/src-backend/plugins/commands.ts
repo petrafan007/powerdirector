@@ -5,13 +5,13 @@
  * These commands are processed before built-in commands and before agent invocation.
  */
 
-import type { PowerDirectorConfig } from '../config/config';
-import { logVerbose } from '../globals';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { logVerbose } from "../globals.js";
 import type {
   PowerDirectorPluginCommandDefinition,
   PluginCommandContext,
   PluginCommandResult,
-} from './types';
+} from "./types.js";
 
 type RegisteredPluginCommand = PowerDirectorPluginCommandDefinition & {
   pluginId: string;

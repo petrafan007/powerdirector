@@ -1,4 +1,4 @@
-import { onAgentEvent } from '../../infra/agent-events';
+import { onAgentEvent } from "../../infra/agent-events.js";
 
 const AGENT_RUN_CACHE_TTL_MS = 10 * 60_000;
 /**

@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { ChannelId } from '../channels/plugins/types';
-import { CronService, type CronServiceDeps } from './service';
+import type { ChannelId } from "../channels/plugins/types.js";
+import { CronService, type CronServiceDeps } from "./service.js";
 
 const noopLogger = {
   debug: vi.fn(),

@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs/promises";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { prepareRestartScript, runRestartScript } from './restart-helper';
+import { prepareRestartScript, runRestartScript } from "./restart-helper.js";
 
 vi.mock("node:child_process", () => ({
   spawn: vi.fn(),

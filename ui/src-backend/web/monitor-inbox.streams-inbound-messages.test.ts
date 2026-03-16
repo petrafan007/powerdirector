@@ -2,13 +2,13 @@ import fsSync from "node:fs";
 import path from "node:path";
 import "./monitor-inbox.test-harness.js";
 import { describe, expect, it, vi } from "vitest";
-import { monitorWebInbox } from './inbound';
+import { monitorWebInbox } from "./inbound.js";
 import {
   DEFAULT_ACCOUNT_ID,
   getAuthDir,
   getSock,
   installWebMonitorInboxUnitTestHooks,
-} from './monitor-inbox.test-harness';
+} from "./monitor-inbox.test-harness.js";
 
 describe("web monitor inbox", () => {
   installWebMonitorInboxUnitTestHooks();

@@ -1,9 +1,9 @@
-import { loadConfig } from '../config/config';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { resolveBrowserConfig } from './config';
-import { ensureBrowserControlAuth } from './control-auth';
-import { type BrowserServerState, createBrowserRouteContext } from './server-context';
-import { ensureExtensionRelayForProfiles, stopKnownBrowserProfiles } from './server-lifecycle';
+import { loadConfig } from "../config/config.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { resolveBrowserConfig } from "./config.js";
+import { ensureBrowserControlAuth } from "./control-auth.js";
+import { type BrowserServerState, createBrowserRouteContext } from "./server-context.js";
+import { ensureExtensionRelayForProfiles, stopKnownBrowserProfiles } from "./server-lifecycle.js";
 
 let state: BrowserServerState | null = null;
 const log = createSubsystemLogger("browser");
@@ -72,7 +72,7 @@ export async function stopBrowserControlService(): Promise<void> {
 
   // Optional: Playwright is not always available (e.g. embedded gateway builds).
   try {
-    const mod = await import('./pw-ai');
+    const mod = await import("./pw-ai.js");
     await mod.closePlaywrightBrowserConnection();
   } catch {
     // ignore

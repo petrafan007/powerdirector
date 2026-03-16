@@ -6,12 +6,12 @@ import {
   MAIN_SESSION_KEY,
   makeCfg,
   withTempHome,
-} from './reply.triggers.trigger-handling.test-harness';
-import { HEARTBEAT_TOKEN } from './tokens';
+} from "./reply.triggers.trigger-handling.test-harness.js";
+import { HEARTBEAT_TOKEN } from "./tokens.js";
 
-let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import('./reply'));
+  ({ getReplyFromConfig } = await import("./reply.js"));
 });
 
 installTriggerHandlingE2eTestHooks();

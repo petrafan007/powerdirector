@@ -1,12 +1,12 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionEntry } from '../config/sessions';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SessionEntry } from "../config/sessions.js";
 import {
   ensureAuthProfileStore,
   resolveAuthProfileDisplayLabel,
   resolveAuthProfileOrder,
-} from './auth-profiles';
-import { getCustomProviderApiKey, resolveEnvApiKey } from './model-auth';
-import { normalizeProviderId } from './model-selection';
+} from "./auth-profiles.js";
+import { getCustomProviderApiKey, resolveEnvApiKey } from "./model-auth.js";
+import { normalizeProviderId } from "./model-selection.js";
 
 function formatApiKeySnippet(apiKey: string): string {
   const compact = apiKey.replace(/\s+/g, "");

@@ -1,8 +1,8 @@
-import type { ProgressReporter } from '../../cli/progress';
-import { renderTable } from '../../terminal/table';
-import { isRich, theme } from '../../terminal/theme';
-import { appendStatusAllDiagnosis } from './diagnosis';
-import { formatTimeAgo } from './format';
+import type { ProgressReporter } from "../../cli/progress.js";
+import { renderTable } from "../../terminal/table.js";
+import { isRich, theme } from "../../terminal/theme.js";
+import { appendStatusAllDiagnosis } from "./diagnosis.js";
+import { formatTimeAgo } from "./format.js";
 
 type OverviewRow = { Item: string; Value: string };
 

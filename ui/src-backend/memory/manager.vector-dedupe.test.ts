@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import type { MemoryIndexManager } from './index';
-import { buildFileEntry } from './internal';
-import { createMemoryManagerOrThrow } from './test-manager';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { MemoryIndexManager } from "./index.js";
+import { buildFileEntry } from "./internal.js";
+import { createMemoryManagerOrThrow } from "./test-manager.js";
 
 vi.mock("./embeddings.js", () => {
   return {

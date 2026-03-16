@@ -5,9 +5,9 @@
  * like command processing, session lifecycle, etc.
  */
 
-import type { WorkspaceBootstrapFile } from '../agents/workspace';
-import type { CliDeps } from '../cli/deps';
-import type { PowerDirectorConfig } from '../config/config';
+import type { WorkspaceBootstrapFile } from "../agents/workspace.js";
+import type { CliDeps } from "../cli/deps.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 
 export type InternalHookEventType = "command" | "session" | "agent" | "gateway" | "message";
 

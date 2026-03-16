@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { saveAuthProfileStore } from '../agents/auth-profiles';
-import { clearConfigCache } from '../config/config';
-import { modelsListCommand } from './models/list.list-command';
+import { saveAuthProfileStore } from "../agents/auth-profiles.js";
+import { clearConfigCache } from "../config/config.js";
+import { modelsListCommand } from "./models/list.list-command.js";
 
 const ENV_KEYS = [
   "POWERDIRECTOR_STATE_DIR",

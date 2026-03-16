@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { SlackChannelConfig } from '../config/types.slack';
-import { normalizeAccountId } from '../routing/session-key';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SlackChannelConfig } from "../config/types.slack.js";
+import { normalizeAccountId } from "../routing/session-key.js";
 
 type SlackChannels = Record<string, SlackChannelConfig>;
 

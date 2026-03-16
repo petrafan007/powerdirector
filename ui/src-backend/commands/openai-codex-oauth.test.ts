@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { RuntimeEnv } from '../runtime';
-import type { WizardPrompter } from '../wizard/prompts';
+import type { RuntimeEnv } from "../runtime.js";
+import type { WizardPrompter } from "../wizard/prompts.js";
 
 const mocks = vi.hoisted(() => ({
   loginOpenAICodex: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock("./oauth-flow.js", () => ({
   createVpsAwareOAuthHandlers: mocks.createVpsAwareOAuthHandlers,
 }));
 
-import { loginOpenAICodexOAuth } from './openai-codex-oauth';
+import { loginOpenAICodexOAuth } from "./openai-codex-oauth.js";
 
 function createPrompter() {
   const spin = { update: vi.fn(), stop: vi.fn() };

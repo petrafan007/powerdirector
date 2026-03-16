@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { messagingApi } from "@line/bot-sdk";
-import { logVerbose } from '../globals';
-import { buildRandomTempFilePath } from '../plugin-sdk/temp-path';
+import { logVerbose } from "../globals.js";
+import { buildRandomTempFilePath } from "../plugin-sdk/temp-path.js";
 
 interface DownloadResult {
   path: string;

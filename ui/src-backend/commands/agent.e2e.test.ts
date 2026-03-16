@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { beforeEach, describe, expect, it, type MockInstance, vi } from "vitest";
-import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
+import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 
 vi.mock("../agents/pi-embedded.js", () => ({
   abortEmbeddedPiRun: vi.fn().mockReturnValue(false),
@@ -12,18 +12,18 @@ vi.mock("../agents/model-catalog.js", () => ({
   loadModelCatalog: vi.fn(),
 }));
 
-import { telegramPlugin } from '../../extensions/telegram/src/channel';
-import { setTelegramRuntime } from '../../extensions/telegram/src/runtime';
-import { loadModelCatalog } from '../agents/model-catalog';
-import { runEmbeddedPiAgent } from '../agents/pi-embedded';
-import type { PowerDirectorConfig } from '../config/config';
-import * as configModule from '../config/config';
-import { emitAgentEvent, onAgentEvent } from '../infra/agent-events';
-import { setActivePluginRegistry } from '../plugins/runtime';
-import { createPluginRuntime } from '../plugins/runtime/index';
-import type { RuntimeEnv } from '../runtime';
-import { createTestRegistry } from '../test-utils/channel-plugins';
-import { agentCommand } from './agent';
+import { telegramPlugin } from "../../extensions/telegram/src/channel.js";
+import { setTelegramRuntime } from "../../extensions/telegram/src/runtime.js";
+import { loadModelCatalog } from "../agents/model-catalog.js";
+import { runEmbeddedPiAgent } from "../agents/pi-embedded.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import * as configModule from "../config/config.js";
+import { emitAgentEvent, onAgentEvent } from "../infra/agent-events.js";
+import { setActivePluginRegistry } from "../plugins/runtime.js";
+import { createPluginRuntime } from "../plugins/runtime/index.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { createTestRegistry } from "../test-utils/channel-plugins.js";
+import { agentCommand } from "./agent.js";
 
 const runtime: RuntimeEnv = {
   log: vi.fn(),

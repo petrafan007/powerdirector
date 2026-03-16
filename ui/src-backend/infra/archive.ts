@@ -9,7 +9,7 @@ import {
   resolveArchiveOutputPath,
   stripArchivePath,
   validateArchiveEntryPath,
-} from './archive-path';
+} from "./archive-path.js";
 
 export type ArchiveKind = "tar" | "zip";
 

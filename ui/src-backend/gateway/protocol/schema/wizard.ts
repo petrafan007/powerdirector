@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import { NonEmptyString } from './primitives';
+import { NonEmptyString } from "./primitives.js";
 
 const WizardRunStatusSchema = Type.Union([
   Type.Literal("running"),

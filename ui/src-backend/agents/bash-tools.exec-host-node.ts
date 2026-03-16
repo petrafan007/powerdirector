@@ -10,17 +10,17 @@ import {
   requiresExecApproval,
   resolveExecApprovals,
   resolveExecApprovalsFromFile,
-} from '../infra/exec-approvals';
-import { buildNodeShellCommand } from '../infra/node-shell';
-import { requestExecApprovalDecision } from './bash-tools.exec-approval-request';
+} from "../infra/exec-approvals.js";
+import { buildNodeShellCommand } from "../infra/node-shell.js";
+import { requestExecApprovalDecision } from "./bash-tools.exec-approval-request.js";
 import {
   DEFAULT_APPROVAL_TIMEOUT_MS,
   createApprovalSlug,
   emitExecSystemEvent,
-} from './bash-tools.exec-runtime';
-import type { ExecToolDetails } from './bash-tools.exec-types';
-import { callGatewayTool } from './tools/gateway';
-import { listNodes, resolveNodeIdFromList } from './tools/nodes-utils';
+} from "./bash-tools.exec-runtime.js";
+import type { ExecToolDetails } from "./bash-tools.exec-types.js";
+import { callGatewayTool } from "./tools/gateway.js";
+import { listNodes, resolveNodeIdFromList } from "./tools/nodes-utils.js";
 
 export type ExecuteNodeHostCommandParams = {
   command: string;

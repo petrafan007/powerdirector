@@ -3,9 +3,9 @@ import type {
   GatewayAuthConfig,
   GatewayTailscaleConfig,
   PowerDirectorConfig,
-} from '../config/config';
-import { writeConfigFile } from '../config/config';
-import { resolveGatewayAuth, type ResolvedGatewayAuth } from './auth';
+} from "../config/config.js";
+import { writeConfigFile } from "../config/config.js";
+import { resolveGatewayAuth, type ResolvedGatewayAuth } from "./auth.js";
 
 export function mergeGatewayAuthConfig(
   base?: GatewayAuthConfig,

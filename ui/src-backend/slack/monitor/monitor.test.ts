@@ -1,12 +1,12 @@
 import type { App } from "@slack/bolt";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../../config/config';
-import type { RuntimeEnv } from '../../runtime';
-import type { SlackMessageEvent } from '../types';
-import { resolveSlackChannelConfig } from './channel-config';
-import { createSlackMonitorContext, normalizeSlackChannelType } from './context';
-import { resetSlackThreadStarterCacheForTest, resolveSlackThreadStarter } from './media';
-import { createSlackThreadTsResolver } from './thread-resolution';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import type { SlackMessageEvent } from "../types.js";
+import { resolveSlackChannelConfig } from "./channel-config.js";
+import { createSlackMonitorContext, normalizeSlackChannelType } from "./context.js";
+import { resetSlackThreadStarterCacheForTest, resolveSlackThreadStarter } from "./media.js";
+import { createSlackThreadTsResolver } from "./thread-resolution.js";
 
 describe("resolveSlackChannelConfig", () => {
   it("uses defaultRequireMention when channels config is empty", () => {

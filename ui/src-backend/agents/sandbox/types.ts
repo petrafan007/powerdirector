@@ -1,7 +1,7 @@
-import type { SandboxFsBridge } from './fs-bridge';
-import type { SandboxDockerConfig } from './types.docker';
+import type { SandboxFsBridge } from "./fs-bridge.js";
+import type { SandboxDockerConfig } from "./types.docker.js";
 
-export type { SandboxDockerConfig } from './types.docker';
+export type { SandboxDockerConfig } from "./types.docker.js";
 
 export type SandboxToolPolicy = {
   allow?: string[];

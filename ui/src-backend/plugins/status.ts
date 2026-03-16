@@ -1,10 +1,10 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import { resolveDefaultAgentWorkspaceDir } from '../agents/workspace';
-import { loadConfig } from '../config/config';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { loadPowerDirectorPlugins } from './loader';
-import { createPluginLoaderLogger } from './logger';
-import type { PluginRegistry } from './registry';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { resolveDefaultAgentWorkspaceDir } from "../agents/workspace.js";
+import { loadConfig } from "../config/config.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { loadPowerDirectorPlugins } from "./loader.js";
+import { createPluginLoaderLogger } from "./logger.js";
+import type { PluginRegistry } from "./registry.js";
 
 export type PluginStatusReport = PluginRegistry & {
   workspaceDir?: string;

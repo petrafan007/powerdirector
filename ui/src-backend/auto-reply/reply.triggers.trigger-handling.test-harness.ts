@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import { join } from "node:path";
 import { afterEach, expect, vi } from "vitest";
-import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
-import type { PowerDirectorConfig } from '../config/config';
+import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 
 // Avoid exporting vitest mock types (TS2742 under pnpm + d.ts emit).
 // oxlint-disable-next-line typescript/no-explicit-any
@@ -136,7 +136,7 @@ export function makeCfg(home: string): PowerDirectorConfig {
 }
 
 export async function loadGetReplyFromConfig() {
-  return (await import('./reply')).getReplyFromConfig;
+  return (await import("./reply.js")).getReplyFromConfig;
 }
 
 export function requireSessionStorePath(cfg: { session?: { store?: string } }): string {
@@ -173,7 +173,7 @@ export function makeWhatsAppElevatedCfg(
 
 export async function runDirectElevatedToggleAndLoadStore(params: {
   cfg: PowerDirectorConfig;
-  getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+  getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
   body?: string;
 }): Promise<{
   text: string | undefined;
@@ -204,7 +204,7 @@ export async function runDirectElevatedToggleAndLoadStore(params: {
 export async function runGreetingPromptForBareNewOrReset(params: {
   home: string;
   body: "/new" | "/reset";
-  getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+  getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
 }) {
   getRunEmbeddedPiAgentMock().mockResolvedValue({
     payloads: [{ text: "hello" }],

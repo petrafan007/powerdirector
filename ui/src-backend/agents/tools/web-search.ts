@@ -1,10 +1,10 @@
 import { Type } from "@sinclair/typebox";
-import { formatCliCommand } from '../../cli/command-format';
-import type { PowerDirectorConfig } from '../../config/config';
-import { wrapWebContent } from '../../security/external-content';
-import { normalizeSecretInput } from '../../utils/normalize-secret-input';
-import type { AnyAgentTool } from './common';
-import { jsonResult, readNumberParam, readStringParam } from './common';
+import { formatCliCommand } from "../../cli/command-format.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { wrapWebContent } from "../../security/external-content.js";
+import { normalizeSecretInput } from "../../utils/normalize-secret-input.js";
+import type { AnyAgentTool } from "./common.js";
+import { jsonResult, readNumberParam, readStringParam } from "./common.js";
 import {
   CacheEntry,
   DEFAULT_CACHE_TTL_MINUTES,
@@ -16,7 +16,7 @@ import {
   resolveTimeoutSeconds,
   withTimeout,
   writeCache,
-} from './web-shared';
+} from "./web-shared.js";
 
 const SEARCH_PROVIDERS = ["brave", "perplexity", "grok"] as const;
 const DEFAULT_SEARCH_COUNT = 5;

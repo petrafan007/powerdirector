@@ -1,13 +1,13 @@
 import fsPromises from "node:fs/promises";
-import { resolveBrowserConfig } from '../browser/config';
+import { resolveBrowserConfig } from "../browser/config.js";
 import {
   createBrowserControlContext,
   startBrowserControlServiceFromConfig,
-} from '../browser/control-service';
-import { createBrowserRouteDispatcher } from '../browser/routes/dispatcher';
-import { loadConfig } from '../config/config';
-import { detectMime } from '../media/mime';
-import { withTimeout } from './with-timeout';
+} from "../browser/control-service.js";
+import { createBrowserRouteDispatcher } from "../browser/routes/dispatcher.js";
+import { loadConfig } from "../config/config.js";
+import { detectMime } from "../media/mime.js";
+import { withTimeout } from "./with-timeout.js";
 
 type BrowserProxyParams = {
   method?: string;

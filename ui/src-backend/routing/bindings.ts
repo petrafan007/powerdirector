@@ -1,8 +1,8 @@
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import { normalizeChatChannelId } from '../channels/registry';
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentBinding } from '../config/types.agents';
-import { normalizeAccountId, normalizeAgentId } from './session-key';
+import { resolveDefaultAgentId } from "../agents/agent-scope.js";
+import { normalizeChatChannelId } from "../channels/registry.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { AgentBinding } from "../config/types.agents.js";
+import { normalizeAccountId, normalizeAgentId } from "./session-key.js";
 
 function normalizeBindingChannelId(raw?: string | null): string | null {
   const normalized = normalizeChatChannelId(raw);

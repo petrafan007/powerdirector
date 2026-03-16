@@ -26,7 +26,7 @@ import {
   resetAllLanes,
   setCommandLaneConcurrency,
   waitForActiveTasks,
-} from './command-queue';
+} from "./command-queue.js";
 
 describe("command queue", () => {
   beforeEach(() => {

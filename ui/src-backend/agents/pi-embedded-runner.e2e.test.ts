@@ -3,8 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import type { PowerDirectorConfig } from '../config/config';
-import { ensurePowerDirectorModelsJson } from './models-config';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { ensurePowerDirectorModelsJson } from "./models-config.js";
 
 vi.mock("@mariozechner/pi-ai", async () => {
   const actual = await vi.importActual<typeof import("@mariozechner/pi-ai")>("@mariozechner/pi-ai");
@@ -93,7 +93,7 @@ vi.mock("@mariozechner/pi-ai", async () => {
   };
 });
 
-let runEmbeddedPiAgent: typeof import('./pi-embedded-runner').runEmbeddedPiAgent;
+let runEmbeddedPiAgent: typeof import("./pi-embedded-runner.js").runEmbeddedPiAgent;
 let tempRoot: string | undefined;
 let agentDir: string;
 let workspaceDir: string;
@@ -102,7 +102,7 @@ let runCounter = 0;
 
 beforeAll(async () => {
   vi.useRealTimers();
-  ({ runEmbeddedPiAgent } = await import('./pi-embedded-runner'));
+  ({ runEmbeddedPiAgent } = await import("./pi-embedded-runner.js"));
   tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-embedded-agent-"));
   agentDir = path.join(tempRoot, "agent");
   workspaceDir = path.join(tempRoot, "workspace");

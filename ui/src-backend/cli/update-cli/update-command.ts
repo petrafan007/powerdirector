@@ -3,39 +3,39 @@ import { confirm, isCancel } from "@clack/prompts";
 import {
   checkShellCompletionStatus,
   ensureCompletionCacheExists,
-} from '../../commands/doctor-completion';
-import { doctorCommand } from '../../commands/doctor';
-import { readConfigFileSnapshot, writeConfigFile } from '../../config/config';
-import { resolveGatewayService } from '../../daemon/service';
+} from "../../commands/doctor-completion.js";
+import { doctorCommand } from "../../commands/doctor.js";
+import { readConfigFileSnapshot, writeConfigFile } from "../../config/config.js";
+import { resolveGatewayService } from "../../daemon/service.js";
 import {
   channelToNpmTag,
   DEFAULT_GIT_CHANNEL,
   DEFAULT_PACKAGE_CHANNEL,
   normalizeUpdateChannel,
-} from '../../infra/update-channels';
+} from "../../infra/update-channels.js";
 import {
   compareSemverStrings,
   resolveNpmChannelTag,
   checkUpdateStatus,
-} from '../../infra/update-check';
+} from "../../infra/update-check.js";
 import {
   cleanupGlobalRenameDirs,
   globalInstallArgs,
   resolveGlobalPackageRoot,
-} from '../../infra/update-global';
-import { runGatewayUpdate, type UpdateRunResult } from '../../infra/update-runner';
-import { syncPluginsForUpdateChannel, updateNpmInstalledPlugins } from '../../plugins/update';
-import { runCommandWithTimeout } from '../../process/exec';
-import { defaultRuntime } from '../../runtime';
-import { stylePromptMessage } from '../../terminal/prompt-style';
-import { theme } from '../../terminal/theme';
-import { pathExists } from '../../utils';
-import { replaceCliName, resolveCliName } from '../cli-name';
-import { formatCliCommand } from '../command-format';
-import { installCompletion } from '../completion-cli';
-import { runDaemonInstall, runDaemonRestart } from '../daemon-cli';
-import { createUpdateProgress, printResult } from './progress';
-import { prepareRestartScript, runRestartScript } from './restart-helper';
+} from "../../infra/update-global.js";
+import { runGatewayUpdate, type UpdateRunResult } from "../../infra/update-runner.js";
+import { syncPluginsForUpdateChannel, updateNpmInstalledPlugins } from "../../plugins/update.js";
+import { runCommandWithTimeout } from "../../process/exec.js";
+import { defaultRuntime } from "../../runtime.js";
+import { stylePromptMessage } from "../../terminal/prompt-style.js";
+import { theme } from "../../terminal/theme.js";
+import { pathExists } from "../../utils.js";
+import { replaceCliName, resolveCliName } from "../cli-name.js";
+import { formatCliCommand } from "../command-format.js";
+import { installCompletion } from "../completion-cli.js";
+import { runDaemonInstall, runDaemonRestart } from "../daemon-cli.js";
+import { createUpdateProgress, printResult } from "./progress.js";
+import { prepareRestartScript, runRestartScript } from "./restart-helper.js";
 import {
   DEFAULT_PACKAGE_NAME,
   ensureGitCheckout,
@@ -51,8 +51,8 @@ import {
   runUpdateStep,
   tryWriteCompletionCache,
   type UpdateCommandOptions,
-} from './shared';
-import { suppressDeprecations } from './suppress-deprecations';
+} from "./shared.js";
+import { suppressDeprecations } from "./suppress-deprecations.js";
 
 const CLI_NAME = resolveCliName();
 

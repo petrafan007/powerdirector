@@ -2,11 +2,11 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import { type FSWatcher } from "chokidar";
-import { resolveAgentDir, resolveAgentWorkspaceDir } from '../agents/agent-scope';
-import type { ResolvedMemorySearchConfig } from '../agents/memory-search';
-import { resolveMemorySearchConfig } from '../agents/memory-search';
-import type { PowerDirectorConfig } from '../config/config';
-import { createSubsystemLogger } from '../logging/subsystem';
+import { resolveAgentDir, resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
+import type { ResolvedMemorySearchConfig } from "../agents/memory-search.js";
+import { resolveMemorySearchConfig } from "../agents/memory-search.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
   createEmbeddingProvider,
   type EmbeddingProvider,
@@ -14,12 +14,12 @@ import {
   type GeminiEmbeddingClient,
   type OpenAiEmbeddingClient,
   type VoyageEmbeddingClient,
-} from './embeddings';
-import { bm25RankToScore, buildFtsQuery, mergeHybridResults } from './hybrid';
-import { isMemoryPath, normalizeExtraMemoryPaths } from './internal';
-import { MemoryManagerEmbeddingOps } from './manager-embedding-ops';
-import { searchKeyword, searchVector } from './manager-search';
-import { extractKeywords } from './query-expansion';
+} from "./embeddings.js";
+import { bm25RankToScore, buildFtsQuery, mergeHybridResults } from "./hybrid.js";
+import { isMemoryPath, normalizeExtraMemoryPaths } from "./internal.js";
+import { MemoryManagerEmbeddingOps } from "./manager-embedding-ops.js";
+import { searchKeyword, searchVector } from "./manager-search.js";
+import { extractKeywords } from "./query-expansion.js";
 import type {
   MemoryEmbeddingProbeResult,
   MemoryProviderStatus,
@@ -27,7 +27,7 @@ import type {
   MemorySearchResult,
   MemorySource,
   MemorySyncProgressUpdate,
-} from './types';
+} from "./types.js";
 const SNIPPET_MAX_CHARS = 700;
 const VECTOR_TABLE = "chunks_vec";
 const FTS_TABLE = "chunks_fts";

@@ -1,17 +1,17 @@
-import { detectBinary } from '../../../commands/onboard-helpers';
-import type { PowerDirectorConfig } from '../../../config/config';
-import type { DmPolicy } from '../../../config/types';
+import { detectBinary } from "../../../commands/onboard-helpers.js";
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import type { DmPolicy } from "../../../config/types.js";
 import {
   listIMessageAccountIds,
   resolveDefaultIMessageAccountId,
   resolveIMessageAccount,
-} from '../../../imessage/accounts';
-import { normalizeIMessageHandle } from '../../../imessage/targets';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../../routing/session-key';
-import { formatDocsLink } from '../../../terminal/links';
-import type { WizardPrompter } from '../../../wizard/prompts';
-import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from '../onboarding-types';
-import { addWildcardAllowFrom, mergeAllowFromEntries, promptAccountId } from './helpers';
+} from "../../../imessage/accounts.js";
+import { normalizeIMessageHandle } from "../../../imessage/targets.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../../routing/session-key.js";
+import { formatDocsLink } from "../../../terminal/links.js";
+import type { WizardPrompter } from "../../../wizard/prompts.js";
+import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from "../onboarding-types.js";
+import { addWildcardAllowFrom, mergeAllowFromEntries, promptAccountId } from "./helpers.js";
 
 const channel = "imessage" as const;
 

@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { safeEqualSecret } from '../security/secret-equal';
+import { safeEqualSecret } from "../security/secret-equal.js";
 
 export const PAIRING_TOKEN_BYTES = 32;
 

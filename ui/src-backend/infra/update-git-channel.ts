@@ -1,6 +1,6 @@
-import { type CommandOptions } from '../process/exec';
-import { compareSemverStrings } from './update-check';
-import { isBetaTag, isStableTag, type UpdateChannel } from './update-channels';
+import { type CommandOptions } from "../process/exec.js";
+import { compareSemverStrings } from "./update-check.js";
+import { isBetaTag, isStableTag, type UpdateChannel } from "./update-channels.js";
 
 type CommandRunner = (
   argv: string[],

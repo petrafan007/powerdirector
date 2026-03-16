@@ -4,12 +4,12 @@ import {
   LEGACY_GATEWAY_SYSTEMD_SERVICE_NAMES,
   resolveGatewayServiceDescription,
   resolveGatewaySystemdServiceName,
-} from './constants';
-import { execFileUtf8 } from './exec-file';
-import { formatLine, toPosixPath, writeFormattedLines } from './output';
-import { resolveHomeDir } from './paths';
-import { parseKeyValueOutput } from './runtime-parse';
-import type { GatewayServiceRuntime } from './service-runtime';
+} from "./constants.js";
+import { execFileUtf8 } from "./exec-file.js";
+import { formatLine, toPosixPath, writeFormattedLines } from "./output.js";
+import { resolveHomeDir } from "./paths.js";
+import { parseKeyValueOutput } from "./runtime-parse.js";
+import type { GatewayServiceRuntime } from "./service-runtime.js";
 import type {
   GatewayServiceCommandConfig,
   GatewayServiceControlArgs,
@@ -17,17 +17,17 @@ import type {
   GatewayServiceEnvArgs,
   GatewayServiceInstallArgs,
   GatewayServiceManageArgs,
-} from './service-types';
+} from "./service-types.js";
 import {
   enableSystemdUserLinger,
   readSystemdUserLingerStatus,
   type SystemdUserLingerStatus,
-} from './systemd-linger';
+} from "./systemd-linger.js";
 import {
   buildSystemdUnit,
   parseSystemdEnvAssignment,
   parseSystemdExecStart,
-} from './systemd-unit';
+} from "./systemd-unit.js";
 
 function resolveSystemdUnitPathForName(env: GatewayServiceEnv, name: string): string {
   const home = toPosixPath(resolveHomeDir(env));

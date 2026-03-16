@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeNextRunAtMs } from './schedule';
+import { computeNextRunAtMs } from "./schedule.js";
 
 describe("cron schedule", () => {
   it("computes next run for cron expression with timezone", () => {

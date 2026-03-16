@@ -1,4 +1,4 @@
-import type { OutboundSendDeps } from '../infra/outbound/deliver';
+import type { OutboundSendDeps } from "../infra/outbound/deliver.js";
 
 export type CliDeps = {
   sendMessageWhatsApp: NonNullable<OutboundSendDeps["sendWhatsApp"]>;

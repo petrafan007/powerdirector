@@ -1,5 +1,5 @@
-import type { ChatType } from '../channels/chat-type';
-import { parseAgentSessionKey, type ParsedAgentSessionKey } from '../sessions/session-key-utils';
+import type { ChatType } from "../channels/chat-type.js";
+import { parseAgentSessionKey, type ParsedAgentSessionKey } from "../sessions/session-key-utils.js";
 
 export {
   getSubagentDepth,
@@ -8,7 +8,7 @@ export {
   isSubagentSessionKey,
   parseAgentSessionKey,
   type ParsedAgentSessionKey,
-} from '../sessions/session-key-utils';
+} from "../sessions/session-key-utils.js";
 
 export const DEFAULT_AGENT_ID = "main";
 export const DEFAULT_MAIN_KEY = "main";

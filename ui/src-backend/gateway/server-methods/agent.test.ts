@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { BARE_SESSION_RESET_PROMPT } from '../../auto-reply/reply/session-reset-prompt';
-import { agentHandlers } from './agent';
-import type { GatewayRequestContext } from './types';
+import { BARE_SESSION_RESET_PROMPT } from "../../auto-reply/reply/session-reset-prompt.js";
+import { agentHandlers } from "./agent.js";
+import type { GatewayRequestContext } from "./types.js";
 
 const mocks = vi.hoisted(() => ({
   loadSessionEntry: vi.fn(),
@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../session-utils.js", async () => {
-  const actual = await vi.importActual<typeof import('../session-utils')>("../session-utils.js");
+  const actual = await vi.importActual<typeof import("../session-utils.js")>("../session-utils.js");
   return {
     ...actual,
     loadSessionEntry: mocks.loadSessionEntry,
@@ -21,7 +21,7 @@ vi.mock("../session-utils.js", async () => {
 });
 
 vi.mock("../../config/sessions.js", async () => {
-  const actual = await vi.importActual<typeof import('../../config/sessions')>(
+  const actual = await vi.importActual<typeof import("../../config/sessions.js")>(
     "../../config/sessions.js",
   );
   return {
@@ -68,7 +68,7 @@ vi.mock("../../sessions/send-policy.js", () => ({
 }));
 
 vi.mock("../../utils/delivery-context.js", async () => {
-  const actual = await vi.importActual<typeof import('../../utils/delivery-context')>(
+  const actual = await vi.importActual<typeof import("../../utils/delivery-context.js")>(
     "../../utils/delivery-context.js",
   );
   return {

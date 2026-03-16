@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isSignalGroupAllowed } from './identity';
+import { isSignalGroupAllowed } from "./identity.js";
 
 describe("signal groupPolicy gating", () => {
   it("allows when policy is open", () => {

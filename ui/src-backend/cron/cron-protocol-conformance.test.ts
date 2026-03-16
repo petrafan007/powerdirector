@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { MACOS_APP_SOURCES_DIR } from '../compat/legacy-names';
-import { CronDeliverySchema } from '../gateway/protocol/schema';
+import { MACOS_APP_SOURCES_DIR } from "../compat/legacy-names.js";
+import { CronDeliverySchema } from "../gateway/protocol/schema.js";
 
 type SchemaLike = {
   anyOf?: Array<SchemaLike>;

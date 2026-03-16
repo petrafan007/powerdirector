@@ -1,4 +1,4 @@
-import type { ChannelStatusIssue } from '../channels/plugins/types';
+import type { ChannelStatusIssue } from "../channels/plugins/types.js";
 
 export function createDefaultChannelRuntimeState<T extends Record<string, unknown>>(
   accountId: string,

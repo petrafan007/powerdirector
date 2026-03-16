@@ -17,11 +17,11 @@ vi.mock("../../plugins/loader.js", () => ({
 }));
 
 import fs from "node:fs";
-import type { ChannelPluginCatalogEntry } from '../../channels/plugins/catalog';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { WizardPrompter } from '../../wizard/prompts';
-import { makePrompter, makeRuntime } from './__tests__/test-utils';
-import { ensureOnboardingPluginInstalled } from './plugin-install';
+import type { ChannelPluginCatalogEntry } from "../../channels/plugins/catalog.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { WizardPrompter } from "../../wizard/prompts.js";
+import { makePrompter, makeRuntime } from "./__tests__/test-utils.js";
+import { ensureOnboardingPluginInstalled } from "./plugin-install.js";
 
 const baseEntry: ChannelPluginCatalogEntry = {
   id: "zalo",

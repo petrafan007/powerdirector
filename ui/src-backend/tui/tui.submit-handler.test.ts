@@ -3,7 +3,7 @@ import {
   createEditorSubmitHandler,
   createSubmitBurstCoalescer,
   shouldEnableWindowsGitBashPasteFallback,
-} from './tui';
+} from "./tui.js";
 
 function createSubmitHarness() {
   const editor = {

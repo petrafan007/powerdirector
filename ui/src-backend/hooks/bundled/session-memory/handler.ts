@@ -8,15 +8,15 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveAgentWorkspaceDir } from '../../../agents/agent-scope';
-import type { PowerDirectorConfig } from '../../../config/config';
-import { resolveStateDir } from '../../../config/paths';
-import { createSubsystemLogger } from '../../../logging/subsystem';
-import { resolveAgentIdFromSessionKey } from '../../../routing/session-key';
-import { hasInterSessionUserProvenance } from '../../../sessions/input-provenance';
-import { resolveHookConfig } from '../../config';
-import type { HookHandler } from '../../hooks';
-import { generateSlugViaLLM } from '../../llm-slug-generator';
+import { resolveAgentWorkspaceDir } from "../../../agents/agent-scope.js";
+import type { PowerDirectorConfig } from "../../../config/config.js";
+import { resolveStateDir } from "../../../config/paths.js";
+import { createSubsystemLogger } from "../../../logging/subsystem.js";
+import { resolveAgentIdFromSessionKey } from "../../../routing/session-key.js";
+import { hasInterSessionUserProvenance } from "../../../sessions/input-provenance.js";
+import { resolveHookConfig } from "../../config.js";
+import type { HookHandler } from "../../hooks.js";
+import { generateSlugViaLLM } from "../../llm-slug-generator.js";
 
 const log = createSubsystemLogger("hooks/session-memory");
 

@@ -1,14 +1,14 @@
 import type { WebhookRequestBody } from "@line/bot-sdk";
 import type { Request, Response, NextFunction } from "express";
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
-import { logVerbose } from '../globals';
-import type { RuntimeEnv } from '../runtime';
-import { resolveLineAccount } from './accounts';
-import { handleLineWebhookEvents } from './bot-handlers';
-import type { LineInboundContext } from './bot-message-context';
-import type { ResolvedLineAccount } from './types';
-import { startLineWebhook } from './webhook';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { loadConfig } from "../config/config.js";
+import { logVerbose } from "../globals.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { resolveLineAccount } from "./accounts.js";
+import { handleLineWebhookEvents } from "./bot-handlers.js";
+import type { LineInboundContext } from "./bot-message-context.js";
+import type { ResolvedLineAccount } from "./types.js";
+import { startLineWebhook } from "./webhook.js";
 
 export interface LineBotOptions {
   channelAccessToken: string;

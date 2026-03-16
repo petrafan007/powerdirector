@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import type { MockFn } from "../test-utils/vitest-mock-fn.js";
 
 type DiscordWebMediaMockFactoryResult = {
   loadWebMedia: MockFn;

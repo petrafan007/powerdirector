@@ -1,11 +1,11 @@
 import fs from "node:fs";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import type {
   LineConfig,
   LineAccountConfig,
   ResolvedLineAccount,
   LineTokenSource,
-} from './types';
+} from "./types.js";
 
 export const DEFAULT_ACCOUNT_ID = "default";
 

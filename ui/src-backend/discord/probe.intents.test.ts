@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveDiscordPrivilegedIntentsFromFlags } from './probe';
+import { resolveDiscordPrivilegedIntentsFromFlags } from "./probe.js";
 
 describe("resolveDiscordPrivilegedIntentsFromFlags", () => {
   it("reports disabled when no bits set", () => {

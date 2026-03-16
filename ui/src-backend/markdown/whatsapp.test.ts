@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownToWhatsApp } from './whatsapp';
+import { markdownToWhatsApp } from "./whatsapp.js";
 
 describe("markdownToWhatsApp", () => {
   it("converts **bold** to *bold*", () => {

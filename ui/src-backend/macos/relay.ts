@@ -32,7 +32,7 @@ async function main() {
     process.exit(0);
   }
 
-  const { parseRelaySmokeTest, runRelaySmokeTest } = await import('./relay-smoke');
+  const { parseRelaySmokeTest, runRelaySmokeTest } = await import("./relay-smoke.js");
   const smokeTest = parseRelaySmokeTest(args, process.env);
   if (smokeTest) {
     try {
@@ -46,21 +46,21 @@ async function main() {
 
   await patchBunLongForProtobuf();
 
-  const { loadDotEnv } = await import('../infra/dotenv');
+  const { loadDotEnv } = await import("../infra/dotenv.js");
   loadDotEnv({ quiet: true });
 
-  const { ensurePowerDirectorCliOnPath } = await import('../infra/path-env');
+  const { ensurePowerDirectorCliOnPath } = await import("../infra/path-env.js");
   ensurePowerDirectorCliOnPath();
 
-  const { enableConsoleCapture } = await import('../logging');
+  const { enableConsoleCapture } = await import("../logging.js");
   enableConsoleCapture();
 
-  const { assertSupportedRuntime } = await import('../infra/runtime-guard');
+  const { assertSupportedRuntime } = await import("../infra/runtime-guard.js");
   assertSupportedRuntime();
-  const { formatUncaughtError } = await import('../infra/errors');
-  const { installUnhandledRejectionHandler } = await import('../infra/unhandled-rejections');
+  const { formatUncaughtError } = await import("../infra/errors.js");
+  const { installUnhandledRejectionHandler } = await import("../infra/unhandled-rejections.js");
 
-  const { buildProgram } = await import('../cli/program');
+  const { buildProgram } = await import("../cli/program.js");
   const program = buildProgram();
 
   installUnhandledRejectionHandler();

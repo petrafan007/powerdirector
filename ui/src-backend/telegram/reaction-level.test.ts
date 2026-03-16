@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveTelegramReactionLevel } from './reaction-level';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveTelegramReactionLevel } from "./reaction-level.js";
 
 describe("resolveTelegramReactionLevel", () => {
   const prevTelegramToken = process.env.TELEGRAM_BOT_TOKEN;

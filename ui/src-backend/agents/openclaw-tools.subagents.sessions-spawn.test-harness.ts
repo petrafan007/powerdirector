@@ -1,7 +1,7 @@
 import { vi } from "vitest";
 
-type SessionsSpawnTestConfig = ReturnType<(typeof import('../config/config'))["loadConfig"]>;
-type CreatePowerDirectorTools = (typeof import('./powerdirector-tools'))["createPowerDirectorTools"];
+type SessionsSpawnTestConfig = ReturnType<(typeof import("../config/config.js"))["loadConfig"]>;
+type CreatePowerDirectorTools = (typeof import("./powerdirector-tools.js"))["createPowerDirectorTools"];
 export type CreatePowerDirectorToolsOpts = Parameters<CreatePowerDirectorTools>[0];
 
 // Avoid exporting vitest mock types (TS2742 under pnpm + d.ts emit).
@@ -34,7 +34,7 @@ export function setSessionsSpawnConfigOverride(next: SessionsSpawnTestConfig): v
 
 export async function getSessionsSpawnTool(opts: CreatePowerDirectorToolsOpts) {
   // Dynamic import: ensure harness mocks are installed before tool modules load.
-  const { createPowerDirectorTools } = await import('./powerdirector-tools');
+  const { createPowerDirectorTools } = await import("./powerdirector-tools.js");
   const tool = createPowerDirectorTools(opts).find((candidate) => candidate.name === "sessions_spawn");
   if (!tool) {
     throw new Error("missing sessions_spawn tool");
@@ -51,7 +51,7 @@ vi.mock("../../gateway/call.js", () => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => hoisted.state.configOverride,
@@ -61,7 +61,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 
 // Same module, different specifier (used by tools under src/agents/tools/*).
 vi.mock("../../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
     loadConfig: () => hoisted.state.configOverride,

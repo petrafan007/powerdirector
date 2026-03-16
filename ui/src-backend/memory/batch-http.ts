@@ -1,4 +1,4 @@
-import { retryAsync } from '../infra/retry';
+import { retryAsync } from "../infra/retry.js";
 
 export async function postJsonWithRetry<T>(params: {
   url: string;

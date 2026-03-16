@@ -1,12 +1,12 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-let collectTelegramUnmentionedGroupIds: typeof import('./audit').collectTelegramUnmentionedGroupIds;
-let auditTelegramGroupMembership: typeof import('./audit').auditTelegramGroupMembership;
+let collectTelegramUnmentionedGroupIds: typeof import("./audit.js").collectTelegramUnmentionedGroupIds;
+let auditTelegramGroupMembership: typeof import("./audit.js").auditTelegramGroupMembership;
 
 describe("telegram audit", () => {
   beforeAll(async () => {
     ({ collectTelegramUnmentionedGroupIds, auditTelegramGroupMembership } =
-      await import('./audit'));
+      await import("./audit.js"));
   });
 
   beforeEach(() => {

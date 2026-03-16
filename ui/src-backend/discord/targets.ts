@@ -1,4 +1,4 @@
-import type { DirectoryConfigParams } from '../channels/plugins/directory-config';
+import type { DirectoryConfigParams } from "../channels/plugins/directory-config.js";
 import {
   buildMessagingTarget,
   ensureTargetId,
@@ -8,8 +8,8 @@ import {
   type MessagingTarget,
   type MessagingTargetKind,
   type MessagingTargetParseOptions,
-} from '../channels/targets';
-import { listDiscordDirectoryPeersLive } from './directory-live';
+} from "../channels/targets.js";
+import { listDiscordDirectoryPeersLive } from "./directory-live.js";
 
 export type DiscordTargetKind = MessagingTargetKind;
 

@@ -6,8 +6,8 @@
  * and validating the integration pattern.
  */
 import { describe, expect, it, vi } from "vitest";
-import { createHookRunner } from './hooks';
-import { createMockPluginRegistry } from './hooks.test-helpers';
+import { createHookRunner } from "./hooks.js";
+import { createMockPluginRegistry } from "./hooks.test-helpers.js";
 
 describe("gateway hook runner methods", () => {
   it("runGatewayStart invokes registered gateway_start hooks", async () => {

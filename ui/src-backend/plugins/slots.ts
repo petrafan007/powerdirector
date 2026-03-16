@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { PluginSlotsConfig } from '../config/types.plugins';
-import type { PluginKind } from './types';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { PluginSlotsConfig } from "../config/types.plugins.js";
+import type { PluginKind } from "./types.js";
 
 export type PluginSlotKey = keyof PluginSlotsConfig;
 

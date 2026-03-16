@@ -7,19 +7,19 @@ import { describe, expect, it } from "vitest";
 import {
   ANTHROPIC_SETUP_TOKEN_PREFIX,
   validateAnthropicSetupToken,
-} from '../commands/auth-token';
-import { loadConfig } from '../config/config';
-import { isTruthyEnvValue } from '../infra/env';
-import { resolvePowerDirectorAgentDir } from './agent-paths';
+} from "../commands/auth-token.js";
+import { loadConfig } from "../config/config.js";
+import { isTruthyEnvValue } from "../infra/env.js";
+import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
 import {
   type AuthProfileCredential,
   ensureAuthProfileStore,
   saveAuthProfileStore,
-} from './auth-profiles';
-import { getApiKeyForModel, requireApiKey } from './model-auth';
-import { normalizeProviderId, parseModelRef } from './model-selection';
-import { ensurePowerDirectorModelsJson } from './models-config';
-import { discoverAuthStorage, discoverModels } from './pi-model-discovery';
+} from "./auth-profiles.js";
+import { getApiKeyForModel, requireApiKey } from "./model-auth.js";
+import { normalizeProviderId, parseModelRef } from "./model-selection.js";
+import { ensurePowerDirectorModelsJson } from "./models-config.js";
+import { discoverAuthStorage, discoverModels } from "./pi-model-discovery.js";
 
 const LIVE = isTruthyEnvValue(process.env.LIVE) || isTruthyEnvValue(process.env.POWERDIRECTOR_LIVE_TEST);
 const SETUP_TOKEN_RAW = process.env.POWERDIRECTOR_LIVE_SETUP_TOKEN?.trim() ?? "";

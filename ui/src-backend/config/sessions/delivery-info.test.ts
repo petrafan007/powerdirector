@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { SessionEntry } from './types';
+import type { SessionEntry } from "./types.js";
 
 const storeState = vi.hoisted(() => ({
   store: {} as Record<string, SessionEntry>,
@@ -17,7 +17,7 @@ vi.mock("./store.js", () => ({
   loadSessionStore: () => storeState.store,
 }));
 
-import { extractDeliveryInfo, parseSessionThreadInfo } from './delivery-info';
+import { extractDeliveryInfo, parseSessionThreadInfo } from "./delivery-info.js";
 
 const buildEntry = (deliveryContext: SessionEntry["deliveryContext"]): SessionEntry => ({
   sessionId: "session-1",

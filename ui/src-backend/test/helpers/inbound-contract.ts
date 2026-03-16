@@ -1,8 +1,8 @@
 import { expect } from "vitest";
-import type { MsgContext } from '../../src/auto-reply/templating';
-import { normalizeChatType } from '../../src/channels/chat-type';
-import { resolveConversationLabel } from '../../src/channels/conversation-label';
-import { validateSenderIdentity } from '../../src/channels/sender-identity';
+import type { MsgContext } from "../../src/auto-reply/templating.js";
+import { normalizeChatType } from "../../src/channels/chat-type.js";
+import { resolveConversationLabel } from "../../src/channels/conversation-label.js";
+import { validateSenderIdentity } from "../../src/channels/sender-identity.js";
 
 export function expectInboundContextContract(ctx: MsgContext) {
   expect(validateSenderIdentity(ctx)).toEqual([]);

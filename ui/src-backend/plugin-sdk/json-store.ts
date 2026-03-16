@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { safeParseJson } from '../utils';
+import { safeParseJson } from "../utils.js";
 
 export async function readJsonFileWithFallback<T>(
   filePath: string,

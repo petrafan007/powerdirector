@@ -73,12 +73,12 @@ vi.mock("./powerdirector-root.js", () => ({
   resolvePowerDirectorPackageRootSync: vi.fn(() => null),
 }));
 
-let resolveControlUiRepoRoot: typeof import('./control-ui-assets').resolveControlUiRepoRoot;
-let resolveControlUiDistIndexPath: typeof import('./control-ui-assets').resolveControlUiDistIndexPath;
-let resolveControlUiDistIndexHealth: typeof import('./control-ui-assets').resolveControlUiDistIndexHealth;
-let resolveControlUiRootOverrideSync: typeof import('./control-ui-assets').resolveControlUiRootOverrideSync;
-let resolveControlUiRootSync: typeof import('./control-ui-assets').resolveControlUiRootSync;
-let powerdirectorRoot: typeof import('./powerdirector-root');
+let resolveControlUiRepoRoot: typeof import("./control-ui-assets.js").resolveControlUiRepoRoot;
+let resolveControlUiDistIndexPath: typeof import("./control-ui-assets.js").resolveControlUiDistIndexPath;
+let resolveControlUiDistIndexHealth: typeof import("./control-ui-assets.js").resolveControlUiDistIndexHealth;
+let resolveControlUiRootOverrideSync: typeof import("./control-ui-assets.js").resolveControlUiRootOverrideSync;
+let resolveControlUiRootSync: typeof import("./control-ui-assets.js").resolveControlUiRootSync;
+let powerdirectorRoot: typeof import("./powerdirector-root.js");
 
 describe("control UI assets helpers (fs-mocked)", () => {
   beforeAll(async () => {
@@ -88,8 +88,8 @@ describe("control UI assets helpers (fs-mocked)", () => {
       resolveControlUiDistIndexHealth,
       resolveControlUiRootOverrideSync,
       resolveControlUiRootSync,
-    } = await import('./control-ui-assets'));
-    powerdirectorRoot = await import('./powerdirector-root');
+    } = await import("./control-ui-assets.js"));
+    powerdirectorRoot = await import("./powerdirector-root.js");
   });
 
   beforeEach(() => {

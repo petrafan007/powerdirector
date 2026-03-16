@@ -2,14 +2,14 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config.js";
 import {
   discoverAllSessions,
   loadCostUsageSummary,
   loadSessionCostSummary,
   loadSessionLogs,
   loadSessionUsageTimeSeries,
-} from './session-cost-usage';
+} from "./session-cost-usage.js";
 
 describe("session cost usage", () => {
   it("aggregates daily totals with log cost and pricing fallback", async () => {

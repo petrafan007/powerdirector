@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildDispatchInboundCaptureMock } from '../../../test/helpers/dispatch-inbound-capture';
-import type { MsgContext } from '../../auto-reply/templating';
-import type { PowerDirectorConfig } from '../../config/types';
+import { buildDispatchInboundCaptureMock } from "../../../test/helpers/dispatch-inbound-capture.js";
+import type { MsgContext } from "../../auto-reply/templating.js";
+import type { PowerDirectorConfig } from "../../config/types.js";
 import {
   createBaseSignalEventHandlerDeps,
   createSignalReceiveEvent,
-} from './event-handler.test-harness';
+} from "./event-handler.test-harness.js";
 
 type SignalMsgContext = Pick<MsgContext, "Body" | "WasMentioned"> & {
   Body?: string;
@@ -19,14 +19,14 @@ function getCapturedCtx() {
 }
 
 vi.mock("../../auto-reply/dispatch.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../auto-reply/dispatch')>();
+  const actual = await importOriginal<typeof import("../../auto-reply/dispatch.js")>();
   return buildDispatchInboundCaptureMock(actual, (ctx) => {
     capturedCtx = ctx as SignalMsgContext;
   });
 });
 
-import { createSignalEventHandler } from './event-handler';
-import { renderSignalMentions } from './mentions';
+import { createSignalEventHandler } from "./event-handler.js";
+import { renderSignalMentions } from "./mentions.js";
 
 type GroupEventOpts = {
   message?: string;

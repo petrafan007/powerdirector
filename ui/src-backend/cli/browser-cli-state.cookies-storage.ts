@@ -1,8 +1,8 @@
 import type { Command } from "commander";
-import { danger } from '../globals';
-import { defaultRuntime } from '../runtime';
-import { callBrowserRequest, type BrowserParentOpts } from './browser-cli-shared';
-import { inheritOptionFromParent } from './command-options';
+import { danger } from "../globals.js";
+import { defaultRuntime } from "../runtime.js";
+import { callBrowserRequest, type BrowserParentOpts } from "./browser-cli-shared.js";
+import { inheritOptionFromParent } from "./command-options.js";
 
 function resolveTargetId(rawTargetId: unknown, command: Command): string | undefined {
   const local = typeof rawTargetId === "string" ? rawTargetId.trim() : "";

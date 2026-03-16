@@ -4,41 +4,41 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import chokidar, { FSWatcher } from "chokidar";
-import { resolveAgentDir } from '../agents/agent-scope';
-import { ResolvedMemorySearchConfig } from '../agents/memory-search';
-import { type PowerDirectorConfig } from '../config/config';
-import { resolveSessionTranscriptsDirForAgent } from '../config/sessions/paths';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { onSessionTranscriptUpdate } from '../sessions/transcript-events';
-import { resolveUserPath } from '../utils';
-import { DEFAULT_GEMINI_EMBEDDING_MODEL } from './embeddings-gemini';
-import { DEFAULT_OPENAI_EMBEDDING_MODEL } from './embeddings-openai';
-import { DEFAULT_VOYAGE_EMBEDDING_MODEL } from './embeddings-voyage';
+import { resolveAgentDir } from "../agents/agent-scope.js";
+import { ResolvedMemorySearchConfig } from "../agents/memory-search.js";
+import { type PowerDirectorConfig } from "../config/config.js";
+import { resolveSessionTranscriptsDirForAgent } from "../config/sessions/paths.js";
+import { createSubsystemLogger } from "../logging/subsystem.js";
+import { onSessionTranscriptUpdate } from "../sessions/transcript-events.js";
+import { resolveUserPath } from "../utils.js";
+import { DEFAULT_GEMINI_EMBEDDING_MODEL } from "./embeddings-gemini.js";
+import { DEFAULT_OPENAI_EMBEDDING_MODEL } from "./embeddings-openai.js";
+import { DEFAULT_VOYAGE_EMBEDDING_MODEL } from "./embeddings-voyage.js";
 import {
   createEmbeddingProvider,
   type EmbeddingProvider,
   type GeminiEmbeddingClient,
   type OpenAiEmbeddingClient,
   type VoyageEmbeddingClient,
-} from './embeddings';
+} from "./embeddings.js";
 import {
   buildFileEntry,
   ensureDir,
   listMemoryFiles,
   normalizeExtraMemoryPaths,
   runWithConcurrency,
-} from './internal';
-import { type MemoryFileEntry } from './internal';
-import { ensureMemoryIndexSchema } from './memory-schema';
-import type { SessionFileEntry } from './session-files';
+} from "./internal.js";
+import { type MemoryFileEntry } from "./internal.js";
+import { ensureMemoryIndexSchema } from "./memory-schema.js";
+import type { SessionFileEntry } from "./session-files.js";
 import {
   buildSessionEntry,
   listSessionFilesForAgent,
   sessionPathForFile,
-} from './session-files';
-import { loadSqliteVecExtension } from './sqlite-vec';
-import { requireNodeSqlite } from './sqlite';
-import type { MemorySource, MemorySyncProgressUpdate } from './types';
+} from "./session-files.js";
+import { loadSqliteVecExtension } from "./sqlite-vec.js";
+import { requireNodeSqlite } from "./sqlite.js";
+import type { MemorySource, MemorySyncProgressUpdate } from "./types.js";
 
 type MemoryIndexMeta = {
   model: string;

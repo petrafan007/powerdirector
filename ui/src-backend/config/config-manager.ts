@@ -2,11 +2,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { resolveConfigBackupBasePath, resolveConfigTempPath } from './artifact-paths';
-import { configSchema, sectionSchemas, SECRET_FIELDS, SECTION_NAMES } from './config-schema';
-import type { PowerDirectorConfig, SectionName } from './config-schema';
-import { validateConfigObjectRaw } from './validation';
-import { resolveConfigPathCandidate } from './paths';
+import { resolveConfigBackupBasePath, resolveConfigTempPath } from './artifact-paths.js';
+import { configSchema, sectionSchemas, SECRET_FIELDS, SECTION_NAMES } from './config-schema.js';
+import type { PowerDirectorConfig, SectionName } from './config-schema.js';
+import { validateConfigObjectRaw } from './validation.js';
+import { resolveConfigPathCandidate } from './paths.js';
 
 const CONFIG_FILENAME = 'powerdirector.config.json';
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));

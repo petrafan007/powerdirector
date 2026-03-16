@@ -4,7 +4,7 @@ import {
   normalizeHyphenSlug,
   normalizeStringEntries,
   normalizeStringEntriesLower,
-} from './string-normalization';
+} from "./string-normalization.js";
 
 describe("shared/string-normalization", () => {
   it("normalizes mixed allow-list entries", () => {

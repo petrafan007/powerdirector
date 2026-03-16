@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { AuthProfileStore } from './types';
+import type { AuthProfileStore } from "./types.js";
 import {
   clearExpiredCooldowns,
   isProfileInCooldown,
   resolveProfileUnusableUntil,
-} from './usage';
+} from "./usage.js";
 
 function makeStore(usageStats: AuthProfileStore["usageStats"]): AuthProfileStore {
   return {

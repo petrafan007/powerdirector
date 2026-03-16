@@ -1,16 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { normalizeTestText } from '../../test/helpers/normalize-text';
-import { withTempHome } from '../../test/helpers/temp-home';
-import type { PowerDirectorConfig } from '../config/config';
-import { createSuccessfulImageMediaDecision } from './media-understanding.test-fixtures';
+import { normalizeTestText } from "../../test/helpers/normalize-text.js";
+import { withTempHome } from "../../test/helpers/temp-home.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import { createSuccessfulImageMediaDecision } from "./media-understanding.test-fixtures.js";
 import {
   buildCommandsMessage,
   buildCommandsMessagePaginated,
   buildHelpMessage,
   buildStatusMessage,
-} from './status';
+} from "./status.js";
 
 const { listPluginCommands } = vi.hoisted(() => ({
   listPluginCommands: vi.fn(

@@ -1,6 +1,6 @@
 import type { Command } from "commander";
-import { buildParseArgv } from '../argv';
-import { resolveActionArgs } from './helpers';
+import { buildParseArgv } from "../argv.js";
+import { resolveActionArgs } from "./helpers.js";
 
 export async function reparseProgramFromActionArgs(
   program: Command,

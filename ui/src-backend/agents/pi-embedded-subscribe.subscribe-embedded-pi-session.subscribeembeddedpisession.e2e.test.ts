@@ -6,8 +6,8 @@ import {
   emitMessageStartAndEndForAssistantText,
   expectSingleAgentEventText,
   extractAgentEventPayloads,
-} from './pi-embedded-subscribe.e2e-harness';
-import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
+} from "./pi-embedded-subscribe.e2e-harness.js";
+import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
 
 type StubSession = {
   subscribe: (fn: (evt: unknown) => void) => () => void;

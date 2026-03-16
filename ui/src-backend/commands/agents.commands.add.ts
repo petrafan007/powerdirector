@@ -4,30 +4,30 @@ import {
   resolveAgentDir,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from '../agents/agent-scope';
-import { ensureAuthProfileStore } from '../agents/auth-profiles';
-import { resolveAuthStorePath } from '../agents/auth-profiles/paths';
-import { writeConfigFile } from '../config/config';
-import { logConfigUpdated } from '../config/logging';
-import { DEFAULT_AGENT_ID, normalizeAgentId } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { resolveUserPath, shortenHomePath } from '../utils';
-import { createClackPrompter } from '../wizard/clack-prompter';
-import { WizardCancelledError } from '../wizard/prompts';
+} from "../agents/agent-scope.js";
+import { ensureAuthProfileStore } from "../agents/auth-profiles.js";
+import { resolveAuthStorePath } from "../agents/auth-profiles/paths.js";
+import { writeConfigFile } from "../config/config.js";
+import { logConfigUpdated } from "../config/logging.js";
+import { DEFAULT_AGENT_ID, normalizeAgentId } from "../routing/session-key.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { defaultRuntime } from "../runtime.js";
+import { resolveUserPath, shortenHomePath } from "../utils.js";
+import { createClackPrompter } from "../wizard/clack-prompter.js";
+import { WizardCancelledError } from "../wizard/prompts.js";
 import {
   applyAgentBindings,
   buildChannelBindings,
   describeBinding,
   parseBindingSpecs,
-} from './agents.bindings';
-import { createQuietRuntime, requireValidConfig } from './agents.command-shared';
-import { applyAgentConfig, findAgentEntryIndex, listAgentEntries } from './agents.config';
-import { promptAuthChoiceGrouped } from './auth-choice-prompt';
-import { applyAuthChoice, warnIfModelConfigLooksOff } from './auth-choice';
-import { setupChannels } from './onboard-channels';
-import { ensureWorkspaceAndSessions } from './onboard-helpers';
-import type { ChannelChoice } from './onboard-types';
+} from "./agents.bindings.js";
+import { createQuietRuntime, requireValidConfig } from "./agents.command-shared.js";
+import { applyAgentConfig, findAgentEntryIndex, listAgentEntries } from "./agents.config.js";
+import { promptAuthChoiceGrouped } from "./auth-choice-prompt.js";
+import { applyAuthChoice, warnIfModelConfigLooksOff } from "./auth-choice.js";
+import { setupChannels } from "./onboard-channels.js";
+import { ensureWorkspaceAndSessions } from "./onboard-helpers.js";
+import type { ChannelChoice } from "./onboard-types.js";
 
 type AgentsAddOptions = {
   name?: string;

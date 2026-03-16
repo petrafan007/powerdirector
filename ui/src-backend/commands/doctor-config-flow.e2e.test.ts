@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { withTempHome } from '../../test/helpers/temp-home';
-import { loadAndMaybeMigrateDoctorConfig } from './doctor-config-flow';
+import { withTempHome } from "../../test/helpers/temp-home.js";
+import { loadAndMaybeMigrateDoctorConfig } from "./doctor-config-flow.js";
 
 async function runDoctorConfigWithInput(params: {
   config: Record<string, unknown>;

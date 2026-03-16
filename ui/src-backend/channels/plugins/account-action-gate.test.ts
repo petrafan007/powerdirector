@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createAccountActionGate } from './account-action-gate';
+import { createAccountActionGate } from "./account-action-gate.js";
 
 type TestActions = {
   send?: boolean;

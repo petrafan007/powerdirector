@@ -6,7 +6,7 @@ import {
   createConfigIO,
   readConfigFileSnapshotForWrite,
   writeConfigFile as writeConfigFileViaWrapper,
-} from './io';
+} from "./io.js";
 
 async function withTempConfig(
   configContent: string,

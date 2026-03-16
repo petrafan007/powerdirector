@@ -1,9 +1,9 @@
-import type { ChannelId } from '../channels/plugins/types';
+import type { ChannelId } from "../channels/plugins/types.js";
 import {
   CHANNEL_IDS,
   listChatChannelAliases,
   normalizeChatChannelId,
-} from '../channels/registry';
+} from "../channels/registry.js";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
@@ -11,8 +11,8 @@ import {
   type GatewayClientName,
   normalizeGatewayClientMode,
   normalizeGatewayClientName,
-} from '../gateway/protocol/client-info';
-import { getActivePluginRegistry } from '../plugins/runtime';
+} from "../gateway/protocol/client-info.js";
+import { getActivePluginRegistry } from "../plugins/runtime.js";
 
 export const INTERNAL_MESSAGE_CHANNEL = "webchat" as const;
 export type InternalMessageChannel = typeof INTERNAL_MESSAGE_CHANNEL;

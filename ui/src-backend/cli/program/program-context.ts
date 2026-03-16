@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { ProgramContext } from './context';
+import type { ProgramContext } from "./context.js";
 
 const PROGRAM_CONTEXT_SYMBOL: unique symbol = Symbol.for("powerdirector.cli.programContext");
 

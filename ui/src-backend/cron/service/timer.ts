@@ -1,17 +1,17 @@
-import type { HeartbeatRunResult } from '../../infra/heartbeat-wake';
-import { DEFAULT_AGENT_ID } from '../../routing/session-key';
-import { resolveCronDeliveryPlan } from '../delivery';
-import { sweepCronRunSessions } from '../session-reaper';
-import type { CronJob, CronRunOutcome, CronRunStatus, CronRunTelemetry } from '../types';
+import type { HeartbeatRunResult } from "../../infra/heartbeat-wake.js";
+import { DEFAULT_AGENT_ID } from "../../routing/session-key.js";
+import { resolveCronDeliveryPlan } from "../delivery.js";
+import { sweepCronRunSessions } from "../session-reaper.js";
+import type { CronJob, CronRunOutcome, CronRunStatus, CronRunTelemetry } from "../types.js";
 import {
   computeJobNextRunAtMs,
   nextWakeAtMs,
   recomputeNextRunsForMaintenance,
   resolveJobPayloadTextForMain,
-} from './jobs';
-import { locked } from './locked';
-import type { CronEvent, CronServiceState } from './state';
-import { ensureLoaded, persist } from './store';
+} from "./jobs.js";
+import { locked } from "./locked.js";
+import type { CronEvent, CronServiceState } from "./state.js";
+import { ensureLoaded, persist } from "./store.js";
 
 const MAX_TIMER_DELAY_MS = 60_000;
 

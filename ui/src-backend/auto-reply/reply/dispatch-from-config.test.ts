@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../../config/config';
-import { createInternalHookEventPayload } from '../../test-utils/internal-hook-event-payload';
-import type { MsgContext } from '../templating';
-import type { GetReplyOptions, ReplyPayload } from '../types';
-import type { ReplyDispatcher } from './reply-dispatcher';
-import { buildTestCtx } from './test-ctx';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { createInternalHookEventPayload } from "../../test-utils/internal-hook-event-payload.js";
+import type { MsgContext } from "../templating.js";
+import type { GetReplyOptions, ReplyPayload } from "../types.js";
+import type { ReplyDispatcher } from "./reply-dispatcher.js";
+import { buildTestCtx } from "./test-ctx.js";
 
 type AbortResult = { handled: boolean; aborted: boolean; stoppedSubagents?: number };
 
@@ -65,8 +65,8 @@ vi.mock("../../hooks/internal-hooks.js", () => ({
   triggerInternalHook: internalHookMocks.triggerInternalHook,
 }));
 
-const { dispatchReplyFromConfig } = await import('./dispatch-from-config');
-const { resetInboundDedupe } = await import('./inbound-dedupe');
+const { dispatchReplyFromConfig } = await import("./dispatch-from-config.js");
+const { resetInboundDedupe } = await import("./inbound-dedupe.js");
 
 const noAbortResult = { handled: false, aborted: false } as const;
 const emptyConfig = {} as PowerDirectorConfig;

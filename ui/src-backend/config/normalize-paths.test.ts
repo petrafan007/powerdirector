@@ -1,7 +1,7 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { withTempHome } from '../../test/helpers/temp-home';
-import { normalizeConfigPaths } from './normalize-paths';
+import { withTempHome } from "../../test/helpers/temp-home.js";
+import { normalizeConfigPaths } from "./normalize-paths.js";
 
 describe("normalizeConfigPaths", () => {
   it("expands tilde for path-ish keys only", async () => {

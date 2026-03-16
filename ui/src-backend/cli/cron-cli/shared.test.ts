@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { CronJob } from '../../cron/types';
-import type { RuntimeEnv } from '../../runtime';
-import { printCronList } from './shared';
+import type { CronJob } from "../../cron/types.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import { printCronList } from "./shared.js";
 
 describe("printCronList", () => {
   it("handles job with undefined sessionTarget (#9649)", () => {

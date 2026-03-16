@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadWorkspaceSkillEntries } from './skills';
+import { loadWorkspaceSkillEntries } from "./skills.js";
 
 async function setupWorkspaceWithProsePlugin() {
   const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));

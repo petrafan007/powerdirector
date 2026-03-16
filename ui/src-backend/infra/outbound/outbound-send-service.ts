@@ -1,14 +1,14 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import { dispatchChannelMessageAction } from '../../channels/plugins/message-actions';
-import type { ChannelId, ChannelThreadingToolContext } from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { appendAssistantMessageToSessionTranscript } from '../../config/sessions';
-import type { GatewayClientMode, GatewayClientName } from '../../utils/message-channel';
-import { throwIfAborted } from './abort';
-import type { OutboundSendDeps } from './deliver';
-import type { MessagePollResult, MessageSendResult } from './message';
-import { sendMessage, sendPoll } from './message';
-import { extractToolPayload } from './tool-payload';
+import { dispatchChannelMessageAction } from "../../channels/plugins/message-actions.js";
+import type { ChannelId, ChannelThreadingToolContext } from "../../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { appendAssistantMessageToSessionTranscript } from "../../config/sessions.js";
+import type { GatewayClientMode, GatewayClientName } from "../../utils/message-channel.js";
+import { throwIfAborted } from "./abort.js";
+import type { OutboundSendDeps } from "./deliver.js";
+import type { MessagePollResult, MessageSendResult } from "./message.js";
+import { sendMessage, sendPoll } from "./message.js";
+import { extractToolPayload } from "./tool-payload.js";
 
 export type OutboundGatewayContext = {
   url?: string;

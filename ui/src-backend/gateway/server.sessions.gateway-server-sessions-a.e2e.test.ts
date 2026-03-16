@@ -3,10 +3,10 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { WebSocket } from "ws";
-import { DEFAULT_PROVIDER } from '../agents/defaults';
-import { GATEWAY_CLIENT_IDS, GATEWAY_CLIENT_MODES } from './protocol/client-info';
-import { startGatewayServerHarness, type GatewayServerHarness } from './server.e2e-ws-harness';
-import { createToolSummaryPreviewTranscriptLines } from './session-preview.test-helpers';
+import { DEFAULT_PROVIDER } from "../agents/defaults.js";
+import { GATEWAY_CLIENT_IDS, GATEWAY_CLIENT_MODES } from "./protocol/client-info.js";
+import { startGatewayServerHarness, type GatewayServerHarness } from "./server.e2e-ws-harness.js";
+import { createToolSummaryPreviewTranscriptLines } from "./session-preview.test-helpers.js";
 import {
   connectOk,
   embeddedRunMock,
@@ -15,7 +15,7 @@ import {
   rpcReq,
   testState,
   writeSessionStore,
-} from './test-helpers';
+} from "./test-helpers.js";
 
 const sessionCleanupMocks = vi.hoisted(() => ({
   clearSessionQueues: vi.fn(() => ({ followupCleared: 0, laneCleared: 0, keys: [] })),
@@ -27,7 +27,7 @@ const sessionHookMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../auto-reply/reply/queue.js", async () => {
-  const actual = await vi.importActual<typeof import('../auto-reply/reply/queue')>(
+  const actual = await vi.importActual<typeof import("../auto-reply/reply/queue.js")>(
     "../auto-reply/reply/queue.js",
   );
   return {
@@ -37,7 +37,7 @@ vi.mock("../auto-reply/reply/queue.js", async () => {
 });
 
 vi.mock("../auto-reply/reply/abort.js", async () => {
-  const actual = await vi.importActual<typeof import('../auto-reply/reply/abort')>(
+  const actual = await vi.importActual<typeof import("../auto-reply/reply/abort.js")>(
     "../auto-reply/reply/abort.js",
   );
   return {
@@ -47,7 +47,7 @@ vi.mock("../auto-reply/reply/abort.js", async () => {
 });
 
 vi.mock("../hooks/internal-hooks.js", async () => {
-  const actual = await vi.importActual<typeof import('../hooks/internal-hooks')>(
+  const actual = await vi.importActual<typeof import("../hooks/internal-hooks.js")>(
     "../hooks/internal-hooks.js",
   );
   return {

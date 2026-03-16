@@ -32,10 +32,10 @@ function createStubPty(pid = 1234) {
 }
 
 describe("createPtyAdapter", () => {
-  let createPtyAdapter: typeof import('./pty').createPtyAdapter;
+  let createPtyAdapter: typeof import("./pty.js").createPtyAdapter;
 
   beforeAll(async () => {
-    ({ createPtyAdapter } = await import('./pty'));
+    ({ createPtyAdapter } = await import("./pty.js"));
   });
 
   beforeEach(() => {

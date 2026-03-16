@@ -1,9 +1,9 @@
-import type { HistoryEntry } from '../../auto-reply/reply/history';
-import type { ReplyPayload } from '../../auto-reply/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { DmPolicy, GroupPolicy, SignalReactionNotificationMode } from '../../config/types';
-import type { RuntimeEnv } from '../../runtime';
-import type { SignalSender } from '../identity';
+import type { HistoryEntry } from "../../auto-reply/reply/history.js";
+import type { ReplyPayload } from "../../auto-reply/types.js";
+import type { PowerDirectorConfig } from "../../config/config.js";
+import type { DmPolicy, GroupPolicy, SignalReactionNotificationMode } from "../../config/types.js";
+import type { RuntimeEnv } from "../../runtime.js";
+import type { SignalSender } from "../identity.js";
 
 export type SignalEnvelope = {
   sourceNumber?: string | null;

@@ -1,11 +1,11 @@
-import type { MarkdownTableMode } from '../config/types.base';
+import type { MarkdownTableMode } from "../config/types.base.js";
 import {
   chunkMarkdownIR,
   markdownToIR,
   type MarkdownLinkSpan,
   type MarkdownIR,
-} from '../markdown/ir';
-import { renderMarkdownWithMarkers } from '../markdown/render';
+} from "../markdown/ir.js";
+import { renderMarkdownWithMarkers } from "../markdown/render.js";
 
 export type TelegramFormattedChunk = {
   html: string;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../../config/config';
-import { createAccountListHelpers } from './account-helpers';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { createAccountListHelpers } from "./account-helpers.js";
 
 const { listConfiguredAccountIds, listAccountIds, resolveDefaultAccountId } =
   createAccountListHelpers("testchannel");

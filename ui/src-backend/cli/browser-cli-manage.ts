@@ -6,12 +6,12 @@ import type {
   BrowserStatus,
   BrowserTab,
   ProfileStatus,
-} from '../browser/client';
-import { danger, info } from '../globals';
-import { defaultRuntime } from '../runtime';
-import { shortenHomePath } from '../utils';
-import { callBrowserRequest, type BrowserParentOpts } from './browser-cli-shared';
-import { runCommandWithRuntime } from './cli-utils';
+} from "../browser/client.js";
+import { danger, info } from "../globals.js";
+import { defaultRuntime } from "../runtime.js";
+import { shortenHomePath } from "../utils.js";
+import { callBrowserRequest, type BrowserParentOpts } from "./browser-cli-shared.js";
+import { runCommandWithRuntime } from "./cli-utils.js";
 
 async function fetchBrowserStatus(
   parent: BrowserParentOpts,

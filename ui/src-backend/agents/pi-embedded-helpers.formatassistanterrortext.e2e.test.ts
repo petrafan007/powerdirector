@@ -5,8 +5,8 @@ import {
   formatBillingErrorMessage,
   formatAssistantErrorText,
   formatRawAssistantErrorForUi,
-} from './pi-embedded-helpers';
-import { makeAssistantMessageFixture } from './test-helpers/assistant-message-fixtures';
+} from "./pi-embedded-helpers.js";
+import { makeAssistantMessageFixture } from "./test-helpers/assistant-message-fixtures.js";
 
 describe("formatAssistantErrorText", () => {
   const makeAssistantError = (errorMessage: string): AssistantMessage =>

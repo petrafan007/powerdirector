@@ -1,6 +1,6 @@
-import { normalizeChatType } from '../channels/chat-type';
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionChatType, SessionEntry } from '../config/sessions';
+import { normalizeChatType } from "../channels/chat-type.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { SessionChatType, SessionEntry } from "../config/sessions.js";
 
 export type SessionSendPolicyDecision = "allow" | "deny";
 

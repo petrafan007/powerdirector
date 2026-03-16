@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Message, ContextBudget, ContentPart } from './types';
-import { BudgetManager } from './budget';
+import { Message, ContextBudget, ContentPart } from './types.js';
+import { BudgetManager } from './budget.js';
 
 type ContextPruningMode = 'off' | 'cache-ttl';
 

@@ -1,4 +1,4 @@
-import { buildUntrustedChannelMetadata } from '../../security/channel-metadata';
+import { buildUntrustedChannelMetadata } from "../../security/channel-metadata.js";
 
 export function resolveSlackRoomContextHints(params: {
   isRoomish: boolean;

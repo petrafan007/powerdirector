@@ -1,5 +1,5 @@
-export { registerDaemonCli } from './daemon-cli/register';
-export { addGatewayServiceCommands } from './daemon-cli/register-service-commands';
+export { registerDaemonCli } from "./daemon-cli/register.js";
+export { addGatewayServiceCommands } from "./daemon-cli/register-service-commands.js";
 export {
   runDaemonInstall,
   runDaemonRestart,
@@ -7,9 +7,9 @@ export {
   runDaemonStatus,
   runDaemonStop,
   runDaemonUninstall,
-} from './daemon-cli/runners';
+} from "./daemon-cli/runners.js";
 export type {
   DaemonInstallOptions,
   DaemonStatusOptions,
   GatewayRpcOpts,
-} from './daemon-cli/types';
+} from "./daemon-cli/types.js";

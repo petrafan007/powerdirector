@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage } from './base';
+import { Channel, ChannelMessage } from './base.js';
 
 // nostr-tools uses ESM, we need dynamic import
 let nostrTools: any = null;

@@ -1,11 +1,11 @@
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { STATE_DIR } from '../config/paths';
-import { TELEGRAM_COMMAND_NAME_PATTERN } from '../config/telegram-custom-commands';
-import type { TelegramAccountConfig } from '../config/types';
-import type { RuntimeEnv } from '../runtime';
-import { registerTelegramNativeCommands } from './bot-native-commands';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { STATE_DIR } from "../config/paths.js";
+import { TELEGRAM_COMMAND_NAME_PATTERN } from "../config/telegram-custom-commands.js";
+import type { TelegramAccountConfig } from "../config/types.js";
+import type { RuntimeEnv } from "../runtime.js";
+import { registerTelegramNativeCommands } from "./bot-native-commands.js";
 
 const { listSkillCommandsForAgents } = vi.hoisted(() => ({
   listSkillCommandsForAgents: vi.fn(() => []),
@@ -20,7 +20,7 @@ const deliveryMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../auto-reply/skill-commands.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../auto-reply/skill-commands')>();
+  const actual = await importOriginal<typeof import("../auto-reply/skill-commands.js")>();
   return {
     ...actual,
     listSkillCommandsForAgents,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { collectTextContentBlocks } from './content-blocks';
+import { collectTextContentBlocks } from "./content-blocks.js";
 
 describe("collectTextContentBlocks", () => {
   it("collects text content blocks in order", () => {

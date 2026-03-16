@@ -20,12 +20,12 @@ vi.mock("../infra/agent-events.js", () => ({
 }));
 
 describe("compaction hook wiring", () => {
-  let handleAutoCompactionStart: typeof import('../agents/pi-embedded-subscribe.handlers.compaction').handleAutoCompactionStart;
-  let handleAutoCompactionEnd: typeof import('../agents/pi-embedded-subscribe.handlers.compaction').handleAutoCompactionEnd;
+  let handleAutoCompactionStart: typeof import("../agents/pi-embedded-subscribe.handlers.compaction.js").handleAutoCompactionStart;
+  let handleAutoCompactionEnd: typeof import("../agents/pi-embedded-subscribe.handlers.compaction.js").handleAutoCompactionEnd;
 
   beforeAll(async () => {
     ({ handleAutoCompactionStart, handleAutoCompactionEnd } =
-      await import('../agents/pi-embedded-subscribe.handlers.compaction'));
+      await import("../agents/pi-embedded-subscribe.handlers.compaction.js"));
   });
 
   beforeEach(() => {

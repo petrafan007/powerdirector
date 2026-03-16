@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { withFetchPreconnect } from '../test-utils/fetch-mock';
-import { fetchDiscord } from './api';
+import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
+import { fetchDiscord } from "./api.js";
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status });

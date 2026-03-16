@@ -2,9 +2,9 @@ import { spawn } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { resolveAgentConfig } from '../agents/agent-scope';
-import { loadConfig } from '../config/config';
-import { GatewayClient } from '../gateway/client';
+import { resolveAgentConfig } from "../agents/agent-scope.js";
+import { loadConfig } from "../config/config.js";
+import { GatewayClient } from "../gateway/client.js";
 import {
   addAllowlistEntry,
   analyzeArgvCommand,
@@ -24,16 +24,16 @@ import {
   type ExecAllowlistEntry,
   type ExecCommandSegment,
   type ExecSecurity,
-} from '../infra/exec-approvals';
+} from "../infra/exec-approvals.js";
 import {
   requestExecHostViaSocket,
   type ExecHostRequest,
   type ExecHostResponse,
   type ExecHostRunResult,
-} from '../infra/exec-host';
-import { getTrustedSafeBinDirs } from '../infra/exec-safe-bin-trust';
-import { validateSystemRunCommandConsistency } from '../infra/system-run-command';
-import { runBrowserProxyCommand } from './invoke-browser';
+} from "../infra/exec-host.js";
+import { getTrustedSafeBinDirs } from "../infra/exec-safe-bin-trust.js";
+import { validateSystemRunCommandConsistency } from "../infra/system-run-command.js";
+import { runBrowserProxyCommand } from "./invoke-browser.js";
 
 const OUTPUT_CAP = 200_000;
 const OUTPUT_EVENT_TAIL = 20_000;

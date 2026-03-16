@@ -2,7 +2,7 @@ import type fs from "node:fs";
 import type os from "node:os";
 import type path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { resolveTalkApiKey } from './talk';
+import { resolveTalkApiKey } from "./talk.js";
 
 describe("talk api key fallback", () => {
   it("reads ELEVENLABS_API_KEY from profile when env is missing", () => {

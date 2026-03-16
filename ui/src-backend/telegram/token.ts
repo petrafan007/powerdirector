@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import type { BaseTokenResolution } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import type { TelegramAccountConfig } from '../config/types.telegram';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../routing/session-key';
+import type { BaseTokenResolution } from "../channels/plugins/types.js";
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { TelegramAccountConfig } from "../config/types.telegram.js";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
 
 export type TelegramTokenSource = "env" | "tokenFile" | "config" | "none";
 

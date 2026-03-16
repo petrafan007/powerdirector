@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentModelListConfig } from '../config/types';
+import type { PowerDirectorConfig } from "../config/config.js";
+import type { AgentModelListConfig } from "../config/types.js";
 
 export const OPENAI_CODEX_DEFAULT_MODEL = "openai-codex/gpt-5.3-codex";
 

@@ -1,7 +1,7 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from '../../config/config';
-import { getChannelPlugin, listChannelPlugins } from './index';
-import type { ChannelMessageActionContext, ChannelMessageActionName } from './types';
+import type { PowerDirectorConfig } from "../../config/config.js";
+import { getChannelPlugin, listChannelPlugins } from "./index.js";
+import type { ChannelMessageActionContext, ChannelMessageActionName } from "./types.js";
 
 const trustedRequesterRequiredByChannel: Readonly<
   Partial<Record<string, ReadonlySet<ChannelMessageActionName>>>

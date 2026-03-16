@@ -3,7 +3,7 @@ import {
   extractContentFromMessage,
   extractThinkingFromMessage,
   resolveFinalAssistantText,
-} from './tui-formatters';
+} from "./tui-formatters.js";
 
 type RunStreamState = {
   thinkingText: string;

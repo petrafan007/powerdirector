@@ -21,10 +21,10 @@ vi.mock("../runtime.js", () => ({
   defaultRuntime: runtime,
 }));
 
-let registerDevicesCli: typeof import('./devices-cli').registerDevicesCli;
+let registerDevicesCli: typeof import("./devices-cli.js").registerDevicesCli;
 
 beforeAll(async () => {
-  ({ registerDevicesCli } = await import('./devices-cli'));
+  ({ registerDevicesCli } = await import("./devices-cli.js"));
 });
 
 async function runDevicesApprove(argv: string[]) {

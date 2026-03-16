@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from '../config/config';
-import { getDmHistoryLimitFromSessionKey } from './pi-embedded-runner';
+import type { PowerDirectorConfig } from "../config/config.js";
+import { getDmHistoryLimitFromSessionKey } from "./pi-embedded-runner.js";
 
 describe("getDmHistoryLimitFromSessionKey", () => {
   it("keeps backward compatibility for dm/direct session kinds", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { AuthProfileStore } from './auth-profiles';
-import { requireApiKey, resolveAwsSdkEnvVarName, resolveModelAuthMode } from './model-auth';
+import type { AuthProfileStore } from "./auth-profiles.js";
+import { requireApiKey, resolveAwsSdkEnvVarName, resolveModelAuthMode } from "./model-auth.js";
 
 describe("resolveAwsSdkEnvVarName", () => {
   it("prefers bearer token over access keys and profile", () => {
