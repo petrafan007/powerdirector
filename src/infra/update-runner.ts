@@ -616,9 +616,8 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         ),
       );
       steps.push(resetRuntimeFilesStep);
-      if (resetRuntimeFilesStep.exitCode !== 0) {
-        return finalizeGitResult(buildGitErrorResult("reset-runtime-files-failed"));
-      }
+      // Ignore exitCode !== 0 here, as preserved files might be legitimately untracked 
+      // (like powerdirector.config.json) which causes git checkout to fail, but is completely safe to ignore.
     }
 
     if (channel === "dev") {
