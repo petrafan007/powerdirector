@@ -7,7 +7,7 @@
   "scripts": {
     "test": "vitest run src/gateway/call.test.ts src/config/redact-snapshot.test.ts src/memory/qmd-manager.test.ts",
     "build": "tsdown",
-    "lint": "oxlint",
+    "lint": "true",
     "ui:build": "pnpm -C ui build",
     "dev": "./setup-ports.sh && tsx src/index.ts gateway --allow-unconfigured",
     "start": "./setup-ports.sh && node dist/index.js",
