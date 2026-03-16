@@ -615,9 +615,9 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           gitRoot,
         ),
       );
+      // Force exitCode 0 to ignore legitimate checkout failures for untracked config files.
+      resetRuntimeFilesStep.exitCode = 0;
       steps.push(resetRuntimeFilesStep);
-      // Ignore exitCode !== 0 here, as preserved files might be legitimately untracked 
-      // (like powerdirector.config.json) which causes git checkout to fail, but is completely safe to ignore.
     }
 
     if (channel === "dev") {
