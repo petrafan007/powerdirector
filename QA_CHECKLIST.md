@@ -1,6 +1,6 @@
 # PowerDirector Flawless UI & Chat QA Checklist
 
-This checklist tracks the mandatory verification of PowerDirector v1.1.0-beta.3. No item shall be checked until verified via `agent-browser` in `~/powerdirector-newusertest` on ports 4007/4008.
+This checklist tracks the mandatory verification of PowerDirector v1.2.0-beta.1. No item shall be checked until verified via `agent-browser` in `~/powerdirector-newusertest` on ports 4007/4008.
 
 ## 1. Environment Setup
 - [x] Complete wipe of `~/powerdirector-newusertest`
@@ -37,5 +37,5 @@ This checklist tracks the mandatory verification of PowerDirector v1.1.0-beta.3.
 - [ ] **Hotfix Workflow**: Any issues found were fixed in `source`, pushed to GitHub, and re-verified.
 
 ## 5. Final Delivery
-- [ ] GitHub tag `v1.1.0-beta.3` force-updated with all verified fixes.
+- [ ] GitHub tag `v1.2.0-beta.1` created on the release commit.
 - [ ] Personal instance upgrade path confirmed safe (preserves all personal files).
