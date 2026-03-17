@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildWorkspaceSkillsPrompt } from "./skills.js";
-import { writeSkill } from "./skills.test-helpers.js";
+import { buildWorkspaceSkillsPrompt } from './skills';
+import { writeSkill } from './skills.test-helpers';
 
 describe("compactSkillPaths", () => {
   it("replaces home directory prefix with ~ in skill locations", async () => {

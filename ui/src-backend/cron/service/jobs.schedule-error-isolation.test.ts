@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { CronJob, CronStoreFile } from "../types.js";
-import { recomputeNextRuns } from "./jobs.js";
-import type { CronServiceState } from "./state.js";
+import type { CronJob, CronStoreFile } from '../types';
+import { recomputeNextRuns } from './jobs';
+import type { CronServiceState } from './state';
 
 function createMockState(jobs: CronJob[]): CronServiceState {
   const store: CronStoreFile = { version: 1, jobs };

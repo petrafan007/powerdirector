@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createPluginLoaderLogger } from "./logger.js";
+import { createPluginLoaderLogger } from './logger';
 
 describe("plugins/logger", () => {
   it("forwards logger methods", () => {

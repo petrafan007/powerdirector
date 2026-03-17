@@ -1,13 +1,13 @@
 import {
   buildChannelAccountSnapshot,
   formatChannelAllowFrom,
-} from "../channels/account-summary.js";
-import { listChannelPlugins } from "../channels/plugins/index.js";
-import type { ChannelAccountSnapshot, ChannelPlugin } from "../channels/plugins/types.js";
-import { type PowerDirectorConfig, loadConfig } from "../config/config.js";
-import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";
-import { theme } from "../terminal/theme.js";
-import { formatTimeAgo } from "./format-time/format-relative.js";
+} from '../channels/account-summary';
+import { listChannelPlugins } from '../channels/plugins/index';
+import type { ChannelAccountSnapshot, ChannelPlugin } from '../channels/plugins/types';
+import { type PowerDirectorConfig, loadConfig } from '../config/config';
+import { DEFAULT_ACCOUNT_ID } from '../routing/session-key';
+import { theme } from '../terminal/theme';
+import { formatTimeAgo } from './format-time/format-relative';
 
 export type ChannelSummaryOptions = {
   colorize?: boolean;

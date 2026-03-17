@@ -1,19 +1,19 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
-import { resolveDefaultAgentId } from "../../agents/agent-scope.js";
-import { abortEmbeddedPiRun, waitForEmbeddedPiRunEnd } from "../../agents/pi-embedded.js";
-import { stopSubagentsForRequester } from "../../auto-reply/reply/abort.js";
-import { clearSessionQueues } from "../../auto-reply/reply/queue.js";
-import { loadConfig } from "../../config/config.js";
+import { resolveDefaultAgentId } from '../../agents/agent-scope';
+import { abortEmbeddedPiRun, waitForEmbeddedPiRunEnd } from '../../agents/pi-embedded';
+import { stopSubagentsForRequester } from '../../auto-reply/reply/abort';
+import { clearSessionQueues } from '../../auto-reply/reply/queue';
+import { loadConfig } from '../../config/config';
 import {
   loadSessionStore,
   snapshotSessionOrigin,
   resolveMainSessionKey,
   type SessionEntry,
   updateSessionStore,
-} from "../../config/sessions.js";
-import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
-import { normalizeAgentId, parseAgentSessionKey } from "../../routing/session-key.js";
+} from '../../config/sessions';
+import { createInternalHookEvent, triggerInternalHook } from '../../hooks/internal-hooks';
+import { normalizeAgentId, parseAgentSessionKey } from '../../routing/session-key';
 import {
   ErrorCodes,
   errorShape,
@@ -24,7 +24,7 @@ import {
   validateSessionsPreviewParams,
   validateSessionsResetParams,
   validateSessionsResolveParams,
-} from "../protocol/index.js";
+} from '../protocol/index';
 import {
   archiveFileOnDisk,
   archiveSessionTranscripts,
@@ -39,11 +39,11 @@ import {
   type SessionsPatchResult,
   type SessionsPreviewEntry,
   type SessionsPreviewResult,
-} from "../session-utils.js";
-import { applySessionsPatchToStore } from "../sessions-patch.js";
-import { resolveSessionKeyFromResolveParams } from "../sessions-resolve.js";
-import type { GatewayClient, GatewayRequestHandlers, RespondFn } from "./types.js";
-import { assertValidParams } from "./validation.js";
+} from '../session-utils';
+import { applySessionsPatchToStore } from '../sessions-patch';
+import { resolveSessionKeyFromResolveParams } from '../sessions-resolve';
+import type { GatewayClient, GatewayRequestHandlers, RespondFn } from './types';
+import { assertValidParams } from './validation';
 
 function requireSessionKey(key: unknown, respond: RespondFn): string | null {
   const raw =

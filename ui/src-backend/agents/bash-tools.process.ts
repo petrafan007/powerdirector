@@ -1,9 +1,9 @@
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
 import { formatDurationCompact } from "../infra/format-time/format-duration.ts";
-import { getDiagnosticSessionState } from "../logging/diagnostic-session-state.js";
-import { killProcessTree } from "../process/kill-tree.js";
-import { getProcessSupervisor } from "../process/supervisor/index.js";
+import { getDiagnosticSessionState } from '../logging/diagnostic-session-state';
+import { killProcessTree } from '../process/kill-tree';
+import { getProcessSupervisor } from '../process/supervisor/index';
 import {
   type ProcessSession,
   deleteSession,
@@ -14,10 +14,10 @@ import {
   listRunningSessions,
   markExited,
   setJobTtlMs,
-} from "./bash-process-registry.js";
-import { deriveSessionName, pad, sliceLogLines, truncateMiddle } from "./bash-tools.shared.js";
-import { recordCommandPoll, resetCommandPollCount } from "./command-poll-backoff.js";
-import { encodeKeySequence, encodePaste } from "./pty-keys.js";
+} from './bash-process-registry';
+import { deriveSessionName, pad, sliceLogLines, truncateMiddle } from './bash-tools.shared';
+import { recordCommandPoll, resetCommandPollCount } from './command-poll-backoff';
+import { encodeKeySequence, encodePaste } from './pty-keys';
 
 export type ProcessToolDefaults = {
   cleanupMs?: number;

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
 import process from "node:process";
-import { applyCliProfileEnv, parseCliProfileArgs } from "./cli/profile.js";
-import { shouldSkipRespawnForArgv } from "./cli/respawn-policy.js";
-import { normalizeWindowsArgv } from "./cli/windows-argv.js";
-import { isTruthyEnvValue, normalizeEnv } from "./infra/env.js";
-import { installProcessWarningFilter } from "./infra/warning-filter.js";
-import { attachChildProcessBridge } from "./process/child-process-bridge.js";
+import { applyCliProfileEnv, parseCliProfileArgs } from './cli/profile';
+import { shouldSkipRespawnForArgv } from './cli/respawn-policy';
+import { normalizeWindowsArgv } from './cli/windows-argv';
+import { isTruthyEnvValue, normalizeEnv } from './infra/env';
+import { installProcessWarningFilter } from './infra/warning-filter';
+import { attachChildProcessBridge } from './process/child-process-bridge';
 
 process.title = "powerdirector";
 installProcessWarningFilter();
@@ -96,7 +96,7 @@ if (!ensureExperimentalWarningSuppressed()) {
     process.argv = parsed.argv;
   }
 
-  import("./cli/run-main.js")
+  import('./cli/run-main')
     .then(({ runCli }) => runCli(process.argv))
     .catch((error) => {
       console.error(

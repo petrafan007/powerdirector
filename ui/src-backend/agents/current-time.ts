@@ -3,7 +3,7 @@ import {
   formatUserTime,
   resolveUserTimeFormat,
   resolveUserTimezone,
-} from "./date-time.js";
+} from './date-time';
 
 export type CronStyleNow = {
   userTimezone: string;

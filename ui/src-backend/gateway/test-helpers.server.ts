@@ -4,23 +4,23 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, expect, vi } from "vitest";
 import { WebSocket } from "ws";
-import { resolveMainSessionKeyFromConfig, type SessionEntry } from "../config/sessions.js";
-import { resetAgentRunContextForTest } from "../infra/agent-events.js";
+import { resolveMainSessionKeyFromConfig, type SessionEntry } from '../config/sessions';
+import { resetAgentRunContextForTest } from '../infra/agent-events';
 import {
   loadOrCreateDeviceIdentity,
   publicKeyRawBase64UrlFromPem,
   signDevicePayload,
-} from "../infra/device-identity.js";
-import { drainSystemEvents, peekSystemEvents } from "../infra/system-events.js";
-import { rawDataToString } from "../infra/ws.js";
-import { resetLogger, setLoggerOverride } from "../logging.js";
-import { DEFAULT_AGENT_ID, toAgentStoreSessionKey } from "../routing/session-key.js";
-import { captureEnv } from "../test-utils/env.js";
-import { getDeterministicFreePortBlock } from "../test-utils/ports.js";
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
-import { buildDeviceAuthPayload } from "./device-auth.js";
-import { PROTOCOL_VERSION } from "./protocol/index.js";
-import type { GatewayServerOptions } from "./server.js";
+} from '../infra/device-identity';
+import { drainSystemEvents, peekSystemEvents } from '../infra/system-events';
+import { rawDataToString } from '../infra/ws';
+import { resetLogger, setLoggerOverride } from '../logging';
+import { DEFAULT_AGENT_ID, toAgentStoreSessionKey } from '../routing/session-key';
+import { captureEnv } from '../test-utils/env';
+import { getDeterministicFreePortBlock } from '../test-utils/ports';
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
+import { buildDeviceAuthPayload } from './device-auth';
+import { PROTOCOL_VERSION } from './protocol/index';
+import type { GatewayServerOptions } from './server';
 import {
   agentCommand,
   cronIsolatedRun,
@@ -32,14 +32,14 @@ import {
   testTailscaleWhois,
   testState,
   testTailnetIPv4,
-} from "./test-helpers.mocks.js";
+} from './test-helpers.mocks';
 
 // Import lazily after test env/home setup so config/session paths resolve to test dirs.
 // Keep one cached module per worker for speed.
-let serverModulePromise: Promise<typeof import("./server.js")> | undefined;
+let serverModulePromise: Promise<typeof import('./server')> | undefined;
 
 async function getServerModule() {
-  serverModulePromise ??= import("./server.js");
+  serverModulePromise ??= import('./server');
   return await serverModulePromise;
 }
 

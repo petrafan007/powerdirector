@@ -63,7 +63,7 @@ const { readAllowFromStoreMock, upsertPairingRequestMock } = vi.hoisted(() => ({
   upsertPairingRequestMock: vi.fn(async () => ({ code: "CODE", created: true })),
 }));
 
-let handleLineWebhookEvents: typeof import("./bot-handlers.js").handleLineWebhookEvents;
+let handleLineWebhookEvents: typeof import('./bot-handlers').handleLineWebhookEvents;
 
 const createRuntime = () => ({ log: vi.fn(), error: vi.fn(), exit: vi.fn() });
 
@@ -74,7 +74,7 @@ vi.mock("../pairing/pairing-store.js", () => ({
 
 describe("handleLineWebhookEvents", () => {
   beforeAll(async () => {
-    ({ handleLineWebhookEvents } = await import("./bot-handlers.js"));
+    ({ handleLineWebhookEvents } = await import('./bot-handlers'));
   });
 
   beforeEach(() => {

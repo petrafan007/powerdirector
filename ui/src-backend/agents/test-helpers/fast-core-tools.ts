@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { stubTool } from "./fast-tool-stubs.js";
+import { stubTool } from './fast-tool-stubs';
 
 vi.mock("../tools/browser-tool.js", () => ({
   createBrowserTool: () => stubTool("browser"),

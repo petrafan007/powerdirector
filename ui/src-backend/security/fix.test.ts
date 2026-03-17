@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { fixSecurityFootguns } from "./fix.js";
+import { fixSecurityFootguns } from './fix';
 
 const isWindows = process.platform === "win32";
 

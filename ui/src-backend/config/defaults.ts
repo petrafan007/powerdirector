@@ -1,9 +1,9 @@
-import { DEFAULT_CONTEXT_TOKENS } from "../agents/defaults.js";
-import { parseModelRef } from "../agents/model-selection.js";
-import { DEFAULT_AGENT_MAX_CONCURRENT, DEFAULT_SUBAGENT_MAX_CONCURRENT } from "./agent-limits.js";
-import { resolveTalkApiKey } from "./talk.js";
-import type { PowerDirectorConfig } from "./types.js";
-import type { ModelDefinitionConfig } from "./types.models.js";
+import { DEFAULT_CONTEXT_TOKENS } from '../agents/defaults';
+import { parseModelRef } from '../agents/model-selection';
+import { DEFAULT_AGENT_MAX_CONCURRENT, DEFAULT_SUBAGENT_MAX_CONCURRENT } from './agent-limits';
+import { resolveTalkApiKey } from './talk';
+import type { PowerDirectorConfig } from './types';
+import type { ModelDefinitionConfig } from './types.models';
 
 type WarnState = { warned: boolean };
 

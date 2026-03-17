@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { monitorTelegramProvider } from "./monitor.js";
+import { monitorTelegramProvider } from './monitor';
 
 type MockCtx = {
   message: {
@@ -44,7 +44,7 @@ const { startTelegramWebhookSpy } = vi.hoisted(() => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig,

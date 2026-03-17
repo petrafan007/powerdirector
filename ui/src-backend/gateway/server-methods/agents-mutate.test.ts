@@ -48,7 +48,7 @@ vi.mock("../../agents/agent-scope.js", () => ({
 }));
 
 vi.mock("../../agents/workspace.js", async () => {
-  const actual = await vi.importActual<typeof import("../../agents/workspace.js")>(
+  const actual = await vi.importActual<typeof import('../../agents/workspace')>(
     "../../agents/workspace.js",
   );
   return {
@@ -93,7 +93,7 @@ vi.mock("node:fs/promises", async () => {
 /* Import after mocks are set up                                      */
 /* ------------------------------------------------------------------ */
 
-const { agentsHandlers } = await import("./agents.js");
+const { agentsHandlers } = await import('./agents');
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                            */

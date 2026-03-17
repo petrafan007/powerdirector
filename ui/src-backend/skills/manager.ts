@@ -3,12 +3,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 import { getRuntimeLogger } from '../core/logger.ts';
-import { Skill, SkillEntry, SkillSnapshot } from './types.js';
-import { SkillLoader } from './loader.js';
-import { SkillFormatter } from './formatter.js';
-import { shouldIncludeSkill } from './config.js';
+import { Skill, SkillEntry, SkillSnapshot } from './types';
+import { SkillLoader } from './loader';
+import { SkillFormatter } from './formatter';
+import { shouldIncludeSkill } from './config';
 import { Tool, ToolResult } from '../tools/base.ts';
-import { resolveConfigPathCandidate, resolvePowerDirectorRoot } from '../config/paths.js';
+import { resolveConfigPathCandidate, resolvePowerDirectorRoot } from '../config/paths';
 
 
 type NodeManager = 'npm' | 'yarn' | 'pnpm';

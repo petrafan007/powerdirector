@@ -1,12 +1,12 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { findNormalizedProviderValue, normalizeProviderId } from "../model-selection.js";
-import { dedupeProfileIds, listProfilesForProvider } from "./profiles.js";
-import type { AuthProfileStore } from "./types.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { findNormalizedProviderValue, normalizeProviderId } from '../model-selection';
+import { dedupeProfileIds, listProfilesForProvider } from './profiles';
+import type { AuthProfileStore } from './types';
 import {
   clearExpiredCooldowns,
   isProfileInCooldown,
   resolveProfileUnusableUntil,
-} from "./usage.js";
+} from './usage';
 
 export function resolveAuthProfileOrder(params: {
   cfg?: PowerDirectorConfig;

@@ -1,11 +1,11 @@
-import { normalizeSecretInput } from "../../utils/normalize-secret-input.js";
-import { normalizeProviderId } from "../model-selection.js";
+import { normalizeSecretInput } from '../../utils/normalize-secret-input';
+import { normalizeProviderId } from '../model-selection';
 import {
   ensureAuthProfileStore,
   saveAuthProfileStore,
   updateAuthProfileStoreWithLock,
-} from "./store.js";
-import type { AuthProfileCredential, AuthProfileStore } from "./types.js";
+} from './store';
+import type { AuthProfileCredential, AuthProfileStore } from './types';
 
 export function dedupeProfileIds(profileIds: string[]): string[] {
   return [...new Set(profileIds)];

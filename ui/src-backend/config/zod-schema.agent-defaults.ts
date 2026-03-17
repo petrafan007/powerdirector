@@ -4,14 +4,14 @@ import {
   AgentSandboxSchema,
   AgentModelSchema,
   MemorySearchSchema,
-} from "./zod-schema.agent-runtime.js";
+} from './zod-schema.agent-runtime';
 import {
   BlockStreamingChunkSchema,
   BlockStreamingCoalesceSchema,
   CliBackendSchema,
   HumanDelaySchema,
   TypingModeSchema,
-} from "./zod-schema.core.js";
+} from './zod-schema.core';
 
 export const AgentDefaultsSchema = z
   .object({

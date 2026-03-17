@@ -1,5 +1,5 @@
 import AjvPkg, { type ErrorObject } from "ajv";
-import type { SessionsPatchResult } from "../session-utils.types.js";
+import type { SessionsPatchResult } from '../session-utils.types';
 import {
   type AgentEvent,
   AgentEventSchema,
@@ -227,7 +227,7 @@ import {
   WizardStatusResultSchema,
   type WizardStep,
   WizardStepSchema,
-} from "./schema.js";
+} from './schema';
 
 const ajv = new (AjvPkg as unknown as new (opts?: object) => import("ajv").default)({
   allErrors: true,

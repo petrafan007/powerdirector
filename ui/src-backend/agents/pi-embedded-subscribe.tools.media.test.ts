@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractToolResultMediaPaths } from "./pi-embedded-subscribe.tools.js";
+import { extractToolResultMediaPaths } from './pi-embedded-subscribe.tools';
 
 describe("extractToolResultMediaPaths", () => {
   it("returns empty array for null/undefined", () => {

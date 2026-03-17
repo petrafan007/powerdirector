@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatToolDetail, resolveToolDisplay } from "./tool-display.js";
+import { formatToolDetail, resolveToolDisplay } from './tool-display';
 
 describe("tool display details", () => {
   it("skips zero/false values for optional detail fields", () => {

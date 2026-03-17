@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolvePowerDirectorPackageRoot } from "../infra/powerdirector-root.js";
-import { pathExists } from "../utils.js";
+import { resolvePowerDirectorPackageRoot } from '../infra/powerdirector-root';
+import { pathExists } from '../utils';
 
 const FALLBACK_TEMPLATE_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),

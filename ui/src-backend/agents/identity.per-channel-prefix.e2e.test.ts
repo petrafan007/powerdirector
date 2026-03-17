@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveResponsePrefix, resolveEffectiveMessagesConfig } from "./identity.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveResponsePrefix, resolveEffectiveMessagesConfig } from './identity';
 
 const makeConfig = <T extends PowerDirectorConfig>(cfg: T) => cfg;
 

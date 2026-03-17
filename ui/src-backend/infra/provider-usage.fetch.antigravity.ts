@@ -1,7 +1,7 @@
-import { logDebug } from "../logger.js";
-import { fetchJson, parseFiniteNumber } from "./provider-usage.fetch.shared.js";
-import { clampPercent, PROVIDER_LABELS } from "./provider-usage.shared.js";
-import type { ProviderUsageSnapshot, UsageWindow } from "./provider-usage.types.js";
+import { logDebug } from '../logger';
+import { fetchJson, parseFiniteNumber } from './provider-usage.fetch.shared';
+import { clampPercent, PROVIDER_LABELS } from './provider-usage.shared';
+import type { ProviderUsageSnapshot, UsageWindow } from './provider-usage.types';
 
 type LoadCodeAssistResponse = {
   availablePromptCredits?: number | string;

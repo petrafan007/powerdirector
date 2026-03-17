@@ -4,7 +4,7 @@ import {
   listThinkingLevels,
   normalizeReasoningLevel,
   normalizeThinkLevel,
-} from "./thinking.js";
+} from './thinking';
 
 describe("normalizeThinkLevel", () => {
   it("accepts mid as medium", () => {

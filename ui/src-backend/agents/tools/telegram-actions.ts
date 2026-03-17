@@ -1,12 +1,12 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { createTelegramActionGate } from "../../telegram/accounts.js";
-import type { TelegramButtonStyle, TelegramInlineButtons } from "../../telegram/button-types.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { createTelegramActionGate } from '../../telegram/accounts';
+import type { TelegramButtonStyle, TelegramInlineButtons } from '../../telegram/button-types';
 import {
   resolveTelegramInlineButtonsScope,
   resolveTelegramTargetChatType,
-} from "../../telegram/inline-buttons.js";
-import { resolveTelegramReactionLevel } from "../../telegram/reaction-level.js";
+} from '../../telegram/inline-buttons';
+import { resolveTelegramReactionLevel } from '../../telegram/reaction-level';
 import {
   createForumTopicTelegram,
   deleteMessageTelegram,
@@ -14,16 +14,16 @@ import {
   reactMessageTelegram,
   sendMessageTelegram,
   sendStickerTelegram,
-} from "../../telegram/send.js";
-import { getCacheStats, searchStickers } from "../../telegram/sticker-cache.js";
-import { resolveTelegramToken } from "../../telegram/token.js";
+} from '../../telegram/send';
+import { getCacheStats, searchStickers } from '../../telegram/sticker-cache';
+import { resolveTelegramToken } from '../../telegram/token';
 import {
   jsonResult,
   readNumberParam,
   readReactionParams,
   readStringOrNumberParam,
   readStringParam,
-} from "./common.js";
+} from './common';
 
 const TELEGRAM_BUTTON_STYLES: readonly TelegramButtonStyle[] = ["danger", "success", "primary"];
 

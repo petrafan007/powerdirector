@@ -1,9 +1,9 @@
-import { resolveSessionAgentId } from "../agents/agent-scope.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { SessionEntry, SessionMaintenanceWarning } from "../config/sessions.js";
-import { isDeliverableMessageChannel, normalizeMessageChannel } from "../utils/message-channel.js";
-import { resolveSessionDeliveryTarget } from "./outbound/targets.js";
-import { enqueueSystemEvent } from "./system-events.js";
+import { resolveSessionAgentId } from '../agents/agent-scope';
+import type { PowerDirectorConfig } from '../config/config';
+import type { SessionEntry, SessionMaintenanceWarning } from '../config/sessions';
+import { isDeliverableMessageChannel, normalizeMessageChannel } from '../utils/message-channel';
+import { resolveSessionDeliveryTarget } from './outbound/targets';
+import { enqueueSystemEvent } from './system-events';
 
 type WarningParams = {
   cfg: PowerDirectorConfig;
@@ -93,7 +93,7 @@ export async function deliverSessionMaintenanceWarning(params: WarningParams): P
   }
 
   try {
-    const { deliverOutboundPayloads } = await import("./outbound/deliver.js");
+    const { deliverOutboundPayloads } = await import('./outbound/deliver');
     await deliverOutboundPayloads({
       cfg: params.cfg,
       channel,

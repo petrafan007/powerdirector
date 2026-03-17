@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import {
   installPwToolsCoreTestHooks,
   setPwToolsCoreCurrentPage,
-} from "./pw-tools-core.test-harness.js";
+} from './pw-tools-core.test-harness';
 
 installPwToolsCoreTestHooks();
-const mod = await import("./pw-tools-core.js");
+const mod = await import('./pw-tools-core');
 
 describe("pw-tools-core", () => {
   it("last file-chooser arm wins", async () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { RuntimeEnv } from "../runtime.js";
-import type { WizardPrompter } from "../wizard/prompts.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { RuntimeEnv } from '../runtime';
+import type { WizardPrompter } from '../wizard/prompts';
 
 // Module under test imports these at module scope.
 vi.mock("../agents/skills-status.js", () => ({
@@ -19,10 +19,10 @@ vi.mock("./onboard-helpers.js", () => ({
   ]),
 }));
 
-import { installSkill } from "../agents/skills-install.js";
-import { buildWorkspaceSkillStatus } from "../agents/skills-status.js";
-import { detectBinary } from "./onboard-helpers.js";
-import { setupSkills } from "./onboard-skills.js";
+import { installSkill } from '../agents/skills-install';
+import { buildWorkspaceSkillStatus } from '../agents/skills-status';
+import { detectBinary } from './onboard-helpers';
+import { setupSkills } from './onboard-skills';
 
 function createBundledSkill(params: {
   name: string;

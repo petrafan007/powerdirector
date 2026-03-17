@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateConfigObject } from "./config.js";
+import { validateConfigObject } from './config';
 
 describe("Telegram webhook config", () => {
   it("accepts webhookUrl when webhookSecret is configured", () => {

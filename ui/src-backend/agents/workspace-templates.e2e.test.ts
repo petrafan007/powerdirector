@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
   resetWorkspaceTemplateDirCache,
   resolveWorkspaceTemplateDir,
-} from "./workspace-templates.js";
+} from './workspace-templates';
 
 async function makeTempRoot(): Promise<string> {
   return await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-templates-"));

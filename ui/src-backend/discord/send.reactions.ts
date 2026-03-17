@@ -1,13 +1,13 @@
 import { Routes } from "discord-api-types/v10";
-import { loadConfig } from "../config/config.js";
+import { loadConfig } from '../config/config';
 import {
   buildReactionIdentifier,
   createDiscordClient,
   formatReactionEmoji,
   normalizeReactionEmoji,
   resolveDiscordRest,
-} from "./send.shared.js";
-import type { DiscordReactionSummary, DiscordReactOpts } from "./send.types.js";
+} from './send.shared';
+import type { DiscordReactionSummary, DiscordReactOpts } from './send.types';
 
 export async function reactMessageDiscord(
   channelId: string,
@@ -119,4 +119,4 @@ export async function fetchReactionsDiscord(
   return summaries;
 }
 
-export { fetchChannelPermissionsDiscord } from "./send.permissions.js";
+export { fetchChannelPermissionsDiscord } from './send.permissions';

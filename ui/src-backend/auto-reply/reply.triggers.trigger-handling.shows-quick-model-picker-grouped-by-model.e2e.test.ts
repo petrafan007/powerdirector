@@ -1,15 +1,15 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { normalizeTestText } from "../../test/helpers/normalize-text.js";
-import { loadSessionStore } from "../config/sessions.js";
+import { normalizeTestText } from '../../test/helpers/normalize-text';
+import { loadSessionStore } from '../config/sessions';
 import {
   installTriggerHandlingE2eTestHooks,
   makeCfg,
   withTempHome,
-} from "./reply.triggers.trigger-handling.test-harness.js";
+} from './reply.triggers.trigger-handling.test-harness';
 
-let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
+let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import("./reply.js"));
+  ({ getReplyFromConfig } = await import('./reply'));
 });
 
 installTriggerHandlingE2eTestHooks();

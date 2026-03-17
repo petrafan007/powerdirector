@@ -1,8 +1,8 @@
-import { listChannelPluginCatalogEntries } from "../channels/plugins/catalog.js";
-import { listChannelPlugins } from "../channels/plugins/index.js";
-import { CHAT_CHANNEL_ORDER } from "../channels/registry.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import { ensurePluginRegistryLoaded } from "./plugin-registry.js";
+import { listChannelPluginCatalogEntries } from '../channels/plugins/catalog';
+import { listChannelPlugins } from '../channels/plugins/index';
+import { CHAT_CHANNEL_ORDER } from '../channels/registry';
+import { isTruthyEnvValue } from '../infra/env';
+import { ensurePluginRegistryLoaded } from './plugin-registry';
 
 function dedupe(values: string[]): string[] {
   const seen = new Set<string>();

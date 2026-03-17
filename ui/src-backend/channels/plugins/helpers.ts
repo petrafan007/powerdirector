@@ -1,7 +1,7 @@
-import { formatCliCommand } from "../../cli/command-format.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key.js";
-import type { ChannelPlugin } from "./types.js";
+import { formatCliCommand } from '../../cli/command-format';
+import type { PowerDirectorConfig } from '../../config/config';
+import { DEFAULT_ACCOUNT_ID } from '../../routing/session-key';
+import type { ChannelPlugin } from './types';
 
 // Channel docking helper: use this when selecting the default account for a plugin.
 export function resolveChannelDefaultAccountId<ResolvedAccount>(params: {

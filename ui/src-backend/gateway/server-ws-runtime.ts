@@ -1,10 +1,10 @@
 import type { WebSocketServer } from "ws";
-import type { createSubsystemLogger } from "../logging/subsystem.js";
-import type { AuthRateLimiter } from "./auth-rate-limit.js";
-import type { ResolvedGatewayAuth } from "./auth.js";
-import type { GatewayRequestContext, GatewayRequestHandlers } from "./server-methods/types.js";
-import { attachGatewayWsConnectionHandler } from "./server/ws-connection.js";
-import type { GatewayWsClient } from "./server/ws-types.js";
+import type { createSubsystemLogger } from '../logging/subsystem';
+import type { AuthRateLimiter } from './auth-rate-limit';
+import type { ResolvedGatewayAuth } from './auth';
+import type { GatewayRequestContext, GatewayRequestHandlers } from './server-methods/types';
+import { attachGatewayWsConnectionHandler } from './server/ws-connection';
+import type { GatewayWsClient } from './server/ws-types';
 
 export function attachGatewayWsHandlers(params: {
   wss: WebSocketServer;

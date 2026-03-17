@@ -5,10 +5,10 @@ import { request as httpRequest } from "node:http";
 import { request as httpsRequest } from "node:https";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
-import { SafeOpenError, readLocalFileSafely } from "../infra/fs-safe.js";
-import { resolvePinnedHostname } from "../infra/net/ssrf.js";
-import { resolveConfigDir } from "../utils.js";
-import { detectMime, extensionForMime } from "./mime.js";
+import { SafeOpenError, readLocalFileSafely } from '../infra/fs-safe';
+import { resolvePinnedHostname } from '../infra/net/ssrf';
+import { resolveConfigDir } from '../utils';
+import { detectMime, extensionForMime } from './mime';
 
 const resolveMediaDir = () => path.join(resolveConfigDir(), "media");
 export const MEDIA_MAX_BYTES = 5 * 1024 * 1024; // 5MB default

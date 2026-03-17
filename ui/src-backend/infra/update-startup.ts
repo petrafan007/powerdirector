@@ -1,19 +1,19 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { formatCliCommand } from "../cli/command-format.js";
-import type { loadConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
-import { runCommandWithTimeout } from "../process/exec.js";
-import { VERSION } from "../version.js";
-import { resolvePowerDirectorPackageRoot } from "./powerdirector-root.js";
-import { normalizeVersionTag, resolveGitChannelRelease } from "./update-git-channel.js";
-import { normalizeUpdateChannel, DEFAULT_PACKAGE_CHANNEL } from "./update-channels.js";
+import { formatCliCommand } from '../cli/command-format';
+import type { loadConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
+import { runCommandWithTimeout } from '../process/exec';
+import { VERSION } from '../version';
+import { resolvePowerDirectorPackageRoot } from './powerdirector-root';
+import { normalizeVersionTag, resolveGitChannelRelease } from './update-git-channel';
+import { normalizeUpdateChannel, DEFAULT_PACKAGE_CHANNEL } from './update-channels';
 import {
   compareSemverStrings,
   resolveNpmChannelTag,
   checkUpdateStatus,
   type UpdateCheckResult,
-} from "./update-check.js";
+} from './update-check';
 
 type UpdateCheckState = {
   lastCheckedAt?: string;

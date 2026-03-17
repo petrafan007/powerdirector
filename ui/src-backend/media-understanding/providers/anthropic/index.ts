@@ -1,5 +1,5 @@
-import type { MediaUnderstandingProvider } from "../../types.js";
-import { describeImageWithModel } from "../image.js";
+import type { MediaUnderstandingProvider } from '../../types';
+import { describeImageWithModel } from '../image';
 
 export const anthropicProvider: MediaUnderstandingProvider = {
   id: "anthropic",

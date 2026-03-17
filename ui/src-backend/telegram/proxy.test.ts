@@ -26,7 +26,7 @@ vi.mock("undici", () => ({
   fetch: undiciFetch,
 }));
 
-import { makeProxyFetch } from "./proxy.js";
+import { makeProxyFetch } from './proxy';
 
 describe("makeProxyFetch", () => {
   it("uses undici fetch with ProxyAgent dispatcher", async () => {

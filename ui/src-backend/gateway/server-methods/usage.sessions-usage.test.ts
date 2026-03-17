@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { captureEnv } from "../../test-utils/env.js";
+import { captureEnv } from '../../test-utils/env';
 
 vi.mock("../../config/config.js", () => {
   return {
@@ -16,7 +16,7 @@ vi.mock("../../config/config.js", () => {
 });
 
 vi.mock("../session-utils.js", async () => {
-  const actual = await vi.importActual<typeof import("../session-utils.js")>("../session-utils.js");
+  const actual = await vi.importActual<typeof import('../session-utils')>("../session-utils.js");
   return {
     ...actual,
     loadCombinedSessionStoreForGateway: vi.fn(() => ({ storePath: "(multiple)", store: {} })),
@@ -24,7 +24,7 @@ vi.mock("../session-utils.js", async () => {
 });
 
 vi.mock("../../infra/session-cost-usage.js", async () => {
-  const actual = await vi.importActual<typeof import("../../infra/session-cost-usage.js")>(
+  const actual = await vi.importActual<typeof import('../../infra/session-cost-usage')>(
     "../../infra/session-cost-usage.js",
   );
   return {
@@ -78,9 +78,9 @@ import {
   loadSessionCostSummary,
   loadSessionLogs,
   loadSessionUsageTimeSeries,
-} from "../../infra/session-cost-usage.js";
-import { loadCombinedSessionStoreForGateway } from "../session-utils.js";
-import { usageHandlers } from "./usage.js";
+} from '../../infra/session-cost-usage';
+import { loadCombinedSessionStoreForGateway } from '../session-utils';
+import { usageHandlers } from './usage';
 
 async function runSessionsUsage(params: Record<string, unknown>) {
   const respond = vi.fn();

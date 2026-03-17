@@ -1,6 +1,6 @@
-import type { BaseTokenResolution } from "../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
+import type { BaseTokenResolution } from '../channels/plugins/types';
+import type { PowerDirectorConfig } from '../config/config';
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../routing/session-key';
 
 export type DiscordTokenSource = "env" | "config" | "none";
 

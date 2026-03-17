@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { loadConfig, validateConfigObject } from "./config.js";
-import { withTempHome } from "./test-helpers.js";
+import { loadConfig, validateConfigObject } from './config';
+import { withTempHome } from './test-helpers';
 
 describe("multi-agent agentDir validation", () => {
   it("rejects shared agents.list agentDir", async () => {

@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { MsgContext } from "../templating.js";
-import type { HandleCommandsParams } from "./commands-types.js";
-import { buildCommandContext } from "./commands.js";
-import { parseInlineDirectives } from "./directive-handling.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import type { MsgContext } from '../templating';
+import type { HandleCommandsParams } from './commands-types';
+import { buildCommandContext } from './commands';
+import { parseInlineDirectives } from './directive-handling';
 
 export function buildCommandTestParams(
   commandBody: string,

@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { captureEnv } from "../test-utils/env.js";
+import { captureEnv } from '../test-utils/env';
 import {
   type AuthProfileStore,
   ensureAuthProfileStore,
   resolveApiKeyForProfile,
-} from "./auth-profiles.js";
-import { CHUTES_TOKEN_ENDPOINT } from "./chutes-oauth.js";
+} from './auth-profiles';
+import { CHUTES_TOKEN_ENDPOINT } from './chutes-oauth';
 
 describe("auth-profiles (chutes)", () => {
   let envSnapshot: ReturnType<typeof captureEnv> | undefined;

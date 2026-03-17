@@ -2,7 +2,7 @@ import {
   resolvePinnedHostnameWithPolicy,
   type LookupFn,
   type SsrFPolicy,
-} from "../infra/net/ssrf.js";
+} from '../infra/net/ssrf';
 
 const NETWORK_NAVIGATION_PROTOCOLS = new Set(["http:", "https:"]);
 

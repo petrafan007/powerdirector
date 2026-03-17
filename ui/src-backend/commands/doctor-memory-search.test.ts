@@ -1,6 +1,6 @@
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 
 const note = vi.hoisted(() => vi.fn());
 const resolveDefaultAgentId = vi.hoisted(() => vi.fn(() => "agent-default"));
@@ -30,8 +30,8 @@ vi.mock("../memory/backend-config.js", () => ({
   resolveMemoryBackendConfig,
 }));
 
-import { noteMemorySearchHealth } from "./doctor-memory-search.js";
-import { detectLegacyWorkspaceDirs } from "./doctor-workspace.js";
+import { noteMemorySearchHealth } from './doctor-memory-search';
+import { detectLegacyWorkspaceDirs } from './doctor-workspace';
 
 describe("noteMemorySearchHealth", () => {
   const cfg = {} as PowerDirectorConfig;

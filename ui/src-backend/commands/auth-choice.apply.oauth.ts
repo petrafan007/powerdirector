@@ -1,9 +1,9 @@
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { loginChutes } from "./chutes-oauth.js";
-import { isRemoteEnvironment } from "./oauth-env.js";
-import { createVpsAwareOAuthHandlers } from "./oauth-flow.js";
-import { applyAuthProfileConfig, writeOAuthCredentials } from "./onboard-auth.js";
-import { openUrl } from "./onboard-helpers.js";
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
+import { loginChutes } from './chutes-oauth';
+import { isRemoteEnvironment } from './oauth-env';
+import { createVpsAwareOAuthHandlers } from './oauth-flow';
+import { applyAuthProfileConfig, writeOAuthCredentials } from './onboard-auth';
+import { openUrl } from './onboard-helpers';
 
 export async function applyAuthChoiceOAuth(
   params: ApplyAuthChoiceParams,

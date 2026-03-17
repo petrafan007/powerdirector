@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { createTempHomeHarness, makeReplyConfig } from "./reply.test-harness.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { createTempHomeHarness, makeReplyConfig } from './reply.test-harness';
 
 const agentMocks = vi.hoisted(() => ({
   runEmbeddedPiAgent: vi.fn(),
@@ -29,7 +29,7 @@ vi.mock("../web/session.js", () => ({
   readWebSelfId: agentMocks.readWebSelfId,
 }));
 
-import { getReplyFromConfig } from "./reply.js";
+import { getReplyFromConfig } from './reply';
 
 const { withTempHome } = createTempHomeHarness({ prefix: "powerdirector-rawbody-" });
 

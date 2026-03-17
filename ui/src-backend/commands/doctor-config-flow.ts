@@ -4,23 +4,23 @@ import type { ZodIssue } from "zod";
 import {
   isNumericTelegramUserId,
   normalizeTelegramAllowFromEntry,
-} from "../channels/telegram/allow-from.js";
-import { fetchTelegramChatId } from "../channels/telegram/api.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+} from '../channels/telegram/allow-from';
+import { fetchTelegramChatId } from '../channels/telegram/api';
+import { formatCliCommand } from '../cli/command-format';
+import type { PowerDirectorConfig } from '../config/config';
 import {
   PowerDirectorSchema,
   CONFIG_PATH,
   migrateLegacyConfig,
   readConfigFileSnapshot,
-} from "../config/config.js";
-import { applyPluginAutoEnable } from "../config/plugin-auto-enable.js";
-import { listTelegramAccountIds, resolveTelegramAccount } from "../telegram/accounts.js";
-import { note } from "../terminal/note.js";
-import { isRecord, resolveHomeDir } from "../utils.js";
-import { normalizeLegacyConfigValues } from "./doctor-legacy-config.js";
-import type { DoctorOptions } from "./doctor-prompter.js";
-import { autoMigrateLegacyStateDir } from "./doctor-state-migrations.js";
+} from '../config/config';
+import { applyPluginAutoEnable } from '../config/plugin-auto-enable';
+import { listTelegramAccountIds, resolveTelegramAccount } from '../telegram/accounts';
+import { note } from '../terminal/note';
+import { isRecord, resolveHomeDir } from '../utils';
+import { normalizeLegacyConfigValues } from './doctor-legacy-config';
+import type { DoctorOptions } from './doctor-prompter';
+import { autoMigrateLegacyStateDir } from './doctor-state-migrations';
 
 type UnrecognizedKeysIssue = ZodIssue & {
   code: "unrecognized_keys";
@@ -770,6 +770,14 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
   }
 
   let snapshot = await readConfigFileSnapshot();
+  const isUpdate = process.env.POWERDIRECTOR_UPDATE_IN_PROGRESS === "1";
+
+  if (!snapshot.exists && isUpdate) {
+    throw new Error(
+      "Config file missing during update. Aborting doctor to prevent overwriting with default template.",
+    );
+  }
+
   const baseCfg = snapshot.config ?? {};
   let cfg: PowerDirectorConfig = baseCfg;
   let candidate = structuredClone(baseCfg);

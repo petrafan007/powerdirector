@@ -4,8 +4,8 @@
  * Tests the hook runner methods directly since outbound delivery is deeply integrated.
  */
 import { describe, expect, it, vi } from "vitest";
-import { createHookRunner } from "./hooks.js";
-import { createMockPluginRegistry } from "./hooks.test-helpers.js";
+import { createHookRunner } from './hooks';
+import { createMockPluginRegistry } from './hooks.test-helpers';
 
 describe("message_sending hook runner", () => {
   it("runMessageSending invokes registered hooks and returns modified content", async () => {

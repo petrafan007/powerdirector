@@ -6,7 +6,7 @@ import {
   packNpmSpecToArchive,
   resolveArchiveSourcePath,
   withTempDir,
-} from "./install-source-utils.js";
+} from './install-source-utils';
 
 const runCommandWithTimeoutMock = vi.fn();
 

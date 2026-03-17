@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getRuntimeLogger } from "../core/logger.js";
-import { resolveStateDir } from "../config/paths.js";
-import type { loadConfig } from "../config/config.js";
-import { scheduleGatewaySigusr1Restart } from "./restart.js";
-import { runGatewayUpdateCheck, getUpdateAvailable } from "./update-startup.js";
-import { runGatewayUpdate, type UpdateRunResult } from "./update-runner.js";
+import { getRuntimeLogger } from '../core/logger';
+import { resolveStateDir } from '../config/paths';
+import type { loadConfig } from '../config/config';
+import { scheduleGatewaySigusr1Restart } from './restart';
+import { runGatewayUpdateCheck, getUpdateAvailable } from './update-startup';
+import { runGatewayUpdate, type UpdateRunResult } from './update-runner';
 
 const DAEMON_STATE_FILE = "update-daemon.json";
 

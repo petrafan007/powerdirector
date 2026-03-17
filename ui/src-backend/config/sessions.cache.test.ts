@@ -7,7 +7,7 @@ import {
   loadSessionStore,
   type SessionEntry,
   saveSessionStore,
-} from "./sessions.js";
+} from './sessions';
 
 describe("Session Store Cache", () => {
   let fixtureRoot = "";

@@ -3,43 +3,43 @@ import { apiThrottler } from "@grammyjs/transformer-throttler";
 import { type Message, type UserFromGetMe } from "@grammyjs/types";
 import type { ApiClientOptions } from "grammy";
 import { Bot, webhookCallback } from "grammy";
-import { resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { resolveTextChunkLimit } from "../auto-reply/chunk.js";
-import { isAbortRequestText } from "../auto-reply/reply/abort.js";
-import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "../auto-reply/reply/history.js";
+import { resolveDefaultAgentId } from '../agents/agent-scope';
+import { resolveTextChunkLimit } from '../auto-reply/chunk';
+import { isAbortRequestText } from '../auto-reply/reply/abort';
+import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from '../auto-reply/reply/history';
 import {
   isNativeCommandsExplicitlyDisabled,
   resolveNativeCommandsEnabled,
   resolveNativeSkillsEnabled,
-} from "../config/commands.js";
-import type { PowerDirectorConfig, ReplyToMode } from "../config/config.js";
-import { loadConfig } from "../config/config.js";
+} from '../config/commands';
+import type { PowerDirectorConfig, ReplyToMode } from '../config/config';
+import { loadConfig } from '../config/config';
 import {
   resolveChannelGroupPolicy,
   resolveChannelGroupRequireMention,
-} from "../config/group-policy.js";
-import { loadSessionStore, resolveStorePath } from "../config/sessions.js";
-import { danger, logVerbose, shouldLogVerbose } from "../globals.js";
-import { formatUncaughtError } from "../infra/errors.js";
-import { getChildLogger } from "../logging.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { resolveTelegramAccount } from "./accounts.js";
-import { registerTelegramHandlers } from "./bot-handlers.js";
-import { createTelegramMessageProcessor } from "./bot-message.js";
-import { registerTelegramNativeCommands } from "./bot-native-commands.js";
+} from '../config/group-policy';
+import { loadSessionStore, resolveStorePath } from '../config/sessions';
+import { danger, logVerbose, shouldLogVerbose } from '../globals';
+import { formatUncaughtError } from '../infra/errors';
+import { getChildLogger } from '../logging';
+import { createSubsystemLogger } from '../logging/subsystem';
+import type { RuntimeEnv } from '../runtime';
+import { resolveTelegramAccount } from './accounts';
+import { registerTelegramHandlers } from './bot-handlers';
+import { createTelegramMessageProcessor } from './bot-message';
+import { registerTelegramNativeCommands } from './bot-native-commands';
 import {
   buildTelegramUpdateKey,
   createTelegramUpdateDedupe,
   resolveTelegramUpdateId,
   type TelegramUpdateKeyContext,
-} from "./bot-updates.js";
+} from './bot-updates';
 import {
   buildTelegramGroupPeerId,
   resolveTelegramForumThreadId,
   resolveTelegramStreamMode,
-} from "./bot/helpers.js";
-import { resolveTelegramFetch } from "./fetch.js";
+} from './bot/helpers';
+import { resolveTelegramFetch } from './fetch';
 
 export type TelegramBotOptions = {
   token: string;

@@ -23,7 +23,7 @@ export {
   collectSmallModelRiskFindings,
   collectSyncedFolderFindings,
   type SecurityAuditFinding,
-} from "./audit-extra.sync.js";
+} from './audit-extra.sync';
 
 // Async collectors
 export {
@@ -33,4 +33,4 @@ export {
   collectPluginsTrustFindings,
   collectStateDeepFilesystemFindings,
   readConfigSnapshotForAudit,
-} from "./audit-extra.async.js";
+} from './audit-extra.async';

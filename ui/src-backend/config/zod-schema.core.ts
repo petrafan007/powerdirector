@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { isSafeExecutableValue } from "../infra/exec-safety.js";
-import { createAllowDenyChannelRulesSchema } from "./zod-schema.allowdeny.js";
-import { sensitive } from "./zod-schema.sensitive.js";
+import { isSafeExecutableValue } from '../infra/exec-safety';
+import { createAllowDenyChannelRulesSchema } from './zod-schema.allowdeny';
+import { sensitive } from './zod-schema.sensitive';
 
 export const ModelApiSchema = z.union([
   z.literal("openai-completions"),

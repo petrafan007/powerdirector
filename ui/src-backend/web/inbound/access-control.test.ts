@@ -4,11 +4,11 @@ import {
   setAccessControlTestConfig,
   setupAccessControlTestHarness,
   upsertPairingRequestMock,
-} from "./access-control.test-harness.js";
+} from './access-control.test-harness';
 
 setupAccessControlTestHarness();
 
-const { checkInboundAccessControl } = await import("./access-control.js");
+const { checkInboundAccessControl } = await import('./access-control');
 
 async function checkUnauthorizedWorkDmSender() {
   return checkInboundAccessControl({

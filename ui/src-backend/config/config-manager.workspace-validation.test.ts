@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { ConfigManager } from "./config-manager.js";
+import { ConfigManager } from './config-manager';
 
 const originalCwd = process.cwd();
 

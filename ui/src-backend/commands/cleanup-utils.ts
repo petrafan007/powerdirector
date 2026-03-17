@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveDefaultAgentWorkspaceDir } from "../agents/workspace.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { resolveHomeDir, resolveUserPath, shortenHomeInString } from "../utils.js";
+import { resolveDefaultAgentWorkspaceDir } from '../agents/workspace';
+import type { PowerDirectorConfig } from '../config/config';
+import type { RuntimeEnv } from '../runtime';
+import { resolveHomeDir, resolveUserPath, shortenHomeInString } from '../utils';
 
 export type RemovalResult = {
   ok: boolean;

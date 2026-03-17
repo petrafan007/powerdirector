@@ -88,7 +88,7 @@ vi.mock("../../agents/agent-scope.js", () => ({
 }));
 
 vi.mock("../../agents/auth-profiles.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../agents/auth-profiles.js")>();
+  const actual = await importOriginal<typeof import('../../agents/auth-profiles')>();
   return {
     ...actual,
     ensureAuthProfileStore: mocks.ensureAuthProfileStore,
@@ -109,14 +109,14 @@ vi.mock("../../infra/shell-env.js", () => ({
 }));
 
 vi.mock("../../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../config/config.js")>();
+  const actual = await importOriginal<typeof import('../../config/config')>();
   return {
     ...actual,
     loadConfig: mocks.loadConfig,
   };
 });
 
-import { modelsStatusCommand } from "./list.status-command.js";
+import { modelsStatusCommand } from './list.status-command';
 
 const runtime = {
   log: vi.fn(),

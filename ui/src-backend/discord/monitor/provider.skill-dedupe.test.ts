@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { __testing } from "./provider.js";
+import { __testing } from './provider';
 
 describe("dedupeSkillCommandsForDiscord", () => {
   it("keeps first command per skillName and drops suffix duplicates", () => {

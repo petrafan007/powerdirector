@@ -12,12 +12,12 @@ import {
   runtime,
   setupCommand,
   statusCommand,
-} from "./program.test-mocks.js";
+} from './program.test-mocks';
 
 installBaseProgramMocks();
 installSmokeProgramMocks();
 
-const { buildProgram } = await import("./program.js");
+const { buildProgram } = await import('./program');
 
 describe("cli program (smoke)", () => {
   function createProgram() {

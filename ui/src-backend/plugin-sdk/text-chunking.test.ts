@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chunkTextForOutbound } from "./text-chunking.js";
+import { chunkTextForOutbound } from './text-chunking';
 
 describe("chunkTextForOutbound", () => {
   it("returns empty for empty input", () => {

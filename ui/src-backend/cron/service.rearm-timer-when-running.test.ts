@@ -3,9 +3,9 @@ import {
   createCronStoreHarness,
   createNoopLogger,
   createRunningCronServiceState,
-} from "./service.test-harness.js";
-import { onTimer } from "./service/timer.js";
-import type { CronJob } from "./types.js";
+} from './service.test-harness';
+import { onTimer } from './service/timer';
+import type { CronJob } from './types';
 
 const noopLogger = createNoopLogger();
 const { makeStorePath } = createCronStoreHarness();

@@ -1,5 +1,5 @@
 import type { Skill } from "@mariozechner/pi-coding-agent";
-import { parseFrontmatterBlock } from "../../markdown/frontmatter.js";
+import { parseFrontmatterBlock } from '../../markdown/frontmatter';
 import {
   getFrontmatterString,
   normalizeStringList,
@@ -9,14 +9,14 @@ import {
   resolvePowerDirectorManifestInstall,
   resolvePowerDirectorManifestOs,
   resolvePowerDirectorManifestRequires,
-} from "../../shared/frontmatter.js";
+} from '../../shared/frontmatter';
 import type {
   PowerDirectorSkillMetadata,
   ParsedSkillFrontmatter,
   SkillEntry,
   SkillInstallSpec,
   SkillInvocationPolicy,
-} from "./types.js";
+} from './types';
 
 export function parseFrontmatter(content: string): ParsedSkillFrontmatter {
   return parseFrontmatterBlock(content);

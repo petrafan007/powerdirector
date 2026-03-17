@@ -6,11 +6,11 @@ import {
   makeCfg,
   runGreetingPromptForBareNewOrReset,
   withTempHome,
-} from "./reply.triggers.trigger-handling.test-harness.js";
+} from './reply.triggers.trigger-handling.test-harness';
 
-let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
+let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import("./reply.js"));
+  ({ getReplyFromConfig } = await import('./reply'));
 });
 
 installTriggerHandlingE2eTestHooks();

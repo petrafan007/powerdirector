@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createStubSessionHarness,
   emitAssistantTextDelta,
-} from "./pi-embedded-subscribe.e2e-harness.js";
-import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
+} from './pi-embedded-subscribe.e2e-harness';
+import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
 
 describe("subscribeEmbeddedPiSession thinking tag code span awareness", () => {
   function createPartialReplyHarness() {

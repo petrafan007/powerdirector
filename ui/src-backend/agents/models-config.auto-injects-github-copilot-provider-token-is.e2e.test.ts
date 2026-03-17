@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { captureEnv } from "../test-utils/env.js";
+import { captureEnv } from '../test-utils/env';
 import {
   installModelsConfigTestHooks,
   mockCopilotTokenExchangeSuccess,
   withCopilotGithubToken,
   withModelsTempHome as withTempHome,
-} from "./models-config.e2e-harness.js";
-import { ensurePowerDirectorModelsJson } from "./models-config.js";
+} from './models-config.e2e-harness';
+import { ensurePowerDirectorModelsJson } from './models-config';
 
 installModelsConfigTestHooks({ restoreFetch: true });
 

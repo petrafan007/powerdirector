@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import * as helpers from "./pi-embedded-helpers.js";
+import * as helpers from './pi-embedded-helpers';
 import {
   expectGoogleModelApiFullSanitizeCall,
   loadSanitizeSessionHistoryWithCleanMocks,
@@ -7,7 +7,7 @@ import {
   makeSimpleUserMessages,
   makeSnapshotChangedOpenAIReasoningScenario,
   sanitizeWithOpenAIResponses,
-} from "./pi-embedded-runner.sanitize-session-history.test-harness.js";
+} from './pi-embedded-runner.sanitize-session-history.test-harness';
 
 type SanitizeSessionHistory = Awaited<ReturnType<typeof loadSanitizeSessionHistoryWithCleanMocks>>;
 let sanitizeSessionHistory: SanitizeSessionHistory;

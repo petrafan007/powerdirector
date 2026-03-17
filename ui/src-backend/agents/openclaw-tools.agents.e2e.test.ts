@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-let configOverride: ReturnType<(typeof import("../config/config.js"))["loadConfig"]> = {
+let configOverride: ReturnType<(typeof import('../config/config'))["loadConfig"]> = {
   session: {
     mainKey: "main",
     scope: "per-sender",
@@ -8,7 +8,7 @@ let configOverride: ReturnType<(typeof import("../config/config.js"))["loadConfi
 };
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => configOverride,
@@ -17,7 +17,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 });
 
 import "./test-helpers/fast-core-tools.js";
-import { createPowerDirectorTools } from "./powerdirector-tools.js";
+import { createPowerDirectorTools } from './powerdirector-tools';
 
 describe("agents_list", () => {
   beforeEach(() => {

@@ -4,8 +4,8 @@ import {
   createParagraphChunkedBlockReplyHarness,
   emitAssistantTextDeltaAndEnd,
   expectFencedChunks,
-} from "./pi-embedded-subscribe.e2e-harness.js";
-import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
+} from './pi-embedded-subscribe.e2e-harness';
+import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
 
 type SessionEventHandler = (evt: unknown) => void;
 

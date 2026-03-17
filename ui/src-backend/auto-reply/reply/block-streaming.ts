@@ -1,13 +1,13 @@
-import { getChannelDock } from "../../channels/dock.js";
-import { normalizeChannelId } from "../../channels/plugins/index.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { BlockStreamingCoalesceConfig } from "../../config/types.js";
-import { normalizeAccountId } from "../../routing/session-key.js";
+import { getChannelDock } from '../../channels/dock';
+import { normalizeChannelId } from '../../channels/plugins/index';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { BlockStreamingCoalesceConfig } from '../../config/types';
+import { normalizeAccountId } from '../../routing/session-key';
 import {
   INTERNAL_MESSAGE_CHANNEL,
   listDeliverableMessageChannels,
-} from "../../utils/message-channel.js";
-import { resolveChunkMode, resolveTextChunkLimit, type TextChunkProvider } from "../chunk.js";
+} from '../../utils/message-channel';
+import { resolveChunkMode, resolveTextChunkLimit, type TextChunkProvider } from '../chunk';
 
 const DEFAULT_BLOCK_STREAM_MIN = 800;
 const DEFAULT_BLOCK_STREAM_MAX = 1200;

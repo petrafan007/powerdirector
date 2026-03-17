@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, vi } from "vitest";
-import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { MockFn } from "../test-utils/vitest-mock-fn.js";
+import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
+import type { PowerDirectorConfig } from '../config/config';
+import type { MockFn } from '../test-utils/vitest-mock-fn';
 
 export async function withModelsTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   return withTempHomeBase(fn, { prefix: "powerdirector-models-" });

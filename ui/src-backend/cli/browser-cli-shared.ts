@@ -1,5 +1,5 @@
-import type { GatewayRpcOpts } from "./gateway-rpc.js";
-import { callGatewayFromCli } from "./gateway-rpc.js";
+import type { GatewayRpcOpts } from './gateway-rpc';
+import { callGatewayFromCli } from './gateway-rpc';
 
 export type BrowserParentOpts = GatewayRpcOpts & {
   json?: boolean;

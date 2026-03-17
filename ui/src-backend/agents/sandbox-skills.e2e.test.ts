@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { captureFullEnv } from "../test-utils/env.js";
-import { resolveSandboxContext } from "./sandbox.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { captureFullEnv } from '../test-utils/env';
+import { resolveSandboxContext } from './sandbox';
 
 vi.mock("./sandbox/docker.js", () => ({
   ensureSandboxContainer: vi.fn(async () => "powerdirector-sbx-test"),

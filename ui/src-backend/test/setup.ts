@@ -16,10 +16,10 @@ import type {
   ChannelId,
   ChannelOutboundAdapter,
   ChannelPlugin,
-} from "../src/channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../src/config/config.js";
-import type { OutboundSendDeps } from "../src/infra/outbound/deliver.js";
-import { withIsolatedTestHome } from "./test-env.js";
+} from '../src/channels/plugins/types';
+import type { PowerDirectorConfig } from '../src/config/config';
+import type { OutboundSendDeps } from '../src/infra/outbound/deliver';
+import { withIsolatedTestHome } from './test-env';
 
 // Set HOME/state isolation before importing any runtime PowerDirector modules.
 const testEnv = withIsolatedTestHome();
@@ -27,9 +27,9 @@ afterAll(() => testEnv.cleanup());
 
 const [{ installProcessWarningFilter }, { setActivePluginRegistry }, { createTestRegistry }] =
   await Promise.all([
-    import("../src/infra/warning-filter.js"),
-    import("../src/plugins/runtime.js"),
-    import("../src/test-utils/channel-plugins.js"),
+    import('../src/infra/warning-filter'),
+    import('../src/plugins/runtime'),
+    import('../src/test-utils/channel-plugins'),
   ]);
 
 installProcessWarningFilter();

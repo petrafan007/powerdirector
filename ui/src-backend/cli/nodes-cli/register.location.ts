@@ -1,9 +1,9 @@
 import type { Command } from "commander";
-import { randomIdempotencyKey } from "../../gateway/call.js";
-import { defaultRuntime } from "../../runtime.js";
-import { runNodesCommand } from "./cli-utils.js";
-import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc.js";
-import type { NodesRpcOpts } from "./types.js";
+import { randomIdempotencyKey } from '../../gateway/call';
+import { defaultRuntime } from '../../runtime';
+import { runNodesCommand } from './cli-utils';
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
+import type { NodesRpcOpts } from './types';
 
 export function registerNodesLocationCommands(nodes: Command) {
   const location = nodes.command("location").description("Fetch location from a paired node");

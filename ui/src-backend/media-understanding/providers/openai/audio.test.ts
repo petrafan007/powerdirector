@@ -3,8 +3,8 @@ import {
   createAuthCaptureJsonFetch,
   createRequestCaptureJsonFetch,
   installPinnedHostnameTestHooks,
-} from "../audio.test-helpers.js";
-import { transcribeOpenAiCompatibleAudio } from "./audio.js";
+} from '../audio.test-helpers';
+import { transcribeOpenAiCompatibleAudio } from './audio';
 
 installPinnedHostnameTestHooks();
 

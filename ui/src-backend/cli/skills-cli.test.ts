@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import type { SkillStatusEntry, SkillStatusReport } from "../agents/skills-status.js";
-import { createEmptyInstallChecks } from "./requirements-test-fixtures.js";
-import { formatSkillInfo, formatSkillsCheck, formatSkillsList } from "./skills-cli.format.js";
+import type { SkillStatusEntry, SkillStatusReport } from '../agents/skills-status';
+import { createEmptyInstallChecks } from './requirements-test-fixtures';
+import { formatSkillInfo, formatSkillsCheck, formatSkillsList } from './skills-cli.format';
 
 // Unit tests: don't pay the runtime cost of loading/parsing the real skills loader.
 vi.mock("@mariozechner/pi-coding-agent", () => ({

@@ -3,7 +3,7 @@ export type {
   SessionAccessAction,
   SessionAccessResult,
   SessionToolsVisibility,
-} from "./sessions-access.js";
+} from './sessions-access';
 export {
   createAgentToAgentPolicy,
   createSessionVisibilityGuard,
@@ -11,8 +11,8 @@ export {
   resolveSandboxSessionToolsVisibility,
   resolveSandboxedSessionToolContext,
   resolveSessionToolsVisibility,
-} from "./sessions-access.js";
-export type { SessionReferenceResolution } from "./sessions-resolution.js";
+} from './sessions-access';
+export type { SessionReferenceResolution } from './sessions-resolution';
 export {
   isRequesterSpawnedSessionVisible,
   listSpawnedSessionKeys,
@@ -23,14 +23,14 @@ export {
   resolveMainSessionAlias,
   resolveSessionReference,
   shouldResolveSessionIdInput,
-} from "./sessions-resolution.js";
-import { extractTextFromChatContent } from "../../shared/chat-content.js";
-import { sanitizeUserFacingText } from "../pi-embedded-helpers.js";
+} from './sessions-resolution';
+import { extractTextFromChatContent } from '../../shared/chat-content';
+import { sanitizeUserFacingText } from '../pi-embedded-helpers';
 import {
   stripDowngradedToolCallText,
   stripMinimaxToolCallXml,
   stripThinkingTagsFromText,
-} from "../pi-embedded-utils.js";
+} from '../pi-embedded-utils';
 
 export type SessionKind = "main" | "group" | "cron" | "hook" | "node" | "other";
 

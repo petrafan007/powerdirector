@@ -1,5 +1,5 @@
 import { beforeEach, vi } from "vitest";
-import type { MockFn } from "../test-utils/vitest-mock-fn.js";
+import type { MockFn } from '../test-utils/vitest-mock-fn';
 
 const { botApi, botCtorSpy } = vi.hoisted(() => ({
   botApi: {
@@ -55,7 +55,7 @@ vi.mock("grammy", () => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig,
@@ -78,5 +78,5 @@ export function installTelegramSendTestHooks() {
 }
 
 export async function importTelegramSendModule() {
-  return await import("./send.js");
+  return await import('./send');
 }

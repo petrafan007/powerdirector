@@ -1,27 +1,27 @@
 import crypto from "node:crypto";
-import { resolveSessionAuthProfileOverride } from "../../agents/auth-profiles/session-override.js";
-import type { ExecToolDefaults } from "../../agents/bash-tools.js";
+import { resolveSessionAuthProfileOverride } from '../../agents/auth-profiles/session-override';
+import type { ExecToolDefaults } from '../../agents/bash-tools';
 import {
   abortEmbeddedPiRun,
   isEmbeddedPiRunActive,
   isEmbeddedPiRunStreaming,
   resolveEmbeddedSessionLane,
-} from "../../agents/pi-embedded.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../agents/pi-embedded';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   resolveGroupSessionKey,
   resolveSessionFilePath,
   resolveSessionFilePathOptions,
   type SessionEntry,
   updateSessionStore,
-} from "../../config/sessions.js";
-import { logVerbose } from "../../globals.js";
-import { clearCommandLane, getQueueSize } from "../../process/command-queue.js";
-import { normalizeMainKey } from "../../routing/session-key.js";
-import { isReasoningTagProvider } from "../../utils/provider-utils.js";
-import { hasControlCommand } from "../command-detection.js";
-import { buildInboundMediaNote } from "../media-note.js";
-import type { MsgContext, TemplateContext } from "../templating.js";
+} from '../../config/sessions';
+import { logVerbose } from '../../globals';
+import { clearCommandLane, getQueueSize } from '../../process/command-queue';
+import { normalizeMainKey } from '../../routing/session-key';
+import { isReasoningTagProvider } from '../../utils/provider-utils';
+import { hasControlCommand } from '../command-detection';
+import { buildInboundMediaNote } from '../media-note';
+import type { MsgContext, TemplateContext } from '../templating';
 import {
   type ElevatedLevel,
   formatXHighModelHint,
@@ -30,23 +30,23 @@ import {
   supportsXHighThinking,
   type ThinkLevel,
   type VerboseLevel,
-} from "../thinking.js";
-import { SILENT_REPLY_TOKEN } from "../tokens.js";
-import type { GetReplyOptions, ReplyPayload } from "../types.js";
-import { runReplyAgent } from "./agent-runner.js";
-import { applySessionHints } from "./body.js";
-import type { buildCommandContext } from "./commands.js";
-import type { InlineDirectives } from "./directive-handling.js";
-import { buildGroupChatContext, buildGroupIntro } from "./groups.js";
-import { buildInboundMetaSystemPrompt, buildInboundUserContextPrefix } from "./inbound-meta.js";
-import type { createModelSelectionState } from "./model-selection.js";
-import { resolveQueueSettings } from "./queue.js";
-import { routeReply } from "./route-reply.js";
-import { BARE_SESSION_RESET_PROMPT } from "./session-reset-prompt.js";
-import { ensureSkillSnapshot, prependSystemEvents } from "./session-updates.js";
-import { resolveTypingMode } from "./typing-mode.js";
-import type { TypingController } from "./typing.js";
-import { appendUntrustedContext } from "./untrusted-context.js";
+} from '../thinking';
+import { SILENT_REPLY_TOKEN } from '../tokens';
+import type { GetReplyOptions, ReplyPayload } from '../types';
+import { runReplyAgent } from './agent-runner';
+import { applySessionHints } from './body';
+import type { buildCommandContext } from './commands';
+import type { InlineDirectives } from './directive-handling';
+import { buildGroupChatContext, buildGroupIntro } from './groups';
+import { buildInboundMetaSystemPrompt, buildInboundUserContextPrefix } from './inbound-meta';
+import type { createModelSelectionState } from './model-selection';
+import { resolveQueueSettings } from './queue';
+import { routeReply } from './route-reply';
+import { BARE_SESSION_RESET_PROMPT } from './session-reset-prompt';
+import { ensureSkillSnapshot, prependSystemEvents } from './session-updates';
+import { resolveTypingMode } from './typing-mode';
+import type { TypingController } from './typing';
+import { appendUntrustedContext } from './untrusted-context';
 
 type AgentDefaults = NonNullable<PowerDirectorConfig["agents"]>["defaults"];
 type ExecOverrides = Pick<ExecToolDefaults, "host" | "security" | "ask" | "node">;

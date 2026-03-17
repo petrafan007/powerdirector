@@ -1,7 +1,7 @@
 import path from "node:path";
 import { z } from "zod";
-import { InstallRecordShape } from "./zod-schema.installs.js";
-import { sensitive } from "./zod-schema.sensitive.js";
+import { InstallRecordShape } from './zod-schema.installs';
+import { sensitive } from './zod-schema.sensitive';
 
 function isSafeRelativeModulePath(raw: string): boolean {
   const value = raw.trim();

@@ -2,9 +2,9 @@ import {
   enableSystemdUserLinger,
   isSystemdUserServiceAvailable,
   readSystemdUserLingerStatus,
-} from "../daemon/systemd.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { note } from "../terminal/note.js";
+} from '../daemon/systemd';
+import type { RuntimeEnv } from '../runtime';
+import { note } from '../terminal/note';
 
 export type LingerPrompter = {
   confirm?: (params: { message: string; initialValue?: boolean }) => Promise<boolean>;

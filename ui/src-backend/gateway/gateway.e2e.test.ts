@@ -3,16 +3,16 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { startGatewayServer } from "./server.js";
-import { extractPayloadText } from "./test-helpers.agent-results.js";
+import { startGatewayServer } from './server';
+import { extractPayloadText } from './test-helpers.agent-results';
 import {
   connectDeviceAuthReq,
   connectGatewayClient,
   getFreeGatewayPort,
   startGatewayWithClient,
-} from "./test-helpers.e2e.js";
-import { installOpenAiResponsesMock } from "./test-helpers.openai-mock.js";
-import { buildOpenAiResponsesProviderConfig } from "./test-openai-responses-model.js";
+} from './test-helpers.e2e';
+import { installOpenAiResponsesMock } from './test-helpers.openai-mock';
+import { buildOpenAiResponsesProviderConfig } from './test-openai-responses-model';
 
 describe("gateway e2e", () => {
   it(
@@ -154,7 +154,7 @@ describe("gateway e2e", () => {
         await prompter.intro("Wizard E2E");
         await prompter.note("write token");
         const token = await prompter.text({ message: "token" });
-        const { writeConfigFile } = await import("../config/config.js");
+        const { writeConfigFile } = await import('../config/config');
         await writeConfigFile({
           gateway: { auth: { mode: "token", token: String(token) } },
         });
@@ -202,7 +202,7 @@ describe("gateway e2e", () => {
       expect(didSendToken).toBe(true);
       expect(next.status).toBe("done");
 
-      const { resolveConfigPath } = await import("../config/config.js");
+      const { resolveConfigPath } = await import('../config/config');
       const parsed = JSON.parse(await fs.readFile(resolveConfigPath(), "utf8"));
       const token = (parsed as Record<string, unknown>)?.gateway as
         | Record<string, unknown>

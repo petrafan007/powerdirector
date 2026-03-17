@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   deriveCopilotApiBaseUrlFromToken,
   resolveCopilotApiToken,
-} from "./github-copilot-token.js";
+} from './github-copilot-token';
 
 describe("github-copilot token", () => {
   const loadJsonFile = vi.fn();
@@ -58,7 +58,7 @@ describe("github-copilot token", () => {
       }),
     });
 
-    const { resolveCopilotApiToken } = await import("./github-copilot-token.js");
+    const { resolveCopilotApiToken } = await import('./github-copilot-token');
 
     const res = await resolveCopilotApiToken({
       githubToken: "gh",

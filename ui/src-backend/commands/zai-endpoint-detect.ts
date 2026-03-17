@@ -1,10 +1,10 @@
-import { fetchWithTimeout } from "../utils/fetch-timeout.js";
+import { fetchWithTimeout } from '../utils/fetch-timeout';
 import {
   ZAI_CN_BASE_URL,
   ZAI_CODING_CN_BASE_URL,
   ZAI_CODING_GLOBAL_BASE_URL,
   ZAI_GLOBAL_BASE_URL,
-} from "./onboard-auth.models.js";
+} from './onboard-auth.models';
 
 export type ZaiEndpointId = "global" | "cn" | "coding-global" | "coding-cn";
 

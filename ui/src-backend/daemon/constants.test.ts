@@ -10,7 +10,7 @@ import {
   resolveGatewayServiceDescription,
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
-} from "./constants.js";
+} from './constants';
 
 describe("normalizeGatewayProfile", () => {
   it("returns null for empty/default profiles", () => {

@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import type { PluginRegistry } from "../plugins/registry.js";
-import { setActivePluginRegistry } from "../plugins/runtime.js";
+import type { PluginRegistry } from '../plugins/registry';
+import { setActivePluginRegistry } from '../plugins/runtime';
 
 export const registryState: { registry: PluginRegistry } = {
   registry: {
@@ -26,7 +26,7 @@ export function setRegistry(registry: PluginRegistry) {
 }
 
 vi.mock("./server-plugins.js", async () => {
-  const { setActivePluginRegistry } = await import("../plugins/runtime.js");
+  const { setActivePluginRegistry } = await import('../plugins/runtime');
   return {
     loadGatewayPlugins: (params: { baseMethods: string[] }) => {
       setActivePluginRegistry(registryState.registry);

@@ -1,9 +1,9 @@
 import { Type } from "@sinclair/typebox";
-import type { GatewayMessageChannel } from "../../utils/message-channel.js";
-import { optionalStringEnum } from "../schema/typebox.js";
-import { spawnSubagentDirect } from "../subagent-spawn.js";
-import type { AnyAgentTool } from "./common.js";
-import { jsonResult, readStringParam } from "./common.js";
+import type { GatewayMessageChannel } from '../../utils/message-channel';
+import { optionalStringEnum } from '../schema/typebox';
+import { spawnSubagentDirect } from '../subagent-spawn';
+import type { AnyAgentTool } from './common';
+import { jsonResult, readStringParam } from './common';
 
 const SessionsSpawnToolSchema = Type.Object({
   task: Type.String(),

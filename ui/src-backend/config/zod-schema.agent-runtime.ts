@@ -1,14 +1,14 @@
 import { z } from "zod";
-import { parseDurationMs } from "../cli/parse-duration.js";
-import { AgentModelSchema } from "./zod-schema.agent-model.js";
+import { parseDurationMs } from '../cli/parse-duration';
+import { AgentModelSchema } from './zod-schema.agent-model';
 import {
   GroupChatSchema,
   HumanDelaySchema,
   IdentitySchema,
   ToolsLinksSchema,
   ToolsMediaSchema,
-} from "./zod-schema.core.js";
-import { sensitive } from "./zod-schema.sensitive.js";
+} from './zod-schema.core';
+import { sensitive } from './zod-schema.sensitive';
 
 export const HeartbeatSchema = z
   .object({

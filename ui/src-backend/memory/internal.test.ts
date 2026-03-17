@@ -7,7 +7,7 @@ import {
   listMemoryFiles,
   normalizeExtraMemoryPaths,
   remapChunkLines,
-} from "./internal.js";
+} from './internal';
 
 describe("normalizeExtraMemoryPaths", () => {
   it("trims, resolves, and dedupes paths", () => {

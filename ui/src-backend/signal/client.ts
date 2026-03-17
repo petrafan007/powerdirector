@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { resolveFetch } from "../infra/fetch.js";
-import { fetchWithTimeout } from "../utils/fetch-timeout.js";
+import { resolveFetch } from '../infra/fetch';
+import { fetchWithTimeout } from '../utils/fetch-timeout';
 
 export type SignalRpcOptions = {
   baseUrl: string;

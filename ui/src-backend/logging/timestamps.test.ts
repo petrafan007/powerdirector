@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatLocalIsoWithOffset } from "./timestamps.js";
+import { formatLocalIsoWithOffset } from './timestamps';
 
 function buildFakeDate(parts: {
   year: number;

@@ -1,14 +1,14 @@
 import type { ImageContent } from "@mariozechner/pi-ai";
-import { resolveHeartbeatPrompt } from "../auto-reply/heartbeat.js";
-import type { ThinkLevel } from "../auto-reply/thinking.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { shouldLogVerbose } from "../globals.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { getProcessSupervisor } from "../process/supervisor/index.js";
-import { resolveSessionAgentIds } from "./agent-scope.js";
-import { makeBootstrapWarn, resolveBootstrapContextForRun } from "./bootstrap-files.js";
-import { resolveCliBackendConfig } from "./cli-backends.js";
+import { resolveHeartbeatPrompt } from '../auto-reply/heartbeat';
+import type { ThinkLevel } from '../auto-reply/thinking';
+import type { PowerDirectorConfig } from '../config/config';
+import { shouldLogVerbose } from '../globals';
+import { isTruthyEnvValue } from '../infra/env';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { getProcessSupervisor } from '../process/supervisor/index';
+import { resolveSessionAgentIds } from './agent-scope';
+import { makeBootstrapWarn, resolveBootstrapContextForRun } from './bootstrap-files';
+import { resolveCliBackendConfig } from './cli-backends';
 import {
   appendImagePathsToPrompt,
   buildCliSupervisorScopeKey,
@@ -23,12 +23,12 @@ import {
   resolveSessionIdToSend,
   resolveSystemPromptUsage,
   writeCliImages,
-} from "./cli-runner/helpers.js";
-import { resolvePowerDirectorDocsPath } from "./docs-path.js";
-import { FailoverError, resolveFailoverStatus } from "./failover-error.js";
-import { classifyFailoverReason, isFailoverErrorMessage } from "./pi-embedded-helpers.js";
-import type { EmbeddedPiRunResult } from "./pi-embedded-runner.js";
-import { redactRunIdentifier, resolveRunWorkspaceDir } from "./workspace-run.js";
+} from './cli-runner/helpers';
+import { resolvePowerDirectorDocsPath } from './docs-path';
+import { FailoverError, resolveFailoverStatus } from './failover-error';
+import { classifyFailoverReason, isFailoverErrorMessage } from './pi-embedded-helpers';
+import type { EmbeddedPiRunResult } from './pi-embedded-runner';
+import { redactRunIdentifier, resolveRunWorkspaceDir } from './workspace-run';
 
 const log = createSubsystemLogger("agent/claude-cli");
 
@@ -46,7 +46,7 @@ export async function runCliAgent(params: {
   timeoutMs: number;
   runId: string;
   extraSystemPrompt?: string;
-  streamParams?: import("../commands/agent/types.js").AgentStreamParams;
+  streamParams?: import('../commands/agent/types').AgentStreamParams;
   ownerNumbers?: string[];
   cliSessionId?: string;
   images?: ImageContent[];

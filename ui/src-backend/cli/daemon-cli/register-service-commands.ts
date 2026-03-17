@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { inheritOptionFromParent } from "../command-options.js";
+import { inheritOptionFromParent } from '../command-options';
 import {
   runDaemonInstall,
   runDaemonRestart,
@@ -7,8 +7,8 @@ import {
   runDaemonStatus,
   runDaemonStop,
   runDaemonUninstall,
-} from "./runners.js";
-import type { DaemonInstallOptions, GatewayRpcOpts } from "./types.js";
+} from './runners';
+import type { DaemonInstallOptions, GatewayRpcOpts } from './types';
 
 function resolveInstallOptions(
   cmdOpts: DaemonInstallOptions,

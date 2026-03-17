@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { WizardPrompter } from "../wizard/prompts.js";
-import { applyAuthChoice } from "./auth-choice.js";
+import type { WizardPrompter } from '../wizard/prompts';
+import { applyAuthChoice } from './auth-choice';
 import {
   createAuthTestLifecycle,
   createExitThrowingRuntime,
@@ -8,7 +8,7 @@ import {
   readAuthProfilesForAgent,
   requirePowerDirectorAgentDir,
   setupAuthTestEnv,
-} from "./test-wizard-helpers.js";
+} from './test-wizard-helpers';
 
 function createPrompter(overrides: Partial<WizardPrompter>): WizardPrompter {
   return createWizardPrompter(overrides, { defaultSelect: "" });

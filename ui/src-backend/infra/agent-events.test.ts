@@ -6,7 +6,7 @@ import {
   onAgentEvent,
   registerAgentRunContext,
   resetAgentRunContextForTest,
-} from "./agent-events.js";
+} from './agent-events';
 
 describe("agent-events sequencing", () => {
   test("stores and clears run context", async () => {

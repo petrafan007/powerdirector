@@ -2,25 +2,25 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { compactEmbeddedPiSession } from "../../agents/pi-embedded.js";
+import { compactEmbeddedPiSession } from '../../agents/pi-embedded';
 import {
   addSubagentRunForTests,
   listSubagentRunsForRequester,
   resetSubagentRegistryForTests,
-} from "../../agents/subagent-registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { updateSessionStore } from "../../config/sessions.js";
-import * as internalHooks from "../../hooks/internal-hooks.js";
-import { clearPluginCommands, registerPluginCommand } from "../../plugins/commands.js";
-import type { MsgContext } from "../templating.js";
-import { resetBashChatCommandForTests } from "./bash-command.js";
-import { handleCompactCommand } from "./commands-compact.js";
-import { buildCommandsPaginationKeyboard } from "./commands-info.js";
-import { extractMessageText } from "./commands-subagents.js";
-import { buildCommandTestParams } from "./commands.test-harness.js";
-import { parseConfigCommand } from "./config-commands.js";
-import { parseDebugCommand } from "./debug-commands.js";
-import { parseInlineDirectives } from "./directive-handling.js";
+} from '../../agents/subagent-registry';
+import type { PowerDirectorConfig } from '../../config/config';
+import { updateSessionStore } from '../../config/sessions';
+import * as internalHooks from '../../hooks/internal-hooks';
+import { clearPluginCommands, registerPluginCommand } from '../../plugins/commands';
+import type { MsgContext } from '../templating';
+import { resetBashChatCommandForTests } from './bash-command';
+import { handleCompactCommand } from './commands-compact';
+import { buildCommandsPaginationKeyboard } from './commands-info';
+import { extractMessageText } from './commands-subagents';
+import { buildCommandTestParams } from './commands.test-harness';
+import { parseConfigCommand } from './config-commands';
+import { parseDebugCommand } from './debug-commands';
+import { parseInlineDirectives } from './directive-handling';
 
 const readConfigFileSnapshotMock = vi.hoisted(() => vi.fn());
 const validateConfigObjectWithPluginsMock = vi.hoisted(() => vi.fn());
@@ -28,7 +28,7 @@ const writeConfigFileMock = vi.hoisted(() => vi.fn());
 
 vi.mock("../../config/config.js", async () => {
   const actual =
-    await vi.importActual<typeof import("../../config/config.js")>("../../config/config.js");
+    await vi.importActual<typeof import('../../config/config')>("../../config/config.js");
   return {
     ...actual,
     readConfigFileSnapshot: readConfigFileSnapshotMock,
@@ -42,7 +42,7 @@ const addChannelAllowFromStoreEntryMock = vi.hoisted(() => vi.fn());
 const removeChannelAllowFromStoreEntryMock = vi.hoisted(() => vi.fn());
 
 vi.mock("../../pairing/pairing-store.js", async () => {
-  const actual = await vi.importActual<typeof import("../../pairing/pairing-store.js")>(
+  const actual = await vi.importActual<typeof import('../../pairing/pairing-store')>(
     "../../pairing/pairing-store.js",
   );
   return {
@@ -54,7 +54,7 @@ vi.mock("../../pairing/pairing-store.js", async () => {
 });
 
 vi.mock("../../channels/plugins/pairing.js", async () => {
-  const actual = await vi.importActual<typeof import("../../channels/plugins/pairing.js")>(
+  const actual = await vi.importActual<typeof import('../../channels/plugins/pairing')>(
     "../../channels/plugins/pairing.js",
   );
   return {
@@ -103,8 +103,8 @@ vi.mock("../../gateway/call.js", () => ({
   callGateway: (opts: unknown) => callGatewayMock(opts),
 }));
 
-import type { HandleCommandsParams } from "./commands-types.js";
-import { buildCommandContext, handleCommands } from "./commands.js";
+import type { HandleCommandsParams } from './commands-types';
+import { buildCommandContext, handleCommands } from './commands';
 
 // Avoid expensive workspace scans during /context tests.
 vi.mock("./commands-context-report.js", () => ({

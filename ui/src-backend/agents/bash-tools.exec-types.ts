@@ -1,5 +1,5 @@
-import type { ExecAsk, ExecHost, ExecSecurity } from "../infra/exec-approvals.js";
-import type { BashSandboxConfig } from "./bash-tools.shared.js";
+import type { ExecAsk, ExecHost, ExecSecurity } from '../infra/exec-approvals';
+import type { BashSandboxConfig } from './bash-tools.shared';
 
 export type ExecToolDefaults = {
   host?: ExecHost;

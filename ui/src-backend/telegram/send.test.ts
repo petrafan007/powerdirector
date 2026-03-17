@@ -4,8 +4,8 @@ import {
   getTelegramSendTestMocks,
   importTelegramSendModule,
   installTelegramSendTestHooks,
-} from "./send.test-harness.js";
-import { clearSentMessageCache, recordSentMessage, wasSentByBot } from "./sent-message-cache.js";
+} from './send.test-harness';
+import { clearSentMessageCache, recordSentMessage, wasSentByBot } from './sent-message-cache';
 
 installTelegramSendTestHooks();
 

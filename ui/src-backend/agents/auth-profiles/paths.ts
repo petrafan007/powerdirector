@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import { saveJsonFile } from "../../infra/json-file.js";
-import { resolveUserPath } from "../../utils.js";
-import { resolvePowerDirectorAgentDir } from "../agent-paths.js";
-import { AUTH_PROFILE_FILENAME, AUTH_STORE_VERSION, LEGACY_AUTH_FILENAME } from "./constants.js";
-import type { AuthProfileStore } from "./types.js";
+import { saveJsonFile } from '../../infra/json-file';
+import { resolveUserPath } from '../../utils';
+import { resolvePowerDirectorAgentDir } from '../agent-paths';
+import { AUTH_PROFILE_FILENAME, AUTH_STORE_VERSION, LEGACY_AUTH_FILENAME } from './constants';
+import type { AuthProfileStore } from './types';
 
 export function resolveAuthStorePath(agentDir?: string): string {
   const resolved = resolveUserPath(agentDir ?? resolvePowerDirectorAgentDir());

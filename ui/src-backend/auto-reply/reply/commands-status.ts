@@ -2,29 +2,29 @@ import {
   resolveAgentDir,
   resolveDefaultAgentId,
   resolveSessionAgentId,
-} from "../../agents/agent-scope.js";
-import { resolveModelAuthLabel } from "../../agents/model-auth-label.js";
-import { listSubagentRunsForRequester } from "../../agents/subagent-registry.js";
+} from '../../agents/agent-scope';
+import { resolveModelAuthLabel } from '../../agents/model-auth-label';
+import { listSubagentRunsForRequester } from '../../agents/subagent-registry';
 import {
   resolveInternalSessionKey,
   resolveMainSessionAlias,
-} from "../../agents/tools/sessions-helpers.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { SessionEntry, SessionScope } from "../../config/sessions.js";
-import { logVerbose } from "../../globals.js";
+} from '../../agents/tools/sessions-helpers';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { SessionEntry, SessionScope } from '../../config/sessions';
+import { logVerbose } from '../../globals';
 import {
   formatUsageWindowSummary,
   loadProviderUsageSummary,
   resolveUsageProviderId,
-} from "../../infra/provider-usage.js";
-import type { MediaUnderstandingDecision } from "../../media-understanding/types.js";
-import { normalizeGroupActivation } from "../group-activation.js";
-import { buildStatusMessage } from "../status.js";
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../thinking.js";
-import type { ReplyPayload } from "../types.js";
-import type { CommandContext } from "./commands-types.js";
-import { getFollowupQueueDepth, resolveQueueSettings } from "./queue.js";
-import { resolveSubagentLabel } from "./subagents-utils.js";
+} from '../../infra/provider-usage';
+import type { MediaUnderstandingDecision } from '../../media-understanding/types';
+import { normalizeGroupActivation } from '../group-activation';
+import { buildStatusMessage } from '../status';
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../thinking';
+import type { ReplyPayload } from '../types';
+import type { CommandContext } from './commands-types';
+import { getFollowupQueueDepth, resolveQueueSettings } from './queue';
+import { resolveSubagentLabel } from './subagents-utils';
 
 export async function buildStatusReply(params: {
   cfg: PowerDirectorConfig;

@@ -1,5 +1,5 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
-import { extractToolCallsFromAssistant, extractToolResultId } from "./tool-call-id.js";
+import { extractToolCallsFromAssistant, extractToolResultId } from './tool-call-id';
 
 type ToolCallBlock = {
   type?: unknown;

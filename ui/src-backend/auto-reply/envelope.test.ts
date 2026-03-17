@@ -3,7 +3,7 @@ import {
   formatAgentEnvelope,
   formatInboundEnvelope,
   resolveEnvelopeFormatOptions,
-} from "./envelope.js";
+} from './envelope';
 
 describe("formatAgentEnvelope", () => {
   it("includes channel, from, ip, host, and timestamp", () => {

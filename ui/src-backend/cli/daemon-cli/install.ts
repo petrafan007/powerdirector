@@ -1,27 +1,27 @@
-import { buildGatewayInstallPlan } from "../../commands/daemon-install-helpers.js";
+import { buildGatewayInstallPlan } from '../../commands/daemon-install-helpers';
 import {
   DEFAULT_GATEWAY_DAEMON_RUNTIME,
   isGatewayDaemonRuntime,
-} from "../../commands/daemon-runtime.js";
-import { randomToken } from "../../commands/onboard-helpers.js";
+} from '../../commands/daemon-runtime';
+import { randomToken } from '../../commands/onboard-helpers';
 import {
   loadConfig,
   readConfigFileSnapshot,
   resolveGatewayPort,
   writeConfigFile,
-} from "../../config/config.js";
-import { resolveIsNixMode } from "../../config/paths.js";
-import { resolveGatewayService } from "../../daemon/service.js";
-import { resolveGatewayAuth } from "../../gateway/auth.js";
-import { defaultRuntime } from "../../runtime.js";
-import { formatCliCommand } from "../command-format.js";
+} from '../../config/config';
+import { resolveIsNixMode } from '../../config/paths';
+import { resolveGatewayService } from '../../daemon/service';
+import { resolveGatewayAuth } from '../../gateway/auth';
+import { defaultRuntime } from '../../runtime';
+import { formatCliCommand } from '../command-format';
 import {
   buildDaemonServiceSnapshot,
   createDaemonActionContext,
   installDaemonServiceAndEmit,
-} from "./response.js";
-import { parsePort } from "./shared.js";
-import type { DaemonInstallOptions } from "./types.js";
+} from './response';
+import { parsePort } from './shared';
+import type { DaemonInstallOptions } from './types';
 
 export async function runDaemonInstall(opts: DaemonInstallOptions) {
   const json = Boolean(opts.json);

@@ -1,18 +1,18 @@
-import { listAgentIds } from "../../agents/agent-scope.js";
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../agents/defaults.js";
+import { listAgentIds } from '../../agents/agent-scope';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../../agents/defaults';
 import {
   buildModelAliasIndex,
   modelKey,
   parseModelRef,
   resolveModelRefFromString,
-} from "../../agents/model-selection.js";
-import { formatCliCommand } from "../../cli/command-format.js";
+} from '../../agents/model-selection';
+import { formatCliCommand } from '../../cli/command-format';
 import {
   type PowerDirectorConfig,
   readConfigFileSnapshot,
   writeConfigFile,
-} from "../../config/config.js";
-import { normalizeAgentId } from "../../routing/session-key.js";
+} from '../../config/config';
+import { normalizeAgentId } from '../../routing/session-key';
 
 export const ensureFlagCompatibility = (opts: { json?: boolean; plain?: boolean }) => {
   if (opts.json && opts.plain) {

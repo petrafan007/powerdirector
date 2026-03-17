@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { startTelegramWebhook } from "./webhook.js";
+import { startTelegramWebhook } from './webhook';
 
 const handlerSpy = vi.hoisted(() =>
   vi.fn(

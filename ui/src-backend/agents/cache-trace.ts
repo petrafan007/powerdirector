@@ -1,12 +1,12 @@
 import crypto from "node:crypto";
 import path from "node:path";
 import type { AgentMessage, StreamFn } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
-import { resolveUserPath } from "../utils.js";
-import { parseBooleanValue } from "../utils/boolean.js";
-import { safeJsonStringify } from "../utils/safe-json.js";
-import { getQueuedFileWriter, type QueuedFileWriter } from "./queued-file-writer.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
+import { resolveUserPath } from '../utils';
+import { parseBooleanValue } from '../utils/boolean';
+import { safeJsonStringify } from '../utils/safe-json';
+import { getQueuedFileWriter, type QueuedFileWriter } from './queued-file-writer';
 
 export type CacheTraceStage =
   | "session:loaded"

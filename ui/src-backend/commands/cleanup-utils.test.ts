@@ -1,8 +1,8 @@
 import path from "node:path";
 import { describe, expect, it, test } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { buildCleanupPlan } from "./cleanup-utils.js";
-import { applyAgentDefaultPrimaryModel } from "./model-default.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { buildCleanupPlan } from './cleanup-utils';
+import { applyAgentDefaultPrimaryModel } from './model-default';
 
 describe("buildCleanupPlan", () => {
   test("resolves inside-state flags and workspace dirs", () => {

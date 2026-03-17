@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base.js';
+import { Tool, ToolResult } from './base';
 import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import https from 'https';
 import { getRuntimeLogger } from '../core/logger.ts';
 import { execSync } from 'child_process';
-import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths';
 
 interface FrigateToolOptions {
     mediaDir?: string;

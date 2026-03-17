@@ -15,7 +15,7 @@ vi.mock("./prompt-style.js", () => ({
   stylePromptHint: stylePromptHintMock,
 }));
 
-import { selectStyled } from "./prompt-select-styled.js";
+import { selectStyled } from './prompt-select-styled';
 
 describe("selectStyled", () => {
   beforeEach(() => {

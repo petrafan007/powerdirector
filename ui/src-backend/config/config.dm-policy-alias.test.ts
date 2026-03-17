@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateConfigObject } from "./config.js";
+import { validateConfigObject } from './config';
 
 describe("DM policy aliases (Slack/Discord)", () => {
   it('rejects discord dmPolicy="open" without allowFrom "*"', () => {

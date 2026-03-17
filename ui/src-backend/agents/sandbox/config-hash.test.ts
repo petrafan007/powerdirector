@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { computeSandboxBrowserConfigHash, computeSandboxConfigHash } from "./config-hash.js";
-import type { SandboxDockerConfig } from "./types.js";
+import { computeSandboxBrowserConfigHash, computeSandboxConfigHash } from './config-hash';
+import type { SandboxDockerConfig } from './types';
 
 function createDockerConfig(overrides?: Partial<SandboxDockerConfig>): SandboxDockerConfig {
   return {

@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import * as logger from "../../logger.js";
-import { withFetchPreconnect } from "../../test-utils/fetch-mock.js";
+import * as logger from '../../logger';
+import { withFetchPreconnect } from '../../test-utils/fetch-mock';
 import {
   createBaseWebFetchToolConfig,
   installWebFetchSsrfHarness,
-} from "./web-fetch.test-harness.js";
+} from './web-fetch.test-harness';
 import "./web-fetch.test-mocks.js";
-import { createWebFetchTool } from "./web-tools.js";
+import { createWebFetchTool } from './web-tools';
 
 const baseToolConfig = createBaseWebFetchToolConfig();
 installWebFetchSsrfHarness();

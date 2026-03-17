@@ -13,11 +13,11 @@ import {
   searchMessagesDiscord,
   sendMessageDiscord,
   unpinMessageDiscord,
-} from "./send.js";
-import { makeDiscordRest } from "./send.test-harness.js";
+} from './send';
+import { makeDiscordRest } from './send.test-harness';
 
 vi.mock("../web/media.js", async () => {
-  const { discordWebMediaMockFactory } = await import("./send.test-harness.js");
+  const { discordWebMediaMockFactory } = await import('./send.test-harness');
   return discordWebMediaMockFactory();
 });
 

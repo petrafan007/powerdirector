@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import JSON5 from "json5";
-import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from "../agents/workspace.js";
-import { type PowerDirectorConfig, createConfigIO, writeConfigFile } from "../config/config.js";
-import { formatConfigPath, logConfigUpdated } from "../config/logging.js";
-import { resolveSessionTranscriptsDir } from "../config/sessions.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { defaultRuntime } from "../runtime.js";
-import { shortenHomePath } from "../utils.js";
+import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from '../agents/workspace';
+import { type PowerDirectorConfig, createConfigIO, writeConfigFile } from '../config/config';
+import { formatConfigPath, logConfigUpdated } from '../config/logging';
+import { resolveSessionTranscriptsDir } from '../config/sessions';
+import type { RuntimeEnv } from '../runtime';
+import { defaultRuntime } from '../runtime';
+import { shortenHomePath } from '../utils';
 
 async function readConfigFileRaw(configPath: string): Promise<{
   exists: boolean;

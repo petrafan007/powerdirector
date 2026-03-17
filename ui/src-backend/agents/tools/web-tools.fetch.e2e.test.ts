@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import * as ssrf from "../../infra/net/ssrf.js";
-import { withFetchPreconnect } from "../../test-utils/fetch-mock.js";
-import { createWebFetchTool } from "./web-tools.js";
+import * as ssrf from '../../infra/net/ssrf';
+import { withFetchPreconnect } from '../../test-utils/fetch-mock';
+import { createWebFetchTool } from './web-tools';
 
 type MockResponse = {
   ok: boolean;

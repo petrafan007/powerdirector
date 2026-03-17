@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { BrowserRouteContext } from "../server-context.js";
+import type { BrowserRouteContext } from '../server-context';
 
 vi.mock("./index.js", () => {
   return {
@@ -29,7 +29,7 @@ vi.mock("./index.js", () => {
 
 describe("browser route dispatcher (abort)", () => {
   it("propagates AbortSignal and lets handlers observe abort", async () => {
-    const { createBrowserRouteDispatcher } = await import("./dispatcher.js");
+    const { createBrowserRouteDispatcher } = await import('./dispatcher');
     const dispatcher = createBrowserRouteDispatcher({} as BrowserRouteContext);
 
     const ctrl = new AbortController();

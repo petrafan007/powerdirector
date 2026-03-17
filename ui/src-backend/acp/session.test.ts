@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createInMemorySessionStore } from "./session.js";
+import { createInMemorySessionStore } from './session';
 
 describe("acp session manager", () => {
   let nowMs = 0;

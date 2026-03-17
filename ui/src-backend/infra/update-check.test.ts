@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { compareSemverStrings, resolveNpmChannelTag } from "./update-check.js";
+import { compareSemverStrings, resolveNpmChannelTag } from './update-check';
 
 describe("resolveNpmChannelTag", () => {
   let versionByTag: Record<string, string | null>;

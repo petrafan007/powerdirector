@@ -10,8 +10,8 @@ export type LegacyConfigMigration = {
   apply: (raw: Record<string, unknown>, changes: string[]) => void;
 };
 
-import { isSafeExecutableValue } from "../infra/exec-safety.js";
-import { isRecord } from "../utils.js";
+import { isSafeExecutableValue } from '../infra/exec-safety';
+import { isRecord } from '../utils';
 export { isRecord };
 
 export const getRecord = (value: unknown): Record<string, unknown> | null =>

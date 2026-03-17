@@ -1,9 +1,9 @@
 import type { WebhookRequestBody } from "@line/bot-sdk";
 import type { Request, Response, NextFunction } from "express";
-import { logVerbose, danger } from "../globals.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { validateLineSignature } from "./signature.js";
-import { isLineWebhookVerificationRequest, parseLineWebhookBody } from "./webhook-utils.js";
+import { logVerbose, danger } from '../globals';
+import type { RuntimeEnv } from '../runtime';
+import { validateLineSignature } from './signature';
+import { isLineWebhookVerificationRequest, parseLineWebhookBody } from './webhook-utils';
 
 export interface LineWebhookOptions {
   channelSecret: string;

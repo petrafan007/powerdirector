@@ -3,7 +3,7 @@ import {
   applyAppendOnlyStreamUpdate,
   buildStatusFinalPreviewText,
   resolveSlackStreamMode,
-} from "./stream-mode.js";
+} from './stream-mode';
 
 describe("resolveSlackStreamMode", () => {
   it("defaults to replace", () => {

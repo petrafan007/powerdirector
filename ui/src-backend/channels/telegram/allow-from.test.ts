@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isNumericTelegramUserId, normalizeTelegramAllowFromEntry } from "./allow-from.js";
+import { isNumericTelegramUserId, normalizeTelegramAllowFromEntry } from './allow-from';
 
 describe("telegram allow-from helpers", () => {
   it("normalizes tg/telegram prefixes", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { handleWhatsAppAction } from "./whatsapp-actions.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { handleWhatsAppAction } from './whatsapp-actions';
 
 const sendReactionWhatsApp = vi.fn(async () => undefined);
 const sendPollWhatsApp = vi.fn(async () => ({ messageId: "poll-1", toJid: "jid-1" }));

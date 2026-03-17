@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import JSON5 from "json5";
-import { expandHomePrefix } from "../infra/home-dir.js";
-import { CONFIG_DIR } from "../utils.js";
-import type { CronStoreFile } from "./types.js";
+import { expandHomePrefix } from '../infra/home-dir';
+import { CONFIG_DIR } from '../utils';
+import type { CronStoreFile } from './types';
 
 export const DEFAULT_CRON_DIR = path.join(CONFIG_DIR, "cron");
 export const DEFAULT_CRON_STORE_PATH = path.join(DEFAULT_CRON_DIR, "jobs.json");

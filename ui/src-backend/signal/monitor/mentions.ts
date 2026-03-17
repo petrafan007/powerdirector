@@ -1,4 +1,4 @@
-import type { SignalMention } from "./event-handler.types.js";
+import type { SignalMention } from './event-handler.types';
 
 const OBJECT_REPLACEMENT = "\uFFFC";
 

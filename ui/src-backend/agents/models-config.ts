@@ -1,15 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { type PowerDirectorConfig, loadConfig } from "../config/config.js";
-import { isRecord } from "../utils.js";
-import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
+import { type PowerDirectorConfig, loadConfig } from '../config/config';
+import { isRecord } from '../utils';
+import { resolvePowerDirectorAgentDir } from './agent-paths';
 import {
   normalizeProviders,
   type ProviderConfig,
   resolveImplicitBedrockProvider,
   resolveImplicitCopilotProvider,
   resolveImplicitProviders,
-} from "./models-config.providers.js";
+} from './models-config.providers';
 
 type ModelsConfig = NonNullable<PowerDirectorConfig["models"]>;
 

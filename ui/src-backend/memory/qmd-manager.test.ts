@@ -78,9 +78,9 @@ vi.mock("node:child_process", async (importOriginal) => {
 });
 
 import { spawn as mockedSpawn } from "node:child_process";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveMemoryBackendConfig } from "./backend-config.js";
-import { QmdMemoryManager } from "./qmd-manager.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveMemoryBackendConfig } from './backend-config';
+import { QmdMemoryManager } from './qmd-manager';
 
 const spawnMock = mockedSpawn as unknown as Mock;
 

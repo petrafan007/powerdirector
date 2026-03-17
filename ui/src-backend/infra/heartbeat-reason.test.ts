@@ -4,7 +4,7 @@ import {
   isHeartbeatEventDrivenReason,
   normalizeHeartbeatWakeReason,
   resolveHeartbeatReasonKind,
-} from "./heartbeat-reason.js";
+} from './heartbeat-reason';
 
 describe("heartbeat-reason", () => {
   it("normalizes wake reasons with trim + requested fallback", () => {

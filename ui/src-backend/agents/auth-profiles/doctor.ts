@@ -1,9 +1,9 @@
-import { formatCliCommand } from "../../cli/command-format.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { normalizeProviderId } from "../model-selection.js";
-import { listProfilesForProvider } from "./profiles.js";
-import { suggestOAuthProfileIdForLegacyDefault } from "./repair.js";
-import type { AuthProfileStore } from "./types.js";
+import { formatCliCommand } from '../../cli/command-format';
+import type { PowerDirectorConfig } from '../../config/config';
+import { normalizeProviderId } from '../model-selection';
+import { listProfilesForProvider } from './profiles';
+import { suggestOAuthProfileIdForLegacyDefault } from './repair';
+import type { AuthProfileStore } from './types';
 
 export function formatAuthDoctorHint(params: {
   cfg?: PowerDirectorConfig;

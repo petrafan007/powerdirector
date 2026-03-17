@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { SkillsInstallPreferences } from "./skills/types.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { SkillsInstallPreferences } from './skills/types';
 
 export {
   hasBinary,
@@ -9,11 +9,11 @@ export {
   resolveConfigPath,
   resolveRuntimePlatform,
   resolveSkillConfig,
-} from "./skills/config.js";
+} from './skills/config';
 export {
   applySkillEnvOverrides,
   applySkillEnvOverridesFromSnapshot,
-} from "./skills/env-overrides.js";
+} from './skills/env-overrides';
 export type {
   PowerDirectorSkillMetadata,
   SkillEligibilityContext,
@@ -22,7 +22,7 @@ export type {
   SkillInstallSpec,
   SkillSnapshot,
   SkillsInstallPreferences,
-} from "./skills/types.js";
+} from './skills/types';
 export {
   buildWorkspaceSkillSnapshot,
   buildWorkspaceSkillsPrompt,
@@ -31,7 +31,7 @@ export {
   loadWorkspaceSkillEntries,
   resolveSkillsPromptForRun,
   syncSkillsToWorkspace,
-} from "./skills/workspace.js";
+} from './skills/workspace';
 
 export function resolveSkillsInstallPreferences(config?: PowerDirectorConfig): SkillsInstallPreferences {
   const raw = config?.skills?.install;

@@ -1,9 +1,9 @@
 import type { GatewayPlugin } from "@buape/carbon/gateway";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { DiscordActionConfig } from "../../config/config.js";
-import { clearGateways, registerGateway } from "../../discord/monitor/gateway-registry.js";
-import type { ActionGate } from "./common.js";
-import { handleDiscordPresenceAction } from "./discord-actions-presence.js";
+import type { DiscordActionConfig } from '../../config/config';
+import { clearGateways, registerGateway } from '../../discord/monitor/gateway-registry';
+import type { ActionGate } from './common';
+import { handleDiscordPresenceAction } from './discord-actions-presence';
 
 const mockUpdatePresence = vi.fn();
 

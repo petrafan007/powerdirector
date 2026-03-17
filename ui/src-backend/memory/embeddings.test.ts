@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import * as authModule from "../agents/model-auth.js";
-import { DEFAULT_GEMINI_EMBEDDING_MODEL } from "./embeddings-gemini.js";
-import { createEmbeddingProvider, DEFAULT_LOCAL_MODEL } from "./embeddings.js";
+import * as authModule from '../agents/model-auth';
+import { DEFAULT_GEMINI_EMBEDDING_MODEL } from './embeddings-gemini';
+import { createEmbeddingProvider, DEFAULT_LOCAL_MODEL } from './embeddings';
 
 vi.mock("../agents/model-auth.js", async () => {
-  const { createModelAuthMockModule } = await import("../test-utils/model-auth-mock.js");
+  const { createModelAuthMockModule } = await import('../test-utils/model-auth-mock');
   return createModelAuthMockModule();
 });
 

@@ -1,6 +1,6 @@
-import type { BaseProbeResult } from "../channels/plugins/types.js";
-import { fetchWithTimeout } from "../utils/fetch-timeout.js";
-import { makeProxyFetch } from "./proxy.js";
+import type { BaseProbeResult } from '../channels/plugins/types';
+import { fetchWithTimeout } from '../utils/fetch-timeout';
+import { makeProxyFetch } from './proxy';
 
 const TELEGRAM_API_BASE = "https://api.telegram.org";
 

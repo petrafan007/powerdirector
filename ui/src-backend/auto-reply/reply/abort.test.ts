@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { SubagentRunRecord } from "../../agents/subagent-registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { SubagentRunRecord } from '../../agents/subagent-registry';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   getAbortMemory,
   getAbortMemorySizeForTest,
@@ -13,10 +13,10 @@ import {
   resolveSessionEntryForKey,
   setAbortMemory,
   tryFastAbortFromMessage,
-} from "./abort.js";
-import { enqueueFollowupRun, getFollowupQueueDepth, type FollowupRun } from "./queue.js";
-import { initSessionState } from "./session.js";
-import { buildTestCtx } from "./test-ctx.js";
+} from './abort';
+import { enqueueFollowupRun, getFollowupQueueDepth, type FollowupRun } from './queue';
+import { initSessionState } from './session';
+import { buildTestCtx } from './test-ctx';
 
 vi.mock("../../agents/pi-embedded.js", () => ({
   abortEmbeddedPiRun: vi.fn().mockReturnValue(true),

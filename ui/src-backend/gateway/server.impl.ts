@@ -1,14 +1,14 @@
 import path from "node:path";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { getActiveEmbeddedRunCount } from "../agents/pi-embedded-runner/runs.js";
-import { registerSkillsChangeListener } from "../agents/skills/refresh.js";
-import { initSubagentRegistry } from "../agents/subagent-registry.js";
-import { getTotalPendingReplies } from "../auto-reply/reply/dispatcher-registry.js";
-import type { CanvasHostServer } from "../canvas-host/server.js";
-import { type ChannelId, listChannelPlugins } from "../channels/plugins/index.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import { createDefaultDeps } from "../cli/deps.js";
-import { isRestartEnabled } from "../config/commands.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { getActiveEmbeddedRunCount } from '../agents/pi-embedded-runner/runs';
+import { registerSkillsChangeListener } from '../agents/skills/refresh';
+import { initSubagentRegistry } from '../agents/subagent-registry';
+import { getTotalPendingReplies } from '../auto-reply/reply/dispatcher-registry';
+import type { CanvasHostServer } from '../canvas-host/server';
+import { type ChannelId, listChannelPlugins } from '../channels/plugins/index';
+import { formatCliCommand } from '../cli/command-format';
+import { createDefaultDeps } from '../cli/deps';
+import { isRestartEnabled } from '../config/commands';
 import {
   CONFIG_PATH,
   isNixMode,
@@ -16,83 +16,83 @@ import {
   migrateLegacyConfig,
   readConfigFileSnapshot,
   writeConfigFile,
-} from "../config/config.js";
-import { applyPluginAutoEnable } from "../config/plugin-auto-enable.js";
-import { clearAgentRunContext, onAgentEvent } from "../infra/agent-events.js";
+} from '../config/config';
+import { applyPluginAutoEnable } from '../config/plugin-auto-enable';
+import { clearAgentRunContext, onAgentEvent } from '../infra/agent-events';
 import {
   ensureControlUiAssetsBuilt,
   resolveControlUiRootOverrideSync,
   resolveControlUiRootSync,
-} from "../infra/control-ui-assets.js";
-import { isDiagnosticsEnabled } from "../infra/diagnostic-events.js";
-import { logAcceptedEnvOption } from "../infra/env.js";
-import { createExecApprovalForwarder } from "../infra/exec-approval-forwarder.js";
-import { onHeartbeatEvent } from "../infra/heartbeat-events.js";
-import { startHeartbeatRunner, type HeartbeatRunner } from "../infra/heartbeat-runner.js";
-import { getMachineDisplayName } from "../infra/machine-name.js";
-import { ensurePowerDirectorCliOnPath } from "../infra/path-env.js";
-import { setGatewaySigusr1RestartPolicy, setPreRestartDeferralCheck } from "../infra/restart.js";
+} from '../infra/control-ui-assets';
+import { isDiagnosticsEnabled } from '../infra/diagnostic-events';
+import { logAcceptedEnvOption } from '../infra/env';
+import { createExecApprovalForwarder } from '../infra/exec-approval-forwarder';
+import { onHeartbeatEvent } from '../infra/heartbeat-events';
+import { startHeartbeatRunner, type HeartbeatRunner } from '../infra/heartbeat-runner';
+import { getMachineDisplayName } from '../infra/machine-name';
+import { ensurePowerDirectorCliOnPath } from '../infra/path-env';
+import { setGatewaySigusr1RestartPolicy, setPreRestartDeferralCheck } from '../infra/restart';
 import {
   primeRemoteSkillsCache,
   refreshRemoteBinsForConnectedNodes,
   setSkillsRemoteRegistry,
-} from "../infra/skills-remote.js";
-import { scheduleGatewayUpdateCheck } from "../infra/update-startup.js";
-import { UpdateDaemon } from "../infra/update-daemon.js";
-import { startDiagnosticHeartbeat, stopDiagnosticHeartbeat } from "../logging/diagnostic.js";
-import { createSubsystemLogger, runtimeForLogger } from "../logging/subsystem.js";
-import { getGlobalHookRunner, runGlobalGatewayStopSafely } from "../plugins/hook-runner-global.js";
-import { createEmptyPluginRegistry } from "../plugins/registry.js";
-import type { PluginServicesHandle } from "../plugins/services.js";
-import { getTotalQueueSize } from "../process/command-queue.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { runOnboardingWizard } from "../wizard/onboarding.js";
-import { createAuthRateLimiter, type AuthRateLimiter } from "./auth-rate-limit.js";
-import { startChannelHealthMonitor } from "./channel-health-monitor.js";
-import { startGatewayConfigReloader } from "./config-reload.js";
-import type { ControlUiRootState } from "./control-ui.js";
+} from '../infra/skills-remote';
+import { scheduleGatewayUpdateCheck } from '../infra/update-startup';
+import { UpdateDaemon } from '../infra/update-daemon';
+import { startDiagnosticHeartbeat, stopDiagnosticHeartbeat } from '../logging/diagnostic';
+import { createSubsystemLogger, runtimeForLogger } from '../logging/subsystem';
+import { getGlobalHookRunner, runGlobalGatewayStopSafely } from '../plugins/hook-runner-global';
+import { createEmptyPluginRegistry } from '../plugins/registry';
+import type { PluginServicesHandle } from '../plugins/services';
+import { getTotalQueueSize } from '../process/command-queue';
+import type { RuntimeEnv } from '../runtime';
+import { runOnboardingWizard } from '../wizard/onboarding';
+import { createAuthRateLimiter, type AuthRateLimiter } from './auth-rate-limit';
+import { startChannelHealthMonitor } from './channel-health-monitor';
+import { startGatewayConfigReloader } from './config-reload';
+import type { ControlUiRootState } from './control-ui';
 import {
   GATEWAY_EVENT_UPDATE_AVAILABLE,
   type GatewayUpdateAvailableEventPayload,
-} from "./events.js";
-import { ExecApprovalManager } from "./exec-approval-manager.js";
-import { NodeRegistry } from "./node-registry.js";
-import type { startBrowserControlServerIfEnabled } from "./server-browser.js";
-import { createChannelManager } from "./server-channels.js";
-import { createAgentEventHandler } from "./server-chat.js";
-import { createGatewayCloseHandler } from "./server-close.js";
-import { buildGatewayCronService } from "./server-cron.js";
-import { startGatewayDiscovery } from "./server-discovery-runtime.js";
-import { applyGatewayLaneConcurrency } from "./server-lanes.js";
-import { startGatewayMaintenanceTimers } from "./server-maintenance.js";
-import { GATEWAY_EVENTS, listGatewayMethods } from "./server-methods-list.js";
-import { coreGatewayHandlers } from "./server-methods.js";
-import { createExecApprovalHandlers } from "./server-methods/exec-approval.js";
-import { safeParseJson } from "./server-methods/nodes.helpers.js";
-import { hasConnectedMobileNode } from "./server-mobile-nodes.js";
-import { loadGatewayModelCatalog } from "./server-model-catalog.js";
-import { createNodeSubscriptionManager } from "./server-node-subscriptions.js";
-import { loadGatewayPlugins } from "./server-plugins.js";
-import { createGatewayReloadHandlers } from "./server-reload-handlers.js";
-import { resolveGatewayRuntimeConfig } from "./server-runtime-config.js";
-import { createGatewayRuntimeState } from "./server-runtime-state.js";
-import { resolveSessionKeyForRun } from "./server-session-key.js";
-import { logGatewayStartup } from "./server-startup-log.js";
-import { startGatewaySidecars } from "./server-startup.js";
-import { startGatewayTailscaleExposure } from "./server-tailscale.js";
-import { createWizardSessionTracker } from "./server-wizard-sessions.js";
-import { attachGatewayWsHandlers } from "./server-ws-runtime.js";
+} from './events';
+import { ExecApprovalManager } from './exec-approval-manager';
+import { NodeRegistry } from './node-registry';
+import type { startBrowserControlServerIfEnabled } from './server-browser';
+import { createChannelManager } from './server-channels';
+import { createAgentEventHandler } from './server-chat';
+import { createGatewayCloseHandler } from './server-close';
+import { buildGatewayCronService } from './server-cron';
+import { startGatewayDiscovery } from './server-discovery-runtime';
+import { applyGatewayLaneConcurrency } from './server-lanes';
+import { startGatewayMaintenanceTimers } from './server-maintenance';
+import { GATEWAY_EVENTS, listGatewayMethods } from './server-methods-list';
+import { coreGatewayHandlers } from './server-methods';
+import { createExecApprovalHandlers } from './server-methods/exec-approval';
+import { safeParseJson } from './server-methods/nodes.helpers';
+import { hasConnectedMobileNode } from './server-mobile-nodes';
+import { loadGatewayModelCatalog } from './server-model-catalog';
+import { createNodeSubscriptionManager } from './server-node-subscriptions';
+import { loadGatewayPlugins } from './server-plugins';
+import { createGatewayReloadHandlers } from './server-reload-handlers';
+import { resolveGatewayRuntimeConfig } from './server-runtime-config';
+import { createGatewayRuntimeState } from './server-runtime-state';
+import { resolveSessionKeyForRun } from './server-session-key';
+import { logGatewayStartup } from './server-startup-log';
+import { startGatewaySidecars } from './server-startup';
+import { startGatewayTailscaleExposure } from './server-tailscale';
+import { createWizardSessionTracker } from './server-wizard-sessions';
+import { attachGatewayWsHandlers } from './server-ws-runtime';
 import {
   getHealthCache,
   getHealthVersion,
   getPresenceVersion,
   incrementPresenceVersion,
   refreshGatewayHealthSnapshot,
-} from "./server/health-state.js";
-import { loadGatewayTlsRuntime } from "./server/tls.js";
-import { ensureGatewayStartupAuth } from "./startup-auth.js";
+} from './server/health-state';
+import { loadGatewayTlsRuntime } from './server/tls';
+import { ensureGatewayStartupAuth } from './startup-auth';
 
-export { __resetModelCatalogCacheForTest } from "./server-model-catalog.js";
+export { __resetModelCatalogCacheForTest } from './server-model-catalog';
 
 ensurePowerDirectorCliOnPath();
 
@@ -123,7 +123,7 @@ export type GatewayServerOptions = {
    * - tailnet: bind only to the Tailscale IPv4 address (100.64.0.0/10)
    * - auto: prefer loopback, else LAN
    */
-  bind?: import("../config/config.js").GatewayBindMode;
+  bind?: import('../config/config').GatewayBindMode;
   /**
    * Advanced override for the bind host, bypassing bind resolution.
    * Prefer `bind` unless you really need a specific address.
@@ -147,11 +147,11 @@ export type GatewayServerOptions = {
   /**
    * Override gateway auth configuration (merges with config).
    */
-  auth?: import("../config/config.js").GatewayAuthConfig;
+  auth?: import('../config/config').GatewayAuthConfig;
   /**
    * Override gateway Tailscale exposure configuration (merges with config).
    */
-  tailscale?: import("../config/config.js").GatewayTailscaleConfig;
+  tailscale?: import('../config/config').GatewayTailscaleConfig;
   /**
    * Test-only: allow canvas host startup even when NODE_ENV/VITEST would disable it.
    */
@@ -160,9 +160,9 @@ export type GatewayServerOptions = {
    * Test-only: override the onboarding wizard runner.
    */
   wizardRunner?: (
-    opts: import("../commands/onboard-types.js").OnboardOptions,
-    runtime: import("../runtime.js").RuntimeEnv,
-    prompter: import("../wizard/prompts.js").WizardPrompter,
+    opts: import('../commands/onboard-types').OnboardOptions,
+    runtime: import('../runtime').RuntimeEnv,
+    prompter: import('../wizard/prompts').WizardPrompter,
   ) => Promise<void>;
 };
 
@@ -547,8 +547,8 @@ export async function startGatewayServer(
   // Recover pending outbound deliveries from previous crash/restart.
   if (!minimalTestGateway) {
     void (async () => {
-      const { recoverPendingDeliveries } = await import("../infra/outbound/delivery-queue.js");
-      const { deliverOutboundPayloads } = await import("../infra/outbound/deliver.js");
+      const { recoverPendingDeliveries } = await import('../infra/outbound/delivery-queue');
+      const { deliverOutboundPayloads } = await import('../infra/outbound/deliver');
       const logRecovery = log.child("delivery-recovery");
       await recoverPendingDeliveries({
         deliver: deliverOutboundPayloads,

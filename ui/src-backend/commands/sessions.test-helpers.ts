@@ -2,11 +2,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { vi } from "vitest";
-import type { RuntimeEnv } from "../runtime.js";
+import type { RuntimeEnv } from '../runtime';
 
 export function mockSessionsConfig() {
   vi.mock("../config/config.js", async (importOriginal) => {
-    const actual = await importOriginal<typeof import("../config/config.js")>();
+    const actual = await importOriginal<typeof import('../config/config')>();
     return {
       ...actual,
       loadConfig: () => ({

@@ -1,11 +1,11 @@
-import { isAllowedParsedChatSender } from "../plugin-sdk/allow-from.js";
-import { normalizeE164 } from "../utils.js";
+import { isAllowedParsedChatSender } from '../plugin-sdk/allow-from';
+import { normalizeE164 } from '../utils';
 import {
   parseChatAllowTargetPrefixes,
   parseChatTargetPrefixesOrThrow,
   resolveServicePrefixedAllowTarget,
   resolveServicePrefixedTarget,
-} from "./target-parsing-helpers.js";
+} from './target-parsing-helpers';
 
 export type IMessageService = "imessage" | "sms" | "auto";
 

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveAgentWorkspaceDir } from "../../../agents/agent-scope.js";
-import type { CliDeps } from "../../../cli/deps.js";
-import type { PowerDirectorConfig } from "../../../config/config.js";
+import { resolveAgentWorkspaceDir } from '../../../agents/agent-scope';
+import type { CliDeps } from '../../../cli/deps';
+import type { PowerDirectorConfig } from '../../../config/config';
 
 const runBootOnce = vi.fn();
 
@@ -13,9 +13,9 @@ vi.mock("../../../logging/subsystem.js", () => ({
   }),
 }));
 
-const { default: runBootChecklist } = await import("./handler.js");
+const { default: runBootChecklist } = await import('./handler');
 const { clearInternalHooks, createInternalHookEvent, registerInternalHook, triggerInternalHook } =
-  await import("../../internal-hooks.js");
+  await import('../../internal-hooks');
 
 describe("boot-md startup hook integration", () => {
   beforeEach(() => {

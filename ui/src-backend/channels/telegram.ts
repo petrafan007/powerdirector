@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Bot } from 'grammy';
-import { Channel, ChannelMessage } from './base.js';
+import { Channel, ChannelMessage } from './base';
 
 export interface TelegramConfig {
     enabled?: boolean;

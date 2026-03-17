@@ -2,15 +2,15 @@
 import { Readable, Writable } from "node:stream";
 import { fileURLToPath } from "node:url";
 import { AgentSideConnection, ndJsonStream } from "@agentclientprotocol/sdk";
-import { loadConfig } from "../config/config.js";
-import { resolveGatewayAuth } from "../gateway/auth.js";
-import { buildGatewayConnectionDetails } from "../gateway/call.js";
-import { GatewayClient } from "../gateway/client.js";
-import { isMainModule } from "../infra/is-main.js";
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
-import { readSecretFromFile } from "./secret-file.js";
-import { AcpGatewayAgent } from "./translator.js";
-import type { AcpServerOptions } from "./types.js";
+import { loadConfig } from '../config/config';
+import { resolveGatewayAuth } from '../gateway/auth';
+import { buildGatewayConnectionDetails } from '../gateway/call';
+import { GatewayClient } from '../gateway/client';
+import { isMainModule } from '../infra/is-main';
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
+import { readSecretFromFile } from './secret-file';
+import { AcpGatewayAgent } from './translator';
+import type { AcpServerOptions } from './types';
 
 export function serveAcpGateway(opts: AcpServerOptions = {}): Promise<void> {
   const cfg = loadConfig();

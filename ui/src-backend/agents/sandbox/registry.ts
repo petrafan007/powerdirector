@@ -1,12 +1,12 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { acquireSessionWriteLock } from "../session-write-lock.js";
+import { acquireSessionWriteLock } from '../session-write-lock';
 import {
   SANDBOX_BROWSER_REGISTRY_PATH,
   SANDBOX_REGISTRY_PATH,
   SANDBOX_STATE_DIR,
-} from "./constants.js";
+} from './constants';
 
 export type SandboxRegistryEntry = {
   containerName: string;

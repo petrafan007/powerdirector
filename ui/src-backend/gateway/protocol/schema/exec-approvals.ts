@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import { NonEmptyString } from "./primitives.js";
+import { NonEmptyString } from './primitives';
 
 export const ExecApprovalsAllowlistEntrySchema = Type.Object(
   {

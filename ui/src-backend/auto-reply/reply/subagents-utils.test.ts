@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { SubagentRunRecord } from "../../agents/subagent-registry.js";
+import type { SubagentRunRecord } from '../../agents/subagent-registry';
 import {
   resolveSubagentLabel,
   resolveSubagentTargetFromRuns,
   sortSubagentRuns,
-} from "./subagents-utils.js";
+} from './subagents-utils';
 
 const NOW_MS = 1_700_000_000_000;
 

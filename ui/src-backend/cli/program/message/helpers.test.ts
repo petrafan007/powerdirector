@@ -51,7 +51,7 @@ vi.mock("../../deps.js", () => ({
   createDefaultDeps: () => ({}),
 }));
 
-const { createMessageCliHelpers } = await import("./helpers.js");
+const { createMessageCliHelpers } = await import('./helpers');
 
 const baseSendOptions = {
   channel: "discord",

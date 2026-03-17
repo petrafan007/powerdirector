@@ -1,11 +1,11 @@
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   loadConfig,
   resolveConfigPath,
   resolveOAuthDir,
   resolveStateDir,
-} from "../config/config.js";
-import { buildCleanupPlan } from "./cleanup-utils.js";
+} from '../config/config';
+import { buildCleanupPlan } from './cleanup-utils';
 
 export function resolveCleanupPlanFromDisk(): {
   cfg: PowerDirectorConfig;

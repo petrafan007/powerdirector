@@ -1,12 +1,12 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { ResolvedQmdConfig } from "./backend-config.js";
-import { resolveMemoryBackendConfig } from "./backend-config.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { createSubsystemLogger } from '../logging/subsystem';
+import type { ResolvedQmdConfig } from './backend-config';
+import { resolveMemoryBackendConfig } from './backend-config';
 import type {
   MemoryEmbeddingProbeResult,
   MemorySearchManager,
   MemorySyncProgressUpdate,
-} from "./types.js";
+} from './types';
 
 const log = createSubsystemLogger("memory");
 const QMD_MANAGER_CACHE = new Map<string, MemorySearchManager>();
@@ -32,7 +32,7 @@ export async function getMemorySearchManager(params: {
       }
     }
     try {
-      const { QmdMemoryManager } = await import("./qmd-manager.js");
+      const { QmdMemoryManager } = await import('./qmd-manager');
       const primary = await QmdMemoryManager.create({
         cfg: params.cfg,
         agentId: params.agentId,
@@ -47,7 +47,7 @@ export async function getMemorySearchManager(params: {
           {
             primary,
             fallbackFactory: async () => {
-              const { MemoryIndexManager } = await import("./manager.js");
+              const { MemoryIndexManager } = await import('./manager');
               return await MemoryIndexManager.get(params);
             },
           },
@@ -63,7 +63,7 @@ export async function getMemorySearchManager(params: {
   }
 
   try {
-    const { MemoryIndexManager } = await import("./manager.js");
+    const { MemoryIndexManager } = await import('./manager');
     const manager = await MemoryIndexManager.get(params);
     return { manager };
   } catch (err) {

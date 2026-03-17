@@ -2,30 +2,30 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { HEARTBEAT_PROMPT } from "../auto-reply/heartbeat.js";
-import * as replyModule from "../auto-reply/reply.js";
-import { whatsappOutbound } from "../channels/plugins/outbound/whatsapp.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+import { HEARTBEAT_PROMPT } from '../auto-reply/heartbeat';
+import * as replyModule from '../auto-reply/reply';
+import { whatsappOutbound } from '../channels/plugins/outbound/whatsapp';
+import type { PowerDirectorConfig } from '../config/config';
 import {
   resolveAgentIdFromSessionKey,
   resolveAgentMainSessionKey,
   resolveMainSessionKey,
   resolveStorePath,
-} from "../config/sessions.js";
-import { getActivePluginRegistry, setActivePluginRegistry } from "../plugins/runtime.js";
-import { buildAgentPeerSessionKey } from "../routing/session-key.js";
-import { createOutboundTestPlugin, createTestRegistry } from "../test-utils/channel-plugins.js";
+} from '../config/sessions';
+import { getActivePluginRegistry, setActivePluginRegistry } from '../plugins/runtime';
+import { buildAgentPeerSessionKey } from '../routing/session-key';
+import { createOutboundTestPlugin, createTestRegistry } from '../test-utils/channel-plugins';
 import {
   isHeartbeatEnabledForAgent,
   resolveHeartbeatIntervalMs,
   resolveHeartbeatPrompt,
   runHeartbeatOnce,
-} from "./heartbeat-runner.js";
+} from './heartbeat-runner';
 import {
   resolveHeartbeatDeliveryTarget,
   resolveHeartbeatSenderContext,
-} from "./outbound/targets.js";
-import { enqueueSystemEvent, resetSystemEventsForTest } from "./system-events.js";
+} from './outbound/targets';
+import { enqueueSystemEvent, resetSystemEventsForTest } from './system-events';
 
 // Avoid pulling optional runtime deps during isolated runs.
 vi.mock("jiti", () => ({ createJiti: () => () => ({}) }));

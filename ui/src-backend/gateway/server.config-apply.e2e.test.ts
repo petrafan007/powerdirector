@@ -6,7 +6,7 @@ import {
   installGatewayTestHooks,
   onceMessage,
   startGatewayServer,
-} from "./test-helpers.js";
+} from './test-helpers';
 
 installGatewayTestHooks({ scope: "suite" });
 

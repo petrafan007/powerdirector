@@ -1,5 +1,5 @@
-import { createProcessSupervisor } from "./supervisor.js";
-import type { ProcessSupervisor } from "./types.js";
+import { createProcessSupervisor } from './supervisor';
+import type { ProcessSupervisor } from './types';
 
 let singleton: ProcessSupervisor | null = null;
 
@@ -11,7 +11,7 @@ export function getProcessSupervisor(): ProcessSupervisor {
   return singleton;
 }
 
-export { createProcessSupervisor } from "./supervisor.js";
+export { createProcessSupervisor } from './supervisor';
 export type {
   ManagedRun,
   ProcessSupervisor,
@@ -21,4 +21,4 @@ export type {
   SpawnInput,
   SpawnMode,
   TerminationReason,
-} from "./types.js";
+} from './types';

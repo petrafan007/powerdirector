@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import { NonEmptyString, SessionLabelString } from "./primitives.js";
+import { NonEmptyString, SessionLabelString } from './primitives';
 
 export const SessionsListParamsSchema = Type.Object(
   {

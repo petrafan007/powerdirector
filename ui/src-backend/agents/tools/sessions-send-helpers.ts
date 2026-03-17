@@ -1,9 +1,9 @@
 import {
   getChannelPlugin,
   normalizeChannelId as normalizeAnyChannelId,
-} from "../../channels/plugins/index.js";
-import { normalizeChannelId as normalizeChatChannelId } from "../../channels/registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../channels/plugins/index';
+import { normalizeChannelId as normalizeChatChannelId } from '../../channels/registry';
+import type { PowerDirectorConfig } from '../../config/config';
 
 const ANNOUNCE_SKIP_TOKEN = "ANNOUNCE_SKIP";
 const REPLY_SKIP_TOKEN = "REPLY_SKIP";

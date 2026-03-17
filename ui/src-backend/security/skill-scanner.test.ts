@@ -8,7 +8,7 @@ import {
   scanDirectory,
   scanDirectoryWithSummary,
   scanSource,
-} from "./skill-scanner.js";
+} from './skill-scanner';
 
 // ---------------------------------------------------------------------------
 // Helpers

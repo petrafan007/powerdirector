@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { ensurePluginAllowlisted } from "../config/plugins-allowlist.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { ensurePluginAllowlisted } from '../config/plugins-allowlist';
 
 export type PluginEnableResult = {
   config: PowerDirectorConfig;

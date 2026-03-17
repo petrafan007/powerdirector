@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { noteMacLaunchctlGatewayEnvOverrides } from "./doctor-platform-notes.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { noteMacLaunchctlGatewayEnvOverrides } from './doctor-platform-notes';
 
 describe("noteMacLaunchctlGatewayEnvOverrides", () => {
   it("prints clear unsetenv instructions for token override", async () => {

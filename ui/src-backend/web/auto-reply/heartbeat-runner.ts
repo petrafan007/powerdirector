@@ -1,30 +1,30 @@
-import { appendCronStyleCurrentTimeLine } from "../../agents/current-time.js";
-import { resolveHeartbeatReplyPayload } from "../../auto-reply/heartbeat-reply-payload.js";
+import { appendCronStyleCurrentTimeLine } from '../../agents/current-time';
+import { resolveHeartbeatReplyPayload } from '../../auto-reply/heartbeat-reply-payload';
 import {
   DEFAULT_HEARTBEAT_ACK_MAX_CHARS,
   resolveHeartbeatPrompt,
   stripHeartbeatToken,
-} from "../../auto-reply/heartbeat.js";
-import { getReplyFromConfig } from "../../auto-reply/reply.js";
-import { HEARTBEAT_TOKEN } from "../../auto-reply/tokens.js";
-import { resolveWhatsAppHeartbeatRecipients } from "../../channels/plugins/whatsapp-heartbeat.js";
-import { loadConfig } from "../../config/config.js";
+} from '../../auto-reply/heartbeat';
+import { getReplyFromConfig } from '../../auto-reply/reply';
+import { HEARTBEAT_TOKEN } from '../../auto-reply/tokens';
+import { resolveWhatsAppHeartbeatRecipients } from '../../channels/plugins/whatsapp-heartbeat';
+import { loadConfig } from '../../config/config';
 import {
   loadSessionStore,
   resolveSessionKey,
   resolveStorePath,
   updateSessionStore,
-} from "../../config/sessions.js";
-import { emitHeartbeatEvent, resolveIndicatorType } from "../../infra/heartbeat-events.js";
-import { resolveHeartbeatVisibility } from "../../infra/heartbeat-visibility.js";
-import { getChildLogger } from "../../logging.js";
-import { normalizeMainKey } from "../../routing/session-key.js";
-import { sendMessageWhatsApp } from "../outbound.js";
-import { newConnectionId } from "../reconnect.js";
-import { formatError } from "../session.js";
-import { whatsappHeartbeatLog } from "./loggers.js";
-import { getSessionSnapshot } from "./session-snapshot.js";
-import { elide } from "./util.js";
+} from '../../config/sessions';
+import { emitHeartbeatEvent, resolveIndicatorType } from '../../infra/heartbeat-events';
+import { resolveHeartbeatVisibility } from '../../infra/heartbeat-visibility';
+import { getChildLogger } from '../../logging';
+import { normalizeMainKey } from '../../routing/session-key';
+import { sendMessageWhatsApp } from '../outbound';
+import { newConnectionId } from '../reconnect';
+import { formatError } from '../session';
+import { whatsappHeartbeatLog } from './loggers';
+import { getSessionSnapshot } from './session-snapshot';
+import { elide } from './util';
 
 export async function runWebHeartbeatOnce(opts: {
   cfg?: ReturnType<typeof loadConfig>;

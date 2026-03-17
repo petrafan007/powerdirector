@@ -5,18 +5,18 @@ export {
   createInfoCard,
   createListCard,
   createNotificationBubble,
-} from "./flex-templates/basic-cards.js";
+} from './flex-templates/basic-cards';
 export {
   createAgendaCard,
   createEventCard,
   createReceiptCard,
-} from "./flex-templates/schedule-cards.js";
+} from './flex-templates/schedule-cards';
 export {
   createAppleTvRemoteCard,
   createDeviceControlCard,
   createMediaPlayerCard,
-} from "./flex-templates/media-control-cards.js";
-export { toFlexMessage } from "./flex-templates/message.js";
+} from './flex-templates/media-control-cards';
+export { toFlexMessage } from './flex-templates/message';
 
 export type {
   Action,
@@ -30,4 +30,4 @@ export type {
   FlexImage,
   FlexText,
   ListItem,
-} from "./flex-templates/types.js";
+} from './flex-templates/types';

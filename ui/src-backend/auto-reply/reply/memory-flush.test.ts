@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveMemoryFlushPromptForRun } from "./memory-flush.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveMemoryFlushPromptForRun } from './memory-flush';
 
 describe("resolveMemoryFlushPromptForRun", () => {
   const cfg = {

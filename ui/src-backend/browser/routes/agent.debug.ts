@@ -1,16 +1,16 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { BrowserRouteContext } from "../server-context.js";
+import type { BrowserRouteContext } from '../server-context';
 import {
   readBody,
   resolveTargetIdFromBody,
   resolveTargetIdFromQuery,
   withPlaywrightRouteContext,
-} from "./agent.shared.js";
-import { DEFAULT_TRACE_DIR, resolvePathWithinRoot } from "./path-output.js";
-import type { BrowserRouteRegistrar } from "./types.js";
-import { toBoolean, toStringOrEmpty } from "./utils.js";
+} from './agent.shared';
+import { DEFAULT_TRACE_DIR, resolvePathWithinRoot } from './path-output';
+import type { BrowserRouteRegistrar } from './types';
+import { toBoolean, toStringOrEmpty } from './utils';
 
 export function registerBrowserAgentDebugRoutes(
   app: BrowserRouteRegistrar,

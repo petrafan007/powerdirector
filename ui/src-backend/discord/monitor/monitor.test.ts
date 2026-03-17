@@ -7,42 +7,42 @@ import type {
 import type { Client } from "@buape/carbon";
 import type { GatewayPresenceUpdate } from "discord-api-types/v10";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { DiscordAccountConfig } from "../../config/types.discord.js";
-import { buildAgentSessionKey } from "../../routing/resolve-route.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import type { DiscordAccountConfig } from '../../config/types.discord';
+import { buildAgentSessionKey } from '../../routing/resolve-route';
 import {
   clearDiscordComponentEntries,
   registerDiscordComponentEntries,
   resolveDiscordComponentEntry,
   resolveDiscordModalEntry,
-} from "../components-registry.js";
-import type { DiscordComponentEntry, DiscordModalEntry } from "../components.js";
+} from '../components-registry';
+import type { DiscordComponentEntry, DiscordModalEntry } from '../components';
 import {
   createAgentComponentButton,
   createAgentSelectMenu,
   createDiscordComponentButton,
   createDiscordComponentModal,
-} from "./agent-components.js";
-import type { DiscordChannelConfigResolved } from "./allow-list.js";
+} from './agent-components';
+import type { DiscordChannelConfigResolved } from './allow-list';
 import {
   resolveDiscordMemberAllowed,
   resolveDiscordOwnerAllowFrom,
   resolveDiscordRoleAllowed,
-} from "./allow-list.js";
+} from './allow-list';
 import {
   clearGateways,
   getGateway,
   registerGateway,
   unregisterGateway,
-} from "./gateway-registry.js";
-import { clearPresences, getPresence, presenceCacheSize, setPresence } from "./presence-cache.js";
-import { resolveDiscordPresenceUpdate } from "./presence.js";
+} from './gateway-registry';
+import { clearPresences, getPresence, presenceCacheSize, setPresence } from './presence-cache';
+import { resolveDiscordPresenceUpdate } from './presence';
 import {
   maybeCreateDiscordAutoThread,
   resolveDiscordAutoThreadContext,
   resolveDiscordAutoThreadReplyPlan,
   resolveDiscordReplyDeliveryPlan,
-} from "./threading.js";
+} from './threading';
 
 const readAllowFromStoreMock = vi.hoisted(() => vi.fn());
 const upsertPairingRequestMock = vi.hoisted(() => vi.fn());
@@ -60,7 +60,7 @@ vi.mock("../../pairing/pairing-store.js", () => ({
 }));
 
 vi.mock("../../infra/system-events.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../infra/system-events.js")>();
+  const actual = await importOriginal<typeof import('../../infra/system-events')>();
   return {
     ...actual,
     enqueueSystemEvent: (...args: unknown[]) => enqueueSystemEventMock(...args),
@@ -80,7 +80,7 @@ vi.mock("../../channels/session.js", () => ({
 }));
 
 vi.mock("../../config/sessions.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../config/sessions.js")>();
+  const actual = await importOriginal<typeof import('../../config/sessions')>();
   return {
     ...actual,
     readSessionUpdatedAt: (...args: unknown[]) => readSessionUpdatedAtMock(...args),
@@ -740,7 +740,7 @@ describe("maybeCreateDiscordAutoThread", () => {
       message: {
         id: "m1",
         channelId: "parent",
-      } as unknown as import("./listeners.js").DiscordMessageEvent["message"],
+      } as unknown as import('./listeners').DiscordMessageEvent["message"],
       isGuildMessage: true,
       channelConfig: {
         autoThread: true,
@@ -795,7 +795,7 @@ describe("resolveDiscordAutoThreadReplyPlan", () => {
       message: {
         id: "m1",
         channelId: "parent",
-      } as unknown as import("./listeners.js").DiscordMessageEvent["message"],
+      } as unknown as import('./listeners').DiscordMessageEvent["message"],
       isGuildMessage: true,
       channelConfig:
         overrides?.channelConfig ??

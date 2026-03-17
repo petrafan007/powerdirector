@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { ensureModelAllowlistEntry } from "./model-allowlist.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { ensureModelAllowlistEntry } from './model-allowlist';
 
 export const OPENAI_DEFAULT_MODEL = "openai/gpt-5.1-codex";
 

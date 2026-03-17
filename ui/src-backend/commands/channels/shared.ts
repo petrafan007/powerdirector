@@ -1,8 +1,8 @@
-import { type ChannelId, getChannelPlugin } from "../../channels/plugins/index.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key.js";
-import { defaultRuntime, type RuntimeEnv } from "../../runtime.js";
-import { requireValidConfigSnapshot } from "../config-validation.js";
+import { type ChannelId, getChannelPlugin } from '../../channels/plugins/index';
+import type { PowerDirectorConfig } from '../../config/config';
+import { DEFAULT_ACCOUNT_ID } from '../../routing/session-key';
+import { defaultRuntime, type RuntimeEnv } from '../../runtime';
+import { requireValidConfigSnapshot } from '../config-validation';
 
 export type ChatChannel = ChannelId;
 

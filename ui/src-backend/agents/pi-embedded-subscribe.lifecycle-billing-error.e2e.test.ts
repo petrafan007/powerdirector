@@ -1,7 +1,7 @@
 import type { AssistantMessage } from "@mariozechner/pi-ai";
 import { describe, expect, it, vi } from "vitest";
-import { createStubSessionHarness } from "./pi-embedded-subscribe.e2e-harness.js";
-import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
+import { createStubSessionHarness } from './pi-embedded-subscribe.e2e-harness';
+import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
 
 describe("subscribeEmbeddedPiSession lifecycle billing errors", () => {
   it("includes provider and model context in lifecycle billing errors", () => {

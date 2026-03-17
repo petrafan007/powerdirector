@@ -1,18 +1,18 @@
 import type { Command } from "commander";
-import { normalizeChannelId } from "../channels/plugins/index.js";
-import { listPairingChannels, notifyPairingApproved } from "../channels/plugins/pairing.js";
-import { loadConfig } from "../config/config.js";
-import { resolvePairingIdLabel } from "../pairing/pairing-labels.js";
+import { normalizeChannelId } from '../channels/plugins/index';
+import { listPairingChannels, notifyPairingApproved } from '../channels/plugins/pairing';
+import { loadConfig } from '../config/config';
+import { resolvePairingIdLabel } from '../pairing/pairing-labels';
 import {
   approveChannelPairingCode,
   listChannelPairingRequests,
   type PairingChannel,
-} from "../pairing/pairing-store.js";
-import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
-import { renderTable } from "../terminal/table.js";
-import { theme } from "../terminal/theme.js";
-import { formatCliCommand } from "./command-format.js";
+} from '../pairing/pairing-store';
+import { defaultRuntime } from '../runtime';
+import { formatDocsLink } from '../terminal/links';
+import { renderTable } from '../terminal/table';
+import { theme } from '../terminal/theme';
+import { formatCliCommand } from './command-format';
 
 /** Parse channel, allowing extension channels not in core registry. */
 function parseChannel(raw: unknown, channels: PairingChannel[]): PairingChannel {

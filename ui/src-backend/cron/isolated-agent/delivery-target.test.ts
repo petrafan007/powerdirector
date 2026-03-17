@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_CHAT_CHANNEL } from "../../channels/registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import { DEFAULT_CHAT_CHANNEL } from '../../channels/registry';
+import type { PowerDirectorConfig } from '../../config/config';
 
 vi.mock("../../config/sessions.js", () => ({
   loadSessionStore: vi.fn().mockReturnValue({}),
@@ -12,9 +12,9 @@ vi.mock("../../infra/outbound/channel-selection.js", () => ({
   resolveMessageChannelSelection: vi.fn().mockResolvedValue({ channel: "telegram" }),
 }));
 
-import { loadSessionStore } from "../../config/sessions.js";
-import { resolveMessageChannelSelection } from "../../infra/outbound/channel-selection.js";
-import { resolveDeliveryTarget } from "./delivery-target.js";
+import { loadSessionStore } from '../../config/sessions';
+import { resolveMessageChannelSelection } from '../../infra/outbound/channel-selection';
+import { resolveDeliveryTarget } from './delivery-target';
 
 function makeCfg(overrides?: Partial<PowerDirectorConfig>): PowerDirectorConfig {
   return {

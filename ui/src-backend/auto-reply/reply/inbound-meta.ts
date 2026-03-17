@@ -1,6 +1,6 @@
-import { normalizeChatType } from "../../channels/chat-type.js";
-import { resolveSenderLabel } from "../../channels/sender-label.js";
-import type { TemplateContext } from "../templating.js";
+import { normalizeChatType } from '../../channels/chat-type';
+import { resolveSenderLabel } from '../../channels/sender-label';
+import type { TemplateContext } from '../templating';
 
 function safeTrim(value: unknown): string | undefined {
   if (typeof value !== "string") {

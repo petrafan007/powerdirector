@@ -1,19 +1,19 @@
-import type { ChannelId } from "../../channels/plugins/types.js";
-import { DEFAULT_CHAT_CHANNEL } from "../../channels/registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { ChannelId } from '../../channels/plugins/types';
+import { DEFAULT_CHAT_CHANNEL } from '../../channels/registry';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   loadSessionStore,
   resolveAgentMainSessionKey,
   resolveStorePath,
-} from "../../config/sessions.js";
-import { resolveMessageChannelSelection } from "../../infra/outbound/channel-selection.js";
-import type { OutboundChannel } from "../../infra/outbound/targets.js";
+} from '../../config/sessions';
+import { resolveMessageChannelSelection } from '../../infra/outbound/channel-selection';
+import type { OutboundChannel } from '../../infra/outbound/targets';
 import {
   resolveOutboundTarget,
   resolveSessionDeliveryTarget,
-} from "../../infra/outbound/targets.js";
-import { buildChannelAccountBindings } from "../../routing/bindings.js";
-import { normalizeAgentId } from "../../routing/session-key.js";
+} from '../../infra/outbound/targets';
+import { buildChannelAccountBindings } from '../../routing/bindings';
+import { normalizeAgentId } from '../../routing/session-key';
 
 export async function resolveDeliveryTarget(
   cfg: PowerDirectorConfig,

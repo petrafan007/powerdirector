@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { normalizeDeviceAuthScopes } from "../shared/device-auth.js";
+import { normalizeDeviceAuthScopes } from '../shared/device-auth';
 import {
   createAsyncLock,
   pruneExpiredPending,
@@ -7,8 +7,8 @@ import {
   resolvePairingPaths,
   upsertPendingPairingRequest,
   writeJsonAtomic,
-} from "./pairing-files.js";
-import { generatePairingToken, verifyPairingToken } from "./pairing-token.js";
+} from './pairing-files';
+import { generatePairingToken, verifyPairingToken } from './pairing-token';
 
 export type DevicePairingPendingRequest = {
   requestId: string;

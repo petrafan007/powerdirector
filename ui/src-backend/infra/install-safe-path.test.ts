@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { safePathSegmentHashed } from "./install-safe-path.js";
+import { safePathSegmentHashed } from './install-safe-path';
 
 describe("safePathSegmentHashed", () => {
   it("keeps safe names unchanged", () => {

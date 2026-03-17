@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { GatewayAuthResult } from "./auth.js";
-import { readJsonBody } from "./hooks.js";
+import type { GatewayAuthResult } from './auth';
+import { readJsonBody } from './hooks';
 
 /**
  * Apply baseline security headers that are safe for all response types (API JSON,

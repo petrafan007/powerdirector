@@ -5,11 +5,11 @@ import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import { createPowerDirectorTools } from "./powerdirector-tools.js";
-import { __testing, createPowerDirectorCodingTools } from "./pi-tools.js";
-import { createPowerDirectorReadTool, createSandboxedReadTool } from "./pi-tools.read.js";
-import { createHostSandboxFsBridge } from "./test-helpers/host-sandbox-fs-bridge.js";
-import { createBrowserTool } from "./tools/browser-tool.js";
+import { createPowerDirectorTools } from './powerdirector-tools';
+import { __testing, createPowerDirectorCodingTools } from './pi-tools';
+import { createPowerDirectorReadTool, createSandboxedReadTool } from './pi-tools.read';
+import { createHostSandboxFsBridge } from './test-helpers/host-sandbox-fs-bridge';
+import { createBrowserTool } from './tools/browser-tool';
 
 const defaultTools = createPowerDirectorCodingTools();
 

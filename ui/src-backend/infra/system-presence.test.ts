@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { listSystemPresence, updateSystemPresence, upsertPresence } from "./system-presence.js";
+import { listSystemPresence, updateSystemPresence, upsertPresence } from './system-presence';
 
 describe("system-presence", () => {
   afterEach(() => {

@@ -1,15 +1,15 @@
-import { setCliSessionId } from "../../agents/cli-session.js";
+import { setCliSessionId } from '../../agents/cli-session';
 import {
   deriveSessionTotalTokens,
   hasNonzeroUsage,
   type NormalizedUsage,
-} from "../../agents/usage.js";
+} from '../../agents/usage';
 import {
   type SessionSystemPromptReport,
   type SessionEntry,
   updateSessionStoreEntry,
-} from "../../config/sessions.js";
-import { logVerbose } from "../../globals.js";
+} from '../../config/sessions';
+import { logVerbose } from '../../globals';
 
 function applyCliSessionIdToSessionPatch(
   params: {

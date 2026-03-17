@@ -1,27 +1,27 @@
-import { resolveSessionAgentId } from "../../agents/agent-scope.js";
-import { abortEmbeddedPiRun } from "../../agents/pi-embedded.js";
+import { resolveSessionAgentId } from '../../agents/agent-scope';
+import { abortEmbeddedPiRun } from '../../agents/pi-embedded';
 import {
   listSubagentRunsForRequester,
   markSubagentRunTerminated,
-} from "../../agents/subagent-registry.js";
+} from '../../agents/subagent-registry';
 import {
   resolveInternalSessionKey,
   resolveMainSessionAlias,
-} from "../../agents/tools/sessions-helpers.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../agents/tools/sessions-helpers';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   loadSessionStore,
   resolveStorePath,
   type SessionEntry,
   updateSessionStore,
-} from "../../config/sessions.js";
-import { logVerbose } from "../../globals.js";
-import { parseAgentSessionKey } from "../../routing/session-key.js";
-import { resolveCommandAuthorization } from "../command-auth.js";
-import { normalizeCommandBody, type CommandNormalizeOptions } from "../commands-registry.js";
-import type { FinalizedMsgContext, MsgContext } from "../templating.js";
-import { stripMentions, stripStructuralPrefixes } from "./mentions.js";
-import { clearSessionQueues } from "./queue.js";
+} from '../../config/sessions';
+import { logVerbose } from '../../globals';
+import { parseAgentSessionKey } from '../../routing/session-key';
+import { resolveCommandAuthorization } from '../command-auth';
+import { normalizeCommandBody, type CommandNormalizeOptions } from '../commands-registry';
+import type { FinalizedMsgContext, MsgContext } from '../templating';
+import { stripMentions, stripStructuralPrefixes } from './mentions';
+import { clearSessionQueues } from './queue';
 
 const ABORT_TRIGGERS = new Set(["stop", "esc", "abort", "wait", "exit", "interrupt"]);
 const ABORT_MEMORY = new Map<string, boolean>();

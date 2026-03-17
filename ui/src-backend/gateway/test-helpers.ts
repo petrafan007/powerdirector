@@ -1,2 +1,2 @@
-export * from "./test-helpers.mocks.js";
-export * from "./test-helpers.server.js";
+export * from './test-helpers.mocks';
+export * from './test-helpers.server';

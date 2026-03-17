@@ -1,15 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { HISTORY_CONTEXT_MARKER } from "../auto-reply/reply/history.js";
-import { CURRENT_MESSAGE_MARKER } from "../auto-reply/reply/mentions.js";
-import { emitAgentEvent } from "../infra/agent-events.js";
-import { buildAssistantDeltaResult } from "./test-helpers.agent-results.js";
+import { HISTORY_CONTEXT_MARKER } from '../auto-reply/reply/history';
+import { CURRENT_MESSAGE_MARKER } from '../auto-reply/reply/mentions';
+import { emitAgentEvent } from '../infra/agent-events';
+import { buildAssistantDeltaResult } from './test-helpers.agent-results';
 import {
   agentCommand,
   getFreePort,
   installGatewayTestHooks,
   testState,
   withGatewayServer,
-} from "./test-helpers.js";
+} from './test-helpers';
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -26,7 +26,7 @@ afterAll(async () => {
 });
 
 async function startServerWithDefaultConfig(port: number) {
-  const { startGatewayServer } = await import("./server.js");
+  const { startGatewayServer } = await import('./server');
   return await startGatewayServer(port, {
     host: "127.0.0.1",
     auth: { mode: "token", token: "secret" },
@@ -36,7 +36,7 @@ async function startServerWithDefaultConfig(port: number) {
 }
 
 async function startServer(port: number, opts?: { openAiChatCompletionsEnabled?: boolean }) {
-  const { startGatewayServer } = await import("./server.js");
+  const { startGatewayServer } = await import('./server');
   return await startGatewayServer(port, {
     host: "127.0.0.1",
     auth: { mode: "token", token: "secret" },

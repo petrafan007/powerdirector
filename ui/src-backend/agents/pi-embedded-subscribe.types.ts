@@ -1,9 +1,9 @@
 import type { AgentSession } from "@mariozechner/pi-coding-agent";
-import type { ReasoningLevel, VerboseLevel } from "../auto-reply/thinking.js";
-import type { PowerDirectorConfig } from "../config/types.powerdirector.js";
-import type { HookRunner } from "../plugins/hooks.js";
-import type { BlockReplyChunking } from "./pi-embedded-block-chunker.js";
-import type { BlockReplyPayload } from "./pi-embedded-payloads.js";
+import type { ReasoningLevel, VerboseLevel } from '../auto-reply/thinking';
+import type { PowerDirectorConfig } from '../config/types.powerdirector';
+import type { HookRunner } from '../plugins/hooks';
+import type { BlockReplyChunking } from './pi-embedded-block-chunker';
+import type { BlockReplyPayload } from './pi-embedded-payloads';
 
 export type ToolResultFormat = "markdown" | "plain";
 
@@ -33,4 +33,4 @@ export type SubscribeEmbeddedPiSessionParams = {
   sessionKey?: string;
 };
 
-export type { BlockReplyChunking } from "./pi-embedded-block-chunker.js";
+export type { BlockReplyChunking } from './pi-embedded-block-chunker';

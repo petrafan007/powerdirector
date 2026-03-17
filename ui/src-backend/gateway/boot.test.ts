@@ -2,17 +2,17 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { SessionScope } from "../config/sessions/types.js";
+import type { SessionScope } from '../config/sessions/types';
 
 const agentCommand = vi.fn();
 
 vi.mock("../commands/agent.js", () => ({ agentCommand }));
 
-const { runBootOnce } = await import("./boot.js");
+const { runBootOnce } = await import('./boot');
 const { resolveAgentIdFromSessionKey, resolveAgentMainSessionKey, resolveMainSessionKey } =
-  await import("../config/sessions/main-session.js");
-const { resolveStorePath } = await import("../config/sessions/paths.js");
-const { loadSessionStore, saveSessionStore } = await import("../config/sessions/store.js");
+  await import('../config/sessions/main-session');
+const { resolveStorePath } = await import('../config/sessions/paths');
+const { loadSessionStore, saveSessionStore } = await import('../config/sessions/store');
 
 describe("runBootOnce", () => {
   const resolveMainStore = (

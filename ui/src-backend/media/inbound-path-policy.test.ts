@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   DEFAULT_IMESSAGE_ATTACHMENT_ROOTS,
   isInboundPathAllowed,
@@ -7,7 +7,7 @@ import {
   mergeInboundPathRoots,
   resolveIMessageAttachmentRoots,
   resolveIMessageRemoteAttachmentRoots,
-} from "./inbound-path-policy.js";
+} from './inbound-path-policy';
 
 describe("inbound-path-policy", () => {
   it("validates absolute root patterns", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createPiToolsSandboxContext } from "./pi-tools-sandbox-context.js";
+import { createPiToolsSandboxContext } from './pi-tools-sandbox-context';
 
 describe("createPiToolsSandboxContext", () => {
   it("provides stable defaults for pi-tools sandbox tests", () => {

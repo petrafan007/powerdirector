@@ -1,14 +1,14 @@
 import type { Command } from "commander";
-import { healthCommand } from "../../commands/health.js";
-import { sessionsCommand } from "../../commands/sessions.js";
-import { statusCommand } from "../../commands/status.js";
-import { setVerbose } from "../../globals.js";
-import { defaultRuntime } from "../../runtime.js";
-import { formatDocsLink } from "../../terminal/links.js";
-import { theme } from "../../terminal/theme.js";
-import { runCommandWithRuntime } from "../cli-utils.js";
-import { formatHelpExamples } from "../help-format.js";
-import { parsePositiveIntOrUndefined } from "./helpers.js";
+import { healthCommand } from '../../commands/health';
+import { sessionsCommand } from '../../commands/sessions';
+import { statusCommand } from '../../commands/status';
+import { setVerbose } from '../../globals';
+import { defaultRuntime } from '../../runtime';
+import { formatDocsLink } from '../../terminal/links';
+import { theme } from '../../terminal/theme';
+import { runCommandWithRuntime } from '../cli-utils';
+import { formatHelpExamples } from '../help-format';
+import { parsePositiveIntOrUndefined } from './helpers';
 
 function resolveVerbose(opts: { verbose?: boolean; debug?: boolean }): boolean {
   return Boolean(opts.verbose || opts.debug);

@@ -2,16 +2,16 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { describe, expect, it } from "vitest";
-import { makeTempWorkspace } from "../test-helpers/workspace.js";
-import { captureEnv } from "../test-utils/env.js";
-import { MINIMAX_API_BASE_URL, MINIMAX_CN_API_BASE_URL } from "./onboard-auth.js";
+import { makeTempWorkspace } from '../test-helpers/workspace';
+import { captureEnv } from '../test-utils/env';
+import { MINIMAX_API_BASE_URL, MINIMAX_CN_API_BASE_URL } from './onboard-auth';
 import {
   createThrowingRuntime,
   readJsonFile,
   runNonInteractiveOnboardingWithDefaults,
   type NonInteractiveRuntime,
-} from "./onboard-non-interactive.test-helpers.js";
-import { OPENAI_DEFAULT_MODEL } from "./openai-model-default.js";
+} from './onboard-non-interactive.test-helpers';
+import { OPENAI_DEFAULT_MODEL } from './openai-model-default';
 
 type OnboardEnv = {
   configPath: string;
@@ -132,7 +132,7 @@ async function expectApiKeyProfile(params: {
   key: string;
   metadata?: Record<string, string>;
 }): Promise<void> {
-  const { ensureAuthProfileStore } = await import("../agents/auth-profiles.js");
+  const { ensureAuthProfileStore } = await import('../agents/auth-profiles');
   const store = ensureAuthProfileStore();
   const profile = store.profiles[params.profileId];
   expect(profile?.type).toBe("api_key");
@@ -264,7 +264,7 @@ describe("onboard (non-interactive): provider auth", () => {
       expect(cfg.auth?.profiles?.["anthropic:default"]?.provider).toBe("anthropic");
       expect(cfg.auth?.profiles?.["anthropic:default"]?.mode).toBe("token");
 
-      const { ensureAuthProfileStore } = await import("../agents/auth-profiles.js");
+      const { ensureAuthProfileStore } = await import('../agents/auth-profiles');
       const store = ensureAuthProfileStore();
       const profile = store.profiles["anthropic:default"];
       expect(profile?.type).toBe("token");
@@ -455,7 +455,7 @@ describe("onboard (non-interactive): provider auth", () => {
     await withOnboardEnv(
       "powerdirector-onboard-custom-provider-profile-fallback-",
       async ({ configPath, runtime }) => {
-        const { upsertAuthProfile } = await import("../agents/auth-profiles.js");
+        const { upsertAuthProfile } = await import('../agents/auth-profiles');
         upsertAuthProfile({
           profileId: `${CUSTOM_LOCAL_PROVIDER_ID}:default`,
           credential: {

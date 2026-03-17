@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ChannelGroupPolicy } from "../config/group-policy.js";
-import type { TelegramAccountConfig } from "../config/types.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { registerTelegramNativeCommands } from "./bot-native-commands.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { ChannelGroupPolicy } from '../config/group-policy';
+import type { TelegramAccountConfig } from '../config/types';
+import type { RuntimeEnv } from '../runtime';
+import { registerTelegramNativeCommands } from './bot-native-commands';
 
 const getPluginCommandSpecs = vi.hoisted(() => vi.fn());
 const matchPluginCommand = vi.hoisted(() => vi.fn());

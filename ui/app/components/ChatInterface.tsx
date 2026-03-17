@@ -2136,7 +2136,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                                                 <div className="flex items-center justify-between mb-3 font-bold uppercase tracking-wider" style={{ color: isToolOutput ? 'var(--pd-text-muted)' : 'var(--pd-accent)' }}>
                                                     <div className="flex items-center gap-2">
                                                         <div className={`w-2 h-2 rounded-full ${msg.metadata?.status === 'running' ? 'bg-yellow-500 animate-pulse' : (isToolOutput ? 'bg-slate-500' : 'bg-blue-500')}`} />
-                                                        <span>{isToolOutput ? 'tool output' : 'execution step'}</span>
+                                                        <span>{isToolOutput ? 'tool output' : (isToolRelated && !isPlainAssistantMessage ? 'execution step' : 'assistant')}</span>
                                                     </div>
                                                     {msg.metadata?.tool && <span className="opacity-50">{msg.metadata.tool}</span>}
                                                 </div>

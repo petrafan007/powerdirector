@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   looksLikeSessionId,
   looksLikeSessionKey,
@@ -7,7 +7,7 @@ import {
   resolveInternalSessionKey,
   resolveMainSessionAlias,
   shouldResolveSessionIdInput,
-} from "./sessions-resolution.js";
+} from './sessions-resolution';
 
 describe("resolveMainSessionAlias", () => {
   it("uses normalized main key and global alias for global scope", () => {

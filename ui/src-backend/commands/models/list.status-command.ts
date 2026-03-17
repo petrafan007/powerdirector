@@ -1,57 +1,57 @@
 import path from "node:path";
-import { resolvePowerDirectorAgentDir } from "../../agents/agent-paths.js";
+import { resolvePowerDirectorAgentDir } from '../../agents/agent-paths';
 import {
   resolveAgentDir,
   resolveAgentModelFallbacksOverride,
   resolveAgentModelPrimary,
-} from "../../agents/agent-scope.js";
+} from '../../agents/agent-scope';
 import {
   buildAuthHealthSummary,
   DEFAULT_OAUTH_WARN_MS,
   formatRemainingShort,
-} from "../../agents/auth-health.js";
+} from '../../agents/auth-health';
 import {
   ensureAuthProfileStore,
   resolveAuthStorePathForDisplay,
   resolveProfileUnusableUntilForDisplay,
-} from "../../agents/auth-profiles.js";
-import { resolveEnvApiKey } from "../../agents/model-auth.js";
+} from '../../agents/auth-profiles';
+import { resolveEnvApiKey } from '../../agents/model-auth';
 import {
   buildModelAliasIndex,
   parseModelRef,
   resolveConfiguredModelRef,
   resolveDefaultModelForAgent,
   resolveModelRefFromString,
-} from "../../agents/model-selection.js";
-import { formatCliCommand } from "../../cli/command-format.js";
-import { withProgressTotals } from "../../cli/progress.js";
-import { CONFIG_PATH, loadConfig } from "../../config/config.js";
+} from '../../agents/model-selection';
+import { formatCliCommand } from '../../cli/command-format';
+import { withProgressTotals } from '../../cli/progress';
+import { CONFIG_PATH, loadConfig } from '../../config/config';
 import {
   formatUsageWindowSummary,
   loadProviderUsageSummary,
   resolveUsageProviderId,
   type UsageProviderId,
-} from "../../infra/provider-usage.js";
-import { getShellEnvAppliedKeys, shouldEnableShellEnvFallback } from "../../infra/shell-env.js";
-import type { RuntimeEnv } from "../../runtime.js";
-import { renderTable } from "../../terminal/table.js";
-import { colorize, theme } from "../../terminal/theme.js";
-import { shortenHomePath } from "../../utils.js";
-import { resolveProviderAuthOverview } from "./list.auth-overview.js";
-import { isRich } from "./list.format.js";
+} from '../../infra/provider-usage';
+import { getShellEnvAppliedKeys, shouldEnableShellEnvFallback } from '../../infra/shell-env';
+import type { RuntimeEnv } from '../../runtime';
+import { renderTable } from '../../terminal/table';
+import { colorize, theme } from '../../terminal/theme';
+import { shortenHomePath } from '../../utils';
+import { resolveProviderAuthOverview } from './list.auth-overview';
+import { isRich } from './list.format';
 import {
   describeProbeSummary,
   formatProbeLatency,
   runAuthProbes,
   sortProbeResults,
   type AuthProbeSummary,
-} from "./list.probe.js";
+} from './list.probe';
 import {
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   ensureFlagCompatibility,
   resolveKnownAgentId,
-} from "./shared.js";
+} from './shared';
 
 export async function modelsStatusCommand(
   opts: {

@@ -1,6 +1,6 @@
 import { EventEmitter } from "node:events";
 import { describe, expect, it, vi } from "vitest";
-import { waitForDiscordGatewayStop } from "./monitor.gateway.js";
+import { waitForDiscordGatewayStop } from './monitor.gateway';
 
 describe("waitForDiscordGatewayStop", () => {
   it("resolves on abort and disconnects gateway", async () => {

@@ -27,12 +27,12 @@ type ConsoleSnapshot = {
 
 let originalIsTty: boolean | undefined;
 let snapshot: ConsoleSnapshot;
-let logging: typeof import("../logging.js");
-let state: typeof import("./state.js");
+let logging: typeof import('../logging');
+let state: typeof import('./state');
 
 beforeAll(async () => {
-  logging = await import("../logging.js");
-  state = await import("./state.js");
+  logging = await import('../logging');
+  state = await import('./state');
 });
 
 beforeEach(() => {

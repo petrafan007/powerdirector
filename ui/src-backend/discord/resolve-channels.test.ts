@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
-import { resolveDiscordChannelAllowlist } from "./resolve-channels.js";
+import { withFetchPreconnect } from '../test-utils/fetch-mock';
+import { resolveDiscordChannelAllowlist } from './resolve-channels';
 
 function jsonResponse(body: unknown) {
   return new Response(JSON.stringify(body), { status: 200 });

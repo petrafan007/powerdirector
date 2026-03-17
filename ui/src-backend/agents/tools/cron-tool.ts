@@ -1,16 +1,16 @@
 import { Type } from "@sinclair/typebox";
-import { loadConfig } from "../../config/config.js";
-import { normalizeCronJobCreate, normalizeCronJobPatch } from "../../cron/normalize.js";
-import type { CronDelivery, CronMessageChannel } from "../../cron/types.js";
-import { normalizeHttpWebhookUrl } from "../../cron/webhook-url.js";
-import { parseAgentSessionKey } from "../../sessions/session-key-utils.js";
-import { extractTextFromChatContent } from "../../shared/chat-content.js";
-import { isRecord, truncateUtf16Safe } from "../../utils.js";
-import { resolveSessionAgentId } from "../agent-scope.js";
-import { optionalStringEnum, stringEnum } from "../schema/typebox.js";
-import { type AnyAgentTool, jsonResult, readStringParam } from "./common.js";
-import { callGatewayTool, readGatewayCallOptions, type GatewayCallOptions } from "./gateway.js";
-import { resolveInternalSessionKey, resolveMainSessionAlias } from "./sessions-helpers.js";
+import { loadConfig } from '../../config/config';
+import { normalizeCronJobCreate, normalizeCronJobPatch } from '../../cron/normalize';
+import type { CronDelivery, CronMessageChannel } from '../../cron/types';
+import { normalizeHttpWebhookUrl } from '../../cron/webhook-url';
+import { parseAgentSessionKey } from '../../sessions/session-key-utils';
+import { extractTextFromChatContent } from '../../shared/chat-content';
+import { isRecord, truncateUtf16Safe } from '../../utils';
+import { resolveSessionAgentId } from '../agent-scope';
+import { optionalStringEnum, stringEnum } from '../schema/typebox';
+import { type AnyAgentTool, jsonResult, readStringParam } from './common';
+import { callGatewayTool, readGatewayCallOptions, type GatewayCallOptions } from './gateway';
+import { resolveInternalSessionKey, resolveMainSessionAlias } from './sessions-helpers';
 
 // NOTE: We use Type.Object({}, { additionalProperties: true }) for job/patch
 // instead of CronAddParamsSchema/CronJobPatchSchema because the gateway schemas

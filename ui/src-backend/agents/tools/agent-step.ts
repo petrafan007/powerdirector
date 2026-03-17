@@ -1,8 +1,8 @@
 import crypto from "node:crypto";
-import { callGateway } from "../../gateway/call.js";
-import { INTERNAL_MESSAGE_CHANNEL } from "../../utils/message-channel.js";
-import { AGENT_LANE_NESTED } from "../lanes.js";
-import { extractAssistantText, stripToolMessages } from "./sessions-helpers.js";
+import { callGateway } from '../../gateway/call';
+import { INTERNAL_MESSAGE_CHANNEL } from '../../utils/message-channel';
+import { AGENT_LANE_NESTED } from '../lanes';
+import { extractAssistantText, stripToolMessages } from './sessions-helpers';
 
 export async function readLatestAssistantReply(params: {
   sessionKey: string;

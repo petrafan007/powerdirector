@@ -1,13 +1,13 @@
 import { EventEmitter } from "node:events";
 import type { IncomingMessage } from "node:http";
 import { describe, expect, it } from "vitest";
-import { createMockServerResponse } from "../test-utils/mock-http-response.js";
+import { createMockServerResponse } from '../test-utils/mock-http-response';
 import {
   installRequestBodyLimitGuard,
   isRequestBodyLimitError,
   readJsonBodyWithLimit,
   readRequestBodyWithLimit,
-} from "./http-body.js";
+} from './http-body';
 
 type MockIncomingMessage = IncomingMessage & {
   destroyed?: boolean;

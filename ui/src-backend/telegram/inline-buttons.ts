@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { TelegramInlineButtonsScope } from "../config/types.telegram.js";
-import { listTelegramAccountIds, resolveTelegramAccount } from "./accounts.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { TelegramInlineButtonsScope } from '../config/types.telegram';
+import { listTelegramAccountIds, resolveTelegramAccount } from './accounts';
 
 const DEFAULT_INLINE_BUTTONS_SCOPE: TelegramInlineButtonsScope = "allowlist";
 
@@ -64,4 +64,4 @@ export function isTelegramInlineButtonsEnabled(params: {
   );
 }
 
-export { resolveTelegramTargetChatType } from "./targets.js";
+export { resolveTelegramTargetChatType } from './targets';

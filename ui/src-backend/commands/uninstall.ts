@@ -1,12 +1,12 @@
 import path from "node:path";
 import { cancel, confirm, isCancel, multiselect } from "@clack/prompts";
-import { isNixMode } from "../config/config.js";
-import { resolveGatewayService } from "../daemon/service.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { stylePromptHint, stylePromptMessage, stylePromptTitle } from "../terminal/prompt-style.js";
-import { resolveHomeDir } from "../utils.js";
-import { resolveCleanupPlanFromDisk } from "./cleanup-plan.js";
-import { removePath } from "./cleanup-utils.js";
+import { isNixMode } from '../config/config';
+import { resolveGatewayService } from '../daemon/service';
+import type { RuntimeEnv } from '../runtime';
+import { stylePromptHint, stylePromptMessage, stylePromptTitle } from '../terminal/prompt-style';
+import { resolveHomeDir } from '../utils';
+import { resolveCleanupPlanFromDisk } from './cleanup-plan';
+import { removePath } from './cleanup-utils';
 
 type UninstallScope = "service" | "state" | "workspace" | "app";
 

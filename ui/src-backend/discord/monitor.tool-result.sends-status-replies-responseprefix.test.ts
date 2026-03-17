@@ -7,11 +7,11 @@ import {
   sendMock,
   updateLastRouteMock,
   upsertPairingRequestMock,
-} from "./monitor.tool-result.test-harness.js";
-import { createDiscordMessageHandler } from "./monitor/message-handler.js";
-import { __resetDiscordChannelInfoCacheForTest } from "./monitor/message-utils.js";
+} from './monitor.tool-result.test-harness';
+import { createDiscordMessageHandler } from './monitor/message-handler';
+import { __resetDiscordChannelInfoCacheForTest } from './monitor/message-utils';
 
-type Config = ReturnType<typeof import("../config/config.js").loadConfig>;
+type Config = ReturnType<typeof import('../config/config').loadConfig>;
 
 beforeEach(() => {
   __resetDiscordChannelInfoCacheForTest();

@@ -1,13 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { createSubsystemLogger } from "../../logging/subsystem.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { createSubsystemLogger } from '../../logging/subsystem';
 import {
   normalizePluginsConfig,
   resolveEnableState,
   resolveMemorySlotDecision,
-} from "../../plugins/config-state.js";
-import { loadPluginManifestRegistry } from "../../plugins/manifest-registry.js";
+} from '../../plugins/config-state';
+import { loadPluginManifestRegistry } from '../../plugins/manifest-registry';
 
 const log = createSubsystemLogger("skills");
 

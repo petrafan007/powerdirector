@@ -7,7 +7,7 @@ import {
   getModelsPageSize,
   parseModelCallbackData,
   type ProviderInfo,
-} from "./model-buttons.js";
+} from './model-buttons';
 
 describe("parseModelCallbackData", () => {
   it("parses mdl_prov callback", () => {

@@ -1,27 +1,27 @@
 import fs from "node:fs/promises";
-import type { Dirent } from "node:fs";
+import { existsSync, type Dirent } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { type CommandOptions, runCommandWithTimeout } from "../process/exec.js";
+import { type CommandOptions, runCommandWithTimeout } from '../process/exec';
 import {
   resolveControlUiDistIndexHealth,
   resolveControlUiDistIndexPathForRoot,
-} from "./control-ui-assets.js";
-import { detectPackageManager as detectPackageManagerImpl } from "./detect-package-manager.js";
-import { readPackageName, readPackageVersion } from "./package-json.js";
-import { trimLogTail } from "./restart-sentinel.js";
+} from './control-ui-assets';
+import { detectPackageManager as detectPackageManagerImpl } from './detect-package-manager';
+import { readPackageName, readPackageVersion } from './package-json';
+import { trimLogTail } from './restart-sentinel';
 import {
   channelToNpmTag,
   DEFAULT_PACKAGE_CHANNEL,
   DEV_BRANCH,
   type UpdateChannel,
-} from "./update-channels.js";
-import { compareSemverStrings } from "./update-check.js";
+} from './update-channels';
+import { compareSemverStrings } from './update-check';
 import {
   cleanupGlobalRenameDirs,
   detectGlobalInstallManagerForRoot,
   globalInstallArgs,
-} from "./update-global.js";
+} from './update-global';
 import {
   buildGitDirtyCheckArgv,
   createGitRuntimeBackup,
@@ -32,8 +32,8 @@ import {
   restorePreservedGitRuntimeFiles,
   snapshotPreservedGitRuntimeFiles,
   type GitRuntimeBackup,
-} from "./update-git-runtime-files.js";
-import { resolveGitChannelTag } from "./update-git-channel.js";
+} from './update-git-runtime-files';
+import { resolveGitChannelTag } from './update-git-channel';
 
 export type UpdateStepResult = {
   name: string;
@@ -605,7 +605,9 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
 
     if (preservedRuntimeFiles.length > 0 || true) {
       const resetPaths = [
-        ...preservedRuntimeFiles.map((file) => file.relativePath),
+        ...preservedRuntimeFiles
+          .map((file) => file.relativePath)
+          .filter((path) => path !== "powerdirector.config.json"),
         "ui/src-backend/",
       ];
       const resetRuntimeFilesStep = await runStep(
@@ -980,6 +982,38 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       });
     }
 
+    // CRITICAL: Restore preserved runtime files (e.g. the user's powerdirector.config.json)
+    // BEFORE running doctor. Previously this restore only happened inside finalizeGitResult,
+    // which runs AFTER doctor — meaning doctor ran against the template config from the
+    // git tag rather than the user's actual config, overwriting it.
+    let runtimeFilesRestored = false;
+    if (preservedRuntimeFiles.length > 0) {
+      try {
+        await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
+
+        // EXTRA SAFEGUARD: Verify config.json exists before proceeding to doctor
+        const configPath = path.join(gitRoot, "powerdirector.config.json");
+        if (!existsSync(configPath)) {
+          throw new Error("Critical failure: powerdirector.config.json missing after pre-doctor restoration. Aborting update to prevent wipe.");
+        }
+
+        runtimeFilesRestored = true;
+        console.log(`[update-runner] Restored preserved runtime files before doctor step.`);
+      } catch (error) {
+        console.warn(`[update-runner] Early restore of preserved runtime files failed: ${error instanceof Error ? error.message : String(error)}`);
+        // If it failed and it's an update, we MUST abort for safety
+        return finalizeGitResult({
+          status: "error",
+          mode: "git",
+          root: gitRoot,
+          reason: "config-restoration-failed",
+          before: { sha: beforeSha, version: beforeVersion },
+          steps,
+          durationMs: Date.now() - startedAt,
+        });
+      }
+    }
+
     // Use --fix so that doctor auto-strips unknown config keys introduced by
     // schema changes between versions, preventing a startup validation crash.
     const doctorArgv = [process.execPath, doctorEntry, "doctor", "--non-interactive", "--fix"];
@@ -987,6 +1021,17 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       step("powerdirector doctor", doctorArgv, gitRoot, { POWERDIRECTOR_UPDATE_IN_PROGRESS: "1" }),
     );
     steps.push(doctorStep);
+
+    // After doctor, re-restore preserved files in case doctor overwrote them
+    // (e.g. doctor --fix may rewrite powerdirector.config.json).
+    if (preservedRuntimeFiles.length > 0 && runtimeFilesRestored) {
+      try {
+        await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
+        console.log(`[update-runner] Re-restored preserved runtime files after doctor step.`);
+      } catch (error) {
+        console.warn(`[update-runner] Post-doctor re-restore of preserved runtime files failed: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
 
     const uiIndexHealth = await resolveControlUiDistIndexHealth({ root: gitRoot });
     if (!uiIndexHealth.exists) {

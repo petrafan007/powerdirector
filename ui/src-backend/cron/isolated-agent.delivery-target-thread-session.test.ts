@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 
 // Mock session store so we can control what entries exist.
 const mockStore: Record<string, Record<string, unknown>> = {};
@@ -27,7 +27,7 @@ vi.mock("../channels/plugins/index.js", () => ({
   normalizeChannelId: vi.fn((id: string) => id),
 }));
 
-const { resolveDeliveryTarget } = await import("./isolated-agent/delivery-target.js");
+const { resolveDeliveryTarget } = await import('./isolated-agent/delivery-target');
 
 describe("resolveDeliveryTarget thread session lookup", () => {
   const cfg: PowerDirectorConfig = {};

@@ -1,7 +1,7 @@
-import { stopBrowserBridgeServer } from "../../browser/bridge-server.js";
-import { defaultRuntime } from "../../runtime.js";
-import { BROWSER_BRIDGES } from "./browser-bridges.js";
-import { dockerContainerState, execDocker } from "./docker.js";
+import { stopBrowserBridgeServer } from '../../browser/bridge-server';
+import { defaultRuntime } from '../../runtime';
+import { BROWSER_BRIDGES } from './browser-bridges';
+import { dockerContainerState, execDocker } from './docker';
 import {
   readBrowserRegistry,
   readRegistry,
@@ -9,8 +9,8 @@ import {
   removeRegistryEntry,
   type SandboxBrowserRegistryEntry,
   type SandboxRegistryEntry,
-} from "./registry.js";
-import type { SandboxConfig } from "./types.js";
+} from './registry';
+import type { SandboxConfig } from './types';
 
 let lastPruneAtMs = 0;
 

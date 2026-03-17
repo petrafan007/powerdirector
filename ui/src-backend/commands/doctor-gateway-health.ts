@@ -1,10 +1,10 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { buildGatewayConnectionDetails, callGateway } from "../gateway/call.js";
-import { collectChannelStatusIssues } from "../infra/channels-status-issues.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { note } from "../terminal/note.js";
-import { formatHealthCheckFailure } from "./health-format.js";
-import { healthCommand } from "./health.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { buildGatewayConnectionDetails, callGateway } from '../gateway/call';
+import { collectChannelStatusIssues } from '../infra/channels-status-issues';
+import type { RuntimeEnv } from '../runtime';
+import { note } from '../terminal/note';
+import { formatHealthCheckFailure } from './health-format';
+import { healthCommand } from './health';
 
 export async function checkGatewayHealth(params: {
   runtime: RuntimeEnv;

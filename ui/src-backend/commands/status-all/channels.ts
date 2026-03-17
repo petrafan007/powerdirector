@@ -2,17 +2,17 @@ import fs from "node:fs";
 import {
   buildChannelAccountSnapshot,
   formatChannelAllowFrom,
-} from "../../channels/account-summary.js";
-import { resolveChannelDefaultAccountId } from "../../channels/plugins/helpers.js";
-import { listChannelPlugins } from "../../channels/plugins/index.js";
+} from '../../channels/account-summary';
+import { resolveChannelDefaultAccountId } from '../../channels/plugins/helpers';
+import { listChannelPlugins } from '../../channels/plugins/index';
 import type {
   ChannelAccountSnapshot,
   ChannelId,
   ChannelPlugin,
-} from "../../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { sha256HexPrefix } from "../../logging/redact-identifier.js";
-import { formatTimeAgo } from "./format.js";
+} from '../../channels/plugins/types';
+import type { PowerDirectorConfig } from '../../config/config';
+import { sha256HexPrefix } from '../../logging/redact-identifier';
+import { formatTimeAgo } from './format';
 
 export type ChannelRow = {
   id: ChannelId;

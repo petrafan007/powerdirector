@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownToTelegramHtml } from "./format.js";
+import { markdownToTelegramHtml } from './format';
 
 describe("markdownToTelegramHtml", () => {
   it("renders basic inline formatting", () => {

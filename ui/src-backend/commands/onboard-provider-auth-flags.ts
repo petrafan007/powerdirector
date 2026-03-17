@@ -1,4 +1,4 @@
-import type { AuthChoice, OnboardOptions } from "./onboard-types.js";
+import type { AuthChoice, OnboardOptions } from './onboard-types';
 
 type OnboardProviderAuthOptionKey = keyof Pick<
   OnboardOptions,

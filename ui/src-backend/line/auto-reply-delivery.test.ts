@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import type { LineAutoReplyDeps } from "./auto-reply-delivery.js";
-import { deliverLineAutoReply } from "./auto-reply-delivery.js";
-import { sendLineReplyChunks } from "./reply-chunks.js";
+import type { LineAutoReplyDeps } from './auto-reply-delivery';
+import { deliverLineAutoReply } from './auto-reply-delivery';
+import { sendLineReplyChunks } from './reply-chunks';
 
 const createFlexMessage = (altText: string, contents: unknown) => ({
   type: "flex" as const,

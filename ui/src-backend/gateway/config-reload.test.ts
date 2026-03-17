@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { listChannelPlugins } from "../channels/plugins/index.js";
-import type { ChannelPlugin } from "../channels/plugins/types.js";
-import { setActivePluginRegistry } from "../plugins/runtime.js";
-import { createTestRegistry } from "../test-utils/channel-plugins.js";
+import { listChannelPlugins } from '../channels/plugins/index';
+import type { ChannelPlugin } from '../channels/plugins/types';
+import { setActivePluginRegistry } from '../plugins/runtime';
+import { createTestRegistry } from '../test-utils/channel-plugins';
 import {
   buildGatewayReloadPlan,
   diffConfigPaths,
   resolveGatewayReloadSettings,
-} from "./config-reload.js";
+} from './config-reload';
 
 describe("diffConfigPaths", () => {
   it("captures nested config changes", () => {

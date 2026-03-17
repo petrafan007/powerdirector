@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { parseByteSize } from "../cli/parse-bytes.js";
-import { parseDurationMs } from "../cli/parse-duration.js";
-import { ElevatedAllowFromSchema } from "./zod-schema.agent-runtime.js";
-import { createAllowDenyChannelRulesSchema } from "./zod-schema.allowdeny.js";
+import { parseByteSize } from '../cli/parse-bytes';
+import { parseDurationMs } from '../cli/parse-duration';
+import { ElevatedAllowFromSchema } from './zod-schema.agent-runtime';
+import { createAllowDenyChannelRulesSchema } from './zod-schema.allowdeny';
 import {
   GroupChatSchema,
   InboundDebounceSchema,
@@ -10,8 +10,8 @@ import {
   QueueSchema,
   TypingModeSchema,
   TtsConfigSchema,
-} from "./zod-schema.core.js";
-import { sensitive } from "./zod-schema.sensitive.js";
+} from './zod-schema.core';
+import { sensitive } from './zod-schema.sensitive';
 
 const SessionResetConfigSchema = z
   .object({

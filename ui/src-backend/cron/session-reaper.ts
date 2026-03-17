@@ -6,11 +6,11 @@
  * run records. The base session (`...:cron:<jobId>`) is kept as-is.
  */
 
-import { parseDurationMs } from "../cli/parse-duration.js";
-import { updateSessionStore } from "../config/sessions.js";
-import type { CronConfig } from "../config/types.cron.js";
-import { isCronRunSessionKey } from "../sessions/session-key-utils.js";
-import type { Logger } from "./service/state.js";
+import { parseDurationMs } from '../cli/parse-duration';
+import { updateSessionStore } from '../config/sessions';
+import type { CronConfig } from '../config/types.cron';
+import { isCronRunSessionKey } from '../sessions/session-key-utils';
+import type { Logger } from './service/state';
 
 const DEFAULT_RETENTION_MS = 24 * 3_600_000; // 24 hours
 

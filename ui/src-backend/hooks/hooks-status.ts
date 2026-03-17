@@ -1,11 +1,11 @@
 import path from "node:path";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { evaluateEntryMetadataRequirementsForCurrentPlatform } from "../shared/entry-status.js";
-import type { RequirementConfigCheck, Requirements } from "../shared/requirements.js";
-import { CONFIG_DIR } from "../utils.js";
-import { hasBinary, isConfigPathTruthy, resolveHookConfig } from "./config.js";
-import type { HookEligibilityContext, HookEntry, HookInstallSpec } from "./types.js";
-import { loadWorkspaceHookEntries } from "./workspace.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { evaluateEntryMetadataRequirementsForCurrentPlatform } from '../shared/entry-status';
+import type { RequirementConfigCheck, Requirements } from '../shared/requirements';
+import { CONFIG_DIR } from '../utils';
+import { hasBinary, isConfigPathTruthy, resolveHookConfig } from './config';
+import type { HookEligibilityContext, HookEntry, HookInstallSpec } from './types';
+import { loadWorkspaceHookEntries } from './workspace';
 
 export type HookStatusConfigCheck = RequirementConfigCheck;
 

@@ -3,10 +3,10 @@ import type {
   DmPolicy,
   GroupPolicy,
   MarkdownConfig,
-} from "./types.base.js";
-import type { ChannelHeartbeatVisibilityConfig } from "./types.channels.js";
-import type { DmConfig } from "./types.messages.js";
-import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from "./types.tools.js";
+} from './types.base';
+import type { ChannelHeartbeatVisibilityConfig } from './types.channels';
+import type { DmConfig } from './types.messages';
+import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from './types.tools';
 
 export type IMessageAccountConfig = {
   /** Optional display name for this account (used in CLI/UI lists). */

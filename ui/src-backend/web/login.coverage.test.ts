@@ -3,8 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import { DisconnectReason } from "@whiskeysockets/baileys";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { loginWeb } from "./login.js";
-import { createWaSocket, formatError, waitForWaConnection } from "./session.js";
+import { loginWeb } from './login';
+import { createWaSocket, formatError, waitForWaConnection } from './session';
 
 const rmMock = vi.spyOn(fs, "rm");
 

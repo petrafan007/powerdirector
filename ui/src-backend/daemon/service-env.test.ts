@@ -1,14 +1,14 @@
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolveGatewayStateDir } from "./paths.js";
+import { resolveGatewayStateDir } from './paths';
 import {
   buildMinimalServicePath,
   buildNodeServiceEnvironment,
   buildServiceEnvironment,
   getMinimalServicePathParts,
   getMinimalServicePathPartsFromEnv,
-} from "./service-env.js";
+} from './service-env';
 
 describe("getMinimalServicePathParts - Linux user directories", () => {
   it("includes user bin directories when HOME is set on Linux", () => {

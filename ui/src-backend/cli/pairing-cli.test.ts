@@ -45,10 +45,10 @@ vi.mock("../config/config.js", () => ({
 }));
 
 describe("pairing cli", () => {
-  let registerPairingCli: typeof import("./pairing-cli.js").registerPairingCli;
+  let registerPairingCli: typeof import('./pairing-cli').registerPairingCli;
 
   beforeAll(async () => {
-    ({ registerPairingCli } = await import("./pairing-cli.js"));
+    ({ registerPairingCli } = await import('./pairing-cli'));
   });
 
   beforeEach(() => {

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { killProcessTree } from "./kill-tree.js";
+import { killProcessTree } from './kill-tree';
 
 const { spawnMock } = vi.hoisted(() => ({
   spawnMock: vi.fn(),

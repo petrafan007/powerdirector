@@ -4,7 +4,7 @@ import {
   resolveArchiveOutputPath,
   stripArchivePath,
   validateArchiveEntryPath,
-} from "./archive-path.js";
+} from './archive-path';
 
 describe("archive path helpers", () => {
   it("uses custom escape labels in traversal errors", () => {

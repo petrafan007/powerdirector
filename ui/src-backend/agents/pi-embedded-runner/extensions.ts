@@ -2,15 +2,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Api, Model } from "@mariozechner/pi-ai";
 import type { SessionManager } from "@mariozechner/pi-coding-agent";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveContextWindowInfo } from "../context-window-guard.js";
-import { DEFAULT_CONTEXT_TOKENS } from "../defaults.js";
-import { setCompactionSafeguardRuntime } from "../pi-extensions/compaction-safeguard-runtime.js";
-import { setContextPruningRuntime } from "../pi-extensions/context-pruning/runtime.js";
-import { computeEffectiveSettings } from "../pi-extensions/context-pruning/settings.js";
-import { makeToolPrunablePredicate } from "../pi-extensions/context-pruning/tools.js";
-import { ensurePiCompactionReserveTokens } from "../pi-settings.js";
-import { isCacheTtlEligibleProvider, readLastCacheTtlTimestamp } from "./cache-ttl.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveContextWindowInfo } from '../context-window-guard';
+import { DEFAULT_CONTEXT_TOKENS } from '../defaults';
+import { setCompactionSafeguardRuntime } from '../pi-extensions/compaction-safeguard-runtime';
+import { setContextPruningRuntime } from '../pi-extensions/context-pruning/runtime';
+import { computeEffectiveSettings } from '../pi-extensions/context-pruning/settings';
+import { makeToolPrunablePredicate } from '../pi-extensions/context-pruning/tools';
+import { ensurePiCompactionReserveTokens } from '../pi-settings';
+import { isCacheTtlEligibleProvider, readLastCacheTtlTimestamp } from './cache-ttl';
 
 function resolvePiExtensionPath(id: string): string {
   const self = fileURLToPath(import.meta.url);

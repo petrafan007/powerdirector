@@ -1,16 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { POWERDIRECTOR_MANIFEST_KEY } from "../plugins/manifest.js";
-import { isPathInsideWithRealpath } from "../security/scan-paths.js";
-import { CONFIG_DIR, resolveUserPath } from "../utils.js";
-import { resolveBundledHooksDir } from "./bundled-dir.js";
-import { shouldIncludeHook } from "./config.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { POWERDIRECTOR_MANIFEST_KEY } from '../plugins/manifest';
+import { isPathInsideWithRealpath } from '../security/scan-paths';
+import { CONFIG_DIR, resolveUserPath } from '../utils';
+import { resolveBundledHooksDir } from './bundled-dir';
+import { shouldIncludeHook } from './config';
 import {
   parseFrontmatter,
   resolvePowerDirectorMetadata,
   resolveHookInvocationPolicy,
-} from "./frontmatter.js";
+} from './frontmatter';
 import type {
   Hook,
   HookEligibilityContext,
@@ -18,7 +18,7 @@ import type {
   HookSnapshot,
   HookSource,
   ParsedHookFrontmatter,
-} from "./types.js";
+} from './types';
 
 type HookPackageManifest = {
   name?: string;

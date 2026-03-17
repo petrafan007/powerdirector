@@ -1,8 +1,8 @@
-import { fetchWithSsrFGuard } from "../infra/net/fetch-guard.js";
-import type { SsrFPolicy } from "../infra/net/ssrf.js";
-import { logWarn } from "../logger.js";
-import { estimateBase64DecodedBytes } from "./base64.js";
-import { readResponseWithLimit } from "./read-response-with-limit.js";
+import { fetchWithSsrFGuard } from '../infra/net/fetch-guard';
+import type { SsrFPolicy } from '../infra/net/ssrf';
+import { logWarn } from '../logger';
+import { estimateBase64DecodedBytes } from './base64';
+import { readResponseWithLimit } from './read-response-with-limit';
 
 type CanvasModule = typeof import("@napi-rs/canvas");
 type PdfJsModule = typeof import("pdfjs-dist/legacy/build/pdf.mjs");

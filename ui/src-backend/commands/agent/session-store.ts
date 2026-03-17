@@ -1,13 +1,13 @@
-import { setCliSessionId } from "../../agents/cli-session.js";
-import { lookupContextTokens } from "../../agents/context.js";
-import { DEFAULT_CONTEXT_TOKENS } from "../../agents/defaults.js";
-import { isCliProvider } from "../../agents/model-selection.js";
-import { deriveSessionTotalTokens, hasNonzeroUsage } from "../../agents/usage.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { type SessionEntry, updateSessionStore } from "../../config/sessions.js";
+import { setCliSessionId } from '../../agents/cli-session';
+import { lookupContextTokens } from '../../agents/context';
+import { DEFAULT_CONTEXT_TOKENS } from '../../agents/defaults';
+import { isCliProvider } from '../../agents/model-selection';
+import { deriveSessionTotalTokens, hasNonzeroUsage } from '../../agents/usage';
+import type { PowerDirectorConfig } from '../../config/config';
+import { type SessionEntry, updateSessionStore } from '../../config/sessions';
 
 type RunResult = Awaited<
-  ReturnType<(typeof import("../../agents/pi-embedded.js"))["runEmbeddedPiAgent"]>
+  ReturnType<(typeof import('../../agents/pi-embedded'))["runEmbeddedPiAgent"]>
 >;
 
 export async function updateSessionStoreAfterAgentRun(params: {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createCommandHandlers } from "./tui-command-handlers.js";
+import { createCommandHandlers } from './tui-command-handlers';
 
 describe("tui command handlers", () => {
   it("forwards unknown slash commands to the gateway", async () => {

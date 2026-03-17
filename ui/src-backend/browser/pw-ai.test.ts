@@ -55,16 +55,16 @@ function createBrowser(pages: unknown[]) {
 }
 
 let chromiumMock: typeof import("playwright-core").chromium;
-let snapshotAiViaPlaywright: typeof import("./pw-tools-core.snapshot.js").snapshotAiViaPlaywright;
-let clickViaPlaywright: typeof import("./pw-tools-core.interactions.js").clickViaPlaywright;
-let closePlaywrightBrowserConnection: typeof import("./pw-session.js").closePlaywrightBrowserConnection;
+let snapshotAiViaPlaywright: typeof import('./pw-tools-core.snapshot').snapshotAiViaPlaywright;
+let clickViaPlaywright: typeof import('./pw-tools-core.interactions').clickViaPlaywright;
+let closePlaywrightBrowserConnection: typeof import('./pw-session').closePlaywrightBrowserConnection;
 
 beforeAll(async () => {
   const pw = await import("playwright-core");
   chromiumMock = pw.chromium;
-  ({ snapshotAiViaPlaywright } = await import("./pw-tools-core.snapshot.js"));
-  ({ clickViaPlaywright } = await import("./pw-tools-core.interactions.js"));
-  ({ closePlaywrightBrowserConnection } = await import("./pw-session.js"));
+  ({ snapshotAiViaPlaywright } = await import('./pw-tools-core.snapshot'));
+  ({ clickViaPlaywright } = await import('./pw-tools-core.interactions'));
+  ({ closePlaywrightBrowserConnection } = await import('./pw-session'));
 });
 
 afterEach(async () => {

@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import YAML from 'yaml';
-import { Skill, SkillEntry, ParsedSkillFrontmatter } from './types.js';
+import { Skill, SkillEntry, ParsedSkillFrontmatter } from './types';
 import { getRuntimeLogger } from '../core/logger.ts';
 
 export class SkillLoader {

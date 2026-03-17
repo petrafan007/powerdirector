@@ -1,16 +1,16 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { installModelsConfigTestHooks, withModelsTempHome } from "./models-config.e2e-harness.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { installModelsConfigTestHooks, withModelsTempHome } from './models-config.e2e-harness';
 
 describe("models-config", () => {
   installModelsConfigTestHooks();
 
   it("normalizes gemini 3 ids to preview for google providers", async () => {
     await withModelsTempHome(async () => {
-      const { ensurePowerDirectorModelsJson } = await import("./models-config.js");
-      const { resolvePowerDirectorAgentDir } = await import("./agent-paths.js");
+      const { ensurePowerDirectorModelsJson } = await import('./models-config');
+      const { resolvePowerDirectorAgentDir } = await import('./agent-paths');
 
       const cfg: PowerDirectorConfig = {
         models: {

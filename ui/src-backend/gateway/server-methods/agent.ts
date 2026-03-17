@@ -1,35 +1,35 @@
 import { randomUUID } from "node:crypto";
-import { listAgentIds } from "../../agents/agent-scope.js";
-import { BARE_SESSION_RESET_PROMPT } from "../../auto-reply/reply/session-reset-prompt.js";
-import { agentCommand } from "../../commands/agent.js";
-import { loadConfig } from "../../config/config.js";
+import { listAgentIds } from '../../agents/agent-scope';
+import { BARE_SESSION_RESET_PROMPT } from '../../auto-reply/reply/session-reset-prompt';
+import { agentCommand } from '../../commands/agent';
+import { loadConfig } from '../../config/config';
 import {
   resolveAgentIdFromSessionKey,
   resolveExplicitAgentSessionKey,
   resolveAgentMainSessionKey,
   type SessionEntry,
   updateSessionStore,
-} from "../../config/sessions.js";
-import { registerAgentRunContext } from "../../infra/agent-events.js";
+} from '../../config/sessions';
+import { registerAgentRunContext } from '../../infra/agent-events';
 import {
   resolveAgentDeliveryPlan,
   resolveAgentOutboundTarget,
-} from "../../infra/outbound/agent-delivery.js";
-import { classifySessionKeyShape, normalizeAgentId } from "../../routing/session-key.js";
-import { defaultRuntime } from "../../runtime.js";
-import { normalizeInputProvenance, type InputProvenance } from "../../sessions/input-provenance.js";
-import { resolveSendPolicy } from "../../sessions/send-policy.js";
-import { normalizeSessionDeliveryFields } from "../../utils/delivery-context.js";
+} from '../../infra/outbound/agent-delivery';
+import { classifySessionKeyShape, normalizeAgentId } from '../../routing/session-key';
+import { defaultRuntime } from '../../runtime';
+import { normalizeInputProvenance, type InputProvenance } from '../../sessions/input-provenance';
+import { resolveSendPolicy } from '../../sessions/send-policy';
+import { normalizeSessionDeliveryFields } from '../../utils/delivery-context';
 import {
   INTERNAL_MESSAGE_CHANNEL,
   isDeliverableMessageChannel,
   isGatewayMessageChannel,
   normalizeMessageChannel,
-} from "../../utils/message-channel.js";
-import { resolveAssistantIdentity } from "../assistant-identity.js";
-import { parseMessageWithAttachments } from "../chat-attachments.js";
-import { resolveAssistantAvatarUrl } from "../control-ui-shared.js";
-import { GATEWAY_CLIENT_CAPS, hasGatewayClientCap } from "../protocol/client-info.js";
+} from '../../utils/message-channel';
+import { resolveAssistantIdentity } from '../assistant-identity';
+import { parseMessageWithAttachments } from '../chat-attachments';
+import { resolveAssistantAvatarUrl } from '../control-ui-shared';
+import { GATEWAY_CLIENT_CAPS, hasGatewayClientCap } from '../protocol/client-info';
 import {
   ErrorCodes,
   errorShape,
@@ -37,19 +37,19 @@ import {
   validateAgentIdentityParams,
   validateAgentParams,
   validateAgentWaitParams,
-} from "../protocol/index.js";
+} from '../protocol/index';
 import {
   canonicalizeSpawnedByForAgent,
   loadSessionEntry,
   pruneLegacyStoreKeys,
   resolveGatewaySessionStoreTarget,
-} from "../session-utils.js";
-import { formatForLog } from "../ws-log.js";
-import { waitForAgentJob } from "./agent-job.js";
-import { injectTimestamp, timestampOptsFromConfig } from "./agent-timestamp.js";
-import { normalizeRpcAttachmentsToChatAttachments } from "./attachment-normalize.js";
-import { sessionsHandlers } from "./sessions.js";
-import type { GatewayRequestHandlerOptions, GatewayRequestHandlers } from "./types.js";
+} from '../session-utils';
+import { formatForLog } from '../ws-log';
+import { waitForAgentJob } from './agent-job';
+import { injectTimestamp, timestampOptsFromConfig } from './agent-timestamp';
+import { normalizeRpcAttachmentsToChatAttachments } from './attachment-normalize';
+import { sessionsHandlers } from './sessions';
+import type { GatewayRequestHandlerOptions, GatewayRequestHandlers } from './types';
 
 const RESET_COMMAND_RE = /^\/(new|reset)(?:\s+([\s\S]*))?$/i;
 

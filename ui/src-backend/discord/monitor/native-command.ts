@@ -10,15 +10,15 @@ import {
   type ComponentData,
 } from "@buape/carbon";
 import { ApplicationCommandOptionType, ButtonStyle } from "discord-api-types/v10";
-import { resolveHumanDelayConfig } from "../../agents/identity.js";
-import { resolveChunkMode, resolveTextChunkLimit } from "../../auto-reply/chunk.js";
+import { resolveHumanDelayConfig } from '../../agents/identity';
+import { resolveChunkMode, resolveTextChunkLimit } from '../../auto-reply/chunk';
 import type {
   ChatCommandDefinition,
   CommandArgDefinition,
   CommandArgValues,
   CommandArgs,
   NativeCommandSpec,
-} from "../../auto-reply/commands-registry.js";
+} from '../../auto-reply/commands-registry';
 import {
   buildCommandTextFromArgs,
   findCommandByNativeName,
@@ -27,24 +27,24 @@ import {
   resolveCommandArgChoices,
   resolveCommandArgMenu,
   serializeCommandArgs,
-} from "../../auto-reply/commands-registry.js";
-import { finalizeInboundContext } from "../../auto-reply/reply/inbound-context.js";
-import { dispatchReplyWithDispatcher } from "../../auto-reply/reply/provider-dispatcher.js";
-import type { ReplyPayload } from "../../auto-reply/types.js";
-import { resolveCommandAuthorizedFromAuthorizers } from "../../channels/command-gating.js";
-import { createReplyPrefixOptions } from "../../channels/reply-prefix.js";
-import type { PowerDirectorConfig, loadConfig } from "../../config/config.js";
-import { getAgentScopedMediaLocalRoots } from "../../media/local-roots.js";
-import { buildPairingReply } from "../../pairing/pairing-messages.js";
+} from '../../auto-reply/commands-registry';
+import { finalizeInboundContext } from '../../auto-reply/reply/inbound-context';
+import { dispatchReplyWithDispatcher } from '../../auto-reply/reply/provider-dispatcher';
+import type { ReplyPayload } from '../../auto-reply/types';
+import { resolveCommandAuthorizedFromAuthorizers } from '../../channels/command-gating';
+import { createReplyPrefixOptions } from '../../channels/reply-prefix';
+import type { PowerDirectorConfig, loadConfig } from '../../config/config';
+import { getAgentScopedMediaLocalRoots } from '../../media/local-roots';
+import { buildPairingReply } from '../../pairing/pairing-messages';
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from "../../pairing/pairing-store.js";
-import { resolveAgentRoute } from "../../routing/resolve-route.js";
-import { buildUntrustedChannelMetadata } from "../../security/channel-metadata.js";
-import { chunkItems } from "../../utils/chunk-items.js";
-import { loadWebMedia } from "../../web/media.js";
-import { chunkDiscordTextWithMode } from "../chunk.js";
+} from '../../pairing/pairing-store';
+import { resolveAgentRoute } from '../../routing/resolve-route';
+import { buildUntrustedChannelMetadata } from '../../security/channel-metadata';
+import { chunkItems } from '../../utils/chunk-items';
+import { loadWebMedia } from '../../web/media';
+import { chunkDiscordTextWithMode } from '../chunk';
 import {
   allowListMatches,
   isDiscordGroupAllowedByPolicy,
@@ -54,10 +54,10 @@ import {
   resolveDiscordGuildEntry,
   resolveDiscordMemberAccessState,
   resolveDiscordOwnerAllowFrom,
-} from "./allow-list.js";
-import { resolveDiscordChannelInfo } from "./message-utils.js";
-import { resolveDiscordSenderIdentity } from "./sender-identity.js";
-import { resolveDiscordThreadParentInfo } from "./threading.js";
+} from './allow-list';
+import { resolveDiscordChannelInfo } from './message-utils';
+import { resolveDiscordSenderIdentity } from './sender-identity';
+import { resolveDiscordThreadParentInfo } from './threading';
 
 type DiscordConfig = NonNullable<PowerDirectorConfig["channels"]>["discord"];
 

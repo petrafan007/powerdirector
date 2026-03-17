@@ -4,7 +4,7 @@ import {
   CONTEXT_LIMIT_TRUNCATION_NOTICE,
   PREEMPTIVE_TOOL_RESULT_COMPACTION_PLACEHOLDER,
   installToolResultContextGuard,
-} from "./tool-result-context-guard.js";
+} from './tool-result-context-guard';
 
 function makeUser(text: string): AgentMessage {
   return {

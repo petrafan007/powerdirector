@@ -1,8 +1,8 @@
 import path from "node:path";
-import { fetchWithSsrFGuard } from "../infra/net/fetch-guard.js";
-import type { LookupFn, SsrFPolicy } from "../infra/net/ssrf.js";
-import { detectMime, extensionForMime } from "./mime.js";
-import { readResponseWithLimit } from "./read-response-with-limit.js";
+import { fetchWithSsrFGuard } from '../infra/net/fetch-guard';
+import type { LookupFn, SsrFPolicy } from '../infra/net/ssrf';
+import { detectMime, extensionForMime } from './mime';
+import { readResponseWithLimit } from './read-response-with-limit';
 
 type FetchMediaResult = {
   buffer: Buffer;

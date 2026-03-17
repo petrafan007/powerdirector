@@ -5,7 +5,7 @@ import {
   isLikelyMutatingToolName,
   isMutatingToolCall,
   isSameToolMutationAction,
-} from "./tool-mutation.js";
+} from './tool-mutation';
 
 describe("tool mutation helpers", () => {
   it("treats session_status as mutating only when model override is provided", () => {

@@ -1,5 +1,5 @@
-import { type ModelRef, normalizeProviderId } from "../../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import { type ModelRef, normalizeProviderId } from '../../agents/model-selection';
+import type { PowerDirectorConfig } from '../../config/config';
 
 export type ModelPickerCatalogEntry = {
   provider: string;

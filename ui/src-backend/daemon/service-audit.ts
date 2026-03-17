@@ -1,13 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveLaunchAgentPlistPath } from "./launchd.js";
+import { resolveLaunchAgentPlistPath } from './launchd';
 import {
   isSystemNodePath,
   isVersionManagedNodePath,
   resolveSystemNodePath,
-} from "./runtime-paths.js";
-import { getMinimalServicePathPartsFromEnv } from "./service-env.js";
-import { resolveSystemdUserUnitPath } from "./systemd.js";
+} from './runtime-paths';
+import { getMinimalServicePathPartsFromEnv } from './service-env';
+import { resolveSystemdUserUnitPath } from './systemd';
 
 export type GatewayServiceCommand = {
   programArguments: string[];

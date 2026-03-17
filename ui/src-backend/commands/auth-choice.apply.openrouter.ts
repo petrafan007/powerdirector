@@ -1,20 +1,20 @@
-import { ensureAuthProfileStore, resolveAuthProfileOrder } from "../agents/auth-profiles.js";
-import { resolveEnvApiKey } from "../agents/model-auth.js";
+import { ensureAuthProfileStore, resolveAuthProfileOrder } from '../agents/auth-profiles';
+import { resolveEnvApiKey } from '../agents/model-auth';
 import {
   formatApiKeyPreview,
   normalizeApiKeyInput,
   validateApiKeyInput,
-} from "./auth-choice.api-key.js";
-import { createAuthChoiceAgentModelNoter } from "./auth-choice.apply-helpers.js";
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { applyDefaultModelChoice } from "./auth-choice.default-model.js";
+} from './auth-choice.api-key';
+import { createAuthChoiceAgentModelNoter } from './auth-choice.apply-helpers';
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
+import { applyDefaultModelChoice } from './auth-choice.default-model';
 import {
   applyAuthProfileConfig,
   applyOpenrouterConfig,
   applyOpenrouterProviderConfig,
   setOpenrouterApiKey,
   OPENROUTER_DEFAULT_MODEL_REF,
-} from "./onboard-auth.js";
+} from './onboard-auth';
 
 export async function applyAuthChoiceOpenRouter(
   params: ApplyAuthChoiceParams,

@@ -2,17 +2,17 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { telegramPlugin } from "../../extensions/telegram/src/channel.js";
-import { setTelegramRuntime } from "../../extensions/telegram/src/runtime.js";
-import { whatsappPlugin } from "../../extensions/whatsapp/src/channel.js";
-import { setWhatsAppRuntime } from "../../extensions/whatsapp/src/runtime.js";
-import * as replyModule from "../auto-reply/reply.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveAgentMainSessionKey, resolveMainSessionKey } from "../config/sessions.js";
-import { setActivePluginRegistry } from "../plugins/runtime.js";
-import { createPluginRuntime } from "../plugins/runtime/index.js";
-import { createTestRegistry } from "../test-utils/channel-plugins.js";
-import { runHeartbeatOnce } from "./heartbeat-runner.js";
+import { telegramPlugin } from '../../extensions/telegram/src/channel';
+import { setTelegramRuntime } from '../../extensions/telegram/src/runtime';
+import { whatsappPlugin } from '../../extensions/whatsapp/src/channel';
+import { setWhatsAppRuntime } from '../../extensions/whatsapp/src/runtime';
+import * as replyModule from '../auto-reply/reply';
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveAgentMainSessionKey, resolveMainSessionKey } from '../config/sessions';
+import { setActivePluginRegistry } from '../plugins/runtime';
+import { createPluginRuntime } from '../plugins/runtime/index';
+import { createTestRegistry } from '../test-utils/channel-plugins';
+import { runHeartbeatOnce } from './heartbeat-runner';
 
 // Avoid pulling optional runtime deps during isolated runs.
 vi.mock("jiti", () => ({ createJiti: () => () => ({}) }));

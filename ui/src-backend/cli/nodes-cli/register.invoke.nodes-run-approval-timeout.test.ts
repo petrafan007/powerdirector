@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { DEFAULT_EXEC_APPROVAL_TIMEOUT_MS } from "../../infra/exec-approvals.js";
-import { parseTimeoutMs } from "../nodes-run.js";
+import { DEFAULT_EXEC_APPROVAL_TIMEOUT_MS } from '../../infra/exec-approvals';
+import { parseTimeoutMs } from '../nodes-run';
 
 /**
  * Regression test for #12098:
@@ -33,10 +33,10 @@ vi.mock("../progress.js", () => ({
 }));
 
 describe("nodes run: approval transport timeout (#12098)", () => {
-  let callGatewayCli: typeof import("./rpc.js").callGatewayCli;
+  let callGatewayCli: typeof import('./rpc').callGatewayCli;
 
   beforeAll(async () => {
-    ({ callGatewayCli } = await import("./rpc.js"));
+    ({ callGatewayCli } = await import('./rpc'));
   });
 
   beforeEach(() => {

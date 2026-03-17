@@ -34,7 +34,7 @@ export function setupAccessControlTestHarness(): void {
 }
 
 vi.mock("../../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../config/config.js")>();
+  const actual = await importOriginal<typeof import('../../config/config')>();
   return {
     ...actual,
     loadConfig: () => config,

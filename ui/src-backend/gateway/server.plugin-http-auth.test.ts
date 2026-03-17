@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { describe, expect, test, vi } from "vitest";
-import type { ResolvedGatewayAuth } from "./auth.js";
-import { createGatewayHttpServer } from "./server-http.js";
-import { withTempConfig } from "./test-temp-config.js";
+import type { ResolvedGatewayAuth } from './auth';
+import { createGatewayHttpServer } from './server-http';
+import { withTempConfig } from './test-temp-config';
 
 function createRequest(params: {
   path: string;

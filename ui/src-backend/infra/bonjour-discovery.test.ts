@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { runCommandWithTimeout } from "../process/exec.js";
-import { discoverGatewayBeacons } from "./bonjour-discovery.js";
+import type { runCommandWithTimeout } from '../process/exec';
+import { discoverGatewayBeacons } from './bonjour-discovery';
 
 const WIDE_AREA_DOMAIN = "powerdirector.internal.";
 

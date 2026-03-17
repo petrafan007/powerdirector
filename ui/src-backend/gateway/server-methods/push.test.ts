@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ErrorCodes } from "../protocol/index.js";
-import { pushHandlers } from "./push.js";
+import { ErrorCodes } from '../protocol/index';
+import { pushHandlers } from './push';
 
 vi.mock("../../infra/push-apns.js", () => ({
   loadApnsRegistration: vi.fn(),
@@ -14,7 +14,7 @@ import {
   normalizeApnsEnvironment,
   resolveApnsAuthConfigFromEnv,
   sendApnsAlert,
-} from "../../infra/push-apns.js";
+} from '../../infra/push-apns';
 
 type RespondCall = [boolean, unknown?, { code: number; message: string }?];
 

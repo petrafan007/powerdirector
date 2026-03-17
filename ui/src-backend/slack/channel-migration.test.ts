@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { migrateSlackChannelConfig } from "./channel-migration.js";
+import { migrateSlackChannelConfig } from './channel-migration';
 
 describe("migrateSlackChannelConfig", () => {
   it("migrates global channel ids", () => {

@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ChannelOutboundAdapter, ChannelPlugin } from "../../channels/plugins/types.js";
-import { setActivePluginRegistry } from "../../plugins/runtime.js";
-import { createTestRegistry } from "../../test-utils/channel-plugins.js";
-import { createIMessageTestPlugin } from "../../test-utils/imessage-test-plugin.js";
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../../utils/message-channel.js";
-import { sendMessage, sendPoll } from "./message.js";
+import type { ChannelOutboundAdapter, ChannelPlugin } from '../../channels/plugins/types';
+import { setActivePluginRegistry } from '../../plugins/runtime';
+import { createTestRegistry } from '../../test-utils/channel-plugins';
+import { createIMessageTestPlugin } from '../../test-utils/imessage-test-plugin';
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../../utils/message-channel';
+import { sendMessage, sendPoll } from './message';
 
 const setRegistry = (registry: ReturnType<typeof createTestRegistry>) => {
   setActivePluginRegistry(registry);

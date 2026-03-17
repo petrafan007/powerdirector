@@ -1,11 +1,11 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { Api, AssistantMessage, Model } from "@mariozechner/pi-ai";
-import type { ThinkLevel } from "../../../auto-reply/thinking.js";
-import type { SessionSystemPromptReport } from "../../../config/sessions/types.js";
-import type { MessagingToolSend } from "../../pi-embedded-messaging.js";
-import type { AuthStorage, ModelRegistry } from "../../pi-model-discovery.js";
-import type { NormalizedUsage } from "../../usage.js";
-import type { RunEmbeddedPiAgentParams } from "./params.js";
+import type { ThinkLevel } from '../../../auto-reply/thinking';
+import type { SessionSystemPromptReport } from '../../../config/sessions/types';
+import type { MessagingToolSend } from '../../pi-embedded-messaging';
+import type { AuthStorage, ModelRegistry } from '../../pi-model-discovery';
+import type { NormalizedUsage } from '../../usage';
+import type { RunEmbeddedPiAgentParams } from './params';
 
 type EmbeddedRunAttemptBase = Omit<
   RunEmbeddedPiAgentParams,

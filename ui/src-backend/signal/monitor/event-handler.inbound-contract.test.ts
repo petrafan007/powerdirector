@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildDispatchInboundContextCapture } from "../../../test/helpers/inbound-contract-capture.js";
-import { expectInboundContextContract } from "../../../test/helpers/inbound-contract.js";
-import type { MsgContext } from "../../auto-reply/templating.js";
+import { buildDispatchInboundContextCapture } from '../../../test/helpers/inbound-contract-capture';
+import { expectInboundContextContract } from '../../../test/helpers/inbound-contract';
+import type { MsgContext } from '../../auto-reply/templating';
 
 const capture = vi.hoisted(() => ({ ctx: undefined as MsgContext | undefined }));
 
@@ -9,11 +9,11 @@ vi.mock("../../auto-reply/dispatch.js", async (importOriginal) => {
   return await buildDispatchInboundContextCapture(importOriginal, capture);
 });
 
-import { createSignalEventHandler } from "./event-handler.js";
+import { createSignalEventHandler } from './event-handler';
 import {
   createBaseSignalEventHandlerDeps,
   createSignalReceiveEvent,
-} from "./event-handler.test-harness.js";
+} from './event-handler.test-harness';
 
 describe("signal createSignalEventHandler inbound contract", () => {
   it("passes a finalized MsgContext to dispatchInboundMessage", async () => {

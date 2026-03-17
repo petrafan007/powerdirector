@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveAgentConfig } from "../agent-scope.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveAgentConfig } from '../agent-scope';
 import {
   DEFAULT_SANDBOX_BROWSER_AUTOSTART_TIMEOUT_MS,
   DEFAULT_SANDBOX_BROWSER_CDP_PORT,
@@ -13,15 +13,15 @@ import {
   DEFAULT_SANDBOX_MAX_AGE_DAYS,
   DEFAULT_SANDBOX_WORKDIR,
   DEFAULT_SANDBOX_WORKSPACE_ROOT,
-} from "./constants.js";
-import { resolveSandboxToolPolicyForAgent } from "./tool-policy.js";
+} from './constants';
+import { resolveSandboxToolPolicyForAgent } from './tool-policy';
 import type {
   SandboxBrowserConfig,
   SandboxConfig,
   SandboxDockerConfig,
   SandboxPruneConfig,
   SandboxScope,
-} from "./types.js";
+} from './types';
 
 export function resolveSandboxBrowserDockerCreateConfig(params: {
   docker: SandboxDockerConfig;

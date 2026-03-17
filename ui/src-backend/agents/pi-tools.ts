@@ -5,32 +5,32 @@ import {
   createWriteTool,
   readTool,
 } from "@mariozechner/pi-coding-agent";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ToolLoopDetectionConfig } from "../config/types.tools.js";
-import { logWarn } from "../logger.js";
-import { getPluginToolMeta } from "../plugins/tools.js";
-import { isSubagentSessionKey } from "../routing/session-key.js";
-import { resolveGatewayMessageChannel } from "../utils/message-channel.js";
-import { resolveAgentConfig } from "./agent-scope.js";
-import { createApplyPatchTool } from "./apply-patch.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { ToolLoopDetectionConfig } from '../config/types.tools';
+import { logWarn } from '../logger';
+import { getPluginToolMeta } from '../plugins/tools';
+import { isSubagentSessionKey } from '../routing/session-key';
+import { resolveGatewayMessageChannel } from '../utils/message-channel';
+import { resolveAgentConfig } from './agent-scope';
+import { createApplyPatchTool } from './apply-patch';
 import {
   createExecTool,
   createProcessTool,
   type ExecToolDefaults,
   type ProcessToolDefaults,
-} from "./bash-tools.js";
-import { listChannelAgentTools } from "./channel-tools.js";
-import { resolveImageSanitizationLimits } from "./image-sanitization.js";
-import type { ModelAuthMode } from "./model-auth.js";
-import { createPowerDirectorTools } from "./powerdirector-tools.js";
-import { wrapToolWithAbortSignal } from "./pi-tools.abort.js";
-import { wrapToolWithBeforeToolCallHook } from "./pi-tools.before-tool-call.js";
+} from './bash-tools';
+import { listChannelAgentTools } from './channel-tools';
+import { resolveImageSanitizationLimits } from './image-sanitization';
+import type { ModelAuthMode } from './model-auth';
+import { createPowerDirectorTools } from './powerdirector-tools';
+import { wrapToolWithAbortSignal } from './pi-tools.abort';
+import { wrapToolWithBeforeToolCallHook } from './pi-tools.before-tool-call';
 import {
   isToolAllowedByPolicies,
   resolveEffectiveToolPolicy,
   resolveGroupToolPolicy,
   resolveSubagentToolPolicy,
-} from "./pi-tools.policy.js";
+} from './pi-tools.policy';
 import {
   assertRequiredParams,
   CLAUDE_PARAM_GROUPS,
@@ -42,22 +42,22 @@ import {
   patchToolSchemaForClaudeCompatibility,
   wrapToolWorkspaceRootGuard,
   wrapToolParamNormalization,
-} from "./pi-tools.read.js";
-import { cleanToolSchemaForGemini, normalizeToolParameters } from "./pi-tools.schema.js";
-import type { AnyAgentTool } from "./pi-tools.types.js";
-import type { SandboxContext } from "./sandbox.js";
-import { getSubagentDepthFromSessionStore } from "./subagent-depth.js";
+} from './pi-tools.read';
+import { cleanToolSchemaForGemini, normalizeToolParameters } from './pi-tools.schema';
+import type { AnyAgentTool } from './pi-tools.types';
+import type { SandboxContext } from './sandbox';
+import { getSubagentDepthFromSessionStore } from './subagent-depth';
 import {
   applyToolPolicyPipeline,
   buildDefaultToolPolicyPipelineSteps,
-} from "./tool-policy-pipeline.js";
+} from './tool-policy-pipeline';
 import {
   applyOwnerOnlyToolPolicy,
   collectExplicitAllowlist,
   mergeAlsoAllowPolicy,
   resolveToolProfilePolicy,
-} from "./tool-policy.js";
-import { resolveWorkspaceRoot } from "./workspace-dir.js";
+} from './tool-policy';
+import { resolveWorkspaceRoot } from './workspace-dir';
 
 function isOpenAIProvider(provider?: string) {
   const normalized = provider?.trim().toLowerCase();

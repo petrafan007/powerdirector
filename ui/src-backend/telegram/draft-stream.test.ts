@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createTelegramDraftStream } from "./draft-stream.js";
+import { createTelegramDraftStream } from './draft-stream';
 
 function createMockDraftApi(sendMessageImpl?: () => Promise<{ message_id: number }>) {
   return {

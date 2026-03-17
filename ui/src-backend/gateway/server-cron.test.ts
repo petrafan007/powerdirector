@@ -1,9 +1,9 @@
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CliDeps } from "../cli/deps.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { SsrFBlockedError } from "../infra/net/ssrf.js";
+import type { CliDeps } from '../cli/deps';
+import type { PowerDirectorConfig } from '../config/config';
+import { SsrFBlockedError } from '../infra/net/ssrf';
 
 const enqueueSystemEventMock = vi.fn();
 const requestHeartbeatNowMock = vi.fn();
@@ -19,7 +19,7 @@ vi.mock("../infra/heartbeat-wake.js", () => ({
 }));
 
 vi.mock("../config/config.js", async () => {
-  const actual = await vi.importActual<typeof import("../config/config.js")>("../config/config.js");
+  const actual = await vi.importActual<typeof import('../config/config')>("../config/config.js");
   return {
     ...actual,
     loadConfig: () => loadConfigMock(),
@@ -30,7 +30,7 @@ vi.mock("../infra/net/fetch-guard.js", () => ({
   fetchWithSsrFGuard: (...args: unknown[]) => fetchWithSsrFGuardMock(...args),
 }));
 
-import { buildGatewayCronService } from "./server-cron.js";
+import { buildGatewayCronService } from './server-cron';
 
 describe("buildGatewayCronService", () => {
   beforeEach(() => {

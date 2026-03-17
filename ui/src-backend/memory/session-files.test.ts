@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { buildSessionEntry } from "./session-files.js";
+import { buildSessionEntry } from './session-files';
 
 describe("buildSessionEntry", () => {
   let tmpDir: string;

@@ -48,4 +48,4 @@ export type {
   PairedNode,
   PairingList,
   PendingRequest,
-} from "../../shared/node-list-types.js";
+} from '../../shared/node-list-types';

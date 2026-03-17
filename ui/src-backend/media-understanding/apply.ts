@@ -1,21 +1,21 @@
 import path from "node:path";
-import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.js";
-import type { MsgContext } from "../auto-reply/templating.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { logVerbose, shouldLogVerbose } from "../globals.js";
+import { finalizeInboundContext } from '../auto-reply/reply/inbound-context';
+import type { MsgContext } from '../auto-reply/templating';
+import type { PowerDirectorConfig } from '../config/config';
+import { logVerbose, shouldLogVerbose } from '../globals';
 import {
   extractFileContentFromSource,
   normalizeMimeType,
   resolveInputFileLimits,
-} from "../media/input-files.js";
-import { resolveAttachmentKind } from "./attachments.js";
-import { runWithConcurrency } from "./concurrency.js";
+} from '../media/input-files';
+import { resolveAttachmentKind } from './attachments';
+import { runWithConcurrency } from './concurrency';
 import {
   extractMediaUserText,
   formatAudioTranscripts,
   formatMediaUnderstandingBody,
-} from "./format.js";
-import { resolveConcurrency } from "./resolve.js";
+} from './format';
+import { resolveConcurrency } from './resolve';
 import {
   type ActiveMediaModel,
   buildProviderRegistry,
@@ -23,13 +23,13 @@ import {
   normalizeMediaAttachments,
   resolveMediaAttachmentLocalRoots,
   runCapability,
-} from "./runner.js";
+} from './runner';
 import type {
   MediaUnderstandingCapability,
   MediaUnderstandingDecision,
   MediaUnderstandingOutput,
   MediaUnderstandingProvider,
-} from "./types.js";
+} from './types';
 
 export type ApplyMediaUnderstandingResult = {
   outputs: MediaUnderstandingOutput[];

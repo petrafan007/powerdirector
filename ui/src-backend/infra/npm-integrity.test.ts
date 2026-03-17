@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   resolveNpmIntegrityDrift,
   resolveNpmIntegrityDriftWithDefaultMessage,
-} from "./npm-integrity.js";
+} from './npm-integrity';
 
 describe("resolveNpmIntegrityDrift", () => {
   it("returns proceed=true when integrity is missing or unchanged", async () => {

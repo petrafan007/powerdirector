@@ -2,9 +2,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, it, expect, beforeEach } from "vitest";
-import { isCronRunSessionKey } from "../sessions/session-key-utils.js";
-import type { Logger } from "./service/state.js";
-import { sweepCronRunSessions, resolveRetentionMs, resetReaperThrottle } from "./session-reaper.js";
+import { isCronRunSessionKey } from '../sessions/session-key-utils';
+import type { Logger } from './service/state';
+import { sweepCronRunSessions, resolveRetentionMs, resetReaperThrottle } from './session-reaper';
 
 function createTestLogger(): Logger {
   return {

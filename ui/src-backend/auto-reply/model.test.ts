@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractModelDirective } from "./model.js";
+import { extractModelDirective } from './model';
 
 describe("extractModelDirective", () => {
   describe("basic /model command", () => {

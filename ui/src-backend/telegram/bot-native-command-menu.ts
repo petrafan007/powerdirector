@@ -2,9 +2,9 @@ import type { Bot } from "grammy";
 import {
   normalizeTelegramCommandName,
   TELEGRAM_COMMAND_NAME_PATTERN,
-} from "../config/telegram-custom-commands.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { withTelegramApiErrorLogging } from "./api-logging.js";
+} from '../config/telegram-custom-commands';
+import type { RuntimeEnv } from '../runtime';
+import { withTelegramApiErrorLogging } from './api-logging';
 
 export const TELEGRAM_MAX_COMMANDS = 100;
 

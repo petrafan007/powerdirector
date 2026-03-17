@@ -1,6 +1,6 @@
 import "./reply.directive.directive-behavior.e2e-mocks.js";
 import { describe, expect, it, vi } from "vitest";
-import { loadSessionStore } from "../config/sessions.js";
+import { loadSessionStore } from '../config/sessions';
 import {
   installDirectiveBehaviorE2EHooks,
   makeWhatsAppDirectiveConfig,
@@ -9,8 +9,8 @@ import {
   runEmbeddedPiAgent,
   sessionStorePath,
   withTempHome,
-} from "./reply.directive.directive-behavior.e2e-harness.js";
-import { getReplyFromConfig } from "./reply.js";
+} from './reply.directive.directive-behavior.e2e-harness';
+import { getReplyFromConfig } from './reply';
 
 async function runThinkDirectiveAndGetText(
   home: string,

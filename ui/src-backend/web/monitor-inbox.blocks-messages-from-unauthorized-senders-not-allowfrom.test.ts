@@ -1,13 +1,13 @@
 import "./monitor-inbox.test-harness.js";
 import { describe, expect, it, vi } from "vitest";
-import { monitorWebInbox } from "./inbound.js";
+import { monitorWebInbox } from './inbound';
 import {
   DEFAULT_ACCOUNT_ID,
   getAuthDir,
   getSock,
   installWebMonitorInboxUnitTestHooks,
   mockLoadConfig,
-} from "./monitor-inbox.test-harness.js";
+} from './monitor-inbox.test-harness';
 
 const nowSeconds = (offsetMs = 0) => Math.floor((Date.now() + offsetMs) / 1000);
 const DEFAULT_MESSAGES_CFG = {

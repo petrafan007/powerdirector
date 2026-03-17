@@ -7,7 +7,7 @@ import {
   makeGeminiCliModel,
   makeGoogleAssistantMessage,
   makeModel,
-} from "./google-shared.test-helpers.js";
+} from './google-shared.test-helpers';
 
 describe("google-shared convertTools", () => {
   it("ensures function call comes after user turn, not after model turn", () => {

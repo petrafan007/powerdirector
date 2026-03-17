@@ -3,7 +3,7 @@ import {
   auditPostCompactionReads,
   extractReadPaths,
   formatAuditWarning,
-} from "./post-compaction-audit.js";
+} from './post-compaction-audit';
 
 describe("extractReadPaths", () => {
   it("extracts file paths from Read tool calls", () => {

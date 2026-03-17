@@ -1,10 +1,10 @@
 import type { SessionManager } from "@mariozechner/pi-coding-agent";
-import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
+import { getGlobalHookRunner } from '../plugins/hook-runner-global';
 import {
   applyInputProvenanceToUserMessage,
   type InputProvenance,
-} from "../sessions/input-provenance.js";
-import { installSessionToolResultGuard } from "./session-tool-result-guard.js";
+} from '../sessions/input-provenance';
+import { installSessionToolResultGuard } from './session-tool-result-guard';
 
 export type GuardedSessionManager = SessionManager & {
   /** Flush any synthetic tool results for pending tool calls. Idempotent. */

@@ -4,7 +4,7 @@ import {
   getDiagnosticSessionStateCountForTest,
   getDiagnosticSessionState,
   resetDiagnosticSessionStateForTest,
-} from "./diagnostic-session-state.js";
+} from './diagnostic-session-state';
 
 describe("diagnostic session state pruning", () => {
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("logger import side effects", () => {
 
     const mkdirSpy = vi.spyOn(fs, "mkdirSync");
 
-    await import("./logger.js");
+    await import('./logger');
 
     expect(mkdirSpy).not.toHaveBeenCalled();
   });

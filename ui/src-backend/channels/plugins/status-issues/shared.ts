@@ -1,4 +1,4 @@
-import { isRecord } from "../../../utils.js";
+import { isRecord } from '../../../utils';
 export { isRecord };
 
 export function asString(value: unknown): string | undefined {

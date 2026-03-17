@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { removeReactionSignal, sendReactionSignal } from "./send-reactions.js";
+import { removeReactionSignal, sendReactionSignal } from './send-reactions';
 
 const rpcMock = vi.fn();
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => ({}),

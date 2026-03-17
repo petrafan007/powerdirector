@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { type PowerDirectorConfig, DEFAULT_GATEWAY_PORT } from "../config/config.js";
+import { type PowerDirectorConfig, DEFAULT_GATEWAY_PORT } from '../config/config';
 import {
   buildDefaultHookUrl,
   buildTopicPath,
   parseTopicPath,
   resolveGmailHookRuntimeConfig,
-} from "./gmail.js";
+} from './gmail';
 
 const baseConfig = {
   hooks: {

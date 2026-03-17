@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "./config.js";
+import type { PowerDirectorConfig } from './config';
 
 export function ensurePluginAllowlisted(cfg: PowerDirectorConfig, pluginId: string): PowerDirectorConfig {
   const allow = cfg.plugins?.allow;

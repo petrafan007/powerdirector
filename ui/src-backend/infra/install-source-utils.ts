@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { runCommandWithTimeout } from "../process/exec.js";
-import { resolveUserPath } from "../utils.js";
-import { fileExists, resolveArchiveKind } from "./archive.js";
+import { runCommandWithTimeout } from '../process/exec';
+import { resolveUserPath } from '../utils';
+import { fileExists, resolveArchiveKind } from './archive';
 
 export type NpmSpecResolution = {
   name?: string;

@@ -1,17 +1,17 @@
 import crypto from "node:crypto";
-import { callGateway } from "../../gateway/call.js";
-import { formatErrorMessage } from "../../infra/errors.js";
-import { createSubsystemLogger } from "../../logging/subsystem.js";
-import type { GatewayMessageChannel } from "../../utils/message-channel.js";
-import { AGENT_LANE_NESTED } from "../lanes.js";
-import { readLatestAssistantReply, runAgentStep } from "./agent-step.js";
-import { resolveAnnounceTarget } from "./sessions-announce-target.js";
+import { callGateway } from '../../gateway/call';
+import { formatErrorMessage } from '../../infra/errors';
+import { createSubsystemLogger } from '../../logging/subsystem';
+import type { GatewayMessageChannel } from '../../utils/message-channel';
+import { AGENT_LANE_NESTED } from '../lanes';
+import { readLatestAssistantReply, runAgentStep } from './agent-step';
+import { resolveAnnounceTarget } from './sessions-announce-target';
 import {
   buildAgentToAgentAnnounceContext,
   buildAgentToAgentReplyContext,
   isAnnounceSkip,
   isReplySkip,
-} from "./sessions-send-helpers.js";
+} from './sessions-send-helpers';
 
 const log = createSubsystemLogger("agents/sessions-send");
 

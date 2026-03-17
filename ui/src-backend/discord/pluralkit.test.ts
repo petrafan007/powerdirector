@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchPluralKitMessageInfo } from "./pluralkit.js";
+import { fetchPluralKitMessageInfo } from './pluralkit';
 
 type MockResponse = {
   status: number;

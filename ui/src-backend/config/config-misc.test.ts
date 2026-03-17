@@ -6,10 +6,10 @@ import {
   parseConfigPath,
   setConfigValueAtPath,
   unsetConfigValueAtPath,
-} from "./config-paths.js";
-import { readConfigFileSnapshot, validateConfigObject } from "./config.js";
-import { withTempHome } from "./test-helpers.js";
-import { PowerDirectorSchema } from "./zod-schema.js";
+} from './config-paths';
+import { readConfigFileSnapshot, validateConfigObject } from './config';
+import { withTempHome } from './test-helpers';
+import { PowerDirectorSchema } from './zod-schema';
 
 describe("$schema key in config (#14998)", () => {
   it("accepts config with $schema string", () => {

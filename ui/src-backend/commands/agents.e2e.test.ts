@@ -1,14 +1,14 @@
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
 import {
   applyAgentBindings,
   applyAgentConfig,
   buildAgentSummaries,
   pruneAgentConfig,
-} from "./agents.js";
+} from './agents';
 
 describe("agents helpers", () => {
   it("buildAgentSummaries includes default + configured agents", () => {

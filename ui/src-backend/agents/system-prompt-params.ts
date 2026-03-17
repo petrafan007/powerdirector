@@ -1,13 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { findGitRoot } from "../infra/git-root.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { findGitRoot } from '../infra/git-root';
 import {
   formatUserTime,
   resolveUserTimeFormat,
   resolveUserTimezone,
   type ResolvedTimeFormat,
-} from "./date-time.js";
+} from './date-time';
 
 export type RuntimeInfoInput = {
   agentId?: string;

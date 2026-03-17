@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveMemorySearchConfig } from "./memory-search.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveMemorySearchConfig } from './memory-search';
 
 const asConfig = (cfg: PowerDirectorConfig): PowerDirectorConfig => cfg;
 

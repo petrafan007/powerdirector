@@ -1,9 +1,9 @@
-import { resolveBrowserExecutableForPlatform } from "../chrome.executables.js";
-import { createBrowserProfilesService } from "../profiles-service.js";
-import type { BrowserRouteContext, ProfileContext } from "../server-context.js";
-import { resolveProfileContext } from "./agent.shared.js";
-import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from "./types.js";
-import { getProfileContext, jsonError, toStringOrEmpty } from "./utils.js";
+import { resolveBrowserExecutableForPlatform } from '../chrome.executables';
+import { createBrowserProfilesService } from '../profiles-service';
+import type { BrowserRouteContext, ProfileContext } from '../server-context';
+import { resolveProfileContext } from './agent.shared';
+import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from './types';
+import { getProfileContext, jsonError, toStringOrEmpty } from './utils';
 
 async function withBasicProfileRoute(params: {
   req: BrowserRequest;

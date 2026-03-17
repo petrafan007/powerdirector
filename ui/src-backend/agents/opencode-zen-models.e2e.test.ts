@@ -4,7 +4,7 @@ import {
   OPENCODE_ZEN_MODEL_ALIASES,
   resolveOpencodeZenAlias,
   resolveOpencodeZenModelApi,
-} from "./opencode-zen-models.js";
+} from './opencode-zen-models';
 
 describe("resolveOpencodeZenAlias", () => {
   it("resolves opus alias", () => {

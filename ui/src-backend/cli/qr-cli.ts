@@ -1,10 +1,10 @@
 import type { Command } from "commander";
 import qrcode from "qrcode-terminal";
-import { loadConfig } from "../config/config.js";
-import { resolvePairingSetupFromConfig, encodePairingSetupCode } from "../pairing/setup-code.js";
-import { runCommandWithTimeout } from "../process/exec.js";
-import { defaultRuntime } from "../runtime.js";
-import { theme } from "../terminal/theme.js";
+import { loadConfig } from '../config/config';
+import { resolvePairingSetupFromConfig, encodePairingSetupCode } from '../pairing/setup-code';
+import { runCommandWithTimeout } from '../process/exec';
+import { defaultRuntime } from '../runtime';
+import { theme } from '../terminal/theme';
 
 type QrCliOptions = {
   json?: boolean;

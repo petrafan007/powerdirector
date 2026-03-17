@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resetLogger, setLoggerOverride } from "../logging.js";
-import { setActiveWebListener } from "./active-listener.js";
+import { resetLogger, setLoggerOverride } from '../logging';
+import { setActiveWebListener } from './active-listener';
 
 const loadWebMediaMock = vi.fn();
 vi.mock("./media.js", () => ({
   loadWebMedia: (...args: unknown[]) => loadWebMediaMock(...args),
 }));
 
-import { sendMessageWhatsApp, sendPollWhatsApp, sendReactionWhatsApp } from "./outbound.js";
+import { sendMessageWhatsApp, sendPollWhatsApp, sendReactionWhatsApp } from './outbound';
 
 describe("web outbound", () => {
   const sendComposingTo = vi.fn(async () => {});

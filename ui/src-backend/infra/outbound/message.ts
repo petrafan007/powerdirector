@@ -1,23 +1,23 @@
-import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { loadConfig } from "../../config/config.js";
-import { callGatewayLeastPrivilege, randomIdempotencyKey } from "../../gateway/call.js";
-import type { PollInput } from "../../polls.js";
-import { normalizePollInput } from "../../polls.js";
+import { getChannelPlugin, normalizeChannelId } from '../../channels/plugins/index';
+import type { PowerDirectorConfig } from '../../config/config';
+import { loadConfig } from '../../config/config';
+import { callGatewayLeastPrivilege, randomIdempotencyKey } from '../../gateway/call';
+import type { PollInput } from '../../polls';
+import { normalizePollInput } from '../../polls';
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
   type GatewayClientMode,
   type GatewayClientName,
-} from "../../utils/message-channel.js";
-import { resolveMessageChannelSelection } from "./channel-selection.js";
+} from '../../utils/message-channel';
+import { resolveMessageChannelSelection } from './channel-selection';
 import {
   deliverOutboundPayloads,
   type OutboundDeliveryResult,
   type OutboundSendDeps,
-} from "./deliver.js";
-import { normalizeReplyPayloadsForDelivery } from "./payloads.js";
-import { resolveOutboundTarget } from "./targets.js";
+} from './deliver';
+import { normalizeReplyPayloadsForDelivery } from './payloads';
+import { resolveOutboundTarget } from './targets';
 
 export type MessageGatewayOptions = {
   url?: string;

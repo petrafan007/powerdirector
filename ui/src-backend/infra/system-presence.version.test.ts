@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
-import { withEnvAsync } from "../test-utils/env.js";
+import { withEnvAsync } from '../test-utils/env';
 
 async function withPresenceModule<T>(
   env: Record<string, string | undefined>,
-  run: (module: typeof import("./system-presence.js")) => Promise<T> | T,
+  run: (module: typeof import('./system-presence')) => Promise<T> | T,
 ): Promise<T> {
   return withEnvAsync(env, async () => {
     vi.resetModules();
     try {
-      const module = await import("./system-presence.js");
+      const module = await import('./system-presence');
       return await run(module);
     } finally {
       vi.resetModules();

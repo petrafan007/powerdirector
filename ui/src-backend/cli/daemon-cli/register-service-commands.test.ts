@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { addGatewayServiceCommands } from "./register-service-commands.js";
+import { addGatewayServiceCommands } from './register-service-commands';
 
 const runDaemonInstall = vi.fn(async (_opts: unknown) => {});
 const runDaemonRestart = vi.fn(async (_opts: unknown) => {});

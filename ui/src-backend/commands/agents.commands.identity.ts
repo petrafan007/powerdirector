@@ -1,22 +1,22 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { identityHasValues, parseIdentityMarkdown } from "../agents/identity-file.js";
-import { DEFAULT_IDENTITY_FILENAME } from "../agents/workspace.js";
-import { writeConfigFile } from "../config/config.js";
-import { logConfigUpdated } from "../config/logging.js";
-import type { IdentityConfig } from "../config/types.js";
-import { normalizeAgentId } from "../routing/session-key.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { defaultRuntime } from "../runtime.js";
-import { resolveUserPath, shortenHomePath } from "../utils.js";
-import { requireValidConfig } from "./agents.command-shared.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { identityHasValues, parseIdentityMarkdown } from '../agents/identity-file';
+import { DEFAULT_IDENTITY_FILENAME } from '../agents/workspace';
+import { writeConfigFile } from '../config/config';
+import { logConfigUpdated } from '../config/logging';
+import type { IdentityConfig } from '../config/types';
+import { normalizeAgentId } from '../routing/session-key';
+import type { RuntimeEnv } from '../runtime';
+import { defaultRuntime } from '../runtime';
+import { resolveUserPath, shortenHomePath } from '../utils';
+import { requireValidConfig } from './agents.command-shared';
 import {
   type AgentIdentity,
   findAgentEntryIndex,
   listAgentEntries,
   loadAgentIdentity,
-} from "./agents.config.js";
+} from './agents.config';
 
 type AgentsSetIdentityOptions = {
   agent?: string;

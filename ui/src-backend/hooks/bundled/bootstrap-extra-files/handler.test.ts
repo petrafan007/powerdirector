@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../../../config/config.js";
-import { makeTempWorkspace, writeWorkspaceFile } from "../../../test-helpers/workspace.js";
-import type { AgentBootstrapHookContext } from "../../hooks.js";
-import { createHookEvent } from "../../hooks.js";
-import handler from "./handler.js";
+import type { PowerDirectorConfig } from '../../../config/config';
+import { makeTempWorkspace, writeWorkspaceFile } from '../../../test-helpers/workspace';
+import type { AgentBootstrapHookContext } from '../../hooks';
+import { createHookEvent } from '../../hooks';
+import handler from './handler';
 
 function createBootstrapExtraConfig(paths: string[]): PowerDirectorConfig {
   return {

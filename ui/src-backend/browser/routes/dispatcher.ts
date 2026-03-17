@@ -1,7 +1,7 @@
-import { escapeRegExp } from "../../utils.js";
-import type { BrowserRouteContext } from "../server-context.js";
-import { registerBrowserRoutes } from "./index.js";
-import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from "./types.js";
+import { escapeRegExp } from '../../utils';
+import type { BrowserRouteContext } from '../server-context';
+import { registerBrowserRoutes } from './index';
+import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from './types';
 
 type BrowserDispatchRequest = {
   method: "GET" | "POST" | "DELETE";

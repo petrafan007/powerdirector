@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { migrateLegacyConfig } from "./legacy-migrate.js";
+import { migrateLegacyConfig } from './legacy-migrate';
 
 describe("legacy migrate audio transcription", () => {
   it("moves routing.transcribeAudio into tools.media.audio.models", () => {

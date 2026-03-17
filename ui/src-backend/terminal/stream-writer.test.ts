@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createSafeStreamWriter } from "./stream-writer.js";
+import { createSafeStreamWriter } from './stream-writer';
 
 describe("createSafeStreamWriter", () => {
   it("signals broken pipes and closes the writer", () => {

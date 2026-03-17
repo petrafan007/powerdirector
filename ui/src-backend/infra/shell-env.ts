@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { isTruthyEnvValue } from "./env.js";
+import { isTruthyEnvValue } from './env';
 
 const DEFAULT_TIMEOUT_MS = 15_000;
 const DEFAULT_MAX_BUFFER_BYTES = 2 * 1024 * 1024;

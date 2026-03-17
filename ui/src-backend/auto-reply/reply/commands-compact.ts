@@ -3,23 +3,23 @@ import {
   compactEmbeddedPiSession,
   isEmbeddedPiRunActive,
   waitForEmbeddedPiRunEnd,
-} from "../../agents/pi-embedded.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../agents/pi-embedded';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   resolveFreshSessionTotalTokens,
   resolveSessionFilePath,
   resolveSessionFilePathOptions,
-} from "../../config/sessions.js";
-import { logVerbose } from "../../globals.js";
-import { enqueueSystemEvent } from "../../infra/system-events.js";
-import { formatContextUsageShort, formatTokenCount } from "../status.js";
-import type { CommandHandler } from "./commands-types.js";
-import { stripMentions, stripStructuralPrefixes } from "./mentions.js";
-import { incrementCompactionCount } from "./session-updates.js";
+} from '../../config/sessions';
+import { logVerbose } from '../../globals';
+import { enqueueSystemEvent } from '../../infra/system-events';
+import { formatContextUsageShort, formatTokenCount } from '../status';
+import type { CommandHandler } from './commands-types';
+import { stripMentions, stripStructuralPrefixes } from './mentions';
+import { incrementCompactionCount } from './session-updates';
 
 function extractCompactInstructions(params: {
   rawBody?: string;
-  ctx: import("../templating.js").MsgContext;
+  ctx: import('../templating').MsgContext;
   cfg: PowerDirectorConfig;
   agentId?: string;
   isGroup: boolean;

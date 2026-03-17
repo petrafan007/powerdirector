@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { findGitRoot, resolveGitHeadPath } from "./git-root.js";
+import { findGitRoot, resolveGitHeadPath } from './git-root';
 
 async function makeTempDir(label: string): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), `powerdirector-${label}-`));

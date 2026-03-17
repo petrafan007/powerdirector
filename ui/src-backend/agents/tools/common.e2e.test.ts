@@ -4,7 +4,7 @@ import {
   readNumberParam,
   readReactionParams,
   readStringOrNumberParam,
-} from "./common.js";
+} from './common';
 
 type TestActions = {
   reactions?: boolean;

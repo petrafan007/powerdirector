@@ -1,13 +1,13 @@
 import type { AgentEvent } from "@mariozechner/pi-agent-core";
-import { emitAgentEvent } from "../infra/agent-events.js";
-import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
-import type { PluginHookAfterToolCallEvent } from "../plugins/types.js";
-import { normalizeTextForComparison } from "./pi-embedded-helpers.js";
-import { isMessagingTool, isMessagingToolSendAction } from "./pi-embedded-messaging.js";
+import { emitAgentEvent } from '../infra/agent-events';
+import { getGlobalHookRunner } from '../plugins/hook-runner-global';
+import type { PluginHookAfterToolCallEvent } from '../plugins/types';
+import { normalizeTextForComparison } from './pi-embedded-helpers';
+import { isMessagingTool, isMessagingToolSendAction } from './pi-embedded-messaging';
 import type {
   ToolCallSummary,
   ToolHandlerContext,
-} from "./pi-embedded-subscribe.handlers.types.js";
+} from './pi-embedded-subscribe.handlers.types';
 import {
   extractToolErrorMessage,
   extractToolResultMediaPaths,
@@ -15,10 +15,10 @@ import {
   extractMessagingToolSend,
   isToolResultError,
   sanitizeToolResult,
-} from "./pi-embedded-subscribe.tools.js";
-import { inferToolMetaFromArgs } from "./pi-embedded-utils.js";
-import { buildToolMutationState, isSameToolMutationAction } from "./tool-mutation.js";
-import { normalizeToolName } from "./tool-policy.js";
+} from './pi-embedded-subscribe.tools';
+import { inferToolMetaFromArgs } from './pi-embedded-utils';
+import { buildToolMutationState, isSameToolMutationAction } from './tool-mutation';
+import { normalizeToolName } from './tool-policy';
 
 /** Track tool execution start times and args for after_tool_call hook */
 const toolStartData = new Map<string, { startTime: number; args: unknown }>();

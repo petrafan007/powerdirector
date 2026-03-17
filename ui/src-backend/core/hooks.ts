@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { spawn } from 'node:child_process';
-import { getRuntimeLogger } from './logger.js';
+import { getRuntimeLogger } from './logger';
 
 export interface HookEntry {
     enabled?: boolean;

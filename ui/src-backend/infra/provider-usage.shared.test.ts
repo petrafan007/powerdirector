@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clampPercent, resolveUsageProviderId, withTimeout } from "./provider-usage.shared.js";
+import { clampPercent, resolveUsageProviderId, withTimeout } from './provider-usage.shared';
 
 describe("provider-usage.shared", () => {
   it("normalizes supported usage provider ids", () => {

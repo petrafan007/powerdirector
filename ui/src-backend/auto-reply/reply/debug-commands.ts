@@ -1,4 +1,4 @@
-import { parseStandardSetUnsetSlashCommand } from "./commands-setunset-standard.js";
+import { parseStandardSetUnsetSlashCommand } from './commands-setunset-standard';
 
 export type DebugCommand =
   | { action: "show" }

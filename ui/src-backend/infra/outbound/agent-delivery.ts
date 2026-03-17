@@ -1,21 +1,21 @@
-import type { ChannelOutboundTargetMode } from "../../channels/plugins/types.js";
-import { DEFAULT_CHAT_CHANNEL } from "../../channels/registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { SessionEntry } from "../../config/sessions.js";
-import { normalizeAccountId } from "../../utils/account-id.js";
+import type { ChannelOutboundTargetMode } from '../../channels/plugins/types';
+import { DEFAULT_CHAT_CHANNEL } from '../../channels/registry';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { SessionEntry } from '../../config/sessions';
+import { normalizeAccountId } from '../../utils/account-id';
 import {
   INTERNAL_MESSAGE_CHANNEL,
   isDeliverableMessageChannel,
   isGatewayMessageChannel,
   normalizeMessageChannel,
   type GatewayMessageChannel,
-} from "../../utils/message-channel.js";
-import type { OutboundTargetResolution } from "./targets.js";
+} from '../../utils/message-channel';
+import type { OutboundTargetResolution } from './targets';
 import {
   resolveOutboundTarget,
   resolveSessionDeliveryTarget,
   type SessionDeliveryTarget,
-} from "./targets.js";
+} from './targets';
 
 export type AgentDeliveryPlan = {
   baseDelivery: SessionDeliveryTarget;

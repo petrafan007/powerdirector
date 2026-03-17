@@ -5,7 +5,7 @@ import {
   resolvePinnedHostname,
   resolvePinnedHostnameWithPolicy,
   SsrFBlockedError,
-} from "./ssrf.js";
+} from './ssrf';
 
 describe("ssrf pinning", () => {
   it("pins resolved addresses for the target hostname", async () => {

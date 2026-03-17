@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createStubSessionHarness,
   emitAssistantTextDelta,
-} from "./pi-embedded-subscribe.e2e-harness.js";
-import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
+} from './pi-embedded-subscribe.e2e-harness';
+import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
 
 describe("subscribeEmbeddedPiSession", () => {
   it("calls onBlockReplyFlush before tool_execution_start to preserve message boundaries", () => {

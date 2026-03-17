@@ -2,12 +2,12 @@ export {
   formatUsageReportLines,
   formatUsageSummaryLine,
   formatUsageWindowSummary,
-} from "./provider-usage.format.js";
-export { loadProviderUsageSummary } from "./provider-usage.load.js";
-export { resolveUsageProviderId } from "./provider-usage.shared.js";
+} from './provider-usage.format';
+export { loadProviderUsageSummary } from './provider-usage.load';
+export { resolveUsageProviderId } from './provider-usage.shared';
 export type {
   ProviderUsageSnapshot,
   UsageProviderId,
   UsageSummary,
   UsageWindow,
-} from "./provider-usage.types.js";
+} from './provider-usage.types';

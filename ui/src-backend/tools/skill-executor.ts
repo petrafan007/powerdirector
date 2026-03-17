@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { getRuntimeLogger } from '../core/logger.ts';
-import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths';
 
 /**
  * Result from executing a skill

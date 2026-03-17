@@ -1,9 +1,9 @@
-import { listAgentIds, resolveAgentWorkspaceDir } from "../../../agents/agent-scope.js";
-import { createDefaultDeps } from "../../../cli/deps.js";
-import { runBootOnce } from "../../../gateway/boot.js";
-import { createSubsystemLogger } from "../../../logging/subsystem.js";
-import type { HookHandler } from "../../hooks.js";
-import { isGatewayStartupEvent } from "../../internal-hooks.js";
+import { listAgentIds, resolveAgentWorkspaceDir } from '../../../agents/agent-scope';
+import { createDefaultDeps } from '../../../cli/deps';
+import { runBootOnce } from '../../../gateway/boot';
+import { createSubsystemLogger } from '../../../logging/subsystem';
+import type { HookHandler } from '../../hooks';
+import { isGatewayStartupEvent } from '../../internal-hooks';
 
 const log = createSubsystemLogger("hooks/boot-md");
 

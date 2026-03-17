@@ -4,9 +4,9 @@ import {
   buildSandboxFsMounts,
   parseSandboxBindMount,
   resolveSandboxFsPathWithMounts,
-} from "./fs-paths.js";
-import { createSandboxTestContext } from "./test-fixtures.js";
-import type { SandboxContext } from "./types.js";
+} from './fs-paths';
+import { createSandboxTestContext } from './test-fixtures';
+import type { SandboxContext } from './types';
 
 function createSandbox(overrides?: Partial<SandboxContext>): SandboxContext {
   return createSandboxTestContext({ overrides });

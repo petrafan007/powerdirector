@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { resolveConfigBackupBasePath } from "./artifact-paths.js";
-import { withTempHome } from "./home-env.test-harness.js";
-import { createConfigIO } from "./io.js";
+import { resolveConfigBackupBasePath } from './artifact-paths';
+import { withTempHome } from './home-env.test-harness';
+import { createConfigIO } from './io';
 
 describe("config io write", () => {
   const silentLogger = {

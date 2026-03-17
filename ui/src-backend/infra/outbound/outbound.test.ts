@@ -2,11 +2,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { telegramPlugin } from "../../../extensions/telegram/src/channel.js";
-import { whatsappPlugin } from "../../../extensions/whatsapp/src/channel.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { setActivePluginRegistry } from "../../plugins/runtime.js";
-import { createTestRegistry } from "../../test-utils/channel-plugins.js";
+import { telegramPlugin } from '../../../extensions/telegram/src/channel';
+import { whatsappPlugin } from '../../../extensions/whatsapp/src/channel';
+import type { PowerDirectorConfig } from '../../config/config';
+import { setActivePluginRegistry } from '../../plugins/runtime';
+import { createTestRegistry } from '../../test-utils/channel-plugins';
 import {
   ackDelivery,
   computeBackoffMs,
@@ -17,27 +17,27 @@ import {
   MAX_RETRIES,
   moveToFailed,
   recoverPendingDeliveries,
-} from "./delivery-queue.js";
-import { DirectoryCache } from "./directory-cache.js";
-import { buildOutboundResultEnvelope } from "./envelope.js";
-import type { OutboundDeliveryJson } from "./format.js";
+} from './delivery-queue';
+import { DirectoryCache } from './directory-cache';
+import { buildOutboundResultEnvelope } from './envelope';
+import type { OutboundDeliveryJson } from './format';
 import {
   buildOutboundDeliveryJson,
   formatGatewaySummary,
   formatOutboundDeliverySummary,
-} from "./format.js";
+} from './format';
 import {
   applyCrossContextDecoration,
   buildCrossContextDecoration,
   enforceCrossContextPolicy,
-} from "./outbound-policy.js";
-import { resolveOutboundSessionRoute } from "./outbound-session.js";
+} from './outbound-policy';
+import { resolveOutboundSessionRoute } from './outbound-session';
 import {
   formatOutboundPayloadLog,
   normalizeOutboundPayloads,
   normalizeOutboundPayloadsForJson,
-} from "./payloads.js";
-import { resolveOutboundTarget } from "./targets.js";
+} from './payloads';
+import { resolveOutboundTarget } from './targets';
 
 describe("delivery-queue", () => {
   let tmpDir: string;

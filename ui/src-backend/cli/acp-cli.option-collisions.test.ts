@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { Command } from "commander";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { runRegisteredCli } from "../test-utils/command-runner.js";
+import { runRegisteredCli } from '../test-utils/command-runner';
 
 const runAcpClientInteractive = vi.fn(async (_opts: unknown) => {});
 const serveAcpGateway = vi.fn(async (_opts: unknown) => {});
@@ -26,10 +26,10 @@ vi.mock("../runtime.js", () => ({
 }));
 
 describe("acp cli option collisions", () => {
-  let registerAcpCli: typeof import("./acp-cli.js").registerAcpCli;
+  let registerAcpCli: typeof import('./acp-cli').registerAcpCli;
 
   beforeAll(async () => {
-    ({ registerAcpCli } = await import("./acp-cli.js"));
+    ({ registerAcpCli } = await import('./acp-cli'));
   });
 
   beforeEach(() => {
@@ -53,7 +53,7 @@ describe("acp cli option collisions", () => {
   });
 
   it("loads gateway token/password from files", async () => {
-    const { registerAcpCli } = await import("./acp-cli.js");
+    const { registerAcpCli } = await import('./acp-cli');
     const program = new Command();
     registerAcpCli(program);
 
@@ -76,7 +76,7 @@ describe("acp cli option collisions", () => {
   });
 
   it("rejects mixed secret flags and file flags", async () => {
-    const { registerAcpCli } = await import("./acp-cli.js");
+    const { registerAcpCli } = await import('./acp-cli');
     const program = new Command();
     registerAcpCli(program);
 
@@ -96,7 +96,7 @@ describe("acp cli option collisions", () => {
   });
 
   it("warns when inline secret flags are used", async () => {
-    const { registerAcpCli } = await import("./acp-cli.js");
+    const { registerAcpCli } = await import('./acp-cli');
     const program = new Command();
     registerAcpCli(program);
 

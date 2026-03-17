@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { makeTempWorkspace } from "../test-helpers/workspace.js";
-import { baseConfigSnapshot, createTestRuntime } from "./test-runtime-config-helpers.js";
+import { makeTempWorkspace } from '../test-helpers/workspace';
+import { baseConfigSnapshot, createTestRuntime } from './test-runtime-config-helpers';
 
 const configMocks = vi.hoisted(() => ({
   readConfigFileSnapshot: vi.fn(),
@@ -10,12 +10,12 @@ const configMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("../config/config.js")>()),
+  ...(await importOriginal<typeof import('../config/config')>()),
   readConfigFileSnapshot: configMocks.readConfigFileSnapshot,
   writeConfigFile: configMocks.writeConfigFile,
 }));
 
-import { agentsSetIdentityCommand } from "./agents.js";
+import { agentsSetIdentityCommand } from './agents';
 
 const runtime = createTestRuntime();
 type ConfigWritePayload = {

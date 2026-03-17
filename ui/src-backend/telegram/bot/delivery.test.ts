@@ -1,7 +1,7 @@
 import type { Bot } from "grammy";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { RuntimeEnv } from "../../runtime.js";
-import { deliverReplies } from "./delivery.js";
+import type { RuntimeEnv } from '../../runtime';
+import { deliverReplies } from './delivery';
 
 const loadWebMedia = vi.fn();
 const baseDeliveryParams = {

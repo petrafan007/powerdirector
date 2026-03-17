@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { isWithinActiveHours } from "./heartbeat-active-hours.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { isWithinActiveHours } from './heartbeat-active-hours';
 
 function cfgWithUserTimezone(userTimezone = "UTC"): PowerDirectorConfig {
   return {

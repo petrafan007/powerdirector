@@ -3,11 +3,11 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { AuthProfileStore } from "./auth-profiles.js";
-import { saveAuthProfileStore } from "./auth-profiles.js";
-import { AUTH_STORE_VERSION } from "./auth-profiles/constants.js";
-import { runWithModelFallback } from "./model-fallback.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { AuthProfileStore } from './auth-profiles';
+import { saveAuthProfileStore } from './auth-profiles';
+import { AUTH_STORE_VERSION } from './auth-profiles/constants';
+import { runWithModelFallback } from './model-fallback';
 
 function makeCfg(overrides: Partial<PowerDirectorConfig> = {}): PowerDirectorConfig {
   return {

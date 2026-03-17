@@ -3,10 +3,10 @@ import {
   buildChannelKeyCandidates,
   resolveChannelEntryMatchWithFallback,
   type ChannelMatchSource,
-} from "../../channels/channel-config.js";
-import type { SlackReactionNotificationMode } from "../../config/config.js";
-import type { SlackMessageEvent } from "../types.js";
-import { allowListMatches, normalizeAllowListLower, normalizeSlackSlug } from "./allow-list.js";
+} from '../../channels/channel-config';
+import type { SlackReactionNotificationMode } from '../../config/config';
+import type { SlackMessageEvent } from '../types';
+import { allowListMatches, normalizeAllowListLower, normalizeSlackSlug } from './allow-list';
 
 export type SlackChannelConfigResolved = {
   allowed: boolean;

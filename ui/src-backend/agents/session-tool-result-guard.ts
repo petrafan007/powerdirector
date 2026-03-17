@@ -4,11 +4,11 @@ import type { SessionManager } from "@mariozechner/pi-coding-agent";
 import type {
   PluginHookBeforeMessageWriteEvent,
   PluginHookBeforeMessageWriteResult,
-} from "../plugins/types.js";
-import { emitSessionTranscriptUpdate } from "../sessions/transcript-events.js";
-import { HARD_MAX_TOOL_RESULT_CHARS } from "./pi-embedded-runner/tool-result-truncation.js";
-import { makeMissingToolResult, sanitizeToolCallInputs } from "./session-transcript-repair.js";
-import { extractToolCallsFromAssistant, extractToolResultId } from "./tool-call-id.js";
+} from '../plugins/types';
+import { emitSessionTranscriptUpdate } from '../sessions/transcript-events';
+import { HARD_MAX_TOOL_RESULT_CHARS } from './pi-embedded-runner/tool-result-truncation';
+import { makeMissingToolResult, sanitizeToolCallInputs } from './session-transcript-repair';
+import { extractToolCallsFromAssistant, extractToolResultId } from './tool-call-id';
 
 const GUARD_TRUNCATION_SUFFIX =
   "\n\n⚠️ [Content truncated during persistence — original exceeded size limit. " +

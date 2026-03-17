@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatMediaUnderstandingBody } from "./format.js";
+import { formatMediaUnderstandingBody } from './format';
 
 describe("formatMediaUnderstandingBody", () => {
   it("replaces placeholder body with transcript", () => {

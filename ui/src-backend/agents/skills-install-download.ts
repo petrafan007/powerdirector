@@ -8,17 +8,17 @@ import {
   resolveArchiveOutputPath,
   stripArchivePath,
   validateArchiveEntryPath,
-} from "../infra/archive-path.js";
-import { extractArchive as extractArchiveSafe } from "../infra/archive.js";
-import { fetchWithSsrFGuard } from "../infra/net/fetch-guard.js";
-import { isWithinDir } from "../infra/path-safety.js";
-import { runCommandWithTimeout } from "../process/exec.js";
-import { ensureDir, resolveUserPath } from "../utils.js";
-import { formatInstallFailureMessage } from "./skills-install-output.js";
-import type { SkillInstallResult } from "./skills-install.js";
-import type { SkillEntry, SkillInstallSpec } from "./skills.js";
-import { hasBinary } from "./skills.js";
-import { resolveSkillToolsRootDir } from "./skills/tools-dir.js";
+} from '../infra/archive-path';
+import { extractArchive as extractArchiveSafe } from '../infra/archive';
+import { fetchWithSsrFGuard } from '../infra/net/fetch-guard';
+import { isWithinDir } from '../infra/path-safety';
+import { runCommandWithTimeout } from '../process/exec';
+import { ensureDir, resolveUserPath } from '../utils';
+import { formatInstallFailureMessage } from './skills-install-output';
+import type { SkillInstallResult } from './skills-install';
+import type { SkillEntry, SkillInstallSpec } from './skills';
+import { hasBinary } from './skills';
+import { resolveSkillToolsRootDir } from './skills/tools-dir';
 
 function isNodeReadableStream(value: unknown): value is NodeJS.ReadableStream {
   return Boolean(value && typeof (value as NodeJS.ReadableStream).pipe === "function");

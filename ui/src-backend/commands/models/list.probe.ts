@@ -1,30 +1,30 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
-import { resolvePowerDirectorAgentDir } from "../../agents/agent-paths.js";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
+import { resolvePowerDirectorAgentDir } from '../../agents/agent-paths';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../../agents/agent-scope';
 import {
   ensureAuthProfileStore,
   listProfilesForProvider,
   resolveAuthProfileDisplayLabel,
   resolveAuthProfileOrder,
-} from "../../agents/auth-profiles.js";
-import { describeFailoverError } from "../../agents/failover-error.js";
-import { getCustomProviderApiKey, resolveEnvApiKey } from "../../agents/model-auth.js";
-import { loadModelCatalog } from "../../agents/model-catalog.js";
+} from '../../agents/auth-profiles';
+import { describeFailoverError } from '../../agents/failover-error';
+import { getCustomProviderApiKey, resolveEnvApiKey } from '../../agents/model-auth';
+import { loadModelCatalog } from '../../agents/model-catalog';
 import {
   findNormalizedProviderValue,
   normalizeProviderId,
   parseModelRef,
-} from "../../agents/model-selection.js";
-import { runEmbeddedPiAgent } from "../../agents/pi-embedded.js";
-import { resolveDefaultAgentWorkspaceDir } from "../../agents/workspace.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../agents/model-selection';
+import { runEmbeddedPiAgent } from '../../agents/pi-embedded';
+import { resolveDefaultAgentWorkspaceDir } from '../../agents/workspace';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   resolveSessionTranscriptPath,
   resolveSessionTranscriptsDirForAgent,
-} from "../../config/sessions/paths.js";
-import { redactSecrets } from "../status-all/format.js";
-import { DEFAULT_PROVIDER, formatMs } from "./shared.js";
+} from '../../config/sessions/paths';
+import { redactSecrets } from '../status-all/format';
+import { DEFAULT_PROVIDER, formatMs } from './shared';
 
 const PROBE_PROMPT = "Reply with OK. Do not use tools.";
 

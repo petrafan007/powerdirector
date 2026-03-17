@@ -12,8 +12,8 @@ import {
   type RequestPermissionResponse,
   type SessionNotification,
 } from "@agentclientprotocol/sdk";
-import { ensurePowerDirectorCliOnPath } from "../infra/path-env.js";
-import { DANGEROUS_ACP_TOOLS } from "../security/dangerous-tools.js";
+import { ensurePowerDirectorCliOnPath } from '../infra/path-env';
+import { DANGEROUS_ACP_TOOLS } from '../security/dangerous-tools';
 
 const SAFE_AUTO_APPROVE_KINDS = new Set(["read", "search"]);
 

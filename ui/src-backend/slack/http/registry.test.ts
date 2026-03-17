@@ -4,7 +4,7 @@ import {
   handleSlackHttpRequest,
   normalizeSlackWebhookPath,
   registerSlackHttpHandler,
-} from "./registry.js";
+} from './registry';
 
 describe("normalizeSlackWebhookPath", () => {
   it("returns the default path when input is empty", () => {

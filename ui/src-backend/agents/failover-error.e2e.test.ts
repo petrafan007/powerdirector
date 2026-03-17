@@ -4,7 +4,7 @@ import {
   describeFailoverError,
   isTimeoutError,
   resolveFailoverReasonFromError,
-} from "./failover-error.js";
+} from './failover-error';
 
 describe("failover-error", () => {
   it("infers failover reason from HTTP status", () => {

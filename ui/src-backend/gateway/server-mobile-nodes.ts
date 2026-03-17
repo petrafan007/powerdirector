@@ -1,4 +1,4 @@
-import type { NodeRegistry } from "./node-registry.js";
+import type { NodeRegistry } from './node-registry';
 
 const isMobilePlatform = (platform: unknown): boolean => {
   const p = typeof platform === "string" ? platform.trim().toLowerCase() : "";

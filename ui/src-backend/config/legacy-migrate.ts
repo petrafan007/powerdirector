@@ -1,6 +1,6 @@
-import { applyLegacyMigrations } from "./legacy.js";
-import type { PowerDirectorConfig } from "./types.js";
-import { validateConfigObjectWithPlugins } from "./validation.js";
+import { applyLegacyMigrations } from './legacy';
+import type { PowerDirectorConfig } from './types';
+import { validateConfigObjectWithPlugins } from './validation';
 
 export function migrateLegacyConfig(raw: unknown): {
   config: PowerDirectorConfig | null;

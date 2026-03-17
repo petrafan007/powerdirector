@@ -1,13 +1,13 @@
 import type { APIChannel } from "discord-api-types/v10";
 import { Routes } from "discord-api-types/v10";
-import { resolveDiscordRest } from "./send.shared.js";
+import { resolveDiscordRest } from './send.shared';
 import type {
   DiscordChannelCreate,
   DiscordChannelEdit,
   DiscordChannelMove,
   DiscordChannelPermissionSet,
   DiscordReactOpts,
-} from "./send.types.js";
+} from './send.types';
 
 export async function createChannelDiscord(
   payload: DiscordChannelCreate,

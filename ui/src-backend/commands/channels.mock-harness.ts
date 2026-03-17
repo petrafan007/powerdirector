@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { MockFn } from "../test-utils/vitest-mock-fn.js";
+import type { MockFn } from '../test-utils/vitest-mock-fn';
 
 export const configMocks: {
   readConfigFileSnapshot: MockFn;
@@ -16,7 +16,7 @@ export const offsetMocks: {
 };
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     readConfigFileSnapshot: configMocks.readConfigFileSnapshot,
@@ -25,7 +25,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 });
 
 vi.mock("../telegram/update-offset-store.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../telegram/update-offset-store.js")>();
+  const actual = await importOriginal<typeof import('../telegram/update-offset-store')>();
   return {
     ...actual,
     deleteTelegramUpdateOffset: offsetMocks.deleteTelegramUpdateOffset,

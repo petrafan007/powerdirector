@@ -1,13 +1,13 @@
 import type { Command } from "commander";
-import { loadConfig } from "../config/config.js";
-import { defaultRuntime } from "../runtime.js";
-import { runSecurityAudit } from "../security/audit.js";
-import { fixSecurityFootguns } from "../security/fix.js";
-import { formatDocsLink } from "../terminal/links.js";
-import { isRich, theme } from "../terminal/theme.js";
-import { shortenHomeInString, shortenHomePath } from "../utils.js";
-import { formatCliCommand } from "./command-format.js";
-import { formatHelpExamples } from "./help-format.js";
+import { loadConfig } from '../config/config';
+import { defaultRuntime } from '../runtime';
+import { runSecurityAudit } from '../security/audit';
+import { fixSecurityFootguns } from '../security/fix';
+import { formatDocsLink } from '../terminal/links';
+import { isRich, theme } from '../terminal/theme';
+import { shortenHomeInString, shortenHomePath } from '../utils';
+import { formatCliCommand } from './command-format';
+import { formatHelpExamples } from './help-format';
 
 type SecurityAuditOptions = {
   json?: boolean;

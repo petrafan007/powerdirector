@@ -1,24 +1,24 @@
-import { resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
-import { getChannelPlugin, listChannelPlugins } from "../channels/plugins/index.js";
-import type { ChannelAccountSnapshot } from "../channels/plugins/types.js";
-import { withProgress } from "../cli/progress.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { loadConfig } from "../config/config.js";
-import { loadSessionStore, resolveStorePath } from "../config/sessions.js";
-import { buildGatewayConnectionDetails, callGateway } from "../gateway/call.js";
-import { info } from "../globals.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import { formatErrorMessage } from "../infra/errors.js";
+import { resolveDefaultAgentId } from '../agents/agent-scope';
+import { resolveChannelDefaultAccountId } from '../channels/plugins/helpers';
+import { getChannelPlugin, listChannelPlugins } from '../channels/plugins/index';
+import type { ChannelAccountSnapshot } from '../channels/plugins/types';
+import { withProgress } from '../cli/progress';
+import type { PowerDirectorConfig } from '../config/config';
+import { loadConfig } from '../config/config';
+import { loadSessionStore, resolveStorePath } from '../config/sessions';
+import { buildGatewayConnectionDetails, callGateway } from '../gateway/call';
+import { info } from '../globals';
+import { isTruthyEnvValue } from '../infra/env';
+import { formatErrorMessage } from '../infra/errors';
 import {
   type HeartbeatSummary,
   resolveHeartbeatSummaryForAgent,
-} from "../infra/heartbeat-runner.js";
-import { buildChannelAccountBindings, resolvePreferredAccountId } from "../routing/bindings.js";
-import { normalizeAgentId } from "../routing/session-key.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { styleHealthChannelLine } from "../terminal/health-style.js";
-import { isRich } from "../terminal/theme.js";
+} from '../infra/heartbeat-runner';
+import { buildChannelAccountBindings, resolvePreferredAccountId } from '../routing/bindings';
+import { normalizeAgentId } from '../routing/session-key';
+import type { RuntimeEnv } from '../runtime';
+import { styleHealthChannelLine } from '../terminal/health-style';
+import { isRich } from '../terminal/theme';
 
 export type ChannelAccountHealthSummary = {
   accountId: string;

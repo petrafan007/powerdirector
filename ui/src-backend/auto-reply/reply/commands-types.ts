@@ -1,11 +1,11 @@
-import type { SkillCommandSpec } from "../../agents/skills.js";
-import type { ChannelId } from "../../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { SessionEntry, SessionScope } from "../../config/sessions.js";
-import type { MsgContext } from "../templating.js";
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../thinking.js";
-import type { ReplyPayload } from "../types.js";
-import type { InlineDirectives } from "./directive-handling.js";
+import type { SkillCommandSpec } from '../../agents/skills';
+import type { ChannelId } from '../../channels/plugins/types';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { SessionEntry, SessionScope } from '../../config/sessions';
+import type { MsgContext } from '../templating';
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../thinking';
+import type { ReplyPayload } from '../types';
+import type { InlineDirectives } from './directive-handling';
 
 export type CommandContext = {
   surface: string;

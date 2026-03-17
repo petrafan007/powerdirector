@@ -1,22 +1,22 @@
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../agents/defaults.js";
-import { loadModelCatalog } from "../../agents/model-catalog.js";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../../agents/defaults';
+import { loadModelCatalog } from '../../agents/model-catalog';
 import {
   buildAllowedModelSet,
   buildModelAliasIndex,
   normalizeProviderId,
   resolveConfiguredModelRef,
   resolveModelRefFromString,
-} from "../../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../agents/model-selection';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   buildModelsKeyboard,
   buildProviderKeyboard,
   calculateTotalPages,
   getModelsPageSize,
   type ProviderInfo,
-} from "../../telegram/model-buttons.js";
-import type { ReplyPayload } from "../types.js";
-import type { CommandHandler } from "./commands-types.js";
+} from '../../telegram/model-buttons';
+import type { ReplyPayload } from '../types';
+import type { CommandHandler } from './commands-types';
 
 const PAGE_SIZE_DEFAULT = 20;
 const PAGE_SIZE_MAX = 100;

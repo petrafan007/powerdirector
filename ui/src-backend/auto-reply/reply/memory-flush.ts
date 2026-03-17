@@ -1,10 +1,10 @@
-import { lookupContextTokens } from "../../agents/context.js";
-import { resolveCronStyleNow } from "../../agents/current-time.js";
-import { DEFAULT_CONTEXT_TOKENS } from "../../agents/defaults.js";
-import { DEFAULT_PI_COMPACTION_RESERVE_TOKENS_FLOOR } from "../../agents/pi-settings.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveFreshSessionTotalTokens, type SessionEntry } from "../../config/sessions.js";
-import { SILENT_REPLY_TOKEN } from "../tokens.js";
+import { lookupContextTokens } from '../../agents/context';
+import { resolveCronStyleNow } from '../../agents/current-time';
+import { DEFAULT_CONTEXT_TOKENS } from '../../agents/defaults';
+import { DEFAULT_PI_COMPACTION_RESERVE_TOKENS_FLOOR } from '../../agents/pi-settings';
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveFreshSessionTotalTokens, type SessionEntry } from '../../config/sessions';
+import { SILENT_REPLY_TOKEN } from '../tokens';
 
 export const DEFAULT_MEMORY_FLUSH_SOFT_TOKENS = 4000;
 

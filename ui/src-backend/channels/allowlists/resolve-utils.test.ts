@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   addAllowlistUserEntriesFromConfigEntry,
   buildAllowlistResolutionSummary,
-} from "./resolve-utils.js";
+} from './resolve-utils';
 
 describe("buildAllowlistResolutionSummary", () => {
   it("returns mapping, additions, and unresolved (including missing ids)", () => {

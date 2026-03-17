@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { SessionEntry } from "../config/sessions.js";
-import { resolveSendPolicy } from "./send-policy.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { SessionEntry } from '../config/sessions';
+import { resolveSendPolicy } from './send-policy';
 
 describe("resolveSendPolicy", () => {
   it("defaults to allow", () => {

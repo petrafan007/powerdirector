@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expandHomePrefix, resolveRequiredHomeDir } from "../infra/home-dir.js";
-import type { PowerDirectorConfig } from "./types.js";
+import { expandHomePrefix, resolveRequiredHomeDir } from '../infra/home-dir';
+import type { PowerDirectorConfig } from './types';
 
 /**
  * Nix mode detection: When POWERDIRECTOR_NIX_MODE=1, the gateway is running under Nix.

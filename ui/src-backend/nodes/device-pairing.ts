@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { randomUUID } from 'node:crypto';
 import path from 'node:path';
-import { createAsyncLock, readJsonFile, writeJsonAtomic } from './json-files.js';
+import { createAsyncLock, readJsonFile, writeJsonAtomic } from './json-files';
 
 export type DeviceTokenSummary = {
     role: string;

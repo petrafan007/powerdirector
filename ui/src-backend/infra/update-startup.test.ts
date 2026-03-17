@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { UpdateCheckResult } from "./update-check.js";
+import type { UpdateCheckResult } from './update-check';
 
 vi.mock("./powerdirector-root.js", () => ({
   resolvePowerDirectorPackageRoot: vi.fn(),
@@ -74,13 +74,13 @@ describe("update-startup", () => {
   let hadNodeEnv = false;
   let hadVitest = false;
 
-  let resolvePowerDirectorPackageRoot: (typeof import("./powerdirector-root.js"))["resolvePowerDirectorPackageRoot"];
-  let checkUpdateStatus: (typeof import("./update-check.js"))["checkUpdateStatus"];
-  let resolveNpmChannelTag: (typeof import("./update-check.js"))["resolveNpmChannelTag"];
-  let runCommandWithTimeout: (typeof import("../process/exec.js"))["runCommandWithTimeout"];
-  let runGatewayUpdateCheck: (typeof import("./update-startup.js"))["runGatewayUpdateCheck"];
-  let getUpdateAvailable: (typeof import("./update-startup.js"))["getUpdateAvailable"];
-  let resetUpdateAvailableStateForTest: (typeof import("./update-startup.js"))["resetUpdateAvailableStateForTest"];
+  let resolvePowerDirectorPackageRoot: (typeof import('./powerdirector-root'))["resolvePowerDirectorPackageRoot"];
+  let checkUpdateStatus: (typeof import('./update-check'))["checkUpdateStatus"];
+  let resolveNpmChannelTag: (typeof import('./update-check'))["resolveNpmChannelTag"];
+  let runCommandWithTimeout: (typeof import('../process/exec'))["runCommandWithTimeout"];
+  let runGatewayUpdateCheck: (typeof import('./update-startup'))["runGatewayUpdateCheck"];
+  let getUpdateAvailable: (typeof import('./update-startup'))["getUpdateAvailable"];
+  let resetUpdateAvailableStateForTest: (typeof import('./update-startup'))["resetUpdateAvailableStateForTest"];
   let loaded = false;
 
   beforeAll(async () => {
@@ -107,11 +107,11 @@ describe("update-startup", () => {
 
     // Perf: load mocked modules once (after timers/env are set up).
     if (!loaded) {
-      ({ resolvePowerDirectorPackageRoot } = await import("./powerdirector-root.js"));
-      ({ checkUpdateStatus, resolveNpmChannelTag } = await import("./update-check.js"));
-      ({ runCommandWithTimeout } = await import("../process/exec.js"));
+      ({ resolvePowerDirectorPackageRoot } = await import('./powerdirector-root'));
+      ({ checkUpdateStatus, resolveNpmChannelTag } = await import('./update-check'));
+      ({ runCommandWithTimeout } = await import('../process/exec'));
       ({ runGatewayUpdateCheck, getUpdateAvailable, resetUpdateAvailableStateForTest } =
-        await import("./update-startup.js"));
+        await import('./update-startup'));
       loaded = true;
     }
     vi.mocked(resolvePowerDirectorPackageRoot).mockReset();

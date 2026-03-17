@@ -25,8 +25,8 @@ import {
   resolveSafeBins,
   type ExecAllowlistEntry,
   type ExecApprovalsFile,
-} from "./exec-approvals.js";
-import { SAFE_BIN_PROFILE_FIXTURES, SAFE_BIN_PROFILES } from "./exec-safe-bin-policy.js";
+} from './exec-approvals';
+import { SAFE_BIN_PROFILE_FIXTURES, SAFE_BIN_PROFILES } from './exec-safe-bin-policy';
 
 function makePathEnv(binDir: string): NodeJS.ProcessEnv {
   if (process.platform !== "win32") {

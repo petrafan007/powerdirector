@@ -3,10 +3,10 @@ import {
   parseModelRef,
   resolveConfiguredModelRef,
   resolveModelRefFromString,
-} from "../../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { ConfiguredEntry } from "./list.types.js";
-import { DEFAULT_MODEL, DEFAULT_PROVIDER, modelKey } from "./shared.js";
+} from '../../agents/model-selection';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { ConfiguredEntry } from './list.types';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER, modelKey } from './shared';
 
 export function resolveConfiguredEntries(cfg: PowerDirectorConfig) {
   const resolvedDefault = resolveConfiguredModelRef({

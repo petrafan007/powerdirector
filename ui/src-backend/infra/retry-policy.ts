@@ -1,6 +1,6 @@
 import { RateLimitError } from "@buape/carbon";
-import { formatErrorMessage } from "./errors.js";
-import { type RetryConfig, resolveRetryConfig, retryAsync } from "./retry.js";
+import { formatErrorMessage } from './errors';
+import { type RetryConfig, resolveRetryConfig, retryAsync } from './retry';
 
 export type RetryRunner = <T>(fn: () => Promise<T>, label?: string) => Promise<T>;
 

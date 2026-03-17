@@ -4,18 +4,18 @@ import os from "node:os";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import JSON5 from "json5";
-import { loadDotEnv } from "../infra/dotenv.js";
-import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { loadDotEnv } from '../infra/dotenv';
+import { resolveRequiredHomeDir } from '../infra/home-dir';
 import {
   loadShellEnvFallback,
   resolveShellEnvFallbackTimeoutMs,
   shouldDeferShellEnvFallback,
   shouldEnableShellEnvFallback,
-} from "../infra/shell-env.js";
-import { VERSION } from "../version.js";
-import { DuplicateAgentDirError, findDuplicateAgentDirs } from "./agent-dirs.js";
-import { rotateConfigBackups } from "./backup-rotation.js";
-import { resolveConfigBackupBasePath, resolveConfigTempPath } from "./artifact-paths.js";
+} from '../infra/shell-env';
+import { VERSION } from '../version';
+import { DuplicateAgentDirError, findDuplicateAgentDirs } from './agent-dirs';
+import { rotateConfigBackups } from './backup-rotation';
+import { resolveConfigBackupBasePath, resolveConfigTempPath } from './artifact-paths';
 import {
   applyCompactionDefaults,
   applyContextPruningDefaults,
@@ -25,30 +25,30 @@ import {
   applyModelDefaults,
   applySessionDefaults,
   applyTalkApiKey,
-} from "./defaults.js";
-import { restoreEnvVarRefs } from "./env-preserve.js";
+} from './defaults';
+import { restoreEnvVarRefs } from './env-preserve';
 import {
   MissingEnvVarError,
   containsEnvVarReference,
   resolveConfigEnvVars,
-} from "./env-substitution.js";
-import { applyConfigEnvVars } from "./env-vars.js";
-import { ConfigIncludeError, resolveConfigIncludes } from "./includes.js";
-import { findLegacyConfigIssues } from "./legacy.js";
-import { applyMergePatch } from "./merge-patch.js";
-import { normalizeConfigPaths } from "./normalize-paths.js";
-import { resolveConfigPath, resolveDefaultConfigCandidates, resolveStateDir } from "./paths.js";
-import { applyConfigOverrides } from "./runtime-overrides.js";
-import type { PowerDirectorConfig, ConfigFileSnapshot, LegacyConfigIssue } from "./types.js";
+} from './env-substitution';
+import { applyConfigEnvVars } from './env-vars';
+import { ConfigIncludeError, resolveConfigIncludes } from './includes';
+import { findLegacyConfigIssues } from './legacy';
+import { applyMergePatch } from './merge-patch';
+import { normalizeConfigPaths } from './normalize-paths';
+import { resolveConfigPath, resolveDefaultConfigCandidates, resolveStateDir } from './paths';
+import { applyConfigOverrides } from './runtime-overrides';
+import type { PowerDirectorConfig, ConfigFileSnapshot, LegacyConfigIssue } from './types';
 import {
   validateConfigObjectRawWithPlugins,
   validateConfigObjectWithPlugins,
-} from "./validation.js";
-import { comparePowerDirectorVersions } from "./version.js";
+} from './validation';
+import { comparePowerDirectorVersions } from './version';
 
 // Re-export for backwards compatibility
-export { CircularIncludeError, ConfigIncludeError } from "./includes.js";
-export { MissingEnvVarError } from "./env-substitution.js";
+export { CircularIncludeError, ConfigIncludeError } from './includes';
+export { MissingEnvVarError } from './env-substitution';
 
 const SHELL_ENV_EXPECTED_KEYS = [
   "OPENAI_API_KEY",

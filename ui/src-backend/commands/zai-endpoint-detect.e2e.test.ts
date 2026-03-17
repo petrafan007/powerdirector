@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectZaiEndpoint } from "./zai-endpoint-detect.js";
+import { detectZaiEndpoint } from './zai-endpoint-detect';
 
 function makeFetch(map: Record<string, { status: number; body?: unknown }>) {
   return (async (url: string) => {

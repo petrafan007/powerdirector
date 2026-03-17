@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { withEnv } from "../../test-utils/env.js";
-import { __testing } from "./web-search.js";
+import { withEnv } from '../../test-utils/env';
+import { __testing } from './web-search';
 
 const {
   inferPerplexityBaseUrlFromApiKey,

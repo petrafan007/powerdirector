@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { resolveDiscordRestFetch } from "./rest-fetch.js";
+import { resolveDiscordRestFetch } from './rest-fetch';
 
 const { undiciFetchMock, proxyAgentSpy } = vi.hoisted(() => ({
   undiciFetchMock: vi.fn(),

@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { normalizeIMessageMessagingTarget } from "./normalize/imessage.js";
-import { looksLikeSignalTargetId, normalizeSignalMessagingTarget } from "./normalize/signal.js";
-import { normalizeSignalAccountInput } from "./onboarding/signal.js";
-import { telegramOutbound } from "./outbound/telegram.js";
-import { whatsappOutbound } from "./outbound/whatsapp.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { normalizeIMessageMessagingTarget } from './normalize/imessage';
+import { looksLikeSignalTargetId, normalizeSignalMessagingTarget } from './normalize/signal';
+import { normalizeSignalAccountInput } from './onboarding/signal';
+import { telegramOutbound } from './outbound/telegram';
+import { whatsappOutbound } from './outbound/whatsapp';
 
 describe("imessage target normalization", () => {
   it("preserves service prefixes for handles", () => {

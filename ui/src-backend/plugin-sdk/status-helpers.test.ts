@@ -3,7 +3,7 @@ import {
   buildBaseChannelStatusSummary,
   collectStatusIssuesFromLastError,
   createDefaultChannelRuntimeState,
-} from "./status-helpers.js";
+} from './status-helpers';
 
 describe("createDefaultChannelRuntimeState", () => {
   it("builds default runtime state without extra fields", () => {

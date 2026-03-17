@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { setTempStateDir, writeDownloadSkill } from "./skills-install.download-test-utils.js";
-import { installSkill } from "./skills-install.js";
+import { setTempStateDir, writeDownloadSkill } from './skills-install.download-test-utils';
+import { installSkill } from './skills-install';
 
 const mocks = {
   runCommand: vi.fn(),
@@ -108,7 +108,7 @@ vi.mock("../infra/net/fetch-guard.js", () => ({
 }));
 
 vi.mock("../security/skill-scanner.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../security/skill-scanner.js")>();
+  const actual = await importOriginal<typeof import('../security/skill-scanner')>();
   return {
     ...actual,
     scanDirectoryWithSummary: (...args: unknown[]) => mocks.scanSummary(...args),

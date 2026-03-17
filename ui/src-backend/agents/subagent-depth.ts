@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import JSON5 from "json5";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveStorePath } from "../config/sessions/paths.js";
-import { getSubagentDepth, parseAgentSessionKey } from "../sessions/session-key-utils.js";
-import { resolveDefaultAgentId } from "./agent-scope.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveStorePath } from '../config/sessions/paths';
+import { getSubagentDepth, parseAgentSessionKey } from '../sessions/session-key-utils';
+import { resolveDefaultAgentId } from './agent-scope';
 
 type SessionDepthEntry = {
   sessionId?: unknown;

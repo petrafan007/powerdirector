@@ -1,4 +1,4 @@
-import { firstDefined, isSenderIdAllowed, mergeAllowFromSources } from "../channels/allow-from.js";
+import { firstDefined, isSenderIdAllowed, mergeAllowFromSources } from '../channels/allow-from';
 
 export type NormalizedAllowFrom = {
   entries: string[];

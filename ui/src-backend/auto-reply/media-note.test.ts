@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildInboundMediaNote } from "./media-note.js";
-import { createSuccessfulImageMediaDecision } from "./media-understanding.test-fixtures.js";
+import { buildInboundMediaNote } from './media-note';
+import { createSuccessfulImageMediaDecision } from './media-understanding.test-fixtures';
 
 describe("buildInboundMediaNote", () => {
   it("formats single MediaPath as a media note", () => {

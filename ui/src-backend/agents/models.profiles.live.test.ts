@@ -1,19 +1,19 @@
 import { type Api, completeSimple, type Model } from "@mariozechner/pi-ai";
 import { Type } from "@sinclair/typebox";
 import { describe, expect, it } from "vitest";
-import { loadConfig } from "../config/config.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
+import { loadConfig } from '../config/config';
+import { isTruthyEnvValue } from '../infra/env';
+import { resolvePowerDirectorAgentDir } from './agent-paths';
 import {
   collectAnthropicApiKeys,
   isAnthropicBillingError,
   isAnthropicRateLimitError,
-} from "./live-auth-keys.js";
-import { isModernModelRef } from "./live-model-filter.js";
-import { getApiKeyForModel, requireApiKey } from "./model-auth.js";
-import { ensurePowerDirectorModelsJson } from "./models-config.js";
-import { isRateLimitErrorMessage } from "./pi-embedded-helpers/errors.js";
-import { discoverAuthStorage, discoverModels } from "./pi-model-discovery.js";
+} from './live-auth-keys';
+import { isModernModelRef } from './live-model-filter';
+import { getApiKeyForModel, requireApiKey } from './model-auth';
+import { ensurePowerDirectorModelsJson } from './models-config';
+import { isRateLimitErrorMessage } from './pi-embedded-helpers/errors';
+import { discoverAuthStorage, discoverModels } from './pi-model-discovery';
 
 const LIVE = isTruthyEnvValue(process.env.LIVE) || isTruthyEnvValue(process.env.POWERDIRECTOR_LIVE_TEST);
 const DIRECT_ENABLED = Boolean(process.env.POWERDIRECTOR_LIVE_MODELS?.trim());

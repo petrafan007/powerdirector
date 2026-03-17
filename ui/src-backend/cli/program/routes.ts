@@ -1,5 +1,5 @@
-import { defaultRuntime } from "../../runtime.js";
-import { getFlagValue, getPositiveIntFlagValue, getVerboseFlag, hasFlag } from "../argv.js";
+import { defaultRuntime } from '../../runtime';
+import { getFlagValue, getPositiveIntFlagValue, getVerboseFlag, hasFlag } from '../argv';
 
 export type RouteSpec = {
   match: (path: string[]) => boolean;
@@ -17,7 +17,7 @@ const routeHealth: RouteSpec = {
     if (timeoutMs === null) {
       return false;
     }
-    const { healthCommand } = await import("../../commands/health.js");
+    const { healthCommand } = await import('../../commands/health');
     await healthCommand({ json, timeoutMs, verbose }, defaultRuntime);
     return true;
   },
@@ -36,7 +36,7 @@ const routeStatus: RouteSpec = {
     if (timeoutMs === null) {
       return false;
     }
-    const { statusCommand } = await import("../../commands/status.js");
+    const { statusCommand } = await import('../../commands/status');
     await statusCommand({ json, deep, all, usage, timeoutMs, verbose }, defaultRuntime);
     return true;
   },
@@ -54,7 +54,7 @@ const routeSessions: RouteSpec = {
     if (active === null) {
       return false;
     }
-    const { sessionsCommand } = await import("../../commands/sessions.js");
+    const { sessionsCommand } = await import('../../commands/sessions');
     await sessionsCommand({ json, store, active }, defaultRuntime);
     return true;
   },
@@ -65,7 +65,7 @@ const routeAgentsList: RouteSpec = {
   run: async (argv) => {
     const json = hasFlag(argv, "--json");
     const bindings = hasFlag(argv, "--bindings");
-    const { agentsListCommand } = await import("../../commands/agents.js");
+    const { agentsListCommand } = await import('../../commands/agents');
     await agentsListCommand({ json, bindings }, defaultRuntime);
     return true;
   },
@@ -82,7 +82,7 @@ const routeMemoryStatus: RouteSpec = {
     const deep = hasFlag(argv, "--deep");
     const index = hasFlag(argv, "--index");
     const verbose = hasFlag(argv, "--verbose");
-    const { runMemoryStatus } = await import("../memory-cli.js");
+    const { runMemoryStatus } = await import('../memory-cli');
     await runMemoryStatus({ agent, json, deep, index, verbose });
     return true;
   },
@@ -140,7 +140,7 @@ const routeConfigGet: RouteSpec = {
       return false;
     }
     const json = hasFlag(argv, "--json");
-    const { runConfigGet } = await import("../config-cli.js");
+    const { runConfigGet } = await import('../config-cli');
     await runConfigGet({ path: pathArg, json });
     return true;
   },
@@ -154,7 +154,7 @@ const routeConfigUnset: RouteSpec = {
     if (!pathArg) {
       return false;
     }
-    const { runConfigUnset } = await import("../config-cli.js");
+    const { runConfigUnset } = await import('../config-cli');
     await runConfigUnset({ path: pathArg });
     return true;
   },
@@ -171,7 +171,7 @@ const routeModelsList: RouteSpec = {
     const local = hasFlag(argv, "--local");
     const json = hasFlag(argv, "--json");
     const plain = hasFlag(argv, "--plain");
-    const { modelsListCommand } = await import("../../commands/models.js");
+    const { modelsListCommand } = await import('../../commands/models');
     await modelsListCommand({ all, local, provider, json, plain }, defaultRuntime);
     return true;
   },
@@ -214,7 +214,7 @@ const routeModelsStatus: RouteSpec = {
     const plain = hasFlag(argv, "--plain");
     const check = hasFlag(argv, "--check");
     const probe = hasFlag(argv, "--probe");
-    const { modelsStatusCommand } = await import("../../commands/models.js");
+    const { modelsStatusCommand } = await import('../../commands/models');
     await modelsStatusCommand(
       {
         json,

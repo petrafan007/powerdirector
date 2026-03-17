@@ -1,10 +1,10 @@
 import { completeSimple, type AssistantMessage } from "@mariozechner/pi-ai";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { getApiKeyForModel } from "../agents/model-auth.js";
-import { resolveModel } from "../agents/pi-embedded-runner/model.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { withEnv } from "../test-utils/env.js";
-import * as tts from "./tts.js";
+import { getApiKeyForModel } from '../agents/model-auth';
+import { resolveModel } from '../agents/pi-embedded-runner/model';
+import type { PowerDirectorConfig } from '../config/config';
+import { withEnv } from '../test-utils/env';
+import * as tts from './tts';
 
 vi.mock("@mariozechner/pi-ai", () => ({
   completeSimple: vi.fn(),

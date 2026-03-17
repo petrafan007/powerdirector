@@ -3,8 +3,8 @@ import {
   DEFAULT_HEARTBEAT_ACK_MAX_CHARS,
   isHeartbeatContentEffectivelyEmpty,
   stripHeartbeatToken,
-} from "./heartbeat.js";
-import { HEARTBEAT_TOKEN } from "./tokens.js";
+} from './heartbeat';
+import { HEARTBEAT_TOKEN } from './tokens';
 
 describe("stripHeartbeatToken", () => {
   it("skips empty or token-only replies", () => {

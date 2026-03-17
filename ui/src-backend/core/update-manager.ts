@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { execFile } from 'node:child_process';
 import util from 'node:util';
-import { getRuntimeLogger } from './logger.js';
+import { getRuntimeLogger } from './logger';
 
 const execFileAsync = util.promisify(execFile);
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstDefined, isSenderIdAllowed, mergeAllowFromSources } from "./allow-from.js";
+import { firstDefined, isSenderIdAllowed, mergeAllowFromSources } from './allow-from';
 
 describe("mergeAllowFromSources", () => {
   it("merges, trims, and filters empty values", () => {

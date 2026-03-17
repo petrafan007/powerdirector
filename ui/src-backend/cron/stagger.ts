@@ -1,4 +1,4 @@
-import type { CronSchedule } from "./types.js";
+import type { CronSchedule } from './types';
 
 export const DEFAULT_TOP_OF_HOUR_STAGGER_MS = 5 * 60 * 1000;
 

@@ -7,7 +7,7 @@ import {
   isOversizedToolResult,
   sessionLikelyHasOversizedToolResults,
   HARD_MAX_TOOL_RESULT_CHARS,
-} from "./tool-result-truncation.js";
+} from './tool-result-truncation';
 
 function makeToolResult(text: string, toolCallId = "call_1"): AgentMessage {
   return {

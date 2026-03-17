@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base.js';
+import { Channel, ChannelMessage, ChannelType, ChannelClassName } from './base';
 import imap, { ImapSimple } from 'imap-simple';
 import nodemailer from 'nodemailer';
 

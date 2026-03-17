@@ -1,13 +1,13 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveAgentConfig } from "../agent-scope.js";
-import { compileGlobPatterns, matchesAnyGlobPattern } from "../glob-pattern.js";
-import { expandToolGroups } from "../tool-policy.js";
-import { DEFAULT_TOOL_ALLOW, DEFAULT_TOOL_DENY } from "./constants.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveAgentConfig } from '../agent-scope';
+import { compileGlobPatterns, matchesAnyGlobPattern } from '../glob-pattern';
+import { expandToolGroups } from '../tool-policy';
+import { DEFAULT_TOOL_ALLOW, DEFAULT_TOOL_DENY } from './constants';
 import type {
   SandboxToolPolicy,
   SandboxToolPolicyResolved,
   SandboxToolPolicySource,
-} from "./types.js";
+} from './types';
 
 function normalizeGlob(value: string) {
   return value.trim().toLowerCase();

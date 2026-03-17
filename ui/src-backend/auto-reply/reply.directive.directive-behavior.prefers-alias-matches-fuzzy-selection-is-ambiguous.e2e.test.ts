@@ -2,9 +2,9 @@ import "./reply.directive.directive-behavior.e2e-mocks.js";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadSessionStore } from "../config/sessions.js";
-import type { ModelDefinitionConfig } from "../config/types.models.js";
-import { drainSystemEvents } from "../infra/system-events.js";
+import { loadSessionStore } from '../config/sessions';
+import type { ModelDefinitionConfig } from '../config/types.models';
+import { drainSystemEvents } from '../infra/system-events';
 import {
   assertModelSelection,
   installDirectiveBehaviorE2EHooks,
@@ -14,8 +14,8 @@ import {
   runEmbeddedPiAgent,
   sessionStorePath,
   withTempHome,
-} from "./reply.directive.directive-behavior.e2e-harness.js";
-import { getReplyFromConfig } from "./reply.js";
+} from './reply.directive.directive-behavior.e2e-harness';
+import { getReplyFromConfig } from './reply';
 
 function makeModelDefinition(id: string, name: string): ModelDefinitionConfig {
   return {

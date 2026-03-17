@@ -1,9 +1,9 @@
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   type AuthProfileCredential,
   type AuthProfileStore,
   resolveAuthProfileDisplayLabel,
-} from "./auth-profiles.js";
+} from './auth-profiles';
 
 export type AuthProfileSource = "store";
 

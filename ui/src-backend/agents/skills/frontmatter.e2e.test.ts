@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveSkillInvocationPolicy } from "./frontmatter.js";
+import { resolveSkillInvocationPolicy } from './frontmatter';
 
 describe("resolveSkillInvocationPolicy", () => {
   it("defaults to enabled behaviors", () => {

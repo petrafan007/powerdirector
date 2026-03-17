@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { expectInboundContextContract } from "../../../../test/helpers/inbound-contract.js";
+import { expectInboundContextContract } from '../../../../test/helpers/inbound-contract';
 
 let capturedCtx: unknown;
 let capturedDispatchParams: unknown;
@@ -75,7 +75,7 @@ vi.mock("./last-route.js", () => ({
   updateLastRouteInBackground: vi.fn(),
 }));
 
-import { processMessage } from "./process-message.js";
+import { processMessage } from './process-message';
 
 describe("web processMessage inbound contract", () => {
   beforeEach(async () => {
@@ -169,7 +169,7 @@ describe("web processMessage inbound contract", () => {
           },
           messages: {},
           session: { store: sessionStorePath },
-        } as unknown as ReturnType<typeof import("../../../config/config.js").loadConfig>,
+        } as unknown as ReturnType<typeof import('../../../config/config').loadConfig>,
         msg: {
           id: "msg1",
           from: "+1555",
@@ -208,7 +208,7 @@ describe("web processMessage inbound contract", () => {
         cfg: {
           messages: {},
           session: { store: sessionStorePath },
-        } as unknown as ReturnType<typeof import("../../../config/config.js").loadConfig>,
+        } as unknown as ReturnType<typeof import('../../../config/config').loadConfig>,
         msg: {
           id: "g1",
           from: "123@g.us",

@@ -1,6 +1,6 @@
-import type { BrowserActionOk, BrowserActionTargetOk } from "./client-actions-types.js";
-import { buildProfileQuery, withBaseUrl } from "./client-actions-url.js";
-import { fetchBrowserJson } from "./client-fetch.js";
+import type { BrowserActionOk, BrowserActionTargetOk } from './client-actions-types';
+import { buildProfileQuery, withBaseUrl } from './client-actions-url';
+import { fetchBrowserJson } from './client-fetch';
 
 export async function browserCookies(
   baseUrl: string | undefined,

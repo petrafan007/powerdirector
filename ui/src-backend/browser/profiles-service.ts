@@ -1,20 +1,20 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { BrowserProfileConfig, PowerDirectorConfig } from "../config/config.js";
-import { loadConfig, writeConfigFile } from "../config/config.js";
-import { deriveDefaultBrowserCdpPortRange } from "../config/port-defaults.js";
-import { resolvePowerDirectorUserDataDir } from "./chrome.js";
-import { parseHttpUrl, resolveProfile } from "./config.js";
-import { DEFAULT_BROWSER_DEFAULT_PROFILE_NAME } from "./constants.js";
+import type { BrowserProfileConfig, PowerDirectorConfig } from '../config/config';
+import { loadConfig, writeConfigFile } from '../config/config';
+import { deriveDefaultBrowserCdpPortRange } from '../config/port-defaults';
+import { resolvePowerDirectorUserDataDir } from './chrome';
+import { parseHttpUrl, resolveProfile } from './config';
+import { DEFAULT_BROWSER_DEFAULT_PROFILE_NAME } from './constants';
 import {
   allocateCdpPort,
   allocateColor,
   getUsedColors,
   getUsedPorts,
   isValidProfileName,
-} from "./profiles.js";
-import type { BrowserRouteContext, ProfileStatus } from "./server-context.js";
-import { movePathToTrash } from "./trash.js";
+} from './profiles';
+import type { BrowserRouteContext, ProfileStatus } from './server-context';
+import { movePathToTrash } from './trash';
 
 export type CreateProfileParams = {
   name: string;

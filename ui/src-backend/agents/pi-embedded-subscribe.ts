@@ -1,24 +1,24 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
-import { parseReplyDirectives } from "../auto-reply/reply/reply-directives.js";
-import { createStreamingDirectiveAccumulator } from "../auto-reply/reply/streaming-directives.js";
-import { formatToolAggregate } from "../auto-reply/tool-meta.js";
-import { emitAgentEvent } from "../infra/agent-events.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { InlineCodeState } from "../markdown/code-spans.js";
-import { buildCodeSpanIndex, createInlineCodeState } from "../markdown/code-spans.js";
-import { EmbeddedBlockChunker } from "./pi-embedded-block-chunker.js";
+import { parseReplyDirectives } from '../auto-reply/reply/reply-directives';
+import { createStreamingDirectiveAccumulator } from '../auto-reply/reply/streaming-directives';
+import { formatToolAggregate } from '../auto-reply/tool-meta';
+import { emitAgentEvent } from '../infra/agent-events';
+import { createSubsystemLogger } from '../logging/subsystem';
+import type { InlineCodeState } from '../markdown/code-spans';
+import { buildCodeSpanIndex, createInlineCodeState } from '../markdown/code-spans';
+import { EmbeddedBlockChunker } from './pi-embedded-block-chunker';
 import {
   isMessagingToolDuplicateNormalized,
   normalizeTextForComparison,
-} from "./pi-embedded-helpers.js";
-import { createEmbeddedPiSessionEventHandler } from "./pi-embedded-subscribe.handlers.js";
+} from './pi-embedded-helpers';
+import { createEmbeddedPiSessionEventHandler } from './pi-embedded-subscribe.handlers';
 import type {
   EmbeddedPiSubscribeContext,
   EmbeddedPiSubscribeState,
-} from "./pi-embedded-subscribe.handlers.types.js";
-import type { SubscribeEmbeddedPiSessionParams } from "./pi-embedded-subscribe.types.js";
-import { formatReasoningMessage, stripDowngradedToolCallText } from "./pi-embedded-utils.js";
-import { hasNonzeroUsage, normalizeUsage, type UsageLike } from "./usage.js";
+} from './pi-embedded-subscribe.handlers.types';
+import type { SubscribeEmbeddedPiSessionParams } from './pi-embedded-subscribe.types';
+import { formatReasoningMessage, stripDowngradedToolCallText } from './pi-embedded-utils';
+import { hasNonzeroUsage, normalizeUsage, type UsageLike } from './usage';
 
 const THINKING_TAG_SCAN_RE = /<\s*(\/?)\s*(?:think(?:ing)?|thought|antthinking)\s*>/gi;
 const FINAL_TAG_SCAN_RE = /<\s*(\/?)\s*final\s*>/gi;
@@ -28,7 +28,7 @@ export type {
   BlockReplyChunking,
   SubscribeEmbeddedPiSessionParams,
   ToolResultFormat,
-} from "./pi-embedded-subscribe.types.js";
+} from './pi-embedded-subscribe.types';
 
 export function subscribeEmbeddedPiSession(params: SubscribeEmbeddedPiSessionParams) {
   const reasoningMode = params.reasoningMode ?? "off";

@@ -1,12 +1,12 @@
 import fsSync from "node:fs";
 import type { Llama, LlamaEmbeddingContext, LlamaModel } from "node-llama-cpp";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { formatErrorMessage } from "../infra/errors.js";
-import { resolveUserPath } from "../utils.js";
-import { createGeminiEmbeddingProvider, type GeminiEmbeddingClient } from "./embeddings-gemini.js";
-import { createOpenAiEmbeddingProvider, type OpenAiEmbeddingClient } from "./embeddings-openai.js";
-import { createVoyageEmbeddingProvider, type VoyageEmbeddingClient } from "./embeddings-voyage.js";
-import { importNodeLlamaCpp } from "./node-llama.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { formatErrorMessage } from '../infra/errors';
+import { resolveUserPath } from '../utils';
+import { createGeminiEmbeddingProvider, type GeminiEmbeddingClient } from './embeddings-gemini';
+import { createOpenAiEmbeddingProvider, type OpenAiEmbeddingClient } from './embeddings-openai';
+import { createVoyageEmbeddingProvider, type VoyageEmbeddingClient } from './embeddings-voyage';
+import { importNodeLlamaCpp } from './node-llama';
 
 function sanitizeAndNormalizeEmbedding(vec: number[]): number[] {
   const sanitized = vec.map((value) => (Number.isFinite(value) ? value : 0));
@@ -17,9 +17,9 @@ function sanitizeAndNormalizeEmbedding(vec: number[]): number[] {
   return sanitized.map((value) => value / magnitude);
 }
 
-export type { GeminiEmbeddingClient } from "./embeddings-gemini.js";
-export type { OpenAiEmbeddingClient } from "./embeddings-openai.js";
-export type { VoyageEmbeddingClient } from "./embeddings-voyage.js";
+export type { GeminiEmbeddingClient } from './embeddings-gemini';
+export type { OpenAiEmbeddingClient } from './embeddings-openai';
+export type { VoyageEmbeddingClient } from './embeddings-voyage';
 
 export type EmbeddingProvider = {
   id: string;

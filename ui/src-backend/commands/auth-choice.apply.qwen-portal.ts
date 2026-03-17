@@ -1,5 +1,5 @@
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { applyAuthChoicePluginProvider } from "./auth-choice.apply.plugin-provider.js";
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
+import { applyAuthChoicePluginProvider } from './auth-choice.apply.plugin-provider';
 
 export async function applyAuthChoiceQwenPortal(
   params: ApplyAuthChoiceParams,

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
+import { resolvePowerDirectorAgentDir } from './agent-paths';
 import {
   CUSTOM_PROXY_MODELS_CONFIG,
   installModelsConfigTestHooks,
@@ -9,8 +9,8 @@ import {
   unsetEnv,
   withTempEnv,
   withModelsTempHome as withTempHome,
-} from "./models-config.e2e-harness.js";
-import { ensurePowerDirectorModelsJson } from "./models-config.js";
+} from './models-config.e2e-harness';
+import { ensurePowerDirectorModelsJson } from './models-config';
 
 installModelsConfigTestHooks();
 

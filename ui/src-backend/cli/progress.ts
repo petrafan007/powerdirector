@@ -4,8 +4,8 @@ import {
   clearActiveProgressLine,
   registerActiveProgressLine,
   unregisterActiveProgressLine,
-} from "../terminal/progress-line.js";
-import { theme } from "../terminal/theme.js";
+} from '../terminal/progress-line';
+import { theme } from '../terminal/theme';
 
 const DEFAULT_DELAY_MS = 0;
 let activeProgress = 0;

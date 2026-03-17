@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { normalizeTestText } from "../../test/helpers/normalize-text.js";
+import { normalizeTestText } from '../../test/helpers/normalize-text';
 import {
   createBlockReplyCollector,
   getProviderUsageMocks,
@@ -9,11 +9,11 @@ import {
   installTriggerHandlingE2eTestHooks,
   makeCfg,
   withTempHome,
-} from "./reply.triggers.trigger-handling.test-harness.js";
+} from './reply.triggers.trigger-handling.test-harness';
 
-let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
+let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import("./reply.js"));
+  ({ getReplyFromConfig } = await import('./reply'));
 });
 
 installTriggerHandlingE2eTestHooks();

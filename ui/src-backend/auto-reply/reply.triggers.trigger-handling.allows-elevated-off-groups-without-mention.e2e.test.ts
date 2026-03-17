@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import { beforeAll, describe, expect, it } from "vitest";
-import { loadSessionStore } from "../config/sessions.js";
+import { loadSessionStore } from '../config/sessions';
 import {
   installTriggerHandlingE2eTestHooks,
   loadGetReplyFromConfig,
@@ -9,9 +9,9 @@ import {
   requireSessionStorePath,
   runDirectElevatedToggleAndLoadStore,
   withTempHome,
-} from "./reply.triggers.trigger-handling.test-harness.js";
+} from './reply.triggers.trigger-handling.test-harness';
 
-let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
+let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
 beforeAll(async () => {
   getReplyFromConfig = await loadGetReplyFromConfig();
 });

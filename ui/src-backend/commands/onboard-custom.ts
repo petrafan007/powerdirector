@@ -1,12 +1,12 @@
-import { DEFAULT_PROVIDER } from "../agents/defaults.js";
-import { buildModelAliasIndex, modelKey } from "../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ModelProviderConfig } from "../config/types.models.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { fetchWithTimeout } from "../utils/fetch-timeout.js";
-import type { WizardPrompter } from "../wizard/prompts.js";
-import { applyPrimaryModel } from "./model-picker.js";
-import { normalizeAlias } from "./models/shared.js";
+import { DEFAULT_PROVIDER } from '../agents/defaults';
+import { buildModelAliasIndex, modelKey } from '../agents/model-selection';
+import type { PowerDirectorConfig } from '../config/config';
+import type { ModelProviderConfig } from '../config/types.models';
+import type { RuntimeEnv } from '../runtime';
+import { fetchWithTimeout } from '../utils/fetch-timeout';
+import type { WizardPrompter } from '../wizard/prompts';
+import { applyPrimaryModel } from './model-picker';
+import { normalizeAlias } from './models/shared';
 
 const DEFAULT_OLLAMA_BASE_URL = "http://127.0.0.1:11434/v1";
 const DEFAULT_CONTEXT_WINDOW = 4096;

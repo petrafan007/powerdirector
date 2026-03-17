@@ -1,19 +1,19 @@
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   resolveChannelGroupRequireMention,
   resolveChannelGroupToolsPolicy,
-} from "../config/group-policy.js";
-import { resolveDiscordAccount } from "../discord/accounts.js";
-import { resolveIMessageAccount } from "../imessage/accounts.js";
-import { requireActivePluginRegistry } from "../plugins/runtime.js";
-import { normalizeAccountId } from "../routing/session-key.js";
-import { resolveSignalAccount } from "../signal/accounts.js";
-import { resolveSlackAccount, resolveSlackReplyToMode } from "../slack/accounts.js";
-import { buildSlackThreadingToolContext } from "../slack/threading-tool-context.js";
-import { resolveTelegramAccount } from "../telegram/accounts.js";
-import { escapeRegExp, normalizeE164 } from "../utils.js";
-import { resolveWhatsAppAccount } from "../web/accounts.js";
-import { normalizeWhatsAppTarget } from "../whatsapp/normalize.js";
+} from '../config/group-policy';
+import { resolveDiscordAccount } from '../discord/accounts';
+import { resolveIMessageAccount } from '../imessage/accounts';
+import { requireActivePluginRegistry } from '../plugins/runtime';
+import { normalizeAccountId } from '../routing/session-key';
+import { resolveSignalAccount } from '../signal/accounts';
+import { resolveSlackAccount, resolveSlackReplyToMode } from '../slack/accounts';
+import { buildSlackThreadingToolContext } from '../slack/threading-tool-context';
+import { resolveTelegramAccount } from '../telegram/accounts';
+import { escapeRegExp, normalizeE164 } from '../utils';
+import { resolveWhatsAppAccount } from '../web/accounts';
+import { normalizeWhatsAppTarget } from '../whatsapp/normalize';
 import {
   resolveDiscordGroupRequireMention,
   resolveDiscordGroupToolPolicy,
@@ -27,8 +27,8 @@ import {
   resolveTelegramGroupToolPolicy,
   resolveWhatsAppGroupRequireMention,
   resolveWhatsAppGroupToolPolicy,
-} from "./plugins/group-mentions.js";
-import { normalizeSignalMessagingTarget } from "./plugins/normalize/signal.js";
+} from './plugins/group-mentions';
+import { normalizeSignalMessagingTarget } from './plugins/normalize/signal';
 import type {
   ChannelCapabilities,
   ChannelCommandAdapter,
@@ -41,8 +41,8 @@ import type {
   ChannelThreadingContext,
   ChannelThreadingAdapter,
   ChannelThreadingToolContext,
-} from "./plugins/types.js";
-import { CHAT_CHANNEL_ORDER, type ChatChannelId, getChatChannelMeta } from "./registry.js";
+} from './plugins/types';
+import { CHAT_CHANNEL_ORDER, type ChatChannelId, getChatChannelMeta } from './registry';
 
 export type ChannelDock = {
   id: ChannelId;

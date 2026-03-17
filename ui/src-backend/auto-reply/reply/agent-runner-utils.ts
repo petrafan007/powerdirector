@@ -1,15 +1,15 @@
-import { resolveAgentModelFallbacksOverride } from "../../agents/agent-scope.js";
-import type { NormalizedUsage } from "../../agents/usage.js";
-import { getChannelDock } from "../../channels/dock.js";
-import type { ChannelId, ChannelThreadingToolContext } from "../../channels/plugins/types.js";
-import { normalizeAnyChannelId, normalizeChannelId } from "../../channels/registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveAgentIdFromSessionKey } from "../../config/sessions.js";
-import { isReasoningTagProvider } from "../../utils/provider-utils.js";
-import { estimateUsageCost, formatTokenCount, formatUsd } from "../../utils/usage-format.js";
-import type { TemplateContext } from "../templating.js";
-import type { ReplyPayload } from "../types.js";
-import type { FollowupRun } from "./queue.js";
+import { resolveAgentModelFallbacksOverride } from '../../agents/agent-scope';
+import type { NormalizedUsage } from '../../agents/usage';
+import { getChannelDock } from '../../channels/dock';
+import type { ChannelId, ChannelThreadingToolContext } from '../../channels/plugins/types';
+import { normalizeAnyChannelId, normalizeChannelId } from '../../channels/registry';
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveAgentIdFromSessionKey } from '../../config/sessions';
+import { isReasoningTagProvider } from '../../utils/provider-utils';
+import { estimateUsageCost, formatTokenCount, formatUsd } from '../../utils/usage-format';
+import type { TemplateContext } from '../templating';
+import type { ReplyPayload } from '../types';
+import type { FollowupRun } from './queue';
 
 const BUN_FETCH_SOCKET_ERROR_RE = /socket connection was closed unexpectedly/i;
 

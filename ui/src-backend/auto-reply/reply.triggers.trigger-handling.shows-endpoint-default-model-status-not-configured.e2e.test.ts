@@ -1,16 +1,16 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { normalizeTestText } from "../../test/helpers/normalize-text.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+import { normalizeTestText } from '../../test/helpers/normalize-text';
+import type { PowerDirectorConfig } from '../config/config';
 import {
   getRunEmbeddedPiAgentMock,
   installTriggerHandlingE2eTestHooks,
   makeCfg,
   withTempHome,
-} from "./reply.triggers.trigger-handling.test-harness.js";
+} from './reply.triggers.trigger-handling.test-harness';
 
-let getReplyFromConfig: typeof import("./reply.js").getReplyFromConfig;
+let getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
 beforeAll(async () => {
-  ({ getReplyFromConfig } = await import("./reply.js"));
+  ({ getReplyFromConfig } = await import('./reply'));
 });
 
 installTriggerHandlingE2eTestHooks();

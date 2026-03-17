@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { callGateway, installBaseProgramMocks, runTui, runtime } from "./program.test-mocks.js";
+import { callGateway, installBaseProgramMocks, runTui, runtime } from './program.test-mocks';
 
 installBaseProgramMocks();
 
-const { buildProgram } = await import("./program.js");
+const { buildProgram } = await import('./program');
 
 function formatRuntimeLogCallArg(value: unknown): string {
   if (typeof value === "string") {

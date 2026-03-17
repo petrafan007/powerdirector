@@ -1,5 +1,5 @@
 import os from "node:os";
-import type { PowerDirectorConfig } from "../config/types.js";
+import type { PowerDirectorConfig } from '../config/types';
 
 const DEFAULT_GATEWAY_PORT = 3007;
 

@@ -1,11 +1,11 @@
 import crypto from "node:crypto";
-import { parseAbsoluteTimeMs } from "../parse.js";
-import { computeNextRunAtMs } from "../schedule.js";
+import { parseAbsoluteTimeMs } from '../parse';
+import { computeNextRunAtMs } from '../schedule';
 import {
   normalizeCronStaggerMs,
   resolveCronStaggerMs,
   resolveDefaultCronStaggerMs,
-} from "../stagger.js";
+} from '../stagger';
 import type {
   CronDelivery,
   CronDeliveryPatch,
@@ -14,16 +14,16 @@ import type {
   CronJobPatch,
   CronPayload,
   CronPayloadPatch,
-} from "../types.js";
-import { normalizeHttpWebhookUrl } from "../webhook-url.js";
+} from '../types';
+import { normalizeHttpWebhookUrl } from '../webhook-url';
 import {
   normalizeOptionalAgentId,
   normalizeOptionalSessionKey,
   normalizeOptionalText,
   normalizePayloadToSystemText,
   normalizeRequiredName,
-} from "./normalize.js";
-import type { CronServiceState } from "./state.js";
+} from './normalize';
+import type { CronServiceState } from './state';
 
 const STUCK_RUN_MS = 2 * 60 * 60 * 1000;
 

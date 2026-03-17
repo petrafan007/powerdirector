@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createDefaultDeps } from "./deps.js";
+import { createDefaultDeps } from './deps';
 
 const moduleLoads = vi.hoisted(() => ({
   whatsapp: vi.fn(),

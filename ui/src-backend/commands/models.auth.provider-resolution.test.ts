@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { ProviderPlugin } from "../plugins/types.js";
-import { resolveRequestedLoginProviderOrThrow } from "./models/auth.js";
+import type { ProviderPlugin } from '../plugins/types';
+import { resolveRequestedLoginProviderOrThrow } from './models/auth';
 
 function makeProvider(params: { id: string; label?: string; aliases?: string[] }): ProviderPlugin {
   return {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base.js';
+import { Tool, ToolResult } from './base';
 import { exec } from 'node:child_process';
 import util from 'node:util';
 

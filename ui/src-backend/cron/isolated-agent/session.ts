@@ -1,12 +1,12 @@
 import crypto from "node:crypto";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   evaluateSessionFreshness,
   loadSessionStore,
   resolveSessionResetPolicy,
   resolveStorePath,
   type SessionEntry,
-} from "../../config/sessions.js";
+} from '../../config/sessions';
 
 export function resolveCronSession(params: {
   cfg: PowerDirectorConfig;

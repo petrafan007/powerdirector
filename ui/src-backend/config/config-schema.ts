@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { z } from 'zod';
-import { PowerDirectorSchema as BasePowerDirectorSchema } from './zod-schema.js';
+import { PowerDirectorSchema as BasePowerDirectorSchema } from './zod-schema';
 import {
   ModelDefinitionSchema,
   ModelProviderSchema,
   ModelsConfigSchema,
-} from './zod-schema.core.js';
+} from './zod-schema.core';
 
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;

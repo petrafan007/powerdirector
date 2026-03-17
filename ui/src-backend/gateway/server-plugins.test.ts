@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
-import type { PluginRegistry } from "../plugins/registry.js";
-import type { PluginDiagnostic } from "../plugins/types.js";
-import { loadGatewayPlugins } from "./server-plugins.js";
+import type { PluginRegistry } from '../plugins/registry';
+import type { PluginDiagnostic } from '../plugins/types';
+import { loadGatewayPlugins } from './server-plugins';
 
 const loadPowerDirectorPlugins = vi.hoisted(() => vi.fn());
 

@@ -1,17 +1,17 @@
-import { formatCliCommand } from "../../../cli/command-format.js";
-import type { PowerDirectorConfig } from "../../../config/config.js";
-import type { DmPolicy } from "../../../config/types.js";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../../routing/session-key.js";
+import { formatCliCommand } from '../../../cli/command-format';
+import type { PowerDirectorConfig } from '../../../config/config';
+import type { DmPolicy } from '../../../config/types';
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../../routing/session-key';
 import {
   listTelegramAccountIds,
   resolveDefaultTelegramAccountId,
   resolveTelegramAccount,
-} from "../../../telegram/accounts.js";
-import { formatDocsLink } from "../../../terminal/links.js";
-import type { WizardPrompter } from "../../../wizard/prompts.js";
-import { fetchTelegramChatId } from "../../telegram/api.js";
-import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from "../onboarding-types.js";
-import { addWildcardAllowFrom, mergeAllowFromEntries, promptAccountId } from "./helpers.js";
+} from '../../../telegram/accounts';
+import { formatDocsLink } from '../../../terminal/links';
+import type { WizardPrompter } from '../../../wizard/prompts';
+import { fetchTelegramChatId } from '../../telegram/api';
+import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from '../onboarding-types';
+import { addWildcardAllowFrom, mergeAllowFromEntries, promptAccountId } from './helpers';
 
 const channel = "telegram" as const;
 

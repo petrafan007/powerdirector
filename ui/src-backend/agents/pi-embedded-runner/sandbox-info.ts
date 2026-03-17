@@ -1,6 +1,6 @@
-import type { ExecElevatedDefaults } from "../bash-tools.js";
-import type { resolveSandboxContext } from "../sandbox.js";
-import type { EmbeddedSandboxInfo } from "./types.js";
+import type { ExecElevatedDefaults } from '../bash-tools';
+import type { resolveSandboxContext } from '../sandbox';
+import type { EmbeddedSandboxInfo } from './types';
 
 export function buildEmbeddedSandboxInfo(
   sandbox?: Awaited<ReturnType<typeof resolveSandboxContext>>,

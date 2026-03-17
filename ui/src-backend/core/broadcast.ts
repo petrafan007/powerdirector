@@ -1,6 +1,6 @@
 // @ts-nocheck
 import type { Channel } from '../channels/base.ts';
-import { getRuntimeLogger } from './logger.js';
+import { getRuntimeLogger } from './logger';
 
 type BroadcastStrategy = 'parallel' | 'sequential';
 

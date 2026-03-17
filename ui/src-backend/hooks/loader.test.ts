@@ -2,14 +2,14 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   clearInternalHooks,
   getRegisteredEventKeys,
   triggerInternalHook,
   createInternalHookEvent,
-} from "./internal-hooks.js";
-import { loadInternalHooks } from "./loader.js";
+} from './internal-hooks';
+import { loadInternalHooks } from './loader';
 
 describe("loader", () => {
   let fixtureRoot = "";

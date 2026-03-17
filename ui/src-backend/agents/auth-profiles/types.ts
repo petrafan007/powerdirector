@@ -1,5 +1,5 @@
 import type { OAuthCredentials } from "@mariozechner/pi-ai";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { PowerDirectorConfig } from '../../config/config';
 
 export type ApiKeyCredential = {
   type: "api_key";

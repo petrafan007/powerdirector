@@ -1,28 +1,28 @@
 import type { Api, Model } from "@mariozechner/pi-ai";
-import { resolvePowerDirectorAgentDir } from "../../agents/agent-paths.js";
-import type { AuthProfileStore } from "../../agents/auth-profiles.js";
-import { listProfilesForProvider } from "../../agents/auth-profiles.js";
+import { resolvePowerDirectorAgentDir } from '../../agents/agent-paths';
+import type { AuthProfileStore } from '../../agents/auth-profiles';
+import { listProfilesForProvider } from '../../agents/auth-profiles';
 import {
   getCustomProviderApiKey,
   resolveAwsSdkEnvVarName,
   resolveEnvApiKey,
-} from "../../agents/model-auth.js";
+} from '../../agents/model-auth';
 import {
   ANTIGRAVITY_OPUS_46_FORWARD_COMPAT_CANDIDATES,
   resolveForwardCompatModel,
-} from "../../agents/model-forward-compat.js";
-import { ensurePowerDirectorModelsJson } from "../../agents/models-config.js";
-import { ensurePiAuthJsonFromAuthProfiles } from "../../agents/pi-auth-json.js";
-import type { ModelRegistry } from "../../agents/pi-model-discovery.js";
-import { discoverAuthStorage, discoverModels } from "../../agents/pi-model-discovery.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../agents/model-forward-compat';
+import { ensurePowerDirectorModelsJson } from '../../agents/models-config';
+import { ensurePiAuthJsonFromAuthProfiles } from '../../agents/pi-auth-json';
+import type { ModelRegistry } from '../../agents/pi-model-discovery';
+import { discoverAuthStorage, discoverModels } from '../../agents/pi-model-discovery';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   formatErrorWithStack,
   MODEL_AVAILABILITY_UNAVAILABLE_CODE,
   shouldFallbackToAuthHeuristics,
-} from "./list.errors.js";
-import type { ModelRow } from "./list.types.js";
-import { isLocalBaseUrl, modelKey } from "./shared.js";
+} from './list.errors';
+import type { ModelRow } from './list.types';
+import { isLocalBaseUrl, modelKey } from './shared';
 
 const hasAuthForProvider = (
   provider: string,

@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { resolveBrowserConfig } from "./config.js";
-import { createBrowserProfilesService } from "./profiles-service.js";
-import type { BrowserRouteContext, BrowserServerState } from "./server-context.js";
+import { resolveBrowserConfig } from './config';
+import { createBrowserProfilesService } from './profiles-service';
+import type { BrowserRouteContext, BrowserServerState } from './server-context';
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: vi.fn(),
@@ -22,9 +22,9 @@ vi.mock("./chrome.js", () => ({
   resolvePowerDirectorUserDataDir: vi.fn(() => "/tmp/powerdirector-test/powerdirector/user-data"),
 }));
 
-import { loadConfig, writeConfigFile } from "../config/config.js";
-import { resolvePowerDirectorUserDataDir } from "./chrome.js";
-import { movePathToTrash } from "./trash.js";
+import { loadConfig, writeConfigFile } from '../config/config';
+import { resolvePowerDirectorUserDataDir } from './chrome';
+import { movePathToTrash } from './trash';
 
 function createCtx(resolved: BrowserServerState["resolved"]) {
   const state: BrowserServerState = {

@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveWorkspaceTemplateDir } from "../../agents/workspace-templates.js";
-import { resolveDefaultAgentWorkspaceDir } from "../../agents/workspace.js";
-import { handleReset } from "../../commands/onboard-helpers.js";
-import { createConfigIO, writeConfigFile } from "../../config/config.js";
-import { defaultRuntime } from "../../runtime.js";
-import { resolveUserPath, shortenHomePath } from "../../utils.js";
+import { resolveWorkspaceTemplateDir } from '../../agents/workspace-templates';
+import { resolveDefaultAgentWorkspaceDir } from '../../agents/workspace';
+import { handleReset } from '../../commands/onboard-helpers';
+import { createConfigIO, writeConfigFile } from '../../config/config';
+import { defaultRuntime } from '../../runtime';
+import { resolveUserPath, shortenHomePath } from '../../utils';
 
 const DEV_IDENTITY_NAME = "C3-PO";
 const DEV_IDENTITY_THEME = "protocol droid";

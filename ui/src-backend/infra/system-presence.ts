@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import os from "node:os";
-import { pickPrimaryLanIPv4 } from "../gateway/net.js";
-import { resolveRuntimeServiceVersion } from "../version.js";
+import { pickPrimaryLanIPv4 } from '../gateway/net';
+import { resolveRuntimeServiceVersion } from '../version';
 
 export type SystemPresence = {
   host?: string;

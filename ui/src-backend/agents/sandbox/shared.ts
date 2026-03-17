@@ -1,8 +1,8 @@
 import path from "node:path";
-import { normalizeAgentId } from "../../routing/session-key.js";
-import { resolveUserPath } from "../../utils.js";
-import { resolveAgentIdFromSessionKey } from "../agent-scope.js";
-import { hashTextSha256 } from "./hash.js";
+import { normalizeAgentId } from '../../routing/session-key';
+import { resolveUserPath } from '../../utils';
+import { resolveAgentIdFromSessionKey } from '../agent-scope';
+import { hashTextSha256 } from './hash';
 
 export function slugifySessionKey(value: string) {
   const trimmed = value.trim() || "session";

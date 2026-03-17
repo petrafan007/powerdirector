@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
-import type { SubagentRunRecord } from "../../agents/subagent-registry.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { formatDurationCompact } from "../../infra/format-time/format-duration.js";
-import type { TemplateContext } from "../templating.js";
-import { buildThreadingToolContext } from "./agent-runner-utils.js";
-import { applyReplyThreading } from "./reply-payloads.js";
+import type { SubagentRunRecord } from '../../agents/subagent-registry';
+import type { PowerDirectorConfig } from '../../config/config';
+import { formatDurationCompact } from '../../infra/format-time/format-duration';
+import type { TemplateContext } from '../templating';
+import { buildThreadingToolContext } from './agent-runner-utils';
+import { applyReplyThreading } from './reply-payloads';
 import {
   formatRunLabel,
   formatRunStatus,
   resolveSubagentLabel,
   sortSubagentRuns,
-} from "./subagents-utils.js";
+} from './subagents-utils';
 
 describe("buildThreadingToolContext", () => {
   const cfg = {} as PowerDirectorConfig;

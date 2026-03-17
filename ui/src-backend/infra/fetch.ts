@@ -1,4 +1,4 @@
-import { bindAbortRelay } from "../utils/fetch-timeout.js";
+import { bindAbortRelay } from '../utils/fetch-timeout';
 
 type FetchWithPreconnect = typeof fetch & {
   preconnect: (url: string, init?: { credentials?: RequestCredentials }) => void;

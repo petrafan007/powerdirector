@@ -1,21 +1,21 @@
 import { createServer } from "node:http";
 import { webhookCallback } from "grammy";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { isDiagnosticsEnabled } from "../infra/diagnostic-events.js";
-import { formatErrorMessage } from "../infra/errors.js";
-import { installRequestBodyLimitGuard } from "../infra/http-body.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { isDiagnosticsEnabled } from '../infra/diagnostic-events';
+import { formatErrorMessage } from '../infra/errors';
+import { installRequestBodyLimitGuard } from '../infra/http-body';
 import {
   logWebhookError,
   logWebhookProcessed,
   logWebhookReceived,
   startDiagnosticHeartbeat,
   stopDiagnosticHeartbeat,
-} from "../logging/diagnostic.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { defaultRuntime } from "../runtime.js";
-import { resolveTelegramAllowedUpdates } from "./allowed-updates.js";
-import { withTelegramApiErrorLogging } from "./api-logging.js";
-import { createTelegramBot } from "./bot.js";
+} from '../logging/diagnostic';
+import type { RuntimeEnv } from '../runtime';
+import { defaultRuntime } from '../runtime';
+import { resolveTelegramAllowedUpdates } from './allowed-updates';
+import { withTelegramApiErrorLogging } from './api-logging';
+import { createTelegramBot } from './bot';
 
 const TELEGRAM_WEBHOOK_MAX_BODY_BYTES = 1024 * 1024;
 const TELEGRAM_WEBHOOK_BODY_TIMEOUT_MS = 30_000;

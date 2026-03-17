@@ -1,7 +1,7 @@
 import type { Command } from "commander";
-import { defaultRuntime } from "../../runtime.js";
-import { renderTable } from "../../terminal/table.js";
-import { shortenHomePath } from "../../utils.js";
+import { defaultRuntime } from '../../runtime';
+import { renderTable } from '../../terminal/table';
+import { shortenHomePath } from '../../utils';
 import {
   type CameraFacing,
   cameraTempPath,
@@ -10,11 +10,11 @@ import {
   writeBase64ToFile,
   writeCameraClipPayloadToFile,
   writeUrlToFile,
-} from "../nodes-camera.js";
-import { parseDurationMs } from "../parse-duration.js";
-import { getNodesTheme, runNodesCommand } from "./cli-utils.js";
-import { buildNodeInvokeParams, callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc.js";
-import type { NodesRpcOpts } from "./types.js";
+} from '../nodes-camera';
+import { parseDurationMs } from '../parse-duration';
+import { getNodesTheme, runNodesCommand } from './cli-utils';
+import { buildNodeInvokeParams, callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
+import type { NodesRpcOpts } from './types';
 
 const parseFacing = (value: string): CameraFacing => {
   const v = String(value ?? "")

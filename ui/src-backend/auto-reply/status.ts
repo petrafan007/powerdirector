@@ -1,24 +1,24 @@
 import fs from "node:fs";
-import { lookupContextTokens } from "../agents/context.js";
-import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
-import { resolveModelAuthMode } from "../agents/model-auth.js";
-import { resolveConfiguredModelRef } from "../agents/model-selection.js";
-import { resolveSandboxRuntimeStatus } from "../agents/sandbox.js";
-import type { SkillCommandSpec } from "../agents/skills.js";
-import { derivePromptTokens, normalizeUsage, type UsageLike } from "../agents/usage.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+import { lookupContextTokens } from '../agents/context';
+import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
+import { resolveModelAuthMode } from '../agents/model-auth';
+import { resolveConfiguredModelRef } from '../agents/model-selection';
+import { resolveSandboxRuntimeStatus } from '../agents/sandbox';
+import type { SkillCommandSpec } from '../agents/skills';
+import { derivePromptTokens, normalizeUsage, type UsageLike } from '../agents/usage';
+import type { PowerDirectorConfig } from '../config/config';
 import {
   resolveMainSessionKey,
   resolveSessionFilePath,
   resolveSessionFilePathOptions,
   type SessionEntry,
   type SessionScope,
-} from "../config/sessions.js";
+} from '../config/sessions';
 import { formatTimeAgo } from "../infra/format-time/format-relative.ts";
-import { resolveCommitHash } from "../infra/git-commit.js";
-import type { MediaUnderstandingDecision } from "../media-understanding/types.js";
-import { listPluginCommands } from "../plugins/commands.js";
-import { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
+import { resolveCommitHash } from '../infra/git-commit';
+import type { MediaUnderstandingDecision } from '../media-understanding/types';
+import { listPluginCommands } from '../plugins/commands';
+import { resolveAgentIdFromSessionKey } from '../routing/session-key';
 import {
   getTtsMaxLength,
   getTtsProvider,
@@ -26,21 +26,21 @@ import {
   resolveTtsAutoMode,
   resolveTtsConfig,
   resolveTtsPrefsPath,
-} from "../tts/tts.js";
+} from '../tts/tts';
 import {
   estimateUsageCost,
   formatTokenCount as formatTokenCountShared,
   formatUsd,
   resolveModelCostConfig,
-} from "../utils/usage-format.js";
-import { VERSION } from "../version.js";
+} from '../utils/usage-format';
+import { VERSION } from '../version';
 import {
   listChatCommands,
   listChatCommandsForConfig,
   type ChatCommandDefinition,
-} from "./commands-registry.js";
-import type { CommandCategory } from "./commands-registry.types.js";
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "./thinking.js";
+} from './commands-registry';
+import type { CommandCategory } from './commands-registry.types';
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from './thinking';
 
 type AgentDefaults = NonNullable<NonNullable<PowerDirectorConfig["agents"]>["defaults"]>;
 type AgentConfig = Partial<AgentDefaults> & {

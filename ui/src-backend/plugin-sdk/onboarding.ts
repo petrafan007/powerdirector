@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
-import type { WizardPrompter } from "../wizard/prompts.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../routing/session-key';
+import type { WizardPrompter } from '../wizard/prompts';
 
 export type PromptAccountIdParams = {
   cfg: PowerDirectorConfig;

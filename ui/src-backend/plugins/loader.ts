@@ -2,33 +2,33 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createJiti } from "jiti";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { GatewayRequestHandler } from "../gateway/server-methods/types.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { isPathInsideWithRealpath } from "../security/scan-paths.js";
-import { resolveUserPath } from "../utils.js";
-import { clearPluginCommands } from "./commands.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { GatewayRequestHandler } from '../gateway/server-methods/types';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { isPathInsideWithRealpath } from '../security/scan-paths';
+import { resolveUserPath } from '../utils';
+import { clearPluginCommands } from './commands';
 import {
   applyTestPluginDefaults,
   normalizePluginsConfig,
   resolveEnableState,
   resolveMemorySlotDecision,
   type NormalizedPluginsConfig,
-} from "./config-state.js";
-import { discoverPowerDirectorPlugins } from "./discovery.js";
-import { initializeGlobalHookRunner } from "./hook-runner-global.js";
-import { loadPluginManifestRegistry } from "./manifest-registry.js";
-import { isPathInside, safeStatSync } from "./path-safety.js";
-import { createPluginRegistry, type PluginRecord, type PluginRegistry } from "./registry.js";
-import { setActivePluginRegistry } from "./runtime.js";
-import { createPluginRuntime } from "./runtime/index.js";
-import { validateJsonSchemaValue } from "./schema-validator.js";
+} from './config-state';
+import { discoverPowerDirectorPlugins } from './discovery';
+import { initializeGlobalHookRunner } from './hook-runner-global';
+import { loadPluginManifestRegistry } from './manifest-registry';
+import { isPathInside, safeStatSync } from './path-safety';
+import { createPluginRegistry, type PluginRecord, type PluginRegistry } from './registry';
+import { setActivePluginRegistry } from './runtime';
+import { createPluginRuntime } from './runtime/index';
+import { validateJsonSchemaValue } from './schema-validator';
 import type {
   PowerDirectorPluginDefinition,
   PowerDirectorPluginModule,
   PluginDiagnostic,
   PluginLogger,
-} from "./types.js";
+} from './types';
 
 export type PluginLoadResult = PluginRegistry;
 

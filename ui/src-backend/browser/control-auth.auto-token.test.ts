@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 
 const mocks = vi.hoisted(() => ({
   loadConfig: vi.fn<() => PowerDirectorConfig>(),
@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: mocks.loadConfig,
@@ -15,7 +15,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
   };
 });
 
-import { ensureBrowserControlAuth } from "./control-auth.js";
+import { ensureBrowserControlAuth } from './control-auth';
 
 describe("ensureBrowserControlAuth", () => {
   const expectExplicitModeSkipsAutoAuth = async (mode: "password" | "none") => {

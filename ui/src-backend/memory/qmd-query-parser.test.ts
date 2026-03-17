@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseQmdQueryJson } from "./qmd-query-parser.js";
+import { parseQmdQueryJson } from './qmd-query-parser';
 
 describe("parseQmdQueryJson", () => {
   it("parses clean qmd JSON output", () => {

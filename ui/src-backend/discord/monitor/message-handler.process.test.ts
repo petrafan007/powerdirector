@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createBaseDiscordMessageContext } from "./message-handler.test-harness.js";
+import { createBaseDiscordMessageContext } from './message-handler.test-harness';
 
 const reactMessageDiscord = vi.fn(async () => {});
 const removeReactionDiscord = vi.fn(async () => {});
@@ -50,7 +50,7 @@ vi.mock("../../config/sessions.js", () => ({
   resolveStorePath,
 }));
 
-const { processDiscordMessage } = await import("./message-handler.process.js");
+const { processDiscordMessage } = await import('./message-handler.process');
 
 const createBaseContext = createBaseDiscordMessageContext;
 

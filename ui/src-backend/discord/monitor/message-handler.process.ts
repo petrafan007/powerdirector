@@ -1,41 +1,41 @@
 import { ChannelType } from "@buape/carbon";
-import { resolveAckReaction, resolveHumanDelayConfig } from "../../agents/identity.js";
-import { resolveChunkMode } from "../../auto-reply/chunk.js";
-import { dispatchInboundMessage } from "../../auto-reply/dispatch.js";
-import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from "../../auto-reply/envelope.js";
+import { resolveAckReaction, resolveHumanDelayConfig } from '../../agents/identity';
+import { resolveChunkMode } from '../../auto-reply/chunk';
+import { dispatchInboundMessage } from '../../auto-reply/dispatch';
+import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from '../../auto-reply/envelope';
 import {
   buildPendingHistoryContextFromMap,
   clearHistoryEntriesIfEnabled,
-} from "../../auto-reply/reply/history.js";
-import { finalizeInboundContext } from "../../auto-reply/reply/inbound-context.js";
-import { createReplyDispatcherWithTyping } from "../../auto-reply/reply/reply-dispatcher.js";
-import type { ReplyPayload } from "../../auto-reply/types.js";
-import { shouldAckReaction as shouldAckReactionGate } from "../../channels/ack-reactions.js";
-import { logTypingFailure, logAckFailure } from "../../channels/logging.js";
-import { createReplyPrefixOptions } from "../../channels/reply-prefix.js";
-import { recordInboundSession } from "../../channels/session.js";
-import { createTypingCallbacks } from "../../channels/typing.js";
-import { resolveMarkdownTableMode } from "../../config/markdown-tables.js";
-import { readSessionUpdatedAt, resolveStorePath } from "../../config/sessions.js";
-import { danger, logVerbose, shouldLogVerbose } from "../../globals.js";
-import { buildAgentSessionKey } from "../../routing/resolve-route.js";
-import { resolveThreadSessionKeys } from "../../routing/session-key.js";
-import { buildUntrustedChannelMetadata } from "../../security/channel-metadata.js";
-import { truncateUtf16Safe } from "../../utils.js";
-import { reactMessageDiscord, removeReactionDiscord } from "../send.js";
-import { normalizeDiscordSlug, resolveDiscordOwnerAllowFrom } from "./allow-list.js";
-import { resolveTimestampMs } from "./format.js";
-import type { DiscordMessagePreflightContext } from "./message-handler.preflight.js";
+} from '../../auto-reply/reply/history';
+import { finalizeInboundContext } from '../../auto-reply/reply/inbound-context';
+import { createReplyDispatcherWithTyping } from '../../auto-reply/reply/reply-dispatcher';
+import type { ReplyPayload } from '../../auto-reply/types';
+import { shouldAckReaction as shouldAckReactionGate } from '../../channels/ack-reactions';
+import { logTypingFailure, logAckFailure } from '../../channels/logging';
+import { createReplyPrefixOptions } from '../../channels/reply-prefix';
+import { recordInboundSession } from '../../channels/session';
+import { createTypingCallbacks } from '../../channels/typing';
+import { resolveMarkdownTableMode } from '../../config/markdown-tables';
+import { readSessionUpdatedAt, resolveStorePath } from '../../config/sessions';
+import { danger, logVerbose, shouldLogVerbose } from '../../globals';
+import { buildAgentSessionKey } from '../../routing/resolve-route';
+import { resolveThreadSessionKeys } from '../../routing/session-key';
+import { buildUntrustedChannelMetadata } from '../../security/channel-metadata';
+import { truncateUtf16Safe } from '../../utils';
+import { reactMessageDiscord, removeReactionDiscord } from '../send';
+import { normalizeDiscordSlug, resolveDiscordOwnerAllowFrom } from './allow-list';
+import { resolveTimestampMs } from './format';
+import type { DiscordMessagePreflightContext } from './message-handler.preflight';
 import {
   buildDiscordMediaPayload,
   resolveDiscordMessageText,
   resolveForwardedMediaList,
   resolveMediaList,
-} from "./message-utils.js";
-import { buildDirectLabel, buildGuildLabel, resolveReplyContext } from "./reply-context.js";
-import { deliverDiscordReply } from "./reply-delivery.js";
-import { resolveDiscordAutoThreadReplyPlan, resolveDiscordThreadStarter } from "./threading.js";
-import { sendTyping } from "./typing.js";
+} from './message-utils';
+import { buildDirectLabel, buildGuildLabel, resolveReplyContext } from './reply-context';
+import { deliverDiscordReply } from './reply-delivery';
+import { resolveDiscordAutoThreadReplyPlan, resolveDiscordThreadStarter } from './threading';
+import { sendTyping } from './typing';
 
 const DISCORD_STATUS_THINKING_EMOJI = "🧠";
 const DISCORD_STATUS_TOOL_EMOJI = "🛠️";

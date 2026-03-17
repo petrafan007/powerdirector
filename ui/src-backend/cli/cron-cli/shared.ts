@@ -1,12 +1,12 @@
-import { listChannelPlugins } from "../../channels/plugins/index.js";
-import { parseAbsoluteTimeMs } from "../../cron/parse.js";
-import { resolveCronStaggerMs } from "../../cron/stagger.js";
-import type { CronJob, CronSchedule } from "../../cron/types.js";
+import { listChannelPlugins } from '../../channels/plugins/index';
+import { parseAbsoluteTimeMs } from '../../cron/parse';
+import { resolveCronStaggerMs } from '../../cron/stagger';
+import type { CronJob, CronSchedule } from '../../cron/types';
 import { formatDurationHuman } from "../../infra/format-time/format-duration.ts";
-import { defaultRuntime } from "../../runtime.js";
-import { colorize, isRich, theme } from "../../terminal/theme.js";
-import type { GatewayRpcOpts } from "../gateway-rpc.js";
-import { callGatewayFromCli } from "../gateway-rpc.js";
+import { defaultRuntime } from '../../runtime';
+import { colorize, isRich, theme } from '../../terminal/theme';
+import type { GatewayRpcOpts } from '../gateway-rpc';
+import { callGatewayFromCli } from '../gateway-rpc';
 
 export const getCronChannelOptions = () =>
   ["last", ...listChannelPlugins().map((plugin) => plugin.id)].join("|");

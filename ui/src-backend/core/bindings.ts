@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { getRuntimeLogger } from './logger.js';
+import { getRuntimeLogger } from './logger';
 
 export interface BindingEntry {
     agentId: string;

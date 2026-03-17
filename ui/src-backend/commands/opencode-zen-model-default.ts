@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { applyAgentDefaultPrimaryModel } from "./model-default.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { applyAgentDefaultPrimaryModel } from './model-default';
 
 export const OPENCODE_ZEN_DEFAULT_MODEL = "opencode/claude-opus-4-6";
 const LEGACY_OPENCODE_ZEN_DEFAULT_MODELS = new Set([

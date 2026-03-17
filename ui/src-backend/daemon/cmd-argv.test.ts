@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseCmdScriptCommandLine, quoteCmdScriptArg } from "./cmd-argv.js";
+import { parseCmdScriptCommandLine, quoteCmdScriptArg } from './cmd-argv';
 
 describe("cmd argv helpers", () => {
   it.each([

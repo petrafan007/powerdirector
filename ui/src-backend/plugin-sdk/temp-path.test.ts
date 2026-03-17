@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildRandomTempFilePath, withTempDownloadPath } from "./temp-path.js";
+import { buildRandomTempFilePath, withTempDownloadPath } from './temp-path';
 
 describe("buildRandomTempFilePath", () => {
   it("builds deterministic paths when now/uuid are provided", () => {

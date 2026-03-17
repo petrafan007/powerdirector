@@ -1,31 +1,31 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import { resolveSessionAgentId } from "../../agents/agent-scope.js";
+import { resolveSessionAgentId } from '../../agents/agent-scope';
 import {
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from "../../agents/tools/common.js";
-import { parseReplyDirectives } from "../../auto-reply/reply/reply-directives.js";
-import { dispatchChannelMessageAction } from "../../channels/plugins/message-actions.js";
+} from '../../agents/tools/common';
+import { parseReplyDirectives } from '../../auto-reply/reply/reply-directives';
+import { dispatchChannelMessageAction } from '../../channels/plugins/message-actions';
 import type {
   ChannelId,
   ChannelMessageActionName,
   ChannelThreadingToolContext,
-} from "../../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+} from '../../channels/plugins/types';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   isDeliverableMessageChannel,
   normalizeMessageChannel,
   type GatewayClientMode,
   type GatewayClientName,
-} from "../../utils/message-channel.js";
-import { throwIfAborted } from "./abort.js";
+} from '../../utils/message-channel';
+import { throwIfAborted } from './abort';
 import {
   listConfiguredMessageChannels,
   resolveMessageChannelSelection,
-} from "./channel-selection.js";
-import { applyTargetToParams } from "./channel-target.js";
-import type { OutboundSendDeps } from "./deliver.js";
+} from './channel-selection';
+import { applyTargetToParams } from './channel-target';
+import type { OutboundSendDeps } from './deliver';
 import {
   hydrateSendAttachmentParams,
   hydrateSetGroupIconParams,
@@ -37,20 +37,20 @@ import {
   readBooleanParam,
   resolveSlackAutoThreadId,
   resolveTelegramAutoThreadId,
-} from "./message-action-params.js";
-import { actionHasTarget, actionRequiresTarget } from "./message-action-spec.js";
-import type { MessagePollResult, MessageSendResult } from "./message.js";
+} from './message-action-params';
+import { actionHasTarget, actionRequiresTarget } from './message-action-spec';
+import type { MessagePollResult, MessageSendResult } from './message';
 import {
   applyCrossContextDecoration,
   buildCrossContextDecoration,
   type CrossContextDecoration,
   enforceCrossContextPolicy,
   shouldApplyCrossContextMarker,
-} from "./outbound-policy.js";
-import { executePollAction, executeSendAction } from "./outbound-send-service.js";
-import { ensureOutboundSessionEntry, resolveOutboundSessionRoute } from "./outbound-session.js";
-import { resolveChannelTarget, type ResolvedMessagingTarget } from "./target-resolver.js";
-import { extractToolPayload } from "./tool-payload.js";
+} from './outbound-policy';
+import { executePollAction, executeSendAction } from './outbound-send-service';
+import { ensureOutboundSessionEntry, resolveOutboundSessionRoute } from './outbound-session';
+import { resolveChannelTarget, type ResolvedMessagingTarget } from './target-resolver';
+import { extractToolPayload } from './tool-payload';
 
 export type MessageActionRunnerGateway = {
   url?: string;

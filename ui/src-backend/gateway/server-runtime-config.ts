@@ -3,23 +3,23 @@ import type {
   GatewayBindMode,
   GatewayTailscaleConfig,
   loadConfig,
-} from "../config/config.js";
+} from '../config/config';
 import {
   assertGatewayAuthConfigured,
   type ResolvedGatewayAuth,
   resolveGatewayAuth,
-} from "./auth.js";
-import { normalizeControlUiBasePath } from "./control-ui-shared.js";
-import { resolveHooksConfig } from "./hooks.js";
-import { isLoopbackHost, isValidIPv4, resolveGatewayBindHost } from "./net.js";
-import { mergeGatewayTailscaleConfig } from "./startup-auth.js";
+} from './auth';
+import { normalizeControlUiBasePath } from './control-ui-shared';
+import { resolveHooksConfig } from './hooks';
+import { isLoopbackHost, isValidIPv4, resolveGatewayBindHost } from './net';
+import { mergeGatewayTailscaleConfig } from './startup-auth';
 
 export type GatewayRuntimeConfig = {
   bindHost: string;
   controlUiEnabled: boolean;
   openAiChatCompletionsEnabled: boolean;
   openResponsesEnabled: boolean;
-  openResponsesConfig?: import("../config/types.gateway.js").GatewayHttpResponsesConfig;
+  openResponsesConfig?: import('../config/types.gateway').GatewayHttpResponsesConfig;
   controlUiBasePath: string;
   controlUiRoot?: string;
   resolvedAuth: ResolvedGatewayAuth;

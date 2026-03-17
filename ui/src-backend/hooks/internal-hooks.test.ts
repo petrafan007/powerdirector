@@ -14,7 +14,7 @@ import {
   type GatewayStartupHookContext,
   type MessageReceivedHookContext,
   type MessageSentHookContext,
-} from "./internal-hooks.js";
+} from './internal-hooks';
 
 describe("hooks", () => {
   beforeEach(() => {

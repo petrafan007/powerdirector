@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { GatewayBindMode } from "../config/types.gateway.js";
-import { dashboardCommand } from "./dashboard.js";
+import type { GatewayBindMode } from '../config/types.gateway';
+import { dashboardCommand } from './dashboard';
 
 const mocks = vi.hoisted(() => ({
   readConfigFileSnapshot: vi.fn(),

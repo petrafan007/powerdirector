@@ -5,7 +5,7 @@ import { ProviderExecutionMetadata, ProviderRouter } from '../reliability/router
 import { ContextPruner } from '../context/pruner.ts';
 import { ToolRegistry } from '../tools/base.ts';
 import { Message } from '../context/types.ts';
-import { MemoryManager } from './memory.js';
+import { MemoryManager } from './memory';
 
 interface AgentOptions {
     runTimeoutMs?: number;
@@ -514,10 +514,12 @@ export class Agent {
                         const callId = Math.random().toString(36).substring(7);
 
                         // Extract any conversational text BEFORE the tool call JSON
-                        // Strip markdown code blocks containing the tool call
-                        let conversationalText = responseText
-                            .replace(/```json\s*[\s\S]*?```\s*/g, '')  // Remove JSON code blocks
-                            .replace(/```\s*[\s\S]*?```\s*/g, '')       // Remove any other code blocks with tool calls
+                        // Strip the exact JSON tool call (whether raw or markdown-wrapped)
+                        let conversationalText = responseText.replace(extractedJson, '').trim();
+                        // Also strip markdown block delimiters if they were left behind
+                        conversationalText = conversationalText
+                            .replace(/```json\s*\n?/g, '')
+                            .replace(/```\s*\n?/g, '')
                             .trim();
 
                         // If there's meaningful conversational text (more than just whitespace), save it as a separate message
@@ -704,7 +706,9 @@ export class Agent {
         const assistantMsg: Message = {
             role: 'assistant',
             content: responseText,
-            timestamp: Date.now(),
+            // Guarantee the assistant message is always strictly after the user's runStartTime
+            // to prevent UI ordering glitches when timestamps collide within the same millisecond.
+            timestamp: Math.max(Date.now(), runStartTime + 1),
             metadata: {
                 turn: currentTurn,
                 runId,
@@ -946,7 +950,8 @@ export class Agent {
             return false;
         }
         const normalized = responseText.toLowerCase();
-        const intentMatches = normalized.match(/\b(i will|i'll|let me|i am going to|i'm going to|i'll start by|i will start by)\b/g);
+        // Look for explicit intent markers that aren't just descriptions of what was done.
+        const intentMatches = normalized.match(/\b(i will now|i'll now|let me now|i am going to use the|i'm going to use the|i will call the|i'll proceed with)\b/g);
         if (!intentMatches || intentMatches.length === 0) {
             return false;
         }

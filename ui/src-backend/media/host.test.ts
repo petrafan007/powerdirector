@@ -15,17 +15,17 @@ const { saveMediaSource, getTailnetHostname, ensurePortAvailable, startMediaServ
 vi.mock("./store.js", () => ({ saveMediaSource }));
 vi.mock("../infra/tailscale.js", () => ({ getTailnetHostname }));
 vi.mock("../infra/ports.js", async () => {
-  const actual = await vi.importActual<typeof import("../infra/ports.js")>("../infra/ports.js");
+  const actual = await vi.importActual<typeof import('../infra/ports')>("../infra/ports.js");
   return { ensurePortAvailable, PortInUseError: actual.PortInUseError };
 });
 vi.mock("./server.js", () => ({ startMediaServer }));
 vi.mock("../logger.js", async () => {
-  const actual = await vi.importActual<typeof import("../logger.js")>("../logger.js");
+  const actual = await vi.importActual<typeof import('../logger')>("../logger.js");
   return { ...actual, logInfo };
 });
 
-const { ensureMediaHosted } = await import("./host.js");
-const { PortInUseError } = await import("../infra/ports.js");
+const { ensureMediaHosted } = await import('./host');
+const { PortInUseError } = await import('../infra/ports');
 
 describe("ensureMediaHosted", () => {
   beforeEach(() => {

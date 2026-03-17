@@ -1,10 +1,10 @@
-export { createAccountListHelpers } from "../channels/plugins/account-helpers.js";
-export { CHANNEL_MESSAGE_ACTION_NAMES } from "../channels/plugins/message-action-names.js";
+export { createAccountListHelpers } from '../channels/plugins/account-helpers';
+export { CHANNEL_MESSAGE_ACTION_NAMES } from '../channels/plugins/message-action-names';
 export {
   BLUEBUBBLES_ACTIONS,
   BLUEBUBBLES_ACTION_NAMES,
   BLUEBUBBLES_GROUP_ACTIONS,
-} from "../channels/plugins/bluebubbles-actions.js";
+} from '../channels/plugins/bluebubbles-actions';
 export type {
   ChannelAccountSnapshot,
   ChannelAccountState,
@@ -59,8 +59,8 @@ export type {
   ChannelToolSend,
   BaseProbeResult,
   BaseTokenResolution,
-} from "../channels/plugins/types.js";
-export type { ChannelConfigSchema, ChannelPlugin } from "../channels/plugins/types.plugin.js";
+} from '../channels/plugins/types';
+export type { ChannelConfigSchema, ChannelPlugin } from '../channels/plugins/types.plugin';
 export type {
   AnyAgentTool,
   PowerDirectorPluginApi,
@@ -68,38 +68,38 @@ export type {
   PowerDirectorPluginServiceContext,
   ProviderAuthContext,
   ProviderAuthResult,
-} from "../plugins/types.js";
+} from '../plugins/types';
 export type {
   GatewayRequestHandler,
   GatewayRequestHandlerOptions,
   RespondFn,
-} from "../gateway/server-methods/types.js";
-export type { PluginRuntime, RuntimeLogger } from "../plugins/runtime/types.js";
-export { normalizePluginHttpPath } from "../plugins/http-path.js";
-export { registerPluginHttpRoute } from "../plugins/http-registry.js";
-export { emptyPluginConfigSchema } from "../plugins/config-schema.js";
-export type { PowerDirectorConfig } from "../config/config.js";
+} from '../gateway/server-methods/types';
+export type { PluginRuntime, RuntimeLogger } from '../plugins/runtime/types';
+export { normalizePluginHttpPath } from '../plugins/http-path';
+export { registerPluginHttpRoute } from '../plugins/http-registry';
+export { emptyPluginConfigSchema } from '../plugins/config-schema';
+export type { PowerDirectorConfig } from '../config/config';
 /** @deprecated Use PowerDirectorConfig instead */
-export type { PowerDirectorConfig as ClawdbotConfig } from "../config/config.js";
+export type { PowerDirectorConfig as ClawdbotConfig } from '../config/config';
 
-export type { FileLockHandle, FileLockOptions } from "./file-lock.js";
-export { acquireFileLock, withFileLock } from "./file-lock.js";
-export { normalizeWebhookPath, resolveWebhookPath } from "./webhook-path.js";
+export type { FileLockHandle, FileLockOptions } from './file-lock';
+export { acquireFileLock, withFileLock } from './file-lock';
+export { normalizeWebhookPath, resolveWebhookPath } from './webhook-path';
 export {
   registerWebhookTarget,
   rejectNonPostWebhookRequest,
   resolveWebhookTargets,
-} from "./webhook-targets.js";
-export type { AgentMediaPayload } from "./agent-media-payload.js";
-export { buildAgentMediaPayload } from "./agent-media-payload.js";
+} from './webhook-targets';
+export type { AgentMediaPayload } from './agent-media-payload';
+export { buildAgentMediaPayload } from './agent-media-payload';
 export {
   buildBaseChannelStatusSummary,
   collectStatusIssuesFromLastError,
   createDefaultChannelRuntimeState,
-} from "./status-helpers.js";
-export { buildOauthProviderAuthResult } from "./provider-auth-result.js";
-export type { ChannelDock } from "../channels/dock.js";
-export { getChatChannelMeta } from "../channels/registry.js";
+} from './status-helpers';
+export { buildOauthProviderAuthResult } from './provider-auth-result';
+export type { ChannelDock } from '../channels/dock';
+export { getChatChannelMeta } from '../channels/registry';
 export type {
   BlockStreamingCoalesceConfig,
   DmPolicy,
@@ -118,7 +118,7 @@ export type {
   MSTeamsConfig,
   MSTeamsReplyStyle,
   MSTeamsTeamConfig,
-} from "../config/types.js";
+} from '../config/types';
 export {
   DiscordConfigSchema,
   GoogleChatConfigSchema,
@@ -127,8 +127,8 @@ export {
   SignalConfigSchema,
   SlackConfigSchema,
   TelegramConfigSchema,
-} from "../config/zod-schema.providers-core.js";
-export { WhatsAppConfigSchema } from "../config/zod-schema.providers-whatsapp.js";
+} from '../config/zod-schema.providers-core';
+export { WhatsAppConfigSchema } from '../config/zod-schema.providers-whatsapp';
 export {
   BlockStreamingCoalesceSchema,
   DmConfigSchema,
@@ -142,34 +142,34 @@ export {
   TtsConfigSchema,
   TtsModeSchema,
   TtsProviderSchema,
-} from "../config/zod-schema.core.js";
-export { ToolPolicySchema } from "../config/zod-schema.agent-runtime.js";
-export type { RuntimeEnv } from "../runtime.js";
-export type { WizardPrompter } from "../wizard/prompts.js";
-export { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
-export { formatAllowFromLowercase, isAllowedParsedChatSender } from "./allow-from.js";
-export { resolveSenderCommandAuthorization } from "./command-auth.js";
-export { handleSlackMessageAction } from "./slack-message-actions.js";
-export { extractToolSend } from "./tool-send.js";
-export { resolveChannelAccountConfigBasePath } from "./config-paths.js";
-export { chunkTextForOutbound } from "./text-chunking.js";
-export { readJsonFileWithFallback, writeJsonFileAtomically } from "./json-store.js";
-export { buildRandomTempFilePath, withTempDownloadPath } from "./temp-path.js";
-export type { ChatType } from "../channels/chat-type.js";
+} from '../config/zod-schema.core';
+export { ToolPolicySchema } from '../config/zod-schema.agent-runtime';
+export type { RuntimeEnv } from '../runtime';
+export type { WizardPrompter } from '../wizard/prompts';
+export { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../routing/session-key';
+export { formatAllowFromLowercase, isAllowedParsedChatSender } from './allow-from';
+export { resolveSenderCommandAuthorization } from './command-auth';
+export { handleSlackMessageAction } from './slack-message-actions';
+export { extractToolSend } from './tool-send';
+export { resolveChannelAccountConfigBasePath } from './config-paths';
+export { chunkTextForOutbound } from './text-chunking';
+export { readJsonFileWithFallback, writeJsonFileAtomically } from './json-store';
+export { buildRandomTempFilePath, withTempDownloadPath } from './temp-path';
+export type { ChatType } from '../channels/chat-type';
 /** @deprecated Use ChatType instead */
-export type { RoutePeerKind } from "../routing/resolve-route.js";
-export { resolveAckReaction } from "../agents/identity.js";
-export type { ReplyPayload } from "../auto-reply/types.js";
-export type { ChunkMode } from "../auto-reply/chunk.js";
-export { SILENT_REPLY_TOKEN, isSilentReplyText } from "../auto-reply/tokens.js";
+export type { RoutePeerKind } from '../routing/resolve-route';
+export { resolveAckReaction } from '../agents/identity';
+export type { ReplyPayload } from '../auto-reply/types';
+export type { ChunkMode } from '../auto-reply/chunk';
+export { SILENT_REPLY_TOKEN, isSilentReplyText } from '../auto-reply/tokens';
 export {
   approveDevicePairing,
   listDevicePairing,
   rejectDevicePairing,
-} from "../infra/device-pairing.js";
-export { createDedupeCache } from "../infra/dedupe.js";
-export type { DedupeCache } from "../infra/dedupe.js";
-export { formatErrorMessage } from "../infra/errors.js";
+} from '../infra/device-pairing';
+export { createDedupeCache } from '../infra/dedupe';
+export type { DedupeCache } from '../infra/dedupe';
+export { formatErrorMessage } from '../infra/errors';
 export {
   DEFAULT_WEBHOOK_BODY_TIMEOUT_MS,
   DEFAULT_WEBHOOK_MAX_BODY_BYTES,
@@ -179,20 +179,20 @@ export {
   readJsonBodyWithLimit,
   readRequestBodyWithLimit,
   requestBodyErrorToText,
-} from "../infra/http-body.js";
+} from '../infra/http-body';
 
-export { fetchWithSsrFGuard } from "../infra/net/fetch-guard.js";
+export { fetchWithSsrFGuard } from '../infra/net/fetch-guard';
 export {
   SsrFBlockedError,
   isBlockedHostname,
   isBlockedHostnameOrIp,
   isPrivateIpAddress,
-} from "../infra/net/ssrf.js";
-export type { LookupFn, SsrFPolicy } from "../infra/net/ssrf.js";
-export { rawDataToString } from "../infra/ws.js";
-export { isWSLSync, isWSL2Sync, isWSLEnv } from "../infra/wsl.js";
-export { isTruthyEnvValue } from "../infra/env.js";
-export { resolveToolsBySender } from "../config/group-policy.js";
+} from '../infra/net/ssrf';
+export type { LookupFn, SsrFPolicy } from '../infra/net/ssrf';
+export { rawDataToString } from '../infra/ws';
+export { isWSLSync, isWSL2Sync, isWSLEnv } from '../infra/wsl';
+export { isTruthyEnvValue } from '../infra/env';
+export { resolveToolsBySender } from '../config/group-policy';
 export {
   buildPendingHistoryContextFromMap,
   clearHistoryEntries,
@@ -200,30 +200,30 @@ export {
   DEFAULT_GROUP_HISTORY_LIMIT,
   recordPendingHistoryEntry,
   recordPendingHistoryEntryIfEnabled,
-} from "../auto-reply/reply/history.js";
-export type { HistoryEntry } from "../auto-reply/reply/history.js";
-export { mergeAllowlist, summarizeMapping } from "../channels/allowlists/resolve-utils.js";
+} from '../auto-reply/reply/history';
+export type { HistoryEntry } from '../auto-reply/reply/history';
+export { mergeAllowlist, summarizeMapping } from '../channels/allowlists/resolve-utils';
 export {
   resolveMentionGating,
   resolveMentionGatingWithBypass,
-} from "../channels/mention-gating.js";
+} from '../channels/mention-gating';
 export type {
   AckReactionGateParams,
   AckReactionScope,
   WhatsAppAckReactionMode,
-} from "../channels/ack-reactions.js";
+} from '../channels/ack-reactions';
 export {
   removeAckReactionAfterReply,
   shouldAckReaction,
   shouldAckReactionForWhatsApp,
-} from "../channels/ack-reactions.js";
-export { createTypingCallbacks } from "../channels/typing.js";
-export { createReplyPrefixContext, createReplyPrefixOptions } from "../channels/reply-prefix.js";
-export { logAckFailure, logInboundDrop, logTypingFailure } from "../channels/logging.js";
-export { resolveChannelMediaMaxBytes } from "../channels/plugins/media-limits.js";
-export type { NormalizedLocation } from "../channels/location.js";
-export { formatLocationText, toLocationContext } from "../channels/location.js";
-export { resolveControlCommandGate } from "../channels/command-gating.js";
+} from '../channels/ack-reactions';
+export { createTypingCallbacks } from '../channels/typing';
+export { createReplyPrefixContext, createReplyPrefixOptions } from '../channels/reply-prefix';
+export { logAckFailure, logInboundDrop, logTypingFailure } from '../channels/logging';
+export { resolveChannelMediaMaxBytes } from '../channels/plugins/media-limits';
+export type { NormalizedLocation } from '../channels/location';
+export { formatLocationText, toLocationContext } from '../channels/location';
+export { resolveControlCommandGate } from '../channels/command-gating';
 export {
   resolveBlueBubblesGroupRequireMention,
   resolveDiscordGroupRequireMention,
@@ -239,15 +239,15 @@ export {
   resolveSlackGroupToolPolicy,
   resolveTelegramGroupToolPolicy,
   resolveWhatsAppGroupToolPolicy,
-} from "../channels/plugins/group-mentions.js";
-export { recordInboundSession } from "../channels/session.js";
+} from '../channels/plugins/group-mentions';
+export { recordInboundSession } from '../channels/session';
 export {
   buildChannelKeyCandidates,
   normalizeChannelSlug,
   resolveChannelEntryMatch,
   resolveChannelEntryMatchWithFallback,
   resolveNestedAllowlistDecision,
-} from "../channels/plugins/channel-config.js";
+} from '../channels/plugins/channel-config';
 export {
   listDiscordDirectoryGroupsFromConfig,
   listDiscordDirectoryPeersFromConfig,
@@ -257,37 +257,37 @@ export {
   listTelegramDirectoryPeersFromConfig,
   listWhatsAppDirectoryGroupsFromConfig,
   listWhatsAppDirectoryPeersFromConfig,
-} from "../channels/plugins/directory-config.js";
-export type { AllowlistMatch } from "../channels/plugins/allowlist-match.js";
+} from '../channels/plugins/directory-config';
+export type { AllowlistMatch } from '../channels/plugins/allowlist-match';
 export {
   formatAllowlistMatchMeta,
   resolveAllowlistMatchSimple,
-} from "../channels/plugins/allowlist-match.js";
-export { optionalStringEnum, stringEnum } from "../agents/schema/typebox.js";
-export type { PollInput } from "../polls.js";
+} from '../channels/plugins/allowlist-match';
+export { optionalStringEnum, stringEnum } from '../agents/schema/typebox';
+export type { PollInput } from '../polls';
 
-export { buildChannelConfigSchema } from "../channels/plugins/config-schema.js";
+export { buildChannelConfigSchema } from '../channels/plugins/config-schema';
 export {
   deleteAccountFromConfigSection,
   setAccountEnabledInConfigSection,
-} from "../channels/plugins/config-helpers.js";
+} from '../channels/plugins/config-helpers';
 export {
   applyAccountNameToChannelSection,
   migrateBaseNameToDefaultAccount,
-} from "../channels/plugins/setup-helpers.js";
-export { formatPairingApproveHint } from "../channels/plugins/helpers.js";
-export { PAIRING_APPROVED_MESSAGE } from "../channels/plugins/pairing-message.js";
+} from '../channels/plugins/setup-helpers';
+export { formatPairingApproveHint } from '../channels/plugins/helpers';
+export { PAIRING_APPROVED_MESSAGE } from '../channels/plugins/pairing-message';
 
 export type {
   ChannelOnboardingAdapter,
   ChannelOnboardingDmPolicy,
-} from "../channels/plugins/onboarding-types.js";
+} from '../channels/plugins/onboarding-types';
 export {
   addWildcardAllowFrom,
   mergeAllowFromEntries,
   promptAccountId,
-} from "../channels/plugins/onboarding/helpers.js";
-export { promptChannelAccessConfig } from "../channels/plugins/onboarding/channel-access.js";
+} from '../channels/plugins/onboarding/helpers';
+export { promptChannelAccessConfig } from '../channels/plugins/onboarding/channel-access';
 
 export {
   createActionGate,
@@ -295,19 +295,19 @@ export {
   readNumberParam,
   readReactionParams,
   readStringParam,
-} from "../agents/tools/common.js";
-export { formatDocsLink } from "../terminal/links.js";
-export type { HookEntry } from "../hooks/types.js";
-export { clamp, escapeRegExp, normalizeE164, safeParseJson, sleep } from "../utils.js";
-export { stripAnsi } from "../terminal/ansi.js";
-export { missingTargetError } from "../infra/outbound/target-errors.js";
-export { registerLogTransport } from "../logging/logger.js";
-export type { LogTransport, LogTransportRecord } from "../logging/logger.js";
+} from '../agents/tools/common';
+export { formatDocsLink } from '../terminal/links';
+export type { HookEntry } from '../hooks/types';
+export { clamp, escapeRegExp, normalizeE164, safeParseJson, sleep } from '../utils';
+export { stripAnsi } from '../terminal/ansi';
+export { missingTargetError } from '../infra/outbound/target-errors';
+export { registerLogTransport } from '../logging/logger';
+export type { LogTransport, LogTransportRecord } from '../logging/logger';
 export {
   emitDiagnosticEvent,
   isDiagnosticsEnabled,
   onDiagnosticEvent,
-} from "../infra/diagnostic-events.js";
+} from '../infra/diagnostic-events';
 export type {
   DiagnosticEventPayload,
   DiagnosticHeartbeatEvent,
@@ -323,9 +323,9 @@ export type {
   DiagnosticWebhookErrorEvent,
   DiagnosticWebhookProcessedEvent,
   DiagnosticWebhookReceivedEvent,
-} from "../infra/diagnostic-events.js";
-export { detectMime, extensionForMime, getFileExtension } from "../media/mime.js";
-export { extractOriginalFilename } from "../media/store.js";
+} from '../infra/diagnostic-events';
+export { detectMime, extensionForMime, getFileExtension } from '../media/mime';
+export { extractOriginalFilename } from '../media/store';
 
 // Channel: Discord
 export {
@@ -333,15 +333,15 @@ export {
   resolveDefaultDiscordAccountId,
   resolveDiscordAccount,
   type ResolvedDiscordAccount,
-} from "../discord/accounts.js";
-export { collectDiscordAuditChannelIds } from "../discord/audit.js";
-export { discordOnboardingAdapter } from "../channels/plugins/onboarding/discord.js";
+} from '../discord/accounts';
+export { collectDiscordAuditChannelIds } from '../discord/audit';
+export { discordOnboardingAdapter } from '../channels/plugins/onboarding/discord';
 export {
   looksLikeDiscordTargetId,
   normalizeDiscordMessagingTarget,
   normalizeDiscordOutboundTarget,
-} from "../channels/plugins/normalize/discord.js";
-export { collectDiscordStatusIssues } from "../channels/plugins/status-issues/discord.js";
+} from '../channels/plugins/normalize/discord';
+export { collectDiscordStatusIssues } from '../channels/plugins/status-issues/discord';
 
 // Channel: iMessage
 export {
@@ -349,18 +349,18 @@ export {
   resolveDefaultIMessageAccountId,
   resolveIMessageAccount,
   type ResolvedIMessageAccount,
-} from "../imessage/accounts.js";
-export { imessageOnboardingAdapter } from "../channels/plugins/onboarding/imessage.js";
+} from '../imessage/accounts';
+export { imessageOnboardingAdapter } from '../channels/plugins/onboarding/imessage';
 export {
   looksLikeIMessageTargetId,
   normalizeIMessageMessagingTarget,
-} from "../channels/plugins/normalize/imessage.js";
+} from '../channels/plugins/normalize/imessage';
 export {
   parseChatAllowTargetPrefixes,
   parseChatTargetPrefixesOrThrow,
   resolveServicePrefixedAllowTarget,
   resolveServicePrefixedTarget,
-} from "../imessage/target-parsing-helpers.js";
+} from '../imessage/target-parsing-helpers';
 
 // Channel: Slack
 export {
@@ -370,14 +370,14 @@ export {
   resolveSlackAccount,
   resolveSlackReplyToMode,
   type ResolvedSlackAccount,
-} from "../slack/accounts.js";
-export { extractSlackToolSend, listSlackMessageActions } from "../slack/message-actions.js";
-export { slackOnboardingAdapter } from "../channels/plugins/onboarding/slack.js";
+} from '../slack/accounts';
+export { extractSlackToolSend, listSlackMessageActions } from '../slack/message-actions';
+export { slackOnboardingAdapter } from '../channels/plugins/onboarding/slack';
 export {
   looksLikeSlackTargetId,
   normalizeSlackMessagingTarget,
-} from "../channels/plugins/normalize/slack.js";
-export { buildSlackThreadingToolContext } from "../slack/threading-tool-context.js";
+} from '../channels/plugins/normalize/slack';
+export { buildSlackThreadingToolContext } from '../slack/threading-tool-context';
 
 // Channel: Telegram
 export {
@@ -385,18 +385,18 @@ export {
   resolveDefaultTelegramAccountId,
   resolveTelegramAccount,
   type ResolvedTelegramAccount,
-} from "../telegram/accounts.js";
-export { telegramOnboardingAdapter } from "../channels/plugins/onboarding/telegram.js";
+} from '../telegram/accounts';
+export { telegramOnboardingAdapter } from '../channels/plugins/onboarding/telegram';
 export {
   looksLikeTelegramTargetId,
   normalizeTelegramMessagingTarget,
-} from "../channels/plugins/normalize/telegram.js";
-export { collectTelegramStatusIssues } from "../channels/plugins/status-issues/telegram.js";
+} from '../channels/plugins/normalize/telegram';
+export { collectTelegramStatusIssues } from '../channels/plugins/status-issues/telegram';
 export {
   parseTelegramReplyToMessageId,
   parseTelegramThreadId,
-} from "../telegram/outbound-params.js";
-export { type TelegramProbe } from "../telegram/probe.js";
+} from '../telegram/outbound-params';
+export { type TelegramProbe } from '../telegram/probe';
 
 // Channel: Signal
 export {
@@ -404,12 +404,12 @@ export {
   resolveDefaultSignalAccountId,
   resolveSignalAccount,
   type ResolvedSignalAccount,
-} from "../signal/accounts.js";
-export { signalOnboardingAdapter } from "../channels/plugins/onboarding/signal.js";
+} from '../signal/accounts';
+export { signalOnboardingAdapter } from '../channels/plugins/onboarding/signal';
 export {
   looksLikeSignalTargetId,
   normalizeSignalMessagingTarget,
-} from "../channels/plugins/normalize/signal.js";
+} from '../channels/plugins/normalize/signal';
 
 // Channel: WhatsApp
 export {
@@ -417,19 +417,19 @@ export {
   resolveDefaultWhatsAppAccountId,
   resolveWhatsAppAccount,
   type ResolvedWhatsAppAccount,
-} from "../web/accounts.js";
-export { isWhatsAppGroupJid, normalizeWhatsAppTarget } from "../whatsapp/normalize.js";
-export { resolveWhatsAppOutboundTarget } from "../whatsapp/resolve-outbound-target.js";
-export { whatsappOnboardingAdapter } from "../channels/plugins/onboarding/whatsapp.js";
-export { resolveWhatsAppHeartbeatRecipients } from "../channels/plugins/whatsapp-heartbeat.js";
+} from '../web/accounts';
+export { isWhatsAppGroupJid, normalizeWhatsAppTarget } from '../whatsapp/normalize';
+export { resolveWhatsAppOutboundTarget } from '../whatsapp/resolve-outbound-target';
+export { whatsappOnboardingAdapter } from '../channels/plugins/onboarding/whatsapp';
+export { resolveWhatsAppHeartbeatRecipients } from '../channels/plugins/whatsapp-heartbeat';
 export {
   looksLikeWhatsAppTargetId,
   normalizeWhatsAppMessagingTarget,
-} from "../channels/plugins/normalize/whatsapp.js";
-export { collectWhatsAppStatusIssues } from "../channels/plugins/status-issues/whatsapp.js";
+} from '../channels/plugins/normalize/whatsapp';
+export { collectWhatsAppStatusIssues } from '../channels/plugins/status-issues/whatsapp';
 
 // Channel: BlueBubbles
-export { collectBlueBubblesStatusIssues } from "../channels/plugins/status-issues/bluebubbles.js";
+export { collectBlueBubblesStatusIssues } from '../channels/plugins/status-issues/bluebubbles';
 
 // Channel: LINE
 export {
@@ -437,14 +437,14 @@ export {
   normalizeAccountId as normalizeLineAccountId,
   resolveDefaultLineAccountId,
   resolveLineAccount,
-} from "../line/accounts.js";
-export { LineConfigSchema } from "../line/config-schema.js";
+} from '../line/accounts';
+export { LineConfigSchema } from '../line/config-schema';
 export type {
   LineConfig,
   LineAccountConfig,
   ResolvedLineAccount,
   LineChannelData,
-} from "../line/types.js";
+} from '../line/types';
 export {
   createInfoCard,
   createListCard,
@@ -453,13 +453,13 @@ export {
   createReceiptCard,
   type CardAction,
   type ListItem,
-} from "../line/flex-templates.js";
+} from '../line/flex-templates';
 export {
   processLineMessage,
   hasMarkdownToConvert,
   stripMarkdown,
-} from "../line/markdown-to-line.js";
-export type { ProcessedLineMessage } from "../line/markdown-to-line.js";
+} from '../line/markdown-to-line';
+export type { ProcessedLineMessage } from '../line/markdown-to-line';
 
 // Media utilities
-export { loadWebMedia, type WebMediaResult } from "../web/media.js";
+export { loadWebMedia, type WebMediaResult } from '../web/media';

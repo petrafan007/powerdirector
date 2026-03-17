@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { HookInstallRecord } from "../config/types.hooks.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { HookInstallRecord } from '../config/types.hooks';
 
 export type HookInstallUpdate = HookInstallRecord & { hookId: string };
 

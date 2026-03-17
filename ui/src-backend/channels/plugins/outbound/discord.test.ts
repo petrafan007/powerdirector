@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeDiscordOutboundTarget } from "../normalize/discord.js";
+import { normalizeDiscordOutboundTarget } from '../normalize/discord';
 
 describe("normalizeDiscordOutboundTarget", () => {
   it("normalizes bare numeric IDs to channel: prefix", () => {

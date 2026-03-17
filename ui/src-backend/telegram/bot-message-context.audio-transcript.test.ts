@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildTelegramMessageContext } from "./bot-message-context.js";
+import { buildTelegramMessageContext } from './bot-message-context';
 
 const transcribeFirstAudioMock = vi.fn();
 

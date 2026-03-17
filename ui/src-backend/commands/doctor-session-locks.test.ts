@@ -9,7 +9,7 @@ vi.mock("../terminal/note.js", () => ({
   note,
 }));
 
-import { noteSessionLockHealth } from "./doctor-session-locks.js";
+import { noteSessionLockHealth } from './doctor-session-locks';
 
 describe("noteSessionLockHealth", () => {
   let root: string;

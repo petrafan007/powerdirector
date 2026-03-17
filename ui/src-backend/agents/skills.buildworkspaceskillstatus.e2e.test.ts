@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildWorkspaceSkillStatus } from "./skills-status.js";
-import { writeSkill } from "./skills.e2e-test-helpers.js";
+import { buildWorkspaceSkillStatus } from './skills-status';
+import { writeSkill } from './skills.e2e-test-helpers';
 
 describe("buildWorkspaceSkillStatus", () => {
   it("reports missing requirements and install options", async () => {

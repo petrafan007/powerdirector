@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resetDiagnosticSessionStateForTest } from "../logging/diagnostic-session-state.js";
-import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
-import { toClientToolDefinitions, toToolDefinitions } from "./pi-tool-definition-adapter.js";
-import { wrapToolWithAbortSignal } from "./pi-tools.abort.js";
-import { wrapToolWithBeforeToolCallHook } from "./pi-tools.before-tool-call.js";
+import { resetDiagnosticSessionStateForTest } from '../logging/diagnostic-session-state';
+import { getGlobalHookRunner } from '../plugins/hook-runner-global';
+import { toClientToolDefinitions, toToolDefinitions } from './pi-tool-definition-adapter';
+import { wrapToolWithAbortSignal } from './pi-tools.abort';
+import { wrapToolWithBeforeToolCallHook } from './pi-tools.before-tool-call';
 
 vi.mock("../plugins/hook-runner-global.js");
 

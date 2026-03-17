@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { stripPluginOnlyAllowlist, type PluginToolGroups } from "./tool-policy.js";
+import { stripPluginOnlyAllowlist, type PluginToolGroups } from './tool-policy';
 
 const pluginGroups: PluginToolGroups = {
   all: ["lobster", "workflow_tool"],

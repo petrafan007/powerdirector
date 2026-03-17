@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { MockFn } from "../test-utils/vitest-mock-fn.js";
+import type { MockFn } from '../test-utils/vitest-mock-fn';
 
 export const sendMock: MockFn = vi.fn();
 export const reactMock: MockFn = vi.fn();
@@ -16,7 +16,7 @@ vi.mock("./send.js", () => ({
 }));
 
 vi.mock("../auto-reply/dispatch.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../auto-reply/dispatch.js")>();
+  const actual = await importOriginal<typeof import('../auto-reply/dispatch')>();
   return {
     ...actual,
     dispatchInboundMessage: (...args: unknown[]) => dispatchMock(...args),
@@ -31,7 +31,7 @@ vi.mock("../pairing/pairing-store.js", () => ({
 }));
 
 vi.mock("../config/sessions.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/sessions.js")>();
+  const actual = await importOriginal<typeof import('../config/sessions')>();
   return {
     ...actual,
     resolveStorePath: vi.fn(() => "/tmp/powerdirector-sessions.json"),

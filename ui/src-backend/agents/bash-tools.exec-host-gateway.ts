@@ -12,9 +12,9 @@ import {
   recordAllowlistUse,
   requiresExecApproval,
   resolveExecApprovals,
-} from "../infra/exec-approvals.js";
-import { markBackgrounded, tail } from "./bash-process-registry.js";
-import { requestExecApprovalDecision } from "./bash-tools.exec-approval-request.js";
+} from '../infra/exec-approvals';
+import { markBackgrounded, tail } from './bash-process-registry';
+import { requestExecApprovalDecision } from './bash-tools.exec-approval-request';
 import {
   DEFAULT_APPROVAL_TIMEOUT_MS,
   DEFAULT_NOTIFY_TAIL_CHARS,
@@ -22,8 +22,8 @@ import {
   emitExecSystemEvent,
   normalizeNotifyOutput,
   runExecProcess,
-} from "./bash-tools.exec-runtime.js";
-import type { ExecToolDetails } from "./bash-tools.exec-types.js";
+} from './bash-tools.exec-runtime';
+import type { ExecToolDetails } from './bash-tools.exec-types';
 
 export type ProcessGatewayAllowlistParams = {
   command: string;

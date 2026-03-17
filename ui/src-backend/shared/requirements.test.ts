@@ -6,7 +6,7 @@ import {
   resolveMissingBins,
   resolveMissingEnv,
   resolveMissingOs,
-} from "./requirements.js";
+} from './requirements';
 
 describe("requirements helpers", () => {
   it("resolveMissingBins respects local+remote", () => {

@@ -1,17 +1,17 @@
 import { Type } from "@sinclair/typebox";
-import { isRestartEnabled } from "../../config/commands.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveConfigSnapshotHash } from "../../config/io.js";
-import { extractDeliveryInfo } from "../../config/sessions.js";
+import { isRestartEnabled } from '../../config/commands';
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveConfigSnapshotHash } from '../../config/io';
+import { extractDeliveryInfo } from '../../config/sessions';
 import {
   formatDoctorNonInteractiveHint,
   type RestartSentinelPayload,
   writeRestartSentinel,
-} from "../../infra/restart-sentinel.js";
-import { scheduleGatewaySigusr1Restart } from "../../infra/restart.js";
-import { stringEnum } from "../schema/typebox.js";
-import { type AnyAgentTool, jsonResult, readStringParam } from "./common.js";
-import { callGatewayTool, readGatewayCallOptions } from "./gateway.js";
+} from '../../infra/restart-sentinel';
+import { scheduleGatewaySigusr1Restart } from '../../infra/restart';
+import { stringEnum } from '../schema/typebox';
+import { type AnyAgentTool, jsonResult, readStringParam } from './common';
+import { callGatewayTool, readGatewayCallOptions } from './gateway';
 
 const DEFAULT_UPDATE_TIMEOUT_MS = 20 * 60_000;
 

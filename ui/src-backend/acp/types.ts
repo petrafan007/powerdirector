@@ -1,5 +1,5 @@
 import type { SessionId } from "@agentclientprotocol/sdk";
-import { VERSION } from "../version.js";
+import { VERSION } from '../version';
 
 export type AcpSession = {
   sessionId: SessionId;

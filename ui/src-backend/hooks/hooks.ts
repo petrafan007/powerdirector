@@ -1,8 +1,8 @@
-export * from "./internal-hooks.js";
+export * from './internal-hooks';
 
-export type HookEventType = import("./internal-hooks.js").InternalHookEventType;
-export type HookEvent = import("./internal-hooks.js").InternalHookEvent;
-export type HookHandler = import("./internal-hooks.js").InternalHookHandler;
+export type HookEventType = import('./internal-hooks').InternalHookEventType;
+export type HookEvent = import('./internal-hooks').InternalHookEvent;
+export type HookHandler = import('./internal-hooks').InternalHookHandler;
 
 export {
   registerInternalHook as registerHook,
@@ -11,4 +11,4 @@ export {
   getRegisteredEventKeys as getRegisteredHookEventKeys,
   triggerInternalHook as triggerHook,
   createInternalHookEvent as createHookEvent,
-} from "./internal-hooks.js";
+} from './internal-hooks';

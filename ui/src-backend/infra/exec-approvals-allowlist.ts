@@ -8,15 +8,15 @@ import {
   type ExecCommandAnalysis,
   type CommandResolution,
   type ExecCommandSegment,
-} from "./exec-approvals-analysis.js";
-import type { ExecAllowlistEntry } from "./exec-approvals.js";
+} from './exec-approvals-analysis';
+import type { ExecAllowlistEntry } from './exec-approvals';
 import {
   SAFE_BIN_GENERIC_PROFILE,
   SAFE_BIN_PROFILES,
   type SafeBinProfile,
   validateSafeBinArgv,
-} from "./exec-safe-bin-policy.js";
-import { isTrustedSafeBinPath } from "./exec-safe-bin-trust.js";
+} from './exec-safe-bin-policy';
+import { isTrustedSafeBinPath } from './exec-safe-bin-trust';
 
 export function normalizeSafeBins(entries?: string[]): Set<string> {
   if (!Array.isArray(entries)) {

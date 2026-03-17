@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { writeSkill } from "./skills.e2e-test-helpers.js";
-import { buildWorkspaceSkillsPrompt, syncSkillsToWorkspace } from "./skills.js";
+import { writeSkill } from './skills.e2e-test-helpers';
+import { buildWorkspaceSkillsPrompt, syncSkillsToWorkspace } from './skills';
 
 async function pathExists(filePath: string): Promise<boolean> {
   try {

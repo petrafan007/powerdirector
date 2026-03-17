@@ -1,14 +1,14 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { formatCliCommand } from "../cli/command-format.js";
-import { resolveOAuthDir } from "../config/paths.js";
-import { info, success } from "../globals.js";
-import { getChildLogger } from "../logging.js";
-import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";
-import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
-import type { WebChannel } from "../utils.js";
-import { jidToE164, resolveUserPath } from "../utils.js";
+import { formatCliCommand } from '../cli/command-format';
+import { resolveOAuthDir } from '../config/paths';
+import { info, success } from '../globals';
+import { getChildLogger } from '../logging';
+import { DEFAULT_ACCOUNT_ID } from '../routing/session-key';
+import { defaultRuntime, type RuntimeEnv } from '../runtime';
+import type { WebChannel } from '../utils';
+import { jidToE164, resolveUserPath } from '../utils';
 
 export function resolveDefaultWebAuthDir(): string {
   return path.join(resolveOAuthDir(), "whatsapp", DEFAULT_ACCOUNT_ID);

@@ -7,12 +7,12 @@ import type {
   Response,
 } from "playwright-core";
 import { chromium } from "playwright-core";
-import { formatErrorMessage } from "../infra/errors.js";
-import type { SsrFPolicy } from "../infra/net/ssrf.js";
-import { appendCdpPath, fetchJson, getHeadersWithAuth, withCdpSocket } from "./cdp.helpers.js";
-import { normalizeCdpWsUrl } from "./cdp.js";
-import { getChromeWebSocketUrl } from "./chrome.js";
-import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from "./navigation-guard.js";
+import { formatErrorMessage } from '../infra/errors';
+import type { SsrFPolicy } from '../infra/net/ssrf';
+import { appendCdpPath, fetchJson, getHeadersWithAuth, withCdpSocket } from './cdp.helpers';
+import { normalizeCdpWsUrl } from './cdp';
+import { getChromeWebSocketUrl } from './chrome';
+import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from './navigation-guard';
 
 export type BrowserConsoleMessage = {
   type: string;

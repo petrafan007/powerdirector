@@ -1,6 +1,6 @@
-import type { ExecApprovalManager } from "./exec-approval-manager.js";
-import { sanitizeSystemRunParamsForForwarding } from "./node-invoke-system-run-approval.js";
-import type { GatewayClient } from "./server-methods/types.js";
+import type { ExecApprovalManager } from './exec-approval-manager';
+import { sanitizeSystemRunParamsForForwarding } from './node-invoke-system-run-approval';
+import type { GatewayClient } from './server-methods/types';
 
 export function sanitizeNodeInvokeParamsForForwarding(opts: {
   command: string;

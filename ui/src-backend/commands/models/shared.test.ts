@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { PowerDirectorConfig } from '../../config/config';
 
 const mocks = vi.hoisted(() => ({
   readConfigFileSnapshot: vi.fn(),
@@ -11,7 +11,7 @@ vi.mock("../../config/config.js", () => ({
   writeConfigFile: (...args: unknown[]) => mocks.writeConfigFile(...args),
 }));
 
-import { loadValidConfigOrThrow, updateConfig } from "./shared.js";
+import { loadValidConfigOrThrow, updateConfig } from './shared';
 
 describe("models/shared", () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "../runtime.js";
+import type { RuntimeEnv } from '../runtime';
 
 export type CliRuntimeCapture = {
   runtimeLogs: string[];

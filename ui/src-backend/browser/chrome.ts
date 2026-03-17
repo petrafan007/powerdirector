@@ -3,40 +3,40 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import WebSocket from "ws";
-import { ensurePortAvailable } from "../infra/ports.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { CONFIG_DIR } from "../utils.js";
-import { appendCdpPath } from "./cdp.helpers.js";
-import { getHeadersWithAuth, normalizeCdpWsUrl } from "./cdp.js";
+import { ensurePortAvailable } from '../infra/ports';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { CONFIG_DIR } from '../utils';
+import { appendCdpPath } from './cdp.helpers';
+import { getHeadersWithAuth, normalizeCdpWsUrl } from './cdp';
 import {
   type BrowserExecutable,
   resolveBrowserExecutableForPlatform,
-} from "./chrome.executables.js";
+} from './chrome.executables';
 import {
   decoratePowerDirectorProfile,
   ensureProfileCleanExit,
   isProfileDecorated,
-} from "./chrome.profile-decoration.js";
-import type { ResolvedBrowserConfig, ResolvedBrowserProfile } from "./config.js";
+} from './chrome.profile-decoration';
+import type { ResolvedBrowserConfig, ResolvedBrowserProfile } from './config';
 import {
   DEFAULT_POWERDIRECTOR_BROWSER_COLOR,
   DEFAULT_POWERDIRECTOR_BROWSER_PROFILE_NAME,
-} from "./constants.js";
+} from './constants';
 
 const log = createSubsystemLogger("browser").child("chrome");
 
-export type { BrowserExecutable } from "./chrome.executables.js";
+export type { BrowserExecutable } from './chrome.executables';
 export {
   findChromeExecutableLinux,
   findChromeExecutableMac,
   findChromeExecutableWindows,
   resolveBrowserExecutableForPlatform,
-} from "./chrome.executables.js";
+} from './chrome.executables';
 export {
   decoratePowerDirectorProfile,
   ensureProfileCleanExit,
   isProfileDecorated,
-} from "./chrome.profile-decoration.js";
+} from './chrome.profile-decoration';
 
 function exists(filePath: string) {
   try {

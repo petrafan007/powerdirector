@@ -7,7 +7,7 @@ import {
   acquireSessionWriteLock,
   cleanStaleLockFiles,
   resolveSessionLockMaxHoldFromTimeout,
-} from "./session-write-lock.js";
+} from './session-write-lock';
 
 describe("acquireSessionWriteLock", () => {
   it("reuses locks across symlinked session paths", async () => {

@@ -6,18 +6,18 @@ import path from "node:path";
 import type { Duplex } from "node:stream";
 import chokidar from "chokidar";
 import { type WebSocket, WebSocketServer } from "ws";
-import { resolveStateDir } from "../config/paths.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import { detectMime } from "../media/mime.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { ensureDir, resolveUserPath } from "../utils.js";
+import { resolveStateDir } from '../config/paths';
+import { isTruthyEnvValue } from '../infra/env';
+import { detectMime } from '../media/mime';
+import type { RuntimeEnv } from '../runtime';
+import { ensureDir, resolveUserPath } from '../utils';
 import {
   CANVAS_HOST_PATH,
   CANVAS_WS_PATH,
   handleA2uiHttpRequest,
   injectCanvasLiveReload,
-} from "./a2ui.js";
-import { normalizeUrlPath, resolveFileWithinRoot } from "./file-resolver.js";
+} from './a2ui';
+import { normalizeUrlPath, resolveFileWithinRoot } from './file-resolver';
 
 export type CanvasHostOpts = {
   runtime: RuntimeEnv;

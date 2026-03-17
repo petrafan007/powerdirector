@@ -5,7 +5,7 @@ import {
   resetShellPathCacheForTests,
   resolveShellEnvFallbackTimeoutMs,
   shouldEnableShellEnvFallback,
-} from "./shell-env.js";
+} from './shell-env';
 
 describe("shell env fallback", () => {
   function getShellPathTwice(params: {

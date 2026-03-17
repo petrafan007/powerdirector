@@ -1,4 +1,4 @@
-import type { InlineDirectives } from "./directive-handling.js";
+import type { InlineDirectives } from './directive-handling';
 
 const CLEARED_EXEC_FIELDS = {
   hasExecDirective: false,

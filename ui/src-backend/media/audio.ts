@@ -1,4 +1,4 @@
-import { getFileExtension, normalizeMimeType } from "./mime.js";
+import { getFileExtension, normalizeMimeType } from './mime';
 
 export const TELEGRAM_VOICE_AUDIO_EXTENSIONS = new Set([".oga", ".ogg", ".opus", ".mp3", ".m4a"]);
 

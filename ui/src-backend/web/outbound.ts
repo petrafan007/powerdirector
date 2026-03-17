@@ -1,14 +1,14 @@
 import { randomUUID } from "node:crypto";
-import { loadConfig } from "../config/config.js";
-import { resolveMarkdownTableMode } from "../config/markdown-tables.js";
-import { getChildLogger } from "../logging/logger.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { convertMarkdownTables } from "../markdown/tables.js";
-import { markdownToWhatsApp } from "../markdown/whatsapp.js";
-import { normalizePollInput, type PollInput } from "../polls.js";
-import { toWhatsappJid } from "../utils.js";
-import { type ActiveWebSendOptions, requireActiveWebListener } from "./active-listener.js";
-import { loadWebMedia } from "./media.js";
+import { loadConfig } from '../config/config';
+import { resolveMarkdownTableMode } from '../config/markdown-tables';
+import { getChildLogger } from '../logging/logger';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { convertMarkdownTables } from '../markdown/tables';
+import { markdownToWhatsApp } from '../markdown/whatsapp';
+import { normalizePollInput, type PollInput } from '../polls';
+import { toWhatsappJid } from '../utils';
+import { type ActiveWebSendOptions, requireActiveWebListener } from './active-listener';
+import { loadWebMedia } from './media';
 
 const outboundLog = createSubsystemLogger("gateway/channels/whatsapp").child("outbound");
 

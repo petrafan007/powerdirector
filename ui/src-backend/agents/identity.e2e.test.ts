@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveHumanDelayConfig } from "./identity.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveHumanDelayConfig } from './identity';
 
 describe("resolveHumanDelayConfig", () => {
   it("returns undefined when no humanDelay config is set", () => {

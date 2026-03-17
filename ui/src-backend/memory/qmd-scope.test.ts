@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { ResolvedQmdConfig } from "./backend-config.js";
-import { deriveQmdScopeChannel, deriveQmdScopeChatType, isQmdScopeAllowed } from "./qmd-scope.js";
+import type { ResolvedQmdConfig } from './backend-config';
+import { deriveQmdScopeChannel, deriveQmdScopeChatType, isQmdScopeAllowed } from './qmd-scope';
 
 describe("qmd scope", () => {
   const allowDirect: ResolvedQmdConfig["scope"] = {

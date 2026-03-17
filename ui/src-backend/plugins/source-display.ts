@@ -1,7 +1,7 @@
 import path from "node:path";
-import { resolveConfigDir, shortenHomeInString } from "../utils.js";
-import { resolveBundledPluginsDir } from "./bundled-dir.js";
-import type { PluginRecord } from "./registry.js";
+import { resolveConfigDir, shortenHomeInString } from '../utils';
+import { resolveBundledPluginsDir } from './bundled-dir';
+import type { PluginRecord } from './registry';
 
 export type PluginSourceRoots = {
   stock?: string;

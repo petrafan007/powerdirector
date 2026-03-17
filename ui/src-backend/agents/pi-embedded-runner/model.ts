@@ -1,18 +1,18 @@
 import type { Api, Model } from "@mariozechner/pi-ai";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { ModelDefinitionConfig } from "../../config/types.js";
-import { resolvePowerDirectorAgentDir } from "../agent-paths.js";
-import { DEFAULT_CONTEXT_TOKENS } from "../defaults.js";
-import { buildModelAliasLines } from "../model-alias-lines.js";
-import { normalizeModelCompat } from "../model-compat.js";
-import { resolveForwardCompatModel } from "../model-forward-compat.js";
-import { normalizeProviderId } from "../model-selection.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import type { ModelDefinitionConfig } from '../../config/types';
+import { resolvePowerDirectorAgentDir } from '../agent-paths';
+import { DEFAULT_CONTEXT_TOKENS } from '../defaults';
+import { buildModelAliasLines } from '../model-alias-lines';
+import { normalizeModelCompat } from '../model-compat';
+import { resolveForwardCompatModel } from '../model-forward-compat';
+import { normalizeProviderId } from '../model-selection';
 import {
   discoverAuthStorage,
   discoverModels,
   type AuthStorage,
   type ModelRegistry,
-} from "../pi-model-discovery.js";
+} from '../pi-model-discovery';
 
 type InlineModelEntry = ModelDefinitionConfig & { provider: string; baseUrl?: string };
 type InlineProviderConfig = {

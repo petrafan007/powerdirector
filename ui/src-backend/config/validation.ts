@@ -1,20 +1,20 @@
 import path from "node:path";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { CHANNEL_IDS, normalizeChatChannelId } from "../channels/registry.js";
-import { findGitRoot } from "../infra/git-root.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { CHANNEL_IDS, normalizeChatChannelId } from '../channels/registry';
+import { findGitRoot } from '../infra/git-root';
 import {
   normalizePluginsConfig,
   resolveEnableState,
   resolveMemorySlotDecision,
-} from "../plugins/config-state.js";
-import { loadPluginManifestRegistry } from "../plugins/manifest-registry.js";
-import { validateJsonSchemaValue } from "../plugins/schema-validator.js";
-import { isRecord, resolveUserPath } from "../utils.js";
-import { findDuplicateAgentDirs, formatDuplicateAgentDirError } from "./agent-dirs.js";
-import { applyAgentDefaults, applyModelDefaults, applySessionDefaults } from "./defaults.js";
-import { findLegacyConfigIssues } from "./legacy.js";
-import type { PowerDirectorConfig, ConfigValidationIssue } from "./types.js";
-import { configSchema } from "./config-schema.js";
+} from '../plugins/config-state';
+import { loadPluginManifestRegistry } from '../plugins/manifest-registry';
+import { validateJsonSchemaValue } from '../plugins/schema-validator';
+import { isRecord, resolveUserPath } from '../utils';
+import { findDuplicateAgentDirs, formatDuplicateAgentDirError } from './agent-dirs';
+import { applyAgentDefaults, applyModelDefaults, applySessionDefaults } from './defaults';
+import { findLegacyConfigIssues } from './legacy';
+import type { PowerDirectorConfig, ConfigValidationIssue } from './types';
+import { configSchema } from './config-schema';
 
 const AVATAR_SCHEME_RE = /^[a-z][a-z0-9+.-]*:/i;
 const AVATAR_DATA_RE = /^data:/i;

@@ -6,17 +6,17 @@
  */
 
 import { type ChildProcess, spawn } from "node:child_process";
-import { hasBinary } from "../agents/skills.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { runCommandWithTimeout } from "../process/exec.js";
-import { ensureTailscaleEndpoint } from "./gmail-setup-utils.js";
+import { hasBinary } from '../agents/skills';
+import type { PowerDirectorConfig } from '../config/config';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { runCommandWithTimeout } from '../process/exec';
+import { ensureTailscaleEndpoint } from './gmail-setup-utils';
 import {
   buildGogWatchServeArgs,
   buildGogWatchStartArgs,
   type GmailHookRuntimeConfig,
   resolveGmailHookRuntimeConfig,
-} from "./gmail.js";
+} from './gmail';
 
 const log = createSubsystemLogger("gmail-watcher");
 

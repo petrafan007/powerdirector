@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "../../../config/config.js";
-import type { RuntimeEnv } from "../../../runtime.js";
-import type { OnboardOptions } from "../../onboard-types.js";
+import type { PowerDirectorConfig } from '../../../config/config';
+import type { RuntimeEnv } from '../../../runtime';
+import type { OnboardOptions } from '../../onboard-types';
 
 export function applyNonInteractiveSkillsConfig(params: {
   nextConfig: PowerDirectorConfig;

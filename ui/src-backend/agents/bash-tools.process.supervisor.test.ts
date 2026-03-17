@@ -4,9 +4,9 @@ import {
   getFinishedSession,
   getSession,
   resetProcessRegistryForTests,
-} from "./bash-process-registry.js";
-import { createProcessSessionFixture } from "./bash-process-registry.test-helpers.js";
-import { createProcessTool } from "./bash-tools.process.js";
+} from './bash-process-registry';
+import { createProcessSessionFixture } from './bash-process-registry.test-helpers';
+import { createProcessTool } from './bash-tools.process';
 
 const { supervisorMock } = vi.hoisted(() => ({
   supervisorMock: {

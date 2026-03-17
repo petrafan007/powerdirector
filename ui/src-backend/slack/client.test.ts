@@ -14,7 +14,7 @@ vi.mock("@slack/web-api", () => {
 
 const slackWebApi = await import("@slack/web-api");
 const { createSlackWebClient, resolveSlackWebClientOptions, SLACK_DEFAULT_RETRY_OPTIONS } =
-  await import("./client.js");
+  await import('./client');
 
 const WebClient = slackWebApi.WebClient as unknown as ReturnType<typeof vi.fn>;
 

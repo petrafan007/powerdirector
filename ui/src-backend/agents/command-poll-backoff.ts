@@ -1,4 +1,4 @@
-import type { SessionState } from "../logging/diagnostic-session-state.js";
+import type { SessionState } from '../logging/diagnostic-session-state';
 
 // Exponential backoff schedule for command polling
 const BACKOFF_SCHEDULE_MS = [5000, 10000, 30000, 60000];

@@ -4,7 +4,7 @@ import {
   mergeConsecutiveUserTurns,
   validateAnthropicTurns,
   validateGeminiTurns,
-} from "./pi-embedded-helpers.js";
+} from './pi-embedded-helpers';
 
 function asMessages(messages: unknown[]): AgentMessage[] {
   return messages as AgentMessage[];

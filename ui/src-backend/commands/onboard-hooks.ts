@@ -1,9 +1,9 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { buildWorkspaceHookStatus } from "../hooks/hooks-status.js";
-import type { RuntimeEnv } from "../runtime.js";
-import type { WizardPrompter } from "../wizard/prompts.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { formatCliCommand } from '../cli/command-format';
+import type { PowerDirectorConfig } from '../config/config';
+import { buildWorkspaceHookStatus } from '../hooks/hooks-status';
+import type { RuntimeEnv } from '../runtime';
+import type { WizardPrompter } from '../wizard/prompts';
 
 export async function setupInternalHooks(
   cfg: PowerDirectorConfig,

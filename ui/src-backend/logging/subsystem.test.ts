@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { setConsoleSubsystemFilter } from "./console.js";
-import { resetLogger, setLoggerOverride } from "./logger.js";
-import { createSubsystemLogger } from "./subsystem.js";
+import { setConsoleSubsystemFilter } from './console';
+import { resetLogger, setLoggerOverride } from './logger';
+import { createSubsystemLogger } from './subsystem';
 
 afterEach(() => {
   setConsoleSubsystemFilter(null);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseTelegramTarget, stripTelegramInternalPrefixes } from "./targets.js";
+import { parseTelegramTarget, stripTelegramInternalPrefixes } from './targets';
 
 describe("stripTelegramInternalPrefixes", () => {
   it("strips telegram prefix", () => {

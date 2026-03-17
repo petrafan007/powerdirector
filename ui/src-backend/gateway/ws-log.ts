@@ -1,10 +1,10 @@
 import chalk from "chalk";
-import { isVerbose } from "../globals.js";
-import { shouldLogSubsystemToConsole } from "../logging/console.js";
-import { getDefaultRedactPatterns, redactSensitiveText } from "../logging/redact.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { parseAgentSessionKey } from "../routing/session-key.js";
-import { DEFAULT_WS_SLOW_MS, getGatewayWsLogStyle } from "./ws-logging.js";
+import { isVerbose } from '../globals';
+import { shouldLogSubsystemToConsole } from '../logging/console';
+import { getDefaultRedactPatterns, redactSensitiveText } from '../logging/redact';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { parseAgentSessionKey } from '../routing/session-key';
+import { DEFAULT_WS_SLOW_MS, getGatewayWsLogStyle } from './ws-logging';
 
 const LOG_VALUE_LIMIT = 240;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

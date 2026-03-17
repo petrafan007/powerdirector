@@ -1,15 +1,15 @@
-import type { HealthSummary } from "../commands/health.js";
-import { abortChatRunById, type ChatAbortControllerEntry } from "./chat-abort.js";
-import type { ChatRunEntry } from "./server-chat.js";
+import type { HealthSummary } from '../commands/health';
+import { abortChatRunById, type ChatAbortControllerEntry } from './chat-abort';
+import type { ChatRunEntry } from './server-chat';
 import {
   DEDUPE_MAX,
   DEDUPE_TTL_MS,
   HEALTH_REFRESH_INTERVAL_MS,
   TICK_INTERVAL_MS,
-} from "./server-constants.js";
-import type { DedupeEntry } from "./server-shared.js";
-import { formatError } from "./server-utils.js";
-import { setBroadcastHealthUpdate } from "./server/health-state.js";
+} from './server-constants';
+import type { DedupeEntry } from './server-shared';
+import { formatError } from './server-utils';
+import { setBroadcastHealthUpdate } from './server/health-state';
 
 export function startGatewayMaintenanceTimers(params: {
   broadcast: (

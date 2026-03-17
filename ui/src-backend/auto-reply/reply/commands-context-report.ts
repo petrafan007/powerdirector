@@ -1,12 +1,12 @@
 import {
   resolveBootstrapMaxChars,
   resolveBootstrapTotalMaxChars,
-} from "../../agents/pi-embedded-helpers.js";
-import { buildSystemPromptReport } from "../../agents/system-prompt-report.js";
-import type { SessionSystemPromptReport } from "../../config/sessions/types.js";
-import type { ReplyPayload } from "../types.js";
-import { resolveCommandsSystemPromptBundle } from "./commands-system-prompt.js";
-import type { HandleCommandsParams } from "./commands-types.js";
+} from '../../agents/pi-embedded-helpers';
+import { buildSystemPromptReport } from '../../agents/system-prompt-report';
+import type { SessionSystemPromptReport } from '../../config/sessions/types';
+import type { ReplyPayload } from '../types';
+import { resolveCommandsSystemPromptBundle } from './commands-system-prompt';
+import type { HandleCommandsParams } from './commands-types';
 
 function estimateTokensFromChars(chars: number): number {
   return Math.ceil(Math.max(0, chars) / 4);

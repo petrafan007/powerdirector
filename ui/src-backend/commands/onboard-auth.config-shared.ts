@@ -1,10 +1,10 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { AgentModelEntryConfig } from "../config/types.agent-defaults.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { AgentModelEntryConfig } from '../config/types.agent-defaults';
 import type {
   ModelApi,
   ModelDefinitionConfig,
   ModelProviderConfig,
-} from "../config/types.models.js";
+} from '../config/types.models';
 
 function extractAgentDefaultModelFallbacks(model: unknown): string[] | undefined {
   if (!model || typeof model !== "object") {

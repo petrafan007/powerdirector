@@ -1,19 +1,19 @@
-import { formatRemainingShort } from "../../agents/auth-health.js";
+import { formatRemainingShort } from '../../agents/auth-health';
 import {
   isProfileInCooldown,
   resolveAuthProfileDisplayLabel,
   resolveAuthStorePathForDisplay,
-} from "../../agents/auth-profiles.js";
+} from '../../agents/auth-profiles';
 import {
   ensureAuthProfileStore,
   getCustomProviderApiKey,
   resolveAuthProfileOrder,
   resolveEnvApiKey,
-} from "../../agents/model-auth.js";
-import { findNormalizedProviderValue, normalizeProviderId } from "../../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { shortenHomePath } from "../../utils.js";
-import { maskApiKey } from "../../utils/mask-api-key.js";
+} from '../../agents/model-auth';
+import { findNormalizedProviderValue, normalizeProviderId } from '../../agents/model-selection';
+import type { PowerDirectorConfig } from '../../config/config';
+import { shortenHomePath } from '../../utils';
+import { maskApiKey } from '../../utils/mask-api-key';
 
 export type ModelAuthDetailMode = "compact" | "verbose";
 

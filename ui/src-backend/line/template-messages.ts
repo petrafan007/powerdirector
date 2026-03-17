@@ -5,7 +5,7 @@ import {
   postbackAction,
   uriAction,
   type Action,
-} from "./actions.js";
+} from './actions';
 
 export { datetimePickerAction, messageAction, postbackAction, uriAction };
 
@@ -267,7 +267,7 @@ export function createProductCarousel(
 // ReplyPayload Conversion
 // ============================================================================
 
-import type { LineTemplateMessagePayload } from "./types.js";
+import type { LineTemplateMessagePayload } from './types';
 
 /**
  * Convert a TemplateMessagePayload from ReplyPayload to a LINE TemplateMessage

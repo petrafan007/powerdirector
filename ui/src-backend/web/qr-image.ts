@@ -1,6 +1,6 @@
 import QRCodeModule from "qrcode-terminal/vendor/QRCode/index.js";
 import QRErrorCorrectLevelModule from "qrcode-terminal/vendor/QRCode/QRErrorCorrectLevel.js";
-import { encodePngRgba, fillPixel } from "../media/png-encode.js";
+import { encodePngRgba, fillPixel } from '../media/png-encode';
 
 type QRCodeConstructor = new (
   typeNumber: number,

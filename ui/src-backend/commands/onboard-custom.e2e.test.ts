@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { defaultRuntime } from "../runtime.js";
+import { defaultRuntime } from '../runtime';
 import {
   applyCustomApiConfig,
   parseNonInteractiveCustomApiFlags,
   promptCustomApiConfig,
-} from "./onboard-custom.js";
+} from './onboard-custom';
 
 // Mock dependencies
 vi.mock("./model-picker.js", () => ({

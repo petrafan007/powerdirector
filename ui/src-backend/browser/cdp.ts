@@ -1,8 +1,8 @@
-import type { SsrFPolicy } from "../infra/net/ssrf.js";
-import { appendCdpPath, fetchJson, isLoopbackHost, withCdpSocket } from "./cdp.helpers.js";
-import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from "./navigation-guard.js";
+import type { SsrFPolicy } from '../infra/net/ssrf';
+import { appendCdpPath, fetchJson, isLoopbackHost, withCdpSocket } from './cdp.helpers';
+import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from './navigation-guard';
 
-export { appendCdpPath, fetchJson, fetchOk, getHeadersWithAuth } from "./cdp.helpers.js";
+export { appendCdpPath, fetchJson, fetchOk, getHeadersWithAuth } from './cdp.helpers';
 
 export function normalizeCdpWsUrl(wsUrl: string, cdpUrl: string): string {
   const ws = new URL(wsUrl);

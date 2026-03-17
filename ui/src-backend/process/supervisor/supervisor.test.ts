@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createProcessSupervisor } from "./supervisor.js";
+import { createProcessSupervisor } from './supervisor';
 
 describe("process supervisor", () => {
   it("spawns child runs and captures output", async () => {

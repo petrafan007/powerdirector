@@ -1,6 +1,6 @@
 import type { WebClient } from "@slack/web-api";
 import { describe, expect, it, vi } from "vitest";
-import { readSlackMessages } from "./actions.js";
+import { readSlackMessages } from './actions';
 
 function createClient() {
   return {

@@ -1,18 +1,18 @@
 import type { MessageEvent, StickerEventMessage, EventSource, PostbackEvent } from "@line/bot-sdk";
-import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from "../auto-reply/envelope.js";
-import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.js";
-import { formatLocationText, toLocationContext } from "../channels/location.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+import { formatInboundEnvelope, resolveEnvelopeFormatOptions } from '../auto-reply/envelope';
+import { finalizeInboundContext } from '../auto-reply/reply/inbound-context';
+import { formatLocationText, toLocationContext } from '../channels/location';
+import type { PowerDirectorConfig } from '../config/config';
 import {
   readSessionUpdatedAt,
   recordSessionMetaFromInbound,
   resolveStorePath,
   updateLastRoute,
-} from "../config/sessions.js";
-import { logVerbose, shouldLogVerbose } from "../globals.js";
-import { recordChannelActivity } from "../infra/channel-activity.js";
-import { resolveAgentRoute } from "../routing/resolve-route.js";
-import type { ResolvedLineAccount } from "./types.js";
+} from '../config/sessions';
+import { logVerbose, shouldLogVerbose } from '../globals';
+import { recordChannelActivity } from '../infra/channel-activity';
+import { resolveAgentRoute } from '../routing/resolve-route';
+import type { ResolvedLineAccount } from './types';
 
 interface MediaRef {
   path: string;

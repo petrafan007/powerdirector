@@ -1,26 +1,26 @@
-import { resolveHumanDelayConfig } from "../../../agents/identity.js";
-import { dispatchInboundMessage } from "../../../auto-reply/dispatch.js";
-import { clearHistoryEntriesIfEnabled } from "../../../auto-reply/reply/history.js";
-import { createReplyDispatcherWithTyping } from "../../../auto-reply/reply/reply-dispatcher.js";
-import type { ReplyPayload } from "../../../auto-reply/types.js";
-import { removeAckReactionAfterReply } from "../../../channels/ack-reactions.js";
-import { logAckFailure, logTypingFailure } from "../../../channels/logging.js";
-import { createReplyPrefixOptions } from "../../../channels/reply-prefix.js";
-import { createTypingCallbacks } from "../../../channels/typing.js";
-import { resolveStorePath, updateLastRoute } from "../../../config/sessions.js";
-import { danger, logVerbose, shouldLogVerbose } from "../../../globals.js";
-import { removeSlackReaction } from "../../actions.js";
-import { createSlackDraftStream } from "../../draft-stream.js";
+import { resolveHumanDelayConfig } from '../../../agents/identity';
+import { dispatchInboundMessage } from '../../../auto-reply/dispatch';
+import { clearHistoryEntriesIfEnabled } from '../../../auto-reply/reply/history';
+import { createReplyDispatcherWithTyping } from '../../../auto-reply/reply/reply-dispatcher';
+import type { ReplyPayload } from '../../../auto-reply/types';
+import { removeAckReactionAfterReply } from '../../../channels/ack-reactions';
+import { logAckFailure, logTypingFailure } from '../../../channels/logging';
+import { createReplyPrefixOptions } from '../../../channels/reply-prefix';
+import { createTypingCallbacks } from '../../../channels/typing';
+import { resolveStorePath, updateLastRoute } from '../../../config/sessions';
+import { danger, logVerbose, shouldLogVerbose } from '../../../globals';
+import { removeSlackReaction } from '../../actions';
+import { createSlackDraftStream } from '../../draft-stream';
 import {
   applyAppendOnlyStreamUpdate,
   buildStatusFinalPreviewText,
   resolveSlackStreamMode,
-} from "../../stream-mode.js";
-import type { SlackStreamSession } from "../../streaming.js";
-import { appendSlackStream, startSlackStream, stopSlackStream } from "../../streaming.js";
-import { resolveSlackThreadTargets } from "../../threading.js";
-import { createSlackReplyDeliveryPlan, deliverReplies, resolveSlackThreadTs } from "../replies.js";
-import type { PreparedSlackMessage } from "./types.js";
+} from '../../stream-mode';
+import type { SlackStreamSession } from '../../streaming';
+import { appendSlackStream, startSlackStream, stopSlackStream } from '../../streaming';
+import { resolveSlackThreadTargets } from '../../threading';
+import { createSlackReplyDeliveryPlan, deliverReplies, resolveSlackThreadTs } from '../replies';
+import type { PreparedSlackMessage } from './types';
 
 function hasMedia(payload: ReplyPayload): boolean {
   return Boolean(payload.mediaUrl) || (payload.mediaUrls?.length ?? 0) > 0;

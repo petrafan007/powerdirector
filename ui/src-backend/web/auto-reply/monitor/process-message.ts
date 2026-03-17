@@ -1,43 +1,43 @@
-import { resolveIdentityNamePrefix } from "../../../agents/identity.js";
-import { resolveChunkMode, resolveTextChunkLimit } from "../../../auto-reply/chunk.js";
-import { shouldComputeCommandAuthorized } from "../../../auto-reply/command-detection.js";
+import { resolveIdentityNamePrefix } from '../../../agents/identity';
+import { resolveChunkMode, resolveTextChunkLimit } from '../../../auto-reply/chunk';
+import { shouldComputeCommandAuthorized } from '../../../auto-reply/command-detection';
 import {
   formatInboundEnvelope,
   resolveEnvelopeFormatOptions,
-} from "../../../auto-reply/envelope.js";
-import type { getReplyFromConfig } from "../../../auto-reply/reply.js";
+} from '../../../auto-reply/envelope';
+import type { getReplyFromConfig } from '../../../auto-reply/reply';
 import {
   buildHistoryContextFromEntries,
   type HistoryEntry,
-} from "../../../auto-reply/reply/history.js";
-import { finalizeInboundContext } from "../../../auto-reply/reply/inbound-context.js";
-import { dispatchReplyWithBufferedBlockDispatcher } from "../../../auto-reply/reply/provider-dispatcher.js";
-import type { ReplyPayload } from "../../../auto-reply/types.js";
-import { toLocationContext } from "../../../channels/location.js";
-import { createReplyPrefixOptions } from "../../../channels/reply-prefix.js";
-import type { loadConfig } from "../../../config/config.js";
-import { resolveMarkdownTableMode } from "../../../config/markdown-tables.js";
+} from '../../../auto-reply/reply/history';
+import { finalizeInboundContext } from '../../../auto-reply/reply/inbound-context';
+import { dispatchReplyWithBufferedBlockDispatcher } from '../../../auto-reply/reply/provider-dispatcher';
+import type { ReplyPayload } from '../../../auto-reply/types';
+import { toLocationContext } from '../../../channels/location';
+import { createReplyPrefixOptions } from '../../../channels/reply-prefix';
+import type { loadConfig } from '../../../config/config';
+import { resolveMarkdownTableMode } from '../../../config/markdown-tables';
 import {
   readSessionUpdatedAt,
   recordSessionMetaFromInbound,
   resolveStorePath,
-} from "../../../config/sessions.js";
-import { logVerbose, shouldLogVerbose } from "../../../globals.js";
-import type { getChildLogger } from "../../../logging.js";
-import { getAgentScopedMediaLocalRoots } from "../../../media/local-roots.js";
-import { readChannelAllowFromStore } from "../../../pairing/pairing-store.js";
-import type { resolveAgentRoute } from "../../../routing/resolve-route.js";
-import { jidToE164, normalizeE164 } from "../../../utils.js";
-import { newConnectionId } from "../../reconnect.js";
-import { formatError } from "../../session.js";
-import { deliverWebReply } from "../deliver-reply.js";
-import { whatsappInboundLog, whatsappOutboundLog } from "../loggers.js";
-import type { WebInboundMsg } from "../types.js";
-import { elide } from "../util.js";
-import { maybeSendAckReaction } from "./ack-reaction.js";
-import { formatGroupMembers } from "./group-members.js";
-import { trackBackgroundTask, updateLastRouteInBackground } from "./last-route.js";
-import { buildInboundLine } from "./message-line.js";
+} from '../../../config/sessions';
+import { logVerbose, shouldLogVerbose } from '../../../globals';
+import type { getChildLogger } from '../../../logging';
+import { getAgentScopedMediaLocalRoots } from '../../../media/local-roots';
+import { readChannelAllowFromStore } from '../../../pairing/pairing-store';
+import type { resolveAgentRoute } from '../../../routing/resolve-route';
+import { jidToE164, normalizeE164 } from '../../../utils';
+import { newConnectionId } from '../../reconnect';
+import { formatError } from '../../session';
+import { deliverWebReply } from '../deliver-reply';
+import { whatsappInboundLog, whatsappOutboundLog } from '../loggers';
+import type { WebInboundMsg } from '../types';
+import { elide } from '../util';
+import { maybeSendAckReaction } from './ack-reaction';
+import { formatGroupMembers } from './group-members';
+import { trackBackgroundTask, updateLastRouteInBackground } from './last-route';
+import { buildInboundLine } from './message-line';
 
 export type GroupHistoryEntry = {
   sender: string;

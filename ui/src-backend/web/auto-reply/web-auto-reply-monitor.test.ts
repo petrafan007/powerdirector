@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { resolveAgentRoute } from "../../routing/resolve-route.js";
-import { buildMentionConfig } from "./mentions.js";
-import { applyGroupGating, type GroupHistoryEntry } from "./monitor/group-gating.js";
-import { buildInboundLine, formatReplyContext } from "./monitor/message-line.js";
+import { resolveAgentRoute } from '../../routing/resolve-route';
+import { buildMentionConfig } from './mentions';
+import { applyGroupGating, type GroupHistoryEntry } from './monitor/group-gating';
+import { buildInboundLine, formatReplyContext } from './monitor/message-line';
 
 let sessionDir: string | undefined;
 let sessionStorePath: string;
@@ -33,10 +33,10 @@ const makeConfig = (overrides: Record<string, unknown>) =>
     },
     session: { store: sessionStorePath },
     ...overrides,
-  }) as unknown as ReturnType<typeof import("../../config/config.js").loadConfig>;
+  }) as unknown as ReturnType<typeof import('../../config/config').loadConfig>;
 
 function runGroupGating(params: {
-  cfg: ReturnType<typeof import("../../config/config.js").loadConfig>;
+  cfg: ReturnType<typeof import('../../config/config').loadConfig>;
   msg: Record<string, unknown>;
   conversationId?: string;
   agentId?: string;

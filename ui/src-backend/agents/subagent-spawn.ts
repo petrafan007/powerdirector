@@ -1,21 +1,21 @@
 import crypto from "node:crypto";
-import { formatThinkingLevels, normalizeThinkLevel } from "../auto-reply/thinking.js";
-import { loadConfig } from "../config/config.js";
-import { callGateway } from "../gateway/call.js";
-import { normalizeAgentId, parseAgentSessionKey } from "../routing/session-key.js";
-import { normalizeDeliveryContext } from "../utils/delivery-context.js";
-import { resolveAgentConfig } from "./agent-scope.js";
-import { AGENT_LANE_SUBAGENT } from "./lanes.js";
-import { resolveSubagentSpawnModelSelection } from "./model-selection.js";
-import { buildSubagentSystemPrompt } from "./subagent-announce.js";
-import { getSubagentDepthFromSessionStore } from "./subagent-depth.js";
-import { countActiveRunsForSession, registerSubagentRun } from "./subagent-registry.js";
-import { readStringParam } from "./tools/common.js";
+import { formatThinkingLevels, normalizeThinkLevel } from '../auto-reply/thinking';
+import { loadConfig } from '../config/config';
+import { callGateway } from '../gateway/call';
+import { normalizeAgentId, parseAgentSessionKey } from '../routing/session-key';
+import { normalizeDeliveryContext } from '../utils/delivery-context';
+import { resolveAgentConfig } from './agent-scope';
+import { AGENT_LANE_SUBAGENT } from './lanes';
+import { resolveSubagentSpawnModelSelection } from './model-selection';
+import { buildSubagentSystemPrompt } from './subagent-announce';
+import { getSubagentDepthFromSessionStore } from './subagent-depth';
+import { countActiveRunsForSession, registerSubagentRun } from './subagent-registry';
+import { readStringParam } from './tools/common';
 import {
   resolveDisplaySessionKey,
   resolveInternalSessionKey,
   resolveMainSessionAlias,
-} from "./tools/sessions-helpers.js";
+} from './tools/sessions-helpers';
 
 export type SpawnSubagentParams = {
   task: string;

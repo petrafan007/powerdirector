@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type AuthProfileStore, resolveAuthProfileOrder } from "./auth-profiles.js";
+import { type AuthProfileStore, resolveAuthProfileOrder } from './auth-profiles';
 
 function makeApiKeyStore(provider: string, profileIds: string[]): AuthProfileStore {
   return {

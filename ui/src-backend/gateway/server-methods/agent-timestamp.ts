@@ -1,5 +1,5 @@
-import { resolveUserTimezone } from "../../agents/date-time.js";
-import type { PowerDirectorConfig } from "../../config/types.js";
+import { resolveUserTimezone } from '../../agents/date-time';
+import type { PowerDirectorConfig } from '../../config/types';
 import { formatZonedTimestamp } from "../../infra/format-time/format-datetime.ts";
 
 /**

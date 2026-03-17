@@ -1,25 +1,25 @@
-import { getActiveEmbeddedRunCount } from "../agents/pi-embedded-runner/runs.js";
-import { getTotalPendingReplies } from "../auto-reply/reply/dispatcher-registry.js";
-import type { CliDeps } from "../cli/deps.js";
-import { resolveAgentMaxConcurrent, resolveSubagentMaxConcurrent } from "../config/agent-limits.js";
-import { isRestartEnabled } from "../config/commands.js";
-import type { loadConfig } from "../config/config.js";
-import { startGmailWatcherWithLogs } from "../hooks/gmail-watcher-lifecycle.js";
-import { stopGmailWatcher } from "../hooks/gmail-watcher.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import type { HeartbeatRunner } from "../infra/heartbeat-runner.js";
-import { resetDirectoryCache } from "../infra/outbound/target-resolver.js";
+import { getActiveEmbeddedRunCount } from '../agents/pi-embedded-runner/runs';
+import { getTotalPendingReplies } from '../auto-reply/reply/dispatcher-registry';
+import type { CliDeps } from '../cli/deps';
+import { resolveAgentMaxConcurrent, resolveSubagentMaxConcurrent } from '../config/agent-limits';
+import { isRestartEnabled } from '../config/commands';
+import type { loadConfig } from '../config/config';
+import { startGmailWatcherWithLogs } from '../hooks/gmail-watcher-lifecycle';
+import { stopGmailWatcher } from '../hooks/gmail-watcher';
+import { isTruthyEnvValue } from '../infra/env';
+import type { HeartbeatRunner } from '../infra/heartbeat-runner';
+import { resetDirectoryCache } from '../infra/outbound/target-resolver';
 import {
   deferGatewayRestartUntilIdle,
   emitGatewayRestart,
   setGatewaySigusr1RestartPolicy,
-} from "../infra/restart.js";
-import { setCommandLaneConcurrency, getTotalQueueSize } from "../process/command-queue.js";
-import { CommandLane } from "../process/lanes.js";
-import type { ChannelKind, GatewayReloadPlan } from "./config-reload.js";
-import { resolveHooksConfig } from "./hooks.js";
-import { startBrowserControlServerIfEnabled } from "./server-browser.js";
-import { buildGatewayCronService, type GatewayCronState } from "./server-cron.js";
+} from '../infra/restart';
+import { setCommandLaneConcurrency, getTotalQueueSize } from '../process/command-queue';
+import { CommandLane } from '../process/lanes';
+import type { ChannelKind, GatewayReloadPlan } from './config-reload';
+import { resolveHooksConfig } from './hooks';
+import { startBrowserControlServerIfEnabled } from './server-browser';
+import { buildGatewayCronService, type GatewayCronState } from './server-cron';
 
 type GatewayHotReloadState = {
   hooksConfig: ReturnType<typeof resolveHooksConfig>;

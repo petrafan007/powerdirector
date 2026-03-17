@@ -1,5 +1,5 @@
-import { logDebug } from "../logger.js";
-import { formatBonjourError } from "./bonjour-errors.js";
+import { logDebug } from '../logger';
+import { formatBonjourError } from './bonjour-errors';
 
 export function ignoreCiaoCancellationRejection(reason: unknown): boolean {
   const message = formatBonjourError(reason).toUpperCase();

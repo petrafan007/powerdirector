@@ -1,10 +1,10 @@
 import { Command } from "commander";
 import { describe, expect, it, vi } from "vitest";
-import { withEnvOverride } from "../config/test-helpers.js";
-import { createCliRuntimeCapture } from "./test-runtime-capture.js";
+import { withEnvOverride } from '../config/test-helpers';
+import { createCliRuntimeCapture } from './test-runtime-capture';
 
 type DiscoveredBeacon = Awaited<
-  ReturnType<typeof import("../infra/bonjour-discovery.js").discoverGatewayBeacons>
+  ReturnType<typeof import('../infra/bonjour-discovery').discoverGatewayBeacons>
 >[number];
 
 const callGateway = vi.fn<(opts: unknown) => Promise<{ ok: true }>>(async () => ({ ok: true }));
@@ -85,7 +85,7 @@ vi.mock("../commands/gateway-status.js", () => ({
   gatewayStatusCommand: (opts: unknown) => gatewayStatusCommand(opts),
 }));
 
-const { registerGatewayCli } = await import("./gateway-cli.js");
+const { registerGatewayCli } = await import('./gateway-cli');
 
 function createGatewayProgram() {
   const program = new Command();
@@ -232,7 +232,7 @@ describe("gateway-cli coverage", () => {
     resetRuntimeCapture();
     serviceIsLoaded.mockResolvedValue(true);
 
-    const { GatewayLockError } = await import("../infra/gateway-lock.js");
+    const { GatewayLockError } = await import('../infra/gateway-lock');
     startGatewayServer.mockRejectedValueOnce(
       new GatewayLockError("another gateway instance is already listening"),
     );

@@ -3,8 +3,8 @@ import {
   errorShape,
   formatValidationErrors,
   validateModelsListParams,
-} from "../protocol/index.js";
-import type { GatewayRequestHandlers } from "./types.js";
+} from '../protocol/index';
+import type { GatewayRequestHandlers } from './types';
 
 export const modelsHandlers: GatewayRequestHandlers = {
   "models.list": async ({ params, respond, context }) => {

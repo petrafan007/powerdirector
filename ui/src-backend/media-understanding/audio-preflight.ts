@@ -1,7 +1,7 @@
-import type { MsgContext } from "../auto-reply/templating.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { logVerbose, shouldLogVerbose } from "../globals.js";
-import { isAudioAttachment } from "./attachments.js";
+import type { MsgContext } from '../auto-reply/templating';
+import type { PowerDirectorConfig } from '../config/config';
+import { logVerbose, shouldLogVerbose } from '../globals';
+import { isAudioAttachment } from './attachments';
 import {
   type ActiveMediaModel,
   buildProviderRegistry,
@@ -9,8 +9,8 @@ import {
   normalizeMediaAttachments,
   resolveMediaAttachmentLocalRoots,
   runCapability,
-} from "./runner.js";
-import type { MediaUnderstandingProvider } from "./types.js";
+} from './runner';
+import type { MediaUnderstandingProvider } from './types';
 
 /**
  * Transcribes the first audio attachment BEFORE mention checking.

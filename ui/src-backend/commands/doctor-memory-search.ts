@@ -1,12 +1,12 @@
 import fsSync from "node:fs";
-import { resolveAgentDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { resolveMemorySearchConfig } from "../agents/memory-search.js";
-import { resolveApiKeyForProvider } from "../agents/model-auth.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveMemoryBackendConfig } from "../memory/backend-config.js";
-import { note } from "../terminal/note.js";
-import { resolveUserPath } from "../utils.js";
+import { resolveAgentDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { resolveMemorySearchConfig } from '../agents/memory-search';
+import { resolveApiKeyForProvider } from '../agents/model-auth';
+import { formatCliCommand } from '../cli/command-format';
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveMemoryBackendConfig } from '../memory/backend-config';
+import { note } from '../terminal/note';
+import { resolveUserPath } from '../utils';
 
 /**
  * Check whether memory search has a usable embedding provider.

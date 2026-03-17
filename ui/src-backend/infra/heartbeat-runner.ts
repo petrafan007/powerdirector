@@ -4,26 +4,26 @@ import {
   resolveAgentConfig,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from "../agents/agent-scope.js";
-import { appendCronStyleCurrentTimeLine } from "../agents/current-time.js";
-import { resolveEffectiveMessagesConfig } from "../agents/identity.js";
-import { DEFAULT_HEARTBEAT_FILENAME } from "../agents/workspace.js";
-import { resolveHeartbeatReplyPayload } from "../auto-reply/heartbeat-reply-payload.js";
+} from '../agents/agent-scope';
+import { appendCronStyleCurrentTimeLine } from '../agents/current-time';
+import { resolveEffectiveMessagesConfig } from '../agents/identity';
+import { DEFAULT_HEARTBEAT_FILENAME } from '../agents/workspace';
+import { resolveHeartbeatReplyPayload } from '../auto-reply/heartbeat-reply-payload';
 import {
   DEFAULT_HEARTBEAT_ACK_MAX_CHARS,
   DEFAULT_HEARTBEAT_EVERY,
   isHeartbeatContentEffectivelyEmpty,
   resolveHeartbeatPrompt as resolveHeartbeatPromptText,
   stripHeartbeatToken,
-} from "../auto-reply/heartbeat.js";
-import { getReplyFromConfig } from "../auto-reply/reply.js";
-import { HEARTBEAT_TOKEN } from "../auto-reply/tokens.js";
-import type { ReplyPayload } from "../auto-reply/types.js";
-import { getChannelPlugin } from "../channels/plugins/index.js";
-import type { ChannelHeartbeatDeps } from "../channels/plugins/types.js";
-import { parseDurationMs } from "../cli/parse-duration.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { loadConfig } from "../config/config.js";
+} from '../auto-reply/heartbeat';
+import { getReplyFromConfig } from '../auto-reply/reply';
+import { HEARTBEAT_TOKEN } from '../auto-reply/tokens';
+import type { ReplyPayload } from '../auto-reply/types';
+import { getChannelPlugin } from '../channels/plugins/index';
+import type { ChannelHeartbeatDeps } from '../channels/plugins/types';
+import { parseDurationMs } from '../cli/parse-duration';
+import type { PowerDirectorConfig } from '../config/config';
+import { loadConfig } from '../config/config';
 import {
   canonicalizeMainSessionAlias,
   loadSessionStore,
@@ -33,37 +33,37 @@ import {
   resolveStorePath,
   saveSessionStore,
   updateSessionStore,
-} from "../config/sessions.js";
-import type { AgentDefaultsConfig } from "../config/types.agent-defaults.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { getQueueSize } from "../process/command-queue.js";
-import { CommandLane } from "../process/lanes.js";
-import { normalizeAgentId, toAgentStoreSessionKey } from "../routing/session-key.js";
-import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
-import { escapeRegExp } from "../utils.js";
-import { formatErrorMessage } from "./errors.js";
-import { isWithinActiveHours } from "./heartbeat-active-hours.js";
+} from '../config/sessions';
+import type { AgentDefaultsConfig } from '../config/types.agent-defaults';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { getQueueSize } from '../process/command-queue';
+import { CommandLane } from '../process/lanes';
+import { normalizeAgentId, toAgentStoreSessionKey } from '../routing/session-key';
+import { defaultRuntime, type RuntimeEnv } from '../runtime';
+import { escapeRegExp } from '../utils';
+import { formatErrorMessage } from './errors';
+import { isWithinActiveHours } from './heartbeat-active-hours';
 import {
   buildCronEventPrompt,
   isCronSystemEvent,
   isExecCompletionEvent,
-} from "./heartbeat-events-filter.js";
-import { emitHeartbeatEvent, resolveIndicatorType } from "./heartbeat-events.js";
-import { resolveHeartbeatReasonKind } from "./heartbeat-reason.js";
-import { resolveHeartbeatVisibility } from "./heartbeat-visibility.js";
+} from './heartbeat-events-filter';
+import { emitHeartbeatEvent, resolveIndicatorType } from './heartbeat-events';
+import { resolveHeartbeatReasonKind } from './heartbeat-reason';
+import { resolveHeartbeatVisibility } from './heartbeat-visibility';
 import {
   type HeartbeatRunResult,
   type HeartbeatWakeHandler,
   requestHeartbeatNow,
   setHeartbeatWakeHandler,
-} from "./heartbeat-wake.js";
-import type { OutboundSendDeps } from "./outbound/deliver.js";
-import { deliverOutboundPayloads } from "./outbound/deliver.js";
+} from './heartbeat-wake';
+import type { OutboundSendDeps } from './outbound/deliver';
+import { deliverOutboundPayloads } from './outbound/deliver';
 import {
   resolveHeartbeatDeliveryTarget,
   resolveHeartbeatSenderContext,
-} from "./outbound/targets.js";
-import { peekSystemEventEntries } from "./system-events.js";
+} from './outbound/targets';
+import { peekSystemEventEntries } from './system-events';
 
 export type HeartbeatDeps = OutboundSendDeps &
   ChannelHeartbeatDeps & {

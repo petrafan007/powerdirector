@@ -1,7 +1,7 @@
 import path from "node:path";
 import type { Bot } from "grammy";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { STATE_DIR } from "../config/paths.js";
+import { STATE_DIR } from '../config/paths';
 
 const createTelegramDraftStream = vi.hoisted(() => vi.fn());
 const dispatchReplyWithBufferedBlockDispatcher = vi.hoisted(() => vi.fn());
@@ -29,7 +29,7 @@ vi.mock("./sticker-cache.js", () => ({
   describeStickerImage: vi.fn(),
 }));
 
-import { dispatchTelegramMessage } from "./bot-message-dispatch.js";
+import { dispatchTelegramMessage } from './bot-message-dispatch';
 
 describe("dispatchTelegramMessage draft streaming", () => {
   type TelegramMessageContext = Parameters<typeof dispatchTelegramMessage>[0]["context"];

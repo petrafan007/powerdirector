@@ -1,4 +1,4 @@
-import type { IMessagePayload } from "./types.js";
+import type { IMessagePayload } from './types';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);

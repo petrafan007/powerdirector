@@ -1,9 +1,9 @@
 import { createServer } from "node:http";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { type WebSocket, WebSocketServer } from "ws";
-import { SsrFBlockedError } from "../infra/net/ssrf.js";
-import { rawDataToString } from "../infra/ws.js";
-import { createTargetViaCdp, evaluateJavaScript, normalizeCdpWsUrl, snapshotAria } from "./cdp.js";
+import { SsrFBlockedError } from '../infra/net/ssrf';
+import { rawDataToString } from '../infra/ws';
+import { createTargetViaCdp, evaluateJavaScript, normalizeCdpWsUrl, snapshotAria } from './cdp';
 
 describe("cdp", () => {
   let httpServer: ReturnType<typeof createServer> | null = null;

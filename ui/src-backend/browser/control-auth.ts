@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { loadConfig } from "../config/config.js";
-import { resolveGatewayAuth } from "../gateway/auth.js";
-import { ensureGatewayStartupAuth } from "../gateway/startup-auth.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { loadConfig } from '../config/config';
+import { resolveGatewayAuth } from '../gateway/auth';
+import { ensureGatewayStartupAuth } from '../gateway/startup-auth';
 
 export type BrowserControlAuth = {
   token?: string;

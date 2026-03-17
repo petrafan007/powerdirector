@@ -1,6 +1,6 @@
-import { OPENCODE_ZEN_DEFAULT_MODEL_REF } from "../agents/opencode-zen-models.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { applyAgentDefaultModelPrimary } from "./onboard-auth.config-shared.js";
+import { OPENCODE_ZEN_DEFAULT_MODEL_REF } from '../agents/opencode-zen-models';
+import type { PowerDirectorConfig } from '../config/config';
+import { applyAgentDefaultModelPrimary } from './onboard-auth.config-shared';
 
 export function applyOpencodeZenProviderConfig(cfg: PowerDirectorConfig): PowerDirectorConfig {
   // Use the built-in opencode provider from pi-ai; only seed the allowlist alias.

@@ -7,7 +7,7 @@ import {
   type LegacyConfigMigration,
   mergeMissing,
   resolveDefaultAgentIdFromRaw,
-} from "./legacy.shared.js";
+} from './legacy.shared';
 
 // NOTE: tools.alsoAllow was introduced after legacy migrations; no legacy migration needed.
 

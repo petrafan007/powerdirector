@@ -5,17 +5,17 @@ import {
   deriveDeviceIdFromPublicKey,
   publicKeyRawBase64UrlFromPem,
   signDevicePayload,
-} from "../infra/device-identity.js";
-import { sleep } from "../utils.js";
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
-import { GatewayClient } from "./client.js";
-import { buildDeviceAuthPayload } from "./device-auth.js";
+} from '../infra/device-identity';
+import { sleep } from '../utils';
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
+import { GatewayClient } from './client';
+import { buildDeviceAuthPayload } from './device-auth';
 import {
   connectReq,
   installGatewayTestHooks,
   rpcReq,
   startServerWithClient,
-} from "./test-helpers.js";
+} from './test-helpers';
 
 installGatewayTestHooks({ scope: "suite" });
 

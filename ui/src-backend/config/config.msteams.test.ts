@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateConfigObject } from "./config.js";
+import { validateConfigObject } from './config';
 
 describe("config msteams", () => {
   it("accepts replyStyle at global/team/channel levels", () => {

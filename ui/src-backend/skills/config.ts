@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { PowerDirectorConfig } from '../config/config-schema.ts';
-import { SkillEntry, SkillEligibilityContext } from './types.js';
+import { SkillEntry, SkillEligibilityContext } from './types';
 
 export function shouldIncludeSkill(params: {
     entry: SkillEntry;

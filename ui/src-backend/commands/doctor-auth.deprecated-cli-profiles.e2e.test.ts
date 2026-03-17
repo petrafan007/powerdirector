@@ -2,9 +2,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { maybeRemoveDeprecatedCliAuthProfiles } from "./doctor-auth.js";
-import type { DoctorPrompter } from "./doctor-prompter.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { maybeRemoveDeprecatedCliAuthProfiles } from './doctor-auth';
+import type { DoctorPrompter } from './doctor-prompter';
 
 let originalAgentDir: string | undefined;
 let originalPiAgentDir: string | undefined;

@@ -1,21 +1,21 @@
 import path from "node:path";
-import { loginWeb } from "../../../channel-web.js";
-import { formatCliCommand } from "../../../cli/command-format.js";
-import type { PowerDirectorConfig } from "../../../config/config.js";
-import { mergeWhatsAppConfig } from "../../../config/merge-config.js";
-import type { DmPolicy } from "../../../config/types.js";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../../routing/session-key.js";
-import type { RuntimeEnv } from "../../../runtime.js";
-import { formatDocsLink } from "../../../terminal/links.js";
-import { normalizeE164, pathExists } from "../../../utils.js";
+import { loginWeb } from '../../../channel-web';
+import { formatCliCommand } from '../../../cli/command-format';
+import type { PowerDirectorConfig } from '../../../config/config';
+import { mergeWhatsAppConfig } from '../../../config/merge-config';
+import type { DmPolicy } from '../../../config/types';
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../../routing/session-key';
+import type { RuntimeEnv } from '../../../runtime';
+import { formatDocsLink } from '../../../terminal/links';
+import { normalizeE164, pathExists } from '../../../utils';
 import {
   listWhatsAppAccountIds,
   resolveDefaultWhatsAppAccountId,
   resolveWhatsAppAuthDir,
-} from "../../../web/accounts.js";
-import type { WizardPrompter } from "../../../wizard/prompts.js";
-import type { ChannelOnboardingAdapter } from "../onboarding-types.js";
-import { mergeAllowFromEntries, promptAccountId } from "./helpers.js";
+} from '../../../web/accounts';
+import type { WizardPrompter } from '../../../wizard/prompts';
+import type { ChannelOnboardingAdapter } from '../onboarding-types';
+import { mergeAllowFromEntries, promptAccountId } from './helpers';
 
 const channel = "whatsapp" as const;
 

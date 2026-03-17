@@ -5,15 +5,15 @@ import {
   resolveAgentModelPrimary,
   resolveAgentSkillsFilter,
   resolveAgentWorkspaceDir,
-} from "../agents/agent-scope.js";
-import { ensureAuthProfileStore } from "../agents/auth-profiles.js";
-import { clearSessionAuthProfileOverride } from "../agents/auth-profiles/session-override.js";
-import { runCliAgent } from "../agents/cli-runner.js";
-import { getCliSessionId } from "../agents/cli-session.js";
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
-import { AGENT_LANE_SUBAGENT } from "../agents/lanes.js";
-import { loadModelCatalog } from "../agents/model-catalog.js";
-import { runWithModelFallback } from "../agents/model-fallback.js";
+} from '../agents/agent-scope';
+import { ensureAuthProfileStore } from '../agents/auth-profiles';
+import { clearSessionAuthProfileOverride } from '../agents/auth-profiles/session-override';
+import { runCliAgent } from '../agents/cli-runner';
+import { getCliSessionId } from '../agents/cli-session';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
+import { AGENT_LANE_SUBAGENT } from '../agents/lanes';
+import { loadModelCatalog } from '../agents/model-catalog';
+import { runWithModelFallback } from '../agents/model-fallback';
 import {
   buildAllowedModelSet,
   isCliProvider,
@@ -21,12 +21,12 @@ import {
   normalizeModelRef,
   resolveConfiguredModelRef,
   resolveThinkingDefault,
-} from "../agents/model-selection.js";
-import { runEmbeddedPiAgent } from "../agents/pi-embedded.js";
-import { buildWorkspaceSkillSnapshot } from "../agents/skills.js";
-import { getSkillsSnapshotVersion } from "../agents/skills/refresh.js";
-import { resolveAgentTimeoutMs } from "../agents/timeout.js";
-import { ensureAgentWorkspace } from "../agents/workspace.js";
+} from '../agents/model-selection';
+import { runEmbeddedPiAgent } from '../agents/pi-embedded';
+import { buildWorkspaceSkillSnapshot } from '../agents/skills';
+import { getSkillsSnapshotVersion } from '../agents/skills/refresh';
+import { resolveAgentTimeoutMs } from '../agents/timeout';
+import { ensureAgentWorkspace } from '../agents/workspace';
 import {
   formatThinkingLevels,
   formatXHighModelHint,
@@ -35,33 +35,33 @@ import {
   supportsXHighThinking,
   type ThinkLevel,
   type VerboseLevel,
-} from "../auto-reply/thinking.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import { type CliDeps, createDefaultDeps } from "../cli/deps.js";
-import { loadConfig } from "../config/config.js";
+} from '../auto-reply/thinking';
+import { formatCliCommand } from '../cli/command-format';
+import { type CliDeps, createDefaultDeps } from '../cli/deps';
+import { loadConfig } from '../config/config';
 import {
   resolveAgentIdFromSessionKey,
   resolveSessionFilePath,
   type SessionEntry,
   updateSessionStore,
-} from "../config/sessions.js";
+} from '../config/sessions';
 import {
   clearAgentRunContext,
   emitAgentEvent,
   registerAgentRunContext,
-} from "../infra/agent-events.js";
-import { getRemoteSkillEligibility } from "../infra/skills-remote.js";
-import { normalizeAgentId } from "../routing/session-key.js";
-import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
-import { applyVerboseOverride } from "../sessions/level-overrides.js";
-import { applyModelOverrideToSessionEntry } from "../sessions/model-overrides.js";
-import { resolveSendPolicy } from "../sessions/send-policy.js";
-import { resolveMessageChannel } from "../utils/message-channel.js";
-import { deliverAgentCommandResult } from "./agent/delivery.js";
-import { resolveAgentRunContext } from "./agent/run-context.js";
-import { updateSessionStoreAfterAgentRun } from "./agent/session-store.js";
-import { resolveSession } from "./agent/session.js";
-import type { AgentCommandOpts } from "./agent/types.js";
+} from '../infra/agent-events';
+import { getRemoteSkillEligibility } from '../infra/skills-remote';
+import { normalizeAgentId } from '../routing/session-key';
+import { defaultRuntime, type RuntimeEnv } from '../runtime';
+import { applyVerboseOverride } from '../sessions/level-overrides';
+import { applyModelOverrideToSessionEntry } from '../sessions/model-overrides';
+import { resolveSendPolicy } from '../sessions/send-policy';
+import { resolveMessageChannel } from '../utils/message-channel';
+import { deliverAgentCommandResult } from './agent/delivery';
+import { resolveAgentRunContext } from './agent/run-context';
+import { updateSessionStoreAfterAgentRun } from './agent/session-store';
+import { resolveSession } from './agent/session';
+import type { AgentCommandOpts } from './agent/types';
 
 type PersistSessionEntryParams = {
   sessionStore: Record<string, SessionEntry>;

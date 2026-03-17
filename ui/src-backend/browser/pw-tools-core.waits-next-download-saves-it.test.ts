@@ -5,7 +5,7 @@ import {
   installPwToolsCoreTestHooks,
   setPwToolsCoreCurrentPage,
   setPwToolsCoreCurrentRefLocator,
-} from "./pw-tools-core.test-harness.js";
+} from './pw-tools-core.test-harness';
 
 installPwToolsCoreTestHooks();
 const sessionMocks = getPwToolsCoreSessionMocks();
@@ -13,7 +13,7 @@ const tmpDirMocks = vi.hoisted(() => ({
   resolvePreferredPowerDirectorTmpDir: vi.fn(() => "/tmp/powerdirector"),
 }));
 vi.mock("../infra/tmp-powerdirector-dir.js", () => tmpDirMocks);
-const mod = await import("./pw-tools-core.js");
+const mod = await import('./pw-tools-core');
 
 describe("pw-tools-core", () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import type { ApplyAuthChoiceParams } from "./auth-choice.apply.js";
+import type { ApplyAuthChoiceParams } from './auth-choice.apply';
 
 export function createAuthChoiceAgentModelNoter(
   params: ApplyAuthChoiceParams,

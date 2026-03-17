@@ -1,13 +1,13 @@
-import { resolveEnvApiKey } from "../agents/model-auth.js";
+import { resolveEnvApiKey } from '../agents/model-auth';
 import {
   formatApiKeyPreview,
   normalizeApiKeyInput,
   validateApiKeyInput,
-} from "./auth-choice.api-key.js";
-import { createAuthChoiceAgentModelNoter } from "./auth-choice.apply-helpers.js";
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { applyAuthChoicePluginProvider } from "./auth-choice.apply.plugin-provider.js";
-import { applyDefaultModelChoice } from "./auth-choice.default-model.js";
+} from './auth-choice.api-key';
+import { createAuthChoiceAgentModelNoter } from './auth-choice.apply-helpers';
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
+import { applyAuthChoicePluginProvider } from './auth-choice.apply.plugin-provider';
+import { applyDefaultModelChoice } from './auth-choice.default-model';
 import {
   applyAuthProfileConfig,
   applyMinimaxApiConfig,
@@ -17,7 +17,7 @@ import {
   applyMinimaxConfig,
   applyMinimaxProviderConfig,
   setMinimaxApiKey,
-} from "./onboard-auth.js";
+} from './onboard-auth';
 
 export async function applyAuthChoiceMiniMax(
   params: ApplyAuthChoiceParams,

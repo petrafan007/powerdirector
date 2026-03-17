@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: mocks.loadConfig,
@@ -29,7 +29,7 @@ vi.mock("./routes/dispatcher.js", () => ({
   })),
 }));
 
-import { fetchBrowserJson } from "./client-fetch.js";
+import { fetchBrowserJson } from './client-fetch';
 
 function stubJsonFetchOk() {
   const fetchMock = vi.fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>(

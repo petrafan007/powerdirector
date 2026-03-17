@@ -1,12 +1,12 @@
 import { Command } from "commander";
 import { describe, expect, it, vi } from "vitest";
-import { parseCanvasSnapshotPayload } from "./nodes-canvas.js";
-import { parseByteSize } from "./parse-bytes.js";
-import { parseDurationMs } from "./parse-duration.js";
-import { shouldSkipRespawnForArgv } from "./respawn-policy.js";
-import { waitForever } from "./wait.js";
+import { parseCanvasSnapshotPayload } from './nodes-canvas';
+import { parseByteSize } from './parse-bytes';
+import { parseDurationMs } from './parse-duration';
+import { shouldSkipRespawnForArgv } from './respawn-policy';
+import { waitForever } from './wait';
 
-const { registerDnsCli } = await import("./dns-cli.js");
+const { registerDnsCli } = await import('./dns-cli');
 
 describe("waitForever", () => {
   it("creates an unref'ed interval and returns a pending promise", () => {

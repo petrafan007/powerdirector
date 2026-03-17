@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { onSpy } from "./bot.media.e2e-harness.js";
+import { onSpy } from './bot.media.e2e-harness';
 
 async function createMessageHandlerAndReplySpy() {
-  const { createTelegramBot } = await import("./bot.js");
-  const replyModule = await import("../auto-reply/reply.js");
+  const { createTelegramBot } = await import('./bot');
+  const replyModule = await import('../auto-reply/reply');
   const replySpy = (replyModule as unknown as { __replySpy: ReturnType<typeof vi.fn> }).__replySpy;
 
   onSpy.mockReset();

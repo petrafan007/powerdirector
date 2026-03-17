@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { runWithModelFallback } from "../../agents/model-fallback.js";
+import { runWithModelFallback } from '../../agents/model-fallback';
 
 // ---------- mocks ----------
 
@@ -110,7 +110,7 @@ vi.mock("../../config/sessions.js", () => ({
 }));
 
 vi.mock("../../routing/session-key.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../routing/session-key.js")>();
+  const actual = await importOriginal<typeof import('../../routing/session-key')>();
   return {
     ...actual,
     buildAgentMainSessionKey: vi.fn().mockReturnValue("agent:default:cron:test"),
@@ -174,7 +174,7 @@ vi.mock("../../agents/defaults.js", () => ({
   DEFAULT_PROVIDER: "openai",
 }));
 
-const { runCronIsolatedAgentTurn } = await import("./run.js");
+const { runCronIsolatedAgentTurn } = await import('./run');
 
 // ---------- helpers ----------
 

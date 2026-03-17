@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage } from './base.js';
+import { Channel, ChannelMessage } from './base';
 import axios from 'axios';
 
 export class NextcloudTalkChannel implements Channel {

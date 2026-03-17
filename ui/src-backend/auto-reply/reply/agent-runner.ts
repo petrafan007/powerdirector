@@ -1,11 +1,11 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
-import { lookupContextTokens } from "../../agents/context.js";
-import { DEFAULT_CONTEXT_TOKENS } from "../../agents/defaults.js";
-import { resolveModelAuthMode } from "../../agents/model-auth.js";
-import { isCliProvider } from "../../agents/model-selection.js";
-import { queueEmbeddedPiMessage } from "../../agents/pi-embedded.js";
-import { hasNonzeroUsage } from "../../agents/usage.js";
+import { lookupContextTokens } from '../../agents/context';
+import { DEFAULT_CONTEXT_TOKENS } from '../../agents/defaults';
+import { resolveModelAuthMode } from '../../agents/model-auth';
+import { isCliProvider } from '../../agents/model-selection';
+import { queueEmbeddedPiMessage } from '../../agents/pi-embedded';
+import { hasNonzeroUsage } from '../../agents/usage';
 import {
   resolveAgentIdFromSessionKey,
   resolveSessionFilePath,
@@ -13,41 +13,41 @@ import {
   type SessionEntry,
   updateSessionStore,
   updateSessionStoreEntry,
-} from "../../config/sessions.js";
-import type { TypingMode } from "../../config/types.js";
-import { emitDiagnosticEvent, isDiagnosticsEnabled } from "../../infra/diagnostic-events.js";
-import { enqueueSystemEvent } from "../../infra/system-events.js";
-import { defaultRuntime } from "../../runtime.js";
-import { estimateUsageCost, resolveModelCostConfig } from "../../utils/usage-format.js";
-import type { OriginatingChannelType, TemplateContext } from "../templating.js";
-import { resolveResponseUsageMode, type VerboseLevel } from "../thinking.js";
-import type { GetReplyOptions, ReplyPayload } from "../types.js";
-import { runAgentTurnWithFallback } from "./agent-runner-execution.js";
+} from '../../config/sessions';
+import type { TypingMode } from '../../config/types';
+import { emitDiagnosticEvent, isDiagnosticsEnabled } from '../../infra/diagnostic-events';
+import { enqueueSystemEvent } from '../../infra/system-events';
+import { defaultRuntime } from '../../runtime';
+import { estimateUsageCost, resolveModelCostConfig } from '../../utils/usage-format';
+import type { OriginatingChannelType, TemplateContext } from '../templating';
+import { resolveResponseUsageMode, type VerboseLevel } from '../thinking';
+import type { GetReplyOptions, ReplyPayload } from '../types';
+import { runAgentTurnWithFallback } from './agent-runner-execution';
 import {
   createShouldEmitToolOutput,
   createShouldEmitToolResult,
   finalizeWithFollowup,
   isAudioPayload,
   signalTypingIfNeeded,
-} from "./agent-runner-helpers.js";
-import { runMemoryFlushIfNeeded } from "./agent-runner-memory.js";
-import { buildReplyPayloads } from "./agent-runner-payloads.js";
-import { appendUsageLine, formatResponseUsageLine } from "./agent-runner-utils.js";
-import { createAudioAsVoiceBuffer, createBlockReplyPipeline } from "./block-reply-pipeline.js";
-import { resolveBlockStreamingCoalescing } from "./block-streaming.js";
-import { createFollowupRunner } from "./followup-runner.js";
+} from './agent-runner-helpers';
+import { runMemoryFlushIfNeeded } from './agent-runner-memory';
+import { buildReplyPayloads } from './agent-runner-payloads';
+import { appendUsageLine, formatResponseUsageLine } from './agent-runner-utils';
+import { createAudioAsVoiceBuffer, createBlockReplyPipeline } from './block-reply-pipeline';
+import { resolveBlockStreamingCoalescing } from './block-streaming';
+import { createFollowupRunner } from './followup-runner';
 import {
   auditPostCompactionReads,
   extractReadPaths,
   formatAuditWarning,
   readSessionMessages,
-} from "./post-compaction-audit.js";
-import { readPostCompactionContext } from "./post-compaction-context.js";
-import { enqueueFollowupRun, type FollowupRun, type QueueSettings } from "./queue.js";
-import { createReplyToModeFilterForChannel, resolveReplyToMode } from "./reply-threading.js";
-import { incrementRunCompactionCount, persistRunSessionUsage } from "./session-run-accounting.js";
-import { createTypingSignaler } from "./typing-mode.js";
-import type { TypingController } from "./typing.js";
+} from './post-compaction-audit';
+import { readPostCompactionContext } from './post-compaction-context';
+import { enqueueFollowupRun, type FollowupRun, type QueueSettings } from './queue';
+import { createReplyToModeFilterForChannel, resolveReplyToMode } from './reply-threading';
+import { incrementRunCompactionCount, persistRunSessionUsage } from './session-run-accounting';
+import { createTypingSignaler } from './typing-mode';
+import type { TypingController } from './typing';
 
 const BLOCK_REPLY_SEND_TIMEOUT_MS = 15_000;
 const UNSCHEDULED_REMINDER_NOTE =

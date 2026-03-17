@@ -3,21 +3,21 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveGatewayPort, resolveIsNixMode } from "../config/paths.js";
-import { findExtraGatewayServices, renderGatewayServiceCleanupHints } from "../daemon/inspect.js";
-import { renderSystemNodeWarning, resolveSystemNodeInfo } from "../daemon/runtime-paths.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveGatewayPort, resolveIsNixMode } from '../config/paths';
+import { findExtraGatewayServices, renderGatewayServiceCleanupHints } from '../daemon/inspect';
+import { renderSystemNodeWarning, resolveSystemNodeInfo } from '../daemon/runtime-paths';
 import {
   auditGatewayServiceConfig,
   needsNodeRuntimeMigration,
   SERVICE_AUDIT_CODES,
-} from "../daemon/service-audit.js";
-import { resolveGatewayService } from "../daemon/service.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { note } from "../terminal/note.js";
-import { buildGatewayInstallPlan } from "./daemon-install-helpers.js";
-import { DEFAULT_GATEWAY_DAEMON_RUNTIME, type GatewayDaemonRuntime } from "./daemon-runtime.js";
-import type { DoctorOptions, DoctorPrompter } from "./doctor-prompter.js";
+} from '../daemon/service-audit';
+import { resolveGatewayService } from '../daemon/service';
+import type { RuntimeEnv } from '../runtime';
+import { note } from '../terminal/note';
+import { buildGatewayInstallPlan } from './daemon-install-helpers';
+import { DEFAULT_GATEWAY_DAEMON_RUNTIME, type GatewayDaemonRuntime } from './daemon-runtime';
+import type { DoctorOptions, DoctorPrompter } from './doctor-prompter';
 
 const execFileAsync = promisify(execFile);
 

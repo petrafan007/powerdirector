@@ -1,19 +1,19 @@
 import { type RunOptions, run } from "@grammyjs/runner";
-import { resolveAgentMaxConcurrent } from "../config/agent-limits.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { loadConfig } from "../config/config.js";
-import { computeBackoff, sleepWithAbort } from "../infra/backoff.js";
-import { formatErrorMessage } from "../infra/errors.js";
+import { resolveAgentMaxConcurrent } from '../config/agent-limits';
+import type { PowerDirectorConfig } from '../config/config';
+import { loadConfig } from '../config/config';
+import { computeBackoff, sleepWithAbort } from '../infra/backoff';
+import { formatErrorMessage } from '../infra/errors';
 import { formatDurationPrecise } from "../infra/format-time/format-duration.ts";
-import { registerUnhandledRejectionHandler } from "../infra/unhandled-rejections.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { resolveTelegramAccount } from "./accounts.js";
-import { resolveTelegramAllowedUpdates } from "./allowed-updates.js";
-import { createTelegramBot } from "./bot.js";
-import { isRecoverableTelegramNetworkError } from "./network-errors.js";
-import { makeProxyFetch } from "./proxy.js";
-import { readTelegramUpdateOffset, writeTelegramUpdateOffset } from "./update-offset-store.js";
-import { startTelegramWebhook } from "./webhook.js";
+import { registerUnhandledRejectionHandler } from '../infra/unhandled-rejections';
+import type { RuntimeEnv } from '../runtime';
+import { resolveTelegramAccount } from './accounts';
+import { resolveTelegramAllowedUpdates } from './allowed-updates';
+import { createTelegramBot } from './bot';
+import { isRecoverableTelegramNetworkError } from './network-errors';
+import { makeProxyFetch } from './proxy';
+import { readTelegramUpdateOffset, writeTelegramUpdateOffset } from './update-offset-store';
+import { startTelegramWebhook } from './webhook';
 
 export type MonitorTelegramOpts = {
   token?: string;

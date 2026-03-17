@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { normalizeWebhookPath } from "./webhook-path.js";
+import { normalizeWebhookPath } from './webhook-path';
 
 export type RegisteredWebhookTarget<T> = {
   target: T;

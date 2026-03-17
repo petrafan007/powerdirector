@@ -1,11 +1,11 @@
-import { startGatewayBonjourAdvertiser } from "../infra/bonjour.js";
-import { pickPrimaryTailnetIPv4, pickPrimaryTailnetIPv6 } from "../infra/tailnet.js";
-import { resolveWideAreaDiscoveryDomain, writeWideAreaGatewayZone } from "../infra/widearea-dns.js";
+import { startGatewayBonjourAdvertiser } from '../infra/bonjour';
+import { pickPrimaryTailnetIPv4, pickPrimaryTailnetIPv6 } from '../infra/tailnet';
+import { resolveWideAreaDiscoveryDomain, writeWideAreaGatewayZone } from '../infra/widearea-dns';
 import {
   formatBonjourInstanceName,
   resolveBonjourCliPath,
   resolveTailnetDnsHint,
-} from "./server-discovery.js";
+} from './server-discovery';
 
 export async function startGatewayDiscovery(params: {
   machineDisplayName: string;

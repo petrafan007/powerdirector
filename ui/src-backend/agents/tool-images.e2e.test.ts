@@ -1,6 +1,6 @@
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
-import { sanitizeContentBlocksImages, sanitizeImageBlocks } from "./tool-images.js";
+import { sanitizeContentBlocksImages, sanitizeImageBlocks } from './tool-images';
 
 describe("tool image sanitizing", () => {
   const getImageBlock = (

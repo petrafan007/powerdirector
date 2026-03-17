@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { captureEnv } from "../test-utils/env.js";
+import { captureEnv } from '../test-utils/env';
 import "./test-helpers/fast-core-tools.js";
-import { createPowerDirectorTools } from "./powerdirector-tools.js";
+import { createPowerDirectorTools } from './powerdirector-tools';
 
 vi.mock("./tools/gateway.js", () => ({
   callGatewayTool: vi.fn(async (method: string) => {
@@ -78,7 +78,7 @@ describe("gateway tool", () => {
   });
 
   it("passes config.apply through gateway call", async () => {
-    const { callGatewayTool } = await import("./tools/gateway.js");
+    const { callGatewayTool } = await import('./tools/gateway');
     const tool = createPowerDirectorTools({
       agentSessionKey: "agent:main:whatsapp:dm:+15555550123",
     }).find((candidate) => candidate.name === "gateway");
@@ -106,7 +106,7 @@ describe("gateway tool", () => {
   });
 
   it("passes config.patch through gateway call", async () => {
-    const { callGatewayTool } = await import("./tools/gateway.js");
+    const { callGatewayTool } = await import('./tools/gateway');
     const tool = createPowerDirectorTools({
       agentSessionKey: "agent:main:whatsapp:dm:+15555550123",
     }).find((candidate) => candidate.name === "gateway");
@@ -134,7 +134,7 @@ describe("gateway tool", () => {
   });
 
   it("passes update.run through gateway call", async () => {
-    const { callGatewayTool } = await import("./tools/gateway.js");
+    const { callGatewayTool } = await import('./tools/gateway');
     const tool = createPowerDirectorTools({
       agentSessionKey: "agent:main:whatsapp:dm:+15555550123",
     }).find((candidate) => candidate.name === "gateway");

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { appendCronRunLog, readCronRunLogEntries, resolveCronRunLogPath } from "./run-log.js";
+import { appendCronRunLog, readCronRunLogEntries, resolveCronRunLogPath } from './run-log';
 
 describe("cron run log", () => {
   it("resolves store path to per-job runs/<jobId>.jsonl", () => {

@@ -1,25 +1,25 @@
-import type { BrowserFormField } from "../client-actions-core.js";
-import type { BrowserRouteContext } from "../server-context.js";
+import type { BrowserFormField } from '../client-actions-core';
+import type { BrowserRouteContext } from '../server-context';
 import {
   type ActKind,
   isActKind,
   parseClickButton,
   parseClickModifiers,
-} from "./agent.act.shared.js";
+} from './agent.act.shared';
 import {
   readBody,
   resolveTargetIdFromBody,
   withPlaywrightRouteContext,
   SELECTOR_UNSUPPORTED_MESSAGE,
-} from "./agent.shared.js";
+} from './agent.shared';
 import {
   DEFAULT_DOWNLOAD_DIR,
   DEFAULT_UPLOAD_DIR,
   resolvePathWithinRoot,
   resolvePathsWithinRoot,
-} from "./path-output.js";
-import type { BrowserResponse, BrowserRouteRegistrar } from "./types.js";
-import { jsonError, toBoolean, toNumber, toStringArray, toStringOrEmpty } from "./utils.js";
+} from './path-output';
+import type { BrowserResponse, BrowserRouteRegistrar } from './types';
+import { jsonError, toBoolean, toNumber, toStringArray, toStringOrEmpty } from './utils';
 
 function resolveDownloadPathOrRespond(res: BrowserResponse, requestedPath: string): string | null {
   const downloadPathResult = resolvePathWithinRoot({

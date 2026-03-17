@@ -1,8 +1,8 @@
 import os from "node:os";
 import path from "node:path";
-import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
+import { resolveAgentWorkspaceDir } from '../agents/agent-scope';
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
 
 function buildMediaLocalRoots(stateDir: string): string[] {
   const resolvedStateDir = path.resolve(stateDir);

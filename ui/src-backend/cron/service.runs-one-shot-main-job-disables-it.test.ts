@@ -1,9 +1,9 @@
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { HeartbeatRunResult } from "../infra/heartbeat-wake.js";
-import type { CronEvent, CronServiceDeps } from "./service.js";
-import { CronService } from "./service.js";
-import { createNoopLogger, installCronTestHooks } from "./service.test-harness.js";
+import type { HeartbeatRunResult } from '../infra/heartbeat-wake';
+import type { CronEvent, CronServiceDeps } from './service';
+import { CronService } from './service';
+import { createNoopLogger, installCronTestHooks } from './service.test-harness';
 
 const noopLogger = createNoopLogger();
 installCronTestHooks({ logger: noopLogger });

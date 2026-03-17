@@ -4,8 +4,8 @@ import path from "node:path";
 import type { ButtonInteraction, ComponentData } from "@buape/carbon";
 import { Routes } from "discord-api-types/v10";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { clearSessionStoreCacheForTest } from "../../config/sessions.js";
-import type { DiscordExecApprovalConfig } from "../../config/types.discord.js";
+import { clearSessionStoreCacheForTest } from '../../config/sessions';
+import type { DiscordExecApprovalConfig } from '../../config/types.discord';
 import {
   buildExecApprovalCustomId,
   extractDiscordChannelId,
@@ -14,7 +14,7 @@ import {
   DiscordExecApprovalHandler,
   ExecApprovalButton,
   type ExecApprovalButtonContext,
-} from "./exec-approvals.js";
+} from './exec-approvals';
 
 const STORE_PATH = path.join(os.tmpdir(), "powerdirector-exec-approvals-test.json");
 
@@ -35,7 +35,7 @@ const mockRestPatch = vi.hoisted(() => vi.fn());
 const mockRestDelete = vi.hoisted(() => vi.fn());
 
 vi.mock("../send.shared.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../send.shared.js")>();
+  const actual = await importOriginal<typeof import('../send.shared')>();
   return {
     ...actual,
     createDiscordClient: () => ({

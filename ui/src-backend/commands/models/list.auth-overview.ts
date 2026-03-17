@@ -1,16 +1,16 @@
-import { formatRemainingShort } from "../../agents/auth-health.js";
+import { formatRemainingShort } from '../../agents/auth-health';
 import {
   type AuthProfileStore,
   listProfilesForProvider,
   resolveAuthProfileDisplayLabel,
   resolveAuthStorePathForDisplay,
   resolveProfileUnusableUntilForDisplay,
-} from "../../agents/auth-profiles.js";
-import { getCustomProviderApiKey, resolveEnvApiKey } from "../../agents/model-auth.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { shortenHomePath } from "../../utils.js";
-import { maskApiKey } from "./list.format.js";
-import type { ProviderAuthOverview } from "./list.types.js";
+} from '../../agents/auth-profiles';
+import { getCustomProviderApiKey, resolveEnvApiKey } from '../../agents/model-auth';
+import type { PowerDirectorConfig } from '../../config/config';
+import { shortenHomePath } from '../../utils';
+import { maskApiKey } from './list.format';
+import type { ProviderAuthOverview } from './list.types';
 
 export function resolveProviderAuthOverview(params: {
   provider: string;

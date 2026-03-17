@@ -1,25 +1,25 @@
 import type { Command } from "commander";
-import { formatDocsLink } from "../../terminal/links.js";
-import { theme } from "../../terminal/theme.js";
-import { formatHelpExamples } from "../help-format.js";
-import type { ProgramContext } from "./context.js";
-import { createMessageCliHelpers } from "./message/helpers.js";
-import { registerMessageBroadcastCommand } from "./message/register.broadcast.js";
-import { registerMessageDiscordAdminCommands } from "./message/register.discord-admin.js";
+import { formatDocsLink } from '../../terminal/links';
+import { theme } from '../../terminal/theme';
+import { formatHelpExamples } from '../help-format';
+import type { ProgramContext } from './context';
+import { createMessageCliHelpers } from './message/helpers';
+import { registerMessageBroadcastCommand } from './message/register.broadcast';
+import { registerMessageDiscordAdminCommands } from './message/register.discord-admin';
 import {
   registerMessageEmojiCommands,
   registerMessageStickerCommands,
-} from "./message/register.emoji-sticker.js";
+} from './message/register.emoji-sticker';
 import {
   registerMessagePermissionsCommand,
   registerMessageSearchCommand,
-} from "./message/register.permissions-search.js";
-import { registerMessagePinCommands } from "./message/register.pins.js";
-import { registerMessagePollCommand } from "./message/register.poll.js";
-import { registerMessageReactionsCommands } from "./message/register.reactions.js";
-import { registerMessageReadEditDeleteCommands } from "./message/register.read-edit-delete.js";
-import { registerMessageSendCommand } from "./message/register.send.js";
-import { registerMessageThreadCommands } from "./message/register.thread.js";
+} from './message/register.permissions-search';
+import { registerMessagePinCommands } from './message/register.pins';
+import { registerMessagePollCommand } from './message/register.poll';
+import { registerMessageReactionsCommands } from './message/register.reactions';
+import { registerMessageReadEditDeleteCommands } from './message/register.read-edit-delete';
+import { registerMessageSendCommand } from './message/register.send';
+import { registerMessageThreadCommands } from './message/register.thread';
 
 export function registerMessageCommands(program: Command, ctx: ProgramContext) {
   const message = program

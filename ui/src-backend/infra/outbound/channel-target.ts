@@ -1,4 +1,4 @@
-import { MESSAGE_ACTION_TARGET_MODE } from "./message-action-spec.js";
+import { MESSAGE_ACTION_TARGET_MODE } from './message-action-spec';
 
 export const CHANNEL_TARGET_DESCRIPTION =
   "Recipient/channel: E.164 for WhatsApp/Signal, Telegram chat id/@username, Discord/Slack channel/user, or iMessage handle/chat_id";

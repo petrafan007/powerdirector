@@ -6,8 +6,8 @@ import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   expectSingleNpmInstallIgnoreScriptsCall,
   expectSingleNpmPackIgnoreScriptsCall,
-} from "../test-utils/exec-assertions.js";
-import { isAddressInUseError } from "./gmail-watcher.js";
+} from '../test-utils/exec-assertions';
+import { isAddressInUseError } from './gmail-watcher';
 
 const fixtureRoot = path.join(os.tmpdir(), `powerdirector-hook-install-${randomUUID()}`);
 let tempDirIndex = 0;
@@ -32,9 +32,9 @@ function makeTempDir() {
   return dir;
 }
 
-const { runCommandWithTimeout } = await import("../process/exec.js");
+const { runCommandWithTimeout } = await import('../process/exec');
 const { installHooksFromArchive, installHooksFromNpmSpec, installHooksFromPath } =
-  await import("./install.js");
+  await import('./install');
 
 afterAll(() => {
   try {

@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import net from "node:net";
-import { isErrno } from "./errors.js";
-import { ensurePortAvailable } from "./ports.js";
+import { isErrno } from './errors';
+import { ensurePortAvailable } from './ports';
 
 export type SshParsedTarget = {
   user?: string;

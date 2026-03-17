@@ -1,4 +1,4 @@
-import { normalizeE164 } from "../utils.js";
+import { normalizeE164 } from '../utils';
 
 export type SignalSender =
   | { kind: "phone"; raw: string; e164: string }

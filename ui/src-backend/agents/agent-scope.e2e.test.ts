@@ -1,6 +1,6 @@
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   resolveAgentConfig,
   resolveAgentDir,
@@ -8,7 +8,7 @@ import {
   resolveAgentModelFallbacksOverride,
   resolveAgentModelPrimary,
   resolveAgentWorkspaceDir,
-} from "./agent-scope.js";
+} from './agent-scope';
 
 afterEach(() => {
   vi.unstubAllEnvs();

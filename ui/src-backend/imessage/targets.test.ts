@@ -4,7 +4,7 @@ import {
   isAllowedIMessageSender,
   normalizeIMessageHandle,
   parseIMessageTarget,
-} from "./targets.js";
+} from './targets';
 
 const spawnMock = vi.hoisted(() => vi.fn());
 
@@ -84,7 +84,7 @@ describe("createIMessageRpcClient", () => {
   });
 
   it("refuses to spawn imsg rpc in test environments", async () => {
-    const { createIMessageRpcClient } = await import("./client.js");
+    const { createIMessageRpcClient } = await import('./client');
     await expect(createIMessageRpcClient()).rejects.toThrow(
       /Refusing to start imsg rpc in test environment/i,
     );

@@ -1,4 +1,4 @@
-import type { EmbeddedRunAttemptResult } from "./run/types.js";
+import type { EmbeddedRunAttemptResult } from './run/types';
 
 export function makeAttemptResult(
   overrides: Partial<EmbeddedRunAttemptResult> = {},

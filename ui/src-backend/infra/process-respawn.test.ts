@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { captureFullEnv } from "../test-utils/env.js";
+import { captureFullEnv } from '../test-utils/env';
 
 const spawnMock = vi.hoisted(() => vi.fn());
 
@@ -7,7 +7,7 @@ vi.mock("node:child_process", () => ({
   spawn: (...args: unknown[]) => spawnMock(...args),
 }));
 
-import { restartGatewayProcessWithFreshPid } from "./process-respawn.js";
+import { restartGatewayProcessWithFreshPid } from './process-respawn';
 
 const originalArgv = [...process.argv];
 const originalExecArgv = [...process.execArgv];

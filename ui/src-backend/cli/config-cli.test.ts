@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, PowerDirectorConfig } from "../config/types.js";
+import type { ConfigFileSnapshot, PowerDirectorConfig } from '../config/types';
 
 /**
  * Test for issue #6070:
@@ -54,7 +54,7 @@ function setSnapshot(resolved: PowerDirectorConfig, config: PowerDirectorConfig)
 }
 
 async function runConfigCommand(args: string[]) {
-  const { registerConfigCli } = await import("./config-cli.js");
+  const { registerConfigCli } = await import('./config-cli');
   const program = new Command();
   program.exitOverride();
   registerConfigCli(program);

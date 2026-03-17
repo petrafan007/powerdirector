@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeEnv } from "./invoke.js";
-import { buildNodeInvokeResultParams } from "./runner.js";
+import { sanitizeEnv } from './invoke';
+import { buildNodeInvokeResultParams } from './runner';
 
 describe("node-host sanitizeEnv", () => {
   it("ignores PATH overrides", () => {

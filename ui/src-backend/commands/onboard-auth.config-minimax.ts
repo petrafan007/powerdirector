@@ -1,9 +1,9 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ModelProviderConfig } from "../config/types.models.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { ModelProviderConfig } from '../config/types.models';
 import {
   applyAgentDefaultModelPrimary,
   applyOnboardAuthAgentModelsAndProviders,
-} from "./onboard-auth.config-shared.js";
+} from './onboard-auth.config-shared';
 import {
   buildMinimaxApiModelDefinition,
   buildMinimaxModelDefinition,
@@ -16,7 +16,7 @@ import {
   MINIMAX_HOSTED_MODEL_ID,
   MINIMAX_HOSTED_MODEL_REF,
   MINIMAX_LM_STUDIO_COST,
-} from "./onboard-auth.models.js";
+} from './onboard-auth.models';
 
 export function applyMinimaxProviderConfig(cfg: PowerDirectorConfig): PowerDirectorConfig {
   const models = { ...cfg.agents?.defaults?.models };

@@ -2,37 +2,37 @@
 import "./bootstrap.js";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { getReplyFromConfig } from "./auto-reply/reply.js";
-import { applyTemplate } from "./auto-reply/templating.js";
-import { monitorWebChannel } from "./channel-web.js";
-import { createDefaultDeps } from "./cli/deps.js";
-import { promptYesNo } from "./cli/prompt.js";
-import { waitForever } from "./cli/wait.js";
-import { loadConfig } from "./config/config.js";
+import { getReplyFromConfig } from './auto-reply/reply';
+import { applyTemplate } from './auto-reply/templating';
+import { monitorWebChannel } from './channel-web';
+import { createDefaultDeps } from './cli/deps';
+import { promptYesNo } from './cli/prompt';
+import { waitForever } from './cli/wait';
+import { loadConfig } from './config/config';
 import {
   deriveSessionKey,
   loadSessionStore,
   resolveSessionKey,
   resolveStorePath,
   saveSessionStore,
-} from "./config/sessions.js";
-import { ensureBinary } from "./infra/binaries.js";
-import { loadDotEnv } from "./infra/dotenv.js";
-import { normalizeEnv } from "./infra/env.js";
-import { formatUncaughtError } from "./infra/errors.js";
-import { isMainModule } from "./infra/is-main.js";
-import { ensurePowerDirectorCliOnPath } from "./infra/path-env.js";
+} from './config/sessions';
+import { ensureBinary } from './infra/binaries';
+import { loadDotEnv } from './infra/dotenv';
+import { normalizeEnv } from './infra/env';
+import { formatUncaughtError } from './infra/errors';
+import { isMainModule } from './infra/is-main';
+import { ensurePowerDirectorCliOnPath } from './infra/path-env';
 import {
   describePortOwner,
   ensurePortAvailable,
   handlePortError,
   PortInUseError,
-} from "./infra/ports.js";
-import { assertSupportedRuntime } from "./infra/runtime-guard.js";
-import { installUnhandledRejectionHandler } from "./infra/unhandled-rejections.js";
-import { enableConsoleCapture } from "./logging.js";
-import { runCommandWithTimeout, runExec } from "./process/exec.js";
-import { assertWebChannel, normalizeE164, toWhatsappJid } from "./utils.js";
+} from './infra/ports';
+import { assertSupportedRuntime } from './infra/runtime-guard';
+import { installUnhandledRejectionHandler } from './infra/unhandled-rejections';
+import { enableConsoleCapture } from './logging';
+import { runCommandWithTimeout, runExec } from './process/exec';
+import { assertWebChannel, normalizeE164, toWhatsappJid } from './utils';
 
 normalizeEnv();
 ensurePowerDirectorCliOnPath();
@@ -43,7 +43,7 @@ enableConsoleCapture();
 // Enforce the minimum supported runtime before doing any work.
 assertSupportedRuntime();
 
-import { buildProgram } from "./cli/program.js";
+import { buildProgram } from './cli/program';
 
 const program = buildProgram();
 

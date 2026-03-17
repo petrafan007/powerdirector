@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { withFetchPreconnect } from "../../test-utils/fetch-mock.js";
+import { withFetchPreconnect } from '../../test-utils/fetch-mock';
 import {
   createBaseWebFetchToolConfig,
   installWebFetchSsrfHarness,
-} from "./web-fetch.test-harness.js";
+} from './web-fetch.test-harness';
 import "./web-fetch.test-mocks.js";
-import { createWebFetchTool } from "./web-tools.js";
+import { createWebFetchTool } from './web-tools';
 
 const baseToolConfig = createBaseWebFetchToolConfig({ maxResponseBytes: 1024 });
 installWebFetchSsrfHarness();

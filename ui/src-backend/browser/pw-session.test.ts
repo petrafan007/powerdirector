@@ -5,7 +5,7 @@ import {
   refLocator,
   rememberRoleRefsForTarget,
   restoreRoleRefsForTarget,
-} from "./pw-session.js";
+} from './pw-session';
 
 function fakePage(): {
   page: Page;

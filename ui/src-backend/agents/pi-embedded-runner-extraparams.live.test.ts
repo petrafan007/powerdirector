@@ -1,9 +1,9 @@
 import type { Model } from "@mariozechner/pi-ai";
 import { getModel, streamSimple } from "@mariozechner/pi-ai";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import { applyExtraParamsToAgent } from "./pi-embedded-runner.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { isTruthyEnvValue } from '../infra/env';
+import { applyExtraParamsToAgent } from './pi-embedded-runner';
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY ?? "";
 const LIVE = isTruthyEnvValue(process.env.OPENAI_LIVE_TEST) || isTruthyEnvValue(process.env.LIVE);

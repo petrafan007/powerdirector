@@ -1,9 +1,9 @@
-import type { ReplyPayload } from "../../auto-reply/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { GroupToolPolicyConfig } from "../../config/types.tools.js";
-import type { OutboundDeliveryResult, OutboundSendDeps } from "../../infra/outbound/deliver.js";
-import type { OutboundIdentity } from "../../infra/outbound/identity.js";
-import type { RuntimeEnv } from "../../runtime.js";
+import type { ReplyPayload } from '../../auto-reply/types';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { GroupToolPolicyConfig } from '../../config/types.tools';
+import type { OutboundDeliveryResult, OutboundSendDeps } from '../../infra/outbound/deliver';
+import type { OutboundIdentity } from '../../infra/outbound/identity';
+import type { RuntimeEnv } from '../../runtime';
 import type {
   ChannelAccountSnapshot,
   ChannelAccountState,
@@ -18,7 +18,7 @@ import type {
   ChannelSecurityDmPolicy,
   ChannelSetupInput,
   ChannelStatusIssue,
-} from "./types.core.js";
+} from './types.core';
 
 export type ChannelSetupAdapter = {
   resolveAccountId?: (params: { cfg: PowerDirectorConfig; accountId?: string }) => string;

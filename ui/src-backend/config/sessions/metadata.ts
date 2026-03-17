@@ -1,11 +1,11 @@
-import type { MsgContext } from "../../auto-reply/templating.js";
-import { normalizeChatType } from "../../channels/chat-type.js";
-import { resolveConversationLabel } from "../../channels/conversation-label.js";
-import { getChannelDock } from "../../channels/dock.js";
-import { normalizeChannelId } from "../../channels/plugins/index.js";
-import { normalizeMessageChannel } from "../../utils/message-channel.js";
-import { buildGroupDisplayName, resolveGroupSessionKey } from "./group.js";
-import type { GroupKeyResolution, SessionEntry, SessionOrigin } from "./types.js";
+import type { MsgContext } from '../../auto-reply/templating';
+import { normalizeChatType } from '../../channels/chat-type';
+import { resolveConversationLabel } from '../../channels/conversation-label';
+import { getChannelDock } from '../../channels/dock';
+import { normalizeChannelId } from '../../channels/plugins/index';
+import { normalizeMessageChannel } from '../../utils/message-channel';
+import { buildGroupDisplayName, resolveGroupSessionKey } from './group';
+import type { GroupKeyResolution, SessionEntry, SessionOrigin } from './types';
 
 const mergeOrigin = (
   existing: SessionOrigin | undefined,

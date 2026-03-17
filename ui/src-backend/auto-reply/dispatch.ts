@@ -1,16 +1,16 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { DispatchFromConfigResult } from "./reply/dispatch-from-config.js";
-import { dispatchReplyFromConfig } from "./reply/dispatch-from-config.js";
-import { finalizeInboundContext } from "./reply/inbound-context.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { DispatchFromConfigResult } from './reply/dispatch-from-config';
+import { dispatchReplyFromConfig } from './reply/dispatch-from-config';
+import { finalizeInboundContext } from './reply/inbound-context';
 import {
   createReplyDispatcher,
   createReplyDispatcherWithTyping,
   type ReplyDispatcher,
   type ReplyDispatcherOptions,
   type ReplyDispatcherWithTypingOptions,
-} from "./reply/reply-dispatcher.js";
-import type { FinalizedMsgContext, MsgContext } from "./templating.js";
-import type { GetReplyOptions } from "./types.js";
+} from './reply/reply-dispatcher';
+import type { FinalizedMsgContext, MsgContext } from './templating';
+import type { GetReplyOptions } from './types';
 
 export type DispatchInboundResult = DispatchFromConfigResult;
 
@@ -37,7 +37,7 @@ export async function dispatchInboundMessage(params: {
   cfg: PowerDirectorConfig;
   dispatcher: ReplyDispatcher;
   replyOptions?: Omit<GetReplyOptions, "onToolResult" | "onBlockReply">;
-  replyResolver?: typeof import("./reply.js").getReplyFromConfig;
+  replyResolver?: typeof import('./reply').getReplyFromConfig;
 }): Promise<DispatchInboundResult> {
   const finalized = finalizeInboundContext(params.ctx);
   return await withReplyDispatcher({
@@ -58,7 +58,7 @@ export async function dispatchInboundMessageWithBufferedDispatcher(params: {
   cfg: PowerDirectorConfig;
   dispatcherOptions: ReplyDispatcherWithTypingOptions;
   replyOptions?: Omit<GetReplyOptions, "onToolResult" | "onBlockReply">;
-  replyResolver?: typeof import("./reply.js").getReplyFromConfig;
+  replyResolver?: typeof import('./reply').getReplyFromConfig;
 }): Promise<DispatchInboundResult> {
   const { dispatcher, replyOptions, markDispatchIdle } = createReplyDispatcherWithTyping(
     params.dispatcherOptions,
@@ -84,7 +84,7 @@ export async function dispatchInboundMessageWithDispatcher(params: {
   cfg: PowerDirectorConfig;
   dispatcherOptions: ReplyDispatcherOptions;
   replyOptions?: Omit<GetReplyOptions, "onToolResult" | "onBlockReply">;
-  replyResolver?: typeof import("./reply.js").getReplyFromConfig;
+  replyResolver?: typeof import('./reply').getReplyFromConfig;
 }): Promise<DispatchInboundResult> {
   const dispatcher = createReplyDispatcher(params.dispatcherOptions);
   return await dispatchInboundMessage({

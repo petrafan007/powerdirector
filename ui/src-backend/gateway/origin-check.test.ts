@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkBrowserOrigin } from "./origin-check.js";
+import { checkBrowserOrigin } from './origin-check';
 
 describe("checkBrowserOrigin", () => {
   it("accepts same-origin host matches", () => {

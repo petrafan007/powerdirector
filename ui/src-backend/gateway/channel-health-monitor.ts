@@ -1,6 +1,6 @@
-import type { ChannelId } from "../channels/plugins/types.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { ChannelManager } from "./server-channels.js";
+import type { ChannelId } from '../channels/plugins/types';
+import { createSubsystemLogger } from '../logging/subsystem';
+import type { ChannelManager } from './server-channels';
 
 const log = createSubsystemLogger("gateway/health-monitor");
 

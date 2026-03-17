@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 
 export function buildModelAliasLines(cfg?: PowerDirectorConfig) {
   const models = cfg?.agents?.defaults?.models ?? {};

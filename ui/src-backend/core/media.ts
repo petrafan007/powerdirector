@@ -1,7 +1,7 @@
 // @ts-nocheck
 import fs from 'node:fs';
 import path from 'node:path';
-import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths.js';
+import { resolveDefaultMediaStorageDir } from '../infra/runtime-paths';
 
 type ImageProvider = 'openai' | 'stability' | 'google';
 type ImageSize = '256x256' | '512x512' | '1024x1024' | string;

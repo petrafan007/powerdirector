@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   computeBackoff,
   DEFAULT_HEARTBEAT_SECONDS,
@@ -7,7 +7,7 @@ import {
   resolveHeartbeatSeconds,
   resolveReconnectPolicy,
   sleepWithAbort,
-} from "./reconnect.js";
+} from './reconnect';
 
 describe("web reconnect helpers", () => {
   const cfg: PowerDirectorConfig = {};

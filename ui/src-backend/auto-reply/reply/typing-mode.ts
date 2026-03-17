@@ -1,6 +1,6 @@
-import type { TypingMode } from "../../config/types.js";
-import { isSilentReplyText, SILENT_REPLY_TOKEN } from "../tokens.js";
-import type { TypingController } from "./typing.js";
+import type { TypingMode } from '../../config/types';
+import { isSilentReplyText, SILENT_REPLY_TOKEN } from '../tokens';
+import type { TypingController } from './typing';
 
 export type TypingModeContext = {
   configured?: TypingMode;

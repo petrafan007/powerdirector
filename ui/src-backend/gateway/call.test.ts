@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { captureEnv } from "../test-utils/env.js";
+import { captureEnv } from '../test-utils/env';
 
 const loadConfig = vi.fn();
 const resolveGatewayPort = vi.fn();
@@ -20,7 +20,7 @@ let closeCode = 1006;
 let closeReason = "";
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig,
@@ -33,7 +33,7 @@ vi.mock("../infra/tailnet.js", () => ({
 }));
 
 vi.mock("./net.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./net.js")>();
+  const actual = await importOriginal<typeof import('./net')>();
   return {
     ...actual,
     pickPrimaryLanIPv4,
@@ -76,7 +76,7 @@ vi.mock("./client.js", () => ({
 }));
 
 const { buildGatewayConnectionDetails, callGateway, callGatewayCli, callGatewayScoped } =
-  await import("./call.js");
+  await import('./call');
 
 function resetGatewayCallMocks() {
   loadConfig.mockReset();

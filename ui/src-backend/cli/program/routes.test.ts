@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findRoutedCommand } from "./routes.js";
+import { findRoutedCommand } from './routes';
 
 describe("program routes", () => {
   it("matches status route and preserves plugin loading", () => {

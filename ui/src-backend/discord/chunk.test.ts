@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { countLines, hasBalancedFences } from "../test-utils/chunk-test-helpers.js";
-import { chunkDiscordText, chunkDiscordTextWithMode } from "./chunk.js";
+import { countLines, hasBalancedFences } from '../test-utils/chunk-test-helpers';
+import { chunkDiscordText, chunkDiscordTextWithMode } from './chunk';
 
 describe("chunkDiscordText", () => {
   it("splits tall messages even when under 2000 chars", () => {

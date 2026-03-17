@@ -1,11 +1,11 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { updateSessionStore, type SessionEntry } from "../../config/sessions.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { updateSessionStore, type SessionEntry } from '../../config/sessions';
 import {
   ensureAuthProfileStore,
   isProfileInCooldown,
   resolveAuthProfileOrder,
-} from "../auth-profiles.js";
-import { normalizeProviderId } from "../model-selection.js";
+} from '../auth-profiles';
+import { normalizeProviderId } from '../model-selection';
 
 function isProfileForProvider(params: {
   provider: string;

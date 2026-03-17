@@ -1,7 +1,7 @@
-import { normalizeChannelId } from "../channels/plugins/index.js";
-import { normalizeAccountId } from "../routing/session-key.js";
-import type { PowerDirectorConfig } from "./config.js";
-import type { TelegramCapabilitiesConfig } from "./types.telegram.js";
+import { normalizeChannelId } from '../channels/plugins/index';
+import { normalizeAccountId } from '../routing/session-key';
+import type { PowerDirectorConfig } from './config';
+import type { TelegramCapabilitiesConfig } from './types.telegram';
 
 type CapabilitiesConfig = TelegramCapabilitiesConfig;
 

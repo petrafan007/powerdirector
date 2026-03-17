@@ -1,4 +1,4 @@
-import { parseFrontmatterBlock } from "../markdown/frontmatter.js";
+import { parseFrontmatterBlock } from '../markdown/frontmatter';
 import {
   getFrontmatterString,
   normalizeStringList,
@@ -8,14 +8,14 @@ import {
   resolvePowerDirectorManifestInstall,
   resolvePowerDirectorManifestOs,
   resolvePowerDirectorManifestRequires,
-} from "../shared/frontmatter.js";
+} from '../shared/frontmatter';
 import type {
   PowerDirectorHookMetadata,
   HookEntry,
   HookInstallSpec,
   HookInvocationPolicy,
   ParsedHookFrontmatter,
-} from "./types.js";
+} from './types';
 
 export function parseFrontmatter(content: string): ParsedHookFrontmatter {
   return parseFrontmatterBlock(content);

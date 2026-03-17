@@ -9,7 +9,7 @@ import {
   resolveRestartSentinelPath,
   trimLogTail,
   writeRestartSentinel,
-} from "./restart-sentinel.js";
+} from './restart-sentinel';
 
 describe("restart sentinel", () => {
   let prevStateDir: string | undefined;

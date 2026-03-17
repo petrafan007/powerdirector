@@ -1,4 +1,4 @@
-import type { ChatAttachment } from "../chat-attachments.js";
+import type { ChatAttachment } from '../chat-attachments';
 
 export type RpcAttachmentInput = {
   type?: unknown;

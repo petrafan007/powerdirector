@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { defaultRuntime } from "../runtime.js";
+import { defaultRuntime } from '../runtime';
 import {
   restoreStateDirEnv,
   setStateDirEnv,
   snapshotStateDirEnv,
-} from "../test-helpers/state-dir-env.js";
-import { createCanvasHostHandler } from "./server.js";
+} from '../test-helpers/state-dir-env';
+import { createCanvasHostHandler } from './server';
 
 describe("canvas host state dir defaults", () => {
   let envSnapshot: ReturnType<typeof snapshotStateDirEnv>;

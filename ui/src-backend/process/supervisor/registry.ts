@@ -1,4 +1,4 @@
-import type { RunRecord, RunState, TerminationReason } from "./types.js";
+import type { RunRecord, RunState, TerminationReason } from './types';
 
 function nowMs() {
   return Date.now();

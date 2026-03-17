@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { runCliAgent } from "./cli-runner.js";
-import { resolveCliNoOutputTimeoutMs } from "./cli-runner/helpers.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { runCliAgent } from './cli-runner';
+import { resolveCliNoOutputTimeoutMs } from './cli-runner/helpers';
 
 const supervisorSpawnMock = vi.fn();
 

@@ -2,8 +2,8 @@ import { createServer as createHttpsServer } from "node:https";
 import { createServer } from "node:net";
 import { afterEach, describe, expect, test } from "vitest";
 import { WebSocketServer } from "ws";
-import { rawDataToString } from "../infra/ws.js";
-import { GatewayClient } from "./client.js";
+import { rawDataToString } from '../infra/ws';
+import { GatewayClient } from './client';
 
 // Find a free localhost port for ad-hoc WS servers.
 async function getFreePort(): Promise<number> {

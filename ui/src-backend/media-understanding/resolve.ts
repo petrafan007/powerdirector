@@ -1,20 +1,20 @@
-import type { MsgContext } from "../auto-reply/templating.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { MsgContext } from '../auto-reply/templating';
+import type { PowerDirectorConfig } from '../config/config';
 import type {
   MediaUnderstandingConfig,
   MediaUnderstandingModelConfig,
   MediaUnderstandingScopeConfig,
-} from "../config/types.tools.js";
-import { logVerbose, shouldLogVerbose } from "../globals.js";
+} from '../config/types.tools';
+import { logVerbose, shouldLogVerbose } from '../globals';
 import {
   DEFAULT_MAX_BYTES,
   DEFAULT_MAX_CHARS_BY_CAPABILITY,
   DEFAULT_MEDIA_CONCURRENCY,
   DEFAULT_PROMPT,
-} from "./defaults.js";
-import { normalizeMediaProviderId } from "./providers/index.js";
-import { normalizeMediaUnderstandingChatType, resolveMediaUnderstandingScope } from "./scope.js";
-import type { MediaUnderstandingCapability } from "./types.js";
+} from './defaults';
+import { normalizeMediaProviderId } from './providers/index';
+import { normalizeMediaUnderstandingChatType, resolveMediaUnderstandingScope } from './scope';
+import type { MediaUnderstandingCapability } from './types';
 
 export function resolveTimeoutMs(seconds: number | undefined, fallbackSeconds: number): number {
   const value = typeof seconds === "number" && Number.isFinite(seconds) ? seconds : fallbackSeconds;

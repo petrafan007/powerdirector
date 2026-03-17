@@ -6,19 +6,19 @@ import {
   getChannelActivity,
   recordChannelActivity,
   resetChannelActivityForTest,
-} from "./channel-activity.js";
-import { createDedupeCache } from "./dedupe.js";
+} from './channel-activity';
+import { createDedupeCache } from './dedupe';
 import {
   emitDiagnosticEvent,
   onDiagnosticEvent,
   resetDiagnosticEventsForTest,
-} from "./diagnostic-events.js";
-import { readSessionStoreJson5 } from "./state-migrations.fs.js";
+} from './diagnostic-events';
+import { readSessionStoreJson5 } from './state-migrations.fs';
 import {
   defaultVoiceWakeTriggers,
   loadVoiceWakeConfig,
   setVoiceWakeTriggers,
-} from "./voicewake.js";
+} from './voicewake';
 
 describe("infra store", () => {
   describe("state migrations fs", () => {

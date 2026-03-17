@@ -1,7 +1,7 @@
 import "./run.overflow-compaction.mocks.shared.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { runEmbeddedPiAgent } from "./run.js";
-import { runEmbeddedAttempt } from "./run/attempt.js";
+import { runEmbeddedPiAgent } from './run';
+import { runEmbeddedAttempt } from './run/attempt';
 
 const mockedRunEmbeddedAttempt = vi.mocked(runEmbeddedAttempt);
 

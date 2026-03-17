@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
+import { withFetchPreconnect } from '../test-utils/fetch-mock';
 import {
   CHUTES_TOKEN_ENDPOINT,
   CHUTES_USERINFO_ENDPOINT,
   exchangeChutesCodeForTokens,
   refreshChutesTokens,
-} from "./chutes-oauth.js";
+} from './chutes-oauth';
 
 const urlToString = (url: Request | URL | string): string => {
   if (typeof url === "string") {

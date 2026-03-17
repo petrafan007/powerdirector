@@ -10,7 +10,7 @@ import {
   resolveApnsAuthConfigFromEnv,
   sendApnsAlert,
   sendApnsBackgroundWake,
-} from "./push-apns.js";
+} from './push-apns';
 
 const tempDirs: string[] = [];
 const testAuthPrivateKey = generateKeyPairSync("ec", { namedCurve: "prime256v1" })

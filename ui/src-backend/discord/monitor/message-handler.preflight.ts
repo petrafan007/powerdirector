@@ -1,32 +1,32 @@
 import { ChannelType, MessageType, type User } from "@buape/carbon";
-import { hasControlCommand } from "../../auto-reply/command-detection.js";
-import { shouldHandleTextCommands } from "../../auto-reply/commands-registry.js";
+import { hasControlCommand } from '../../auto-reply/command-detection';
+import { shouldHandleTextCommands } from '../../auto-reply/commands-registry';
 import {
   recordPendingHistoryEntryIfEnabled,
   type HistoryEntry,
-} from "../../auto-reply/reply/history.js";
+} from '../../auto-reply/reply/history';
 import {
   buildMentionRegexes,
   matchesMentionWithExplicit,
-} from "../../auto-reply/reply/mentions.js";
-import { formatAllowlistMatchMeta } from "../../channels/allowlist-match.js";
-import { resolveControlCommandGate } from "../../channels/command-gating.js";
-import { logInboundDrop } from "../../channels/logging.js";
-import { resolveMentionGatingWithBypass } from "../../channels/mention-gating.js";
-import { loadConfig } from "../../config/config.js";
-import { logVerbose, shouldLogVerbose } from "../../globals.js";
-import { recordChannelActivity } from "../../infra/channel-activity.js";
-import { enqueueSystemEvent } from "../../infra/system-events.js";
-import { logDebug } from "../../logger.js";
-import { getChildLogger } from "../../logging.js";
-import { buildPairingReply } from "../../pairing/pairing-messages.js";
+} from '../../auto-reply/reply/mentions';
+import { formatAllowlistMatchMeta } from '../../channels/allowlist-match';
+import { resolveControlCommandGate } from '../../channels/command-gating';
+import { logInboundDrop } from '../../channels/logging';
+import { resolveMentionGatingWithBypass } from '../../channels/mention-gating';
+import { loadConfig } from '../../config/config';
+import { logVerbose, shouldLogVerbose } from '../../globals';
+import { recordChannelActivity } from '../../infra/channel-activity';
+import { enqueueSystemEvent } from '../../infra/system-events';
+import { logDebug } from '../../logger';
+import { getChildLogger } from '../../logging';
+import { buildPairingReply } from '../../pairing/pairing-messages';
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from "../../pairing/pairing-store.js";
-import { resolveAgentRoute } from "../../routing/resolve-route.js";
-import { fetchPluralKitMessageInfo } from "../pluralkit.js";
-import { sendMessageDiscord } from "../send.js";
+} from '../../pairing/pairing-store';
+import { resolveAgentRoute } from '../../routing/resolve-route';
+import { fetchPluralKitMessageInfo } from '../pluralkit';
+import { sendMessageDiscord } from '../send';
 import {
   allowListMatches,
   isDiscordGroupAllowedByPolicy,
@@ -38,29 +38,29 @@ import {
   resolveDiscordMemberAccessState,
   resolveDiscordShouldRequireMention,
   resolveGroupDmAllow,
-} from "./allow-list.js";
+} from './allow-list';
 import {
   formatDiscordUserTag,
   resolveDiscordSystemLocation,
   resolveTimestampMs,
-} from "./format.js";
+} from './format';
 import type {
   DiscordMessagePreflightContext,
   DiscordMessagePreflightParams,
-} from "./message-handler.preflight.types.js";
+} from './message-handler.preflight.types';
 import {
   resolveDiscordChannelInfo,
   resolveDiscordMessageChannelId,
   resolveDiscordMessageText,
-} from "./message-utils.js";
-import { resolveDiscordSenderIdentity, resolveDiscordWebhookId } from "./sender-identity.js";
-import { resolveDiscordSystemEvent } from "./system-events.js";
-import { resolveDiscordThreadChannel, resolveDiscordThreadParentInfo } from "./threading.js";
+} from './message-utils';
+import { resolveDiscordSenderIdentity, resolveDiscordWebhookId } from './sender-identity';
+import { resolveDiscordSystemEvent } from './system-events';
+import { resolveDiscordThreadChannel, resolveDiscordThreadParentInfo } from './threading';
 
 export type {
   DiscordMessagePreflightContext,
   DiscordMessagePreflightParams,
-} from "./message-handler.preflight.types.js";
+} from './message-handler.preflight.types';
 
 export async function preflightDiscordMessage(
   params: DiscordMessagePreflightParams,
@@ -432,7 +432,7 @@ export async function preflightDiscordMessage(
 
   if (needsPreflightTranscription) {
     try {
-      const { transcribeFirstAudio } = await import("../../media-understanding/audio-preflight.js");
+      const { transcribeFirstAudio } = await import('../../media-understanding/audio-preflight');
       const audioPaths =
         message.attachments
           ?.filter((att: { contentType?: string; url: string }) =>

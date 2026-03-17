@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolveStateDir } from "../config/paths.js";
+import { resolveStateDir } from '../config/paths';
 import {
   type DeviceAuthEntry,
   type DeviceAuthStore,
   normalizeDeviceAuthRole,
   normalizeDeviceAuthScopes,
-} from "../shared/device-auth.js";
+} from '../shared/device-auth';
 
 const DEVICE_AUTH_FILE = "device-auth.json";
 

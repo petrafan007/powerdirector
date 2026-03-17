@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveBrewExecutable } from "../infra/brew.js";
-import { runCommandWithTimeout, type CommandOptions } from "../process/exec.js";
-import { scanDirectoryWithSummary } from "../security/skill-scanner.js";
-import { resolveUserPath } from "../utils.js";
-import { installDownloadSpec } from "./skills-install-download.js";
-import { formatInstallFailureMessage } from "./skills-install-output.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveBrewExecutable } from '../infra/brew';
+import { runCommandWithTimeout, type CommandOptions } from '../process/exec';
+import { scanDirectoryWithSummary } from '../security/skill-scanner';
+import { resolveUserPath } from '../utils';
+import { installDownloadSpec } from './skills-install-download';
+import { formatInstallFailureMessage } from './skills-install-output';
 import {
   hasBinary,
   loadWorkspaceSkillEntries,
@@ -14,7 +14,7 @@ import {
   type SkillEntry,
   type SkillInstallSpec,
   type SkillsInstallPreferences,
-} from "./skills.js";
+} from './skills';
 
 export type SkillInstallRequest = {
   workspaceDir: string;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveCliBackendConfig } from "./cli-backends.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveCliBackendConfig } from './cli-backends';
 
 describe("resolveCliBackendConfig reliability merge", () => {
   it("deep-merges reliability watchdog overrides for codex", () => {

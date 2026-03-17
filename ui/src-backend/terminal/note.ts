@@ -1,6 +1,6 @@
 import { note as clackNote } from "@clack/prompts";
-import { visibleWidth } from "./ansi.js";
-import { stylePromptTitle } from "./prompt-style.js";
+import { visibleWidth } from './ansi';
+import { stylePromptTitle } from './prompt-style';
 
 const URL_PREFIX_RE = /^(https?:\/\/|file:\/\/)/i;
 const WINDOWS_DRIVE_RE = /^[a-zA-Z]:[\\/]/;

@@ -1,2 +1,2 @@
-export { monitorDiscordProvider } from "./monitor.js";
-export { sendMessageDiscord, sendPollDiscord } from "./send.js";
+export { monitorDiscordProvider } from './monitor';
+export { sendMessageDiscord, sendPollDiscord } from './send';

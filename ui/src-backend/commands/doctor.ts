@@ -1,61 +1,61 @@
 import fs from "node:fs";
 import { intro as clackIntro, outro as clackOutro } from "@clack/prompts";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
-import { loadModelCatalog } from "../agents/model-catalog.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
+import { loadModelCatalog } from '../agents/model-catalog';
 import {
   getModelRefStatus,
   resolveConfiguredModelRef,
   resolveHooksGmailModel,
-} from "../agents/model-selection.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { CONFIG_PATH, readConfigFileSnapshot, writeConfigFile } from "../config/config.js";
-import { logConfigUpdated } from "../config/logging.js";
-import { resolveGatewayService } from "../daemon/service.js";
-import { resolveGatewayAuth } from "../gateway/auth.js";
-import { buildGatewayConnectionDetails } from "../gateway/call.js";
-import { resolvePowerDirectorPackageRoot } from "../infra/powerdirector-root.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { defaultRuntime } from "../runtime.js";
-import { note } from "../terminal/note.js";
-import { stylePromptTitle } from "../terminal/prompt-style.js";
-import { shortenHomePath } from "../utils.js";
+} from '../agents/model-selection';
+import { formatCliCommand } from '../cli/command-format';
+import type { PowerDirectorConfig } from '../config/config';
+import { CONFIG_PATH, readConfigFileSnapshot, writeConfigFile } from '../config/config';
+import { logConfigUpdated } from '../config/logging';
+import { resolveGatewayService } from '../daemon/service';
+import { resolveGatewayAuth } from '../gateway/auth';
+import { buildGatewayConnectionDetails } from '../gateway/call';
+import { resolvePowerDirectorPackageRoot } from '../infra/powerdirector-root';
+import type { RuntimeEnv } from '../runtime';
+import { defaultRuntime } from '../runtime';
+import { note } from '../terminal/note';
+import { stylePromptTitle } from '../terminal/prompt-style';
+import { shortenHomePath } from '../utils';
 import {
   maybeRemoveDeprecatedCliAuthProfiles,
   maybeRepairAnthropicOAuthProfileId,
   noteAuthProfileHealth,
-} from "./doctor-auth.js";
-import { doctorShellCompletion } from "./doctor-completion.js";
-import { loadAndMaybeMigrateDoctorConfig } from "./doctor-config-flow.js";
-import { maybeRepairGatewayDaemon } from "./doctor-gateway-daemon-flow.js";
-import { checkGatewayHealth } from "./doctor-gateway-health.js";
+} from './doctor-auth';
+import { doctorShellCompletion } from './doctor-completion';
+import { loadAndMaybeMigrateDoctorConfig } from './doctor-config-flow';
+import { maybeRepairGatewayDaemon } from './doctor-gateway-daemon-flow';
+import { checkGatewayHealth } from './doctor-gateway-health';
 import {
   maybeRepairGatewayServiceConfig,
   maybeScanExtraGatewayServices,
-} from "./doctor-gateway-services.js";
-import { noteSourceInstallIssues } from "./doctor-install.js";
-import { noteMemorySearchHealth } from "./doctor-memory-search.js";
+} from './doctor-gateway-services';
+import { noteSourceInstallIssues } from './doctor-install';
+import { noteMemorySearchHealth } from './doctor-memory-search';
 import {
   noteMacLaunchAgentOverrides,
   noteMacLaunchctlGatewayEnvOverrides,
   noteDeprecatedLegacyEnvVars,
-} from "./doctor-platform-notes.js";
-import { createDoctorPrompter, type DoctorOptions } from "./doctor-prompter.js";
-import { maybeRepairSandboxImages, noteSandboxScopeWarnings } from "./doctor-sandbox.js";
-import { noteSecurityWarnings } from "./doctor-security.js";
-import { noteSessionLockHealth } from "./doctor-session-locks.js";
-import { noteStateIntegrity, noteWorkspaceBackupTip } from "./doctor-state-integrity.js";
+} from './doctor-platform-notes';
+import { createDoctorPrompter, type DoctorOptions } from './doctor-prompter';
+import { maybeRepairSandboxImages, noteSandboxScopeWarnings } from './doctor-sandbox';
+import { noteSecurityWarnings } from './doctor-security';
+import { noteSessionLockHealth } from './doctor-session-locks';
+import { noteStateIntegrity, noteWorkspaceBackupTip } from './doctor-state-integrity';
 import {
   detectLegacyStateMigrations,
   runLegacyStateMigrations,
-} from "./doctor-state-migrations.js";
-import { maybeRepairUiProtocolFreshness } from "./doctor-ui.js";
-import { maybeOfferUpdateBeforeDoctor } from "./doctor-update.js";
-import { noteWorkspaceStatus } from "./doctor-workspace-status.js";
-import { MEMORY_SYSTEM_PROMPT, shouldSuggestMemorySystem } from "./doctor-workspace.js";
-import { applyWizardMetadata, printWizardHeader, randomToken } from "./onboard-helpers.js";
-import { ensureSystemdUserLingerInteractive } from "./systemd-linger.js";
+} from './doctor-state-migrations';
+import { maybeRepairUiProtocolFreshness } from './doctor-ui';
+import { maybeOfferUpdateBeforeDoctor } from './doctor-update';
+import { noteWorkspaceStatus } from './doctor-workspace-status';
+import { MEMORY_SYSTEM_PROMPT, shouldSuggestMemorySystem } from './doctor-workspace';
+import { applyWizardMetadata, printWizardHeader, randomToken } from './onboard-helpers';
+import { ensureSystemdUserLingerInteractive } from './systemd-linger';
 
 const intro = (message: string) => clackIntro(stylePromptTitle(message) ?? message);
 const outro = (message: string) => clackOutro(stylePromptTitle(message) ?? message);

@@ -5,14 +5,14 @@ vi.mock("../pi-model-discovery.js", () => ({
   discoverModels: vi.fn(() => ({ find: vi.fn(() => null) })),
 }));
 
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { buildInlineProviderModels, resolveModel } from "./model.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { buildInlineProviderModels, resolveModel } from './model';
 import {
   makeModel,
   mockDiscoveredModel,
   OPENAI_CODEX_TEMPLATE_MODEL,
   resetMockDiscoverModels,
-} from "./model.test-harness.js";
+} from './model.test-harness';
 
 beforeEach(() => {
   resetMockDiscoverModels();

@@ -1,4 +1,4 @@
-import type { NodeListNode, PairedNode, PairingList, PendingRequest } from "./node-list-types.js";
+import type { NodeListNode, PairedNode, PairingList, PendingRequest } from './node-list-types';
 
 function asRecord(value: unknown): Record<string, unknown> {
   return typeof value === "object" && value !== null ? (value as Record<string, unknown>) : {};

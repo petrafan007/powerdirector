@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { formatDurationCompact } from "../infra/format-time/format-duration.js";
+import { formatDurationCompact } from '../infra/format-time/format-duration';
 import {
   countMismatches,
   countRunning,
   formatImageMatch,
   formatSimpleStatus,
   formatStatus,
-} from "./sandbox-formatters.js";
+} from './sandbox-formatters';
 
 /** Helper matching old formatAge behavior: spaced compound duration */
 const formatAge = (ms: number) => formatDurationCompact(ms, { spaced: true }) ?? "0s";

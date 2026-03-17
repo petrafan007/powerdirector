@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resolvePluginTools } from "./tools.js";
+import { resolvePluginTools } from './tools';
 
 type MockRegistryToolEntry = {
   pluginId: string;

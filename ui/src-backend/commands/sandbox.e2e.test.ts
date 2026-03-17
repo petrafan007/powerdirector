@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { SandboxBrowserInfo, SandboxContainerInfo } from "../agents/sandbox.js";
+import type { SandboxBrowserInfo, SandboxContainerInfo } from '../agents/sandbox';
 
 // --- Mocks ---
 
@@ -22,7 +22,7 @@ vi.mock("@clack/prompts", () => ({
   confirm: mocks.clackConfirm,
 }));
 
-import { sandboxListCommand, sandboxRecreateCommand } from "./sandbox.js";
+import { sandboxListCommand, sandboxRecreateCommand } from './sandbox';
 
 // --- Test Factories ---
 

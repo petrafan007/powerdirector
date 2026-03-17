@@ -3,8 +3,8 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 const { loadConfig, migrateLegacyConfig, readConfigFileSnapshot, validateConfigObject } =
-  await vi.importActual<typeof import("./config.js")>("./config.js");
-import { withTempHome } from "./test-helpers.js";
+  await vi.importActual<typeof import('./config')>("./config.js");
+import { withTempHome } from './test-helpers';
 
 async function expectLoadRejectionPreservesField(params: {
   config: unknown;

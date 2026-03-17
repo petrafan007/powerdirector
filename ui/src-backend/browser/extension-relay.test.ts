@@ -5,8 +5,8 @@ import {
   ensureChromeExtensionRelayServer,
   getChromeExtensionRelayAuthHeaders,
   stopChromeExtensionRelayServer,
-} from "./extension-relay.js";
-import { getFreePort } from "./test-port.js";
+} from './extension-relay';
+import { getFreePort } from './test-port';
 
 function waitForOpen(ws: WebSocket) {
   return new Promise<void>((resolve, reject) => {

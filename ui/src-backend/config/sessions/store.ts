@@ -1,27 +1,27 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { acquireSessionWriteLock } from "../../agents/session-write-lock.js";
-import type { MsgContext } from "../../auto-reply/templating.js";
-import { parseByteSize } from "../../cli/parse-bytes.js";
-import { parseDurationMs } from "../../cli/parse-duration.js";
+import { acquireSessionWriteLock } from '../../agents/session-write-lock';
+import type { MsgContext } from '../../auto-reply/templating';
+import { parseByteSize } from '../../cli/parse-bytes';
+import { parseDurationMs } from '../../cli/parse-duration';
 import {
   archiveSessionTranscripts,
   cleanupArchivedSessionTranscripts,
-} from "../../gateway/session-utils.fs.js";
-import { createSubsystemLogger } from "../../logging/subsystem.js";
+} from '../../gateway/session-utils.fs';
+import { createSubsystemLogger } from '../../logging/subsystem';
 import {
   deliveryContextFromSession,
   mergeDeliveryContext,
   normalizeDeliveryContext,
   normalizeSessionDeliveryFields,
   type DeliveryContext,
-} from "../../utils/delivery-context.js";
-import { getFileMtimeMs, isCacheEnabled, resolveCacheTtlMs } from "../cache-utils.js";
-import { loadConfig } from "../config.js";
-import type { SessionMaintenanceConfig, SessionMaintenanceMode } from "../types.base.js";
-import { deriveSessionMetaPatch } from "./metadata.js";
-import { mergeSessionEntry, type SessionEntry } from "./types.js";
+} from '../../utils/delivery-context';
+import { getFileMtimeMs, isCacheEnabled, resolveCacheTtlMs } from '../cache-utils';
+import { loadConfig } from '../config';
+import type { SessionMaintenanceConfig, SessionMaintenanceMode } from '../types.base';
+import { deriveSessionMetaPatch } from './metadata';
+import { mergeSessionEntry, type SessionEntry } from './types';
 
 const log = createSubsystemLogger("sessions/store");
 
@@ -826,7 +826,7 @@ export async function recordSessionMetaFromInbound(params: {
   storePath: string;
   sessionKey: string;
   ctx: MsgContext;
-  groupResolution?: import("./types.js").GroupKeyResolution | null;
+  groupResolution?: import('./types').GroupKeyResolution | null;
   createIfMissing?: boolean;
 }): Promise<SessionEntry | null> {
   const { storePath, sessionKey, ctx } = params;
@@ -864,7 +864,7 @@ export async function updateLastRoute(params: {
   threadId?: string | number;
   deliveryContext?: DeliveryContext;
   ctx?: MsgContext;
-  groupResolution?: import("./types.js").GroupKeyResolution | null;
+  groupResolution?: import('./types').GroupKeyResolution | null;
 }) {
   const { storePath, sessionKey, channel, to, accountId, threadId, ctx } = params;
   return await withSessionStoreLock(storePath, async () => {

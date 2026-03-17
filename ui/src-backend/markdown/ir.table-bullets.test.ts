@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { markdownToIR } from "./ir.js";
+import { markdownToIR } from './ir';
 
 describe("markdownToIR tableMode bullets", () => {
   it("converts simple table to bullets", () => {

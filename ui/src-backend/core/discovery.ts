@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { spawn } from 'node:child_process';
-import { getRuntimeLogger } from './logger.js';
-import { getConfigManager } from '../config/config-manager.js';
-import { resolvePowerDirectorRoot } from '../config/paths.js';
+import { getRuntimeLogger } from './logger';
+import { getConfigManager } from '../config/config-manager';
+import { resolvePowerDirectorRoot } from '../config/paths';
 
 type MdnsDiscoveryMode = 'off' | 'minimal' | 'full';
 

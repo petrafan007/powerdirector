@@ -1,11 +1,11 @@
-import { formatCliCommand } from "../cli/command-format.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { readConfigFileSnapshot } from "../config/config.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { defaultRuntime } from "../runtime.js";
-import { runNonInteractiveOnboardingLocal } from "./onboard-non-interactive/local.js";
-import { runNonInteractiveOnboardingRemote } from "./onboard-non-interactive/remote.js";
-import type { OnboardOptions } from "./onboard-types.js";
+import { formatCliCommand } from '../cli/command-format';
+import type { PowerDirectorConfig } from '../config/config';
+import { readConfigFileSnapshot } from '../config/config';
+import type { RuntimeEnv } from '../runtime';
+import { defaultRuntime } from '../runtime';
+import { runNonInteractiveOnboardingLocal } from './onboard-non-interactive/local';
+import { runNonInteractiveOnboardingRemote } from './onboard-non-interactive/remote';
+import type { OnboardOptions } from './onboard-types';
 
 export async function runNonInteractiveOnboarding(
   opts: OnboardOptions,

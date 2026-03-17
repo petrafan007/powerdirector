@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { InboundDebounceByProvider } from "../config/types.messages.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { InboundDebounceByProvider } from '../config/types.messages';
 
 const resolveMs = (value: unknown): number | undefined => {
   if (typeof value !== "number" || !Number.isFinite(value)) {

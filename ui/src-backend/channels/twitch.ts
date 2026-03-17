@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage } from './base.js';
+import { Channel, ChannelMessage } from './base';
 import { StaticAuthProvider, RefreshingAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import * as fs from 'fs';

@@ -1,16 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
-import type { NormalizedUsage, UsageLike } from "../agents/usage.js";
-import { normalizeUsage } from "../agents/usage.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { NormalizedUsage, UsageLike } from '../agents/usage';
+import { normalizeUsage } from '../agents/usage';
+import type { PowerDirectorConfig } from '../config/config';
 import {
   resolveSessionFilePath,
   resolveSessionTranscriptsDirForAgent,
-} from "../config/sessions/paths.js";
-import type { SessionEntry } from "../config/sessions/types.js";
-import { countToolResults, extractToolCallNames } from "../utils/transcript-tools.js";
-import { estimateUsageCost, resolveModelCostConfig } from "../utils/usage-format.js";
+} from '../config/sessions/paths';
+import type { SessionEntry } from '../config/sessions/types';
+import { countToolResults, extractToolCallNames } from '../utils/transcript-tools';
+import { estimateUsageCost, resolveModelCostConfig } from '../utils/usage-format';
 import type {
   CostBreakdown,
   CostUsageTotals,
@@ -30,7 +30,7 @@ import type {
   SessionToolUsage,
   SessionUsageTimePoint,
   SessionUsageTimeSeries,
-} from "./session-cost-usage.types.js";
+} from './session-cost-usage.types';
 
 export type {
   CostUsageDailyEntry,
@@ -49,7 +49,7 @@ export type {
   SessionToolUsage,
   SessionUsageTimePoint,
   SessionUsageTimeSeries,
-} from "./session-cost-usage.types.js";
+} from './session-cost-usage.types';
 
 const emptyTotals = (): CostUsageTotals => ({
   input: 0,

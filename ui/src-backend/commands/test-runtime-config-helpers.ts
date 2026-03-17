@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import type { RuntimeEnv } from "../runtime.js";
-import type { MockFn } from "../test-utils/vitest-mock-fn.js";
+import type { RuntimeEnv } from '../runtime';
+import type { MockFn } from '../test-utils/vitest-mock-fn';
 
 export const baseConfigSnapshot = {
   path: "/tmp/powerdirector.config.json",

@@ -1,5 +1,5 @@
 import path from "node:path";
-import { resolveSafeBaseDir } from "./path-safety.js";
+import { resolveSafeBaseDir } from './path-safety';
 
 export function isWindowsDrivePath(value: string): boolean {
   return /^[a-zA-Z]:[\\/]/.test(value);

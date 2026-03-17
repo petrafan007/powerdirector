@@ -1,12 +1,12 @@
-import { resolveAgentConfig } from "../../agents/agent-scope.js";
-import { getChannelDock } from "../../channels/dock.js";
-import { normalizeChannelId } from "../../channels/plugins/index.js";
-import { CHAT_CHANNEL_ORDER } from "../../channels/registry.js";
-import type { AgentElevatedAllowFromConfig, PowerDirectorConfig } from "../../config/config.js";
-import { normalizeAtHashSlug } from "../../shared/string-normalization.js";
-import { INTERNAL_MESSAGE_CHANNEL } from "../../utils/message-channel.js";
-import type { MsgContext } from "../templating.js";
-export { formatElevatedUnavailableMessage } from "./elevated-unavailable.js";
+import { resolveAgentConfig } from '../../agents/agent-scope';
+import { getChannelDock } from '../../channels/dock';
+import { normalizeChannelId } from '../../channels/plugins/index';
+import { CHAT_CHANNEL_ORDER } from '../../channels/registry';
+import type { AgentElevatedAllowFromConfig, PowerDirectorConfig } from '../../config/config';
+import { normalizeAtHashSlug } from '../../shared/string-normalization';
+import { INTERNAL_MESSAGE_CHANNEL } from '../../utils/message-channel';
+import type { MsgContext } from '../templating';
+export { formatElevatedUnavailableMessage } from './elevated-unavailable';
 
 function normalizeAllowToken(value?: string) {
   if (!value) {

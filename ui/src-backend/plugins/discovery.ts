@@ -1,15 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
-import { isPathInsideWithRealpath } from "../security/scan-paths.js";
-import { resolveConfigDir, resolveUserPath } from "../utils.js";
-import { resolveBundledPluginsDir } from "./bundled-dir.js";
+import { isPathInsideWithRealpath } from '../security/scan-paths';
+import { resolveConfigDir, resolveUserPath } from '../utils';
+import { resolveBundledPluginsDir } from './bundled-dir';
 import {
   getPackageManifestMetadata,
   type PowerDirectorPackageManifest,
   type PackageManifest,
-} from "./manifest.js";
-import { formatPosixMode, isPathInside, safeRealpathSync, safeStatSync } from "./path-safety.js";
-import type { PluginDiagnostic, PluginOrigin } from "./types.js";
+} from './manifest';
+import { formatPosixMode, isPathInside, safeRealpathSync, safeStatSync } from './path-safety';
+import type { PluginDiagnostic, PluginOrigin } from './types';
 
 const EXTENSION_EXTS = new Set([".ts", ".js", ".mts", ".cts", ".mjs", ".cjs"]);
 

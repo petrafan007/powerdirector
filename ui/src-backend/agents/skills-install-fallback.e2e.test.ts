@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { installSkill } from "./skills-install.js";
-import { buildWorkspaceSkillStatus } from "./skills-status.js";
+import { installSkill } from './skills-install';
+import { buildWorkspaceSkillStatus } from './skills-status';
 
 const runCommandWithTimeoutMock = vi.fn();
 const scanDirectoryWithSummaryMock = vi.fn();
@@ -18,7 +18,7 @@ vi.mock("../infra/net/fetch-guard.js", () => ({
 }));
 
 vi.mock("../security/skill-scanner.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../security/skill-scanner.js")>();
+  const actual = await importOriginal<typeof import('../security/skill-scanner')>();
   return {
     ...actual,
     scanDirectoryWithSummary: (...args: unknown[]) => scanDirectoryWithSummaryMock(...args),
@@ -26,7 +26,7 @@ vi.mock("../security/skill-scanner.js", async (importOriginal) => {
 });
 
 vi.mock("../shared/config-eval.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../shared/config-eval.js")>();
+  const actual = await importOriginal<typeof import('../shared/config-eval')>();
   return {
     ...actual,
     hasBinary: (...args: unknown[]) => hasBinaryMock(...args),

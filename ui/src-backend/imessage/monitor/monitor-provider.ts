@@ -1,51 +1,51 @@
 import fs from "node:fs/promises";
-import { resolveHumanDelayConfig } from "../../agents/identity.js";
-import { resolveTextChunkLimit } from "../../auto-reply/chunk.js";
-import { hasControlCommand } from "../../auto-reply/command-detection.js";
-import { dispatchInboundMessage } from "../../auto-reply/dispatch.js";
+import { resolveHumanDelayConfig } from '../../agents/identity';
+import { resolveTextChunkLimit } from '../../auto-reply/chunk';
+import { hasControlCommand } from '../../auto-reply/command-detection';
+import { dispatchInboundMessage } from '../../auto-reply/dispatch';
 import {
   createInboundDebouncer,
   resolveInboundDebounceMs,
-} from "../../auto-reply/inbound-debounce.js";
+} from '../../auto-reply/inbound-debounce';
 import {
   clearHistoryEntriesIfEnabled,
   DEFAULT_GROUP_HISTORY_LIMIT,
   type HistoryEntry,
-} from "../../auto-reply/reply/history.js";
-import { createReplyDispatcher } from "../../auto-reply/reply/reply-dispatcher.js";
-import { createReplyPrefixOptions } from "../../channels/reply-prefix.js";
-import { recordInboundSession } from "../../channels/session.js";
-import { loadConfig } from "../../config/config.js";
-import { readSessionUpdatedAt, resolveStorePath } from "../../config/sessions.js";
-import { danger, logVerbose, shouldLogVerbose } from "../../globals.js";
-import { normalizeScpRemoteHost } from "../../infra/scp-host.js";
-import { waitForTransportReady } from "../../infra/transport-ready.js";
-import { mediaKindFromMime } from "../../media/constants.js";
+} from '../../auto-reply/reply/history';
+import { createReplyDispatcher } from '../../auto-reply/reply/reply-dispatcher';
+import { createReplyPrefixOptions } from '../../channels/reply-prefix';
+import { recordInboundSession } from '../../channels/session';
+import { loadConfig } from '../../config/config';
+import { readSessionUpdatedAt, resolveStorePath } from '../../config/sessions';
+import { danger, logVerbose, shouldLogVerbose } from '../../globals';
+import { normalizeScpRemoteHost } from '../../infra/scp-host';
+import { waitForTransportReady } from '../../infra/transport-ready';
+import { mediaKindFromMime } from '../../media/constants';
 import {
   isInboundPathAllowed,
   resolveIMessageAttachmentRoots,
   resolveIMessageRemoteAttachmentRoots,
-} from "../../media/inbound-path-policy.js";
-import { buildPairingReply } from "../../pairing/pairing-messages.js";
+} from '../../media/inbound-path-policy';
+import { buildPairingReply } from '../../pairing/pairing-messages';
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from "../../pairing/pairing-store.js";
-import { truncateUtf16Safe } from "../../utils.js";
-import { resolveIMessageAccount } from "../accounts.js";
-import { createIMessageRpcClient } from "../client.js";
-import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from "../constants.js";
-import { probeIMessage } from "../probe.js";
-import { sendMessageIMessage } from "../send.js";
-import { attachIMessageMonitorAbortHandler } from "./abort-handler.js";
-import { deliverReplies } from "./deliver.js";
+} from '../../pairing/pairing-store';
+import { truncateUtf16Safe } from '../../utils';
+import { resolveIMessageAccount } from '../accounts';
+import { createIMessageRpcClient } from '../client';
+import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from '../constants';
+import { probeIMessage } from '../probe';
+import { sendMessageIMessage } from '../send';
+import { attachIMessageMonitorAbortHandler } from './abort-handler';
+import { deliverReplies } from './deliver';
 import {
   buildIMessageInboundContext,
   resolveIMessageInboundDecision,
-} from "./inbound-processing.js";
-import { parseIMessageNotification } from "./parse-notification.js";
-import { normalizeAllowList, resolveRuntime } from "./runtime.js";
-import type { IMessagePayload, MonitorIMessageOpts } from "./types.js";
+} from './inbound-processing';
+import { parseIMessageNotification } from './parse-notification';
+import { normalizeAllowList, resolveRuntime } from './runtime';
+import type { IMessagePayload, MonitorIMessageOpts } from './types';
 
 /**
  * Try to detect remote host from an SSH wrapper script like:

@@ -1,18 +1,18 @@
-import { ensureAuthProfileStore } from "../agents/auth-profiles.js";
-import type { PowerDirectorConfig, GatewayAuthConfig } from "../config/config.js";
-import type { RuntimeEnv } from "../runtime.js";
-import type { WizardPrompter } from "../wizard/prompts.js";
-import { promptAuthChoiceGrouped } from "./auth-choice-prompt.js";
-import { applyAuthChoice, resolvePreferredProviderForAuthChoice } from "./auth-choice.js";
+import { ensureAuthProfileStore } from '../agents/auth-profiles';
+import type { PowerDirectorConfig, GatewayAuthConfig } from '../config/config';
+import type { RuntimeEnv } from '../runtime';
+import type { WizardPrompter } from '../wizard/prompts';
+import { promptAuthChoiceGrouped } from './auth-choice-prompt';
+import { applyAuthChoice, resolvePreferredProviderForAuthChoice } from './auth-choice';
 import {
   applyModelAllowlist,
   applyModelFallbacksFromSelection,
   applyPrimaryModel,
   promptDefaultModel,
   promptModelAllowlist,
-} from "./model-picker.js";
-import { promptCustomApiConfig } from "./onboard-custom.js";
-import { randomToken } from "./onboard-helpers.js";
+} from './model-picker';
+import { promptCustomApiConfig } from './onboard-custom';
+import { randomToken } from './onboard-helpers';
 
 type GatewayAuthChoice = "token" | "password" | "trusted-proxy";
 

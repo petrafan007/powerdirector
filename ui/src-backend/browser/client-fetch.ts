@@ -1,12 +1,12 @@
-import { formatCliCommand } from "../cli/command-format.js";
-import { loadConfig } from "../config/config.js";
-import { getBridgeAuthForPort } from "./bridge-auth-registry.js";
-import { resolveBrowserControlAuth } from "./control-auth.js";
+import { formatCliCommand } from '../cli/command-format';
+import { loadConfig } from '../config/config';
+import { getBridgeAuthForPort } from './bridge-auth-registry';
+import { resolveBrowserControlAuth } from './control-auth';
 import {
   createBrowserControlContext,
   startBrowserControlServiceFromConfig,
-} from "./control-service.js";
-import { createBrowserRouteDispatcher } from "./routes/dispatcher.js";
+} from './control-service';
+import { createBrowserRouteDispatcher } from './routes/dispatcher';
 
 type LoopbackBrowserAuthDeps = {
   loadConfig: typeof loadConfig;

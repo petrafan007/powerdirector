@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveOutboundTarget } from "../../infra/outbound/targets.js";
-import { sendHandlers } from "./send.js";
-import type { GatewayRequestContext } from "./types.js";
+import { resolveOutboundTarget } from '../../infra/outbound/targets';
+import { sendHandlers } from './send';
+import type { GatewayRequestContext } from './types';
 
 const mocks = vi.hoisted(() => ({
   deliverOutboundPayloads: vi.fn(),
@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("../../config/config.js", async () => {
   const actual =
-    await vi.importActual<typeof import("../../config/config.js")>("../../config/config.js");
+    await vi.importActual<typeof import('../../config/config')>("../../config/config.js");
   return {
     ...actual,
     loadConfig: () => ({}),
@@ -33,7 +33,7 @@ vi.mock("../../infra/outbound/deliver.js", () => ({
 }));
 
 vi.mock("../../config/sessions.js", async () => {
-  const actual = await vi.importActual<typeof import("../../config/sessions.js")>(
+  const actual = await vi.importActual<typeof import('../../config/sessions')>(
     "../../config/sessions.js",
   );
   return {

@@ -1,5 +1,5 @@
-import { isPlainObject, resolveUserPath } from "../utils.js";
-import type { PowerDirectorConfig } from "./types.js";
+import { isPlainObject, resolveUserPath } from '../utils';
+import type { PowerDirectorConfig } from './types';
 
 const PATH_VALUE_RE = /^~(?=$|[\\/])/;
 

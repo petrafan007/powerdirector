@@ -1,6 +1,6 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveSlackAccount } from "../../slack/accounts.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveSlackAccount } from '../../slack/accounts';
 import {
   deleteSlackMessage,
   editSlackMessage,
@@ -15,17 +15,17 @@ import {
   removeSlackReaction,
   sendSlackMessage,
   unpinSlackMessage,
-} from "../../slack/actions.js";
-import { parseSlackBlocksInput } from "../../slack/blocks-input.js";
-import { parseSlackTarget, resolveSlackChannelId } from "../../slack/targets.js";
-import { withNormalizedTimestamp } from "../date-time.js";
+} from '../../slack/actions';
+import { parseSlackBlocksInput } from '../../slack/blocks-input';
+import { parseSlackTarget, resolveSlackChannelId } from '../../slack/targets';
+import { withNormalizedTimestamp } from '../date-time';
 import {
   createActionGate,
   jsonResult,
   readNumberParam,
   readReactionParams,
   readStringParam,
-} from "./common.js";
+} from './common';
 
 const messagingActions = new Set(["sendMessage", "editMessage", "deleteMessage", "readMessages"]);
 

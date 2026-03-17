@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
-import { detectMime } from "../../media/mime.js";
-import type { ImageSanitizationLimits } from "../image-sanitization.js";
-import { sanitizeToolResultImages } from "../tool-images.js";
+import { detectMime } from '../../media/mime';
+import type { ImageSanitizationLimits } from '../image-sanitization';
+import { sanitizeToolResultImages } from '../tool-images';
 
 // oxlint-disable-next-line typescript/no-explicit-any
 export type AnyAgentTool = AgentTool<any, unknown> & {

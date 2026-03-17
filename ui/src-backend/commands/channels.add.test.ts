@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { setDefaultChannelPluginRegistryForTests } from "./channel-test-helpers.js";
-import { configMocks, offsetMocks } from "./channels.mock-harness.js";
-import { baseConfigSnapshot, createTestRuntime } from "./test-runtime-config-helpers.js";
+import { setDefaultChannelPluginRegistryForTests } from './channel-test-helpers';
+import { configMocks, offsetMocks } from './channels.mock-harness';
+import { baseConfigSnapshot, createTestRuntime } from './test-runtime-config-helpers';
 
 const runtime = createTestRuntime();
-let channelsAddCommand: typeof import("./channels.js").channelsAddCommand;
+let channelsAddCommand: typeof import('./channels').channelsAddCommand;
 
 describe("channelsAddCommand", () => {
   beforeEach(async () => {
@@ -15,7 +15,7 @@ describe("channelsAddCommand", () => {
     runtime.error.mockClear();
     runtime.exit.mockClear();
     setDefaultChannelPluginRegistryForTests();
-    ({ channelsAddCommand } = await import("./channels.js"));
+    ({ channelsAddCommand } = await import('./channels'));
   });
 
   it("clears telegram update offsets when the token changes", async () => {

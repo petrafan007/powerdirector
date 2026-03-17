@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage } from './base.js';
+import { Channel, ChannelMessage } from './base';
 import * as matrix from 'matrix-js-sdk';
 
 export class MatrixChannel implements Channel {

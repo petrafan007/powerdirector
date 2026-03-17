@@ -1,4 +1,4 @@
-import { formatTerminalLink } from "../utils.js";
+import { formatTerminalLink } from '../utils';
 
 export const DOCS_ROOT = "https://docs.powerdirector.ai";
 

@@ -1,10 +1,10 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { isSubagentSessionKey, resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { isSubagentSessionKey, resolveAgentIdFromSessionKey } from '../../routing/session-key';
 import {
   listSpawnedSessionKeys,
   resolveInternalSessionKey,
   resolveMainSessionAlias,
-} from "./sessions-resolution.js";
+} from './sessions-resolution';
 
 export type SessionToolsVisibility = "self" | "tree" | "agent" | "all";
 

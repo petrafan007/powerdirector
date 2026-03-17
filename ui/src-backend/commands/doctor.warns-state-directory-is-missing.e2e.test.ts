@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { createDoctorRuntime, mockDoctorConfigSnapshot, note } from "./doctor.e2e-harness.js";
+import { createDoctorRuntime, mockDoctorConfigSnapshot, note } from './doctor.e2e-harness';
 
 describe("doctor command", () => {
   it("warns when the state directory is missing", async () => {
@@ -13,7 +13,7 @@ describe("doctor command", () => {
     process.env.POWERDIRECTOR_STATE_DIR = missingDir;
     note.mockClear();
 
-    const { doctorCommand } = await import("./doctor.js");
+    const { doctorCommand } = await import('./doctor');
     await doctorCommand(createDoctorRuntime(), {
       nonInteractive: true,
       workspaceSuggestions: false,
@@ -38,7 +38,7 @@ describe("doctor command", () => {
       },
     });
 
-    const { doctorCommand } = await import("./doctor.js");
+    const { doctorCommand } = await import('./doctor');
     await doctorCommand(createDoctorRuntime(), {
       nonInteractive: true,
       workspaceSuggestions: false,
@@ -63,7 +63,7 @@ describe("doctor command", () => {
     note.mockClear();
 
     try {
-      const { doctorCommand } = await import("./doctor.js");
+      const { doctorCommand } = await import('./doctor');
       await doctorCommand(createDoctorRuntime(), {
         nonInteractive: true,
         workspaceSuggestions: false,

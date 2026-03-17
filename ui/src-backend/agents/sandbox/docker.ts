@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { sanitizeEnvVars } from "./sanitize-env-vars.js";
+import { sanitizeEnvVars } from './sanitize-env-vars';
 
 type ExecDockerRawOptions = {
   allowFailure?: boolean;
@@ -105,14 +105,14 @@ export function execDockerRaw(
   });
 }
 
-import { formatCliCommand } from "../../cli/command-format.js";
-import { defaultRuntime } from "../../runtime.js";
-import { computeSandboxConfigHash } from "./config-hash.js";
-import { DEFAULT_SANDBOX_IMAGE, SANDBOX_AGENT_WORKSPACE_MOUNT } from "./constants.js";
-import { readRegistry, updateRegistry } from "./registry.js";
-import { resolveSandboxAgentId, resolveSandboxScopeKey, slugifySessionKey } from "./shared.js";
-import type { SandboxConfig, SandboxDockerConfig, SandboxWorkspaceAccess } from "./types.js";
-import { validateSandboxSecurity } from "./validate-sandbox-security.js";
+import { formatCliCommand } from '../../cli/command-format';
+import { defaultRuntime } from '../../runtime';
+import { computeSandboxConfigHash } from './config-hash';
+import { DEFAULT_SANDBOX_IMAGE, SANDBOX_AGENT_WORKSPACE_MOUNT } from './constants';
+import { readRegistry, updateRegistry } from './registry';
+import { resolveSandboxAgentId, resolveSandboxScopeKey, slugifySessionKey } from './shared';
+import type { SandboxConfig, SandboxDockerConfig, SandboxWorkspaceAccess } from './types';
+import { validateSandboxSecurity } from './validate-sandbox-security';
 
 const HOT_CONTAINER_WINDOW_MS = 5 * 60 * 1000;
 

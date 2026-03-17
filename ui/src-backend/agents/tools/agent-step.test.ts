@@ -5,7 +5,7 @@ vi.mock("../../gateway/call.js", () => ({
   callGateway: (opts: unknown) => callGatewayMock(opts),
 }));
 
-import { readLatestAssistantReply } from "./agent-step.js";
+import { readLatestAssistantReply } from './agent-step';
 
 describe("readLatestAssistantReply", () => {
   beforeEach(() => {

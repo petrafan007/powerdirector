@@ -1,33 +1,33 @@
 import crypto from "node:crypto";
 import { Type } from "@sinclair/typebox";
-import { clearSessionQueues } from "../../auto-reply/reply/queue.js";
+import { clearSessionQueues } from '../../auto-reply/reply/queue';
 import {
   resolveSubagentLabel,
   resolveSubagentTargetFromRuns,
   sortSubagentRuns,
   type SubagentTargetResolution,
-} from "../../auto-reply/reply/subagents-utils.js";
-import { loadConfig } from "../../config/config.js";
-import type { SessionEntry } from "../../config/sessions.js";
-import { loadSessionStore, resolveStorePath, updateSessionStore } from "../../config/sessions.js";
-import { callGateway } from "../../gateway/call.js";
-import { logVerbose } from "../../globals.js";
+} from '../../auto-reply/reply/subagents-utils';
+import { loadConfig } from '../../config/config';
+import type { SessionEntry } from '../../config/sessions';
+import { loadSessionStore, resolveStorePath, updateSessionStore } from '../../config/sessions';
+import { callGateway } from '../../gateway/call';
+import { logVerbose } from '../../globals';
 import {
   isSubagentSessionKey,
   parseAgentSessionKey,
   type ParsedAgentSessionKey,
-} from "../../routing/session-key.js";
+} from '../../routing/session-key';
 import {
   formatDurationCompact,
   formatTokenUsageDisplay,
   resolveTotalTokens,
   truncateLine,
-} from "../../shared/subagents-format.js";
-import { INTERNAL_MESSAGE_CHANNEL } from "../../utils/message-channel.js";
-import { AGENT_LANE_SUBAGENT } from "../lanes.js";
-import { abortEmbeddedPiRun } from "../pi-embedded.js";
-import { optionalStringEnum } from "../schema/typebox.js";
-import { getSubagentDepthFromSessionStore } from "../subagent-depth.js";
+} from '../../shared/subagents-format';
+import { INTERNAL_MESSAGE_CHANNEL } from '../../utils/message-channel';
+import { AGENT_LANE_SUBAGENT } from '../lanes';
+import { abortEmbeddedPiRun } from '../pi-embedded';
+import { optionalStringEnum } from '../schema/typebox';
+import { getSubagentDepthFromSessionStore } from '../subagent-depth';
 import {
   clearSubagentRunSteerRestart,
   listSubagentRunsForRequester,
@@ -35,10 +35,10 @@ import {
   markSubagentRunForSteerRestart,
   replaceSubagentRunAfterSteer,
   type SubagentRunRecord,
-} from "../subagent-registry.js";
-import type { AnyAgentTool } from "./common.js";
-import { jsonResult, readNumberParam, readStringParam } from "./common.js";
-import { resolveInternalSessionKey, resolveMainSessionAlias } from "./sessions-helpers.js";
+} from '../subagent-registry';
+import type { AnyAgentTool } from './common';
+import { jsonResult, readNumberParam, readStringParam } from './common';
+import { resolveInternalSessionKey, resolveMainSessionAlias } from './sessions-helpers';
 
 const SUBAGENT_ACTIONS = ["list", "kill", "steer"] as const;
 type SubagentAction = (typeof SUBAGENT_ACTIONS)[number];

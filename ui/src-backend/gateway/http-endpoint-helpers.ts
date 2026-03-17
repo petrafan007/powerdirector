@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { AuthRateLimiter } from "./auth-rate-limit.js";
-import type { ResolvedGatewayAuth } from "./auth.js";
-import { authorizeGatewayBearerRequestOrReply } from "./http-auth-helpers.js";
-import { readJsonBodyOrError, sendMethodNotAllowed } from "./http-common.js";
+import type { AuthRateLimiter } from './auth-rate-limit';
+import type { ResolvedGatewayAuth } from './auth';
+import { authorizeGatewayBearerRequestOrReply } from './http-auth-helpers';
+import { readJsonBodyOrError, sendMethodNotAllowed } from './http-common';
 
 export async function handleGatewayPostJsonEndpoint(
   req: IncomingMessage,

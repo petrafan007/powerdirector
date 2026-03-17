@@ -1,10 +1,10 @@
 import path from "node:path";
 import "./reply.directive.directive-behavior.e2e-mocks.js";
 import { describe, expect, it, vi } from "vitest";
-import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
-import { runEmbeddedPiAgent } from "../agents/pi-embedded.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { getReplyFromConfig } from "./reply.js";
+import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
+import { runEmbeddedPiAgent } from '../agents/pi-embedded';
+import type { PowerDirectorConfig } from '../config/config';
+import { getReplyFromConfig } from './reply';
 
 function makeResult(text: string) {
   return {

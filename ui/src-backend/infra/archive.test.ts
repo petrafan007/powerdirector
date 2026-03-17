@@ -4,7 +4,7 @@ import path from "node:path";
 import JSZip from "jszip";
 import * as tar from "tar";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { extractArchive, resolveArchiveKind, resolvePackedRootDir } from "./archive.js";
+import { extractArchive, resolveArchiveKind, resolvePackedRootDir } from './archive';
 
 let fixtureRoot = "";
 let fixtureCount = 0;

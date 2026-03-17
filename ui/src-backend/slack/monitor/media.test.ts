@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import * as ssrf from "../../infra/net/ssrf.js";
-import type { SavedMedia } from "../../media/store.js";
-import * as mediaStore from "../../media/store.js";
-import { type FetchMock, withFetchPreconnect } from "../../test-utils/fetch-mock.js";
+import * as ssrf from '../../infra/net/ssrf';
+import type { SavedMedia } from '../../media/store';
+import * as mediaStore from '../../media/store';
+import { type FetchMock, withFetchPreconnect } from '../../test-utils/fetch-mock';
 import {
   fetchWithSlackAuth,
   resolveSlackAttachmentContent,
   resolveSlackMedia,
   resolveSlackThreadHistory,
-} from "./media.js";
+} from './media';
 
 // Store original fetch
 const originalFetch = globalThis.fetch;

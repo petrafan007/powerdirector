@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { runPreparedReply } from "./get-reply-run.js";
+import { runPreparedReply } from './get-reply-run';
 
 vi.mock("../../agents/auth-profiles/session-override.js", () => ({
   resolveSessionAuthProfileOverride: vi.fn().mockResolvedValue(undefined),
@@ -79,7 +79,7 @@ vi.mock("./typing-mode.js", () => ({
   resolveTypingMode: vi.fn().mockReturnValue("off"),
 }));
 
-import { runReplyAgent } from "./agent-runner.js";
+import { runReplyAgent } from './agent-runner';
 
 function baseParams(
   overrides: Partial<Parameters<typeof runPreparedReply>[0]> = {},

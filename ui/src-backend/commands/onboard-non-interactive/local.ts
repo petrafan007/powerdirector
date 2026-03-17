@@ -1,26 +1,26 @@
-import { formatCliCommand } from "../../cli/command-format.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resolveGatewayPort, writeConfigFile } from "../../config/config.js";
-import { logConfigUpdated } from "../../config/logging.js";
-import type { RuntimeEnv } from "../../runtime.js";
-import { DEFAULT_GATEWAY_DAEMON_RUNTIME } from "../daemon-runtime.js";
-import { healthCommand } from "../health.js";
-import { applyOnboardingLocalWorkspaceConfig } from "../onboard-config.js";
+import { formatCliCommand } from '../../cli/command-format';
+import type { PowerDirectorConfig } from '../../config/config';
+import { resolveGatewayPort, writeConfigFile } from '../../config/config';
+import { logConfigUpdated } from '../../config/logging';
+import type { RuntimeEnv } from '../../runtime';
+import { DEFAULT_GATEWAY_DAEMON_RUNTIME } from '../daemon-runtime';
+import { healthCommand } from '../health';
+import { applyOnboardingLocalWorkspaceConfig } from '../onboard-config';
 import {
   applyWizardMetadata,
   DEFAULT_WORKSPACE,
   ensureWorkspaceAndSessions,
   resolveControlUiLinks,
   waitForGatewayReachable,
-} from "../onboard-helpers.js";
-import type { OnboardOptions } from "../onboard-types.js";
-import { inferAuthChoiceFromFlags } from "./local/auth-choice-inference.js";
-import { applyNonInteractiveAuthChoice } from "./local/auth-choice.js";
-import { installGatewayDaemonNonInteractive } from "./local/daemon-install.js";
-import { applyNonInteractiveGatewayConfig } from "./local/gateway-config.js";
-import { logNonInteractiveOnboardingJson } from "./local/output.js";
-import { applyNonInteractiveSkillsConfig } from "./local/skills-config.js";
-import { resolveNonInteractiveWorkspaceDir } from "./local/workspace.js";
+} from '../onboard-helpers';
+import type { OnboardOptions } from '../onboard-types';
+import { inferAuthChoiceFromFlags } from './local/auth-choice-inference';
+import { applyNonInteractiveAuthChoice } from './local/auth-choice';
+import { installGatewayDaemonNonInteractive } from './local/daemon-install';
+import { applyNonInteractiveGatewayConfig } from './local/gateway-config';
+import { logNonInteractiveOnboardingJson } from './local/output';
+import { applyNonInteractiveSkillsConfig } from './local/skills-config';
+import { resolveNonInteractiveWorkspaceDir } from './local/workspace';
 
 export async function runNonInteractiveOnboardingLocal(params: {
   opts: OnboardOptions;

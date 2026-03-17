@@ -1,22 +1,22 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { DispatchInboundResult } from "../dispatch.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import type { DispatchInboundResult } from '../dispatch';
 import {
   dispatchInboundMessageWithBufferedDispatcher,
   dispatchInboundMessageWithDispatcher,
-} from "../dispatch.js";
-import type { FinalizedMsgContext, MsgContext } from "../templating.js";
-import type { GetReplyOptions } from "../types.js";
+} from '../dispatch';
+import type { FinalizedMsgContext, MsgContext } from '../templating';
+import type { GetReplyOptions } from '../types';
 import type {
   ReplyDispatcherOptions,
   ReplyDispatcherWithTypingOptions,
-} from "./reply-dispatcher.js";
+} from './reply-dispatcher';
 
 export async function dispatchReplyWithBufferedBlockDispatcher(params: {
   ctx: MsgContext | FinalizedMsgContext;
   cfg: PowerDirectorConfig;
   dispatcherOptions: ReplyDispatcherWithTypingOptions;
   replyOptions?: Omit<GetReplyOptions, "onToolResult" | "onBlockReply">;
-  replyResolver?: typeof import("../reply.js").getReplyFromConfig;
+  replyResolver?: typeof import('../reply').getReplyFromConfig;
 }): Promise<DispatchInboundResult> {
   return await dispatchInboundMessageWithBufferedDispatcher({
     ctx: params.ctx,
@@ -32,7 +32,7 @@ export async function dispatchReplyWithDispatcher(params: {
   cfg: PowerDirectorConfig;
   dispatcherOptions: ReplyDispatcherOptions;
   replyOptions?: Omit<GetReplyOptions, "onToolResult" | "onBlockReply">;
-  replyResolver?: typeof import("../reply.js").getReplyFromConfig;
+  replyResolver?: typeof import('../reply').getReplyFromConfig;
 }): Promise<DispatchInboundResult> {
   return await dispatchInboundMessageWithDispatcher({
     ctx: params.ctx,

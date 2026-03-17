@@ -39,10 +39,10 @@ vi.mock("./subagent-registry.store.js", () => ({
 }));
 
 describe("subagent registry steer restarts", () => {
-  let mod: typeof import("./subagent-registry.js");
+  let mod: typeof import('./subagent-registry');
 
   beforeAll(async () => {
-    mod = await import("./subagent-registry.js");
+    mod = await import('./subagent-registry');
   });
 
   const flushAnnounce = async () => {
@@ -241,7 +241,7 @@ describe("subagent registry steer restarts", () => {
   });
 
   it("retries completion-mode announce delivery with backoff and then gives up after retry limit", async () => {
-    const callGateway = vi.mocked((await import("../gateway/call.js")).callGateway);
+    const callGateway = vi.mocked((await import('../gateway/call')).callGateway);
     const originalCallGateway = callGateway.getMockImplementation();
     callGateway.mockImplementation(async (request: unknown) => {
       const typed = request as { method?: string };

@@ -1,5 +1,5 @@
-import { fetchDiscord } from "./api.js";
-import { normalizeDiscordSlug } from "./monitor/allow-list.js";
+import { fetchDiscord } from './api';
+import { normalizeDiscordSlug } from './monitor/allow-list';
 
 export type DiscordGuildSummary = {
   id: string;

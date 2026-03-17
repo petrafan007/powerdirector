@@ -5,7 +5,7 @@ import type {
   FlexComponent,
   FlexImage,
   FlexText,
-} from "./types.js";
+} from './types';
 
 /**
  * Create a media player card for Sonos, Spotify, Apple Music, etc.

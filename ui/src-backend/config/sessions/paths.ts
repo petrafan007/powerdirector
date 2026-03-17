@@ -1,8 +1,8 @@
 import os from "node:os";
 import path from "node:path";
-import { expandHomePrefix, resolveRequiredHomeDir } from "../../infra/home-dir.js";
-import { DEFAULT_AGENT_ID, normalizeAgentId } from "../../routing/session-key.js";
-import { resolveStateDir } from "../paths.js";
+import { expandHomePrefix, resolveRequiredHomeDir } from '../../infra/home-dir';
+import { DEFAULT_AGENT_ID, normalizeAgentId } from '../../routing/session-key';
+import { resolveStateDir } from '../paths';
 
 function resolveAgentSessionsDir(
   agentId?: string,

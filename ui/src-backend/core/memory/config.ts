@@ -1,7 +1,7 @@
 // @ts-nocheck
 import path from "node:path";
 import os from "node:os";
-import { resolveUserPath, clampNumber, clampInt } from "./utils.js";
+import { resolveUserPath, clampNumber, clampInt } from './utils';
 
 // --- Types for Memory Search (Sqlite-Vec) ---
 

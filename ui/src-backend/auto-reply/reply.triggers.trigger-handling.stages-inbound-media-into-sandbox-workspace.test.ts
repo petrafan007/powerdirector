@@ -5,7 +5,7 @@ import {
   createSandboxMediaContexts,
   createSandboxMediaStageConfig,
   withSandboxMediaTempHome,
-} from "./stage-sandbox-media.test-harness.js";
+} from './stage-sandbox-media.test-harness';
 
 const sandboxMocks = vi.hoisted(() => ({
   ensureSandboxWorkspaceForSession: vi.fn(),
@@ -17,8 +17,8 @@ const childProcessMocks = vi.hoisted(() => ({
 vi.mock("../agents/sandbox.js", () => sandboxMocks);
 vi.mock("node:child_process", () => childProcessMocks);
 
-import { ensureSandboxWorkspaceForSession } from "../agents/sandbox.js";
-import { stageSandboxMedia } from "./reply/stage-sandbox-media.js";
+import { ensureSandboxWorkspaceForSession } from '../agents/sandbox';
+import { stageSandboxMedia } from './reply/stage-sandbox-media';
 
 afterEach(() => {
   vi.restoreAllMocks();

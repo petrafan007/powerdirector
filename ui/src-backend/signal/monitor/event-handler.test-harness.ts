@@ -1,4 +1,4 @@
-import type { SignalEventHandlerDeps, SignalReactionMessage } from "./event-handler.types.js";
+import type { SignalEventHandlerDeps, SignalReactionMessage } from './event-handler.types';
 
 export function createBaseSignalEventHandlerDeps(
   overrides: Partial<SignalEventHandlerDeps> = {},

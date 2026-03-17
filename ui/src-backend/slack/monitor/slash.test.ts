@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { getSlackSlashMocks, resetSlackSlashMocks } from "./slash.test-harness.js";
+import { getSlackSlashMocks, resetSlackSlashMocks } from './slash.test-harness';
 
 vi.mock("../../auto-reply/commands-registry.js", () => {
   const usageCommand = { key: "usage", nativeName: "usage" };
@@ -181,7 +181,7 @@ let registerSlackMonitorSlashCommands: RegisterFn;
 const { dispatchMock } = getSlackSlashMocks();
 
 beforeAll(async () => {
-  ({ registerSlackMonitorSlashCommands } = (await import("./slash.js")) as unknown as {
+  ({ registerSlackMonitorSlashCommands } = (await import('./slash')) as unknown as {
     registerSlackMonitorSlashCommands: RegisterFn;
   });
 });

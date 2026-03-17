@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { runCommandWithTimeout } from "../process/exec.js";
-import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
-import { resolvePowerDirectorPackageRoot, resolvePowerDirectorPackageRootSync } from "./powerdirector-root.js";
+import { runCommandWithTimeout } from '../process/exec';
+import { defaultRuntime, type RuntimeEnv } from '../runtime';
+import { resolvePowerDirectorPackageRoot, resolvePowerDirectorPackageRootSync } from './powerdirector-root';
 
 const CONTROL_UI_DIST_PATH_SEGMENTS = ["ui", ".next", "build-manifest.json"] as const;
 

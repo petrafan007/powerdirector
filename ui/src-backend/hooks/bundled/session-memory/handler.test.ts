@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../../config/config.js";
-import { makeTempWorkspace, writeWorkspaceFile } from "../../../test-helpers/workspace.js";
-import type { HookHandler } from "../../hooks.js";
-import { createHookEvent } from "../../hooks.js";
+import type { PowerDirectorConfig } from '../../../config/config';
+import { makeTempWorkspace, writeWorkspaceFile } from '../../../test-helpers/workspace';
+import type { HookHandler } from '../../hooks';
+import { createHookEvent } from '../../hooks';
 
 // Avoid calling the embedded Pi agent (global command lane); keep this unit test deterministic.
 vi.mock("../../llm-slug-generator.js", () => ({
@@ -14,7 +14,7 @@ vi.mock("../../llm-slug-generator.js", () => ({
 let handler: HookHandler;
 
 beforeAll(async () => {
-  ({ default: handler } = await import("./handler.js"));
+  ({ default: handler } = await import('./handler'));
 });
 
 /**

@@ -1,5 +1,5 @@
 import fs from "node:fs/promises";
-import type { RuntimeEnv } from "../runtime.js";
+import type { RuntimeEnv } from '../runtime';
 
 type RuntimeLike = Pick<RuntimeEnv, "log" | "error" | "exit">;
 
@@ -32,7 +32,7 @@ export async function runNonInteractiveOnboarding(
   options: Record<string, unknown>,
   runtime: NonInteractiveRuntime,
 ): Promise<void> {
-  const { runNonInteractiveOnboarding: run } = await import("./onboard-non-interactive.js");
+  const { runNonInteractiveOnboarding: run } = await import('./onboard-non-interactive');
   await run(options, runtime);
 }
 

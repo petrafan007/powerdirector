@@ -1,10 +1,10 @@
-import { createAccountActionGate } from "../channels/plugins/account-action-gate.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { TelegramAccountConfig, TelegramActionConfig } from "../config/types.js";
-import { isTruthyEnvValue } from "../infra/env.js";
-import { listBoundAccountIds, resolveDefaultAgentBoundAccountId } from "../routing/bindings.js";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
-import { resolveTelegramToken } from "./token.js";
+import { createAccountActionGate } from '../channels/plugins/account-action-gate';
+import type { PowerDirectorConfig } from '../config/config';
+import type { TelegramAccountConfig, TelegramActionConfig } from '../config/types';
+import { isTruthyEnvValue } from '../infra/env';
+import { listBoundAccountIds, resolveDefaultAgentBoundAccountId } from '../routing/bindings';
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../routing/session-key';
+import { resolveTelegramToken } from './token';
 
 const debugAccounts = (...args: unknown[]) => {
   if (isTruthyEnvValue(process.env.POWERDIRECTOR_DEBUG_TELEGRAM_ACCOUNTS)) {

@@ -1,4 +1,4 @@
-import { chunkTextByBreakResolver } from "../shared/text-chunking.js";
+import { chunkTextByBreakResolver } from '../shared/text-chunking';
 
 export function chunkTextForOutbound(text: string, limit: number): string[] {
   return chunkTextByBreakResolver(text, limit, (window) => {

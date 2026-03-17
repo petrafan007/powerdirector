@@ -1,1 +1,1 @@
-export { registerNodesCli } from "./nodes-cli/register.js";
+export { registerNodesCli } from './nodes-cli/register';

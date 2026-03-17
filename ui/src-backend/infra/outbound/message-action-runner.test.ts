@@ -2,20 +2,20 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { slackPlugin } from "../../../extensions/slack/src/channel.js";
-import { telegramPlugin } from "../../../extensions/telegram/src/channel.js";
-import { whatsappPlugin } from "../../../extensions/whatsapp/src/channel.js";
-import { jsonResult } from "../../agents/tools/common.js";
-import type { ChannelPlugin } from "../../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { setActivePluginRegistry } from "../../plugins/runtime.js";
-import { createOutboundTestPlugin, createTestRegistry } from "../../test-utils/channel-plugins.js";
-import { createIMessageTestPlugin } from "../../test-utils/imessage-test-plugin.js";
-import { loadWebMedia } from "../../web/media.js";
-import { runMessageAction } from "./message-action-runner.js";
+import { slackPlugin } from '../../../extensions/slack/src/channel';
+import { telegramPlugin } from '../../../extensions/telegram/src/channel';
+import { whatsappPlugin } from '../../../extensions/whatsapp/src/channel';
+import { jsonResult } from '../../agents/tools/common';
+import type { ChannelPlugin } from '../../channels/plugins/types';
+import type { PowerDirectorConfig } from '../../config/config';
+import { setActivePluginRegistry } from '../../plugins/runtime';
+import { createOutboundTestPlugin, createTestRegistry } from '../../test-utils/channel-plugins';
+import { createIMessageTestPlugin } from '../../test-utils/imessage-test-plugin';
+import { loadWebMedia } from '../../web/media';
+import { runMessageAction } from './message-action-runner';
 
 vi.mock("../../web/media.js", async () => {
-  const actual = await vi.importActual<typeof import("../../web/media.js")>("../../web/media.js");
+  const actual = await vi.importActual<typeof import('../../web/media')>("../../web/media.js");
   return {
     ...actual,
     loadWebMedia: vi.fn(actual.loadWebMedia),
@@ -86,10 +86,10 @@ function createAlwaysConfiguredPluginConfig(account: Record<string, unknown> = {
   };
 }
 
-let createPluginRuntime: typeof import("../../plugins/runtime/index.js").createPluginRuntime;
-let setSlackRuntime: typeof import("../../../extensions/slack/src/runtime.js").setSlackRuntime;
-let setTelegramRuntime: typeof import("../../../extensions/telegram/src/runtime.js").setTelegramRuntime;
-let setWhatsAppRuntime: typeof import("../../../extensions/whatsapp/src/runtime.js").setWhatsAppRuntime;
+let createPluginRuntime: typeof import('../../plugins/runtime/index').createPluginRuntime;
+let setSlackRuntime: typeof import('../../../extensions/slack/src/runtime').setSlackRuntime;
+let setTelegramRuntime: typeof import('../../../extensions/telegram/src/runtime').setTelegramRuntime;
+let setWhatsAppRuntime: typeof import('../../../extensions/whatsapp/src/runtime').setWhatsAppRuntime;
 
 function installChannelRuntimes(params?: { includeTelegram?: boolean; includeWhatsApp?: boolean }) {
   const runtime = createPluginRuntime();
@@ -104,10 +104,10 @@ function installChannelRuntimes(params?: { includeTelegram?: boolean; includeWha
 
 describe("runMessageAction context isolation", () => {
   beforeAll(async () => {
-    ({ createPluginRuntime } = await import("../../plugins/runtime/index.js"));
-    ({ setSlackRuntime } = await import("../../../extensions/slack/src/runtime.js"));
-    ({ setTelegramRuntime } = await import("../../../extensions/telegram/src/runtime.js"));
-    ({ setWhatsAppRuntime } = await import("../../../extensions/whatsapp/src/runtime.js"));
+    ({ createPluginRuntime } = await import('../../plugins/runtime/index'));
+    ({ setSlackRuntime } = await import('../../../extensions/slack/src/runtime'));
+    ({ setTelegramRuntime } = await import('../../../extensions/telegram/src/runtime'));
+    ({ setWhatsAppRuntime } = await import('../../../extensions/whatsapp/src/runtime'));
   });
 
   beforeEach(() => {

@@ -1,6 +1,6 @@
-import { normalizeProviderId } from "../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ProviderAuthMethod, ProviderPlugin } from "../plugins/types.js";
+import { normalizeProviderId } from '../agents/model-selection';
+import type { PowerDirectorConfig } from '../config/config';
+import type { ProviderAuthMethod, ProviderPlugin } from '../plugins/types';
 
 export function resolveProviderMatch(
   providers: ProviderPlugin[],

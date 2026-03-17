@@ -1,18 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, type Mock } from "vitest";
-import { resolveSessionTranscriptPath } from "../config/sessions.js";
-import { emitAgentEvent } from "../infra/agent-events.js";
-import { captureEnv } from "../test-utils/env.js";
+import { resolveSessionTranscriptPath } from '../config/sessions';
+import { emitAgentEvent } from '../infra/agent-events';
+import { captureEnv } from '../test-utils/env';
 import {
   agentCommand,
   getFreePort,
   installGatewayTestHooks,
   startGatewayServer,
   testState,
-} from "./test-helpers.js";
+} from './test-helpers';
 
-const { createPowerDirectorTools } = await import("../agents/powerdirector-tools.js");
+const { createPowerDirectorTools } = await import('../agents/powerdirector-tools');
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -158,7 +158,7 @@ describe("sessions_send label lookup", () => {
     });
 
     // First, create a session with a label via sessions.patch
-    const { callGateway } = await import("./call.js");
+    const { callGateway } = await import('./call');
     await callGateway({
       method: "sessions.patch",
       params: { key: "test-labeled-session", label: "my-test-worker" },

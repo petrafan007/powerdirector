@@ -1,7 +1,7 @@
-import { normalizeChatType } from "../../channels/chat-type.js";
-import { resolveConversationLabel } from "../../channels/conversation-label.js";
-import type { FinalizedMsgContext, MsgContext } from "../templating.js";
-import { normalizeInboundTextNewlines } from "./inbound-text.js";
+import { normalizeChatType } from '../../channels/chat-type';
+import { resolveConversationLabel } from '../../channels/conversation-label';
+import type { FinalizedMsgContext, MsgContext } from '../templating';
+import { normalizeInboundTextNewlines } from './inbound-text';
 
 export type FinalizeInboundContextOptions = {
   forceBodyForAgent?: boolean;

@@ -6,7 +6,7 @@ import {
   getFirstToolParameters,
   makeGoogleAssistantMessage,
   makeModel,
-} from "./google-shared.test-helpers.js";
+} from './google-shared.test-helpers';
 
 describe("google-shared convertTools", () => {
   it("preserves parameters when type is missing", () => {

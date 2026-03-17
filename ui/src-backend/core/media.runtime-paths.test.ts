@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { MediaManager } from "./media.js";
+import { MediaManager } from './media';
 
 const originalStateDir = process.env.POWERDIRECTOR_STATE_DIR;
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { applyConfiguredContextWindows, applyDiscoveredContextWindows } from "./context.js";
-import { createSessionManagerRuntimeRegistry } from "./pi-extensions/session-manager-runtime-registry.js";
+import { applyConfiguredContextWindows, applyDiscoveredContextWindows } from './context';
+import { createSessionManagerRuntimeRegistry } from './pi-extensions/session-manager-runtime-registry';
 
 describe("applyDiscoveredContextWindows", () => {
   it("keeps the smallest context window when duplicate model ids are discovered", () => {

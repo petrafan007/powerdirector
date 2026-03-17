@@ -3,17 +3,17 @@ import os from "node:os";
 import path from "node:path";
 import sharp from "sharp";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { resolveStateDir } from "../config/paths.js";
-import { sendVoiceMessageDiscord } from "../discord/send.js";
-import * as ssrf from "../infra/net/ssrf.js";
-import { optimizeImageToPng } from "../media/image-ops.js";
-import { captureEnv } from "../test-utils/env.js";
+import { resolveStateDir } from '../config/paths';
+import { sendVoiceMessageDiscord } from '../discord/send';
+import * as ssrf from '../infra/net/ssrf';
+import { optimizeImageToPng } from '../media/image-ops';
+import { captureEnv } from '../test-utils/env';
 import {
   LocalMediaAccessError,
   loadWebMedia,
   loadWebMediaRaw,
   optimizeImageToJpeg,
-} from "./media.js";
+} from './media';
 
 let fixtureRoot = "";
 let fixtureFileCount = 0;

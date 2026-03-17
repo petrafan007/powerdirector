@@ -1,6 +1,6 @@
-import { formatCliCommand } from "../cli/command-format.js";
-import { type PowerDirectorConfig, readConfigFileSnapshot } from "../config/config.js";
-import type { RuntimeEnv } from "../runtime.js";
+import { formatCliCommand } from '../cli/command-format';
+import { type PowerDirectorConfig, readConfigFileSnapshot } from '../config/config';
+import type { RuntimeEnv } from '../runtime';
 
 export async function requireValidConfigSnapshot(
   runtime: RuntimeEnv,

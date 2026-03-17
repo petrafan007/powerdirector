@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { SsrFBlockedError, type LookupFn } from "../infra/net/ssrf.js";
+import { SsrFBlockedError, type LookupFn } from '../infra/net/ssrf';
 import {
   assertBrowserNavigationAllowed,
   InvalidBrowserNavigationUrlError,
-} from "./navigation-guard.js";
+} from './navigation-guard';
 
 function createLookupFn(address: string): LookupFn {
   const family = address.includes(":") ? 6 : 4;

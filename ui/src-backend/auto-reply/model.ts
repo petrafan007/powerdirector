@@ -1,4 +1,4 @@
-import { escapeRegExp } from "../utils.js";
+import { escapeRegExp } from '../utils';
 
 export function extractModelDirective(
   body?: string,

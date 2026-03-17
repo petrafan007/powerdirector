@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { PowerDirectorConfig } from '../../config/config';
 
 vi.mock("../../config/sessions.js", () => ({
   loadSessionStore: vi.fn(),
@@ -8,8 +8,8 @@ vi.mock("../../config/sessions.js", () => ({
   resolveSessionResetPolicy: vi.fn().mockReturnValue({ mode: "idle", idleMinutes: 60 }),
 }));
 
-import { loadSessionStore, evaluateSessionFreshness } from "../../config/sessions.js";
-import { resolveCronSession } from "./session.js";
+import { loadSessionStore, evaluateSessionFreshness } from '../../config/sessions';
+import { resolveCronSession } from './session';
 
 const NOW_MS = 1_737_600_000_000;
 

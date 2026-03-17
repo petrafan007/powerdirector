@@ -3,12 +3,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { SessionEntry } from "../../config/sessions.js";
-import { loadSessionStore, saveSessionStore } from "../../config/sessions.js";
-import { onAgentEvent } from "../../infra/agent-events.js";
-import type { TemplateContext } from "../templating.js";
-import type { FollowupRun, QueueSettings } from "./queue.js";
-import { createMockTypingController } from "./test-helpers.js";
+import type { SessionEntry } from '../../config/sessions';
+import { loadSessionStore, saveSessionStore } from '../../config/sessions';
+import { onAgentEvent } from '../../infra/agent-events';
+import type { TemplateContext } from '../templating';
+import type { FollowupRun, QueueSettings } from './queue';
+import { createMockTypingController } from './test-helpers';
 
 const runEmbeddedPiAgentMock = vi.fn();
 const runCliAgentMock = vi.fn();
@@ -24,7 +24,7 @@ vi.mock("../../agents/model-fallback.js", () => ({
 }));
 
 vi.mock("../../agents/pi-embedded.js", async () => {
-  const actual = await vi.importActual<typeof import("../../agents/pi-embedded.js")>(
+  const actual = await vi.importActual<typeof import('../../agents/pi-embedded')>(
     "../../agents/pi-embedded.js",
   );
   return {
@@ -35,7 +35,7 @@ vi.mock("../../agents/pi-embedded.js", async () => {
 });
 
 vi.mock("../../agents/cli-runner.js", async () => {
-  const actual = await vi.importActual<typeof import("../../agents/cli-runner.js")>(
+  const actual = await vi.importActual<typeof import('../../agents/cli-runner')>(
     "../../agents/cli-runner.js",
   );
   return {
@@ -45,7 +45,7 @@ vi.mock("../../agents/cli-runner.js", async () => {
 });
 
 vi.mock("../../runtime.js", async () => {
-  const actual = await vi.importActual<typeof import("../../runtime.js")>("../../runtime.js");
+  const actual = await vi.importActual<typeof import('../../runtime')>("../../runtime.js");
   return {
     ...actual,
     defaultRuntime: {
@@ -58,7 +58,7 @@ vi.mock("../../runtime.js", async () => {
 });
 
 vi.mock("./queue.js", async () => {
-  const actual = await vi.importActual<typeof import("./queue.js")>("./queue.js");
+  const actual = await vi.importActual<typeof import('./queue')>("./queue.js");
   return {
     ...actual,
     enqueueFollowupRun: vi.fn(),
@@ -66,7 +66,7 @@ vi.mock("./queue.js", async () => {
   };
 });
 
-import { runReplyAgent } from "./agent-runner.js";
+import { runReplyAgent } from './agent-runner';
 
 type RunWithModelFallbackParams = {
   provider: string;

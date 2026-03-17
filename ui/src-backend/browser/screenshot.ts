@@ -3,7 +3,7 @@ import {
   getImageMetadata,
   IMAGE_REDUCE_QUALITY_STEPS,
   resizeToJpeg,
-} from "../media/image-ops.js";
+} from '../media/image-ops';
 
 export const DEFAULT_BROWSER_SCREENSHOT_MAX_SIDE = 2000;
 export const DEFAULT_BROWSER_SCREENSHOT_MAX_BYTES = 5 * 1024 * 1024;

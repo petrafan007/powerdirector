@@ -2,8 +2,8 @@ import { EventEmitter } from "node:events";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resetLogger, setLoggerOverride } from "../logging.js";
-import { renderQrPngBase64 } from "./qr-image.js";
+import { resetLogger, setLoggerOverride } from '../logging';
+import { renderQrPngBase64 } from './qr-image';
 
 vi.mock("./session.js", () => {
   const ev = new EventEmitter();
@@ -19,10 +19,10 @@ vi.mock("./session.js", () => {
   };
 });
 
-import { loginWeb } from "./login.js";
-import type { waitForWaConnection } from "./session.js";
+import { loginWeb } from './login';
+import type { waitForWaConnection } from './session';
 
-const { createWaSocket } = await import("./session.js");
+const { createWaSocket } = await import('./session');
 
 describe("web login", () => {
   beforeEach(() => {

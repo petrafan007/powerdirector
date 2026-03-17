@@ -1,41 +1,41 @@
-import { formatCliCommand } from "../cli/command-format.js";
-import { withProgress } from "../cli/progress.js";
-import { resolveGatewayPort } from "../config/config.js";
-import { buildGatewayConnectionDetails, callGateway } from "../gateway/call.js";
-import { info } from "../globals.js";
+import { formatCliCommand } from '../cli/command-format';
+import { withProgress } from '../cli/progress';
+import { resolveGatewayPort } from '../config/config';
+import { buildGatewayConnectionDetails, callGateway } from '../gateway/call';
+import { info } from '../globals';
 import { formatTimeAgo } from "../infra/format-time/format-relative.ts";
-import type { HeartbeatEventPayload } from "../infra/heartbeat-events.js";
-import { formatUsageReportLines, loadProviderUsageSummary } from "../infra/provider-usage.js";
-import { normalizeUpdateChannel, resolveUpdateChannelDisplay } from "../infra/update-channels.js";
-import { formatGitInstallLabel } from "../infra/update-check.js";
+import type { HeartbeatEventPayload } from '../infra/heartbeat-events';
+import { formatUsageReportLines, loadProviderUsageSummary } from '../infra/provider-usage';
+import { normalizeUpdateChannel, resolveUpdateChannelDisplay } from '../infra/update-channels';
+import { formatGitInstallLabel } from '../infra/update-check';
 import {
   resolveMemoryCacheSummary,
   resolveMemoryFtsState,
   resolveMemoryVectorState,
   type Tone,
-} from "../memory/status-format.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { runSecurityAudit } from "../security/audit.js";
-import { renderTable } from "../terminal/table.js";
-import { theme } from "../terminal/theme.js";
-import { formatHealthChannelLines, type HealthSummary } from "./health.js";
-import { resolveControlUiLinks } from "./onboard-helpers.js";
-import { statusAllCommand } from "./status-all.js";
-import { formatGatewayAuthUsed } from "./status-all/format.js";
-import { getDaemonStatusSummary, getNodeDaemonStatusSummary } from "./status.daemon.js";
+} from '../memory/status-format';
+import type { RuntimeEnv } from '../runtime';
+import { runSecurityAudit } from '../security/audit';
+import { renderTable } from '../terminal/table';
+import { theme } from '../terminal/theme';
+import { formatHealthChannelLines, type HealthSummary } from './health';
+import { resolveControlUiLinks } from './onboard-helpers';
+import { statusAllCommand } from './status-all';
+import { formatGatewayAuthUsed } from './status-all/format';
+import { getDaemonStatusSummary, getNodeDaemonStatusSummary } from './status.daemon';
 import {
   formatDuration,
   formatKTokens,
   formatTokensCompact,
   shortenText,
-} from "./status.format.js";
-import { resolveGatewayProbeAuth } from "./status.gateway-probe.js";
-import { scanStatus } from "./status.scan.js";
+} from './status.format';
+import { resolveGatewayProbeAuth } from './status.gateway-probe';
+import { scanStatus } from './status.scan';
 import {
   formatUpdateAvailableHint,
   formatUpdateOneLiner,
   resolveUpdateAvailability,
-} from "./status.update.js";
+} from './status.update';
 
 export async function statusCommand(
   opts: {

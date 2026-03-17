@@ -5,8 +5,8 @@ import {
   getSessionsSpawnTool,
   resetSessionsSpawnConfigOverride,
   setSessionsSpawnConfigOverride,
-} from "./powerdirector-tools.subagents.sessions-spawn.test-harness.js";
-import { resetSubagentRegistryForTests } from "./subagent-registry.js";
+} from './powerdirector-tools.subagents.sessions-spawn.test-harness';
+import { resetSubagentRegistryForTests } from './subagent-registry';
 
 const callGatewayMock = getCallGatewayMock();
 

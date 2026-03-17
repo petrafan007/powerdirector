@@ -1,7 +1,7 @@
-import { resolveTextChunkLimit } from "../auto-reply/chunk.js";
-import { getChannelDock } from "../channels/dock.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { normalizeAccountId } from "../routing/session-key.js";
+import { resolveTextChunkLimit } from '../auto-reply/chunk';
+import { getChannelDock } from '../channels/dock';
+import type { PowerDirectorConfig } from '../config/config';
+import { normalizeAccountId } from '../routing/session-key';
 
 const DEFAULT_TELEGRAM_DRAFT_STREAM_MIN = 200;
 const DEFAULT_TELEGRAM_DRAFT_STREAM_MAX = 800;

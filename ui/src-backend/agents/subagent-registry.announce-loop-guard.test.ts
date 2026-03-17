@@ -55,12 +55,12 @@ vi.mock("./timeout.js", () => ({
 }));
 
 describe("announce loop guard (#18264)", () => {
-  let registry: typeof import("./subagent-registry.js");
+  let registry: typeof import('./subagent-registry');
   let announceFn: ReturnType<typeof vi.fn>;
 
   beforeAll(async () => {
-    registry = await import("./subagent-registry.js");
-    const subagentAnnounce = await import("./subagent-announce.js");
+    registry = await import('./subagent-registry');
+    const subagentAnnounce = await import('./subagent-announce');
     announceFn = vi.mocked(subagentAnnounce.runSubagentAnnounceFlow);
   });
 

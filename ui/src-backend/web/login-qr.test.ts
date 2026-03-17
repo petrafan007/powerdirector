@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { startWebLoginWithQr, waitForWebLogin } from "./login-qr.js";
-import { createWaSocket, logoutWeb, waitForWaConnection } from "./session.js";
+import { startWebLoginWithQr, waitForWebLogin } from './login-qr';
+import { createWaSocket, logoutWeb, waitForWaConnection } from './session';
 
 vi.mock("./session.js", () => {
   const createWaSocket = vi.fn(

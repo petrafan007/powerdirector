@@ -1,5 +1,5 @@
 import type { AgentTool } from "@mariozechner/pi-agent-core";
-import { toToolDefinitions } from "../pi-tool-definition-adapter.js";
+import { toToolDefinitions } from '../pi-tool-definition-adapter';
 
 // We always pass tools via `customTools` so our policy filtering, sandbox integration,
 // and extended toolset remain consistent across providers.

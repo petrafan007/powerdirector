@@ -1,6 +1,6 @@
 import { Container } from "@buape/carbon";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveDiscordAccount } from "./accounts.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveDiscordAccount } from './accounts';
 
 const DEFAULT_DISCORD_ACCENT_COLOR = "#5865F2";
 

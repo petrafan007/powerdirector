@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 
 const mocks = vi.hoisted(() => ({
   clackIntro: vi.fn(),
@@ -95,8 +95,8 @@ vi.mock("./onboard-channels.js", () => ({
   setupChannels: vi.fn(),
 }));
 
-import { WizardCancelledError } from "../wizard/prompts.js";
-import { runConfigureWizard } from "./configure.wizard.js";
+import { WizardCancelledError } from '../wizard/prompts';
+import { runConfigureWizard } from './configure.wizard';
 
 describe("runConfigureWizard", () => {
   it("persists gateway.mode=local when only the run mode is selected", async () => {

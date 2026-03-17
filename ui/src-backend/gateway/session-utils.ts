@@ -1,15 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { lookupContextTokens } from "../agents/context.js";
-import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { lookupContextTokens } from '../agents/context';
+import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
 import {
   parseModelRef,
   resolveConfiguredModelRef,
   resolveDefaultModelForAgent,
-} from "../agents/model-selection.js";
-import { type PowerDirectorConfig, loadConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
+} from '../agents/model-selection';
+import { type PowerDirectorConfig, loadConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
 import {
   buildGroupDisplayName,
   canonicalizeMainSessionAlias,
@@ -20,21 +20,21 @@ import {
   resolveStorePath,
   type SessionEntry,
   type SessionScope,
-} from "../config/sessions.js";
+} from '../config/sessions';
 import {
   normalizeAgentId,
   normalizeMainKey,
   parseAgentSessionKey,
-} from "../routing/session-key.js";
-import { isCronRunSessionKey } from "../sessions/session-key-utils.js";
-import { normalizeSessionDeliveryFields } from "../utils/delivery-context.js";
-import { readSessionTitleFieldsFromTranscript } from "./session-utils.fs.js";
+} from '../routing/session-key';
+import { isCronRunSessionKey } from '../sessions/session-key-utils';
+import { normalizeSessionDeliveryFields } from '../utils/delivery-context';
+import { readSessionTitleFieldsFromTranscript } from './session-utils.fs';
 import type {
   GatewayAgentRow,
   GatewaySessionRow,
   GatewaySessionsDefaults,
   SessionsListResult,
-} from "./session-utils.types.js";
+} from './session-utils.types';
 
 export {
   archiveFileOnDisk,
@@ -46,7 +46,7 @@ export {
   readSessionPreviewItemsFromTranscript,
   readSessionMessages,
   resolveSessionTranscriptCandidates,
-} from "./session-utils.fs.js";
+} from './session-utils.fs';
 export type {
   GatewayAgentRow,
   GatewaySessionRow,
@@ -55,7 +55,7 @@ export type {
   SessionsPatchResult,
   SessionsPreviewEntry,
   SessionsPreviewResult,
-} from "./session-utils.types.js";
+} from './session-utils.types';
 
 const DERIVED_TITLE_MAX_LEN = 60;
 const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
@@ -699,7 +699,7 @@ export function listSessionsFromStore(params: {
   cfg: PowerDirectorConfig;
   storePath: string;
   store: Record<string, SessionEntry>;
-  opts: import("./protocol/index.js").SessionsListParams;
+  opts: import('./protocol/index').SessionsListParams;
 }): SessionsListResult {
   const { cfg, storePath, store, opts } = params;
   const now = Date.now();

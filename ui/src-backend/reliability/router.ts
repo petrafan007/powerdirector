@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { CircuitBreaker } from './circuit-breaker.js';
-import { PowerDirectorError, ErrorCode } from './errors.js';
-import { ProviderConfig } from './types.js';
+import { CircuitBreaker } from './circuit-breaker';
+import { PowerDirectorError, ErrorCode } from './errors';
+import { ProviderConfig } from './types';
 
 export interface Provider {
     config: ProviderConfig;

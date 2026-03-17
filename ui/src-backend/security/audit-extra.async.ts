@@ -5,36 +5,36 @@
  */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { isToolAllowedByPolicies } from "../agents/pi-tools.policy.js";
+import { resolveDefaultAgentId } from '../agents/agent-scope';
+import { isToolAllowedByPolicies } from '../agents/pi-tools.policy';
 import {
   resolveSandboxConfigForAgent,
   resolveSandboxToolPolicyForAgent,
-} from "../agents/sandbox.js";
-import type { SandboxToolPolicy } from "../agents/sandbox/types.js";
-import { loadWorkspaceSkillEntries } from "../agents/skills.js";
-import { resolveToolProfilePolicy } from "../agents/tool-policy.js";
-import { listAgentWorkspaceDirs } from "../agents/workspace-dirs.js";
-import { resolveNativeSkillsEnabled } from "../config/commands.js";
-import type { PowerDirectorConfig, ConfigFileSnapshot } from "../config/config.js";
-import { createConfigIO } from "../config/config.js";
-import { collectIncludePathsRecursive } from "../config/includes-scan.js";
-import { resolveOAuthDir } from "../config/paths.js";
-import type { AgentToolsConfig } from "../config/types.tools.js";
-import { POWERDIRECTOR_MANIFEST_KEY } from "../plugins/manifest.js";
-import { normalizePluginsConfig } from "../plugins/config-state.js";
-import { normalizeAgentId } from "../routing/session-key.js";
+} from '../agents/sandbox';
+import type { SandboxToolPolicy } from '../agents/sandbox/types';
+import { loadWorkspaceSkillEntries } from '../agents/skills';
+import { resolveToolProfilePolicy } from '../agents/tool-policy';
+import { listAgentWorkspaceDirs } from '../agents/workspace-dirs';
+import { resolveNativeSkillsEnabled } from '../config/commands';
+import type { PowerDirectorConfig, ConfigFileSnapshot } from '../config/config';
+import { createConfigIO } from '../config/config';
+import { collectIncludePathsRecursive } from '../config/includes-scan';
+import { resolveOAuthDir } from '../config/paths';
+import type { AgentToolsConfig } from '../config/types.tools';
+import { POWERDIRECTOR_MANIFEST_KEY } from '../plugins/manifest';
+import { normalizePluginsConfig } from '../plugins/config-state';
+import { normalizeAgentId } from '../routing/session-key';
 import {
   formatPermissionDetail,
   formatPermissionRemediation,
   inspectPathPermissions,
   safeStat,
-} from "./audit-fs.js";
-import { pickSandboxToolPolicy } from "./audit-tool-policy.js";
-import { extensionUsesSkippedScannerPath, isPathInside } from "./scan-paths.js";
-import type { SkillScanFinding } from "./skill-scanner.js";
-import * as skillScanner from "./skill-scanner.js";
-import type { ExecFn } from "./windows-acl.js";
+} from './audit-fs';
+import { pickSandboxToolPolicy } from './audit-tool-policy';
+import { extensionUsesSkippedScannerPath, isPathInside } from './scan-paths';
+import type { SkillScanFinding } from './skill-scanner';
+import * as skillScanner from './skill-scanner';
+import type { ExecFn } from './windows-acl';
 
 export type SecurityAuditFinding = {
   checkId: string;

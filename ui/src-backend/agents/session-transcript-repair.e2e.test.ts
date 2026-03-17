@@ -4,7 +4,7 @@ import {
   sanitizeToolCallInputs,
   sanitizeToolUseResultPairing,
   repairToolUseResultPairing,
-} from "./session-transcript-repair.js";
+} from './session-transcript-repair';
 
 describe("sanitizeToolUseResultPairing", () => {
   const buildDuplicateToolResultInput = (opts?: {

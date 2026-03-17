@@ -1,21 +1,21 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { runRegisteredCli } from "../test-utils/command-runner.js";
-import { formatLogTimestamp } from "./logs-cli.js";
+import { runRegisteredCli } from '../test-utils/command-runner';
+import { formatLogTimestamp } from './logs-cli';
 
 const callGatewayFromCli = vi.fn();
 
 vi.mock("./gateway-rpc.js", async () => {
-  const actual = await vi.importActual<typeof import("./gateway-rpc.js")>("./gateway-rpc.js");
+  const actual = await vi.importActual<typeof import('./gateway-rpc')>("./gateway-rpc.js");
   return {
     ...actual,
     callGatewayFromCli: (...args: unknown[]) => callGatewayFromCli(...args),
   };
 });
 
-let registerLogsCli: typeof import("./logs-cli.js").registerLogsCli;
+let registerLogsCli: typeof import('./logs-cli').registerLogsCli;
 
 beforeAll(async () => {
-  ({ registerLogsCli } = await import("./logs-cli.js"));
+  ({ registerLogsCli } = await import('./logs-cli'));
 });
 
 async function runLogsCli(argv: string[]) {

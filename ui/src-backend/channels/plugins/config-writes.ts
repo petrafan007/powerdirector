@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { normalizeAccountId } from "../../routing/session-key.js";
-import type { ChannelId } from "./types.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { normalizeAccountId } from '../../routing/session-key';
+import type { ChannelId } from './types';
 
 type ChannelConfigWithAccounts = {
   configWrites?: boolean;

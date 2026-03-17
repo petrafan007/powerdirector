@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { DEFAULT_ACCOUNT_ID } from '../../routing/session-key';
 
 type ChannelSection = {
   accounts?: Record<string, Record<string, unknown>>;

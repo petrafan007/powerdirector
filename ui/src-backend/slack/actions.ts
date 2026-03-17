@@ -1,12 +1,12 @@
 import type { Block, KnownBlock, WebClient } from "@slack/web-api";
-import { loadConfig } from "../config/config.js";
-import { logVerbose } from "../globals.js";
-import { resolveSlackAccount } from "./accounts.js";
-import { buildSlackBlocksFallbackText } from "./blocks-fallback.js";
-import { validateSlackBlocksArray } from "./blocks-input.js";
-import { createSlackWebClient } from "./client.js";
-import { sendMessageSlack } from "./send.js";
-import { resolveSlackBotToken } from "./token.js";
+import { loadConfig } from '../config/config';
+import { logVerbose } from '../globals';
+import { resolveSlackAccount } from './accounts';
+import { buildSlackBlocksFallbackText } from './blocks-fallback';
+import { validateSlackBlocksArray } from './blocks-input';
+import { createSlackWebClient } from './client';
+import { sendMessageSlack } from './send';
+import { resolveSlackBotToken } from './token';
 
 export type SlackActionClientOpts = {
   accountId?: string;

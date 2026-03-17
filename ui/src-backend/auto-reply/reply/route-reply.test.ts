@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { discordOutbound } from "../../channels/plugins/outbound/discord.js";
-import { imessageOutbound } from "../../channels/plugins/outbound/imessage.js";
-import { signalOutbound } from "../../channels/plugins/outbound/signal.js";
-import { slackOutbound } from "../../channels/plugins/outbound/slack.js";
-import { telegramOutbound } from "../../channels/plugins/outbound/telegram.js";
-import { whatsappOutbound } from "../../channels/plugins/outbound/whatsapp.js";
-import type { ChannelOutboundAdapter, ChannelPlugin } from "../../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { PluginRegistry } from "../../plugins/registry.js";
-import { setActivePluginRegistry } from "../../plugins/runtime.js";
-import { createOutboundTestPlugin, createTestRegistry } from "../../test-utils/channel-plugins.js";
-import { createIMessageTestPlugin } from "../../test-utils/imessage-test-plugin.js";
-import { SILENT_REPLY_TOKEN } from "../tokens.js";
+import { discordOutbound } from '../../channels/plugins/outbound/discord';
+import { imessageOutbound } from '../../channels/plugins/outbound/imessage';
+import { signalOutbound } from '../../channels/plugins/outbound/signal';
+import { slackOutbound } from '../../channels/plugins/outbound/slack';
+import { telegramOutbound } from '../../channels/plugins/outbound/telegram';
+import { whatsappOutbound } from '../../channels/plugins/outbound/whatsapp';
+import type { ChannelOutboundAdapter, ChannelPlugin } from '../../channels/plugins/types';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { PluginRegistry } from '../../plugins/registry';
+import { setActivePluginRegistry } from '../../plugins/runtime';
+import { createOutboundTestPlugin, createTestRegistry } from '../../test-utils/channel-plugins';
+import { createIMessageTestPlugin } from '../../test-utils/imessage-test-plugin';
+import { SILENT_REPLY_TOKEN } from '../tokens';
 
 const mocks = vi.hoisted(() => ({
   sendMessageDiscord: vi.fn(async () => ({ messageId: "m1", channelId: "c1" })),
@@ -47,7 +47,7 @@ vi.mock("../../web/outbound.js", () => ({
   sendPollWhatsApp: mocks.sendMessageWhatsApp,
 }));
 vi.mock("../../infra/outbound/deliver.js", async () => {
-  const actual = await vi.importActual<typeof import("../../infra/outbound/deliver.js")>(
+  const actual = await vi.importActual<typeof import('../../infra/outbound/deliver')>(
     "../../infra/outbound/deliver.js",
   );
   return {
@@ -55,11 +55,11 @@ vi.mock("../../infra/outbound/deliver.js", async () => {
     deliverOutboundPayloads: mocks.deliverOutboundPayloads,
   };
 });
-const actualDeliver = await vi.importActual<typeof import("../../infra/outbound/deliver.js")>(
+const actualDeliver = await vi.importActual<typeof import('../../infra/outbound/deliver')>(
   "../../infra/outbound/deliver.js",
 );
 
-const { routeReply } = await import("./route-reply.js");
+const { routeReply } = await import('./route-reply');
 
 const createRegistry = (channels: PluginRegistry["channels"]): PluginRegistry => ({
   plugins: [],

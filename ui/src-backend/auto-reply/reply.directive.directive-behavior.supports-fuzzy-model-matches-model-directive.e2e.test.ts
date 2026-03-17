@@ -1,14 +1,14 @@
 import "./reply.directive.directive-behavior.e2e-mocks.js";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   assertModelSelection,
   installDirectiveBehaviorE2EHooks,
   runEmbeddedPiAgent,
   withTempHome,
-} from "./reply.directive.directive-behavior.e2e-harness.js";
-import { getReplyFromConfig } from "./reply.js";
+} from './reply.directive.directive-behavior.e2e-harness';
+import { getReplyFromConfig } from './reply';
 
 function makeModelDefinition(id: string, name: string) {
   return {

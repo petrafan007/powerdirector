@@ -1,10 +1,10 @@
 import type { Command } from "commander";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { loadConfig } from "../config/config.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { loadPowerDirectorPlugins } from "./loader.js";
-import type { PluginLogger } from "./types.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import type { PowerDirectorConfig } from '../config/config';
+import { loadConfig } from '../config/config';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { loadPowerDirectorPlugins } from './loader';
+import type { PluginLogger } from './types';
 
 const log = createSubsystemLogger("plugins");
 

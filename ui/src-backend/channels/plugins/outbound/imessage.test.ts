@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../../config/config.js";
-import { imessageOutbound } from "./imessage.js";
+import type { PowerDirectorConfig } from '../../../config/config';
+import { imessageOutbound } from './imessage';
 
 describe("imessageOutbound", () => {
   const cfg: PowerDirectorConfig = {

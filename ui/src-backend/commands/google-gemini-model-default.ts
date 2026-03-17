@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { applyAgentDefaultPrimaryModel } from "./model-default.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { applyAgentDefaultPrimaryModel } from './model-default';
 
 export const GOOGLE_GEMINI_DEFAULT_MODEL = "google/gemini-3-pro-preview";
 

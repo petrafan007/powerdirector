@@ -1,7 +1,7 @@
 import type { RequestPermissionRequest } from "@agentclientprotocol/sdk";
 import { describe, expect, it, vi } from "vitest";
-import { resolvePermissionRequest } from "./client.js";
-import { extractAttachmentsFromPrompt, extractTextFromPrompt } from "./event-mapper.js";
+import { resolvePermissionRequest } from './client';
+import { extractAttachmentsFromPrompt, extractTextFromPrompt } from './event-mapper';
 
 function makePermissionRequest(
   overrides: Partial<RequestPermissionRequest> = {},

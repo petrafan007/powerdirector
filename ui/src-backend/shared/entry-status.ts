@@ -1,11 +1,11 @@
-import { resolveEmojiAndHomepage } from "./entry-metadata.js";
+import { resolveEmojiAndHomepage } from './entry-metadata';
 import {
   evaluateRequirementsFromMetadataWithRemote,
   type RequirementConfigCheck,
   type RequirementRemote,
   type Requirements,
   type RequirementsMetadata,
-} from "./requirements.js";
+} from './requirements';
 
 export type EntryMetadataRequirementsParams = Parameters<
   typeof evaluateEntryMetadataRequirements

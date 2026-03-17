@@ -3,7 +3,7 @@ export {
   listSlackAccountIds,
   resolveDefaultSlackAccountId,
   resolveSlackAccount,
-} from "./accounts.js";
+} from './accounts';
 export {
   deleteSlackMessage,
   editSlackMessage,
@@ -18,8 +18,8 @@ export {
   removeSlackReaction,
   sendSlackMessage,
   unpinSlackMessage,
-} from "./actions.js";
-export { monitorSlackProvider } from "./monitor.js";
-export { probeSlack } from "./probe.js";
-export { sendMessageSlack } from "./send.js";
-export { resolveSlackAppToken, resolveSlackBotToken } from "./token.js";
+} from './actions';
+export { monitorSlackProvider } from './monitor';
+export { probeSlack } from './probe';
+export { sendMessageSlack } from './send';
+export { resolveSlackAppToken, resolveSlackBotToken } from './token';

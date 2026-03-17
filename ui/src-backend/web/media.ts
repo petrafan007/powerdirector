@@ -1,20 +1,20 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { logVerbose, shouldLogVerbose } from "../globals.js";
-import { SafeOpenError, readLocalFileSafely } from "../infra/fs-safe.js";
-import type { SsrFPolicy } from "../infra/net/ssrf.js";
-import { type MediaKind, maxBytesForKind, mediaKindFromMime } from "../media/constants.js";
-import { fetchRemoteMedia } from "../media/fetch.js";
+import { logVerbose, shouldLogVerbose } from '../globals';
+import { SafeOpenError, readLocalFileSafely } from '../infra/fs-safe';
+import type { SsrFPolicy } from '../infra/net/ssrf';
+import { type MediaKind, maxBytesForKind, mediaKindFromMime } from '../media/constants';
+import { fetchRemoteMedia } from '../media/fetch';
 import {
   convertHeicToJpeg,
   hasAlphaChannel,
   optimizeImageToPng,
   resizeToJpeg,
-} from "../media/image-ops.js";
-import { getDefaultMediaLocalRoots } from "../media/local-roots.js";
-import { detectMime, extensionForMime } from "../media/mime.js";
-import { resolveUserPath } from "../utils.js";
+} from '../media/image-ops';
+import { getDefaultMediaLocalRoots } from '../media/local-roots';
+import { detectMime, extensionForMime } from '../media/mime';
+import { resolveUserPath } from '../utils';
 
 export type WebMediaResult = {
   buffer: Buffer;

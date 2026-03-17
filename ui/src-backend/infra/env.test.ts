@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isTruthyEnvValue, normalizeZaiEnv } from "./env.js";
+import { isTruthyEnvValue, normalizeZaiEnv } from './env';
 
 describe("normalizeZaiEnv", () => {
   function withZaiEnv(env: { zaiApiKey?: string; legacyZaiApiKey?: string }, run: () => void) {

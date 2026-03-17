@@ -3,9 +3,9 @@ import os from "node:os";
 import path from "node:path";
 import type { MessageEvent, PostbackEvent } from "@line/bot-sdk";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { buildLineMessageContext, buildLinePostbackContext } from "./bot-message-context.js";
-import type { ResolvedLineAccount } from "./types.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { buildLineMessageContext, buildLinePostbackContext } from './bot-message-context';
+import type { ResolvedLineAccount } from './types';
 
 describe("buildLineMessageContext", () => {
   let tmpDir: string;

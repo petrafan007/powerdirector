@@ -1,13 +1,13 @@
-import type { ChatType } from "../channels/chat-type.js";
-import type { AgentDefaultsConfig } from "./types.agent-defaults.js";
-import type { HumanDelayConfig, IdentityConfig } from "./types.base.js";
-import type { GroupChatConfig } from "./types.messages.js";
+import type { ChatType } from '../channels/chat-type';
+import type { AgentDefaultsConfig } from './types.agent-defaults';
+import type { HumanDelayConfig, IdentityConfig } from './types.base';
+import type { GroupChatConfig } from './types.messages';
 import type {
   SandboxBrowserSettings,
   SandboxDockerSettings,
   SandboxPruneSettings,
-} from "./types.sandbox.js";
-import type { AgentToolsConfig, MemorySearchConfig } from "./types.tools.js";
+} from './types.sandbox';
+import type { AgentToolsConfig, MemorySearchConfig } from './types.tools';
 
 export type AgentModelConfig =
   | string

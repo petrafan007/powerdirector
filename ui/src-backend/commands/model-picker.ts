@@ -1,19 +1,19 @@
-import { ensureAuthProfileStore, listProfilesForProvider } from "../agents/auth-profiles.js";
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
-import { getCustomProviderApiKey, resolveEnvApiKey } from "../agents/model-auth.js";
-import { loadModelCatalog } from "../agents/model-catalog.js";
+import { ensureAuthProfileStore, listProfilesForProvider } from '../agents/auth-profiles';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
+import { getCustomProviderApiKey, resolveEnvApiKey } from '../agents/model-auth';
+import { loadModelCatalog } from '../agents/model-catalog';
 import {
   buildAllowedModelSet,
   buildModelAliasIndex,
   modelKey,
   normalizeProviderId,
   resolveConfiguredModelRef,
-} from "../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { WizardPrompter, WizardSelectOption } from "../wizard/prompts.js";
-import { formatTokenK } from "./models/shared.js";
-import { OPENAI_CODEX_DEFAULT_MODEL } from "./openai-codex-model-default.js";
-import { promptAndConfigureVllm } from "./vllm-setup.js";
+} from '../agents/model-selection';
+import type { PowerDirectorConfig } from '../config/config';
+import type { WizardPrompter, WizardSelectOption } from '../wizard/prompts';
+import { formatTokenK } from './models/shared';
+import { OPENAI_CODEX_DEFAULT_MODEL } from './openai-codex-model-default';
+import { promptAndConfigureVllm } from './vllm-setup';
 
 const KEEP_VALUE = "__keep__";
 const MANUAL_VALUE = "__manual__";

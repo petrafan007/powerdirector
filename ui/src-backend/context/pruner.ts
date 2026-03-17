@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Message, ContextBudget, ContentPart } from './types.js';
-import { BudgetManager } from './budget.js';
+import { Message, ContextBudget, ContentPart } from './types';
+import { BudgetManager } from './budget';
 
 type ContextPruningMode = 'off' | 'cache-ttl';
 
@@ -507,8 +507,31 @@ export class ContextPruner {
             ? messages.filter((m) => m.role !== 'system')
             : [...messages];
 
+        // Protect the last N real user messages from being evicted so that
+        // recent follow-up questions are never lost to blind shifting.
+        const PROTECT_LAST_USER_TURNS = 2;
+
         while (this.budgetManager.checkTotalBudget(window) === false && window.length > 1) {
-            window.shift();
+            // Build set of indexes to protect (last N user-role messages, excluding tool outputs).
+            const protectedIndexes = new Set<number>();
+            let userCount = 0;
+            for (let i = window.length - 1; i >= 0 && userCount < PROTECT_LAST_USER_TURNS; i--) {
+                const msg = window[i];
+                // A "real" user message: role=user and no tool metadata (tool outputs also have role user)
+                const isTool = typeof msg?.metadata?.tool === 'string' && msg.metadata.tool.length > 0;
+                if (msg?.role === 'user' && !isTool) {
+                    protectedIndexes.add(i);
+                    userCount++;
+                }
+            }
+
+            // Find the first non-protected index to shift out.
+            const shiftIdx = window.findIndex((_, i) => !protectedIndexes.has(i));
+            if (shiftIdx === -1) {
+                // All remaining messages are protected — nothing more we can drop.
+                break;
+            }
+            window.splice(shiftIdx, 1);
         }
 
         if (systemPrompt) {

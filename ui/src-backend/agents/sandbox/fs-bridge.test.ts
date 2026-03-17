@@ -4,10 +4,10 @@ vi.mock("./docker.js", () => ({
   execDockerRaw: vi.fn(),
 }));
 
-import { execDockerRaw } from "./docker.js";
-import { createSandboxFsBridge } from "./fs-bridge.js";
-import { createSandboxTestContext } from "./test-fixtures.js";
-import type { SandboxContext } from "./types.js";
+import { execDockerRaw } from './docker';
+import { createSandboxFsBridge } from './fs-bridge';
+import { createSandboxTestContext } from './test-fixtures';
+import type { SandboxContext } from './types';
 
 const mockedExecDockerRaw = vi.mocked(execDockerRaw);
 

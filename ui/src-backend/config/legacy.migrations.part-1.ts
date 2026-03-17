@@ -4,7 +4,7 @@ import {
   isRecord,
   type LegacyConfigMigration,
   mergeMissing,
-} from "./legacy.shared.js";
+} from './legacy.shared';
 
 function migrateBindings(
   raw: Record<string, unknown>,

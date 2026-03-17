@@ -2,52 +2,52 @@ import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveApiKeyForProvider } from "../agents/model-auth.js";
+import { resolveApiKeyForProvider } from '../agents/model-auth';
 import {
   findModelInCatalog,
   loadModelCatalog,
   modelSupportsVision,
-} from "../agents/model-catalog.js";
-import type { MsgContext } from "../auto-reply/templating.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+} from '../agents/model-catalog';
+import type { MsgContext } from '../auto-reply/templating';
+import type { PowerDirectorConfig } from '../config/config';
 import type {
   MediaUnderstandingConfig,
   MediaUnderstandingModelConfig,
-} from "../config/types.tools.js";
-import { logVerbose, shouldLogVerbose } from "../globals.js";
+} from '../config/types.tools';
+import { logVerbose, shouldLogVerbose } from '../globals';
 import {
   mergeInboundPathRoots,
   resolveIMessageAttachmentRoots,
-} from "../media/inbound-path-policy.js";
-import { getDefaultMediaLocalRoots } from "../media/local-roots.js";
-import { runExec } from "../process/exec.js";
+} from '../media/inbound-path-policy';
+import { getDefaultMediaLocalRoots } from '../media/local-roots';
+import { runExec } from '../process/exec';
 import {
   MediaAttachmentCache,
   type MediaAttachmentCacheOptions,
   normalizeAttachments,
   selectAttachments,
-} from "./attachments.js";
+} from './attachments';
 import {
   AUTO_AUDIO_KEY_PROVIDERS,
   AUTO_IMAGE_KEY_PROVIDERS,
   AUTO_VIDEO_KEY_PROVIDERS,
   DEFAULT_IMAGE_MODELS,
-} from "./defaults.js";
-import { isMediaUnderstandingSkipError } from "./errors.js";
-import { fileExists } from "./fs.js";
-import { extractGeminiResponse } from "./output-extract.js";
+} from './defaults';
+import { isMediaUnderstandingSkipError } from './errors';
+import { fileExists } from './fs';
+import { extractGeminiResponse } from './output-extract';
 import {
   buildMediaUnderstandingRegistry,
   getMediaUnderstandingProvider,
   normalizeMediaProviderId,
-} from "./providers/index.js";
-import { resolveModelEntries, resolveScopeDecision } from "./resolve.js";
+} from './providers/index';
+import { resolveModelEntries, resolveScopeDecision } from './resolve';
 import {
   buildModelDecision,
   formatDecisionSummary,
   runCliEntry,
   runProviderEntry,
-} from "./runner.entries.js";
+} from './runner.entries';
 import type {
   MediaAttachment,
   MediaUnderstandingCapability,
@@ -55,7 +55,7 @@ import type {
   MediaUnderstandingModelDecision,
   MediaUnderstandingOutput,
   MediaUnderstandingProvider,
-} from "./types.js";
+} from './types';
 
 export type ActiveMediaModel = {
   provider: string;

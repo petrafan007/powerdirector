@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { SessionEntry } from "../../config/sessions.js";
-import { resolveSessionAuthProfileOverride } from "./session-override.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import type { SessionEntry } from '../../config/sessions';
+import { resolveSessionAuthProfileOverride } from './session-override';
 
 async function writeAuthStore(agentDir: string) {
   const authPath = path.join(agentDir, "auth-profiles.json");

@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { WebSocket } from "ws";
-import { withEnvAsync } from "../test-utils/env.js";
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
-import { buildDeviceAuthPayload } from "./device-auth.js";
-import { PROTOCOL_VERSION } from "./protocol/index.js";
-import { getHandshakeTimeoutMs } from "./server-constants.js";
+import { withEnvAsync } from '../test-utils/env';
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
+import { buildDeviceAuthPayload } from './device-auth';
+import { PROTOCOL_VERSION } from './protocol/index';
+import { getHandshakeTimeoutMs } from './server-constants';
 import {
   connectReq,
   getFreePort,
@@ -16,7 +16,7 @@ import {
   testTailscaleWhois,
   testState,
   withGatewayServer,
-} from "./test-helpers.js";
+} from './test-helpers';
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -129,7 +129,7 @@ async function createSignedDevice(params: {
   signedAtMs?: number;
 }) {
   const { loadOrCreateDeviceIdentity, publicKeyRawBase64UrlFromPem, signDevicePayload } =
-    await import("../infra/device-identity.js");
+    await import('../infra/device-identity');
   const identity = params.identityPath
     ? loadOrCreateDeviceIdentity(params.identityPath)
     : loadOrCreateDeviceIdentity();
@@ -167,7 +167,7 @@ function resolveGatewayTokenOrEnv(): string {
 }
 
 async function approvePendingPairingIfNeeded() {
-  const { approveDevicePairing, listDevicePairing } = await import("../infra/device-pairing.js");
+  const { approveDevicePairing, listDevicePairing } = await import('../infra/device-pairing');
   const list = await listDevicePairing();
   const pending = list.pending.at(0);
   expect(pending?.requestId).toBeDefined();
@@ -220,8 +220,8 @@ async function sendRawConnectReq(
 }
 
 async function startRateLimitedTokenServerWithPairedDeviceToken() {
-  const { loadOrCreateDeviceIdentity } = await import("../infra/device-identity.js");
-  const { getPairedDevice } = await import("../infra/device-pairing.js");
+  const { loadOrCreateDeviceIdentity } = await import('../infra/device-identity');
+  const { getPairedDevice } = await import('../infra/device-pairing');
 
   testState.gatewayAuth = {
     mode: "token",
@@ -256,8 +256,8 @@ async function ensurePairedDeviceTokenForCurrentIdentity(ws: WebSocket): Promise
   identity: { deviceId: string };
   deviceToken: string;
 }> {
-  const { loadOrCreateDeviceIdentity } = await import("../infra/device-identity.js");
-  const { getPairedDevice } = await import("../infra/device-pairing.js");
+  const { loadOrCreateDeviceIdentity } = await import('../infra/device-identity');
+  const { getPairedDevice } = await import('../infra/device-pairing');
 
   const res = await connectReq(ws, { token: "secret" });
   if (!res.ok) {
@@ -304,7 +304,7 @@ describe("gateway server auth/connect", () => {
     });
 
     test("connect (req) handshake returns hello-ok payload", async () => {
-      const { CONFIG_PATH, STATE_DIR } = await import("../config/config.js");
+      const { CONFIG_PATH, STATE_DIR } = await import('../config/config');
       const ws = await openWs(port);
 
       const res = await connectReq(ws);
@@ -711,7 +711,7 @@ describe("gateway server auth/connect", () => {
   test("allows control ui with device identity when insecure auth is enabled", async () => {
     testState.gatewayControlUi = { allowInsecureAuth: true };
     testState.gatewayAuth = { mode: "token", token: "secret" };
-    const { writeConfigFile } = await import("../config/config.js");
+    const { writeConfigFile } = await import('../config/config');
     await writeConfigFile({
       gateway: {
         trustedProxies: ["127.0.0.1"],
@@ -871,10 +871,10 @@ describe("gateway server auth/connect", () => {
     const { mkdtemp } = await import("node:fs/promises");
     const { tmpdir } = await import("node:os");
     const { join } = await import("node:path");
-    const { buildDeviceAuthPayload } = await import("./device-auth.js");
+    const { buildDeviceAuthPayload } = await import('./device-auth');
     const { loadOrCreateDeviceIdentity, publicKeyRawBase64UrlFromPem, signDevicePayload } =
-      await import("../infra/device-identity.js");
-    const { getPairedDevice } = await import("../infra/device-pairing.js");
+      await import('../infra/device-identity');
+    const { getPairedDevice } = await import('../infra/device-pairing');
     const { server, ws, port, prevToken } = await startServerWithClient("secret");
     const identityDir = await mkdtemp(join(tmpdir(), "powerdirector-device-scope-"));
     const identity = loadOrCreateDeviceIdentity(join(identityDir, "device.json"));
@@ -949,7 +949,7 @@ describe("gateway server auth/connect", () => {
   });
 
   test("rejects revoked device token", async () => {
-    const { revokeDeviceToken } = await import("../infra/device-pairing.js");
+    const { revokeDeviceToken } = await import('../infra/device-pairing');
     const { server, ws, port, prevToken } = await startServerWithClient("secret");
     const { identity, deviceToken } = await ensurePairedDeviceTokenForCurrentIdentity(ws);
 

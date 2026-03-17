@@ -1,8 +1,8 @@
-import { defaultRuntime } from "../../runtime.js";
-import { colorize, isRich, theme } from "../../terminal/theme.js";
-import { gatherDaemonStatus } from "./status.gather.js";
-import { printDaemonStatus } from "./status.print.js";
-import type { DaemonStatusOptions } from "./types.js";
+import { defaultRuntime } from '../../runtime';
+import { colorize, isRich, theme } from '../../terminal/theme';
+import { gatherDaemonStatus } from './status.gather';
+import { printDaemonStatus } from './status.print';
+import type { DaemonStatusOptions } from './types';
 
 export async function runDaemonStatus(opts: DaemonStatusOptions) {
   try {

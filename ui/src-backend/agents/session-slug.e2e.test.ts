@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createSessionSlug } from "./session-slug.js";
+import { createSessionSlug } from './session-slug';
 
 describe("session slug", () => {
   afterEach(() => {

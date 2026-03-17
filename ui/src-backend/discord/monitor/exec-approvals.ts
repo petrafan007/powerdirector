@@ -10,27 +10,27 @@ import {
   type TopLevelComponents,
 } from "@buape/carbon";
 import { ButtonStyle, Routes } from "discord-api-types/v10";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { loadSessionStore, resolveStorePath } from "../../config/sessions.js";
-import type { DiscordExecApprovalConfig } from "../../config/types.discord.js";
-import { buildGatewayConnectionDetails } from "../../gateway/call.js";
-import { GatewayClient } from "../../gateway/client.js";
-import type { EventFrame } from "../../gateway/protocol/index.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { loadSessionStore, resolveStorePath } from '../../config/sessions';
+import type { DiscordExecApprovalConfig } from '../../config/types.discord';
+import { buildGatewayConnectionDetails } from '../../gateway/call';
+import { GatewayClient } from '../../gateway/client';
+import type { EventFrame } from '../../gateway/protocol/index';
 import type {
   ExecApprovalDecision,
   ExecApprovalRequest,
   ExecApprovalResolved,
-} from "../../infra/exec-approvals.js";
-import { logDebug, logError } from "../../logger.js";
-import { normalizeAccountId, resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
-import type { RuntimeEnv } from "../../runtime.js";
+} from '../../infra/exec-approvals';
+import { logDebug, logError } from '../../logger';
+import { normalizeAccountId, resolveAgentIdFromSessionKey } from '../../routing/session-key';
+import type { RuntimeEnv } from '../../runtime';
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
   normalizeMessageChannel,
-} from "../../utils/message-channel.js";
-import { createDiscordClient, stripUndefinedFields } from "../send.shared.js";
-import { DiscordUiContainer } from "../ui.js";
+} from '../../utils/message-channel';
+import { createDiscordClient, stripUndefinedFields } from '../send.shared';
+import { DiscordUiContainer } from '../ui';
 
 const EXEC_APPROVAL_KEY = "execapproval";
 

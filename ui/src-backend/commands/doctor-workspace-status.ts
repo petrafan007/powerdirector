@@ -1,9 +1,9 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { buildWorkspaceSkillStatus } from "../agents/skills-status.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { loadPowerDirectorPlugins } from "../plugins/loader.js";
-import { note } from "../terminal/note.js";
-import { detectLegacyWorkspaceDirs, formatLegacyWorkspaceWarning } from "./doctor-workspace.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { buildWorkspaceSkillStatus } from '../agents/skills-status';
+import type { PowerDirectorConfig } from '../config/config';
+import { loadPowerDirectorPlugins } from '../plugins/loader';
+import { note } from '../terminal/note';
+import { detectLegacyWorkspaceDirs, formatLegacyWorkspaceWarning } from './doctor-workspace';
 
 export function noteWorkspaceStatus(cfg: PowerDirectorConfig) {
   const workspaceDir = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveBrowserConfig } from "./config.js";
+import { resolveBrowserConfig } from './config';
 import {
   allocateCdpPort,
   allocateColor,
@@ -9,7 +9,7 @@ import {
   getUsedPorts,
   isValidProfileName,
   PROFILE_COLORS,
-} from "./profiles.js";
+} from './profiles';
 
 describe("profile name validation", () => {
   it.each(["powerdirector", "work", "my-profile", "test123", "a", "a-b-c-1-2-3", "1test"])(

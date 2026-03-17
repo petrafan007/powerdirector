@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { AuthProfileStore } from "../agents/auth-profiles.js";
+import type { AuthProfileStore } from '../agents/auth-profiles';
 import {
   buildAuthChoiceGroups,
   buildAuthChoiceOptions,
   formatAuthChoiceChoicesForCli,
-} from "./auth-choice-options.js";
+} from './auth-choice-options';
 
 const EMPTY_STORE: AuthProfileStore = { version: 1, profiles: {} };
 

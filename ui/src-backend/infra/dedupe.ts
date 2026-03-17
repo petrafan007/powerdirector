@@ -1,4 +1,4 @@
-import { pruneMapToMaxSize } from "./map-size.js";
+import { pruneMapToMaxSize } from './map-size';
 
 export type DedupeCache = {
   check: (key: string | undefined | null, now?: number) => boolean;

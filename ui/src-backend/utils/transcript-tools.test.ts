@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countToolResults, extractToolCallNames, hasToolCall } from "./transcript-tools.js";
+import { countToolResults, extractToolCallNames, hasToolCall } from './transcript-tools';
 
 describe("transcript-tools", () => {
   describe("extractToolCallNames", () => {

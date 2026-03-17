@@ -1,4 +1,4 @@
-import { createEmptyPluginRegistry, type PluginRegistry } from "./registry.js";
+import { createEmptyPluginRegistry, type PluginRegistry } from './registry';
 
 const REGISTRY_STATE = Symbol.for("powerdirector.pluginRegistryState");
 

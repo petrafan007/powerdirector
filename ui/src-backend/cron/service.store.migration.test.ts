@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { CronService } from "./service.js";
-import { DEFAULT_TOP_OF_HOUR_STAGGER_MS } from "./stagger.js";
-import { loadCronStore } from "./store.js";
+import { CronService } from './service';
+import { DEFAULT_TOP_OF_HOUR_STAGGER_MS } from './stagger';
+import { loadCronStore } from './store';
 
 const noopLogger = {
   debug: vi.fn(),

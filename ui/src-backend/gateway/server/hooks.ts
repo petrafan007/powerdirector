@@ -1,14 +1,14 @@
 import { randomUUID } from "node:crypto";
-import type { CliDeps } from "../../cli/deps.js";
-import { loadConfig } from "../../config/config.js";
-import { resolveMainSessionKeyFromConfig } from "../../config/sessions.js";
-import { runCronIsolatedAgentTurn } from "../../cron/isolated-agent.js";
-import type { CronJob } from "../../cron/types.js";
-import { requestHeartbeatNow } from "../../infra/heartbeat-wake.js";
-import { enqueueSystemEvent } from "../../infra/system-events.js";
-import type { createSubsystemLogger } from "../../logging/subsystem.js";
-import type { HookMessageChannel, HooksConfigResolved } from "../hooks.js";
-import { createHooksRequestHandler } from "../server-http.js";
+import type { CliDeps } from '../../cli/deps';
+import { loadConfig } from '../../config/config';
+import { resolveMainSessionKeyFromConfig } from '../../config/sessions';
+import { runCronIsolatedAgentTurn } from '../../cron/isolated-agent';
+import type { CronJob } from '../../cron/types';
+import { requestHeartbeatNow } from '../../infra/heartbeat-wake';
+import { enqueueSystemEvent } from '../../infra/system-events';
+import type { createSubsystemLogger } from '../../logging/subsystem';
+import type { HookMessageChannel, HooksConfigResolved } from '../hooks';
+import { createHooksRequestHandler } from '../server-http';
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 

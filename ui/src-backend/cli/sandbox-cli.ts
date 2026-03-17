@@ -1,10 +1,10 @@
 import type { Command } from "commander";
-import { sandboxExplainCommand } from "../commands/sandbox-explain.js";
-import { sandboxListCommand, sandboxRecreateCommand } from "../commands/sandbox.js";
-import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
-import { theme } from "../terminal/theme.js";
-import { formatHelpExamples } from "./help-format.js";
+import { sandboxExplainCommand } from '../commands/sandbox-explain';
+import { sandboxListCommand, sandboxRecreateCommand } from '../commands/sandbox';
+import { defaultRuntime } from '../runtime';
+import { formatDocsLink } from '../terminal/links';
+import { theme } from '../terminal/theme';
+import { formatHelpExamples } from './help-format';
 
 // --- Types ---
 

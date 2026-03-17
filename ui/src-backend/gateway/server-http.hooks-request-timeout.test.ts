@@ -1,21 +1,21 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import type { createSubsystemLogger } from "../logging/subsystem.js";
-import type { HooksConfigResolved } from "./hooks.js";
+import type { createSubsystemLogger } from '../logging/subsystem';
+import type { HooksConfigResolved } from './hooks';
 
 const { readJsonBodyMock } = vi.hoisted(() => ({
   readJsonBodyMock: vi.fn(),
 }));
 
 vi.mock("./hooks.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./hooks.js")>();
+  const actual = await importOriginal<typeof import('./hooks')>();
   return {
     ...actual,
     readJsonBody: readJsonBodyMock,
   };
 });
 
-import { createHooksRequestHandler } from "./server-http.js";
+import { createHooksRequestHandler } from './server-http';
 
 function createHooksConfig(): HooksConfigResolved {
   return {

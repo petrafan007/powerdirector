@@ -4,7 +4,7 @@ import {
   estimateMessagesTokens,
   pruneHistoryForContextShare,
   splitMessagesByTokenShare,
-} from "./compaction.js";
+} from './compaction';
 
 function makeMessage(id: number, size: number): AgentMessage {
   return {

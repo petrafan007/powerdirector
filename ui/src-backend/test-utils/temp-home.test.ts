@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { createTempHomeEnv } from "./temp-home.js";
+import { createTempHomeEnv } from './temp-home';
 
 describe("createTempHomeEnv", () => {
   it("sets home env vars and restores them on cleanup", async () => {

@@ -1,4 +1,4 @@
-import type { PluginLogger } from "./types.js";
+import type { PluginLogger } from './types';
 
 type LoggerLike = {
   info: (message: string) => void;

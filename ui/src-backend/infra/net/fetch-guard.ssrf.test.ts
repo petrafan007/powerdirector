@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchWithSsrFGuard } from "./fetch-guard.js";
+import { fetchWithSsrFGuard } from './fetch-guard';
 
 function redirectResponse(location: string): Response {
   return new Response(null, {

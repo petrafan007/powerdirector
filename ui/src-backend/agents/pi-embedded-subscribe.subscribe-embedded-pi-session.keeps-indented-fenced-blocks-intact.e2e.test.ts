@@ -3,7 +3,7 @@ import {
   createParagraphChunkedBlockReplyHarness,
   emitAssistantTextDeltaAndEnd,
   extractTextPayloads,
-} from "./pi-embedded-subscribe.e2e-harness.js";
+} from './pi-embedded-subscribe.e2e-harness';
 
 describe("subscribeEmbeddedPiSession", () => {
   it("keeps indented fenced blocks intact", () => {

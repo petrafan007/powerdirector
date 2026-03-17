@@ -1,4 +1,4 @@
-import { logVerbose } from "../../globals.js";
+import { logVerbose } from '../../globals';
 import {
   getLastTtsAttempt,
   getTtsMaxLength,
@@ -15,9 +15,9 @@ import {
   setTtsMaxLength,
   setTtsProvider,
   textToSpeech,
-} from "../../tts/tts.js";
-import type { ReplyPayload } from "../types.js";
-import type { CommandHandler } from "./commands-types.js";
+} from '../../tts/tts';
+import type { ReplyPayload } from '../types';
+import type { CommandHandler } from './commands-types';
 
 type ParsedTtsCommand = {
   action: string;

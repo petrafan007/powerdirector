@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { HookStatusReport } from "../hooks/hooks-status.js";
-import { formatHooksCheck, formatHooksList } from "./hooks-cli.js";
-import { createEmptyInstallChecks } from "./requirements-test-fixtures.js";
+import type { HookStatusReport } from '../hooks/hooks-status';
+import { formatHooksCheck, formatHooksList } from './hooks-cli';
+import { createEmptyInstallChecks } from './requirements-test-fixtures';
 
 const report: HookStatusReport = {
   workspaceDir: "/tmp/workspace",

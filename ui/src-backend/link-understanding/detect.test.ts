@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractLinksFromMessage } from "./detect.js";
+import { extractLinksFromMessage } from './detect';
 
 describe("extractLinksFromMessage", () => {
   it("extracts bare http/https URLs in order", () => {

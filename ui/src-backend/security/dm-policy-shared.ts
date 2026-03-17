@@ -1,6 +1,6 @@
-import type { ChannelId } from "../channels/plugins/types.js";
-import { readChannelAllowFromStore } from "../pairing/pairing-store.js";
-import { normalizeStringEntries } from "../shared/string-normalization.js";
+import type { ChannelId } from '../channels/plugins/types';
+import { readChannelAllowFromStore } from '../pairing/pairing-store';
+import { normalizeStringEntries } from '../shared/string-normalization';
 
 export async function resolveDmAllowState(params: {
   provider: ChannelId;

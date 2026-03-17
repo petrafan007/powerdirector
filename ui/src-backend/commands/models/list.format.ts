@@ -1,5 +1,5 @@
-import { colorize, isRich as isRichTerminal, theme } from "../../terminal/theme.js";
-export { maskApiKey } from "../../utils/mask-api-key.js";
+import { colorize, isRich as isRichTerminal, theme } from '../../terminal/theme';
+export { maskApiKey } from '../../utils/mask-api-key';
 
 export const isRich = (opts?: { json?: boolean; plain?: boolean }) =>
   Boolean(isRichTerminal() && !opts?.json && !opts?.plain);

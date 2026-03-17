@@ -1,12 +1,12 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import { escapeRegExp, formatEnvelopeTimestamp } from "../../test/helpers/envelope-timestamp.js";
+import { escapeRegExp, formatEnvelopeTimestamp } from '../../test/helpers/envelope-timestamp';
 import {
   installWebAutoReplyTestHomeHooks,
   installWebAutoReplyUnitTestHooks,
   makeSessionStore,
   setLoadConfigMock,
-} from "./auto-reply.test-harness.js";
-import type { WebInboundMessage } from "./inbound.js";
+} from './auto-reply.test-harness';
+import type { WebInboundMessage } from './inbound';
 
 installWebAutoReplyTestHomeHooks();
 
@@ -74,9 +74,9 @@ describe("web auto-reply", () => {
   installWebAutoReplyUnitTestHooks();
 
   // Ensure test-harness `vi.mock(...)` hooks are registered before importing the module under test.
-  let monitorWebChannel: typeof import("./auto-reply.js").monitorWebChannel;
+  let monitorWebChannel: typeof import('./auto-reply').monitorWebChannel;
   beforeAll(async () => {
-    ({ monitorWebChannel } = await import("./auto-reply.js"));
+    ({ monitorWebChannel } = await import('./auto-reply'));
   });
 
   it("handles helper envelope timestamps with trimmed timezones (regression)", () => {
@@ -125,11 +125,11 @@ describe("web auto-reply", () => {
       const sleep = vi.fn(async () => {});
       const closeResolvers: Array<(reason: unknown) => void> = [];
       let capturedOnMessage:
-        | ((msg: import("./inbound.js").WebInboundMessage) => Promise<void>)
+        | ((msg: import('./inbound').WebInboundMessage) => Promise<void>)
         | undefined;
       const listenerFactory = vi.fn(
         async (opts: {
-          onMessage: (msg: import("./inbound.js").WebInboundMessage) => Promise<void>;
+          onMessage: (msg: import('./inbound').WebInboundMessage) => Promise<void>;
         }) => {
           capturedOnMessage = opts.onMessage;
           let resolveClose: (reason: unknown) => void = () => {};
@@ -250,10 +250,10 @@ describe("web auto-reply", () => {
       const resolver = vi.fn().mockResolvedValue({ text: "ok" });
 
       let capturedOnMessage:
-        | ((msg: import("./inbound.js").WebInboundMessage) => Promise<void>)
+        | ((msg: import('./inbound').WebInboundMessage) => Promise<void>)
         | undefined;
       const listenerFactory = async (opts: {
-        onMessage: (msg: import("./inbound.js").WebInboundMessage) => Promise<void>;
+        onMessage: (msg: import('./inbound').WebInboundMessage) => Promise<void>;
       }) => {
         capturedOnMessage = opts.onMessage;
         return { close: vi.fn() };

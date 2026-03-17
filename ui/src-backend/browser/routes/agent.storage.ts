@@ -1,12 +1,12 @@
-import type { BrowserRouteContext } from "../server-context.js";
+import type { BrowserRouteContext } from '../server-context';
 import {
   readBody,
   resolveTargetIdFromBody,
   resolveTargetIdFromQuery,
   withPlaywrightRouteContext,
-} from "./agent.shared.js";
-import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from "./types.js";
-import { jsonError, toBoolean, toNumber, toStringOrEmpty } from "./utils.js";
+} from './agent.shared';
+import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from './types';
+import { jsonError, toBoolean, toNumber, toStringOrEmpty } from './utils';
 
 type StorageKind = "local" | "session";
 

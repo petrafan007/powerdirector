@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { resolveSlackChannelAllowlist } from "./resolve-channels.js";
+import { resolveSlackChannelAllowlist } from './resolve-channels';
 
 describe("resolveSlackChannelAllowlist", () => {
   it("resolves by name and prefers active channels", async () => {

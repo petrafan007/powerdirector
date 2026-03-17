@@ -1,17 +1,17 @@
 import path from "node:path";
 import { fetch as realFetch } from "undici";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_UPLOAD_DIR } from "./paths.js";
+import { DEFAULT_UPLOAD_DIR } from './paths';
 import {
   installAgentContractHooks,
   postJson,
   startServerAndBase,
-} from "./server.agent-contract.test-harness.js";
+} from './server.agent-contract.test-harness';
 import {
   getBrowserControlServerTestState,
   getPwMocks,
   setBrowserControlServerEvaluateEnabled,
-} from "./server.control-server.test-harness.js";
+} from './server.control-server.test-harness';
 
 const state = getBrowserControlServerTestState();
 const pwMocks = getPwMocks();

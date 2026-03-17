@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { isPidAlive } from "../shared/pid-alive.js";
-import { resolveProcessScopedMap } from "../shared/process-scoped-map.js";
+import { isPidAlive } from '../shared/pid-alive';
+import { resolveProcessScopedMap } from '../shared/process-scoped-map';
 
 export type FileLockOptions = {
   retries: {

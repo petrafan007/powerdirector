@@ -11,7 +11,7 @@ import {
   restoreGatewayPortEnv,
   startBrowserControlServerFromConfig,
   stopBrowserControlServer,
-} from "./server.control-server.test-harness.js";
+} from './server.control-server.test-harness';
 
 const state = getBrowserControlServerTestState();
 const cdpMocks = getCdpMocks();

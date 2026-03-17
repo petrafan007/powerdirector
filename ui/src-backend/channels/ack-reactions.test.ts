@@ -3,7 +3,7 @@ import {
   removeAckReactionAfterReply,
   shouldAckReaction,
   shouldAckReactionForWhatsApp,
-} from "./ack-reactions.js";
+} from './ack-reactions';
 
 const flushMicrotasks = async () => {
   await Promise.resolve();

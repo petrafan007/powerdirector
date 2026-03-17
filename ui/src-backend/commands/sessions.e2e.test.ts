@@ -5,14 +5,14 @@ import {
   mockSessionsConfig,
   runSessionsJson,
   writeStore,
-} from "./sessions.test-helpers.js";
+} from './sessions.test-helpers';
 
 // Disable colors for deterministic snapshots.
 process.env.FORCE_COLOR = "0";
 
 mockSessionsConfig();
 
-import { sessionsCommand } from "./sessions.js";
+import { sessionsCommand } from './sessions';
 
 describe("sessionsCommand", () => {
   beforeEach(() => {

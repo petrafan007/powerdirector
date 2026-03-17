@@ -2,7 +2,7 @@
 
 import { Client, LocalAuth, Message as WPMessage } from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
-import { Channel, ChannelClassName, ChannelConfig, ChannelMessage, ChannelType } from './base.js';
+import { Channel, ChannelClassName, ChannelConfig, ChannelMessage, ChannelType } from './base';
 
 export class WhatsAppChannel implements Channel {
     public readonly id: string = 'whatsapp';

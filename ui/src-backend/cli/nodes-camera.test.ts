@@ -9,8 +9,8 @@ import {
   writeCameraClipPayloadToFile,
   writeBase64ToFile,
   writeUrlToFile,
-} from "./nodes-camera.js";
-import { parseScreenRecordPayload, screenRecordTempPath } from "./nodes-screen.js";
+} from './nodes-camera';
+import { parseScreenRecordPayload, screenRecordTempPath } from './nodes-screen';
 
 describe("nodes camera helpers", () => {
   it("parses camera.snap payload", () => {

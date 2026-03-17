@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ChannelAccountSnapshot } from "./plugins/types.core.js";
-import type { ChannelPlugin } from "./plugins/types.plugin.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { ChannelAccountSnapshot } from './plugins/types.core';
+import type { ChannelPlugin } from './plugins/types.plugin';
 
 export function buildChannelAccountSnapshot(params: {
   plugin: ChannelPlugin;

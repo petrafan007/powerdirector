@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveApiKeyForProvider } from "../agents/model-auth.js";
-import type { MsgContext } from "../auto-reply/templating.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { fetchRemoteMedia } from "../media/fetch.js";
+import { resolveApiKeyForProvider } from '../agents/model-auth';
+import type { MsgContext } from '../auto-reply/templating';
+import type { PowerDirectorConfig } from '../config/config';
+import { fetchRemoteMedia } from '../media/fetch';
 
 vi.mock("../agents/model-auth.js", () => ({
   resolveApiKeyForProvider: vi.fn(async () => ({
@@ -30,7 +30,7 @@ vi.mock("../process/exec.js", () => ({
 }));
 
 async function loadApply() {
-  return await import("./apply.js");
+  return await import('./apply');
 }
 
 function createGroqAudioConfig(): PowerDirectorConfig {
@@ -288,7 +288,7 @@ describe("applyMediaUnderstanding", () => {
       },
     };
 
-    const execModule = await import("../process/exec.js");
+    const execModule = await import('../process/exec');
     vi.mocked(execModule.runExec).mockResolvedValue({
       stdout: "cli transcript\n",
       stderr: "",
@@ -340,7 +340,7 @@ describe("applyMediaUnderstanding", () => {
       },
     };
 
-    const execModule = await import("../process/exec.js");
+    const execModule = await import('../process/exec');
     vi.mocked(execModule.runExec).mockResolvedValue({
       stdout: "image description\n",
       stderr: "",
@@ -385,7 +385,7 @@ describe("applyMediaUnderstanding", () => {
       },
     };
 
-    const execModule = await import("../process/exec.js");
+    const execModule = await import('../process/exec');
     vi.mocked(execModule.runExec).mockResolvedValue({
       stdout: "shared description\n",
       stderr: "",

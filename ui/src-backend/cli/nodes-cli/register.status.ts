@@ -1,14 +1,14 @@
 import type { Command } from "commander";
 import { formatTimeAgo } from "../../infra/format-time/format-relative.ts";
-import { defaultRuntime } from "../../runtime.js";
-import { renderTable } from "../../terminal/table.js";
-import { shortenHomeInString } from "../../utils.js";
-import { parseDurationMs } from "../parse-duration.js";
-import { getNodesTheme, runNodesCommand } from "./cli-utils.js";
-import { formatPermissions, parseNodeList, parsePairingList } from "./format.js";
-import { renderPendingPairingRequestsTable } from "./pairing-render.js";
-import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc.js";
-import type { NodesRpcOpts } from "./types.js";
+import { defaultRuntime } from '../../runtime';
+import { renderTable } from '../../terminal/table';
+import { shortenHomeInString } from '../../utils';
+import { parseDurationMs } from '../parse-duration';
+import { getNodesTheme, runNodesCommand } from './cli-utils';
+import { formatPermissions, parseNodeList, parsePairingList } from './format';
+import { renderPendingPairingRequestsTable } from './pairing-render';
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
+import type { NodesRpcOpts } from './types';
 
 function formatVersionLabel(raw: string) {
   const trimmed = raw.trim();

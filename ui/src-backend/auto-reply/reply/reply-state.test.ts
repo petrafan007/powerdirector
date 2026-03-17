@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { SessionEntry } from "../../config/sessions.js";
+import type { SessionEntry } from '../../config/sessions';
 import {
   appendHistoryEntry,
   buildHistoryContext,
@@ -12,15 +12,15 @@ import {
   clearHistoryEntriesIfEnabled,
   HISTORY_CONTEXT_MARKER,
   recordPendingHistoryEntryIfEnabled,
-} from "./history.js";
+} from './history';
 import {
   DEFAULT_MEMORY_FLUSH_SOFT_TOKENS,
   resolveMemoryFlushContextWindowTokens,
   resolveMemoryFlushSettings,
   shouldRunMemoryFlush,
-} from "./memory-flush.js";
-import { CURRENT_MESSAGE_MARKER } from "./mentions.js";
-import { incrementCompactionCount } from "./session-updates.js";
+} from './memory-flush';
+import { CURRENT_MESSAGE_MARKER } from './mentions';
+import { incrementCompactionCount } from './session-updates';
 
 async function seedSessionStore(params: {
   storePath: string;

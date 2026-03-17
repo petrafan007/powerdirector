@@ -56,7 +56,7 @@ vi.mock("../runtime.js", () => ({
   defaultRuntime: runtime,
 }));
 
-let registerBrowserInspectCommands: typeof import("./browser-cli-inspect.js").registerBrowserInspectCommands;
+let registerBrowserInspectCommands: typeof import('./browser-cli-inspect').registerBrowserInspectCommands;
 
 type SnapshotDefaultsCase = {
   label: string;
@@ -76,7 +76,7 @@ describe("browser cli snapshot defaults", () => {
   };
 
   beforeAll(async () => {
-    ({ registerBrowserInspectCommands } = await import("./browser-cli-inspect.js"));
+    ({ registerBrowserInspectCommands } = await import('./browser-cli-inspect'));
   });
 
   afterEach(() => {

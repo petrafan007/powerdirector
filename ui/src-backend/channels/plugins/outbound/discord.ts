@@ -1,6 +1,6 @@
-import { sendMessageDiscord, sendPollDiscord } from "../../../discord/send.js";
-import { normalizeDiscordOutboundTarget } from "../normalize/discord.js";
-import type { ChannelOutboundAdapter } from "../types.js";
+import { sendMessageDiscord, sendPollDiscord } from '../../../discord/send';
+import { normalizeDiscordOutboundTarget } from '../normalize/discord';
+import type { ChannelOutboundAdapter } from '../types';
 
 export const discordOutbound: ChannelOutboundAdapter = {
   deliveryMode: "direct",

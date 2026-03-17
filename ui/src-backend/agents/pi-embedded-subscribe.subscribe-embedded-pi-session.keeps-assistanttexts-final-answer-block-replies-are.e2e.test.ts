@@ -4,8 +4,8 @@ import {
   createStubSessionHarness,
   emitAssistantTextDelta,
   emitAssistantTextEnd,
-} from "./pi-embedded-subscribe.e2e-harness.js";
-import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
+} from './pi-embedded-subscribe.e2e-harness';
+import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
 
 describe("subscribeEmbeddedPiSession", () => {
   it("keeps assistantTexts to the final answer when block replies are disabled", () => {

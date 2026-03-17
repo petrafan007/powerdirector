@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyPluginAutoEnable } from "./plugin-auto-enable.js";
+import { applyPluginAutoEnable } from './plugin-auto-enable';
 
 describe("applyPluginAutoEnable", () => {
   it("auto-enables channel plugins and updates allowlist", () => {

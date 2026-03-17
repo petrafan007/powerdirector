@@ -1,5 +1,5 @@
-import type { RuntimeEnv } from "../../../runtime.js";
-import type { OnboardOptions } from "../../onboard-types.js";
+import type { RuntimeEnv } from '../../../runtime';
+import type { OnboardOptions } from '../../onboard-types';
 
 export function logNonInteractiveOnboardingJson(params: {
   opts: OnboardOptions;

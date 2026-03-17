@@ -1,33 +1,33 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import SlackBolt from "@slack/bolt";
-import { resolveTextChunkLimit } from "../../auto-reply/chunk.js";
-import { DEFAULT_GROUP_HISTORY_LIMIT } from "../../auto-reply/reply/history.js";
+import { resolveTextChunkLimit } from '../../auto-reply/chunk';
+import { DEFAULT_GROUP_HISTORY_LIMIT } from '../../auto-reply/reply/history';
 import {
   addAllowlistUserEntriesFromConfigEntry,
   buildAllowlistResolutionSummary,
   mergeAllowlist,
   patchAllowlistUsersInConfigEntries,
   summarizeMapping,
-} from "../../channels/allowlists/resolve-utils.js";
-import { loadConfig } from "../../config/config.js";
-import type { SessionScope } from "../../config/sessions.js";
-import { warn } from "../../globals.js";
-import { installRequestBodyLimitGuard } from "../../infra/http-body.js";
-import { normalizeMainKey } from "../../routing/session-key.js";
-import { createNonExitingRuntime, type RuntimeEnv } from "../../runtime.js";
-import { resolveSlackAccount } from "../accounts.js";
-import { resolveSlackWebClientOptions } from "../client.js";
-import { normalizeSlackWebhookPath, registerSlackHttpHandler } from "../http/index.js";
-import { resolveSlackChannelAllowlist } from "../resolve-channels.js";
-import { resolveSlackUserAllowlist } from "../resolve-users.js";
-import { resolveSlackAppToken, resolveSlackBotToken } from "../token.js";
-import { normalizeAllowList } from "./allow-list.js";
-import { resolveSlackSlashCommandConfig } from "./commands.js";
-import { createSlackMonitorContext } from "./context.js";
-import { registerSlackMonitorEvents } from "./events.js";
-import { createSlackMessageHandler } from "./message-handler.js";
-import { registerSlackMonitorSlashCommands } from "./slash.js";
-import type { MonitorSlackOpts } from "./types.js";
+} from '../../channels/allowlists/resolve-utils';
+import { loadConfig } from '../../config/config';
+import type { SessionScope } from '../../config/sessions';
+import { warn } from '../../globals';
+import { installRequestBodyLimitGuard } from '../../infra/http-body';
+import { normalizeMainKey } from '../../routing/session-key';
+import { createNonExitingRuntime, type RuntimeEnv } from '../../runtime';
+import { resolveSlackAccount } from '../accounts';
+import { resolveSlackWebClientOptions } from '../client';
+import { normalizeSlackWebhookPath, registerSlackHttpHandler } from '../http/index';
+import { resolveSlackChannelAllowlist } from '../resolve-channels';
+import { resolveSlackUserAllowlist } from '../resolve-users';
+import { resolveSlackAppToken, resolveSlackBotToken } from '../token';
+import { normalizeAllowList } from './allow-list';
+import { resolveSlackSlashCommandConfig } from './commands';
+import { createSlackMonitorContext } from './context';
+import { registerSlackMonitorEvents } from './events';
+import { createSlackMessageHandler } from './message-handler';
+import { registerSlackMonitorSlashCommands } from './slash';
+import type { MonitorSlackOpts } from './types';
 
 const slackBoltModule = SlackBolt as typeof import("@slack/bolt") & {
   default?: typeof import("@slack/bolt");

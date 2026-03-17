@@ -1,9 +1,9 @@
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import {
   applyAgentDefaultModelPrimary,
   applyProviderConfigWithDefaultModel,
-} from "./onboard-auth.config-shared.js";
-import { LITELLM_DEFAULT_MODEL_REF } from "./onboard-auth.credentials.js";
+} from './onboard-auth.config-shared';
+import { LITELLM_DEFAULT_MODEL_REF } from './onboard-auth.credentials';
 
 export const LITELLM_BASE_URL = "http://localhost:4000";
 export const LITELLM_DEFAULT_MODEL_ID = "claude-opus-4-6";

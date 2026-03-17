@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { runRegisteredCli } from "../../test-utils/command-runner.js";
-import { createCliRuntimeCapture } from "../test-runtime-capture.js";
+import { runRegisteredCli } from '../../test-utils/command-runner';
+import { createCliRuntimeCapture } from '../test-runtime-capture';
 
 const callGatewayCli = vi.fn(async (_method: string, _opts: unknown, _params?: unknown) => ({
   ok: true,
@@ -112,10 +112,10 @@ vi.mock("./discover.js", () => ({
 }));
 
 describe("gateway register option collisions", () => {
-  let registerGatewayCli: typeof import("./register.js").registerGatewayCli;
+  let registerGatewayCli: typeof import('./register').registerGatewayCli;
 
   beforeAll(async () => {
-    ({ registerGatewayCli } = await import("./register.js"));
+    ({ registerGatewayCli } = await import('./register'));
   });
 
   beforeEach(() => {

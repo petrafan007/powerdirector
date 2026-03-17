@@ -1,6 +1,6 @@
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { isSensitiveConfigPath, type ConfigUiHints } from "./schema.hints.js";
-import type { ConfigFileSnapshot } from "./types.powerdirector.js";
+import { createSubsystemLogger } from '../logging/subsystem';
+import { isSensitiveConfigPath, type ConfigUiHints } from './schema.hints';
+import type { ConfigFileSnapshot } from './types.powerdirector';
 
 const log = createSubsystemLogger("config/redaction");
 const ENV_VAR_PLACEHOLDER_PATTERN = /^\$\{[^}]*\}$/;

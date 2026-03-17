@@ -2,13 +2,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, expect } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { getEmbedBatchMock, resetEmbeddingMocks } from "./embedding.test-mocks.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { getEmbedBatchMock, resetEmbeddingMocks } from './embedding.test-mocks';
 import {
   getMemorySearchManager,
   type MemoryIndexManager,
   type MemorySearchManager,
-} from "./index.js";
+} from './index';
 
 export function installEmbeddingManagerFixture(opts: {
   fixturePrefix: string;

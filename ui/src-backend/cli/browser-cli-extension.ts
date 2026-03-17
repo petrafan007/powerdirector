@@ -2,15 +2,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Command } from "commander";
-import { movePathToTrash } from "../browser/trash.js";
-import { resolveStateDir } from "../config/paths.js";
-import { danger, info } from "../globals.js";
-import { copyToClipboard } from "../infra/clipboard.js";
-import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
-import { theme } from "../terminal/theme.js";
-import { shortenHomePath } from "../utils.js";
-import { formatCliCommand } from "./command-format.js";
+import { movePathToTrash } from '../browser/trash';
+import { resolveStateDir } from '../config/paths';
+import { danger, info } from '../globals';
+import { copyToClipboard } from '../infra/clipboard';
+import { defaultRuntime } from '../runtime';
+import { formatDocsLink } from '../terminal/links';
+import { theme } from '../terminal/theme';
+import { shortenHomePath } from '../utils';
+import { formatCliCommand } from './command-format';
 
 export function resolveBundledExtensionRootDir(
   here = path.dirname(fileURLToPath(import.meta.url)),

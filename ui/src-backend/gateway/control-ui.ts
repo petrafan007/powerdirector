@@ -1,20 +1,20 @@
 import fs from "node:fs";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveControlUiRootSync } from "../infra/control-ui-assets.js";
-import { DEFAULT_ASSISTANT_IDENTITY, resolveAssistantIdentity } from "./assistant-identity.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveControlUiRootSync } from '../infra/control-ui-assets';
+import { DEFAULT_ASSISTANT_IDENTITY, resolveAssistantIdentity } from './assistant-identity';
 import {
   CONTROL_UI_BOOTSTRAP_CONFIG_PATH,
   type ControlUiBootstrapConfig,
-} from "./control-ui-contract.js";
-import { buildControlUiCspHeader } from "./control-ui-csp.js";
+} from './control-ui-contract';
+import { buildControlUiCspHeader } from './control-ui-csp';
 import {
   buildControlUiAvatarUrl,
   CONTROL_UI_AVATAR_PREFIX,
   normalizeControlUiBasePath,
   resolveAssistantAvatarUrl,
-} from "./control-ui-shared.js";
+} from './control-ui-shared';
 
 const ROOT_PREFIX = "/";
 

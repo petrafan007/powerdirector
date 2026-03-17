@@ -1,4 +1,4 @@
-import type { ErrorShape } from "./types.js";
+import type { ErrorShape } from './types';
 
 export const ErrorCodes = {
   NOT_LINKED: "NOT_LINKED",

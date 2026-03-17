@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { encodePairingSetupCode } from "../pairing/setup-code.js";
+import { encodePairingSetupCode } from '../pairing/setup-code';
 
 const runtime = {
   log: vi.fn(),
@@ -25,7 +25,7 @@ vi.mock("qrcode-terminal", () => ({
   },
 }));
 
-const { registerQrCli } = await import("./qr-cli.js");
+const { registerQrCli } = await import('./qr-cli');
 
 function createRemoteQrConfig(params?: { withTailscale?: boolean }) {
   return {

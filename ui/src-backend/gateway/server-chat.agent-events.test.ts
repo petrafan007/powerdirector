@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { registerAgentRunContext, resetAgentRunContextForTest } from "../infra/agent-events.js";
+import { registerAgentRunContext, resetAgentRunContextForTest } from '../infra/agent-events';
 import {
   createAgentEventHandler,
   createChatRunState,
   createToolEventRecipientRegistry,
-} from "./server-chat.js";
+} from './server-chat';
 
 describe("agent event handler", () => {
   function createHarness(params?: {

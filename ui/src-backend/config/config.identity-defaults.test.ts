@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_AGENT_MAX_CONCURRENT, DEFAULT_SUBAGENT_MAX_CONCURRENT } from "./agent-limits.js";
-import { loadConfig } from "./config.js";
-import { withTempHome } from "./home-env.test-harness.js";
+import { DEFAULT_AGENT_MAX_CONCURRENT, DEFAULT_SUBAGENT_MAX_CONCURRENT } from './agent-limits';
+import { loadConfig } from './config';
+import { withTempHome } from './home-env.test-harness';
 
 describe("config identity defaults", () => {
   const writeAndLoadConfig = async (home: string, config: Record<string, unknown>) => {

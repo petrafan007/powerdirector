@@ -13,7 +13,7 @@ import {
   serviceIsLoaded,
   uninstallLegacyGatewayServices,
   writeConfigFile,
-} from "./doctor.e2e-harness.js";
+} from './doctor.e2e-harness';
 
 describe("doctor command", () => {
   it("migrates routing.allowFrom to channels.whatsapp.allowFrom", { timeout: 60_000 }, async () => {
@@ -24,7 +24,7 @@ describe("doctor command", () => {
       legacyIssues: [{ path: "routing.allowFrom", message: "legacy" }],
     });
 
-    const { doctorCommand } = await import("./doctor.js");
+    const { doctorCommand } = await import('./doctor');
     const runtime = createDoctorRuntime();
 
     migrateLegacyConfig.mockReturnValue({
@@ -57,7 +57,7 @@ describe("doctor command", () => {
       legacyIssues: [{ path: "routing.allowFrom", message: "legacy" }],
     });
 
-    const { doctorCommand } = await import("./doctor.js");
+    const { doctorCommand } = await import('./doctor');
     const runtime = createDoctorRuntime();
 
     migrateLegacyConfig.mockReturnValue({
@@ -93,7 +93,7 @@ describe("doctor command", () => {
     serviceIsLoaded.mockResolvedValueOnce(false);
     serviceInstall.mockClear();
 
-    const { doctorCommand } = await import("./doctor.js");
+    const { doctorCommand } = await import('./doctor');
     await doctorCommand(createDoctorRuntime());
 
     expect(uninstallLegacyGatewayServices).not.toHaveBeenCalled();
@@ -122,7 +122,7 @@ describe("doctor command", () => {
 
     mockDoctorConfigSnapshot();
 
-    const { doctorCommand } = await import("./doctor.js");
+    const { doctorCommand } = await import('./doctor');
     await doctorCommand(createDoctorRuntime());
 
     expect(runGatewayUpdate).toHaveBeenCalledWith(expect.objectContaining({ cwd: root }));

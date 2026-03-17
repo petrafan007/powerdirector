@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isRecoverableTelegramNetworkError } from "./network-errors.js";
+import { isRecoverableTelegramNetworkError } from './network-errors';
 
 describe("isRecoverableTelegramNetworkError", () => {
   it("detects recoverable error codes", () => {

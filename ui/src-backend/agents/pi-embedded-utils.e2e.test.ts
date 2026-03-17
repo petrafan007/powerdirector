@@ -4,7 +4,7 @@ import {
   extractAssistantText,
   formatReasoningMessage,
   stripDowngradedToolCallText,
-} from "./pi-embedded-utils.js";
+} from './pi-embedded-utils';
 
 function makeAssistantMessage(
   message: Omit<AssistantMessage, "api" | "provider" | "model" | "usage" | "stopReason"> &

@@ -1,4 +1,4 @@
-import { resolveFetch } from "../infra/fetch.js";
+import { resolveFetch } from '../infra/fetch';
 
 const PLURALKIT_API_BASE = "https://api.pluralkit.me/v2";
 

@@ -8,7 +8,7 @@ let MEDIA_DIR = "";
 const cleanOldMedia = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("./store.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./store.js")>();
+  const actual = await importOriginal<typeof import('./store')>();
   return {
     ...actual,
     getMediaDir: () => MEDIA_DIR,
@@ -16,8 +16,8 @@ vi.mock("./store.js", async (importOriginal) => {
   };
 });
 
-const { startMediaServer } = await import("./server.js");
-const { MEDIA_MAX_BYTES } = await import("./store.js");
+const { startMediaServer } = await import('./server');
+const { MEDIA_MAX_BYTES } = await import('./store');
 
 async function waitForFileRemoval(filePath: string, maxTicks = 1000) {
   for (let tick = 0; tick < maxTicks; tick += 1) {

@@ -1,10 +1,10 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { CliBackendConfig } from "../config/types.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { CliBackendConfig } from '../config/types';
 import {
   CLI_FRESH_WATCHDOG_DEFAULTS,
   CLI_RESUME_WATCHDOG_DEFAULTS,
-} from "./cli-watchdog-defaults.js";
-import { normalizeProviderId } from "./model-selection.js";
+} from './cli-watchdog-defaults';
+import { normalizeProviderId } from './model-selection';
 
 export type ResolvedCliBackend = {
   id: string;

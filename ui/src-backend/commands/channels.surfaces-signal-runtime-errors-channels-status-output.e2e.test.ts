@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { signalPlugin } from "../../extensions/signal/src/channel.js";
-import { setActivePluginRegistry } from "../plugins/runtime.js";
-import { createTestRegistry } from "../test-utils/channel-plugins.js";
-import { createIMessageTestPlugin } from "../test-utils/imessage-test-plugin.js";
-import { formatGatewayChannelsStatusLines } from "./channels/status.js";
+import { signalPlugin } from '../../extensions/signal/src/channel';
+import { setActivePluginRegistry } from '../plugins/runtime';
+import { createTestRegistry } from '../test-utils/channel-plugins';
+import { createIMessageTestPlugin } from '../test-utils/imessage-test-plugin';
+import { formatGatewayChannelsStatusLines } from './channels/status';
 
 describe("channels command", () => {
   beforeEach(() => {

@@ -3,7 +3,7 @@ import {
   parseFrontmatter,
   resolvePowerDirectorMetadata,
   resolveHookInvocationPolicy,
-} from "./frontmatter.js";
+} from './frontmatter';
 
 describe("parseFrontmatter", () => {
   it("parses single-line key-value pairs", () => {

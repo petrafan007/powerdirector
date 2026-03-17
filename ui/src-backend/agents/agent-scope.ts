@@ -1,16 +1,16 @@
 import path from "node:path";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
 import {
   DEFAULT_AGENT_ID,
   normalizeAgentId,
   parseAgentSessionKey,
-} from "../routing/session-key.js";
-import { resolveUserPath } from "../utils.js";
-import { normalizeSkillFilter } from "./skills/filter.js";
-import { resolveDefaultAgentWorkspaceDir } from "./workspace.js";
+} from '../routing/session-key';
+import { resolveUserPath } from '../utils';
+import { normalizeSkillFilter } from './skills/filter';
+import { resolveDefaultAgentWorkspaceDir } from './workspace';
 
-export { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
+export { resolveAgentIdFromSessionKey } from '../routing/session-key';
 
 type AgentEntry = NonNullable<NonNullable<PowerDirectorConfig["agents"]>["list"]>[number];
 

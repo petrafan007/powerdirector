@@ -8,7 +8,7 @@ import {
   resolveGatewayClientIp,
   resolveGatewayListenHosts,
   resolveHostName,
-} from "./net.js";
+} from './net';
 
 describe("resolveHostName", () => {
   it("returns hostname without port for IPv4/hostnames", () => {

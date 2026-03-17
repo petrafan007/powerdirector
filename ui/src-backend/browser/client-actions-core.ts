@@ -2,9 +2,9 @@ import type {
   BrowserActionOk,
   BrowserActionPathResult,
   BrowserActionTabResult,
-} from "./client-actions-types.js";
-import { buildProfileQuery, withBaseUrl } from "./client-actions-url.js";
-import { fetchBrowserJson } from "./client-fetch.js";
+} from './client-actions-types';
+import { buildProfileQuery, withBaseUrl } from './client-actions-url';
+import { fetchBrowserJson } from './client-fetch';
 
 export type BrowserFormField = {
   ref: string;

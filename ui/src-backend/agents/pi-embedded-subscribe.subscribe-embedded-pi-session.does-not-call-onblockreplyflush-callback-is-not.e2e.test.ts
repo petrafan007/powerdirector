@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { subscribeEmbeddedPiSession } from "./pi-embedded-subscribe.js";
+import { subscribeEmbeddedPiSession } from './pi-embedded-subscribe';
 
 type StubSession = {
   subscribe: (fn: (evt: unknown) => void) => () => void;

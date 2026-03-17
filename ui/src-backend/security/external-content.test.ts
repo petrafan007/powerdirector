@@ -6,7 +6,7 @@ import {
   isExternalHookSession,
   wrapExternalContent,
   wrapWebContent,
-} from "./external-content.js";
+} from './external-content';
 
 describe("external-content security", () => {
   const expectSanitizedBoundaryMarkers = (result: string) => {

@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { runRegisteredCli } from "../test-utils/command-runner.js";
+import { runRegisteredCli } from '../test-utils/command-runner';
 
 const updateCommand = vi.fn(async (_opts: unknown) => {});
 const updateStatusCommand = vi.fn(async (_opts: unknown) => {});
@@ -29,10 +29,10 @@ vi.mock("../runtime.js", () => ({
 }));
 
 describe("update cli option collisions", () => {
-  let registerUpdateCli: typeof import("./update-cli.js").registerUpdateCli;
+  let registerUpdateCli: typeof import('./update-cli').registerUpdateCli;
 
   beforeAll(async () => {
-    ({ registerUpdateCli } = await import("./update-cli.js"));
+    ({ registerUpdateCli } = await import('./update-cli'));
   });
 
   beforeEach(() => {

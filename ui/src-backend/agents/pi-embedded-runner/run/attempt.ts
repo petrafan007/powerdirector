@@ -4,109 +4,109 @@ import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { ImageContent } from "@mariozechner/pi-ai";
 import { streamSimple } from "@mariozechner/pi-ai";
 import { createAgentSession, SessionManager, SettingsManager } from "@mariozechner/pi-coding-agent";
-import { resolveHeartbeatPrompt } from "../../../auto-reply/heartbeat.js";
-import { resolveChannelCapabilities } from "../../../config/channel-capabilities.js";
-import { getMachineDisplayName } from "../../../infra/machine-name.js";
-import { MAX_IMAGE_BYTES } from "../../../media/constants.js";
-import { getGlobalHookRunner } from "../../../plugins/hook-runner-global.js";
+import { resolveHeartbeatPrompt } from '../../../auto-reply/heartbeat';
+import { resolveChannelCapabilities } from '../../../config/channel-capabilities';
+import { getMachineDisplayName } from '../../../infra/machine-name';
+import { MAX_IMAGE_BYTES } from '../../../media/constants';
+import { getGlobalHookRunner } from '../../../plugins/hook-runner-global';
 import {
   isCronSessionKey,
   isSubagentSessionKey,
   normalizeAgentId,
-} from "../../../routing/session-key.js";
-import { resolveSignalReactionLevel } from "../../../signal/reaction-level.js";
-import { resolveTelegramInlineButtonsScope } from "../../../telegram/inline-buttons.js";
-import { resolveTelegramReactionLevel } from "../../../telegram/reaction-level.js";
-import { buildTtsSystemPromptHint } from "../../../tts/tts.js";
-import { resolveUserPath } from "../../../utils.js";
-import { normalizeMessageChannel } from "../../../utils/message-channel.js";
-import { isReasoningTagProvider } from "../../../utils/provider-utils.js";
-import { resolvePowerDirectorAgentDir } from "../../agent-paths.js";
-import { resolveSessionAgentIds } from "../../agent-scope.js";
-import { createAnthropicPayloadLogger } from "../../anthropic-payload-log.js";
-import { makeBootstrapWarn, resolveBootstrapContextForRun } from "../../bootstrap-files.js";
-import { createCacheTrace } from "../../cache-trace.js";
+} from '../../../routing/session-key';
+import { resolveSignalReactionLevel } from '../../../signal/reaction-level';
+import { resolveTelegramInlineButtonsScope } from '../../../telegram/inline-buttons';
+import { resolveTelegramReactionLevel } from '../../../telegram/reaction-level';
+import { buildTtsSystemPromptHint } from '../../../tts/tts';
+import { resolveUserPath } from '../../../utils';
+import { normalizeMessageChannel } from '../../../utils/message-channel';
+import { isReasoningTagProvider } from '../../../utils/provider-utils';
+import { resolvePowerDirectorAgentDir } from '../../agent-paths';
+import { resolveSessionAgentIds } from '../../agent-scope';
+import { createAnthropicPayloadLogger } from '../../anthropic-payload-log';
+import { makeBootstrapWarn, resolveBootstrapContextForRun } from '../../bootstrap-files';
+import { createCacheTrace } from '../../cache-trace';
 import {
   listChannelSupportedActions,
   resolveChannelMessageToolHints,
-} from "../../channel-tools.js";
-import { DEFAULT_CONTEXT_TOKENS } from "../../defaults.js";
-import { resolvePowerDirectorDocsPath } from "../../docs-path.js";
-import { isTimeoutError } from "../../failover-error.js";
-import { resolveImageSanitizationLimits } from "../../image-sanitization.js";
-import { resolveModelAuthMode } from "../../model-auth.js";
-import { resolveDefaultModelForAgent } from "../../model-selection.js";
-import { createOllamaStreamFn, OLLAMA_NATIVE_BASE_URL } from "../../ollama-stream.js";
+} from '../../channel-tools';
+import { DEFAULT_CONTEXT_TOKENS } from '../../defaults';
+import { resolvePowerDirectorDocsPath } from '../../docs-path';
+import { isTimeoutError } from '../../failover-error';
+import { resolveImageSanitizationLimits } from '../../image-sanitization';
+import { resolveModelAuthMode } from '../../model-auth';
+import { resolveDefaultModelForAgent } from '../../model-selection';
+import { createOllamaStreamFn, OLLAMA_NATIVE_BASE_URL } from '../../ollama-stream';
 import {
   isCloudCodeAssistFormatError,
   resolveBootstrapMaxChars,
   resolveBootstrapTotalMaxChars,
   validateAnthropicTurns,
   validateGeminiTurns,
-} from "../../pi-embedded-helpers.js";
-import { subscribeEmbeddedPiSession } from "../../pi-embedded-subscribe.js";
+} from '../../pi-embedded-helpers';
+import { subscribeEmbeddedPiSession } from '../../pi-embedded-subscribe';
 import {
   ensurePiCompactionReserveTokens,
   resolveCompactionReserveTokensFloor,
-} from "../../pi-settings.js";
-import { toClientToolDefinitions } from "../../pi-tool-definition-adapter.js";
-import { createPowerDirectorCodingTools, resolveToolLoopDetectionConfig } from "../../pi-tools.js";
-import { resolveSandboxContext } from "../../sandbox.js";
-import { resolveSandboxRuntimeStatus } from "../../sandbox/runtime-status.js";
-import { repairSessionFileIfNeeded } from "../../session-file-repair.js";
-import { guardSessionManager } from "../../session-tool-result-guard-wrapper.js";
-import { sanitizeToolUseResultPairing } from "../../session-transcript-repair.js";
+} from '../../pi-settings';
+import { toClientToolDefinitions } from '../../pi-tool-definition-adapter';
+import { createPowerDirectorCodingTools, resolveToolLoopDetectionConfig } from '../../pi-tools';
+import { resolveSandboxContext } from '../../sandbox';
+import { resolveSandboxRuntimeStatus } from '../../sandbox/runtime-status';
+import { repairSessionFileIfNeeded } from '../../session-file-repair';
+import { guardSessionManager } from '../../session-tool-result-guard-wrapper';
+import { sanitizeToolUseResultPairing } from '../../session-transcript-repair';
 import {
   acquireSessionWriteLock,
   resolveSessionLockMaxHoldFromTimeout,
-} from "../../session-write-lock.js";
-import { detectRuntimeShell } from "../../shell-utils.js";
+} from '../../session-write-lock';
+import { detectRuntimeShell } from '../../shell-utils';
 import {
   applySkillEnvOverrides,
   applySkillEnvOverridesFromSnapshot,
   loadWorkspaceSkillEntries,
   resolveSkillsPromptForRun,
-} from "../../skills.js";
-import { buildSystemPromptParams } from "../../system-prompt-params.js";
-import { buildSystemPromptReport } from "../../system-prompt-report.js";
-import { resolveTranscriptPolicy } from "../../transcript-policy.js";
-import { DEFAULT_BOOTSTRAP_FILENAME } from "../../workspace.js";
-import { isRunnerAbortError } from "../abort.js";
-import { appendCacheTtlTimestamp, isCacheTtlEligibleProvider } from "../cache-ttl.js";
-import { buildEmbeddedExtensionPaths } from "../extensions.js";
-import { applyExtraParamsToAgent } from "../extra-params.js";
+} from '../../skills';
+import { buildSystemPromptParams } from '../../system-prompt-params';
+import { buildSystemPromptReport } from '../../system-prompt-report';
+import { resolveTranscriptPolicy } from '../../transcript-policy';
+import { DEFAULT_BOOTSTRAP_FILENAME } from '../../workspace';
+import { isRunnerAbortError } from '../abort';
+import { appendCacheTtlTimestamp, isCacheTtlEligibleProvider } from '../cache-ttl';
+import { buildEmbeddedExtensionPaths } from '../extensions';
+import { applyExtraParamsToAgent } from '../extra-params';
 import {
   logToolSchemasForGoogle,
   sanitizeAntigravityThinkingBlocks,
   sanitizeSessionHistory,
   sanitizeToolsForGoogle,
-} from "../google.js";
-import { getDmHistoryLimitFromSessionKey, limitHistoryTurns } from "../history.js";
-import { log } from "../logger.js";
-import { buildModelAliasLines } from "../model.js";
+} from '../google';
+import { getDmHistoryLimitFromSessionKey, limitHistoryTurns } from '../history';
+import { log } from '../logger';
+import { buildModelAliasLines } from '../model';
 import {
   clearActiveEmbeddedRun,
   type EmbeddedPiQueueHandle,
   setActiveEmbeddedRun,
-} from "../runs.js";
-import { buildEmbeddedSandboxInfo } from "../sandbox-info.js";
-import { prewarmSessionFile, trackSessionManagerAccess } from "../session-manager-cache.js";
-import { prepareSessionManagerForRun } from "../session-manager-init.js";
+} from '../runs';
+import { buildEmbeddedSandboxInfo } from '../sandbox-info';
+import { prewarmSessionFile, trackSessionManagerAccess } from '../session-manager-cache';
+import { prepareSessionManagerForRun } from '../session-manager-init';
 import {
   applySystemPromptOverrideToSession,
   buildEmbeddedSystemPrompt,
   createSystemPromptOverride,
-} from "../system-prompt.js";
-import { installToolResultContextGuard } from "../tool-result-context-guard.js";
-import { splitSdkTools } from "../tool-split.js";
-import { describeUnknownError, mapThinkingLevel } from "../utils.js";
-import { flushPendingToolResultsAfterIdle } from "../wait-for-idle-before-flush.js";
+} from '../system-prompt';
+import { installToolResultContextGuard } from '../tool-result-context-guard';
+import { splitSdkTools } from '../tool-split';
+import { describeUnknownError, mapThinkingLevel } from '../utils';
+import { flushPendingToolResultsAfterIdle } from '../wait-for-idle-before-flush';
 import {
   selectCompactionTimeoutSnapshot,
   shouldFlagCompactionTimeout,
-} from "./compaction-timeout.js";
-import { detectAndLoadPromptImages } from "./images.js";
-import type { EmbeddedRunAttemptParams, EmbeddedRunAttemptResult } from "./types.js";
+} from './compaction-timeout';
+import { detectAndLoadPromptImages } from './images';
+import type { EmbeddedRunAttemptParams, EmbeddedRunAttemptResult } from './types';
 
 export function injectHistoryImagesIntoMessages(
   messages: AgentMessage[],

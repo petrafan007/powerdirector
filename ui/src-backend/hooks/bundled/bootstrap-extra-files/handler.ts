@@ -1,9 +1,9 @@
 import {
   filterBootstrapFilesForSession,
   loadExtraBootstrapFiles,
-} from "../../../agents/workspace.js";
-import { resolveHookConfig } from "../../config.js";
-import { isAgentBootstrapEvent, type HookHandler } from "../../hooks.js";
+} from '../../../agents/workspace';
+import { resolveHookConfig } from '../../config';
+import { isAgentBootstrapEvent, type HookHandler } from '../../hooks';
 
 const HOOK_KEY = "bootstrap-extra-files";
 

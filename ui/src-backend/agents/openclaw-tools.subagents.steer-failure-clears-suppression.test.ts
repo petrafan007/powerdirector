@@ -5,14 +5,14 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   callGatewayMock,
   setSubagentsConfigOverride,
-} from "./powerdirector-tools.subagents.test-harness.js";
+} from './powerdirector-tools.subagents.test-harness';
 import {
   addSubagentRunForTests,
   listSubagentRunsForRequester,
   resetSubagentRegistryForTests,
-} from "./subagent-registry.js";
+} from './subagent-registry';
 import "./test-helpers/fast-core-tools.js";
-import { createSubagentsTool } from "./tools/subagents-tool.js";
+import { createSubagentsTool } from './tools/subagents-tool';
 
 describe("powerdirector-tools: subagents steer failure", () => {
   beforeEach(() => {

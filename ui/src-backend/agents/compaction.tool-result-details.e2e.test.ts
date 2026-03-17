@@ -17,7 +17,7 @@ vi.mock("@mariozechner/pi-coding-agent", async () => {
   };
 });
 
-import { summarizeWithFallback } from "./compaction.js";
+import { summarizeWithFallback } from './compaction';
 
 describe("compaction toolResult details stripping", () => {
   beforeEach(() => {

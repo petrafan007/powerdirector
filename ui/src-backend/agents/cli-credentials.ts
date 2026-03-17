@@ -3,9 +3,9 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import type { OAuthCredentials, OAuthProvider } from "@mariozechner/pi-ai";
-import { loadJsonFile, saveJsonFile } from "../infra/json-file.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { resolveUserPath } from "../utils.js";
+import { loadJsonFile, saveJsonFile } from '../infra/json-file';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { resolveUserPath } from '../utils';
 
 const log = createSubsystemLogger("agents/auth-profiles");
 

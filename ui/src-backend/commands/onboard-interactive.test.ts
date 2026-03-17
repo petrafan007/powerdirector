@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { RuntimeEnv } from "../runtime.js";
-import { WizardCancelledError } from "../wizard/prompts.js";
-import { runInteractiveOnboarding } from "./onboard-interactive.js";
+import type { RuntimeEnv } from '../runtime';
+import { WizardCancelledError } from '../wizard/prompts';
+import { runInteractiveOnboarding } from './onboard-interactive';
 
 const mocks = vi.hoisted(() => ({
   createClackPrompter: vi.fn(() => ({ id: "prompter" })),

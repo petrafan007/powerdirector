@@ -1,7 +1,7 @@
-import type { DirectoryConfigParams } from "../channels/plugins/directory-config.js";
-import type { ChannelDirectoryEntry } from "../channels/plugins/types.js";
-import { resolveSlackAccount } from "./accounts.js";
-import { createSlackWebClient } from "./client.js";
+import type { DirectoryConfigParams } from '../channels/plugins/directory-config';
+import type { ChannelDirectoryEntry } from '../channels/plugins/types';
+import { resolveSlackAccount } from './accounts';
+import { createSlackWebClient } from './client';
 
 type SlackUser = {
   id?: string;

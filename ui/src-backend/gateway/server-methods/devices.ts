@@ -7,7 +7,7 @@ import {
   revokeDeviceToken,
   rotateDeviceToken,
   summarizeDeviceTokens,
-} from "../../infra/device-pairing.js";
+} from '../../infra/device-pairing';
 import {
   ErrorCodes,
   errorShape,
@@ -18,8 +18,8 @@ import {
   validateDevicePairRejectParams,
   validateDeviceTokenRevokeParams,
   validateDeviceTokenRotateParams,
-} from "../protocol/index.js";
-import type { GatewayRequestHandlers } from "./types.js";
+} from '../protocol/index';
+import type { GatewayRequestHandlers } from './types';
 
 function redactPairedDevice(
   device: { tokens?: Record<string, DeviceAuthToken> } & Record<string, unknown>,

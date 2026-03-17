@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { isDiagnosticFlagEnabled, resolveDiagnosticFlags } from "./diagnostic-flags.js";
-import { isMainModule } from "./is-main.js";
-import { buildNodeShellCommand } from "./node-shell.js";
-import { parseSshTarget } from "./ssh-tunnel.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { isDiagnosticFlagEnabled, resolveDiagnosticFlags } from './diagnostic-flags';
+import { isMainModule } from './is-main';
+import { buildNodeShellCommand } from './node-shell';
+import { parseSshTarget } from './ssh-tunnel';
 
 describe("infra parsing", () => {
   describe("diagnostic flags", () => {

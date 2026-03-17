@@ -1,15 +1,15 @@
-import { resolveSandboxConfigForAgent } from "../agents/sandbox.js";
-import { resolveBrowserConfig, resolveProfile } from "../browser/config.js";
-import { resolveBrowserControlAuth } from "../browser/control-auth.js";
-import { listChannelPlugins } from "../channels/plugins/index.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveConfigPath, resolveStateDir } from "../config/paths.js";
-import { resolveGatewayAuth } from "../gateway/auth.js";
-import { buildGatewayConnectionDetails } from "../gateway/call.js";
-import { resolveGatewayProbeAuth } from "../gateway/probe-auth.js";
-import { probeGateway } from "../gateway/probe.js";
-import { collectChannelSecurityFindings } from "./audit-channel.js";
+import { resolveSandboxConfigForAgent } from '../agents/sandbox';
+import { resolveBrowserConfig, resolveProfile } from '../browser/config';
+import { resolveBrowserControlAuth } from '../browser/control-auth';
+import { listChannelPlugins } from '../channels/plugins/index';
+import { formatCliCommand } from '../cli/command-format';
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveConfigPath, resolveStateDir } from '../config/paths';
+import { resolveGatewayAuth } from '../gateway/auth';
+import { buildGatewayConnectionDetails } from '../gateway/call';
+import { resolveGatewayProbeAuth } from '../gateway/probe-auth';
+import { probeGateway } from '../gateway/probe';
+import { collectChannelSecurityFindings } from './audit-channel';
 import {
   collectAttackSurfaceSummaryFindings,
   collectExposureMatrixFindings,
@@ -30,14 +30,14 @@ import {
   collectStateDeepFilesystemFindings,
   collectSyncedFolderFindings,
   readConfigSnapshotForAudit,
-} from "./audit-extra.js";
+} from './audit-extra';
 import {
   formatPermissionDetail,
   formatPermissionRemediation,
   inspectPathPermissions,
-} from "./audit-fs.js";
-import { DEFAULT_GATEWAY_HTTP_TOOL_DENY } from "./dangerous-tools.js";
-import type { ExecFn } from "./windows-acl.js";
+} from './audit-fs';
+import { DEFAULT_GATEWAY_HTTP_TOOL_DENY } from './dangerous-tools';
+import type { ExecFn } from './windows-acl';
 
 export type SecurityAuditSeverity = "info" | "warn" | "critical";
 

@@ -8,18 +8,18 @@ import {
   useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
 import qrcode from "qrcode-terminal";
-import { formatCliCommand } from "../cli/command-format.js";
-import { danger, success } from "../globals.js";
-import { getChildLogger, toPinoLikeLogger } from "../logging.js";
-import { ensureDir, resolveUserPath } from "../utils.js";
-import { VERSION } from "../version.js";
+import { formatCliCommand } from '../cli/command-format';
+import { danger, success } from '../globals';
+import { getChildLogger, toPinoLikeLogger } from '../logging';
+import { ensureDir, resolveUserPath } from '../utils';
+import { VERSION } from '../version';
 import {
   maybeRestoreCredsFromBackup,
   readCredsJsonRaw,
   resolveDefaultWebAuthDir,
   resolveWebCredsBackupPath,
   resolveWebCredsPath,
-} from "./auth-store.js";
+} from './auth-store';
 
 export {
   getWebAuthAgeMs,
@@ -29,7 +29,7 @@ export {
   readWebSelfId,
   WA_WEB_AUTH_DIR,
   webAuthExists,
-} from "./auth-store.js";
+} from './auth-store';
 
 let credsSaveQueue: Promise<void> = Promise.resolve();
 function enqueueSaveCreds(

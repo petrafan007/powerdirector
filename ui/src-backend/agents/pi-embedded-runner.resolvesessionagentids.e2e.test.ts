@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveSessionAgentIds } from "./agent-scope.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveSessionAgentIds } from './agent-scope';
 
 describe("resolveSessionAgentIds", () => {
   const cfg = {

@@ -2,12 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { createPowerDirectorCodingTools } from "./pi-tools.js";
-import { createHostSandboxFsBridge } from "./test-helpers/host-sandbox-fs-bridge.js";
-import { createPiToolsSandboxContext } from "./test-helpers/pi-tools-sandbox-context.js";
+import { createPowerDirectorCodingTools } from './pi-tools';
+import { createHostSandboxFsBridge } from './test-helpers/host-sandbox-fs-bridge';
+import { createPiToolsSandboxContext } from './test-helpers/pi-tools-sandbox-context';
 
 vi.mock("../infra/shell-env.js", async (importOriginal) => {
-  const mod = await importOriginal<typeof import("../infra/shell-env.js")>();
+  const mod = await importOriginal<typeof import('../infra/shell-env')>();
   return { ...mod, getShellPathFromLoginShell: () => null };
 });
 async function withTempDir<T>(prefix: string, fn: (dir: string) => Promise<T>) {

@@ -1,14 +1,14 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveOAuthDir } from "./config/paths.js";
-import { logVerbose, shouldLogVerbose } from "./globals.js";
+import { resolveOAuthDir } from './config/paths';
+import { logVerbose, shouldLogVerbose } from './globals';
 import {
   expandHomePrefix,
   resolveEffectiveHomeDir,
   resolveRequiredHomeDir,
-} from "./infra/home-dir.js";
-import { isPlainObject } from "./infra/plain-object.js";
+} from './infra/home-dir';
+import { isPlainObject } from './infra/plain-object';
 
 export async function ensureDir(dir: string) {
   await fs.promises.mkdir(dir, { recursive: true });

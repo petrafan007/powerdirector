@@ -3,8 +3,8 @@ import {
   auditGatewayServiceConfig,
   checkTokenDrift,
   SERVICE_AUDIT_CODES,
-} from "./service-audit.js";
-import { buildMinimalServicePath } from "./service-env.js";
+} from './service-audit';
+import { buildMinimalServicePath } from './service-env';
 
 describe("auditGatewayServiceConfig", () => {
   it("flags bun runtime", async () => {

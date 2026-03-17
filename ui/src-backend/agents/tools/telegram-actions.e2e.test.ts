@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { handleTelegramAction, readTelegramButtons } from "./telegram-actions.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { handleTelegramAction, readTelegramButtons } from './telegram-actions';
 
 const reactMessageTelegram = vi.fn(async () => ({ ok: true }));
 const sendMessageTelegram = vi.fn(async () => ({

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { loadModelCatalog } from "./model-catalog.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { loadModelCatalog } from './model-catalog';
 import {
   installModelCatalogTestHooks,
   mockCatalogImportFailThenRecover,
-} from "./model-catalog.test-harness.js";
+} from './model-catalog.test-harness';
 
 describe("loadModelCatalog e2e smoke", () => {
   installModelCatalogTestHooks();

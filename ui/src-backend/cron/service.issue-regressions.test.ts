@@ -3,13 +3,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import * as schedule from "./schedule.js";
-import { CronService } from "./service.js";
-import { createRunningCronServiceState } from "./service.test-harness.js";
-import { computeJobNextRunAtMs } from "./service/jobs.js";
-import { createCronServiceState, type CronEvent } from "./service/state.js";
-import { onTimer } from "./service/timer.js";
-import type { CronJob, CronJobState } from "./types.js";
+import * as schedule from './schedule';
+import { CronService } from './service';
+import { createRunningCronServiceState } from './service.test-harness';
+import { computeJobNextRunAtMs } from './service/jobs';
+import { createCronServiceState, type CronEvent } from './service/state';
+import { onTimer } from './service/timer';
+import type { CronJob, CronJobState } from './types';
 
 const noopLogger = {
   info: vi.fn(),

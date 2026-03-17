@@ -1,18 +1,18 @@
 import path from "node:path";
-import { ensureMediaDir, saveMediaBuffer } from "../../media/store.js";
-import { captureScreenshot, snapshotAria } from "../cdp.js";
+import { ensureMediaDir, saveMediaBuffer } from '../../media/store';
+import { captureScreenshot, snapshotAria } from '../cdp';
 import {
   DEFAULT_AI_SNAPSHOT_EFFICIENT_DEPTH,
   DEFAULT_AI_SNAPSHOT_EFFICIENT_MAX_CHARS,
   DEFAULT_AI_SNAPSHOT_MAX_CHARS,
-} from "../constants.js";
-import { withBrowserNavigationPolicy } from "../navigation-guard.js";
+} from '../constants';
+import { withBrowserNavigationPolicy } from '../navigation-guard';
 import {
   DEFAULT_BROWSER_SCREENSHOT_MAX_BYTES,
   DEFAULT_BROWSER_SCREENSHOT_MAX_SIDE,
   normalizeBrowserScreenshot,
-} from "../screenshot.js";
-import type { BrowserRouteContext } from "../server-context.js";
+} from '../screenshot';
+import type { BrowserRouteContext } from '../server-context';
 import {
   getPwAiModule,
   handleRouteError,
@@ -21,9 +21,9 @@ import {
   resolveProfileContext,
   withPlaywrightRouteContext,
   withRouteTabContext,
-} from "./agent.shared.js";
-import type { BrowserResponse, BrowserRouteRegistrar } from "./types.js";
-import { jsonError, toBoolean, toNumber, toStringOrEmpty } from "./utils.js";
+} from './agent.shared';
+import type { BrowserResponse, BrowserRouteRegistrar } from './types';
+import { jsonError, toBoolean, toNumber, toStringOrEmpty } from './utils';
 
 async function saveBrowserMediaResponse(params: {
   res: BrowserResponse;

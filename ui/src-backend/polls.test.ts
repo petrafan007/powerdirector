@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizePollDurationHours, normalizePollInput } from "./polls.js";
+import { normalizePollDurationHours, normalizePollInput } from './polls';
 
 describe("polls", () => {
   it("normalizes question/options and validates maxSelections", () => {

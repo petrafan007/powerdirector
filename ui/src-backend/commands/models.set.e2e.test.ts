@@ -52,7 +52,7 @@ describe("models set + fallbacks", () => {
   it("normalizes z.ai provider in models set", async () => {
     mockConfigSnapshot({});
     const runtime = makeRuntime();
-    const { modelsSetCommand } = await import("./models/set.js");
+    const { modelsSetCommand } = await import('./models/set');
 
     await modelsSetCommand("z.ai/glm-4.7", runtime);
 
@@ -62,7 +62,7 @@ describe("models set + fallbacks", () => {
   it("normalizes z-ai provider in models fallbacks add", async () => {
     mockConfigSnapshot({ agents: { defaults: { model: { fallbacks: [] } } } });
     const runtime = makeRuntime();
-    const { modelsFallbacksAddCommand } = await import("./models/fallbacks.js");
+    const { modelsFallbacksAddCommand } = await import('./models/fallbacks');
 
     await modelsFallbacksAddCommand("z-ai/glm-4.7", runtime);
 
@@ -79,7 +79,7 @@ describe("models set + fallbacks", () => {
   it("normalizes provider casing in models set", async () => {
     mockConfigSnapshot({});
     const runtime = makeRuntime();
-    const { modelsSetCommand } = await import("./models/set.js");
+    const { modelsSetCommand } = await import('./models/set');
 
     await modelsSetCommand("Z.AI/glm-4.7", runtime);
 

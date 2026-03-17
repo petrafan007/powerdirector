@@ -1,20 +1,20 @@
-import type { BrowserConfig, BrowserProfileConfig, PowerDirectorConfig } from "../config/config.js";
-import { resolveGatewayPort } from "../config/paths.js";
+import type { BrowserConfig, BrowserProfileConfig, PowerDirectorConfig } from '../config/config';
+import { resolveGatewayPort } from '../config/paths';
 import {
   deriveDefaultBrowserCdpPortRange,
   deriveDefaultBrowserControlPort,
   DEFAULT_BROWSER_CONTROL_PORT,
-} from "../config/port-defaults.js";
-import { isLoopbackHost } from "../gateway/net.js";
-import type { SsrFPolicy } from "../infra/net/ssrf.js";
+} from '../config/port-defaults';
+import { isLoopbackHost } from '../gateway/net';
+import type { SsrFPolicy } from '../infra/net/ssrf';
 import {
   DEFAULT_POWERDIRECTOR_BROWSER_COLOR,
   DEFAULT_POWERDIRECTOR_BROWSER_ENABLED,
   DEFAULT_BROWSER_EVALUATE_ENABLED,
   DEFAULT_BROWSER_DEFAULT_PROFILE_NAME,
   DEFAULT_POWERDIRECTOR_BROWSER_PROFILE_NAME,
-} from "./constants.js";
-import { CDP_PORT_RANGE_START, getUsedPorts } from "./profiles.js";
+} from './constants';
+import { CDP_PORT_RANGE_START, getUsedPorts } from './profiles';
 
 export type ResolvedBrowserConfig = {
   enabled: boolean;

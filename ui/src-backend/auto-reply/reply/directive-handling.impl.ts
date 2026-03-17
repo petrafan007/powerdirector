@@ -2,30 +2,30 @@ import {
   resolveAgentConfig,
   resolveAgentDir,
   resolveSessionAgentId,
-} from "../../agents/agent-scope.js";
-import { resolveSandboxRuntimeStatus } from "../../agents/sandbox.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { type SessionEntry, updateSessionStore } from "../../config/sessions.js";
-import type { ExecAsk, ExecHost, ExecSecurity } from "../../infra/exec-approvals.js";
-import { enqueueSystemEvent } from "../../infra/system-events.js";
-import { applyVerboseOverride } from "../../sessions/level-overrides.js";
-import { applyModelOverrideToSessionEntry } from "../../sessions/model-overrides.js";
-import { formatThinkingLevels, formatXHighModelHint, supportsXHighThinking } from "../thinking.js";
-import type { ReplyPayload } from "../types.js";
+} from '../../agents/agent-scope';
+import { resolveSandboxRuntimeStatus } from '../../agents/sandbox';
+import type { PowerDirectorConfig } from '../../config/config';
+import { type SessionEntry, updateSessionStore } from '../../config/sessions';
+import type { ExecAsk, ExecHost, ExecSecurity } from '../../infra/exec-approvals';
+import { enqueueSystemEvent } from '../../infra/system-events';
+import { applyVerboseOverride } from '../../sessions/level-overrides';
+import { applyModelOverrideToSessionEntry } from '../../sessions/model-overrides';
+import { formatThinkingLevels, formatXHighModelHint, supportsXHighThinking } from '../thinking';
+import type { ReplyPayload } from '../types';
 import {
   maybeHandleModelDirectiveInfo,
   resolveModelSelectionFromDirective,
-} from "./directive-handling.model.js";
-import type { HandleDirectiveOnlyParams } from "./directive-handling.params.js";
-import { maybeHandleQueueDirective } from "./directive-handling.queue-validation.js";
+} from './directive-handling.model';
+import type { HandleDirectiveOnlyParams } from './directive-handling.params';
+import { maybeHandleQueueDirective } from './directive-handling.queue-validation';
 import {
   formatDirectiveAck,
   formatElevatedRuntimeHint,
   formatElevatedUnavailableText,
   enqueueModeSwitchEvents,
   withOptions,
-} from "./directive-handling.shared.js";
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel } from "./directives.js";
+} from './directive-handling.shared';
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel } from './directives';
 
 function resolveExecDefaults(params: {
   cfg: PowerDirectorConfig;

@@ -4,7 +4,7 @@ import {
   isNativeCommandsExplicitlyDisabled,
   resolveNativeCommandsEnabled,
   resolveNativeSkillsEnabled,
-} from "./commands.js";
+} from './commands';
 
 describe("resolveNativeSkillsEnabled", () => {
   it("uses provider defaults for auto", () => {

@@ -2,8 +2,8 @@ import type { ChildProcess } from "node:child_process";
 import { EventEmitter } from "node:events";
 import { PassThrough } from "node:stream";
 import { describe, expect, it, vi } from "vitest";
-import { createRestartIterationHook } from "./restart-recovery.js";
-import { spawnWithFallback } from "./spawn-utils.js";
+import { createRestartIterationHook } from './restart-recovery';
+import { spawnWithFallback } from './spawn-utils';
 
 function createStubChild() {
   const child = new EventEmitter() as ChildProcess;

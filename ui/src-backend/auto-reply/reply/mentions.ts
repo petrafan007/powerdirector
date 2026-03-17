@@ -1,9 +1,9 @@
-import { resolveAgentConfig } from "../../agents/agent-scope.js";
-import { getChannelDock } from "../../channels/dock.js";
-import { normalizeChannelId } from "../../channels/plugins/index.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { escapeRegExp } from "../../utils.js";
-import type { MsgContext } from "../templating.js";
+import { resolveAgentConfig } from '../../agents/agent-scope';
+import { getChannelDock } from '../../channels/dock';
+import { normalizeChannelId } from '../../channels/plugins/index';
+import type { PowerDirectorConfig } from '../../config/config';
+import { escapeRegExp } from '../../utils';
+import type { MsgContext } from '../templating';
 
 function deriveMentionPatterns(identity?: { name?: string; emoji?: string }) {
   const patterns: string[] = [];

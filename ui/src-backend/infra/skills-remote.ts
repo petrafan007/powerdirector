@@ -1,11 +1,11 @@
-import type { SkillEligibilityContext, SkillEntry } from "../agents/skills.js";
-import { loadWorkspaceSkillEntries } from "../agents/skills.js";
-import { bumpSkillsSnapshotVersion } from "../agents/skills/refresh.js";
-import { listAgentWorkspaceDirs } from "../agents/workspace-dirs.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { NodeRegistry } from "../gateway/node-registry.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { listNodePairing, updatePairedNodeMetadata } from "./node-pairing.js";
+import type { SkillEligibilityContext, SkillEntry } from '../agents/skills';
+import { loadWorkspaceSkillEntries } from '../agents/skills';
+import { bumpSkillsSnapshotVersion } from '../agents/skills/refresh';
+import { listAgentWorkspaceDirs } from '../agents/workspace-dirs';
+import type { PowerDirectorConfig } from '../config/config';
+import type { NodeRegistry } from '../gateway/node-registry';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { listNodePairing, updatePairedNodeMetadata } from './node-pairing';
 
 type RemoteNodeRecord = {
   nodeId: string;

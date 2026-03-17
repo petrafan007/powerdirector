@@ -1,5 +1,5 @@
 import type { WebClient } from "@slack/web-api";
-import { createSlackWebClient } from "./client.js";
+import { createSlackWebClient } from './client';
 
 export type SlackChannelLookup = {
   id: string;

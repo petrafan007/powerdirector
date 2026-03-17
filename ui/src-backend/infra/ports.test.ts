@@ -1,13 +1,13 @@
 import net from "node:net";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { stripAnsi } from "../terminal/ansi.js";
+import { stripAnsi } from '../terminal/ansi';
 
 const runCommandWithTimeoutMock = vi.hoisted(() => vi.fn());
 
 vi.mock("../process/exec.js", () => ({
   runCommandWithTimeout: (...args: unknown[]) => runCommandWithTimeoutMock(...args),
 }));
-import { inspectPortUsage } from "./ports-inspect.js";
+import { inspectPortUsage } from './ports-inspect';
 import {
   buildPortHints,
   classifyPortListener,
@@ -15,7 +15,7 @@ import {
   formatPortDiagnostics,
   handlePortError,
   PortInUseError,
-} from "./ports.js";
+} from './ports';
 
 const describeUnix = process.platform === "win32" ? describe.skip : describe;
 

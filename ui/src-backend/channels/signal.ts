@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel } from './base.js'; // Assuming base interface exists or similar structure
+import { Channel } from './base'; // Assuming base interface exists or similar structure
 import { exec, spawn } from 'node:child_process';
 import util from 'node:util';
 

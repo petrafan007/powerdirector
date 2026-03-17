@@ -1,12 +1,12 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ImageContent } from "@mariozechner/pi-ai";
-import { resolveUserPath } from "../../../utils.js";
-import { loadWebMedia } from "../../../web/media.js";
-import type { ImageSanitizationLimits } from "../../image-sanitization.js";
-import type { SandboxFsBridge } from "../../sandbox/fs-bridge.js";
-import { sanitizeImageBlocks } from "../../tool-images.js";
-import { log } from "../logger.js";
+import { resolveUserPath } from '../../../utils';
+import { loadWebMedia } from '../../../web/media';
+import type { ImageSanitizationLimits } from '../../image-sanitization';
+import type { SandboxFsBridge } from '../../sandbox/fs-bridge';
+import { sanitizeImageBlocks } from '../../tool-images';
+import { log } from '../logger';
 
 /**
  * Common image file extensions for detection.

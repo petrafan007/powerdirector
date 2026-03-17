@@ -1,4 +1,4 @@
-import { ensureContextState, getPageForTargetId } from "./pw-session.js";
+import { ensureContextState, getPageForTargetId } from './pw-session';
 
 export async function traceStartViaPlaywright(opts: {
   cdpUrl: string;

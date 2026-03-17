@@ -3,12 +3,12 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { WebSocket } from "ws";
-import { whatsappPlugin } from "../../extensions/whatsapp/src/channel.js";
-import { BARE_SESSION_RESET_PROMPT } from "../auto-reply/reply/session-reset-prompt.js";
-import type { ChannelPlugin } from "../channels/plugins/types.js";
-import { emitAgentEvent, registerAgentRunContext } from "../infra/agent-events.js";
-import { setRegistry } from "./server.agent.gateway-server-agent.mocks.js";
-import { createRegistry } from "./server.e2e-registry-helpers.js";
+import { whatsappPlugin } from '../../extensions/whatsapp/src/channel';
+import { BARE_SESSION_RESET_PROMPT } from '../auto-reply/reply/session-reset-prompt';
+import type { ChannelPlugin } from '../channels/plugins/types';
+import { emitAgentEvent, registerAgentRunContext } from '../infra/agent-events';
+import { setRegistry } from './server.agent.gateway-server-agent.mocks';
+import { createRegistry } from './server.e2e-registry-helpers';
 import {
   agentCommand,
   connectWebchatClient,
@@ -20,7 +20,7 @@ import {
   testState,
   withGatewayServer,
   writeSessionStore,
-} from "./test-helpers.js";
+} from './test-helpers';
 
 installGatewayTestHooks({ scope: "suite" });
 

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { resolveTelegramVoiceSend } from "./voice.js";
+import { resolveTelegramVoiceSend } from './voice';
 
 describe("resolveTelegramVoiceSend", () => {
   it("skips voice when wantsVoice is false", () => {

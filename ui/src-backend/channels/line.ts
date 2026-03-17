@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Channel, ChannelMessage } from './base.js';
+import { Channel, ChannelMessage } from './base';
 import { messagingApi, WebhookEvent } from '@line/bot-sdk';
 
 export interface LineConfig {

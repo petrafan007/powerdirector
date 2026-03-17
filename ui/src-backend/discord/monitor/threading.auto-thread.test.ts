@@ -1,6 +1,6 @@
 import { ChannelType } from "@buape/carbon";
 import { describe, it, expect, vi } from "vitest";
-import { maybeCreateDiscordAutoThread } from "./threading.js";
+import { maybeCreateDiscordAutoThread } from './threading';
 
 describe("maybeCreateDiscordAutoThread", () => {
   const postMock = vi.fn();

@@ -11,7 +11,7 @@ vi.mock("@line/bot-sdk", () => ({
   messagingApi: { MessagingApiClient: MessagingApiClientMock },
 }));
 
-let probeLineBot: typeof import("./probe.js").probeLineBot;
+let probeLineBot: typeof import('./probe').probeLineBot;
 
 afterEach(() => {
   vi.useRealTimers();
@@ -20,7 +20,7 @@ afterEach(() => {
 
 describe("probeLineBot", () => {
   beforeAll(async () => {
-    ({ probeLineBot } = await import("./probe.js"));
+    ({ probeLineBot } = await import('./probe'));
   });
 
   it("returns timeout when bot info stalls", async () => {

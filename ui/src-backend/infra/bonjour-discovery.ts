@@ -1,6 +1,6 @@
-import { runCommandWithTimeout } from "../process/exec.js";
-import { isTailnetIPv4 } from "./tailnet.js";
-import { resolveWideAreaDiscoveryDomain } from "./widearea-dns.js";
+import { runCommandWithTimeout } from '../process/exec';
+import { isTailnetIPv4 } from './tailnet';
+import { resolveWideAreaDiscoveryDomain } from './widearea-dns';
 
 export type GatewayBonjourBeacon = {
   instanceName: string;

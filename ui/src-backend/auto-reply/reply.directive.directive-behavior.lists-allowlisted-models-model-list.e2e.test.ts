@@ -9,8 +9,8 @@ import {
   runEmbeddedPiAgent,
   sessionStorePath,
   withTempHome,
-} from "./reply.directive.directive-behavior.e2e-harness.js";
-import { getReplyFromConfig } from "./reply.js";
+} from './reply.directive.directive-behavior.e2e-harness';
+import { getReplyFromConfig } from './reply';
 
 async function runModelDirective(
   home: string,

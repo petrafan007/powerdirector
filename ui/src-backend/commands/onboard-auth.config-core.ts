@@ -2,32 +2,32 @@ import {
   buildHuggingfaceModelDefinition,
   HUGGINGFACE_BASE_URL,
   HUGGINGFACE_MODEL_CATALOG,
-} from "../agents/huggingface-models.js";
+} from '../agents/huggingface-models';
 import {
   buildQianfanProvider,
   buildXiaomiProvider,
   QIANFAN_DEFAULT_MODEL_ID,
   XIAOMI_DEFAULT_MODEL_ID,
-} from "../agents/models-config.providers.js";
+} from '../agents/models-config.providers';
 import {
   buildSyntheticModelDefinition,
   SYNTHETIC_BASE_URL,
   SYNTHETIC_DEFAULT_MODEL_REF,
   SYNTHETIC_MODEL_CATALOG,
-} from "../agents/synthetic-models.js";
+} from '../agents/synthetic-models';
 import {
   buildTogetherModelDefinition,
   TOGETHER_BASE_URL,
   TOGETHER_MODEL_CATALOG,
-} from "../agents/together-models.js";
+} from '../agents/together-models';
 import {
   buildVeniceModelDefinition,
   VENICE_BASE_URL,
   VENICE_DEFAULT_MODEL_REF,
   VENICE_MODEL_CATALOG,
-} from "../agents/venice-models.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ModelApi } from "../config/types.models.js";
+} from '../agents/venice-models';
+import type { PowerDirectorConfig } from '../config/config';
+import type { ModelApi } from '../config/types.models';
 import {
   HUGGINGFACE_DEFAULT_MODEL_REF,
   OPENROUTER_DEFAULT_MODEL_REF,
@@ -35,26 +35,26 @@ import {
   XIAOMI_DEFAULT_MODEL_REF,
   ZAI_DEFAULT_MODEL_REF,
   XAI_DEFAULT_MODEL_REF,
-} from "./onboard-auth.credentials.js";
+} from './onboard-auth.credentials';
 export {
   applyCloudflareAiGatewayConfig,
   applyCloudflareAiGatewayProviderConfig,
   applyVercelAiGatewayConfig,
   applyVercelAiGatewayProviderConfig,
-} from "./onboard-auth.config-gateways.js";
+} from './onboard-auth.config-gateways';
 export {
   applyLitellmConfig,
   applyLitellmProviderConfig,
   LITELLM_BASE_URL,
   LITELLM_DEFAULT_MODEL_ID,
-} from "./onboard-auth.config-litellm.js";
+} from './onboard-auth.config-litellm';
 import {
   applyAgentDefaultModelPrimary,
   applyOnboardAuthAgentModelsAndProviders,
   applyProviderConfigWithDefaultModel,
   applyProviderConfigWithDefaultModels,
   applyProviderConfigWithModelCatalog,
-} from "./onboard-auth.config-shared.js";
+} from './onboard-auth.config-shared';
 import {
   buildZaiModelDefinition,
   buildMoonshotModelDefinition,
@@ -70,7 +70,7 @@ import {
   resolveZaiBaseUrl,
   XAI_BASE_URL,
   XAI_DEFAULT_MODEL_ID,
-} from "./onboard-auth.models.js";
+} from './onboard-auth.models';
 
 export function applyZaiProviderConfig(
   cfg: PowerDirectorConfig,

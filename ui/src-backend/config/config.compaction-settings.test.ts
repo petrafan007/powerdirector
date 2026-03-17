@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadConfig } from "./config.js";
-import { withTempHome } from "./test-helpers.js";
+import { loadConfig } from './config';
+import { withTempHome } from './test-helpers';
 
 describe("config compaction settings", () => {
   it("preserves memory flush config values", async () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filterMessagingToolMediaDuplicates } from "./reply-payloads.js";
+import { filterMessagingToolMediaDuplicates } from './reply-payloads';
 
 describe("filterMessagingToolMediaDuplicates", () => {
   it("strips mediaUrl when it matches sentMediaUrls", () => {

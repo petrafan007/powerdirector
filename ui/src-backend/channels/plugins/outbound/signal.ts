@@ -1,7 +1,7 @@
-import { chunkText } from "../../../auto-reply/chunk.js";
-import { sendMessageSignal } from "../../../signal/send.js";
-import { resolveChannelMediaMaxBytes } from "../media-limits.js";
-import type { ChannelOutboundAdapter } from "../types.js";
+import { chunkText } from '../../../auto-reply/chunk';
+import { sendMessageSignal } from '../../../signal/send';
+import { resolveChannelMediaMaxBytes } from '../media-limits';
+import type { ChannelOutboundAdapter } from '../types';
 
 function resolveSignalMaxBytes(params: {
   cfg: Parameters<typeof resolveChannelMediaMaxBytes>[0]["cfg"];

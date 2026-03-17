@@ -3,31 +3,31 @@ import {
   resolveAgentDir,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from "../../agents/agent-scope.js";
-import { upsertAuthProfile } from "../../agents/auth-profiles.js";
-import type { AuthProfileCredential } from "../../agents/auth-profiles/types.js";
-import { normalizeProviderId } from "../../agents/model-selection.js";
-import { resolveDefaultAgentWorkspaceDir } from "../../agents/workspace.js";
-import { formatCliCommand } from "../../cli/command-format.js";
-import { parseDurationMs } from "../../cli/parse-duration.js";
-import { logConfigUpdated } from "../../config/logging.js";
-import { resolvePluginProviders } from "../../plugins/providers.js";
-import type { ProviderAuthResult, ProviderPlugin } from "../../plugins/types.js";
-import type { RuntimeEnv } from "../../runtime.js";
-import { stylePromptHint, stylePromptMessage } from "../../terminal/prompt-style.js";
-import { createClackPrompter } from "../../wizard/clack-prompter.js";
-import { validateAnthropicSetupToken } from "../auth-token.js";
-import { isRemoteEnvironment } from "../oauth-env.js";
-import { createVpsAwareOAuthHandlers } from "../oauth-flow.js";
-import { applyAuthProfileConfig } from "../onboard-auth.js";
-import { openUrl } from "../onboard-helpers.js";
+} from '../../agents/agent-scope';
+import { upsertAuthProfile } from '../../agents/auth-profiles';
+import type { AuthProfileCredential } from '../../agents/auth-profiles/types';
+import { normalizeProviderId } from '../../agents/model-selection';
+import { resolveDefaultAgentWorkspaceDir } from '../../agents/workspace';
+import { formatCliCommand } from '../../cli/command-format';
+import { parseDurationMs } from '../../cli/parse-duration';
+import { logConfigUpdated } from '../../config/logging';
+import { resolvePluginProviders } from '../../plugins/providers';
+import type { ProviderAuthResult, ProviderPlugin } from '../../plugins/types';
+import type { RuntimeEnv } from '../../runtime';
+import { stylePromptHint, stylePromptMessage } from '../../terminal/prompt-style';
+import { createClackPrompter } from '../../wizard/clack-prompter';
+import { validateAnthropicSetupToken } from '../auth-token';
+import { isRemoteEnvironment } from '../oauth-env';
+import { createVpsAwareOAuthHandlers } from '../oauth-flow';
+import { applyAuthProfileConfig } from '../onboard-auth';
+import { openUrl } from '../onboard-helpers';
 import {
   applyDefaultModel,
   mergeConfigPatch,
   pickAuthMethod,
   resolveProviderMatch,
-} from "../provider-auth-helpers.js";
-import { loadValidConfigOrThrow, updateConfig } from "./shared.js";
+} from '../provider-auth-helpers';
+import { loadValidConfigOrThrow, updateConfig } from './shared';
 
 const confirm = (params: Parameters<typeof clackConfirm>[0]) =>
   clackConfirm({

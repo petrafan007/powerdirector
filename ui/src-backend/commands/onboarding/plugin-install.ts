@@ -1,16 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
-import type { ChannelPluginCatalogEntry } from "../../channels/plugins/catalog.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { createSubsystemLogger } from "../../logging/subsystem.js";
-import { enablePluginInConfig } from "../../plugins/enable.js";
-import { installPluginFromNpmSpec } from "../../plugins/install.js";
-import { recordPluginInstall } from "../../plugins/installs.js";
-import { loadPowerDirectorPlugins } from "../../plugins/loader.js";
-import { createPluginLoaderLogger } from "../../plugins/logger.js";
-import type { RuntimeEnv } from "../../runtime.js";
-import type { WizardPrompter } from "../../wizard/prompts.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../../agents/agent-scope';
+import type { ChannelPluginCatalogEntry } from '../../channels/plugins/catalog';
+import type { PowerDirectorConfig } from '../../config/config';
+import { createSubsystemLogger } from '../../logging/subsystem';
+import { enablePluginInConfig } from '../../plugins/enable';
+import { installPluginFromNpmSpec } from '../../plugins/install';
+import { recordPluginInstall } from '../../plugins/installs';
+import { loadPowerDirectorPlugins } from '../../plugins/loader';
+import { createPluginLoaderLogger } from '../../plugins/logger';
+import type { RuntimeEnv } from '../../runtime';
+import type { WizardPrompter } from '../../wizard/prompts';
 
 type InstallChoice = "npm" | "local" | "skip";
 

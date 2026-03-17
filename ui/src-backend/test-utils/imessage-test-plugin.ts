@@ -1,6 +1,6 @@
-import { imessageOutbound } from "../channels/plugins/outbound/imessage.js";
-import type { ChannelOutboundAdapter, ChannelPlugin } from "../channels/plugins/types.js";
-import { normalizeIMessageHandle } from "../imessage/targets.js";
+import { imessageOutbound } from '../channels/plugins/outbound/imessage';
+import type { ChannelOutboundAdapter, ChannelPlugin } from '../channels/plugins/types';
+import { normalizeIMessageHandle } from '../imessage/targets';
 
 export const createIMessageTestPlugin = (params?: {
   outbound?: ChannelOutboundAdapter;

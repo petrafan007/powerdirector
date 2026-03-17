@@ -62,7 +62,7 @@ const nodesUtilsMocks = vi.hoisted(() => ({
   listNodes: vi.fn(async (..._args: unknown[]): Promise<Array<Record<string, unknown>>> => []),
 }));
 vi.mock("./nodes-utils.js", async () => {
-  const actual = await vi.importActual<typeof import("./nodes-utils.js")>("./nodes-utils.js");
+  const actual = await vi.importActual<typeof import('./nodes-utils')>("./nodes-utils.js");
   return {
     ...actual,
     listNodes: nodesUtilsMocks.listNodes,
@@ -86,15 +86,15 @@ const toolCommonMocks = vi.hoisted(() => ({
   imageResultFromFile: vi.fn(),
 }));
 vi.mock("./common.js", async () => {
-  const actual = await vi.importActual<typeof import("./common.js")>("./common.js");
+  const actual = await vi.importActual<typeof import('./common')>("./common.js");
   return {
     ...actual,
     imageResultFromFile: toolCommonMocks.imageResultFromFile,
   };
 });
 
-import { DEFAULT_AI_SNAPSHOT_MAX_CHARS } from "../../browser/constants.js";
-import { createBrowserTool } from "./browser-tool.js";
+import { DEFAULT_AI_SNAPSHOT_MAX_CHARS } from '../../browser/constants';
+import { createBrowserTool } from './browser-tool';
 
 describe("browser tool snapshot maxChars", () => {
   afterEach(() => {

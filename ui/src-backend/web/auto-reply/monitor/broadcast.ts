@@ -1,15 +1,15 @@
-import type { loadConfig } from "../../../config/config.js";
-import type { resolveAgentRoute } from "../../../routing/resolve-route.js";
-import { buildAgentSessionKey } from "../../../routing/resolve-route.js";
+import type { loadConfig } from '../../../config/config';
+import type { resolveAgentRoute } from '../../../routing/resolve-route';
+import { buildAgentSessionKey } from '../../../routing/resolve-route';
 import {
   buildAgentMainSessionKey,
   DEFAULT_MAIN_KEY,
   normalizeAgentId,
-} from "../../../routing/session-key.js";
-import { formatError } from "../../session.js";
-import { whatsappInboundLog } from "../loggers.js";
-import type { WebInboundMsg } from "../types.js";
-import type { GroupHistoryEntry } from "./process-message.js";
+} from '../../../routing/session-key';
+import { formatError } from '../../session';
+import { whatsappInboundLog } from '../loggers';
+import type { WebInboundMsg } from '../types';
+import type { GroupHistoryEntry } from './process-message';
 
 export async function maybeBroadcastMessage(params: {
   cfg: ReturnType<typeof loadConfig>;

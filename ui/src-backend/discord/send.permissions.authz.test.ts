@@ -5,7 +5,7 @@ import {
   fetchMemberGuildPermissionsDiscord,
   hasAllGuildPermissionsDiscord,
   hasAnyGuildPermissionDiscord,
-} from "./send.permissions.js";
+} from './send.permissions';
 
 const mockRest = vi.hoisted(() => ({
   get: vi.fn(),

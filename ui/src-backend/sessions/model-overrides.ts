@@ -1,4 +1,4 @@
-import type { SessionEntry } from "../config/sessions.js";
+import type { SessionEntry } from '../config/sessions';
 
 export type ModelOverrideSelection = {
   provider: string;

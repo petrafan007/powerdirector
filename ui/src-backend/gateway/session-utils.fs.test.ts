@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from "vitest";
-import { createToolSummaryPreviewTranscriptLines } from "./session-preview.test-helpers.js";
+import { createToolSummaryPreviewTranscriptLines } from './session-preview.test-helpers';
 import {
   archiveSessionTranscripts,
   readFirstUserMessageFromTranscript,
@@ -11,7 +11,7 @@ import {
   readSessionTitleFieldsFromTranscript,
   readSessionPreviewItemsFromTranscript,
   resolveSessionTranscriptCandidates,
-} from "./session-utils.fs.js";
+} from './session-utils.fs';
 
 function registerTempSessionStore(
   prefix: string,

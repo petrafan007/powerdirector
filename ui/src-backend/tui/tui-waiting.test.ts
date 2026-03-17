@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWaitingStatusMessage, pickWaitingPhrase } from "./tui-waiting.js";
+import { buildWaitingStatusMessage, pickWaitingPhrase } from './tui-waiting';
 
 const theme = {
   dim: (s: string) => `<d>${s}</d>`,

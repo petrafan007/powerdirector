@@ -1,12 +1,12 @@
-import type { ProgressReporter } from "../../cli/progress.js";
-import { resolveGatewayLogPaths } from "../../daemon/launchd.js";
-import { formatPortDiagnostics } from "../../infra/ports.js";
+import type { ProgressReporter } from '../../cli/progress';
+import { resolveGatewayLogPaths } from '../../daemon/launchd';
+import { formatPortDiagnostics } from '../../infra/ports';
 import {
   type RestartSentinelPayload,
   summarizeRestartSentinel,
-} from "../../infra/restart-sentinel.js";
-import { formatTimeAgo, redactSecrets } from "./format.js";
-import { readFileTailLines, summarizeLogTail } from "./gateway.js";
+} from '../../infra/restart-sentinel';
+import { formatTimeAgo, redactSecrets } from './format';
+import { readFileTailLines, summarizeLogTail } from './gateway';
 
 type ConfigIssueLike = { path: string; message: string };
 type ConfigSnapshotLike = {

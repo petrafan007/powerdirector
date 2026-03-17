@@ -1,6 +1,6 @@
 import JSON5 from "json5";
 import { describe, expect, it } from "vitest";
-import { parseFrontmatterBlock } from "./frontmatter.js";
+import { parseFrontmatterBlock } from './frontmatter';
 
 describe("parseFrontmatterBlock", () => {
   it("parses YAML block scalars", () => {

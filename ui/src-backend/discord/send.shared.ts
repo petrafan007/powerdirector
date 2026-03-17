@@ -9,17 +9,17 @@ import {
 import { PollLayoutType } from "discord-api-types/payloads/v10";
 import type { RESTAPIPoll } from "discord-api-types/rest/v10";
 import { Routes, type APIEmbed } from "discord-api-types/v10";
-import type { ChunkMode } from "../auto-reply/chunk.js";
-import { loadConfig } from "../config/config.js";
-import type { RetryRunner } from "../infra/retry-policy.js";
-import { normalizePollDurationHours, normalizePollInput, type PollInput } from "../polls.js";
-import { loadWebMedia } from "../web/media.js";
-import { resolveDiscordAccount } from "./accounts.js";
-import { chunkDiscordTextWithMode } from "./chunk.js";
-import { createDiscordClient, resolveDiscordRest } from "./client.js";
-import { fetchChannelPermissionsDiscord, isThreadChannelType } from "./send.permissions.js";
-import { DiscordSendError } from "./send.types.js";
-import { parseDiscordTarget, resolveDiscordTarget } from "./targets.js";
+import type { ChunkMode } from '../auto-reply/chunk';
+import { loadConfig } from '../config/config';
+import type { RetryRunner } from '../infra/retry-policy';
+import { normalizePollDurationHours, normalizePollInput, type PollInput } from '../polls';
+import { loadWebMedia } from '../web/media';
+import { resolveDiscordAccount } from './accounts';
+import { chunkDiscordTextWithMode } from './chunk';
+import { createDiscordClient, resolveDiscordRest } from './client';
+import { fetchChannelPermissionsDiscord, isThreadChannelType } from './send.permissions';
+import { DiscordSendError } from './send.types';
+import { parseDiscordTarget, resolveDiscordTarget } from './targets';
 
 const DISCORD_TEXT_LIMIT = 2000;
 const DISCORD_MAX_STICKERS = 3;

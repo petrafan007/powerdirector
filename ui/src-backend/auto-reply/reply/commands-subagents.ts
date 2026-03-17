@@ -1,49 +1,49 @@
 import crypto from "node:crypto";
-import { AGENT_LANE_SUBAGENT } from "../../agents/lanes.js";
-import { abortEmbeddedPiRun } from "../../agents/pi-embedded.js";
-import type { SubagentRunRecord } from "../../agents/subagent-registry.js";
+import { AGENT_LANE_SUBAGENT } from '../../agents/lanes';
+import { abortEmbeddedPiRun } from '../../agents/pi-embedded';
+import type { SubagentRunRecord } from '../../agents/subagent-registry';
 import {
   clearSubagentRunSteerRestart,
   listSubagentRunsForRequester,
   markSubagentRunTerminated,
   markSubagentRunForSteerRestart,
   replaceSubagentRunAfterSteer,
-} from "../../agents/subagent-registry.js";
-import { spawnSubagentDirect } from "../../agents/subagent-spawn.js";
+} from '../../agents/subagent-registry';
+import { spawnSubagentDirect } from '../../agents/subagent-spawn';
 import {
   extractAssistantText,
   resolveInternalSessionKey,
   resolveMainSessionAlias,
   sanitizeTextContent,
   stripToolMessages,
-} from "../../agents/tools/sessions-helpers.js";
+} from '../../agents/tools/sessions-helpers';
 import {
   type SessionEntry,
   loadSessionStore,
   resolveStorePath,
   updateSessionStore,
-} from "../../config/sessions.js";
-import { callGateway } from "../../gateway/call.js";
-import { logVerbose } from "../../globals.js";
+} from '../../config/sessions';
+import { callGateway } from '../../gateway/call';
+import { logVerbose } from '../../globals';
 import { formatTimeAgo } from "../../infra/format-time/format-relative.ts";
-import { parseAgentSessionKey } from "../../routing/session-key.js";
-import { extractTextFromChatContent } from "../../shared/chat-content.js";
+import { parseAgentSessionKey } from '../../routing/session-key';
+import { extractTextFromChatContent } from '../../shared/chat-content';
 import {
   formatDurationCompact,
   formatTokenUsageDisplay,
   truncateLine,
-} from "../../shared/subagents-format.js";
-import { INTERNAL_MESSAGE_CHANNEL } from "../../utils/message-channel.js";
-import { stopSubagentsForRequester } from "./abort.js";
-import type { CommandHandler } from "./commands-types.js";
-import { clearSessionQueues } from "./queue.js";
+} from '../../shared/subagents-format';
+import { INTERNAL_MESSAGE_CHANNEL } from '../../utils/message-channel';
+import { stopSubagentsForRequester } from './abort';
+import type { CommandHandler } from './commands-types';
+import { clearSessionQueues } from './queue';
 import {
   formatRunLabel,
   formatRunStatus,
   resolveSubagentTargetFromRuns,
   type SubagentTargetResolution,
   sortSubagentRuns,
-} from "./subagents-utils.js";
+} from './subagents-utils';
 
 const COMMAND = "/subagents";
 const COMMAND_KILL = "/kill";

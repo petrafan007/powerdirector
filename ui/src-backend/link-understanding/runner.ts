@@ -10,8 +10,8 @@ import {
   resolveMediaUnderstandingScope,
 } from "../media-understanding/scope.ts";
 import { runExec } from "../process/exec.ts";
-import { DEFAULT_LINK_TIMEOUT_SECONDS } from "./defaults.js";
-import { extractLinksFromMessage } from "./detect.js";
+import { DEFAULT_LINK_TIMEOUT_SECONDS } from './defaults';
+import { extractLinksFromMessage } from './detect';
 
 export type LinkUnderstandingResult = {
   urls: string[];

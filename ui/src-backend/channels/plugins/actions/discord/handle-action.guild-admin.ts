@@ -3,13 +3,13 @@ import {
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from "../../../../agents/tools/common.js";
+} from '../../../../agents/tools/common';
 import {
   isDiscordModerationAction,
   readDiscordModerationCommand,
-} from "../../../../agents/tools/discord-actions-moderation-shared.js";
-import { handleDiscordAction } from "../../../../agents/tools/discord-actions.js";
-import type { ChannelMessageActionContext } from "../../types.js";
+} from '../../../../agents/tools/discord-actions-moderation-shared';
+import { handleDiscordAction } from '../../../../agents/tools/discord-actions';
+import type { ChannelMessageActionContext } from '../../types';
 
 type Ctx = Pick<
   ChannelMessageActionContext,

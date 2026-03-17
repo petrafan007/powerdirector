@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { CURRENT_SESSION_VERSION } from "@mariozechner/pi-coding-agent";
 import { describe, expect, it, vi } from "vitest";
-import type { GatewayRequestContext } from "./types.js";
+import type { GatewayRequestContext } from './types';
 
 // Guardrail: Ensure gateway "injected" assistant transcript messages are appended via SessionManager,
 // so they are attached to the current leaf with a `parentId` and do not sever compaction history.
@@ -26,7 +26,7 @@ describe("gateway chat.inject transcript writes", () => {
     );
 
     vi.doMock("../session-utils.js", async (importOriginal) => {
-      const original = await importOriginal<typeof import("../session-utils.js")>();
+      const original = await importOriginal<typeof import('../session-utils')>();
       return {
         ...original,
         loadSessionEntry: () => ({
@@ -39,7 +39,7 @@ describe("gateway chat.inject transcript writes", () => {
       };
     });
 
-    const { chatHandlers } = await import("./chat.js");
+    const { chatHandlers } = await import('./chat');
 
     const respond = vi.fn();
     type InjectCtx = Pick<GatewayRequestContext, "broadcast" | "nodeSendToSession">;

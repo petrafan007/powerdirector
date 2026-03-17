@@ -3,7 +3,7 @@ import {
   createTextEndBlockReplyHarness,
   emitAssistantTextDelta,
   emitAssistantTextEnd,
-} from "./pi-embedded-subscribe.e2e-harness.js";
+} from './pi-embedded-subscribe.e2e-harness';
 
 describe("subscribeEmbeddedPiSession", () => {
   function setupTextEndSubscription() {

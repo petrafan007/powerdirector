@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createBaseSignalEventHandlerDeps,
   createSignalReceiveEvent,
-} from "./monitor/event-handler.test-harness.js";
+} from './monitor/event-handler.test-harness';
 
 const sendTypingMock = vi.fn();
 const sendReadReceiptMock = vi.fn();
@@ -39,7 +39,7 @@ describe("signal event handler typing + read receipts", () => {
   });
 
   it("sends typing + read receipt for allowed DMs", async () => {
-    const { createSignalEventHandler } = await import("./monitor/event-handler.js");
+    const { createSignalEventHandler } = await import('./monitor/event-handler');
     const handler = createSignalEventHandler(
       createBaseSignalEventHandlerDeps({
         cfg: {

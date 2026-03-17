@@ -1,6 +1,6 @@
 import type { Dispatcher } from "undici";
-import { logWarn } from "../../logger.js";
-import { bindAbortRelay } from "../../utils/fetch-timeout.js";
+import { logWarn } from '../../logger';
+import { bindAbortRelay } from '../../utils/fetch-timeout';
 import {
   closeDispatcher,
   createPinnedDispatcher,
@@ -8,7 +8,7 @@ import {
   type LookupFn,
   SsrFBlockedError,
   type SsrFPolicy,
-} from "./ssrf.js";
+} from './ssrf';
 
 type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 

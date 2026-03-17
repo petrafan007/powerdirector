@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { loadCronStore, resolveCronStorePath } from "./store.js";
+import { loadCronStore, resolveCronStorePath } from './store';
 
 async function makeStorePath() {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-cron-store-"));

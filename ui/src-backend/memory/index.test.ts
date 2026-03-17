@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMemorySearchManager, type MemoryIndexManager } from "./index.js";
+import { getMemorySearchManager, type MemoryIndexManager } from './index';
 import "./test-runtime-mocks.js";
 
 let embedBatchCalls = 0;

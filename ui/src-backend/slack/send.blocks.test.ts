@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { createSlackSendTestClient, installSlackBlockTestMocks } from "./blocks.test-helpers.js";
+import { createSlackSendTestClient, installSlackBlockTestMocks } from './blocks.test-helpers';
 
 installSlackBlockTestMocks();
-const { sendMessageSlack } = await import("./send.js");
+const { sendMessageSlack } = await import('./send');
 
 describe("sendMessageSlack blocks", () => {
   it("posts blocks with fallback text when message is empty", async () => {

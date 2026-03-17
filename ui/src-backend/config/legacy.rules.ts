@@ -1,4 +1,4 @@
-import type { LegacyConfigRule } from "./legacy.shared.js";
+import type { LegacyConfigRule } from './legacy.shared';
 
 export const LEGACY_CONFIG_RULES: LegacyConfigRule[] = [
   {

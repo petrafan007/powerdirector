@@ -1,14 +1,14 @@
 import "./test-helpers.js";
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { monitorWebChannel } from "./auto-reply.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { monitorWebChannel } from './auto-reply';
 import {
   createMockWebListener,
   installWebAutoReplyTestHomeHooks,
   installWebAutoReplyUnitTestHooks,
   resetLoadConfigMock,
   setLoadConfigMock,
-} from "./auto-reply.test-harness.js";
+} from './auto-reply.test-harness';
 
 installWebAutoReplyTestHomeHooks();
 

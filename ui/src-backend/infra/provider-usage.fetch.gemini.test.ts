@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createProviderUsageFetch, makeResponse } from "../test-utils/provider-usage-fetch.js";
-import { fetchGeminiUsage } from "./provider-usage.fetch.gemini.js";
+import { createProviderUsageFetch, makeResponse } from '../test-utils/provider-usage-fetch';
+import { fetchGeminiUsage } from './provider-usage.fetch.gemini';
 
 describe("fetchGeminiUsage", () => {
   it("returns HTTP errors for failed requests", async () => {

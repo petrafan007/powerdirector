@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import * as ssrf from "../infra/net/ssrf.js";
-import { onSpy, sendChatActionSpy } from "./bot.media.e2e-harness.js";
+import * as ssrf from '../infra/net/ssrf';
+import { onSpy, sendChatActionSpy } from './bot.media.e2e-harness';
 
 const cacheStickerSpy = vi.fn();
 const getCachedStickerSpy = vi.fn();
@@ -30,8 +30,8 @@ async function createBotHandlerWithOptions(options: {
   replySpy: ReturnType<typeof vi.fn>;
   runtimeError: ReturnType<typeof vi.fn>;
 }> {
-  const { createTelegramBot } = await import("./bot.js");
-  const replyModule = await import("../auto-reply/reply.js");
+  const { createTelegramBot } = await import('./bot');
+  const replyModule = await import('../auto-reply/reply');
   const replySpy = (replyModule as unknown as { __replySpy: ReturnType<typeof vi.fn> }).__replySpy;
 
   onSpy.mockReset();
@@ -521,8 +521,8 @@ describe("telegram text fragments", () => {
   it(
     "buffers near-limit text and processes sequential parts as one message",
     async () => {
-      const { createTelegramBot } = await import("./bot.js");
-      const replyModule = await import("../auto-reply/reply.js");
+      const { createTelegramBot } = await import('./bot');
+      const replyModule = await import('../auto-reply/reply');
       const replySpy = (replyModule as unknown as { __replySpy: ReturnType<typeof vi.fn> })
         .__replySpy;
 

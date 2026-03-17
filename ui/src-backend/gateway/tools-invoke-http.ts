@@ -1,38 +1,38 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createPowerDirectorTools } from "../agents/powerdirector-tools.js";
+import { createPowerDirectorTools } from '../agents/powerdirector-tools';
 import {
   resolveEffectiveToolPolicy,
   resolveGroupToolPolicy,
   resolveSubagentToolPolicy,
-} from "../agents/pi-tools.policy.js";
+} from '../agents/pi-tools.policy';
 import {
   applyToolPolicyPipeline,
   buildDefaultToolPolicyPipelineSteps,
-} from "../agents/tool-policy-pipeline.js";
+} from '../agents/tool-policy-pipeline';
 import {
   collectExplicitAllowlist,
   mergeAlsoAllowPolicy,
   resolveToolProfilePolicy,
-} from "../agents/tool-policy.js";
-import { ToolInputError } from "../agents/tools/common.js";
-import { loadConfig } from "../config/config.js";
-import { resolveMainSessionKey } from "../config/sessions.js";
-import { logWarn } from "../logger.js";
-import { isTestDefaultMemorySlotDisabled } from "../plugins/config-state.js";
-import { getPluginToolMeta } from "../plugins/tools.js";
-import { isSubagentSessionKey } from "../routing/session-key.js";
-import { DEFAULT_GATEWAY_HTTP_TOOL_DENY } from "../security/dangerous-tools.js";
-import { normalizeMessageChannel } from "../utils/message-channel.js";
-import type { AuthRateLimiter } from "./auth-rate-limit.js";
-import { authorizeGatewayConnect, type ResolvedGatewayAuth } from "./auth.js";
+} from '../agents/tool-policy';
+import { ToolInputError } from '../agents/tools/common';
+import { loadConfig } from '../config/config';
+import { resolveMainSessionKey } from '../config/sessions';
+import { logWarn } from '../logger';
+import { isTestDefaultMemorySlotDisabled } from '../plugins/config-state';
+import { getPluginToolMeta } from '../plugins/tools';
+import { isSubagentSessionKey } from '../routing/session-key';
+import { DEFAULT_GATEWAY_HTTP_TOOL_DENY } from '../security/dangerous-tools';
+import { normalizeMessageChannel } from '../utils/message-channel';
+import type { AuthRateLimiter } from './auth-rate-limit';
+import { authorizeGatewayConnect, type ResolvedGatewayAuth } from './auth';
 import {
   readJsonBodyOrError,
   sendGatewayAuthFailure,
   sendInvalidRequest,
   sendJson,
   sendMethodNotAllowed,
-} from "./http-common.js";
-import { getBearerToken, getHeader } from "./http-utils.js";
+} from './http-common';
+import { getBearerToken, getHeader } from './http-utils';
 
 const DEFAULT_BODY_BYTES = 2 * 1024 * 1024;
 const MEMORY_TOOL_NAMES = new Set(["memory_search", "memory_get"]);

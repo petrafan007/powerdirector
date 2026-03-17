@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
-import * as cdpModule from "./cdp.js";
-import * as pwAiModule from "./pw-ai-module.js";
-import type { BrowserServerState } from "./server-context.js";
+import { withFetchPreconnect } from '../test-utils/fetch-mock';
+import * as cdpModule from './cdp';
+import * as pwAiModule from './pw-ai-module';
+import type { BrowserServerState } from './server-context';
 import "./server-context.chrome-test-harness.js";
-import { createBrowserRouteContext } from "./server-context.js";
+import { createBrowserRouteContext } from './server-context';
 
 const originalFetch = globalThis.fetch;
 

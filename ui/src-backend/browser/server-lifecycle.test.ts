@@ -23,7 +23,7 @@ vi.mock("./server-context.js", () => ({
   listKnownProfileNames: listKnownProfileNamesMock,
 }));
 
-import { ensureExtensionRelayForProfiles, stopKnownBrowserProfiles } from "./server-lifecycle.js";
+import { ensureExtensionRelayForProfiles, stopKnownBrowserProfiles } from './server-lifecycle';
 
 describe("ensureExtensionRelayForProfiles", () => {
   beforeEach(() => {

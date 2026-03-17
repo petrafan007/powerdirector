@@ -3,11 +3,11 @@ import {
   REDACTED_SENTINEL,
   redactConfigSnapshot,
   restoreRedactedValues as restoreRedactedValues_orig,
-} from "./redact-snapshot.js";
-import { __test__ } from "./schema.hints.js";
-import type { ConfigUiHints } from "./schema.js";
-import type { ConfigFileSnapshot } from "./types.powerdirector.js";
-import { PowerDirectorSchema } from "./zod-schema.js";
+} from './redact-snapshot';
+import { __test__ } from './schema.hints';
+import type { ConfigUiHints } from './schema';
+import type { ConfigFileSnapshot } from './types.powerdirector';
+import { PowerDirectorSchema } from './zod-schema';
 
 const { mapSensitivePaths } = __test__;
 

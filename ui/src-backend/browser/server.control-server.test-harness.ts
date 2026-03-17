@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import type { MockFn } from "../test-utils/vitest-mock-fn.js";
-import { getFreePort } from "./test-port.js";
+import type { MockFn } from '../test-utils/vitest-mock-fn';
+import { getFreePort } from './test-port';
 
-export { getFreePort } from "./test-port.js";
+export { getFreePort } from './test-port';
 
 type HarnessState = {
   testPort: number;
@@ -157,7 +157,7 @@ function makeProc(pid = 123) {
 const proc = makeProc();
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => ({
@@ -232,7 +232,7 @@ vi.mock("./screenshot.js", () => ({
   })),
 }));
 
-const server = await import("./server.js");
+const server = await import('./server');
 export const startBrowserControlServerFromConfig = server.startBrowserControlServerFromConfig;
 export const stopBrowserControlServer = server.stopBrowserControlServer;
 

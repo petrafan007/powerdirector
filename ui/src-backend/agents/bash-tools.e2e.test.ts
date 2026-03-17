@@ -1,10 +1,10 @@
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { peekSystemEvents, resetSystemEventsForTest } from "../infra/system-events.js";
-import { getFinishedSession, resetProcessRegistryForTests } from "./bash-process-registry.js";
-import { createExecTool, createProcessTool, execTool, processTool } from "./bash-tools.js";
-import { buildDockerExecArgs } from "./bash-tools.shared.js";
-import { resolveShellFromPath, sanitizeBinaryOutput } from "./shell-utils.js";
+import { peekSystemEvents, resetSystemEventsForTest } from '../infra/system-events';
+import { getFinishedSession, resetProcessRegistryForTests } from './bash-process-registry';
+import { createExecTool, createProcessTool, execTool, processTool } from './bash-tools';
+import { buildDockerExecArgs } from './bash-tools.shared';
+import { resolveShellFromPath, sanitizeBinaryOutput } from './shell-utils';
 
 const isWin = process.platform === "win32";
 const defaultShell = isWin

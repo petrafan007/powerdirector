@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import type { PowerDirectorConfig } from '../../config/config';
 
 let backend: "builtin" | "qmd" = "builtin";
 let searchImpl: () => Promise<unknown[]> = async () => [
@@ -41,7 +41,7 @@ vi.mock("../../memory/index.js", () => {
   };
 });
 
-import { createMemoryGetTool, createMemorySearchTool } from "./memory-tool.js";
+import { createMemoryGetTool, createMemorySearchTool } from './memory-tool';
 
 function asPowerDirectorConfig(config: Partial<PowerDirectorConfig>): PowerDirectorConfig {
   return config as PowerDirectorConfig;

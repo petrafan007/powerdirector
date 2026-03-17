@@ -1,8 +1,8 @@
-import { runEmbeddingBatchGroups } from "./batch-runner.js";
-import { buildBatchHeaders, normalizeBatchBaseUrl } from "./batch-utils.js";
-import { debugEmbeddingsLog } from "./embeddings-debug.js";
-import type { GeminiEmbeddingClient } from "./embeddings-gemini.js";
-import { hashText } from "./internal.js";
+import { runEmbeddingBatchGroups } from './batch-runner';
+import { buildBatchHeaders, normalizeBatchBaseUrl } from './batch-utils';
+import { debugEmbeddingsLog } from './embeddings-debug';
+import type { GeminiEmbeddingClient } from './embeddings-gemini';
+import { hashText } from './internal';
 
 export type GeminiBatchRequest = {
   custom_id: string;

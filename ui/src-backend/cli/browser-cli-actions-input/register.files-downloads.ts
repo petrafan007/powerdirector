@@ -1,10 +1,10 @@
 import type { Command } from "commander";
-import { DEFAULT_UPLOAD_DIR, resolvePathsWithinRoot } from "../../browser/paths.js";
-import { danger } from "../../globals.js";
-import { defaultRuntime } from "../../runtime.js";
-import { shortenHomePath } from "../../utils.js";
-import { callBrowserRequest, type BrowserParentOpts } from "../browser-cli-shared.js";
-import { resolveBrowserActionContext } from "./shared.js";
+import { DEFAULT_UPLOAD_DIR, resolvePathsWithinRoot } from '../../browser/paths';
+import { danger } from '../../globals';
+import { defaultRuntime } from '../../runtime';
+import { shortenHomePath } from '../../utils';
+import { callBrowserRequest, type BrowserParentOpts } from '../browser-cli-shared';
+import { resolveBrowserActionContext } from './shared';
 
 function normalizeUploadPaths(paths: string[]): string[] {
   const result = resolvePathsWithinRoot({

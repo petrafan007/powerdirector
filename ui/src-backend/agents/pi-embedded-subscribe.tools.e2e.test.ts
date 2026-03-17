@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { telegramPlugin } from "../../extensions/telegram/src/channel.js";
-import { setActivePluginRegistry } from "../plugins/runtime.js";
-import { createTestRegistry } from "../test-utils/channel-plugins.js";
-import { extractMessagingToolSend } from "./pi-embedded-subscribe.tools.js";
+import { telegramPlugin } from '../../extensions/telegram/src/channel';
+import { setActivePluginRegistry } from '../plugins/runtime';
+import { createTestRegistry } from '../test-utils/channel-plugins';
+import { extractMessagingToolSend } from './pi-embedded-subscribe.tools';
 
 describe("extractMessagingToolSend", () => {
   beforeEach(() => {

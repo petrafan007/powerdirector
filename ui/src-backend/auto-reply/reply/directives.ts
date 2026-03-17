@@ -1,5 +1,5 @@
-import { escapeRegExp } from "../../utils.js";
-import type { NoticeLevel, ReasoningLevel } from "../thinking.js";
+import { escapeRegExp } from '../../utils';
+import type { NoticeLevel, ReasoningLevel } from '../thinking';
 import {
   type ElevatedLevel,
   normalizeElevatedLevel,
@@ -9,7 +9,7 @@ import {
   normalizeVerboseLevel,
   type ThinkLevel,
   type VerboseLevel,
-} from "../thinking.js";
+} from '../thinking';
 
 type ExtractedLevel<T> = {
   cleaned: string;
@@ -189,4 +189,4 @@ export function extractStatusDirective(body?: string): {
 }
 
 export type { ElevatedLevel, NoticeLevel, ReasoningLevel, ThinkLevel, VerboseLevel };
-export { extractExecDirective } from "./exec/directive.js";
+export { extractExecDirective } from './exec/directive';

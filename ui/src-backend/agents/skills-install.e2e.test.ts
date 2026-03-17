@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { installSkill } from "./skills-install.js";
+import { installSkill } from './skills-install';
 
 const runCommandWithTimeoutMock = vi.fn();
 const scanDirectoryWithSummaryMock = vi.fn();
@@ -12,7 +12,7 @@ vi.mock("../process/exec.js", () => ({
 }));
 
 vi.mock("../security/skill-scanner.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../security/skill-scanner.js")>();
+  const actual = await importOriginal<typeof import('../security/skill-scanner')>();
   return {
     ...actual,
     scanDirectoryWithSummary: (...args: unknown[]) => scanDirectoryWithSummaryMock(...args),

@@ -1,5 +1,5 @@
 import process from "node:process";
-import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
+import { defaultRuntime, type RuntimeEnv } from '../runtime';
 
 export type RuntimeKind = "node" | "unknown";
 

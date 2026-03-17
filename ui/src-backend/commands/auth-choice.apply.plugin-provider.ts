@@ -1,24 +1,24 @@
-import { resolvePowerDirectorAgentDir } from "../agents/agent-paths.js";
+import { resolvePowerDirectorAgentDir } from '../agents/agent-paths';
 import {
   resolveDefaultAgentId,
   resolveAgentDir,
   resolveAgentWorkspaceDir,
-} from "../agents/agent-scope.js";
-import { upsertAuthProfile } from "../agents/auth-profiles.js";
-import { resolveDefaultAgentWorkspaceDir } from "../agents/workspace.js";
-import { enablePluginInConfig } from "../plugins/enable.js";
-import { resolvePluginProviders } from "../plugins/providers.js";
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { isRemoteEnvironment } from "./oauth-env.js";
-import { createVpsAwareOAuthHandlers } from "./oauth-flow.js";
-import { applyAuthProfileConfig } from "./onboard-auth.js";
-import { openUrl } from "./onboard-helpers.js";
+} from '../agents/agent-scope';
+import { upsertAuthProfile } from '../agents/auth-profiles';
+import { resolveDefaultAgentWorkspaceDir } from '../agents/workspace';
+import { enablePluginInConfig } from '../plugins/enable';
+import { resolvePluginProviders } from '../plugins/providers';
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
+import { isRemoteEnvironment } from './oauth-env';
+import { createVpsAwareOAuthHandlers } from './oauth-flow';
+import { applyAuthProfileConfig } from './onboard-auth';
+import { openUrl } from './onboard-helpers';
 import {
   applyDefaultModel,
   mergeConfigPatch,
   pickAuthMethod,
   resolveProviderMatch,
-} from "./provider-auth-helpers.js";
+} from './provider-auth-helpers';
 
 export type PluginProviderAuthChoiceOptions = {
   authChoice: string;

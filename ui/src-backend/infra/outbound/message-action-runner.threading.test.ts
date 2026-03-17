@@ -1,9 +1,9 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { slackPlugin } from "../../../extensions/slack/src/channel.js";
-import { telegramPlugin } from "../../../extensions/telegram/src/channel.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { setActivePluginRegistry } from "../../plugins/runtime.js";
-import { createTestRegistry } from "../../test-utils/channel-plugins.js";
+import { slackPlugin } from '../../../extensions/slack/src/channel';
+import { telegramPlugin } from '../../../extensions/telegram/src/channel';
+import type { PowerDirectorConfig } from '../../config/config';
+import { setActivePluginRegistry } from '../../plugins/runtime';
+import { createTestRegistry } from '../../test-utils/channel-plugins';
 
 const mocks = vi.hoisted(() => ({
   executeSendAction: vi.fn(),
@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("./outbound-send-service.js", async () => {
-  const actual = await vi.importActual<typeof import("./outbound-send-service.js")>(
+  const actual = await vi.importActual<typeof import('./outbound-send-service')>(
     "./outbound-send-service.js",
   );
   return {
@@ -21,7 +21,7 @@ vi.mock("./outbound-send-service.js", async () => {
 });
 
 vi.mock("../../config/sessions.js", async () => {
-  const actual = await vi.importActual<typeof import("../../config/sessions.js")>(
+  const actual = await vi.importActual<typeof import('../../config/sessions')>(
     "../../config/sessions.js",
   );
   return {
@@ -30,7 +30,7 @@ vi.mock("../../config/sessions.js", async () => {
   };
 });
 
-import { runMessageAction } from "./message-action-runner.js";
+import { runMessageAction } from './message-action-runner';
 
 const slackConfig = {
   channels: {
@@ -80,15 +80,15 @@ const defaultTelegramToolContext = {
   currentThreadTs: "42",
 } as const;
 
-let createPluginRuntime: typeof import("../../plugins/runtime/index.js").createPluginRuntime;
-let setSlackRuntime: typeof import("../../../extensions/slack/src/runtime.js").setSlackRuntime;
-let setTelegramRuntime: typeof import("../../../extensions/telegram/src/runtime.js").setTelegramRuntime;
+let createPluginRuntime: typeof import('../../plugins/runtime/index').createPluginRuntime;
+let setSlackRuntime: typeof import('../../../extensions/slack/src/runtime').setSlackRuntime;
+let setTelegramRuntime: typeof import('../../../extensions/telegram/src/runtime').setTelegramRuntime;
 
 describe("runMessageAction threading auto-injection", () => {
   beforeAll(async () => {
-    ({ createPluginRuntime } = await import("../../plugins/runtime/index.js"));
-    ({ setSlackRuntime } = await import("../../../extensions/slack/src/runtime.js"));
-    ({ setTelegramRuntime } = await import("../../../extensions/telegram/src/runtime.js"));
+    ({ createPluginRuntime } = await import('../../plugins/runtime/index'));
+    ({ setSlackRuntime } = await import('../../../extensions/slack/src/runtime'));
+    ({ setTelegramRuntime } = await import('../../../extensions/telegram/src/runtime'));
   });
 
   beforeEach(() => {

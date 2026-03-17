@@ -13,8 +13,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import JSON5 from "json5";
-import { isPathInside } from "../security/scan-paths.js";
-import { isPlainObject } from "../utils.js";
+import { isPathInside } from '../security/scan-paths';
+import { isPlainObject } from '../utils';
 
 export const INCLUDE_KEY = "$include";
 export const MAX_INCLUDE_DEPTH = 10;

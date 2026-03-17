@@ -1,7 +1,7 @@
 import { PermissionFlagsBits } from "discord-api-types/v10";
 import { describe, expect, it, vi } from "vitest";
-import type { DiscordActionConfig } from "../../config/config.js";
-import { handleDiscordModerationAction } from "./discord-actions-moderation.js";
+import type { DiscordActionConfig } from '../../config/config';
+import { handleDiscordModerationAction } from './discord-actions-moderation';
 
 const discordSendMocks = vi.hoisted(() => ({
   banMemberDiscord: vi.fn(async () => ({ ok: true })),

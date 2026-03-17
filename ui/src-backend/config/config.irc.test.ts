@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateConfigObject } from "./config.js";
+import { validateConfigObject } from './config';
 
 function expectValidConfig(result: ReturnType<typeof validateConfigObject>) {
   expect(result.ok).toBe(true);

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { handleSlackAction } from "./slack-actions.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { handleSlackAction } from './slack-actions';
 
 const deleteSlackMessage = vi.fn(async (..._args: unknown[]) => ({}));
 const editSlackMessage = vi.fn(async (..._args: unknown[]) => ({}));

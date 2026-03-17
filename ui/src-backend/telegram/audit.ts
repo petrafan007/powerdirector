@@ -1,5 +1,5 @@
-import type { TelegramGroupConfig } from "../config/types.js";
-import { isRecord } from "../utils.js";
+import type { TelegramGroupConfig } from '../config/types';
+import { isRecord } from '../utils';
 
 const TELEGRAM_API_BASE = "https://api.telegram.org";
 
@@ -88,9 +88,9 @@ export async function auditTelegramGroupMembership(params: {
   // Lazy import to avoid pulling `undici` (ProxyAgent) into cold-path callers that only need
   // `collectTelegramUnmentionedGroupIds` (e.g. config audits).
   const fetcher = params.proxyUrl
-    ? (await import("./proxy.js")).makeProxyFetch(params.proxyUrl)
+    ? (await import('./proxy')).makeProxyFetch(params.proxyUrl)
     : fetch;
-  const { fetchWithTimeout } = await import("../utils/fetch-timeout.js");
+  const { fetchWithTimeout } = await import('../utils/fetch-timeout');
   const base = `${TELEGRAM_API_BASE}/bot${token}`;
   const groups: TelegramGroupMembershipAuditEntry[] = [];
 

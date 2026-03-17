@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ResolvedIMessageAccount } from "./accounts.js";
-import type { IMessageRpcClient } from "./client.js";
-import { sendMessageIMessage } from "./send.js";
+import type { ResolvedIMessageAccount } from './accounts';
+import type { IMessageRpcClient } from './client';
+import { sendMessageIMessage } from './send';
 
 const requestMock = vi.fn();
 const stopMock = vi.fn();

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createRunRegistry } from "./registry.js";
+import { createRunRegistry } from './registry';
 
 describe("process supervisor run registry", () => {
   it("finalize is idempotent and preserves first terminal metadata", () => {

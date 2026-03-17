@@ -1,18 +1,18 @@
-import { formatCliCommand } from "../cli/command-format.js";
+import { formatCliCommand } from '../cli/command-format';
 import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
-} from "../daemon/constants.js";
-import { resolveGatewayLogPaths } from "../daemon/launchd.js";
-import { formatRuntimeStatus } from "../daemon/runtime-format.js";
-import type { GatewayServiceRuntime } from "../daemon/service-runtime.js";
+} from '../daemon/constants';
+import { resolveGatewayLogPaths } from '../daemon/launchd';
+import { formatRuntimeStatus } from '../daemon/runtime-format';
+import type { GatewayServiceRuntime } from '../daemon/service-runtime';
 import {
   isSystemdUnavailableDetail,
   renderSystemdUnavailableHints,
-} from "../daemon/systemd-hints.js";
-import { isWSLEnv } from "../infra/wsl.js";
-import { getResolvedLoggerSettings } from "../logging.js";
+} from '../daemon/systemd-hints';
+import { isWSLEnv } from '../infra/wsl';
+import { getResolvedLoggerSettings } from '../logging';
 
 type RuntimeHintOptions = {
   platform?: NodeJS.Platform;

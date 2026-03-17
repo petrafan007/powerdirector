@@ -1,16 +1,16 @@
 import { fetch as realFetch } from "undici";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_AI_SNAPSHOT_MAX_CHARS } from "./constants.js";
+import { DEFAULT_AI_SNAPSHOT_MAX_CHARS } from './constants';
 import {
   installAgentContractHooks,
   postJson,
   startServerAndBase,
-} from "./server.agent-contract.test-harness.js";
+} from './server.agent-contract.test-harness';
 import {
   getBrowserControlServerTestState,
   getCdpMocks,
   getPwMocks,
-} from "./server.control-server.test-harness.js";
+} from './server.control-server.test-harness';
 
 const state = getBrowserControlServerTestState();
 const cdpMocks = getCdpMocks();

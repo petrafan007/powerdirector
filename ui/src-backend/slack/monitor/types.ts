@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig, SlackSlashCommandConfig } from "../../config/config.js";
-import type { RuntimeEnv } from "../../runtime.js";
-import type { SlackFile, SlackMessageEvent } from "../types.js";
+import type { PowerDirectorConfig, SlackSlashCommandConfig } from '../../config/config';
+import type { RuntimeEnv } from '../../runtime';
+import type { SlackFile, SlackMessageEvent } from '../types';
 
 export type MonitorSlackOpts = {
   botToken?: string;

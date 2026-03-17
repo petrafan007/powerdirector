@@ -1,6 +1,6 @@
-import { resolveAgentAvatar } from "../../agents/identity-avatar.js";
-import { resolveAgentIdentity } from "../../agents/identity.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import { resolveAgentAvatar } from '../../agents/identity-avatar';
+import { resolveAgentIdentity } from '../../agents/identity';
+import type { PowerDirectorConfig } from '../../config/config';
 
 export type OutboundIdentity = {
   name?: string;

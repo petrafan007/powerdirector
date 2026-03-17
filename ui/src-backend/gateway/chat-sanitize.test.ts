@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { stripEnvelopeFromMessage } from "./chat-sanitize.js";
+import { stripEnvelopeFromMessage } from './chat-sanitize';
 
 describe("stripEnvelopeFromMessage", () => {
   test("removes message_id hint lines from user messages", () => {

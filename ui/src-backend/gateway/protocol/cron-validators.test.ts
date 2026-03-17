@@ -5,7 +5,7 @@ import {
   validateCronRunParams,
   validateCronRunsParams,
   validateCronUpdateParams,
-} from "./index.js";
+} from './index';
 
 const minimalAddParams = {
   name: "daily-summary",

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createSubscribedSessionHarness } from "./pi-embedded-subscribe.e2e-harness.js";
+import { createSubscribedSessionHarness } from './pi-embedded-subscribe.e2e-harness';
 
 describe("subscribeEmbeddedPiSession", () => {
   it("includes canvas action metadata in tool summaries", async () => {

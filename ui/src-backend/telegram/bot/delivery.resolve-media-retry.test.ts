@@ -1,7 +1,7 @@
 import type { Message } from "@grammyjs/types";
 import { GrammyError } from "grammy";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { TelegramContext } from "./types.js";
+import type { TelegramContext } from './types';
 
 const saveMediaBuffer = vi.fn();
 const fetchRemoteMedia = vi.fn();
@@ -26,7 +26,7 @@ vi.mock("../sticker-cache.js", () => ({
 }));
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-const { resolveMedia } = await import("./delivery.js");
+const { resolveMedia } = await import('./delivery');
 const MAX_MEDIA_BYTES = 10_000_000;
 const BOT_TOKEN = "tok123";
 

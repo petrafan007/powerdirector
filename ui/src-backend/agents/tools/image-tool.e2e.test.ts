@@ -2,12 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { ModelDefinitionConfig } from "../../config/types.models.js";
-import { withFetchPreconnect } from "../../test-utils/fetch-mock.js";
-import { createPowerDirectorCodingTools } from "../pi-tools.js";
-import { createHostSandboxFsBridge } from "../test-helpers/host-sandbox-fs-bridge.js";
-import { __testing, createImageTool, resolveImageModelConfigForTool } from "./image-tool.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import type { ModelDefinitionConfig } from '../../config/types.models';
+import { withFetchPreconnect } from '../../test-utils/fetch-mock';
+import { createPowerDirectorCodingTools } from '../pi-tools';
+import { createHostSandboxFsBridge } from '../test-helpers/host-sandbox-fs-bridge';
+import { __testing, createImageTool, resolveImageModelConfigForTool } from './image-tool';
 
 async function writeAuthProfiles(agentDir: string, profiles: unknown) {
   await fs.mkdir(agentDir, { recursive: true });

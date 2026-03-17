@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { formatChangesDate } from "./utils.js";
+import { formatChangesDate } from './utils';
 
 export async function fetchGroupChanges(
   api: { scry: (path: string) => Promise<unknown> },

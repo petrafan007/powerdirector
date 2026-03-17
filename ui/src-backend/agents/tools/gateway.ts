@@ -1,8 +1,8 @@
-import { loadConfig, resolveGatewayPort } from "../../config/config.js";
-import { callGateway } from "../../gateway/call.js";
-import { resolveLeastPrivilegeOperatorScopesForMethod } from "../../gateway/method-scopes.js";
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../../utils/message-channel.js";
-import { readStringParam } from "./common.js";
+import { loadConfig, resolveGatewayPort } from '../../config/config';
+import { callGateway } from '../../gateway/call';
+import { resolveLeastPrivilegeOperatorScopesForMethod } from '../../gateway/method-scopes';
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../../utils/message-channel';
+import { readStringParam } from './common';
 
 export const DEFAULT_GATEWAY_URL = "ws://127.0.0.1:18789";
 

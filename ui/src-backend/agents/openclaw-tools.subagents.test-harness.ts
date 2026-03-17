@@ -1,7 +1,7 @@
 import { vi } from "vitest";
-import type { MockFn } from "../test-utils/vitest-mock-fn.js";
+import type { MockFn } from '../test-utils/vitest-mock-fn';
 
-export type LoadedConfig = ReturnType<(typeof import("../config/config.js"))["loadConfig"]>;
+export type LoadedConfig = ReturnType<(typeof import('../config/config'))["loadConfig"]>;
 
 export const callGatewayMock: MockFn = vi.fn();
 
@@ -27,7 +27,7 @@ vi.mock("../gateway/call.js", () => ({
 }));
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => configOverride,

@@ -1,12 +1,12 @@
 import { cancel, confirm, isCancel } from "@clack/prompts";
-import { formatCliCommand } from "../cli/command-format.js";
-import { isNixMode } from "../config/config.js";
-import { resolveGatewayService } from "../daemon/service.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { selectStyled } from "../terminal/prompt-select-styled.js";
-import { stylePromptMessage, stylePromptTitle } from "../terminal/prompt-style.js";
-import { resolveCleanupPlanFromDisk } from "./cleanup-plan.js";
-import { listAgentSessionDirs, removePath } from "./cleanup-utils.js";
+import { formatCliCommand } from '../cli/command-format';
+import { isNixMode } from '../config/config';
+import { resolveGatewayService } from '../daemon/service';
+import type { RuntimeEnv } from '../runtime';
+import { selectStyled } from '../terminal/prompt-select-styled';
+import { stylePromptMessage, stylePromptTitle } from '../terminal/prompt-style';
+import { resolveCleanupPlanFromDisk } from './cleanup-plan';
+import { listAgentSessionDirs, removePath } from './cleanup-utils';
 
 export type ResetScope = "config" | "config+creds+sessions" | "full";
 

@@ -1,4 +1,4 @@
-import { IRC_FIELD_HELP } from "./schema.irc.js";
+import { IRC_FIELD_HELP } from './schema.irc';
 
 export const FIELD_HELP: Record<string, string> = {
   "meta.lastTouchedVersion": "Auto-set when PowerDirector writes the config.",

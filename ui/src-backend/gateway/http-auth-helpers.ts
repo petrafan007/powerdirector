@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { AuthRateLimiter } from "./auth-rate-limit.js";
-import { authorizeGatewayConnect, type ResolvedGatewayAuth } from "./auth.js";
-import { sendGatewayAuthFailure } from "./http-common.js";
-import { getBearerToken } from "./http-utils.js";
+import type { AuthRateLimiter } from './auth-rate-limit';
+import { authorizeGatewayConnect, type ResolvedGatewayAuth } from './auth';
+import { sendGatewayAuthFailure } from './http-common';
+import { getBearerToken } from './http-utils';
 
 export async function authorizeGatewayBearerRequestOrReply(params: {
   req: IncomingMessage;

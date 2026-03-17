@@ -1,6 +1,6 @@
 import type { Command } from "commander";
-import { collectOption } from "../helpers.js";
-import type { MessageCliHelpers } from "./helpers.js";
+import { collectOption } from '../helpers';
+import type { MessageCliHelpers } from './helpers';
 
 export function registerMessagePollCommand(message: Command, helpers: MessageCliHelpers) {
   helpers

@@ -1,11 +1,11 @@
-import { listChannelPlugins } from "../../channels/plugins/index.js";
-import type { ChannelPlugin } from "../../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
+import { listChannelPlugins } from '../../channels/plugins/index';
+import type { ChannelPlugin } from '../../channels/plugins/types';
+import type { PowerDirectorConfig } from '../../config/config';
 import {
   listDeliverableMessageChannels,
   type DeliverableMessageChannel,
   normalizeMessageChannel,
-} from "../../utils/message-channel.js";
+} from '../../utils/message-channel';
 
 export type MessageChannelId = DeliverableMessageChannel;
 

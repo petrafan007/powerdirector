@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { describe, expect, it, vi } from "vitest";
-import { createLineNodeWebhookHandler } from "./webhook-node.js";
+import { createLineNodeWebhookHandler } from './webhook-node';
 
 const sign = (body: string, secret: string) =>
   crypto.createHmac("SHA256", secret).update(body).digest("base64");

@@ -15,7 +15,7 @@ vi.mock("../../config/config.js", () => {
   };
 });
 
-const { skillsHandlers } = await import("./skills.js");
+const { skillsHandlers } = await import('./skills');
 
 describe("skills.update", () => {
   it("strips embedded CR/LF from apiKey", async () => {

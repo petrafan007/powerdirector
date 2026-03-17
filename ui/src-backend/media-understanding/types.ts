@@ -98,7 +98,7 @@ export type ImageDescriptionRequest = {
   profile?: string;
   preferredProfile?: string;
   agentDir: string;
-  cfg: import("../config/config.js").PowerDirectorConfig;
+  cfg: import('../config/config').PowerDirectorConfig;
 };
 
 export type ImageDescriptionResult = {

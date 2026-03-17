@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveHeartbeatVisibility } from "./heartbeat-visibility.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveHeartbeatVisibility } from './heartbeat-visibility';
 
 describe("resolveHeartbeatVisibility", () => {
   function createChannelDefaultsHeartbeatConfig(heartbeat: {

@@ -33,10 +33,10 @@ function createStubPtyAdapter() {
 }
 
 describe("process supervisor PTY command contract", () => {
-  let createProcessSupervisor: typeof import("./supervisor.js").createProcessSupervisor;
+  let createProcessSupervisor: typeof import('./supervisor').createProcessSupervisor;
 
   beforeAll(async () => {
-    ({ createProcessSupervisor } = await import("./supervisor.js"));
+    ({ createProcessSupervisor } = await import('./supervisor'));
   });
 
   beforeEach(() => {

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { CONFIG_DIR, ensureDir } from "../utils.js";
+import { CONFIG_DIR, ensureDir } from '../utils';
 
 export function normalizeWideAreaDomain(raw?: string | null): string | null {
   const trimmed = raw?.trim();

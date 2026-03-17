@@ -1,9 +1,9 @@
 // Lazy-load pi-coding-agent model metadata so we can infer context windows when
 // the agent reports a model id. This includes custom models.json entries.
 
-import { loadConfig } from "../config/config.js";
-import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
-import { ensurePowerDirectorModelsJson } from "./models-config.js";
+import { loadConfig } from '../config/config';
+import { resolvePowerDirectorAgentDir } from './agent-paths';
+import { ensurePowerDirectorModelsJson } from './models-config';
 
 type ModelEntry = { id: string; contextWindow?: number };
 type ModelRegistryLike = {
@@ -77,7 +77,7 @@ const loadPromise = (async () => {
   }
 
   try {
-    const { discoverAuthStorage, discoverModels } = await import("./pi-model-discovery.js");
+    const { discoverAuthStorage, discoverModels } = await import('./pi-model-discovery');
     const agentDir = resolvePowerDirectorAgentDir();
     const authStorage = discoverAuthStorage(agentDir);
     const modelRegistry = discoverModels(authStorage, agentDir) as unknown as ModelRegistryLike;

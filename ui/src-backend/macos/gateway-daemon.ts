@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import process from "node:process";
-import type { GatewayLockHandle } from "../infra/gateway-lock.js";
-import { restartGatewayProcessWithFreshPid } from "../infra/process-respawn.js";
+import type { GatewayLockHandle } from '../infra/gateway-lock';
+import { restartGatewayProcessWithFreshPid } from '../infra/process-respawn';
 
 declare const __POWERDIRECTOR_VERSION__: string | undefined;
 
@@ -60,16 +60,16 @@ async function main() {
     commandQueueMod,
     { createRestartIterationHook },
   ] = await Promise.all([
-    import("../config/config.js"),
-    import("../gateway/server.js"),
-    import("../gateway/ws-logging.js"),
-    import("../globals.js"),
-    import("../infra/gateway-lock.js"),
-    import("../infra/restart.js"),
-    import("../runtime.js"),
-    import("../logging.js"),
-    import("../process/command-queue.js"),
-    import("../process/restart-recovery.js"),
+    import('../config/config'),
+    import('../gateway/server'),
+    import('../gateway/ws-logging'),
+    import('../globals'),
+    import('../infra/gateway-lock'),
+    import('../infra/restart'),
+    import('../runtime'),
+    import('../logging'),
+    import('../process/command-queue'),
+    import('../process/restart-recovery'),
   ] as const);
 
   enableConsoleCapture();

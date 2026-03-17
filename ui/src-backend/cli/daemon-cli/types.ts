@@ -1,4 +1,4 @@
-import type { FindExtraGatewayServicesOptions } from "../../daemon/inspect.js";
+import type { FindExtraGatewayServicesOptions } from '../../daemon/inspect';
 
 export type GatewayRpcOpts = {
   url?: string;

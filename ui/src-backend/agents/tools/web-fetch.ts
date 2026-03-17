@@ -1,20 +1,20 @@
 import { Type } from "@sinclair/typebox";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { fetchWithSsrFGuard } from "../../infra/net/fetch-guard.js";
-import { SsrFBlockedError } from "../../infra/net/ssrf.js";
-import { logDebug } from "../../logger.js";
-import { wrapExternalContent, wrapWebContent } from "../../security/external-content.js";
-import { normalizeSecretInput } from "../../utils/normalize-secret-input.js";
-import { stringEnum } from "../schema/typebox.js";
-import type { AnyAgentTool } from "./common.js";
-import { jsonResult, readNumberParam, readStringParam } from "./common.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { fetchWithSsrFGuard } from '../../infra/net/fetch-guard';
+import { SsrFBlockedError } from '../../infra/net/ssrf';
+import { logDebug } from '../../logger';
+import { wrapExternalContent, wrapWebContent } from '../../security/external-content';
+import { normalizeSecretInput } from '../../utils/normalize-secret-input';
+import { stringEnum } from '../schema/typebox';
+import type { AnyAgentTool } from './common';
+import { jsonResult, readNumberParam, readStringParam } from './common';
 import {
   extractReadableContent,
   htmlToMarkdown,
   markdownToText,
   truncateText,
   type ExtractMode,
-} from "./web-fetch-utils.js";
+} from './web-fetch-utils';
 import {
   CacheEntry,
   DEFAULT_CACHE_TTL_MINUTES,
@@ -26,9 +26,9 @@ import {
   resolveTimeoutSeconds,
   withTimeout,
   writeCache,
-} from "./web-shared.js";
+} from './web-shared';
 
-export { extractReadableContent } from "./web-fetch-utils.js";
+export { extractReadableContent } from './web-fetch-utils';
 
 const EXTRACT_MODES = ["markdown", "text"] as const;
 

@@ -10,7 +10,7 @@ vi.mock("@whiskeysockets/baileys", () => ({
   downloadMediaMessage,
 }));
 
-import { downloadInboundMedia } from "./media.js";
+import { downloadInboundMedia } from './media';
 
 const mockSock = {
   updateMediaMessage: vi.fn(),

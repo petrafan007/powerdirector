@@ -1,8 +1,8 @@
-export { runDaemonInstall } from "./install.js";
+export { runDaemonInstall } from './install';
 export {
   runDaemonRestart,
   runDaemonStart,
   runDaemonStop,
   runDaemonUninstall,
-} from "./lifecycle.js";
-export { runDaemonStatus } from "./status.js";
+} from './lifecycle';
+export { runDaemonStatus } from './status';

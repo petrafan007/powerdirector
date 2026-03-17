@@ -2,7 +2,7 @@ import {
   buildAuthHealthSummary,
   DEFAULT_OAUTH_WARN_MS,
   formatRemainingShort,
-} from "../agents/auth-health.js";
+} from '../agents/auth-health';
 import {
   CLAUDE_CLI_PROFILE_ID,
   CODEX_CLI_PROFILE_ID,
@@ -10,12 +10,12 @@ import {
   repairOAuthProfileIdMismatch,
   resolveApiKeyForProfile,
   resolveProfileUnusableUntilForDisplay,
-} from "../agents/auth-profiles.js";
-import { updateAuthProfileStoreWithLock } from "../agents/auth-profiles/store.js";
-import { formatCliCommand } from "../cli/command-format.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { note } from "../terminal/note.js";
-import type { DoctorPrompter } from "./doctor-prompter.js";
+} from '../agents/auth-profiles';
+import { updateAuthProfileStoreWithLock } from '../agents/auth-profiles/store';
+import { formatCliCommand } from '../cli/command-format';
+import type { PowerDirectorConfig } from '../config/config';
+import { note } from '../terminal/note';
+import type { DoctorPrompter } from './doctor-prompter';
 
 export async function maybeRepairAnthropicOAuthProfileId(
   cfg: PowerDirectorConfig,

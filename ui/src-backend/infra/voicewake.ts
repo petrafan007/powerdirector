@@ -1,6 +1,6 @@
 import path from "node:path";
-import { resolveStateDir } from "../config/paths.js";
-import { createAsyncLock, readJsonFile, writeJsonAtomic } from "./json-files.js";
+import { resolveStateDir } from '../config/paths';
+import { createAsyncLock, readJsonFile, writeJsonAtomic } from './json-files';
 
 export type VoiceWakeConfig = {
   triggers: string[];

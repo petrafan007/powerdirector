@@ -1,9 +1,9 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { HookStatusReport } from "../hooks/hooks-status.js";
-import type { RuntimeEnv } from "../runtime.js";
-import type { WizardPrompter } from "../wizard/prompts.js";
-import { setupInternalHooks } from "./onboard-hooks.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { HookStatusReport } from '../hooks/hooks-status';
+import type { RuntimeEnv } from '../runtime';
+import type { WizardPrompter } from '../wizard/prompts';
+import { setupInternalHooks } from './onboard-hooks';
 
 // Mock hook discovery modules
 vi.mock("../hooks/hooks-status.js", () => ({
@@ -117,7 +117,7 @@ describe("onboard-hooks", () => {
     cfg?: PowerDirectorConfig;
     eligible?: boolean;
   }) {
-    const { buildWorkspaceHookStatus } = await import("../hooks/hooks-status.js");
+    const { buildWorkspaceHookStatus } = await import('../hooks/hooks-status');
     vi.mocked(buildWorkspaceHookStatus).mockReturnValue(
       createMockHookReport(params.eligible ?? true),
     );

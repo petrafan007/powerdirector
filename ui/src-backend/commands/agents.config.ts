@@ -3,15 +3,15 @@ import {
   resolveAgentDir,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from "../agents/agent-scope.js";
-import type { AgentIdentityFile } from "../agents/identity-file.js";
+} from '../agents/agent-scope';
+import type { AgentIdentityFile } from '../agents/identity-file';
 import {
   identityHasValues,
   loadAgentIdentityFromWorkspace,
   parseIdentityMarkdown as parseIdentityMarkdownFile,
-} from "../agents/identity-file.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { normalizeAgentId } from "../routing/session-key.js";
+} from '../agents/identity-file';
+import type { PowerDirectorConfig } from '../config/config';
+import { normalizeAgentId } from '../routing/session-key';
 
 export type AgentSummary = {
   id: string;

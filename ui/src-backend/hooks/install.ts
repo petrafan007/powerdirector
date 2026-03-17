@@ -6,21 +6,21 @@ import {
   readJsonFile,
   resolveArchiveKind,
   resolvePackedRootDir,
-} from "../infra/archive.js";
-import { installPackageDir } from "../infra/install-package-dir.js";
-import { resolveSafeInstallDir, unscopedPackageName } from "../infra/install-safe-path.js";
+} from '../infra/archive';
+import { installPackageDir } from '../infra/install-package-dir';
+import { resolveSafeInstallDir, unscopedPackageName } from '../infra/install-safe-path';
 import {
   type NpmIntegrityDrift,
   type NpmSpecResolution,
   resolveArchiveSourcePath,
   withTempDir,
-} from "../infra/install-source-utils.js";
-import { installFromNpmSpecArchive } from "../infra/npm-pack-install.js";
-import { validateRegistryNpmSpec } from "../infra/npm-registry-spec.js";
-import { isPathInside, isPathInsideWithRealpath } from "../security/scan-paths.js";
-import { CONFIG_DIR, resolveUserPath } from "../utils.js";
-import { POWERDIRECTOR_MANIFEST_KEY } from "../plugins/manifest.js";
-import { parseFrontmatter } from "./frontmatter.js";
+} from '../infra/install-source-utils';
+import { installFromNpmSpecArchive } from '../infra/npm-pack-install';
+import { validateRegistryNpmSpec } from '../infra/npm-registry-spec';
+import { isPathInside, isPathInsideWithRealpath } from '../security/scan-paths';
+import { CONFIG_DIR, resolveUserPath } from '../utils';
+import { POWERDIRECTOR_MANIFEST_KEY } from '../plugins/manifest';
+import { parseFrontmatter } from './frontmatter';
 
 export type HookInstallLogger = {
   info?: (message: string) => void;

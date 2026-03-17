@@ -6,8 +6,8 @@ import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
-} from "./constants.js";
-import { execSchtasks } from "./schtasks-exec.js";
+} from './constants';
+import { execSchtasks } from './schtasks-exec';
 
 export type ExtraGatewayService = {
   platform: "darwin" | "linux" | "win32";

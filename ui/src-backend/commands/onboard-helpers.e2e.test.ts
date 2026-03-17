@@ -5,7 +5,7 @@ import {
   resolveBrowserOpenCommand,
   resolveControlUiLinks,
   validateGatewayPasswordInput,
-} from "./onboard-helpers.js";
+} from './onboard-helpers';
 
 const mocks = vi.hoisted(() => ({
   runCommandWithTimeout: vi.fn<

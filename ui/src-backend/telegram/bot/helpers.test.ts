@@ -5,7 +5,7 @@ import {
   expandTextLinks,
   normalizeForwardedContext,
   resolveTelegramForumThreadId,
-} from "./helpers.js";
+} from './helpers';
 
 describe("resolveTelegramForumThreadId", () => {
   it.each([

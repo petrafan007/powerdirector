@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
-import { resolveLsofCommandSync } from "../infra/ports-lsof.js";
-import { sleep } from "../utils.js";
+import { resolveLsofCommandSync } from '../infra/ports-lsof';
+import { sleep } from '../utils';
 
 export type PortProcess = { pid: number; command?: string };
 

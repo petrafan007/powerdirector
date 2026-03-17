@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import type { Chat, Message } from "@grammyjs/types";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { escapeRegExp, formatEnvelopeTimestamp } from "../../test/helpers/envelope-timestamp.js";
+import { escapeRegExp, formatEnvelopeTimestamp } from '../../test/helpers/envelope-timestamp';
 import {
   answerCallbackQuerySpy,
   botCtorSpy,
@@ -27,9 +27,9 @@ import {
   setMyCommandsSpy,
   throttlerSpy,
   useSpy,
-} from "./bot.create-telegram-bot.test-harness.js";
-import { createTelegramBot, getTelegramSequentialKey } from "./bot.js";
-import { resolveTelegramFetch } from "./fetch.js";
+} from './bot.create-telegram-bot.test-harness';
+import { createTelegramBot, getTelegramSequentialKey } from './bot';
+import { resolveTelegramFetch } from './fetch';
 
 const loadConfig = getLoadConfigMock();
 const loadWebMedia = getLoadWebMediaMock();

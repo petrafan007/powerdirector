@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchRemoteMedia } from "./fetch.js";
+import { fetchRemoteMedia } from './fetch';
 
 function makeStream(chunks: Uint8Array[]) {
   return new ReadableStream<Uint8Array>({

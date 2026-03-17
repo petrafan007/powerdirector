@@ -1,7 +1,7 @@
-import { resolveAgentMaxConcurrent, resolveSubagentMaxConcurrent } from "../config/agent-limits.js";
-import type { loadConfig } from "../config/config.js";
-import { setCommandLaneConcurrency } from "../process/command-queue.js";
-import { CommandLane } from "../process/lanes.js";
+import { resolveAgentMaxConcurrent, resolveSubagentMaxConcurrent } from '../config/agent-limits';
+import type { loadConfig } from '../config/config';
+import { setCommandLaneConcurrency } from '../process/command-queue';
+import { CommandLane } from '../process/lanes';
 
 export function applyGatewayLaneConcurrency(cfg: ReturnType<typeof loadConfig>) {
   setCommandLaneConcurrency(CommandLane.Cron, cfg.cron?.maxConcurrentRuns ?? 1);

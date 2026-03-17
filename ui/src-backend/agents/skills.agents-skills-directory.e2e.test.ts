@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { buildWorkspaceSkillsPrompt } from "./skills.js";
-import { writeSkill } from "./skills.test-helpers.js";
+import { buildWorkspaceSkillsPrompt } from './skills';
+import { writeSkill } from './skills.test-helpers';
 
 function buildSkillsPrompt(workspaceDir: string, managedDir: string, bundledDir: string): string {
   return buildWorkspaceSkillsPrompt(workspaceDir, {

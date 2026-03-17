@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isTruthyEnvValue } from "../infra/env.js";
+import { isTruthyEnvValue } from '../infra/env';
 
 const LIVE = isTruthyEnvValue(process.env.LIVE) || isTruthyEnvValue(process.env.POWERDIRECTOR_LIVE_TEST);
 const CDP_URL = process.env.POWERDIRECTOR_LIVE_BROWSER_CDP_URL?.trim() || "";
@@ -14,7 +14,7 @@ async function waitFor(
 
 describeLive("browser (live): remote CDP tab persistence", () => {
   it("creates, lists, focuses, and closes tabs via Playwright", { timeout: 60_000 }, async () => {
-    const pw = await import("./pw-ai.js");
+    const pw = await import('./pw-ai');
     await pw.closePlaywrightBrowserConnection().catch(() => {});
 
     const created = await pw.createPageViaPlaywright({ cdpUrl: CDP_URL, url: "about:blank" });

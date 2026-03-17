@@ -1,1 +1,1 @@
-export { registerCronCli } from "./cron-cli/register.js";
+export { registerCronCli } from './cron-cli/register';

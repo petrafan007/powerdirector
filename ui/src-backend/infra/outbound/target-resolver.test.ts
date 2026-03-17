@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ChannelDirectoryEntry } from "../../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { resetDirectoryCache, resolveMessagingTarget } from "./target-resolver.js";
+import type { ChannelDirectoryEntry } from '../../channels/plugins/types';
+import type { PowerDirectorConfig } from '../../config/config';
+import { resetDirectoryCache, resolveMessagingTarget } from './target-resolver';
 
 const mocks = vi.hoisted(() => ({
   listGroups: vi.fn(),

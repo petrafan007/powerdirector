@@ -1,16 +1,16 @@
-import type { ChannelId } from "../channels/plugins/types.js";
+import type { ChannelId } from '../channels/plugins/types';
 import type {
   BlockStreamingChunkConfig,
   BlockStreamingCoalesceConfig,
   HumanDelayConfig,
   TypingMode,
-} from "./types.base.js";
+} from './types.base';
 import type {
   SandboxBrowserSettings,
   SandboxDockerSettings,
   SandboxPruneSettings,
-} from "./types.sandbox.js";
-import type { MemorySearchConfig } from "./types.tools.js";
+} from './types.sandbox';
+import type { MemorySearchConfig } from './types.tools';
 
 export type AgentModelEntryConfig = {
   alias?: string;

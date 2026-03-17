@@ -1,6 +1,6 @@
-import { type PowerDirectorConfig, loadConfig } from "../config/config.js";
-import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
-import { ensurePowerDirectorModelsJson } from "./models-config.js";
+import { type PowerDirectorConfig, loadConfig } from '../config/config';
+import { resolvePowerDirectorAgentDir } from './agent-paths';
+import { ensurePowerDirectorModelsJson } from './models-config';
 
 export type ModelCatalogEntry = {
   id: string;
@@ -20,11 +20,11 @@ type DiscoveredModel = {
   input?: Array<"text" | "image">;
 };
 
-type PiSdkModule = typeof import("./pi-model-discovery.js");
+type PiSdkModule = typeof import('./pi-model-discovery');
 
 let modelCatalogPromise: Promise<ModelCatalogEntry[]> | null = null;
 let hasLoggedModelCatalogError = false;
-const defaultImportPiSdk = () => import("./pi-model-discovery.js");
+const defaultImportPiSdk = () => import('./pi-model-discovery');
 let importPiSdk = defaultImportPiSdk;
 
 const CODEX_PROVIDER = "openai-codex";
@@ -100,7 +100,7 @@ export async function loadModelCatalog(params?: {
       const cfg = params?.config ?? loadConfig();
       await ensurePowerDirectorModelsJson(cfg);
       await (
-        await import("./pi-auth-json.js")
+        await import('./pi-auth-json')
       ).ensurePiAuthJsonFromAuthProfiles(resolvePowerDirectorAgentDir());
       // IMPORTANT: keep the dynamic import *inside* the try/catch.
       // If this fails once (e.g. during a pnpm install that temporarily swaps node_modules),

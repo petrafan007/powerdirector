@@ -6,7 +6,7 @@ import {
   deleteTelegramUpdateOffset,
   readTelegramUpdateOffset,
   writeTelegramUpdateOffset,
-} from "./update-offset-store.js";
+} from './update-offset-store';
 
 async function withTempStateDir<T>(fn: (dir: string) => Promise<T>) {
   const previous = process.env.POWERDIRECTOR_STATE_DIR;

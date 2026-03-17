@@ -1,6 +1,6 @@
-import { logVerbose, shouldLogVerbose } from "../../globals.js";
-import { createDedupeCache, type DedupeCache } from "../../infra/dedupe.js";
-import type { MsgContext } from "../templating.js";
+import { logVerbose, shouldLogVerbose } from '../../globals';
+import { createDedupeCache, type DedupeCache } from '../../infra/dedupe';
+import type { MsgContext } from '../templating';
 
 const DEFAULT_INBOUND_DEDUPE_TTL_MS = 20 * 60_000;
 const DEFAULT_INBOUND_DEDUPE_MAX = 5000;

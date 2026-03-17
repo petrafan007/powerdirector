@@ -1,10 +1,10 @@
 import type { Command } from "commander";
-import { setVerbose } from "../../globals.js";
-import { isTruthyEnvValue } from "../../infra/env.js";
-import { defaultRuntime } from "../../runtime.js";
-import { getCommandPath, getVerboseFlag, hasHelpOrVersion } from "../argv.js";
-import { emitCliBanner } from "../banner.js";
-import { resolveCliName } from "../cli-name.js";
+import { setVerbose } from '../../globals';
+import { isTruthyEnvValue } from '../../infra/env';
+import { defaultRuntime } from '../../runtime';
+import { getCommandPath, getVerboseFlag, hasHelpOrVersion } from '../argv';
+import { emitCliBanner } from '../banner';
+import { resolveCliName } from '../cli-name';
 
 function setProcessTitleForCommand(actionCommand: Command) {
   let current: Command = actionCommand;
@@ -46,11 +46,11 @@ export function registerPreActionHooks(program: Command, programVersion: string)
     if (commandPath[0] === "doctor" || commandPath[0] === "completion") {
       return;
     }
-    const { ensureConfigReady } = await import("./config-guard.js");
+    const { ensureConfigReady } = await import('./config-guard');
     await ensureConfigReady({ runtime: defaultRuntime, commandPath });
     // Load plugins for commands that need channel access
     if (PLUGIN_REQUIRED_COMMANDS.has(commandPath[0])) {
-      const { ensurePluginRegistryLoaded } = await import("../plugin-registry.js");
+      const { ensurePluginRegistryLoaded } = await import('../plugin-registry');
       ensurePluginRegistryLoaded();
     }
   });

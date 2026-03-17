@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveRequiredHomeDir } from "../infra/home-dir.js";
-import { runCommandWithTimeout } from "../process/exec.js";
-import { isCronSessionKey, isSubagentSessionKey } from "../routing/session-key.js";
-import { resolveUserPath } from "../utils.js";
-import { resolveWorkspaceTemplateDir } from "./workspace-templates.js";
+import { resolveRequiredHomeDir } from '../infra/home-dir';
+import { runCommandWithTimeout } from '../process/exec';
+import { isCronSessionKey, isSubagentSessionKey } from '../routing/session-key';
+import { resolveUserPath } from '../utils';
+import { resolveWorkspaceTemplateDir } from './workspace-templates';
 
 export function resolveDefaultAgentWorkspaceDir(
   env: NodeJS.ProcessEnv = process.env,

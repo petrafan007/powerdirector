@@ -13,7 +13,7 @@ import {
   updateLastRoute,
   updateSessionStore,
   updateSessionStoreEntry,
-} from "./sessions.js";
+} from './sessions';
 
 describe("sessions", () => {
   let fixtureRoot = "";

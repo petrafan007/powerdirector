@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canonicalizeBase64, estimateBase64DecodedBytes } from "./base64.js";
+import { canonicalizeBase64, estimateBase64DecodedBytes } from './base64';
 
 describe("base64 helpers", () => {
   it("normalizes whitespace and keeps valid base64", () => {

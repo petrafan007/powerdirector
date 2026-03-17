@@ -4,7 +4,7 @@ import {
   listAgentIds,
   resolveAgentDir,
   resolveAgentWorkspaceDir,
-} from "../../agents/agent-scope.js";
+} from '../../agents/agent-scope';
 import {
   DEFAULT_AGENTS_FILENAME,
   DEFAULT_BOOTSTRAP_FILENAME,
@@ -17,18 +17,18 @@ import {
   DEFAULT_USER_FILENAME,
   ensureAgentWorkspace,
   isWorkspaceOnboardingCompleted,
-} from "../../agents/workspace.js";
-import { movePathToTrash } from "../../browser/trash.js";
+} from '../../agents/workspace';
+import { movePathToTrash } from '../../browser/trash';
 import {
   applyAgentConfig,
   findAgentEntryIndex,
   listAgentEntries,
   pruneAgentConfig,
-} from "../../commands/agents.config.js";
-import { loadConfig, writeConfigFile } from "../../config/config.js";
-import { resolveSessionTranscriptsDirForAgent } from "../../config/sessions/paths.js";
-import { DEFAULT_AGENT_ID, normalizeAgentId } from "../../routing/session-key.js";
-import { resolveUserPath } from "../../utils.js";
+} from '../../commands/agents.config';
+import { loadConfig, writeConfigFile } from '../../config/config';
+import { resolveSessionTranscriptsDirForAgent } from '../../config/sessions/paths';
+import { DEFAULT_AGENT_ID, normalizeAgentId } from '../../routing/session-key';
+import { resolveUserPath } from '../../utils';
 import {
   ErrorCodes,
   errorShape,
@@ -40,9 +40,9 @@ import {
   validateAgentsFilesSetParams,
   validateAgentsListParams,
   validateAgentsUpdateParams,
-} from "../protocol/index.js";
-import { listAgentsForGateway } from "../session-utils.js";
-import type { GatewayRequestHandlers, RespondFn } from "./types.js";
+} from '../protocol/index';
+import { listAgentsForGateway } from '../session-utils';
+import type { GatewayRequestHandlers, RespondFn } from './types';
 
 const BOOTSTRAP_FILE_NAMES = [
   DEFAULT_AGENTS_FILENAME,

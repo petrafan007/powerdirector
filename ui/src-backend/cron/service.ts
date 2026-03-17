@@ -1,8 +1,8 @@
-import * as ops from "./service/ops.js";
-import { type CronServiceDeps, createCronServiceState } from "./service/state.js";
-import type { CronJob, CronJobCreate, CronJobPatch } from "./types.js";
+import * as ops from './service/ops';
+import { type CronServiceDeps, createCronServiceState } from './service/state';
+import type { CronJob, CronJobCreate, CronJobPatch } from './types';
 
-export type { CronEvent, CronServiceDeps } from "./service/state.js";
+export type { CronEvent, CronServiceDeps } from './service/state';
 
 export class CronService {
   private readonly state;

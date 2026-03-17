@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { TelegramGroupConfig } from "../config/types.telegram.js";
-import { normalizeAccountId } from "../routing/session-key.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { TelegramGroupConfig } from '../config/types.telegram';
+import { normalizeAccountId } from '../routing/session-key';
 
 type TelegramGroups = Record<string, TelegramGroupConfig>;
 

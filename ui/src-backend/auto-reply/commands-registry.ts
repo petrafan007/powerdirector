@@ -1,9 +1,9 @@
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
-import { resolveConfiguredModelRef } from "../agents/model-selection.js";
-import type { SkillCommandSpec } from "../agents/skills.js";
-import type { PowerDirectorConfig } from "../config/types.js";
-import { escapeRegExp } from "../utils.js";
-import { getChatCommands, getNativeCommandSurfaces } from "./commands-registry.data.js";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
+import { resolveConfiguredModelRef } from '../agents/model-selection';
+import type { SkillCommandSpec } from '../agents/skills';
+import type { PowerDirectorConfig } from '../config/types';
+import { escapeRegExp } from '../utils';
+import { getChatCommands, getNativeCommandSurfaces } from './commands-registry.data';
 import type {
   ChatCommandDefinition,
   CommandArgChoiceContext,
@@ -15,7 +15,7 @@ import type {
   CommandNormalizeOptions,
   NativeCommandSpec,
   ShouldHandleTextCommandsParams,
-} from "./commands-registry.types.js";
+} from './commands-registry.types';
 
 export type {
   ChatCommandDefinition,
@@ -29,7 +29,7 @@ export type {
   CommandScope,
   NativeCommandSpec,
   ShouldHandleTextCommandsParams,
-} from "./commands-registry.types.js";
+} from './commands-registry.types';
 
 type TextAliasSpec = {
   key: string;

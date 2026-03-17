@@ -1,19 +1,19 @@
-import { lookupContextTokens } from "../agents/context.js";
-import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
-import { resolveConfiguredModelRef } from "../agents/model-selection.js";
-import { loadConfig } from "../config/config.js";
+import { lookupContextTokens } from '../agents/context';
+import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
+import { resolveConfiguredModelRef } from '../agents/model-selection';
+import { loadConfig } from '../config/config';
 import {
   loadSessionStore,
   resolveFreshSessionTotalTokens,
   resolveStorePath,
   type SessionEntry,
-} from "../config/sessions.js";
-import { classifySessionKey, resolveSessionModelRef } from "../gateway/session-utils.js";
-import { info } from "../globals.js";
+} from '../config/sessions';
+import { classifySessionKey, resolveSessionModelRef } from '../gateway/session-utils';
+import { info } from '../globals';
 import { formatTimeAgo } from "../infra/format-time/format-relative.ts";
-import { parseAgentSessionKey } from "../routing/session-key.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { isRich, theme } from "../terminal/theme.js";
+import { parseAgentSessionKey } from '../routing/session-key';
+import type { RuntimeEnv } from '../runtime';
+import { isRich, theme } from '../terminal/theme';
 
 type SessionRow = {
   key: string;

@@ -1,4 +1,4 @@
-import { createSessionManagerRuntimeRegistry } from "./session-manager-runtime-registry.js";
+import { createSessionManagerRuntimeRegistry } from './session-manager-runtime-registry';
 
 export type CompactionSafeguardRuntimeValue = {
   maxHistoryShare?: number;

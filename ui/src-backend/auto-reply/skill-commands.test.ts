@@ -60,12 +60,12 @@ vi.mock("../agents/skills.js", () => {
   };
 });
 
-let listSkillCommandsForAgents: typeof import("./skill-commands.js").listSkillCommandsForAgents;
-let resolveSkillCommandInvocation: typeof import("./skill-commands.js").resolveSkillCommandInvocation;
+let listSkillCommandsForAgents: typeof import('./skill-commands').listSkillCommandsForAgents;
+let resolveSkillCommandInvocation: typeof import('./skill-commands').resolveSkillCommandInvocation;
 
 beforeAll(async () => {
   ({ listSkillCommandsForAgents, resolveSkillCommandInvocation } =
-    await import("./skill-commands.js"));
+    await import('./skill-commands'));
 });
 
 describe("resolveSkillCommandInvocation", () => {

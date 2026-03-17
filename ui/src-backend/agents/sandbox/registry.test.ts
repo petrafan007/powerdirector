@@ -20,7 +20,7 @@ vi.mock("./constants.js", () => ({
   SANDBOX_BROWSER_REGISTRY_PATH,
 }));
 
-import type { SandboxBrowserRegistryEntry, SandboxRegistryEntry } from "./registry.js";
+import type { SandboxBrowserRegistryEntry, SandboxRegistryEntry } from './registry';
 import {
   readBrowserRegistry,
   readRegistry,
@@ -28,7 +28,7 @@ import {
   removeRegistryEntry,
   updateBrowserRegistry,
   updateRegistry,
-} from "./registry.js";
+} from './registry';
 
 type WriteDelayConfig = {
   targetFile: "containers.json" | "browsers.json";

@@ -36,7 +36,7 @@ const routeCtxMocks = vi.hoisted(() => {
 });
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => ({
@@ -58,7 +58,7 @@ vi.mock("./pw-ai-module.js", () => ({
 }));
 
 vi.mock("./server-context.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./server-context.js")>();
+  const actual = await importOriginal<typeof import('./server-context')>();
   return {
     ...actual,
     createBrowserRouteContext: routeCtxMocks.createBrowserRouteContext,
@@ -66,7 +66,7 @@ vi.mock("./server-context.js", async (importOriginal) => {
 });
 
 const { startBrowserControlServerFromConfig, stopBrowserControlServer } =
-  await import("./server.js");
+  await import('./server');
 
 async function getFreePort(): Promise<number> {
   const probe = createServer();

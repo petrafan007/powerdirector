@@ -8,7 +8,7 @@ import {
   applyMMRToHybridResults,
   DEFAULT_MMR_CONFIG,
   type MMRItem,
-} from "./mmr.js";
+} from './mmr';
 
 describe("tokenize", () => {
   it("extracts alphanumeric tokens and lowercases", () => {

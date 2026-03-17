@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ChannelHeartbeatVisibilityConfig } from "../config/types.channels.js";
-import type { GatewayMessageChannel } from "../utils/message-channel.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { ChannelHeartbeatVisibilityConfig } from '../config/types.channels';
+import type { GatewayMessageChannel } from '../utils/message-channel';
 
 export type ResolvedHeartbeatVisibility = {
   showOk: boolean;

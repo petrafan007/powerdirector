@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { loadModelCatalog } from "../agents/model-catalog.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { withTempHome as withTempHomeHarness } from "../config/home-env.test-harness.js";
-import { getReplyFromConfig } from "./reply.js";
+import { loadModelCatalog } from '../agents/model-catalog';
+import type { PowerDirectorConfig } from '../config/config';
+import { withTempHome as withTempHomeHarness } from '../config/home-env.test-harness';
+import { getReplyFromConfig } from './reply';
 
-type RunEmbeddedPiAgent = typeof import("../agents/pi-embedded.js").runEmbeddedPiAgent;
+type RunEmbeddedPiAgent = typeof import('../agents/pi-embedded').runEmbeddedPiAgent;
 type RunEmbeddedPiAgentParams = Parameters<RunEmbeddedPiAgent>[0];
 type RunEmbeddedPiAgentReply = Awaited<ReturnType<RunEmbeddedPiAgent>>;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { migrateTelegramGroupConfig } from "./group-migration.js";
+import { migrateTelegramGroupConfig } from './group-migration';
 
 describe("migrateTelegramGroupConfig", () => {
   it("migrates global group ids", () => {

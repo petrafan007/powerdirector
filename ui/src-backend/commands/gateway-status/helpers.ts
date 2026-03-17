@@ -1,9 +1,9 @@
-import { resolveGatewayPort } from "../../config/config.js";
-import type { PowerDirectorConfig, ConfigFileSnapshot } from "../../config/types.js";
-import type { GatewayProbeResult } from "../../gateway/probe.js";
-import { pickPrimaryTailnetIPv4 } from "../../infra/tailnet.js";
-import { colorize, theme } from "../../terminal/theme.js";
-import { pickGatewaySelfPresence } from "../gateway-presence.js";
+import { resolveGatewayPort } from '../../config/config';
+import type { PowerDirectorConfig, ConfigFileSnapshot } from '../../config/types';
+import type { GatewayProbeResult } from '../../gateway/probe';
+import { pickPrimaryTailnetIPv4 } from '../../infra/tailnet';
+import { colorize, theme } from '../../terminal/theme';
+import { pickGatewaySelfPresence } from '../gateway-presence';
 
 type TargetKind = "explicit" | "configRemote" | "localLoopback" | "sshTunnel";
 

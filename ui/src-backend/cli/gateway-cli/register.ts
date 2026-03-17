@@ -1,30 +1,30 @@
 import type { Command } from "commander";
-import { gatewayStatusCommand } from "../../commands/gateway-status.js";
-import { formatHealthChannelLines, type HealthSummary } from "../../commands/health.js";
-import { loadConfig } from "../../config/config.js";
-import { discoverGatewayBeacons } from "../../infra/bonjour-discovery.js";
-import type { CostUsageSummary } from "../../infra/session-cost-usage.js";
-import { resolveWideAreaDiscoveryDomain } from "../../infra/widearea-dns.js";
-import { defaultRuntime } from "../../runtime.js";
-import { styleHealthChannelLine } from "../../terminal/health-style.js";
-import { formatDocsLink } from "../../terminal/links.js";
-import { colorize, isRich, theme } from "../../terminal/theme.js";
-import { formatTokenCount, formatUsd } from "../../utils/usage-format.js";
-import { runCommandWithRuntime } from "../cli-utils.js";
-import { inheritOptionFromParent } from "../command-options.js";
-import { addGatewayServiceCommands } from "../daemon-cli.js";
-import { formatHelpExamples } from "../help-format.js";
-import { withProgress } from "../progress.js";
-import { callGatewayCli, gatewayCallOpts } from "./call.js";
-import type { GatewayDiscoverOpts } from "./discover.js";
+import { gatewayStatusCommand } from '../../commands/gateway-status';
+import { formatHealthChannelLines, type HealthSummary } from '../../commands/health';
+import { loadConfig } from '../../config/config';
+import { discoverGatewayBeacons } from '../../infra/bonjour-discovery';
+import type { CostUsageSummary } from '../../infra/session-cost-usage';
+import { resolveWideAreaDiscoveryDomain } from '../../infra/widearea-dns';
+import { defaultRuntime } from '../../runtime';
+import { styleHealthChannelLine } from '../../terminal/health-style';
+import { formatDocsLink } from '../../terminal/links';
+import { colorize, isRich, theme } from '../../terminal/theme';
+import { formatTokenCount, formatUsd } from '../../utils/usage-format';
+import { runCommandWithRuntime } from '../cli-utils';
+import { inheritOptionFromParent } from '../command-options';
+import { addGatewayServiceCommands } from '../daemon-cli';
+import { formatHelpExamples } from '../help-format';
+import { withProgress } from '../progress';
+import { callGatewayCli, gatewayCallOpts } from './call';
+import type { GatewayDiscoverOpts } from './discover';
 import {
   dedupeBeacons,
   parseDiscoverTimeoutMs,
   pickBeaconHost,
   pickGatewayPort,
   renderBeaconLines,
-} from "./discover.js";
-import { addGatewayRunCommand } from "./run.js";
+} from './discover';
+import { addGatewayRunCommand } from './run';
 
 function runGatewayCommand(action: () => Promise<void>, label?: string) {
   return runCommandWithRuntime(defaultRuntime, action, (err) => {

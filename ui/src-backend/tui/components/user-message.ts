@@ -1,5 +1,5 @@
 import { Container, Markdown, Spacer } from "@mariozechner/pi-tui";
-import { markdownTheme, theme } from "../theme/theme.js";
+import { markdownTheme, theme } from '../theme/theme';
 
 export class UserMessageComponent extends Container {
   private body: Markdown;

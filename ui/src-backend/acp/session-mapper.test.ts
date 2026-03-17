@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import type { GatewayClient } from "../gateway/client.js";
-import { parseSessionMeta, resolveSessionKey } from "./session-mapper.js";
+import type { GatewayClient } from '../gateway/client';
+import { parseSessionMeta, resolveSessionKey } from './session-mapper';
 
 function createGateway(resolveLabelKey = "agent:main:label"): {
   gateway: GatewayClient;

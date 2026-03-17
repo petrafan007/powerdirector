@@ -1,17 +1,17 @@
 import "./isolated-agent.mocks.js";
 import fs from "node:fs/promises";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { runEmbeddedPiAgent } from "../agents/pi-embedded.js";
-import { runSubagentAnnounceFlow } from "../agents/subagent-announce.js";
-import type { CliDeps } from "../cli/deps.js";
-import { runCronIsolatedAgentTurn } from "./isolated-agent.js";
+import { runEmbeddedPiAgent } from '../agents/pi-embedded';
+import { runSubagentAnnounceFlow } from '../agents/subagent-announce';
+import type { CliDeps } from '../cli/deps';
+import { runCronIsolatedAgentTurn } from './isolated-agent';
 import {
   makeCfg,
   makeJob,
   withTempCronHome,
   writeSessionStore,
-} from "./isolated-agent.test-harness.js";
-import { setupIsolatedAgentTurnMocks } from "./isolated-agent.test-setup.js";
+} from './isolated-agent.test-harness';
+import { setupIsolatedAgentTurnMocks } from './isolated-agent.test-setup';
 
 function createCliDeps(overrides: Partial<CliDeps> = {}): CliDeps {
   return {

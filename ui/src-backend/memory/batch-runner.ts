@@ -1,5 +1,5 @@
-import { splitBatchRequests } from "./batch-utils.js";
-import { runWithConcurrency } from "./internal.js";
+import { splitBatchRequests } from './batch-utils';
+import { runWithConcurrency } from './internal';
 
 export async function runEmbeddingBatchGroups<TRequest>(params: {
   requests: TRequest[];

@@ -3,16 +3,16 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe.js";
-import * as ssrf from "../infra/net/ssrf.js";
-import { resetLogger, setLoggerOverride } from "../logging.js";
-import type { WebInboundMessage, WebListenerCloseReason } from "./inbound.js";
+import { resetInboundDedupe } from '../auto-reply/reply/inbound-dedupe';
+import * as ssrf from '../infra/net/ssrf';
+import { resetLogger, setLoggerOverride } from '../logging';
+import type { WebInboundMessage, WebListenerCloseReason } from './inbound';
 import {
   resetBaileysMocks as _resetBaileysMocks,
   resetLoadConfigMock as _resetLoadConfigMock,
-} from "./test-helpers.js";
+} from './test-helpers';
 
-export { resetBaileysMocks, resetLoadConfigMock, setLoadConfigMock } from "./test-helpers.js";
+export { resetBaileysMocks, resetLoadConfigMock, setLoadConfigMock } from './test-helpers';
 
 // Avoid exporting inferred vitest mock types (TS2742 under pnpm + d.ts emit).
 // oxlint-disable-next-line typescript/no-explicit-any

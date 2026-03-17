@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
-import type { ModelAliasIndex } from "../../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { SessionEntry } from "../../config/sessions.js";
-import { handleDirectiveOnly } from "./directive-handling.impl.js";
-import { parseInlineDirectives } from "./directive-handling.js";
+import type { ModelAliasIndex } from '../../agents/model-selection';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { SessionEntry } from '../../config/sessions';
+import { handleDirectiveOnly } from './directive-handling.impl';
+import { parseInlineDirectives } from './directive-handling';
 import {
   maybeHandleModelDirectiveInfo,
   resolveModelSelectionFromDirective,
-} from "./directive-handling.model.js";
+} from './directive-handling.model';
 
 // Mock dependencies for directive handling persistence.
 vi.mock("../../agents/agent-scope.js", () => ({

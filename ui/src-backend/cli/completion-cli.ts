@@ -2,12 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { Command, Option } from "commander";
-import { resolveStateDir } from "../config/paths.js";
-import { routeLogsToStderr } from "../logging/console.js";
-import { pathExists } from "../utils.js";
-import { getCoreCliCommandNames, registerCoreCliByName } from "./program/command-registry.js";
-import { getProgramContext } from "./program/program-context.js";
-import { getSubCliEntries, registerSubCliByName } from "./program/register.subclis.js";
+import { resolveStateDir } from '../config/paths';
+import { routeLogsToStderr } from '../logging/console';
+import { pathExists } from '../utils';
+import { getCoreCliCommandNames, registerCoreCliByName } from './program/command-registry';
+import { getProgramContext } from './program/program-context';
+import { getSubCliEntries, registerSubCliByName } from './program/register.subclis';
 
 const COMPLETION_SHELLS = ["zsh", "bash", "powershell", "fish"] as const;
 type CompletionShell = (typeof COMPLETION_SHELLS)[number];

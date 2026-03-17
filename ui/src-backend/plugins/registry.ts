@@ -1,17 +1,17 @@
 import path from "node:path";
-import type { AnyAgentTool } from "../agents/tools/common.js";
-import type { ChannelDock } from "../channels/dock.js";
-import type { ChannelPlugin } from "../channels/plugins/types.js";
+import type { AnyAgentTool } from '../agents/tools/common';
+import type { ChannelDock } from '../channels/dock';
+import type { ChannelPlugin } from '../channels/plugins/types';
 import type {
   GatewayRequestHandler,
   GatewayRequestHandlers,
-} from "../gateway/server-methods/types.js";
-import { registerInternalHook } from "../hooks/internal-hooks.js";
-import type { HookEntry } from "../hooks/types.js";
-import { resolveUserPath } from "../utils.js";
-import { registerPluginCommand } from "./commands.js";
-import { normalizePluginHttpPath } from "./http-path.js";
-import type { PluginRuntime } from "./runtime/types.js";
+} from '../gateway/server-methods/types';
+import { registerInternalHook } from '../hooks/internal-hooks';
+import type { HookEntry } from '../hooks/types';
+import { resolveUserPath } from '../utils';
+import { registerPluginCommand } from './commands';
+import { normalizePluginHttpPath } from './http-path';
+import type { PluginRuntime } from './runtime/types';
 import type {
   PowerDirectorPluginApi,
   PowerDirectorPluginChannelRegistration,
@@ -32,7 +32,7 @@ import type {
   PluginHookName,
   PluginHookHandlerMap,
   PluginHookRegistration as TypedPluginHookRegistration,
-} from "./types.js";
+} from './types';
 
 export type PluginToolRegistration = {
   pluginId: string;

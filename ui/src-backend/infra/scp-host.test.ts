@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isSafeScpRemoteHost, normalizeScpRemoteHost } from "./scp-host.js";
+import { isSafeScpRemoteHost, normalizeScpRemoteHost } from './scp-host';
 
 describe("scp remote host", () => {
   it("accepts host and user@host forms", () => {

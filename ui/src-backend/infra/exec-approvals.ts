@@ -1,11 +1,11 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
-import { expandHomePrefix } from "./home-dir.js";
-import { requestJsonlSocket } from "./jsonl-socket.js";
-export * from "./exec-approvals-analysis.js";
-export * from "./exec-approvals-allowlist.js";
+import { DEFAULT_AGENT_ID } from '../routing/session-key';
+import { expandHomePrefix } from './home-dir';
+import { requestJsonlSocket } from './jsonl-socket';
+export * from './exec-approvals-analysis';
+export * from './exec-approvals-allowlist';
 
 export type ExecHost = "sandbox" | "gateway" | "node";
 export type ExecSecurity = "deny" | "allowlist" | "full";

@@ -1,31 +1,31 @@
 import fs from "node:fs";
-import { SsrFBlockedError } from "../infra/net/ssrf.js";
-import { fetchJson, fetchOk } from "./cdp.helpers.js";
-import { appendCdpPath, createTargetViaCdp, normalizeCdpWsUrl } from "./cdp.js";
+import { SsrFBlockedError } from '../infra/net/ssrf';
+import { fetchJson, fetchOk } from './cdp.helpers';
+import { appendCdpPath, createTargetViaCdp, normalizeCdpWsUrl } from './cdp';
 import {
   isChromeCdpReady,
   isChromeReachable,
   launchPowerDirectorChrome,
   resolvePowerDirectorUserDataDir,
   stopPowerDirectorChrome,
-} from "./chrome.js";
-import type { ResolvedBrowserProfile } from "./config.js";
-import { resolveProfile } from "./config.js";
+} from './chrome';
+import type { ResolvedBrowserProfile } from './config';
+import { resolveProfile } from './config';
 import {
   ensureChromeExtensionRelayServer,
   stopChromeExtensionRelayServer,
-} from "./extension-relay.js";
+} from './extension-relay';
 import {
   assertBrowserNavigationAllowed,
   InvalidBrowserNavigationUrlError,
   withBrowserNavigationPolicy,
-} from "./navigation-guard.js";
-import type { PwAiModule } from "./pw-ai-module.js";
-import { getPwAiModule } from "./pw-ai-module.js";
+} from './navigation-guard';
+import type { PwAiModule } from './pw-ai-module';
+import { getPwAiModule } from './pw-ai-module';
 import {
   refreshResolvedBrowserConfigFromDisk,
   resolveBrowserProfileWithHotReload,
-} from "./resolved-config-refresh.js";
+} from './resolved-config-refresh';
 import type {
   BrowserServerState,
   BrowserRouteContext,
@@ -34,9 +34,9 @@ import type {
   ProfileContext,
   ProfileRuntimeState,
   ProfileStatus,
-} from "./server-context.types.js";
-import { resolveTargetIdFromTabs } from "./target-id.js";
-import { movePathToTrash } from "./trash.js";
+} from './server-context.types';
+import { resolveTargetIdFromTabs } from './target-id';
+import { movePathToTrash } from './trash';
 
 export type {
   BrowserRouteContext,
@@ -45,7 +45,7 @@ export type {
   ProfileContext,
   ProfileRuntimeState,
   ProfileStatus,
-} from "./server-context.types.js";
+} from './server-context.types';
 
 export function listKnownProfileNames(state: BrowserServerState): string[] {
   const names = new Set(Object.keys(state.resolved.profiles));
@@ -518,7 +518,7 @@ function createProfileContext(
     if (httpReachable && !profileState.running) {
       // Port in use but not by us - kill it
       try {
-        const mod = await import("./pw-ai.js");
+        const mod = await import('./pw-ai');
         await mod.closePlaywrightBrowserConnection();
       } catch {
         // ignore
@@ -530,7 +530,7 @@ function createProfileContext(
     }
 
     try {
-      const mod = await import("./pw-ai.js");
+      const mod = await import('./pw-ai');
       await mod.closePlaywrightBrowserConnection();
     } catch {
       // ignore

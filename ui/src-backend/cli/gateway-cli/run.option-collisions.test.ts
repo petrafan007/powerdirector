@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { runRegisteredCli } from "../../test-utils/command-runner.js";
-import { createCliRuntimeCapture } from "../test-runtime-capture.js";
+import { runRegisteredCli } from '../../test-utils/command-runner';
+import { createCliRuntimeCapture } from '../test-runtime-capture';
 
 const startGatewayServer = vi.fn(async (_port: number, _opts?: unknown) => ({
   close: vi.fn(async () => {}),
@@ -92,10 +92,10 @@ vi.mock("./run-loop.js", () => ({
 }));
 
 describe("gateway run option collisions", () => {
-  let addGatewayRunCommand: typeof import("./run.js").addGatewayRunCommand;
+  let addGatewayRunCommand: typeof import('./run').addGatewayRunCommand;
 
   beforeAll(async () => {
-    ({ addGatewayRunCommand } = await import("./run.js"));
+    ({ addGatewayRunCommand } = await import('./run'));
   });
 
   beforeEach(() => {

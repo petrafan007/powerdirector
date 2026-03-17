@@ -1,12 +1,12 @@
-import { loadConfig } from "../../config/config.js";
-import { logVerbose } from "../../globals.js";
-import { buildPairingReply } from "../../pairing/pairing-messages.js";
+import { loadConfig } from '../../config/config';
+import { logVerbose } from '../../globals';
+import { buildPairingReply } from '../../pairing/pairing-messages';
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from "../../pairing/pairing-store.js";
-import { isSelfChatMode, normalizeE164 } from "../../utils.js";
-import { resolveWhatsAppAccount } from "../accounts.js";
+} from '../../pairing/pairing-store';
+import { isSelfChatMode, normalizeE164 } from '../../utils';
+import { resolveWhatsAppAccount } from '../accounts';
 
 export type InboundAccessControlResult = {
   allowed: boolean;

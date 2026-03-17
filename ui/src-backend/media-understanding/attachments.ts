@@ -1,22 +1,22 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { MsgContext } from "../auto-reply/templating.js";
-import type { MediaUnderstandingAttachmentsConfig } from "../config/types.tools.js";
-import { logVerbose, shouldLogVerbose } from "../globals.js";
-import { isAbortError } from "../infra/unhandled-rejections.js";
-import { fetchRemoteMedia, MediaFetchError } from "../media/fetch.js";
+import type { MsgContext } from '../auto-reply/templating';
+import type { MediaUnderstandingAttachmentsConfig } from '../config/types.tools';
+import { logVerbose, shouldLogVerbose } from '../globals';
+import { isAbortError } from '../infra/unhandled-rejections';
+import { fetchRemoteMedia, MediaFetchError } from '../media/fetch';
 import {
   DEFAULT_IMESSAGE_ATTACHMENT_ROOTS,
   isInboundPathAllowed,
   mergeInboundPathRoots,
-} from "../media/inbound-path-policy.js";
-import { getDefaultMediaLocalRoots } from "../media/local-roots.js";
-import { detectMime, getFileExtension, isAudioFileName, kindFromMime } from "../media/mime.js";
-import { buildRandomTempFilePath } from "../plugin-sdk/temp-path.js";
-import { MediaUnderstandingSkipError } from "./errors.js";
-import { fetchWithTimeout } from "./providers/shared.js";
-import type { MediaAttachment, MediaUnderstandingCapability } from "./types.js";
+} from '../media/inbound-path-policy';
+import { getDefaultMediaLocalRoots } from '../media/local-roots';
+import { detectMime, getFileExtension, isAudioFileName, kindFromMime } from '../media/mime';
+import { buildRandomTempFilePath } from '../plugin-sdk/temp-path';
+import { MediaUnderstandingSkipError } from './errors';
+import { fetchWithTimeout } from './providers/shared';
+import type { MediaAttachment, MediaUnderstandingCapability } from './types';
 
 type MediaBufferResult = {
   buffer: Buffer;

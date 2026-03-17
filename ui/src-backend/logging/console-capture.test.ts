@@ -8,8 +8,8 @@ import {
   routeLogsToStderr,
   setConsoleTimestampPrefix,
   setLoggerOverride,
-} from "../logging.js";
-import { loggingState } from "./state.js";
+} from '../logging';
+import { loggingState } from './state';
 
 type ConsoleSnapshot = {
   log: typeof console.log;

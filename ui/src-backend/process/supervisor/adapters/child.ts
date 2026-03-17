@@ -1,8 +1,8 @@
 import type { ChildProcessWithoutNullStreams, SpawnOptions } from "node:child_process";
-import { killProcessTree } from "../../kill-tree.js";
-import { spawnWithFallback } from "../../spawn-utils.js";
-import type { ManagedRunStdin } from "../types.js";
-import { toStringEnv } from "./env.js";
+import { killProcessTree } from '../../kill-tree';
+import { spawnWithFallback } from '../../spawn-utils';
+import type { ManagedRunStdin } from '../types';
+import { toStringEnv } from './env';
 
 function resolveCommand(command: string): string {
   if (process.platform !== "win32") {

@@ -1,6 +1,6 @@
 import type { AssistantMessage } from "@mariozechner/pi-ai";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { extractAssistantText } from "../pi-embedded-utils.js";
+import type { PowerDirectorConfig } from '../../config/config';
+import { extractAssistantText } from '../pi-embedded-utils';
 
 export type ImageModelConfig = { primary?: string; fallbacks?: string[] };
 

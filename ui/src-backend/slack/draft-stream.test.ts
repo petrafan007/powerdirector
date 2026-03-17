@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createSlackDraftStream } from "./draft-stream.js";
+import { createSlackDraftStream } from './draft-stream';
 
 type DraftStreamParams = Parameters<typeof createSlackDraftStream>[0];
 type DraftSendFn = NonNullable<DraftStreamParams["send"]>;

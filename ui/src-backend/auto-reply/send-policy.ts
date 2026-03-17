@@ -1,4 +1,4 @@
-import { normalizeCommandBody } from "./commands-registry.js";
+import { normalizeCommandBody } from './commands-registry';
 
 export type SendPolicyOverride = "allow" | "deny";
 

@@ -1,6 +1,6 @@
-import { isGatewayCliClient, isWebchatClient } from "../../../utils/message-channel.js";
-import type { ResolvedGatewayAuth } from "../../auth.js";
-import { GATEWAY_CLIENT_IDS } from "../../protocol/client-info.js";
+import { isGatewayCliClient, isWebchatClient } from '../../../utils/message-channel';
+import type { ResolvedGatewayAuth } from '../../auth';
+import { GATEWAY_CLIENT_IDS } from '../../protocol/client-info';
 
 export type AuthProvidedKind = "token" | "password" | "none";
 

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { resolveFetch } from "../infra/fetch.js";
-import { resetTelegramFetchStateForTests, resolveTelegramFetch } from "./fetch.js";
+import { resolveFetch } from '../infra/fetch';
+import { resetTelegramFetchStateForTests, resolveTelegramFetch } from './fetch';
 
 const setDefaultAutoSelectFamily = vi.hoisted(() => vi.fn());
 

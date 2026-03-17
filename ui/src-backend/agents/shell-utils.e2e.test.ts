@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { getShellConfig, resolveShellFromPath } from "./shell-utils.js";
+import { getShellConfig, resolveShellFromPath } from './shell-utils';
 
 const isWin = process.platform === "win32";
 

@@ -1,10 +1,10 @@
 import type { Command } from "commander";
-import { defaultRuntime } from "../../runtime.js";
-import { getNodesTheme, runNodesCommand } from "./cli-utils.js";
-import { parsePairingList } from "./format.js";
-import { renderPendingPairingRequestsTable } from "./pairing-render.js";
-import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc.js";
-import type { NodesRpcOpts } from "./types.js";
+import { defaultRuntime } from '../../runtime';
+import { getNodesTheme, runNodesCommand } from './cli-utils';
+import { parsePairingList } from './format';
+import { renderPendingPairingRequestsTable } from './pairing-render';
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
+import type { NodesRpcOpts } from './types';
 
 export function registerNodesPairingCommands(nodes: Command) {
   nodesCallOpts(

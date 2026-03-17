@@ -4,7 +4,7 @@ vi.mock("../../auto-reply/tokens.js", () => ({
   SILENT_REPLY_TOKEN: "QUIET_TOKEN",
 }));
 
-const { createTtsTool } = await import("./tts-tool.js");
+const { createTtsTool } = await import('./tts-tool');
 
 describe("createTtsTool", () => {
   it("uses SILENT_REPLY_TOKEN in guidance text", () => {

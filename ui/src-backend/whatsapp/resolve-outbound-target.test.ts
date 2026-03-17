@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as normalize from "./normalize.js";
-import { resolveWhatsAppOutboundTarget } from "./resolve-outbound-target.js";
+import * as normalize from './normalize';
+import { resolveWhatsAppOutboundTarget } from './resolve-outbound-target';
 
 vi.mock("./normalize.js");
 vi.mock("../infra/outbound/target-errors.js", () => ({

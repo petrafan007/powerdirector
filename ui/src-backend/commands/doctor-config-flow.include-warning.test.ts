@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { withTempHome } from "../../test/helpers/temp-home.js";
+import { withTempHome } from '../../test/helpers/temp-home';
 
 const { noteSpy } = vi.hoisted(() => ({
   noteSpy: vi.fn(),
@@ -11,7 +11,7 @@ vi.mock("../terminal/note.js", () => ({
   note: noteSpy,
 }));
 
-import { loadAndMaybeMigrateDoctorConfig } from "./doctor-config-flow.js";
+import { loadAndMaybeMigrateDoctorConfig } from './doctor-config-flow';
 
 describe("doctor include warning", () => {
   it("surfaces include confinement hint for escaped include paths", async () => {

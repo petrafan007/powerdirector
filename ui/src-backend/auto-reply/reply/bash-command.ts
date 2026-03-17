@@ -1,15 +1,15 @@
-import { resolveSessionAgentId } from "../../agents/agent-scope.js";
-import { getFinishedSession, getSession, markExited } from "../../agents/bash-process-registry.js";
-import { createExecTool } from "../../agents/bash-tools.js";
-import { resolveSandboxRuntimeStatus } from "../../agents/sandbox.js";
-import { killProcessTree } from "../../agents/shell-utils.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { logVerbose } from "../../globals.js";
-import { clampInt } from "../../utils.js";
-import type { MsgContext } from "../templating.js";
-import type { ReplyPayload } from "../types.js";
-import { formatElevatedUnavailableMessage } from "./elevated-unavailable.js";
-import { stripMentions, stripStructuralPrefixes } from "./mentions.js";
+import { resolveSessionAgentId } from '../../agents/agent-scope';
+import { getFinishedSession, getSession, markExited } from '../../agents/bash-process-registry';
+import { createExecTool } from '../../agents/bash-tools';
+import { resolveSandboxRuntimeStatus } from '../../agents/sandbox';
+import { killProcessTree } from '../../agents/shell-utils';
+import type { PowerDirectorConfig } from '../../config/config';
+import { logVerbose } from '../../globals';
+import { clampInt } from '../../utils';
+import type { MsgContext } from '../templating';
+import type { ReplyPayload } from '../types';
+import { formatElevatedUnavailableMessage } from './elevated-unavailable';
+import { stripMentions, stripStructuralPrefixes } from './mentions';
 
 const CHAT_BASH_SCOPE_KEY = "chat:bash";
 const DEFAULT_FOREGROUND_MS = 2000;

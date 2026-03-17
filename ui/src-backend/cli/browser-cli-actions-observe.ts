@@ -1,9 +1,9 @@
 import type { Command } from "commander";
-import { danger } from "../globals.js";
-import { defaultRuntime } from "../runtime.js";
-import { shortenHomePath } from "../utils.js";
-import { callBrowserRequest, type BrowserParentOpts } from "./browser-cli-shared.js";
-import { runCommandWithRuntime } from "./cli-utils.js";
+import { danger } from '../globals';
+import { defaultRuntime } from '../runtime';
+import { shortenHomePath } from '../utils';
+import { callBrowserRequest, type BrowserParentOpts } from './browser-cli-shared';
+import { runCommandWithRuntime } from './cli-utils';
 
 function runBrowserObserve(action: () => Promise<void>) {
   return runCommandWithRuntime(defaultRuntime, action, (err) => {

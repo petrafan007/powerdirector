@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { visibleWidth } from "./ansi.js";
-import { wrapNoteMessage } from "./note.js";
-import { renderTable } from "./table.js";
+import { visibleWidth } from './ansi';
+import { wrapNoteMessage } from './note';
+import { renderTable } from './table';
 
 describe("renderTable", () => {
   it("prefers shrinking flex columns to avoid wrapping non-flex labels", () => {

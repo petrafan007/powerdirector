@@ -2,12 +2,12 @@ import crypto from "node:crypto";
 import path from "node:path";
 import type { AgentMessage, StreamFn } from "@mariozechner/pi-agent-core";
 import type { Api, Model } from "@mariozechner/pi-ai";
-import { resolveStateDir } from "../config/paths.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import { resolveUserPath } from "../utils.js";
-import { parseBooleanValue } from "../utils/boolean.js";
-import { safeJsonStringify } from "../utils/safe-json.js";
-import { getQueuedFileWriter, type QueuedFileWriter } from "./queued-file-writer.js";
+import { resolveStateDir } from '../config/paths';
+import { createSubsystemLogger } from '../logging/subsystem';
+import { resolveUserPath } from '../utils';
+import { parseBooleanValue } from '../utils/boolean';
+import { safeJsonStringify } from '../utils/safe-json';
+import { getQueuedFileWriter, type QueuedFileWriter } from './queued-file-writer';
 
 type PayloadLogStage = "request" | "usage";
 

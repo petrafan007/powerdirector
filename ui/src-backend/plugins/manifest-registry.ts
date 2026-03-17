@@ -1,11 +1,11 @@
 import fs from "node:fs";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveUserPath } from "../utils.js";
-import { normalizePluginsConfig, type NormalizedPluginsConfig } from "./config-state.js";
-import { discoverPowerDirectorPlugins, type PluginCandidate } from "./discovery.js";
-import { loadPluginManifest, type PluginManifest } from "./manifest.js";
-import { safeRealpathSync } from "./path-safety.js";
-import type { PluginConfigUiHint, PluginDiagnostic, PluginKind, PluginOrigin } from "./types.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveUserPath } from '../utils';
+import { normalizePluginsConfig, type NormalizedPluginsConfig } from './config-state';
+import { discoverPowerDirectorPlugins, type PluginCandidate } from './discovery';
+import { loadPluginManifest, type PluginManifest } from './manifest';
+import { safeRealpathSync } from './path-safety';
+import type { PluginConfigUiHint, PluginDiagnostic, PluginKind, PluginOrigin } from './types';
 
 type SeenIdEntry = {
   candidate: PluginCandidate;

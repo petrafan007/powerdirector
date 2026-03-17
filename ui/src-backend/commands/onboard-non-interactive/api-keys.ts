@@ -2,11 +2,11 @@ import {
   ensureAuthProfileStore,
   resolveApiKeyForProfile,
   resolveAuthProfileOrder,
-} from "../../agents/auth-profiles.js";
-import { resolveEnvApiKey } from "../../agents/model-auth.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { RuntimeEnv } from "../../runtime.js";
-import { normalizeOptionalSecretInput } from "../../utils/normalize-secret-input.js";
+} from '../../agents/auth-profiles';
+import { resolveEnvApiKey } from '../../agents/model-auth';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { RuntimeEnv } from '../../runtime';
+import { normalizeOptionalSecretInput } from '../../utils/normalize-secret-input';
 
 export type NonInteractiveApiKeySource = "flag" | "env" | "profile";
 

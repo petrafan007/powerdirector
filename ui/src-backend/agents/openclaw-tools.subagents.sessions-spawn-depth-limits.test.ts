@@ -2,8 +2,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { addSubagentRunForTests, resetSubagentRegistryForTests } from "./subagent-registry.js";
-import { createSessionsSpawnTool } from "./tools/sessions-spawn-tool.js";
+import { addSubagentRunForTests, resetSubagentRegistryForTests } from './subagent-registry';
+import { createSessionsSpawnTool } from './tools/sessions-spawn-tool';
 
 const callGatewayMock = vi.fn();
 
@@ -20,7 +20,7 @@ let configOverride: Record<string, unknown> = {
 };
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => configOverride,

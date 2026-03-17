@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { getReplyFromConfig } from "../../auto-reply/reply.js";
-import { HEARTBEAT_TOKEN } from "../../auto-reply/tokens.js";
-import type { sendMessageWhatsApp } from "../outbound.js";
+import type { getReplyFromConfig } from '../../auto-reply/reply';
+import { HEARTBEAT_TOKEN } from '../../auto-reply/tokens';
+import type { sendMessageWhatsApp } from '../outbound';
 
 const state = vi.hoisted(() => ({
   visibility: { showAlerts: true, showOk: true, useIndicator: false },
@@ -94,7 +94,7 @@ describe("runWebHeartbeatOnce", () => {
   let replyResolverMock: ReturnType<typeof vi.fn>;
   let replyResolver: typeof getReplyFromConfig;
 
-  const getModules = async () => await import("./heartbeat-runner.js");
+  const getModules = async () => await import('./heartbeat-runner');
 
   beforeEach(() => {
     state.visibility = { showAlerts: true, showOk: true, useIndicator: false };

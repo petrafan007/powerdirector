@@ -4,7 +4,7 @@ const loadSessionStoreMock = vi.fn();
 const updateSessionStoreMock = vi.fn();
 
 vi.mock("../config/sessions.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/sessions.js")>();
+  const actual = await importOriginal<typeof import('../config/sessions')>();
   return {
     ...actual,
     loadSessionStore: (storePath: string) => loadSessionStoreMock(storePath),
@@ -23,7 +23,7 @@ vi.mock("../config/sessions.js", async (importOriginal) => {
 });
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => ({
@@ -77,7 +77,7 @@ vi.mock("../infra/provider-usage.js", () => ({
 }));
 
 import "./test-helpers/fast-core-tools.js";
-import { createPowerDirectorTools } from "./powerdirector-tools.js";
+import { createPowerDirectorTools } from './powerdirector-tools';
 
 function resetSessionStore(store: Record<string, unknown>) {
   loadSessionStoreMock.mockReset();

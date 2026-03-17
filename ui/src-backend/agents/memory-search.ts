@@ -1,9 +1,9 @@
 import os from "node:os";
 import path from "node:path";
-import type { PowerDirectorConfig, MemorySearchConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
-import { clampInt, clampNumber, resolveUserPath } from "../utils.js";
-import { resolveAgentConfig } from "./agent-scope.js";
+import type { PowerDirectorConfig, MemorySearchConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
+import { clampInt, clampNumber, resolveUserPath } from '../utils';
+import { resolveAgentConfig } from './agent-scope';
 
 export type ResolvedMemorySearchConfig = {
   enabled: boolean;

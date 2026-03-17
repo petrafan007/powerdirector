@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { expandQueryForFts, extractKeywords } from "./query-expansion.js";
+import { expandQueryForFts, extractKeywords } from './query-expansion';
 
 describe("extractKeywords", () => {
   it("extracts keywords from English conversational query", () => {

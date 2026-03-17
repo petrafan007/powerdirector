@@ -1,10 +1,10 @@
-import { resolveEffectiveMessagesConfig, resolveIdentityName } from "../agents/identity.js";
+import { resolveEffectiveMessagesConfig, resolveIdentityName } from '../agents/identity';
 import {
   extractShortModelName,
   type ResponsePrefixContext,
-} from "../auto-reply/reply/response-prefix-template.js";
-import type { GetReplyOptions } from "../auto-reply/types.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+} from '../auto-reply/reply/response-prefix-template';
+import type { GetReplyOptions } from '../auto-reply/types';
+import type { PowerDirectorConfig } from '../config/config';
 
 type ModelSelectionContext = Parameters<NonNullable<GetReplyOptions["onModelSelected"]>>[0];
 

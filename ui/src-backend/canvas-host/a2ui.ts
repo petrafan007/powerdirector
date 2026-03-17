@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { detectMime } from "../media/mime.js";
-import { resolveFileWithinRoot } from "./file-resolver.js";
+import { detectMime } from '../media/mime';
+import { resolveFileWithinRoot } from './file-resolver';
 
 export const A2UI_PATH = "/__powerdirector__/a2ui";
 

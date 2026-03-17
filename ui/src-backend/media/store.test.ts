@@ -3,18 +3,18 @@ import path from "node:path";
 import JSZip from "jszip";
 import sharp from "sharp";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { isPathWithinBase } from "../../test/helpers/paths.js";
-import { createTempHomeEnv, type TempHomeEnv } from "../test-utils/temp-home.js";
+import { isPathWithinBase } from '../../test/helpers/paths';
+import { createTempHomeEnv, type TempHomeEnv } from '../test-utils/temp-home';
 
 describe("media store", () => {
-  let store: typeof import("./store.js");
+  let store: typeof import('./store');
   let home = "";
   let tempHome: TempHomeEnv;
 
   beforeAll(async () => {
     tempHome = await createTempHomeEnv("powerdirector-test-home-");
     home = tempHome.home;
-    store = await import("./store.js");
+    store = await import('./store');
   });
 
   afterAll(async () => {
@@ -26,7 +26,7 @@ describe("media store", () => {
   });
 
   async function withTempStore<T>(
-    fn: (store: typeof import("./store.js"), home: string) => Promise<T>,
+    fn: (store: typeof import('./store'), home: string) => Promise<T>,
   ): Promise<T> {
     return await fn(store, home);
   }
@@ -173,7 +173,7 @@ describe("media store", () => {
     await withTempStore(async (_store, home) => {
       vi.resetModules();
       vi.doMock("./mime.js", async () => {
-        const actual = await vi.importActual<typeof import("./mime.js")>("./mime.js");
+        const actual = await vi.importActual<typeof import('./mime')>("./mime.js");
         return {
           ...actual,
           detectMime: vi.fn(async () => "audio/opus"),
@@ -181,7 +181,7 @@ describe("media store", () => {
       });
 
       try {
-        const storeWithMock = await import("./store.js");
+        const storeWithMock = await import('./store');
         const buf = Buffer.from("fake-audio");
         const saved = await storeWithMock.saveMediaBuffer(buf, "audio/ogg; codecs=opus");
         expect(path.extname(saved.path)).toBe(".ogg");

@@ -1,16 +1,16 @@
 import crypto from "node:crypto";
 import { Type } from "@sinclair/typebox";
-import { loadConfig } from "../../config/config.js";
-import { callGateway } from "../../gateway/call.js";
-import { normalizeAgentId, resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
-import { SESSION_LABEL_MAX_LENGTH } from "../../sessions/session-label.js";
+import { loadConfig } from '../../config/config';
+import { callGateway } from '../../gateway/call';
+import { normalizeAgentId, resolveAgentIdFromSessionKey } from '../../routing/session-key';
+import { SESSION_LABEL_MAX_LENGTH } from '../../sessions/session-label';
 import {
   type GatewayMessageChannel,
   INTERNAL_MESSAGE_CHANNEL,
-} from "../../utils/message-channel.js";
-import { AGENT_LANE_NESTED } from "../lanes.js";
-import type { AnyAgentTool } from "./common.js";
-import { jsonResult, readStringParam } from "./common.js";
+} from '../../utils/message-channel';
+import { AGENT_LANE_NESTED } from '../lanes';
+import type { AnyAgentTool } from './common';
+import { jsonResult, readStringParam } from './common';
 import {
   createSessionVisibilityGuard,
   createAgentToAgentPolicy,
@@ -20,9 +20,9 @@ import {
   resolveSessionReference,
   resolveSandboxedSessionToolContext,
   stripToolMessages,
-} from "./sessions-helpers.js";
-import { buildAgentToAgentMessageContext, resolvePingPongTurns } from "./sessions-send-helpers.js";
-import { runSessionsSendA2AFlow } from "./sessions-send-tool.a2a.js";
+} from './sessions-helpers';
+import { buildAgentToAgentMessageContext, resolvePingPongTurns } from './sessions-send-helpers';
+import { runSessionsSendA2AFlow } from './sessions-send-tool.a2a';
 
 const SessionsSendToolSchema = Type.Object({
   sessionKey: Type.Optional(Type.String()),

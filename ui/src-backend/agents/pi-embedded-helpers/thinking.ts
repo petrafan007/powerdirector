@@ -1,4 +1,4 @@
-import { normalizeThinkLevel, type ThinkLevel } from "../../auto-reply/thinking.js";
+import { normalizeThinkLevel, type ThinkLevel } from '../../auto-reply/thinking';
 
 function extractSupportedValues(raw: string): string[] {
   const match =

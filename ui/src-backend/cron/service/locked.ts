@@ -1,4 +1,4 @@
-import type { CronServiceState } from "./state.js";
+import type { CronServiceState } from './state';
 
 const storeLocks = new Map<string, Promise<void>>();
 

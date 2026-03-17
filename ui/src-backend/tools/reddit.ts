@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Tool, ToolResult } from './base.js';
+import { Tool, ToolResult } from './base';
 import Snoowrap from 'snoowrap';
 
 export class RedditTool implements Tool {

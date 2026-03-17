@@ -1,6 +1,6 @@
-import { normalizeGoogleModelId } from "../../../agents/models-config.providers.js";
-import { parseGeminiAuth } from "../../../infra/gemini-auth.js";
-import { assertOkOrThrowHttpError, fetchWithTimeoutGuarded, normalizeBaseUrl } from "../shared.js";
+import { normalizeGoogleModelId } from '../../../agents/models-config.providers';
+import { parseGeminiAuth } from '../../../infra/gemini-auth';
+import { assertOkOrThrowHttpError, fetchWithTimeoutGuarded, normalizeBaseUrl } from '../shared';
 
 export async function generateGeminiInlineDataText(params: {
   buffer: Buffer;

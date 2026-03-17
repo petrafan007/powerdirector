@@ -10,7 +10,7 @@ import {
   startServerWithClient,
   testState,
   waitForSystemEvent,
-} from "./test-helpers.js";
+} from './test-helpers';
 
 installGatewayTestHooks({ scope: "suite" });
 

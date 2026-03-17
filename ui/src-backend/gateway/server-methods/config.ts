@@ -1,5 +1,5 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
-import { listChannelPlugins } from "../../channels/plugins/index.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../../agents/agent-scope';
+import { listChannelPlugins } from '../../channels/plugins/index';
 import {
   CONFIG_PATH,
   loadConfig,
@@ -9,30 +9,30 @@ import {
   resolveConfigSnapshotHash,
   validateConfigObjectWithPlugins,
   writeConfigFile,
-} from "../../config/config.js";
-import { applyLegacyMigrations } from "../../config/legacy.js";
-import { applyMergePatch } from "../../config/merge-patch.js";
+} from '../../config/config';
+import { applyLegacyMigrations } from '../../config/legacy';
+import { applyMergePatch } from '../../config/merge-patch';
 import {
   redactConfigObject,
   redactConfigSnapshot,
   restoreRedactedValues,
-} from "../../config/redact-snapshot.js";
-import { buildConfigSchema, type ConfigSchemaResponse } from "../../config/schema.js";
-import { extractDeliveryInfo } from "../../config/sessions.js";
-import type { PowerDirectorConfig } from "../../config/types.powerdirector.js";
+} from '../../config/redact-snapshot';
+import { buildConfigSchema, type ConfigSchemaResponse } from '../../config/schema';
+import { extractDeliveryInfo } from '../../config/sessions';
+import type { PowerDirectorConfig } from '../../config/types.powerdirector';
 import {
   formatDoctorNonInteractiveHint,
   type RestartSentinelPayload,
   writeRestartSentinel,
-} from "../../infra/restart-sentinel.js";
-import { scheduleGatewaySigusr1Restart } from "../../infra/restart.js";
-import { loadPowerDirectorPlugins } from "../../plugins/loader.js";
-import { diffConfigPaths } from "../config-reload.js";
+} from '../../infra/restart-sentinel';
+import { scheduleGatewaySigusr1Restart } from '../../infra/restart';
+import { loadPowerDirectorPlugins } from '../../plugins/loader';
+import { diffConfigPaths } from '../config-reload';
 import {
   formatControlPlaneActor,
   resolveControlPlaneActor,
   summarizeChangedPaths,
-} from "../control-plane-audit.js";
+} from '../control-plane-audit';
 import {
   ErrorCodes,
   errorShape,
@@ -41,11 +41,11 @@ import {
   validateConfigPatchParams,
   validateConfigSchemaParams,
   validateConfigSetParams,
-} from "../protocol/index.js";
-import { resolveBaseHashParam } from "./base-hash.js";
-import { parseRestartRequestParams } from "./restart-request.js";
-import type { GatewayRequestHandlers, RespondFn } from "./types.js";
-import { assertValidParams } from "./validation.js";
+} from '../protocol/index';
+import { resolveBaseHashParam } from './base-hash';
+import { parseRestartRequestParams } from './restart-request';
+import type { GatewayRequestHandlers, RespondFn } from './types';
+import { assertValidParams } from './validation';
 
 function requireConfigBaseHash(
   params: unknown,

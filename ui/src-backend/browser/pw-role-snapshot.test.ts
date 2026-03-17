@@ -4,7 +4,7 @@ import {
   buildRoleSnapshotFromAriaSnapshot,
   getRoleSnapshotStats,
   parseRoleRef,
-} from "./pw-role-snapshot.js";
+} from './pw-role-snapshot';
 
 describe("pw-role-snapshot", () => {
   it("adds refs for interactive elements", () => {

@@ -4,18 +4,18 @@ import type {
   AgentToolUpdateCallback,
 } from "@mariozechner/pi-agent-core";
 import type { ToolDefinition } from "@mariozechner/pi-coding-agent";
-import { logDebug, logError } from "../logger.js";
-import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
-import { isPlainObject } from "../utils.js";
-import type { ClientToolDefinition } from "./pi-embedded-runner/run/params.js";
-import type { HookContext } from "./pi-tools.before-tool-call.js";
+import { logDebug, logError } from '../logger';
+import { getGlobalHookRunner } from '../plugins/hook-runner-global';
+import { isPlainObject } from '../utils';
+import type { ClientToolDefinition } from './pi-embedded-runner/run/params';
+import type { HookContext } from './pi-tools.before-tool-call';
 import {
   consumeAdjustedParamsForToolCall,
   isToolWrappedWithBeforeToolCallHook,
   runBeforeToolCallHook,
-} from "./pi-tools.before-tool-call.js";
-import { normalizeToolName } from "./tool-policy.js";
-import { jsonResult } from "./tools/common.js";
+} from './pi-tools.before-tool-call';
+import { normalizeToolName } from './tool-policy';
+import { jsonResult } from './tools/common';
 
 type AnyAgentTool = AgentTool;
 

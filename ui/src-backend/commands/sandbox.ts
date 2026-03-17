@@ -6,15 +6,15 @@ import {
   removeSandboxContainer,
   type SandboxBrowserInfo,
   type SandboxContainerInfo,
-} from "../agents/sandbox.js";
-import type { RuntimeEnv } from "../runtime.js";
+} from '../agents/sandbox';
+import type { RuntimeEnv } from '../runtime';
 import {
   displayBrowsers,
   displayContainers,
   displayRecreatePreview,
   displayRecreateResult,
   displaySummary,
-} from "./sandbox-display.js";
+} from './sandbox-display';
 
 // --- Types ---
 

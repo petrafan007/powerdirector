@@ -1,13 +1,13 @@
 import fs from "node:fs/promises";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { WizardPrompter } from "../wizard/prompts.js";
-import { applyAuthChoice, resolvePreferredProviderForAuthChoice } from "./auth-choice.js";
+import type { WizardPrompter } from '../wizard/prompts';
+import { applyAuthChoice, resolvePreferredProviderForAuthChoice } from './auth-choice';
 import {
   MINIMAX_CN_API_BASE_URL,
   ZAI_CODING_CN_BASE_URL,
   ZAI_CODING_GLOBAL_BASE_URL,
-} from "./onboard-auth.js";
-import type { AuthChoice } from "./onboard-types.js";
+} from './onboard-auth';
+import type { AuthChoice } from './onboard-types';
 import {
   authProfilePathForAgent,
   createAuthTestLifecycle,
@@ -16,7 +16,7 @@ import {
   readAuthProfilesForAgent,
   requirePowerDirectorAgentDir,
   setupAuthTestEnv,
-} from "./test-wizard-helpers.js";
+} from './test-wizard-helpers';
 
 vi.mock("../providers/github-copilot-auth.js", () => ({
   githubCopilotLoginCommand: vi.fn(async () => {}),

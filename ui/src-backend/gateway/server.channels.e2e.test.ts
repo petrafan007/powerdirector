@@ -1,17 +1,17 @@
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
-import type { ChannelPlugin } from "../channels/plugins/types.js";
-import type { PluginRegistry } from "../plugins/registry.js";
-import { setActivePluginRegistry } from "../plugins/runtime.js";
-import { createChannelTestPluginBase } from "../test-utils/channel-plugins.js";
-import { createRegistry } from "./server.e2e-registry-helpers.js";
+import type { ChannelPlugin } from '../channels/plugins/types';
+import type { PluginRegistry } from '../plugins/registry';
+import { setActivePluginRegistry } from '../plugins/runtime';
+import { createChannelTestPluginBase } from '../test-utils/channel-plugins';
+import { createRegistry } from './server.e2e-registry-helpers';
 import {
   connectOk,
   installGatewayTestHooks,
   rpcReq,
   startServerWithClient,
-} from "./test-helpers.js";
+} from './test-helpers';
 
-const loadConfigHelpers = async () => await import("../config/config.js");
+const loadConfigHelpers = async () => await import('../config/config');
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -31,7 +31,7 @@ const registryState = vi.hoisted(() => ({
 }));
 
 vi.mock("./server-plugins.js", async () => {
-  const { setActivePluginRegistry } = await import("../plugins/runtime.js");
+  const { setActivePluginRegistry } = await import('../plugins/runtime');
   return {
     loadGatewayPlugins: (params: { baseMethods: string[] }) => {
       setActivePluginRegistry(registryState.registry);
@@ -77,7 +77,7 @@ const telegramPlugin: ChannelPlugin = {
   }),
   gateway: {
     logoutAccount: async ({ cfg }) => {
-      const { writeConfigFile } = await import("../config/config.js");
+      const { writeConfigFile } = await import('../config/config');
       const nextTelegram = cfg.channels?.telegram ? { ...cfg.channels.telegram } : {};
       delete nextTelegram.botToken;
       await writeConfigFile({

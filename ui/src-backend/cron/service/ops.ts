@@ -1,4 +1,4 @@
-import type { CronJobCreate, CronJobPatch } from "../types.js";
+import type { CronJobCreate, CronJobPatch } from '../types';
 import {
   applyJobPatch,
   computeJobNextRunAtMs,
@@ -8,11 +8,11 @@ import {
   nextWakeAtMs,
   recomputeNextRuns,
   recomputeNextRunsForMaintenance,
-} from "./jobs.js";
-import { locked } from "./locked.js";
-import type { CronServiceState } from "./state.js";
-import { ensureLoaded, persist, warnIfDisabled } from "./store.js";
-import { armTimer, emit, executeJob, runMissedJobs, stopTimer, wake } from "./timer.js";
+} from './jobs';
+import { locked } from './locked';
+import type { CronServiceState } from './state';
+import { ensureLoaded, persist, warnIfDisabled } from './store';
+import { armTimer, emit, executeJob, runMissedJobs, stopTimer, wake } from './timer';
 
 async function ensureLoadedForRead(state: CronServiceState) {
   await ensureLoaded(state, { skipRecompute: true });

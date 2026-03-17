@@ -1,12 +1,12 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { ChannelGroupPolicy } from "../config/group-policy.js";
+import type { PowerDirectorConfig } from '../config/config';
+import type { ChannelGroupPolicy } from '../config/group-policy';
 import type {
   TelegramAccountConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "../config/types.js";
-import { isSenderAllowed, type NormalizedAllowFrom } from "./bot-access.js";
-import { firstDefined } from "./bot-access.js";
+} from '../config/types';
+import { isSenderAllowed, type NormalizedAllowFrom } from './bot-access';
+import { firstDefined } from './bot-access';
 
 export type TelegramGroupBaseBlockReason =
   | "group-disabled"

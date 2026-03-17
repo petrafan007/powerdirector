@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { MsgContext } from "../auto-reply/templating.js";
+import type { MsgContext } from '../auto-reply/templating';
 import {
   type ChannelMatchSource,
   buildChannelKeyCandidates,
@@ -9,8 +9,8 @@ import {
   resolveNestedAllowlistDecision,
   applyChannelMatchMeta,
   resolveChannelMatchConfig,
-} from "./channel-config.js";
-import { validateSenderIdentity } from "./sender-identity.js";
+} from './channel-config';
+import { validateSenderIdentity } from './sender-identity';
 
 describe("buildChannelKeyCandidates", () => {
   it("dedupes and trims keys", () => {

@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveAgentWorkspaceDir } from "../../agents/agent-scope.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import { loadSessionStore, resolveStorePath } from "../../config/sessions.js";
-import { listAgentsForGateway } from "../../gateway/session-utils.js";
+import { resolveAgentWorkspaceDir } from '../../agents/agent-scope';
+import type { PowerDirectorConfig } from '../../config/config';
+import { loadSessionStore, resolveStorePath } from '../../config/sessions';
+import { listAgentsForGateway } from '../../gateway/session-utils';
 
 async function fileExists(p: string): Promise<boolean> {
   try {

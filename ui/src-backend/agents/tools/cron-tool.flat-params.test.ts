@@ -8,7 +8,7 @@ vi.mock("../agent-scope.js", () => ({
   resolveSessionAgentId: () => "agent-123",
 }));
 
-import { createCronTool } from "./cron-tool.js";
+import { createCronTool } from './cron-tool';
 
 describe("cron tool flat-params", () => {
   beforeEach(() => {

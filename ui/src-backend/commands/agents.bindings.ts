@@ -1,10 +1,10 @@
-import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
-import { getChannelPlugin, normalizeChannelId } from "../channels/plugins/index.js";
-import type { ChannelId } from "../channels/plugins/types.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import type { AgentBinding } from "../config/types.js";
-import { DEFAULT_ACCOUNT_ID, normalizeAgentId } from "../routing/session-key.js";
-import type { ChannelChoice } from "./onboard-types.js";
+import { resolveChannelDefaultAccountId } from '../channels/plugins/helpers';
+import { getChannelPlugin, normalizeChannelId } from '../channels/plugins/index';
+import type { ChannelId } from '../channels/plugins/types';
+import type { PowerDirectorConfig } from '../config/config';
+import type { AgentBinding } from '../config/types';
+import { DEFAULT_ACCOUNT_ID, normalizeAgentId } from '../routing/session-key';
+import type { ChannelChoice } from './onboard-types';
 
 function bindingMatchKey(match: AgentBinding["match"]) {
   const accountId = match.accountId?.trim() || DEFAULT_ACCOUNT_ID;

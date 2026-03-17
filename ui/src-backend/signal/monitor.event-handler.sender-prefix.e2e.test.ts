@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { SignalReactionMessage } from "./monitor/event-handler.types.js";
+import type { SignalReactionMessage } from './monitor/event-handler.types';
 
 const dispatchMock = vi.fn();
 const readAllowFromMock = vi.fn();
@@ -32,7 +32,7 @@ describe("signal event handler sender prefix", () => {
       return { queuedFinal: true, counts: { tool: 0, block: 0, final: 1 } };
     });
 
-    const { createSignalEventHandler } = await import("./monitor/event-handler.js");
+    const { createSignalEventHandler } = await import('./monitor/event-handler');
     const handler = createSignalEventHandler({
       runtime: {
         log: vi.fn(),

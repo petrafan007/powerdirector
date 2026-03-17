@@ -1,9 +1,9 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { loadConfig } from "../config/config.js";
-import { createSubsystemLogger } from "../logging.js";
-import { loadPowerDirectorPlugins } from "../plugins/loader.js";
-import { getActivePluginRegistry } from "../plugins/runtime.js";
-import type { PluginLogger } from "../plugins/types.js";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
+import { loadConfig } from '../config/config';
+import { createSubsystemLogger } from '../logging';
+import { loadPowerDirectorPlugins } from '../plugins/loader';
+import { getActivePluginRegistry } from '../plugins/runtime';
+import type { PluginLogger } from '../plugins/types';
 
 const log = createSubsystemLogger("plugins");
 let pluginRegistryLoaded = false;

@@ -1,5 +1,5 @@
-import type { CronConfig } from "../../config/types.cron.js";
-import type { HeartbeatRunResult } from "../../infra/heartbeat-wake.js";
+import type { CronConfig } from '../../config/types.cron';
+import type { HeartbeatRunResult } from '../../infra/heartbeat-wake';
 import type {
   CronJob,
   CronJobCreate,
@@ -8,7 +8,7 @@ import type {
   CronRunStatus,
   CronRunTelemetry,
   CronStoreFile,
-} from "../types.js";
+} from '../types';
 
 export type CronEvent = {
   jobId: string;

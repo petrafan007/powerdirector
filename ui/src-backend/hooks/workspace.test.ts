@@ -2,8 +2,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { POWERDIRECTOR_MANIFEST_KEY } from "../plugins/manifest.js";
-import { loadHookEntriesFromDir } from "./workspace.js";
+import { POWERDIRECTOR_MANIFEST_KEY } from '../plugins/manifest';
+import { loadHookEntriesFromDir } from './workspace';
 
 describe("hooks workspace", () => {
   it("ignores package.json hook paths that traverse outside package directory", () => {

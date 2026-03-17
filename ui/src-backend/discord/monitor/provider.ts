@@ -7,10 +7,10 @@ import {
 } from "@buape/carbon";
 import { GatewayCloseCodes, type GatewayPlugin } from "@buape/carbon/gateway";
 import { Routes } from "discord-api-types/v10";
-import { resolveTextChunkLimit } from "../../auto-reply/chunk.js";
-import { listNativeCommandSpecsForConfig } from "../../auto-reply/commands-registry.js";
-import type { HistoryEntry } from "../../auto-reply/reply/history.js";
-import { listSkillCommandsForAgents } from "../../auto-reply/skill-commands.js";
+import { resolveTextChunkLimit } from '../../auto-reply/chunk';
+import { listNativeCommandSpecsForConfig } from '../../auto-reply/commands-registry';
+import type { HistoryEntry } from '../../auto-reply/reply/history';
+import { listSkillCommandsForAgents } from '../../auto-reply/skill-commands';
 import {
   addAllowlistUserEntriesFromConfigEntry,
   buildAllowlistResolutionSummary,
@@ -18,26 +18,26 @@ import {
   resolveAllowlistIdAdditions,
   patchAllowlistUsersInConfigEntries,
   summarizeMapping,
-} from "../../channels/allowlists/resolve-utils.js";
+} from '../../channels/allowlists/resolve-utils';
 import {
   isNativeCommandsExplicitlyDisabled,
   resolveNativeCommandsEnabled,
   resolveNativeSkillsEnabled,
-} from "../../config/commands.js";
-import type { PowerDirectorConfig, ReplyToMode } from "../../config/config.js";
-import { loadConfig } from "../../config/config.js";
-import { danger, logVerbose, shouldLogVerbose, warn } from "../../globals.js";
-import { formatErrorMessage } from "../../infra/errors.js";
-import { createDiscordRetryRunner } from "../../infra/retry-policy.js";
-import { createSubsystemLogger } from "../../logging/subsystem.js";
-import { createNonExitingRuntime, type RuntimeEnv } from "../../runtime.js";
-import { resolveDiscordAccount } from "../accounts.js";
-import { attachDiscordGatewayLogging } from "../gateway-logging.js";
-import { getDiscordGatewayEmitter, waitForDiscordGatewayStop } from "../monitor.gateway.js";
-import { fetchDiscordApplicationId } from "../probe.js";
-import { resolveDiscordChannelAllowlist } from "../resolve-channels.js";
-import { resolveDiscordUserAllowlist } from "../resolve-users.js";
-import { normalizeDiscordToken } from "../token.js";
+} from '../../config/commands';
+import type { PowerDirectorConfig, ReplyToMode } from '../../config/config';
+import { loadConfig } from '../../config/config';
+import { danger, logVerbose, shouldLogVerbose, warn } from '../../globals';
+import { formatErrorMessage } from '../../infra/errors';
+import { createDiscordRetryRunner } from '../../infra/retry-policy';
+import { createSubsystemLogger } from '../../logging/subsystem';
+import { createNonExitingRuntime, type RuntimeEnv } from '../../runtime';
+import { resolveDiscordAccount } from '../accounts';
+import { attachDiscordGatewayLogging } from '../gateway-logging';
+import { getDiscordGatewayEmitter, waitForDiscordGatewayStop } from '../monitor.gateway';
+import { fetchDiscordApplicationId } from '../probe';
+import { resolveDiscordChannelAllowlist } from '../resolve-channels';
+import { resolveDiscordUserAllowlist } from '../resolve-users';
+import { normalizeDiscordToken } from '../token';
 import {
   createAgentComponentButton,
   createAgentSelectMenu,
@@ -48,24 +48,24 @@ import {
   createDiscordComponentRoleSelect,
   createDiscordComponentStringSelect,
   createDiscordComponentUserSelect,
-} from "./agent-components.js";
-import { createExecApprovalButton, DiscordExecApprovalHandler } from "./exec-approvals.js";
-import { createDiscordGatewayPlugin } from "./gateway-plugin.js";
-import { registerGateway, unregisterGateway } from "./gateway-registry.js";
+} from './agent-components';
+import { createExecApprovalButton, DiscordExecApprovalHandler } from './exec-approvals';
+import { createDiscordGatewayPlugin } from './gateway-plugin';
+import { registerGateway, unregisterGateway } from './gateway-registry';
 import {
   DiscordMessageListener,
   DiscordPresenceListener,
   DiscordReactionListener,
   DiscordReactionRemoveListener,
   registerDiscordListener,
-} from "./listeners.js";
-import { createDiscordMessageHandler } from "./message-handler.js";
+} from './listeners';
+import { createDiscordMessageHandler } from './message-handler';
 import {
   createDiscordCommandArgFallbackButton,
   createDiscordNativeCommand,
-} from "./native-command.js";
-import { resolveDiscordPresenceUpdate } from "./presence.js";
-import { resolveDiscordRestFetch } from "./rest-fetch.js";
+} from './native-command';
+import { resolveDiscordPresenceUpdate } from './presence';
+import { resolveDiscordRestFetch } from './rest-fetch';
 
 export type MonitorDiscordOpts = {
   token?: string;

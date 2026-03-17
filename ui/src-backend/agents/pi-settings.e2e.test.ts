@@ -3,7 +3,7 @@ import {
   DEFAULT_PI_COMPACTION_RESERVE_TOKENS_FLOOR,
   ensurePiCompactionReserveTokens,
   resolveCompactionReserveTokensFloor,
-} from "./pi-settings.js";
+} from './pi-settings';
 
 describe("ensurePiCompactionReserveTokens", () => {
   it("bumps reserveTokens when below floor", () => {

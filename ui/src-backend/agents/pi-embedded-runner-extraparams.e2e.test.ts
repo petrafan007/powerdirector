@@ -1,7 +1,7 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
 import type { Context, Model, SimpleStreamOptions } from "@mariozechner/pi-ai";
 import { describe, expect, it } from "vitest";
-import { applyExtraParamsToAgent, resolveExtraParams } from "./pi-embedded-runner.js";
+import { applyExtraParamsToAgent, resolveExtraParams } from './pi-embedded-runner';
 
 describe("resolveExtraParams", () => {
   it("returns undefined with no model config", () => {

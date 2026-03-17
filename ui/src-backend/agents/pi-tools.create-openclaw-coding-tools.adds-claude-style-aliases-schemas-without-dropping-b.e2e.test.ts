@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
+import type { PowerDirectorConfig } from '../config/config';
 import "./test-helpers/fast-coding-tools.js";
-import { createPowerDirectorCodingTools } from "./pi-tools.js";
+import { createPowerDirectorCodingTools } from './pi-tools';
 
 const defaultTools = createPowerDirectorCodingTools();
 

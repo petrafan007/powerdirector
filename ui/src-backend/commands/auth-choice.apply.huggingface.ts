@@ -1,23 +1,23 @@
 import {
   discoverHuggingfaceModels,
   isHuggingfacePolicyLocked,
-} from "../agents/huggingface-models.js";
-import { resolveEnvApiKey } from "../agents/model-auth.js";
+} from '../agents/huggingface-models';
+import { resolveEnvApiKey } from '../agents/model-auth';
 import {
   formatApiKeyPreview,
   normalizeApiKeyInput,
   validateApiKeyInput,
-} from "./auth-choice.api-key.js";
-import { createAuthChoiceAgentModelNoter } from "./auth-choice.apply-helpers.js";
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { applyDefaultModelChoice } from "./auth-choice.default-model.js";
-import { ensureModelAllowlistEntry } from "./model-allowlist.js";
+} from './auth-choice.api-key';
+import { createAuthChoiceAgentModelNoter } from './auth-choice.apply-helpers';
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
+import { applyDefaultModelChoice } from './auth-choice.default-model';
+import { ensureModelAllowlistEntry } from './model-allowlist';
 import {
   applyAuthProfileConfig,
   applyHuggingfaceProviderConfig,
   setHuggingfaceApiKey,
   HUGGINGFACE_DEFAULT_MODEL_REF,
-} from "./onboard-auth.js";
+} from './onboard-auth';
 
 export async function applyAuthChoiceHuggingface(
   params: ApplyAuthChoiceParams,

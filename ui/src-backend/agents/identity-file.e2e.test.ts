@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseIdentityMarkdown } from "./identity-file.js";
+import { parseIdentityMarkdown } from './identity-file';
 
 describe("parseIdentityMarkdown", () => {
   it("ignores identity template placeholders", () => {

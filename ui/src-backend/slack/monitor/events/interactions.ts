@@ -1,9 +1,9 @@
 import type { SlackActionMiddlewareArgs } from "@slack/bolt";
 import type { Block, KnownBlock } from "@slack/web-api";
-import { enqueueSystemEvent } from "../../../infra/system-events.js";
-import { parseSlackModalPrivateMetadata } from "../../modal-metadata.js";
-import type { SlackMonitorContext } from "../context.js";
-import { escapeSlackMrkdwn } from "../mrkdwn.js";
+import { enqueueSystemEvent } from '../../../infra/system-events';
+import { parseSlackModalPrivateMetadata } from '../../modal-metadata';
+import type { SlackMonitorContext } from '../context';
+import { escapeSlackMrkdwn } from '../mrkdwn';
 
 // Prefix for PowerDirector-generated action IDs to scope our handler
 const POWERDIRECTOR_ACTION_PREFIX = "powerdirector:";

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveImageSanitizationLimits } from "./image-sanitization.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveImageSanitizationLimits } from './image-sanitization';
 
 describe("image sanitization config", () => {
   it("defaults when no config value exists", () => {

@@ -1,27 +1,27 @@
 import crypto from "node:crypto";
-import { startBrowserBridgeServer, stopBrowserBridgeServer } from "../../browser/bridge-server.js";
-import { type ResolvedBrowserConfig, resolveProfile } from "../../browser/config.js";
+import { startBrowserBridgeServer, stopBrowserBridgeServer } from '../../browser/bridge-server';
+import { type ResolvedBrowserConfig, resolveProfile } from '../../browser/config';
 import {
   DEFAULT_BROWSER_EVALUATE_ENABLED,
   DEFAULT_POWERDIRECTOR_BROWSER_COLOR,
   DEFAULT_POWERDIRECTOR_BROWSER_PROFILE_NAME,
-} from "../../browser/constants.js";
-import { defaultRuntime } from "../../runtime.js";
-import { BROWSER_BRIDGES } from "./browser-bridges.js";
-import { computeSandboxBrowserConfigHash } from "./config-hash.js";
-import { resolveSandboxBrowserDockerCreateConfig } from "./config.js";
-import { DEFAULT_SANDBOX_BROWSER_IMAGE, SANDBOX_AGENT_WORKSPACE_MOUNT } from "./constants.js";
+} from '../../browser/constants';
+import { defaultRuntime } from '../../runtime';
+import { BROWSER_BRIDGES } from './browser-bridges';
+import { computeSandboxBrowserConfigHash } from './config-hash';
+import { resolveSandboxBrowserDockerCreateConfig } from './config';
+import { DEFAULT_SANDBOX_BROWSER_IMAGE, SANDBOX_AGENT_WORKSPACE_MOUNT } from './constants';
 import {
   buildSandboxCreateArgs,
   dockerContainerState,
   execDocker,
   readDockerContainerLabel,
   readDockerPort,
-} from "./docker.js";
-import { readBrowserRegistry, updateBrowserRegistry } from "./registry.js";
-import { resolveSandboxAgentId, slugifySessionKey } from "./shared.js";
-import { isToolAllowed } from "./tool-policy.js";
-import type { SandboxBrowserContext, SandboxConfig } from "./types.js";
+} from './docker';
+import { readBrowserRegistry, updateBrowserRegistry } from './registry';
+import { resolveSandboxAgentId, slugifySessionKey } from './shared';
+import { isToolAllowed } from './tool-policy';
+import type { SandboxBrowserContext, SandboxConfig } from './types';
 
 const HOT_BROWSER_WINDOW_MS = 5 * 60 * 1000;
 

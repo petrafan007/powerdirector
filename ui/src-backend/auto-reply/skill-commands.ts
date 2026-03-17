@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import { listAgentIds, resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
-import { buildWorkspaceSkillCommandSpecs, type SkillCommandSpec } from "../agents/skills.js";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { getRemoteSkillEligibility } from "../infra/skills-remote.js";
-import { listChatCommands } from "./commands-registry.js";
+import { listAgentIds, resolveAgentWorkspaceDir } from '../agents/agent-scope';
+import { buildWorkspaceSkillCommandSpecs, type SkillCommandSpec } from '../agents/skills';
+import type { PowerDirectorConfig } from '../config/config';
+import { getRemoteSkillEligibility } from '../infra/skills-remote';
+import { listChatCommands } from './commands-registry';
 
 export function listReservedChatSlashCommandNames(extraNames: string[] = []): Set<string> {
   const reserved = new Set<string>();

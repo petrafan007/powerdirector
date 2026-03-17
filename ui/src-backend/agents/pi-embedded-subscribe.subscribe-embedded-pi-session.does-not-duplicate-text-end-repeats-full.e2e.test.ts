@@ -3,7 +3,7 @@ import {
   createTextEndBlockReplyHarness,
   emitAssistantTextDelta,
   emitAssistantTextEnd,
-} from "./pi-embedded-subscribe.e2e-harness.js";
+} from './pi-embedded-subscribe.e2e-harness';
 
 describe("subscribeEmbeddedPiSession", () => {
   it("does not duplicate when text_end repeats full content", () => {

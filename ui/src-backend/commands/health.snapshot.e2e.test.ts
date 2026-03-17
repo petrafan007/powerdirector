@@ -2,17 +2,17 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { telegramPlugin } from "../../extensions/telegram/src/channel.js";
-import { setActivePluginRegistry } from "../plugins/runtime.js";
-import { createTestRegistry } from "../test-utils/channel-plugins.js";
-import type { HealthSummary } from "./health.js";
-import { getHealthSnapshot } from "./health.js";
+import { telegramPlugin } from '../../extensions/telegram/src/channel';
+import { setActivePluginRegistry } from '../plugins/runtime';
+import { createTestRegistry } from '../test-utils/channel-plugins';
+import type { HealthSummary } from './health';
+import { getHealthSnapshot } from './health';
 
 let testConfig: Record<string, unknown> = {};
 let testStore: Record<string, { updatedAt?: number }> = {};
 
 vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/config.js")>();
+  const actual = await importOriginal<typeof import('../config/config')>();
   return {
     ...actual,
     loadConfig: () => testConfig,
@@ -99,13 +99,13 @@ async function runSuccessfulTelegramProbe(
   return { calls, telegram };
 }
 
-let createPluginRuntime: typeof import("../plugins/runtime/index.js").createPluginRuntime;
-let setTelegramRuntime: typeof import("../../extensions/telegram/src/runtime.js").setTelegramRuntime;
+let createPluginRuntime: typeof import('../plugins/runtime/index').createPluginRuntime;
+let setTelegramRuntime: typeof import('../../extensions/telegram/src/runtime').setTelegramRuntime;
 
 describe("getHealthSnapshot", () => {
   beforeAll(async () => {
-    ({ createPluginRuntime } = await import("../plugins/runtime/index.js"));
-    ({ setTelegramRuntime } = await import("../../extensions/telegram/src/runtime.js"));
+    ({ createPluginRuntime } = await import('../plugins/runtime/index'));
+    ({ setTelegramRuntime } = await import('../../extensions/telegram/src/runtime'));
   });
 
   beforeEach(() => {

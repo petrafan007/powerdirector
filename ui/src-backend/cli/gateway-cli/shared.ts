@@ -2,11 +2,11 @@ import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
-} from "../../daemon/constants.js";
-import { resolveGatewayService } from "../../daemon/service.js";
-import { defaultRuntime } from "../../runtime.js";
-import { formatCliCommand } from "../command-format.js";
-import { parsePort } from "../shared/parse-port.js";
+} from '../../daemon/constants';
+import { resolveGatewayService } from '../../daemon/service';
+import { defaultRuntime } from '../../runtime';
+import { formatCliCommand } from '../command-format';
+import { parsePort } from '../shared/parse-port';
 
 export { parsePort };
 

@@ -1,20 +1,20 @@
 import { describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { peekSystemEvents } from "../infra/system-events.js";
-import { resolveAgentRoute } from "../routing/resolve-route.js";
-import { normalizeE164 } from "../utils.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { peekSystemEvents } from '../infra/system-events';
+import { resolveAgentRoute } from '../routing/resolve-route';
+import { normalizeE164 } from '../utils';
 import {
   config,
   flush,
   getSignalToolResultTestMocks,
   installSignalToolResultTestHooks,
   setSignalToolResultTestConfig,
-} from "./monitor.tool-result.test-harness.js";
+} from './monitor.tool-result.test-harness';
 
 installSignalToolResultTestHooks();
 
 // Import after the harness registers `vi.mock(...)` for Signal internals.
-await import("./monitor.js");
+await import('./monitor');
 
 const {
   replyMock,
@@ -70,15 +70,15 @@ function createAutoAbortController() {
 }
 
 async function runMonitorWithMocks(
-  opts: Parameters<(typeof import("./monitor.js"))["monitorSignalProvider"]>[0],
+  opts: Parameters<(typeof import('./monitor'))["monitorSignalProvider"]>[0],
 ) {
-  const { monitorSignalProvider } = await import("./monitor.js");
+  const { monitorSignalProvider } = await import('./monitor');
   return monitorSignalProvider(opts);
 }
 
 async function receiveSignalPayloads(params: {
   payloads: unknown[];
-  opts?: Partial<Parameters<(typeof import("./monitor.js"))["monitorSignalProvider"]>[0]>;
+  opts?: Partial<Parameters<(typeof import('./monitor'))["monitorSignalProvider"]>[0]>;
 }) {
   const abortController = new AbortController();
   streamMock.mockImplementation(async ({ onEvent }) => {
@@ -122,7 +122,7 @@ function makeBaseEnvelope(overrides: Record<string, unknown> = {}) {
 
 async function receiveSingleEnvelope(
   envelope: Record<string, unknown>,
-  opts?: Partial<Parameters<(typeof import("./monitor.js"))["monitorSignalProvider"]>[0]>,
+  opts?: Partial<Parameters<(typeof import('./monitor'))["monitorSignalProvider"]>[0]>,
 ) {
   await receiveSignalPayloads({
     payloads: [{ envelope }],

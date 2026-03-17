@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { ensureSandboxWorkspaceForSession, resolveSandboxContext } from "./sandbox.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { ensureSandboxWorkspaceForSession, resolveSandboxContext } from './sandbox';
 
 describe("resolveSandboxContext", () => {
   it("does not sandbox the agent main session in non-main mode", async () => {

@@ -19,7 +19,7 @@ vi.mock("./deliver.js", () => ({
   deliverOutboundPayloads: mocks.deliverOutboundPayloads,
 }));
 
-import { sendMessage } from "./message.js";
+import { sendMessage } from './message';
 
 describe("sendMessage", () => {
   beforeEach(() => {

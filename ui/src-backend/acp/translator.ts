@@ -20,25 +20,25 @@ import type {
   StopReason,
 } from "@agentclientprotocol/sdk";
 import { PROTOCOL_VERSION } from "@agentclientprotocol/sdk";
-import type { GatewayClient } from "../gateway/client.js";
-import type { EventFrame } from "../gateway/protocol/index.js";
-import type { SessionsListResult } from "../gateway/session-utils.js";
+import type { GatewayClient } from '../gateway/client';
+import type { EventFrame } from '../gateway/protocol/index';
+import type { SessionsListResult } from '../gateway/session-utils';
 import {
   createFixedWindowRateLimiter,
   type FixedWindowRateLimiter,
-} from "../infra/fixed-window-rate-limit.js";
-import { shortenHomePath } from "../utils.js";
-import { getAvailableCommands } from "./commands.js";
+} from '../infra/fixed-window-rate-limit';
+import { shortenHomePath } from '../utils';
+import { getAvailableCommands } from './commands';
 import {
   extractAttachmentsFromPrompt,
   extractTextFromPrompt,
   formatToolTitle,
   inferToolKind,
-} from "./event-mapper.js";
-import { readBool, readNumber, readString } from "./meta.js";
-import { parseSessionMeta, resetSessionIfNeeded, resolveSessionKey } from "./session-mapper.js";
-import { defaultAcpSessionStore, type AcpSessionStore } from "./session.js";
-import { ACP_AGENT_INFO, type AcpServerOptions } from "./types.js";
+} from './event-mapper';
+import { readBool, readNumber, readString } from './meta';
+import { parseSessionMeta, resetSessionIfNeeded, resolveSessionKey } from './session-mapper';
+import { defaultAcpSessionStore, type AcpSessionStore } from './session';
+import { ACP_AGENT_INFO, type AcpServerOptions } from './types';
 
 // Maximum allowed prompt size (2MB) to prevent DoS via memory exhaustion (CWE-400, GHSA-cxpw-2g23-2vgw)
 const MAX_PROMPT_BYTES = 2 * 1024 * 1024;

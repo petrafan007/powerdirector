@@ -1,13 +1,13 @@
 import type { Chat, Message, MessageOrigin, User } from "@grammyjs/types";
-import { formatLocationText, type NormalizedLocation } from "../../channels/location.js";
-import type { TelegramGroupConfig, TelegramTopicConfig } from "../../config/types.js";
-import { readChannelAllowFromStore } from "../../pairing/pairing-store.js";
+import { formatLocationText, type NormalizedLocation } from '../../channels/location';
+import type { TelegramGroupConfig, TelegramTopicConfig } from '../../config/types';
+import { readChannelAllowFromStore } from '../../pairing/pairing-store';
 import {
   firstDefined,
   normalizeAllowFromWithStore,
   type NormalizedAllowFrom,
-} from "../bot-access.js";
-import type { TelegramStreamMode } from "./types.js";
+} from '../bot-access';
+import type { TelegramStreamMode } from './types';
 
 const TELEGRAM_GENERAL_TOPIC_ID = 1;
 

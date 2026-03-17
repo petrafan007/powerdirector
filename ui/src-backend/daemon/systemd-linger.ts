@@ -1,5 +1,5 @@
 import os from "node:os";
-import { runCommandWithTimeout, runExec } from "../process/exec.js";
+import { runCommandWithTimeout, runExec } from '../process/exec';
 
 function resolveLoginctlUser(env: Record<string, string | undefined>): string | null {
   const fromEnv = env.USER?.trim() || env.LOGNAME?.trim();

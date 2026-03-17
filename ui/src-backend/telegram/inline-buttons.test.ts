@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveTelegramTargetChatType } from "./inline-buttons.js";
+import { resolveTelegramTargetChatType } from './inline-buttons';
 
 describe("resolveTelegramTargetChatType", () => {
   it("returns 'direct' for positive numeric IDs", () => {

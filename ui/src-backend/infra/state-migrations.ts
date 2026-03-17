@@ -1,26 +1,26 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { PowerDirectorConfig } from "../config/config.js";
+import { resolveDefaultAgentId } from '../agents/agent-scope';
+import type { PowerDirectorConfig } from '../config/config';
 import {
   resolveLegacyStateDirs,
   resolveNewStateDir,
   resolveOAuthDir,
   resolveStateDir,
-} from "../config/paths.js";
-import type { SessionEntry } from "../config/sessions.js";
-import { saveSessionStore } from "../config/sessions.js";
-import { canonicalizeMainSessionAlias } from "../config/sessions/main-session.js";
-import type { SessionScope } from "../config/sessions/types.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
+} from '../config/paths';
+import type { SessionEntry } from '../config/sessions';
+import { saveSessionStore } from '../config/sessions';
+import { canonicalizeMainSessionAlias } from '../config/sessions/main-session';
+import type { SessionScope } from '../config/sessions/types';
+import { createSubsystemLogger } from '../logging/subsystem';
 import {
   buildAgentMainSessionKey,
   DEFAULT_ACCOUNT_ID,
   DEFAULT_MAIN_KEY,
   normalizeAgentId,
-} from "../routing/session-key.js";
-import { isWithinDir } from "./path-safety.js";
+} from '../routing/session-key';
+import { isWithinDir } from './path-safety';
 import {
   ensureDir,
   existsDir,
@@ -29,7 +29,7 @@ import {
   readSessionStoreJson5,
   type SessionEntryLike,
   safeReadDir,
-} from "./state-migrations.fs.js";
+} from './state-migrations.fs';
 
 export type LegacyStateDetection = {
   targetAgentId: string;

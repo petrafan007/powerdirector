@@ -1,4 +1,4 @@
-import type { AuthChoice } from "./onboard-types.js";
+import type { AuthChoice } from './onboard-types';
 
 export const AUTH_CHOICE_LEGACY_ALIASES_FOR_CLI: ReadonlyArray<AuthChoice> = [
   "setup-token",

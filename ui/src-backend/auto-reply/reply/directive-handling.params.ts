@@ -1,9 +1,9 @@
-import type { ModelAliasIndex } from "../../agents/model-selection.js";
-import type { PowerDirectorConfig } from "../../config/config.js";
-import type { SessionEntry } from "../../config/sessions.js";
-import type { MsgContext } from "../templating.js";
-import type { InlineDirectives } from "./directive-handling.parse.js";
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "./directives.js";
+import type { ModelAliasIndex } from '../../agents/model-selection';
+import type { PowerDirectorConfig } from '../../config/config';
+import type { SessionEntry } from '../../config/sessions';
+import type { MsgContext } from '../templating';
+import type { InlineDirectives } from './directive-handling.parse';
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from './directives';
 
 export type HandleDirectiveOnlyCoreParams = {
   cfg: PowerDirectorConfig;
@@ -21,7 +21,7 @@ export type HandleDirectiveOnlyCoreParams = {
   aliasIndex: ModelAliasIndex;
   allowedModelKeys: Set<string>;
   allowedModelCatalog: Awaited<
-    ReturnType<typeof import("../../agents/model-catalog.js").loadModelCatalog>
+    ReturnType<typeof import('../../agents/model-catalog').loadModelCatalog>
   >;
   resetModelOverride: boolean;
   provider: string;
@@ -48,7 +48,7 @@ export type ApplyInlineDirectivesFastLaneParams = HandleDirectiveOnlyCoreParams 
     resolveDefaultThinkingLevel: () => Promise<ThinkLevel | undefined>;
     allowedModelKeys: Set<string>;
     allowedModelCatalog: Awaited<
-      ReturnType<typeof import("../../agents/model-catalog.js").loadModelCatalog>
+      ReturnType<typeof import('../../agents/model-catalog').loadModelCatalog>
     >;
     resetModelOverride: boolean;
   };

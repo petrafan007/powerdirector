@@ -1,9 +1,9 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
-import { resolveRunWorkspaceDir } from "./workspace-run.js";
-import { resolveDefaultAgentWorkspaceDir } from "./workspace.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { resolveStateDir } from '../config/paths';
+import { resolveRunWorkspaceDir } from './workspace-run';
+import { resolveDefaultAgentWorkspaceDir } from './workspace';
 
 describe("resolveRunWorkspaceDir", () => {
   it("resolves explicit workspace values without fallback", () => {

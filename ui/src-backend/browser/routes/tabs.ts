@@ -1,6 +1,6 @@
-import type { BrowserRouteContext, ProfileContext } from "../server-context.js";
-import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from "./types.js";
-import { getProfileContext, jsonError, toNumber, toStringOrEmpty } from "./utils.js";
+import type { BrowserRouteContext, ProfileContext } from '../server-context';
+import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from './types';
+import { getProfileContext, jsonError, toNumber, toStringOrEmpty } from './utils';
 
 function resolveTabsProfileContext(
   req: BrowserRequest,

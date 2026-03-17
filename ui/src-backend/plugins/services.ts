@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from "../config/config.js";
-import { STATE_DIR } from "../config/paths.js";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { PluginRegistry } from "./registry.js";
-import type { PowerDirectorPluginServiceContext, PluginLogger } from "./types.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { STATE_DIR } from '../config/paths';
+import { createSubsystemLogger } from '../logging/subsystem';
+import type { PluginRegistry } from './registry';
+import type { PowerDirectorPluginServiceContext, PluginLogger } from './types';
 
 const log = createSubsystemLogger("plugins");
 

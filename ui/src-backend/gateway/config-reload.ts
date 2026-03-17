@@ -1,8 +1,8 @@
 import chokidar from "chokidar";
-import { type ChannelId, listChannelPlugins } from "../channels/plugins/index.js";
-import type { PowerDirectorConfig, ConfigFileSnapshot, GatewayReloadMode } from "../config/config.js";
-import { getActivePluginRegistry } from "../plugins/runtime.js";
-import { isPlainObject } from "../utils.js";
+import { type ChannelId, listChannelPlugins } from '../channels/plugins/index';
+import type { PowerDirectorConfig, ConfigFileSnapshot, GatewayReloadMode } from '../config/config';
+import { getActivePluginRegistry } from '../plugins/runtime';
+import { isPlainObject } from '../utils';
 
 export type GatewayReloadSettings = {
   mode: GatewayReloadMode;

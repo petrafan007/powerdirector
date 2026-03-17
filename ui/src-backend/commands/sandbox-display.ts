@@ -2,11 +2,11 @@
  * Display utilities for sandbox CLI
  */
 
-import type { SandboxBrowserInfo, SandboxContainerInfo } from "../agents/sandbox.js";
-import { formatCliCommand } from "../cli/command-format.js";
+import type { SandboxBrowserInfo, SandboxContainerInfo } from '../agents/sandbox';
+import { formatCliCommand } from '../cli/command-format';
 import { formatDurationCompact } from "../infra/format-time/format-duration.ts";
-import type { RuntimeEnv } from "../runtime.js";
-import { formatImageMatch, formatSimpleStatus, formatStatus } from "./sandbox-formatters.js";
+import type { RuntimeEnv } from '../runtime';
+import { formatImageMatch, formatSimpleStatus, formatStatus } from './sandbox-formatters';
 
 type DisplayConfig<T> = {
   emptyMessage: string;

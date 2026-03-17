@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { PowerDirectorConfig } from "../config/config.js";
-import { startHeartbeatRunner } from "./heartbeat-runner.js";
-import { requestHeartbeatNow, resetHeartbeatWakeStateForTests } from "./heartbeat-wake.js";
+import type { PowerDirectorConfig } from '../config/config';
+import { startHeartbeatRunner } from './heartbeat-runner';
+import { requestHeartbeatNow, resetHeartbeatWakeStateForTests } from './heartbeat-wake';
 
 describe("startHeartbeatRunner", () => {
   function startDefaultRunner(runOnce: Parameters<typeof startHeartbeatRunner>[0]["runOnce"]) {

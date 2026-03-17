@@ -1,4 +1,4 @@
-import { withTimeout } from "../../node-host/with-timeout.js";
+import { withTimeout } from '../../node-host/with-timeout';
 
 export const EMBEDDED_COMPACTION_TIMEOUT_MS = 300_000;
 

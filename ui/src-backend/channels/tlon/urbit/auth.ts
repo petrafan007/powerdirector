@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { UrbitAuthError } from "./errors.js";
-import { urbitFetch, UrbitFetchOptions } from "./fetch.js";
-import { SsrFPolicy, LookupFn } from "./types.js";
+import { UrbitAuthError } from './errors';
+import { urbitFetch, UrbitFetchOptions } from './fetch';
+import { SsrFPolicy, LookupFn } from './types';
 
 export type UrbitAuthenticateOptions = {
   ssrfPolicy?: SsrFPolicy;

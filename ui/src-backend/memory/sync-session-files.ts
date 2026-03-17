@@ -1,15 +1,15 @@
 import type { DatabaseSync } from "node:sqlite";
-import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { SessionFileEntry } from "./session-files.js";
+import { createSubsystemLogger } from '../logging/subsystem';
+import type { SessionFileEntry } from './session-files';
 import {
   buildSessionEntry,
   listSessionFilesForAgent,
   sessionPathForFile,
-} from "./session-files.js";
-import { indexFileEntryIfChanged } from "./sync-index.js";
-import type { SyncProgressState } from "./sync-progress.js";
-import { bumpSyncProgressCompleted, bumpSyncProgressTotal } from "./sync-progress.js";
-import { deleteStaleIndexedPaths } from "./sync-stale.js";
+} from './session-files';
+import { indexFileEntryIfChanged } from './sync-index';
+import type { SyncProgressState } from './sync-progress';
+import { bumpSyncProgressCompleted, bumpSyncProgressTotal } from './sync-progress';
+import { deleteStaleIndexedPaths } from './sync-stale';
 
 const log = createSubsystemLogger("memory");
 
