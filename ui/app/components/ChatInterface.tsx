@@ -413,7 +413,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
                         return false;
                     });
-                    return [...merged, ...purelyLocalMessages];
+
+                    // Sort by timestamp ASC then sequence ASC to match DB ordering and
+                    // prevent assistant responses from rendering before user messages due
+                    // to timestamp skew between optimistic UI updates and DB saves.
+                    const combined = [...merged, ...purelyLocalMessages];
+                    combined.sort((a, b) => {
+                        const tDiff = (a.timestamp ?? 0) - (b.timestamp ?? 0);
+                        if (tDiff !== 0) return tDiff;
+                        return ((a.metadata?.sequence ?? 0) - (b.metadata?.sequence ?? 0));
+                    });
+                    return combined;
                 }
                 return normalizedDbMessages;
             });

@@ -704,7 +704,9 @@ export class Agent {
         const assistantMsg: Message = {
             role: 'assistant',
             content: responseText,
-            timestamp: Date.now(),
+            // Guarantee the assistant message is always strictly after the user's runStartTime
+            // to prevent UI ordering glitches when timestamps collide within the same millisecond.
+            timestamp: Math.max(Date.now(), runStartTime + 1),
             metadata: {
                 turn: currentTurn,
                 runId,
