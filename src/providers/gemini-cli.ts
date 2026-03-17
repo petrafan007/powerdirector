@@ -230,7 +230,7 @@ export class GeminiCLIProvider implements Provider {
         const outputFormat = this.backendConfig?.output || 'text';
         const baseArgs = Array.isArray(this.backendConfig?.args) && this.backendConfig!.args!.length > 0
             ? [...this.backendConfig!.args!]
-            : ['--output-format', outputFormat, '--approval-mode', 'plan'];
+            : ['--output-format', outputFormat, '--approval-mode', 'auto_edit'];
         
         if (inputMode === 'stdin') {
             baseArgs.push('-p', '-');

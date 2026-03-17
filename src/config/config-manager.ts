@@ -252,6 +252,11 @@ export class ConfigManager {
         return structuredClone(this.config);
     }
 
+    /** Alias for getAll(false) for backward compatibility */
+    public get(): PowerDirectorConfig {
+        return this.getAll(false);
+    }
+
     /** Get a specific section */
     public getSection<T extends SectionName>(section: T, maskSecrets = true): PowerDirectorConfig[T] {
         this.sync();

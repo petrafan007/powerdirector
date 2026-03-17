@@ -605,7 +605,9 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
 
     if (preservedRuntimeFiles.length > 0 || true) {
       const resetPaths = [
-        ...preservedRuntimeFiles.map((file) => file.relativePath),
+        ...preservedRuntimeFiles
+          .map((file) => file.relativePath)
+          .filter((path) => path !== "powerdirector.config.json"),
         "ui/src-backend/",
       ];
       const resetRuntimeFilesStep = await runStep(
