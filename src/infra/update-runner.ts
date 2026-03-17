@@ -1,5 +1,5 @@
 import fs from "node:fs/promises";
-import type { Dirent } from "node:fs";
+import { existsSync, type Dirent } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { type CommandOptions, runCommandWithTimeout } from "../process/exec.js";
@@ -988,11 +988,27 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     if (preservedRuntimeFiles.length > 0) {
       try {
         await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
+
+        // EXTRA SAFEGUARD: Verify config.json exists before proceeding to doctor
+        const configPath = path.join(gitRoot, "powerdirector.config.json");
+        if (!existsSync(configPath)) {
+          throw new Error("Critical failure: powerdirector.config.json missing after pre-doctor restoration. Aborting update to prevent wipe.");
+        }
+
         runtimeFilesRestored = true;
         console.log(`[update-runner] Restored preserved runtime files before doctor step.`);
       } catch (error) {
         console.warn(`[update-runner] Early restore of preserved runtime files failed: ${error instanceof Error ? error.message : String(error)}`);
-        // Non-fatal — finalizeGitResult will attempt again.
+        // If it failed and it's an update, we MUST abort for safety
+        return finalizeGitResult({
+          status: "error",
+          mode: "git",
+          root: gitRoot,
+          reason: "config-restoration-failed",
+          before: { sha: beforeSha, version: beforeVersion },
+          steps,
+          durationMs: Date.now() - startedAt,
+        });
       }
     }
 

@@ -770,6 +770,14 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
   }
 
   let snapshot = await readConfigFileSnapshot();
+  const isUpdate = process.env.POWERDIRECTOR_UPDATE_IN_PROGRESS === "1";
+
+  if (!snapshot.exists && isUpdate) {
+    throw new Error(
+      "Config file missing during update. Aborting doctor to prevent overwriting with default template.",
+    );
+  }
+
   const baseCfg = snapshot.config ?? {};
   let cfg: PowerDirectorConfig = baseCfg;
   let candidate = structuredClone(baseCfg);
