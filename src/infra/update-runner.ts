@@ -980,6 +980,22 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       });
     }
 
+    // CRITICAL: Restore preserved runtime files (e.g. the user's powerdirector.config.json)
+    // BEFORE running doctor. Previously this restore only happened inside finalizeGitResult,
+    // which runs AFTER doctor — meaning doctor ran against the template config from the
+    // git tag rather than the user's actual config, overwriting it.
+    let runtimeFilesRestored = false;
+    if (preservedRuntimeFiles.length > 0) {
+      try {
+        await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
+        runtimeFilesRestored = true;
+        console.log(`[update-runner] Restored preserved runtime files before doctor step.`);
+      } catch (error) {
+        console.warn(`[update-runner] Early restore of preserved runtime files failed: ${error instanceof Error ? error.message : String(error)}`);
+        // Non-fatal — finalizeGitResult will attempt again.
+      }
+    }
+
     // Use --fix so that doctor auto-strips unknown config keys introduced by
     // schema changes between versions, preventing a startup validation crash.
     const doctorArgv = [process.execPath, doctorEntry, "doctor", "--non-interactive", "--fix"];
@@ -987,6 +1003,17 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       step("powerdirector doctor", doctorArgv, gitRoot, { POWERDIRECTOR_UPDATE_IN_PROGRESS: "1" }),
     );
     steps.push(doctorStep);
+
+    // After doctor, re-restore preserved files in case doctor overwrote them
+    // (e.g. doctor --fix may rewrite powerdirector.config.json).
+    if (preservedRuntimeFiles.length > 0 && runtimeFilesRestored) {
+      try {
+        await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
+        console.log(`[update-runner] Re-restored preserved runtime files after doctor step.`);
+      } catch (error) {
+        console.warn(`[update-runner] Post-doctor re-restore of preserved runtime files failed: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
 
     const uiIndexHealth = await resolveControlUiDistIndexHealth({ root: gitRoot });
     if (!uiIndexHealth.exists) {

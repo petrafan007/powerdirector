@@ -17,6 +17,8 @@ moltbook-adk/
 gemini_tmp_images/
 /state/
 powerdirector.db
+# Personal config - must never be committed; each instance has its own
+powerdirector.config.json
 powerdirector.config.json.bak
 powerdirector.config.json.bak.*
 powerdirector.config.json.tmp
