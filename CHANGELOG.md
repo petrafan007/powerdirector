@@ -8,14 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0-beta.1] - 2026-03-17
 
 ### Added
-- Parity roadmap for the OpenClaw post-2026-02-23 releases, including P0/P1/P2 clusters, release-by-release notes, and implementation checklist for the 1.2.0-beta.1 cycle (`powerdirector-v1.2.0-beta1.md`).
+- Parity roadmap brief (`powerdirector-v1.2.0-beta1.md`) that enumerates P0/P1/P2 targets from OpenClaw releases (v2026.2.23–v2026.3.8) with release-by-release notes and an implementation checklist for this cycle.
 
 ### Changed
-- Bumped gateway and UI package versions to `1.2.0-beta.1` and retargeted the QA checklist to the new prerelease.
-- Clarified release/hotfix QA expectations to enforce personal-config loading and agent-browser verification of core chat plus new fixes/features.
-
-### Removed
-- Temporary `QA_CHECKLIST.md` working file; QA requirements are now codified in the release/hotfix skills.
+- Bumped gateway and UI package versions to `1.2.0-beta.1`.
+- Hardened network interface detection in gateway/UI backends to avoid `uv_interface_addresses` crashes on restricted hosts (fixes UI build failure on `/api/instances`).
+- Release/hotfix QA policy now explicit in skills: load personal `powerdirector.config.json` into the test instance, verify 3+ chat exchanges with the default model via agent-browser, and confirm each shipped fix/feature (including UI effects) behaves as intended with zero errors.
 
 ## [1.1.0-beta.3] - 2026-03-15
 
