@@ -45,6 +45,7 @@ import { formatErrorMessage } from './errors';
 import { isWithinActiveHours } from './heartbeat-active-hours';
 import {
   buildCronEventPrompt,
+  buildExecEventPrompt,
   isCronSystemEvent,
   isExecCompletionEvent,
 } from './heartbeat-events-filter';
@@ -95,15 +96,7 @@ export type HeartbeatSummary = {
   ackMaxChars: number;
 };
 
-const DEFAULT_HEARTBEAT_TARGET = "last";
-
-// Prompt used when an async exec has completed and the result should be relayed to the user.
-// This overrides the standard heartbeat prompt to ensure the model responds with the exec result
-// instead of just "HEARTBEAT_OK".
-const EXEC_EVENT_PROMPT =
-  "An async command you ran earlier has completed. The result is shown in the system messages above. " +
-  "Please relay the command output to the user in a helpful way. If the command succeeded, share the relevant output. " +
-  "If it failed, explain what went wrong.";
+const DEFAULT_HEARTBEAT_TARGET = "none";
 export { isCronSystemEvent };
 
 type HeartbeatAgentState = {
@@ -618,12 +611,12 @@ export async function runHeartbeatOnce(opts: {
   if (delivery.reason === "unknown-account") {
     log.warn("heartbeat: unknown accountId", {
       accountId: delivery.accountId ?? heartbeatAccountId ?? null,
-      target: heartbeat?.target ?? "last",
+      target: heartbeat?.target ?? "none",
     });
   } else if (heartbeatAccountId) {
     log.info("heartbeat: using explicit accountId", {
       accountId: delivery.accountId ?? heartbeatAccountId,
-      target: heartbeat?.target ?? "last",
+      target: heartbeat?.target ?? "none",
       channel: delivery.channel,
     });
   }
@@ -657,10 +650,13 @@ export async function runHeartbeatOnce(opts: {
     .map((event) => event.text);
   const hasExecCompletion = pendingEvents.some(isExecCompletionEvent);
   const hasCronEvents = cronEvents.length > 0;
+  const canRelayToUser = Boolean(
+    delivery.channel !== "none" && delivery.to && visibility.showAlerts,
+  );
   const prompt = hasExecCompletion
-    ? EXEC_EVENT_PROMPT
+    ? buildExecEventPrompt({ deliverToUser: canRelayToUser })
     : hasCronEvents
-      ? buildCronEventPrompt(cronEvents)
+      ? buildCronEventPrompt(cronEvents, { deliverToUser: canRelayToUser })
       : resolveHeartbeatPrompt(cfg, heartbeat);
   const ctx = {
     Body: appendCronStyleCurrentTimeLine(prompt, cfg, startedAt),

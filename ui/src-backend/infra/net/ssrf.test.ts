@@ -26,6 +26,8 @@ const privateIpCases = [
   "fec0::1",
   "2001:db8:1234::5efe:127.0.0.1",
   "2001:db8:1234:1:200:5efe:7f00:1",
+  "ff00::1",
+  "ff0f::abcd",
 ];
 
 const publicIpCases = [

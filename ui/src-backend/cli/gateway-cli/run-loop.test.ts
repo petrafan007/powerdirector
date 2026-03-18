@@ -55,10 +55,12 @@ function removeNewSignalListeners(
 }
 
 describe("runGatewayLoop", () => {
-  it("restarts after SIGUSR1 even when drain times out, and resets lanes for the new iteration", async () => {
+  it("keeps the process alive after post-restart startup failure and releases lock", async () => {
     vi.clearAllMocks();
     getActiveTaskCount.mockReturnValueOnce(2).mockReturnValueOnce(0);
     waitForActiveTasks.mockResolvedValueOnce({ drained: false });
+    const releaseLock = vi.fn(async () => {});
+    acquireGatewayLock.mockResolvedValue({ release: releaseLock });
 
     type StartServer = () => Promise<{
       close: (opts: { reason: string; restartExpectedMs: number | null }) => Promise<void>;
@@ -86,7 +88,7 @@ describe("runGatewayLoop", () => {
       return { close: closeSecond };
     });
 
-    start.mockRejectedValueOnce(new Error("stop-loop"));
+    start.mockRejectedValueOnce(new Error("start-failed"));
 
     const beforeSigterm = new Set(
       process.listeners("SIGTERM") as Array<(...args: unknown[]) => void>,
@@ -131,13 +133,18 @@ describe("runGatewayLoop", () => {
 
       process.emit("SIGUSR1");
 
-      await expect(loopPromise).rejects.toThrow("stop-loop");
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      expect(gatewayLog.error).toHaveBeenCalledWith(
+        expect.stringContaining("gateway startup failed: start-failed"),
+      );
+      expect(releaseLock).toHaveBeenCalledTimes(1);
       expect(closeSecond).toHaveBeenCalledWith({
         reason: "gateway restarting",
         restartExpectedMs: 1500,
       });
       expect(markGatewaySigusr1RestartHandled).toHaveBeenCalledTimes(2);
       expect(resetAllLanes).toHaveBeenCalledTimes(2);
+      void loopPromise.catch(() => {});
     } finally {
       removeNewSignalListeners("SIGTERM", beforeSigterm);
       removeNewSignalListeners("SIGINT", beforeSigint);

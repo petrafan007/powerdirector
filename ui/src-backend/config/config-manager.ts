@@ -177,26 +177,34 @@ export class ConfigManager {
 
                 const raw = JSON.parse(fs.readFileSync(this.configPath, 'utf-8'));
                 const normalizedRaw = this.normalizeConfigForValidation(raw);
-                const result = configSchema.safeParse(normalizedRaw);
-                if (result.success) {
-                    return this.mergeUnknownFields(normalizedRaw, result.data) as PowerDirectorConfig;
+                const result = validateConfigObjectRaw(normalizedRaw);
+                if (!result.ok) {
+                    const issues = result.issues.map((i) => `${i.path}: ${i.message}`).join("; ");
+                    throw new Error(`Config validation failed (fail-closed): ${issues}`);
                 }
-                console.warn('Config validation errors, using defaults for invalid fields:', result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`));
-                // Strict validation failed (e.g. unrecognized keys). Merge raw data with
-                // defaults section-by-section so valid sections are preserved.
-                try {
-                    const defaults = configSchema.parse({});
-                    return this.mergeUnknownFields(normalizedRaw, defaults) as PowerDirectorConfig;
-                } catch {
-                    // If even defaults fail, just use raw as-is with best effort
-                    return normalizedRaw as PowerDirectorConfig;
-                }
+                const merged = this.mergeUnknownFields(normalizedRaw, result.config) as PowerDirectorConfig;
+                this.assertGatewayAuthMode(merged);
+                return merged;
             }
         } catch (err: any) {
-            console.warn(`Failed to load config from ${this.configPath}:`, err.message);
+            // Fail closed: surface validation/load errors instead of silently running defaults.
+            throw new Error(`Failed to load config from ${this.configPath}: ${err?.message ?? err}`);
         }
         // Return full defaults
         return configSchema.parse({});
+    }
+
+    /** Enforce explicit gateway.auth.mode when both token and password are provided */
+    private assertGatewayAuthMode(config: PowerDirectorConfig): void {
+        const auth = asObject(config?.gateway?.auth);
+        const hasToken = typeof auth.token === 'string' && auth.token.trim().length > 0;
+        const hasPassword = typeof auth.password === 'string' && auth.password.trim().length > 0;
+        if (hasToken && hasPassword) {
+            const mode = typeof auth.mode === 'string' ? auth.mode.trim() : '';
+            if (!mode) {
+                throw new Error('gateway.auth.mode is required when both gateway.auth.token and gateway.auth.password are set');
+            }
+        }
     }
 
     /** Check for updates on disk */

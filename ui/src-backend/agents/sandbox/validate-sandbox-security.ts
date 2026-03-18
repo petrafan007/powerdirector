@@ -160,6 +160,13 @@ export function validateNetworkMode(network: string | undefined): void {
         'Use "bridge" or "none" instead.',
     );
   }
+
+  if (network && network.trim().toLowerCase().startsWith("container:")) {
+    throw new Error(
+      `Sandbox security: network mode "${network}" is blocked. ` +
+        "Joining another container's network namespace is not allowed by default.",
+    );
+  }
 }
 
 export function validateSeccompProfile(profile: string | undefined): void {

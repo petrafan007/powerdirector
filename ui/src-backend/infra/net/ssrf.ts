@@ -352,6 +352,7 @@ export function isPrivateIpAddress(address: string): boolean {
     // - link-local: fe80::/10
     // - site-local (deprecated, but internal): fec0::/10
     // - unique local: fc00::/7
+    // - multicast: ff00::/8 (blocked to prevent SSRF via multicast/reserved targets)
     const first = hextets[0];
     if ((first & 0xffc0) === 0xfe80) {
       return true;
@@ -360,6 +361,9 @@ export function isPrivateIpAddress(address: string): boolean {
       return true;
     }
     if ((first & 0xfe00) === 0xfc00) {
+      return true;
+    }
+    if ((first & 0xff00) === 0xff00) {
       return true;
     }
     return false;

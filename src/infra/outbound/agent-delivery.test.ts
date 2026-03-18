@@ -83,4 +83,42 @@ describe("agent delivery helpers", () => {
     expect(mocks.resolveOutboundTarget).not.toHaveBeenCalled();
     expect(resolved.resolvedTo).toBe("+1555");
   });
+
+  it("passes normalized turnSourceChannel through to delivery target resolution", () => {
+    // When a turn-source channel is provided, the plan should use it (not the session lastChannel).
+    // The session was last active on telegram, but the turn came from whatsapp.
+    const plan = resolveAgentDeliveryPlan({
+      sessionEntry: {
+        sessionId: "s4",
+        updatedAt: 4,
+        deliveryContext: { channel: "telegram", to: "tg-user" },
+      },
+      requestedChannel: "last",
+      wantsDelivery: true,
+      turnSourceChannel: "whatsapp",
+      turnSourceTo: "+1555",
+      turnSourceAccountId: "wa-acct",
+    });
+
+    // With turnSourceChannel pinned to whatsapp, channel must resolve to whatsapp
+    expect(plan.resolvedChannel).toBe("whatsapp");
+    expect(plan.baseDelivery.channel).toBe("whatsapp");
+    expect(plan.baseDelivery.to).toBe("+1555");
+  });
+
+  it("ignores invalid turnSourceChannel values (non-deliverable channels)", () => {
+    const plan = resolveAgentDeliveryPlan({
+      sessionEntry: {
+        sessionId: "s5",
+        updatedAt: 5,
+        deliveryContext: { channel: "whatsapp", to: "+1555" },
+      },
+      requestedChannel: "last",
+      wantsDelivery: true,
+      turnSourceChannel: "not-a-real-channel",
+    });
+
+    // Falls back to session delivery normally
+    expect(plan.resolvedChannel).toBe("whatsapp");
+  });
 });

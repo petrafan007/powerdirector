@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0-beta.2] - 2026-03-18
+
+### Changed / Fixed
+- **[Wave 1] Fail-closed cross-channel routing — session isolation** (`v2026.2.24 + v2026.2.25`): Agent replies are now pinned to the turn-source channel (`turnSourceChannel`) provided at the start of each agent turn. This prevents a race where a concurrent inbound message on a different channel (in `dmScope = "main"` shared sessions) updates `lastChannel` while the agent turn is in flight and causes the reply to be sent to the wrong channel. The fix is fail-closed: when a turn-source channel is set, _no_ fallback to mutable session metadata occurs. Applied across `targets.ts`, `agent-delivery.ts`, and the gateway `agent` handler. 4 focused test cases added.
+- **[Wave 1] Heartbeat delivery semantics reset** (`v2026.2.25`): Default heartbeat target changed from `"last"` to `"none"`. Users without an explicit `heartbeat.target` in their config will no longer receive unsolicited heartbeat messages; this matches the upstream fail-safe default. Exec-completion and cron-event prompts now carry a `deliverToUser` flag (`buildExecEventPrompt`, updated `buildCronEventPrompt`) so the model is instructed to process silently when there is no active delivery channel.
+- **[Wave 1] Bun/Deno `run` approval binding to on-disk snapshots** (`v2026.3.8`): New `src/node-host/invoke-system-run-plan.ts` provides specialised argv scanners for `bun` and `deno run` that locate the mutable script file operand past subcommands and option flags. This enables exec-approval snapshot hardening for these runtimes in the same way already supported for POSIX shell scripts and node interpreters. 29 unit tests added.
+- **[Wave 1] Full `v2026.2.25` security sweep** — the remaining sub-items (gateway auth/pairing, browser WS origins+throttle, SSRF edges) were landed in `1.2.0-beta.1`; the cross-channel routing fix above covers the last open item from this sweep. Marked complete.
+
 ## [1.2.0-beta.1] - 2026-03-17
 
 ### Added

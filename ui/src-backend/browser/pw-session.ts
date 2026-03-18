@@ -12,7 +12,12 @@ import type { SsrFPolicy } from '../infra/net/ssrf';
 import { appendCdpPath, fetchJson, getHeadersWithAuth, withCdpSocket } from './cdp.helpers';
 import { normalizeCdpWsUrl } from './cdp';
 import { getChromeWebSocketUrl } from './chrome';
-import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from './navigation-guard';
+import {
+  assertBrowserNavigationAllowed,
+  assertBrowserNavigationRedirectChainAllowed,
+  assertBrowserNavigationResultAllowed,
+  withBrowserNavigationPolicy,
+} from './navigation-guard';
 
 export type BrowserConsoleMessage = {
   type: string;
@@ -745,8 +750,17 @@ export async function createPageViaPlaywright(opts: {
         ...withBrowserNavigationPolicy(opts.ssrfPolicy),
       });
     }
-    await page.goto(targetUrl, { timeout: 30_000 }).catch(() => {
+    const response = await page.goto(targetUrl, { timeout: 30_000 }).catch(() => {
       // Navigation might fail for some URLs, but page is still created
+      return null;
+    });
+    await assertBrowserNavigationRedirectChainAllowed({
+      request: response?.request(),
+      ...withBrowserNavigationPolicy(opts.ssrfPolicy),
+    });
+    await assertBrowserNavigationResultAllowed({
+      url: page.url(),
+      ...withBrowserNavigationPolicy(opts.ssrfPolicy),
     });
   }
 

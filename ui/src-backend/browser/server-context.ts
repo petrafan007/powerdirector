@@ -17,7 +17,9 @@ import {
 } from './extension-relay';
 import {
   assertBrowserNavigationAllowed,
+  assertBrowserNavigationResultAllowed,
   InvalidBrowserNavigationUrlError,
+  requiresInspectableBrowserNavigationRedirects,
   withBrowserNavigationPolicy,
 } from './navigation-guard';
 import type { PwAiModule } from './pw-ai-module';
@@ -162,6 +164,15 @@ function createProfileContext(
       }
     }
 
+    if (
+      !profile.cdpIsLoopback &&
+      requiresInspectableBrowserNavigationRedirects(state().resolved.ssrfPolicy)
+    ) {
+      throw new InvalidBrowserNavigationUrlError(
+        "Navigation blocked: strict browser SSRF policy requires Playwright-backed redirect-hop inspection",
+      );
+    }
+
     const createdViaCdp = await createTargetViaCdp({
       cdpUrl: profile.cdpUrl,
       url,
@@ -179,10 +190,18 @@ function createProfileContext(
         const tabs = await listTabs().catch(() => [] as BrowserTab[]);
         const found = tabs.find((t) => t.targetId === createdViaCdp);
         if (found) {
+          await assertBrowserNavigationResultAllowed({
+            url: found.url,
+            ...ssrfPolicyOpts,
+          });
           return found;
         }
         await new Promise((r) => setTimeout(r, 100));
       }
+      await assertBrowserNavigationResultAllowed({
+        url,
+        ...ssrfPolicyOpts,
+      });
       return { targetId: createdViaCdp, title: "", url, type: "page" };
     }
 
@@ -216,6 +235,10 @@ function createProfileContext(
     }
     const profileState = getProfileState();
     profileState.lastTargetId = created.id;
+    await assertBrowserNavigationResultAllowed({
+      url: created.url ?? url,
+      ...ssrfPolicyOpts,
+    });
     return {
       targetId: created.id,
       title: created.title ?? "",

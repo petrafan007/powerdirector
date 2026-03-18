@@ -218,3 +218,93 @@ describe("resolveSessionDeliveryTarget", () => {
     expect(resolved.to).toBe("63448508");
   });
 });
+
+describe("resolveSessionDeliveryTarget – cross-channel routing isolation", () => {
+  it("pins reply to turn-source channel, ignoring mutable session lastChannel", () => {
+    // Simulate: agent turn started on whatsapp, then concurrent inbound updated session to telegram.
+    // Without turnSourceChannel, the reply would go to telegram. With it, it must stay on whatsapp.
+    const resolved = resolveSessionDeliveryTarget({
+      entry: {
+        sessionId: "sess-race",
+        updatedAt: 1,
+        // Session lastChannel has been updated to telegram by a concurrent inbound
+        lastChannel: "telegram",
+        lastTo: "tg-user",
+        lastAccountId: "tg-acct",
+      },
+      requestedChannel: "last",
+      // Agent turn was initiated by whatsapp – pin to it
+      turnSourceChannel: "whatsapp",
+      turnSourceTo: "+1555",
+      turnSourceAccountId: "wa-acct",
+    });
+
+    expect(resolved.channel).toBe("whatsapp");
+    expect(resolved.to).toBe("+1555");
+    expect(resolved.accountId).toBe("wa-acct");
+    // lastChannel/lastTo reflect session-level fields (unchanged output contract)
+    expect(resolved.lastChannel).toBe("whatsapp");
+    expect(resolved.lastTo).toBe("+1555");
+  });
+
+  it("without turnSourceChannel, still uses session lastChannel normally", () => {
+    const resolved = resolveSessionDeliveryTarget({
+      entry: {
+        sessionId: "sess-no-pin",
+        updatedAt: 1,
+        lastChannel: "whatsapp",
+        lastTo: "+1555",
+        lastAccountId: "wa-acct",
+      },
+      requestedChannel: "last",
+    });
+
+    expect(resolved.channel).toBe("whatsapp");
+    expect(resolved.to).toBe("+1555");
+    expect(resolved.accountId).toBe("wa-acct");
+  });
+
+  it("turnSourceChannel=undefined behaves identically to not providing it", () => {
+    const withUndefined = resolveSessionDeliveryTarget({
+      entry: {
+        sessionId: "sess-undef",
+        updatedAt: 1,
+        lastChannel: "slack",
+        lastTo: "U12345",
+      },
+      requestedChannel: "last",
+      turnSourceChannel: undefined,
+    });
+    const withoutProp = resolveSessionDeliveryTarget({
+      entry: {
+        sessionId: "sess-undef",
+        updatedAt: 1,
+        lastChannel: "slack",
+        lastTo: "U12345",
+      },
+      requestedChannel: "last",
+    });
+
+    expect(withUndefined).toEqual(withoutProp);
+  });
+
+  it("does not fall back to mutable session metadata when turnSourceTo is undefined (fail-closed)", () => {
+    // If turnSourceChannel is set but turnSourceTo is absent, we must NOT fall back to session lastTo.
+    // This is the stricter upstream v2026.2.25 fail-closed behavior.
+    const resolved = resolveSessionDeliveryTarget({
+      entry: {
+        sessionId: "sess-fail-closed",
+        updatedAt: 1,
+        lastChannel: "telegram",
+        lastTo: "tg-user",
+      },
+      requestedChannel: "last",
+      turnSourceChannel: "whatsapp",
+      // turnSourceTo intentionally absent
+    });
+
+    expect(resolved.channel).toBe("whatsapp");
+    // Must NOT inherit 'tg-user' from session metadata
+    expect(resolved.to).toBeUndefined();
+  });
+});

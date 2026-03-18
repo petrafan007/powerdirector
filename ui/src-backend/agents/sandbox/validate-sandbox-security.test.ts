@@ -150,4 +150,12 @@ describe("validateSandboxSecurity", () => {
       }),
     ).not.toThrow();
   });
+
+  it("blocks container network namespace joins", () => {
+    expect(() =>
+      validateSandboxSecurity({
+        network: "container:abc123",
+      }),
+    ).toThrow(/network mode "container:abc123" is blocked/i);
+  });
 });

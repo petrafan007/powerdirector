@@ -223,8 +223,27 @@ describe("resolveHeartbeatDeliveryTarget", () => {
     });
   });
 
-  it("uses last route by default", () => {
+  it("defaults to none when target is unset (fail-closed)", () => {
     const cfg: PowerDirectorConfig = {};
+    const entry = {
+      ...baseEntry,
+      lastChannel: "whatsapp" as const,
+      lastTo: "+1555",
+    };
+    // Default is now "none" — heartbeat does NOT deliver unless explicitly configured
+    expect(resolveHeartbeatDeliveryTarget({ cfg, entry })).toEqual({
+      channel: "none",
+      reason: "target-none",
+      accountId: undefined,
+      lastChannel: "whatsapp",
+      lastAccountId: undefined,
+    });
+  });
+
+  it("uses last route when target is explicitly set to 'last'", () => {
+    const cfg: PowerDirectorConfig = {
+      agents: { defaults: { heartbeat: { target: "last" } } },
+    };
     const entry = {
       ...baseEntry,
       lastChannel: "whatsapp" as const,
@@ -257,8 +276,10 @@ describe("resolveHeartbeatDeliveryTarget", () => {
     });
   });
 
-  it("skips when last route is webchat", () => {
-    const cfg: PowerDirectorConfig = {};
+  it("skips when last route is webchat (with explicit target=last)", () => {
+    const cfg: PowerDirectorConfig = {
+      agents: { defaults: { heartbeat: { target: "last" } } },
+    };
     const entry = {
       ...baseEntry,
       lastChannel: "webchat" as const,
@@ -294,6 +315,7 @@ describe("resolveHeartbeatDeliveryTarget", () => {
 
   it("normalizes prefixed WhatsApp group targets for heartbeat delivery", () => {
     const cfg: PowerDirectorConfig = {
+      agents: { defaults: { heartbeat: { target: "last" } } },
       channels: { whatsapp: { allowFrom: ["+1555"] } },
     };
     const entry = {
@@ -1034,7 +1056,7 @@ describe("runHeartbeatOnce", () => {
     try {
       const cfg: PowerDirectorConfig = {
         agents: {
-          defaults: { workspace: tmpDir, heartbeat: { every: "5m" } },
+          defaults: { workspace: tmpDir, heartbeat: { every: "5m", target: "last" } },
           list: [{ id: "work", default: true }],
         },
         channels: { whatsapp: { allowFrom: ["*"] } },

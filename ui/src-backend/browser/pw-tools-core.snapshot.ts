@@ -1,6 +1,11 @@
 import type { SsrFPolicy } from '../infra/net/ssrf';
 import { type AriaSnapshotNode, formatAriaSnapshot, type RawAXNode } from './cdp';
-import { assertBrowserNavigationAllowed, withBrowserNavigationPolicy } from './navigation-guard';
+import {
+  assertBrowserNavigationAllowed,
+  assertBrowserNavigationRedirectChainAllowed,
+  assertBrowserNavigationResultAllowed,
+  withBrowserNavigationPolicy,
+} from './navigation-guard';
 import {
   buildRoleSnapshotFromAiSnapshot,
   buildRoleSnapshotFromAriaSnapshot,
@@ -172,10 +177,19 @@ export async function navigateViaPlaywright(opts: {
   });
   const page = await getPageForTargetId(opts);
   ensurePageState(page);
-  await page.goto(url, {
+  const response = await page.goto(url, {
     timeout: Math.max(1000, Math.min(120_000, opts.timeoutMs ?? 20_000)),
   });
-  return { url: page.url() };
+  await assertBrowserNavigationRedirectChainAllowed({
+    request: response?.request(),
+    ...withBrowserNavigationPolicy(opts.ssrfPolicy),
+  });
+  const finalUrl = page.url();
+  await assertBrowserNavigationResultAllowed({
+    url: finalUrl,
+    ...withBrowserNavigationPolicy(opts.ssrfPolicy),
+  });
+  return { url: finalUrl };
 }
 
 export async function resizeViewportViaPlaywright(opts: {

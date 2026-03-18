@@ -1,4 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
+import { DEFAULT_AGENTS_FILENAME } from '../../agents/workspace';
 
 /* ------------------------------------------------------------------ */
 /* Mocks                                                              */
@@ -27,6 +28,13 @@ const mocks = vi.hoisted(() => ({
   fsAppendFile: vi.fn(async () => {}),
   fsReadFile: vi.fn(async () => ""),
   fsStat: vi.fn(async () => null),
+  fsWriteFile: vi.fn(async () => {}),
+  fsLstat: vi.fn(async () => {
+    const err = new Error("ENOENT") as NodeJS.ErrnoException;
+    err.code = "ENOENT";
+    throw err;
+  }),
+  fsRealpath: vi.fn(async (p: string | Buffer | URL) => String(p)),
 }));
 
 vi.mock("../../config/config.js", () => ({
@@ -85,6 +93,9 @@ vi.mock("node:fs/promises", async () => {
     appendFile: mocks.fsAppendFile,
     readFile: mocks.fsReadFile,
     stat: mocks.fsStat,
+    writeFile: mocks.fsWriteFile,
+    lstat: mocks.fsLstat,
+    realpath: mocks.fsRealpath,
   };
   return { ...patched, default: patched };
 });
@@ -172,6 +183,11 @@ beforeEach(() => {
   mocks.fsStat.mockImplementation(async () => {
     throw createEnoentError();
   });
+  mocks.fsWriteFile.mockImplementation(async () => {});
+  mocks.fsLstat.mockImplementation(async () => {
+    throw createEnoentError();
+  });
+  mocks.fsRealpath.mockImplementation(async (p: string | Buffer | URL) => String(p));
 });
 
 /* ------------------------------------------------------------------ */
@@ -457,5 +473,55 @@ describe("agents.files.list", () => {
 
     const names = await listAgentFileNames();
     expect(names).toContain("BOOTSTRAP.md");
+  });
+});
+
+describe("agents.files safety", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.loadConfigReturn = {};
+  });
+
+  it("rejects symlinked workspace files on get", async () => {
+    mocks.fsLstat.mockResolvedValueOnce({
+      isSymbolicLink: () => true,
+      isFile: () => false,
+      nlink: 1,
+    } as unknown as import("node:fs").Stats);
+
+    const { respond, promise } = makeCall("agents.files.get", {
+      agentId: "main",
+      name: DEFAULT_AGENTS_FILENAME,
+    });
+    await promise;
+
+    expect(respond).toHaveBeenCalledWith(
+      false,
+      undefined,
+      expect.objectContaining({ message: expect.stringContaining("symlink") }),
+    );
+  });
+
+  it("rejects hardlinked workspace files on set", async () => {
+    mocks.fsLstat.mockResolvedValueOnce({
+      isSymbolicLink: () => false,
+      isFile: () => true,
+      nlink: 2,
+      size: 10,
+      mtimeMs: 0,
+    } as unknown as import("node:fs").Stats);
+
+    const { respond, promise } = makeCall("agents.files.set", {
+      agentId: "main",
+      name: DEFAULT_AGENTS_FILENAME,
+      content: "{}",
+    });
+    await promise;
+
+    expect(respond).toHaveBeenCalledWith(
+      false,
+      undefined,
+      expect.objectContaining({ message: expect.stringContaining("hardlink") }),
+    );
   });
 });

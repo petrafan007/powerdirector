@@ -7,6 +7,12 @@ const loadConfig = vi.fn(() => ({
     },
   },
 }));
+const readConfigFileSnapshot = vi.fn(async () => ({
+  exists: true,
+  valid: true,
+  config: {},
+  issues: [],
+}));
 
 const runtimeLogs: string[] = [];
 const defaultRuntime = {
@@ -32,6 +38,7 @@ const service = {
 
 vi.mock("../../config/config.js", () => ({
   loadConfig: () => loadConfig(),
+  readConfigFileSnapshot: () => readConfigFileSnapshot(),
 }));
 
 vi.mock("../../runtime.js", () => ({
@@ -39,15 +46,23 @@ vi.mock("../../runtime.js", () => ({
 }));
 
 let runServiceRestart: typeof import('./lifecycle-core').runServiceRestart;
+let runServiceStart: typeof import('./lifecycle-core').runServiceStart;
 
 describe("runServiceRestart token drift", () => {
   beforeAll(async () => {
-    ({ runServiceRestart } = await import('./lifecycle-core'));
+    ({ runServiceRestart, runServiceStart } = await import('./lifecycle-core'));
   });
 
   beforeEach(() => {
     runtimeLogs.length = 0;
     loadConfig.mockClear();
+    readConfigFileSnapshot.mockReset();
+    readConfigFileSnapshot.mockResolvedValue({
+      exists: true,
+      valid: true,
+      config: {},
+      issues: [],
+    });
     service.isLoaded.mockClear();
     service.readCommand.mockClear();
     service.restart.mockClear();
@@ -89,5 +104,45 @@ describe("runServiceRestart token drift", () => {
     const jsonLine = runtimeLogs.find((line) => line.trim().startsWith("{"));
     const payload = JSON.parse(jsonLine ?? "{}") as { warnings?: string[] };
     expect(payload.warnings).toBeUndefined();
+  });
+
+  it("aborts restart when config validation fails", async () => {
+    readConfigFileSnapshot.mockResolvedValue({
+      exists: true,
+      valid: false,
+      config: {},
+      issues: [{ path: "gateway.auth.mode", message: "Required" }],
+    });
+
+    await expect(
+      runServiceRestart({
+        serviceNoun: "Gateway",
+        service,
+        renderStartHints: () => [],
+        opts: { json: true },
+      }),
+    ).rejects.toThrow("__exit__:1");
+
+    expect(service.restart).not.toHaveBeenCalled();
+  });
+
+  it("aborts start when config validation fails", async () => {
+    readConfigFileSnapshot.mockResolvedValue({
+      exists: true,
+      valid: false,
+      config: {},
+      issues: [{ path: "gateway.auth.mode", message: "Required" }],
+    });
+
+    await expect(
+      runServiceStart({
+        serviceNoun: "Gateway",
+        service,
+        renderStartHints: () => [],
+        opts: { json: true },
+      }),
+    ).rejects.toThrow("__exit__:1");
+
+    expect(service.restart).not.toHaveBeenCalled();
   });
 });
