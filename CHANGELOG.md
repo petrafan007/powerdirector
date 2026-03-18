@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped gateway and UI package versions to `1.2.0-beta.1`.
 - Config now fails closed on validation errors and requires explicit `gateway.auth.mode` when both token and password are set; load errors now halt startup instead of silently defaulting.
+- Sandbox Docker security: block `network: container:<id>` namespace joins by default (in addition to host mode) and add test coverage.
 - Hardened network interface detection in gateway/UI backends to avoid `uv_interface_addresses` crashes on restricted hosts (fixes UI build failure on `/api/instances`).
 - Release/hotfix QA policy now explicit in skills: load personal `powerdirector.config.json` into the test instance, verify 3+ chat exchanges with the default model via agent-browser, and confirm each shipped fix/feature (including UI effects) behaves as intended with zero errors.
 
