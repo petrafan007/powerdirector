@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Bumped gateway and UI package versions to `1.2.0-beta.1` and retargeted the QA checklist to the new prerelease.
+- Clarified release/hotfix QA expectations to enforce personal-config loading and agent-browser verification of core chat plus new fixes/features.
+
+### Removed
+- Temporary `QA_CHECKLIST.md` working file; QA requirements are now codified in the release/hotfix skills.
 
 ## [1.1.0-beta.3] - 2026-03-15
 
