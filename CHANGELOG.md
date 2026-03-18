@@ -12,10 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Bumped gateway and UI package versions to `1.2.0-beta.1`.
-- Config now fails closed on validation errors and requires explicit `gateway.auth.mode` when both token and password are set; load errors now halt startup instead of silently defaulting.
-- Sandbox Docker security: block `network: container:<id>` namespace joins by default (in addition to host mode) and add test coverage.
-- Hardened network interface detection in gateway/UI backends to avoid `uv_interface_addresses` crashes on restricted hosts (fixes UI build failure on `/api/instances`).
-- Release/hotfix QA policy now explicit in skills: load personal `powerdirector.config.json` into the test instance, verify 3+ chat exchanges with the default model via agent-browser, and confirm each shipped fix/feature (including UI effects) behaves as intended with zero errors.
+- Config loader now fails closed: any validation/load error halts startup; when both a gateway token and password are present, `gateway.auth.mode` is mandatory and enforced before boot. Implemented via `validateConfigObjectRaw` in `config-manager`.
+- Sandbox security tightened: Docker sandbox requests using `network: container:<id>` are blocked by default (host mode was already blocked) with unit coverage in `validate-sandbox-security.test.ts`.
+- Gateway/UI network interface probing hardened to avoid `uv_interface_addresses` crashes on restricted hosts, unblocking UI build of `/api/instances`.
+- Release/hotfix workflows tightened: skills now require copying the personal `~/powerdirector/powerdirector.config.json` into the test instance, pinning test ports to gateway/UI `4007` and terminal `4008`, and running release/hotfix-focused QA via agent-browser (minimum 3 default-model exchanges, chat render verification, zero errors, and validation that shipped fixes are observable in behavior/UI).
 
 ## [1.1.0-beta.3] - 2026-03-15
 
