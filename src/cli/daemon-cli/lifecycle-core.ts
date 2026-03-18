@@ -1,4 +1,4 @@
-import { loadConfig } from "../../config/config.js";
+import { loadConfig, readConfigFileSnapshot } from "../../config/config.js";
 import { resolveIsNixMode } from "../../config/paths.js";
 import { checkTokenDrift } from "../../daemon/service-audit.js";
 import type { GatewayService } from "../../daemon/service.js";
@@ -85,6 +85,27 @@ async function resolveServiceLoadedOrFail(params: {
   }
 }
 
+async function getConfigValidationError(): Promise<string | null> {
+  try {
+    const snapshot = await readConfigFileSnapshot();
+    if (!snapshot.exists || snapshot.valid) {
+      return null;
+    }
+    if (snapshot.issues.length === 0) {
+      return "Unknown validation issue.";
+    }
+    return snapshot.issues
+      .map((issue) => {
+        const path = String(issue.path ?? "").trim() || "<root>";
+        const message = String(issue.message ?? "").trim() || "invalid value";
+        return `${path}: ${message}`;
+      })
+      .join("\n");
+  } catch {
+    return null;
+  }
+}
+
 export async function runServiceUninstall(params: {
   serviceNoun: string;
   service: GatewayService;
@@ -165,6 +186,15 @@ export async function runServiceStart(params: {
     });
     return;
   }
+
+  const configError = await getConfigValidationError();
+  if (configError) {
+    fail(
+      `${params.serviceNoun} aborted: config is invalid.\n${configError}\nFix the config and retry, or run "powerdirector doctor" to repair.`,
+    );
+    return;
+  }
+
   try {
     await params.service.restart({ env: process.env, stdout });
   } catch (err) {
@@ -261,6 +291,14 @@ export async function runServiceRestart(params: {
       json,
       emit,
     });
+    return false;
+  }
+
+  const configError = await getConfigValidationError();
+  if (configError) {
+    fail(
+      `${params.serviceNoun} aborted: config is invalid.\n${configError}\nFix the config and retry, or run "powerdirector doctor" to repair.`,
+    );
     return false;
   }
 

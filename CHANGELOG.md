@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Gateway/UI network interface probing hardened to avoid `uv_interface_addresses` crashes on restricted hosts, unblocking UI build of `/api/instances`.
 - Agent workspace file boundaries hardened: `agents.files.get/set` now reject symlinks, hardlinks, and any path that resolves outside the workspace; links are treated as missing in listings and guarded by new unit tests.
 - SSRF guardrails: IPv6 multicast targets (`ff00::/8`) are now blocked by the private-address classifier to prevent redirect-based SSRF.
+- Browser navigation SSRF hardening now validates redirect chains and final navigation targets in Playwright flows (`createPageViaPlaywright`, `navigateViaPlaywright`) and blocks remote CDP tab-open fallback when strict SSRF policy requires redirect-hop inspection.
+- Daemon lifecycle hardening: `gateway start`/`gateway restart` now run config-validation preflight checks and fail fast with explicit invalid-path errors instead of attempting a restart with a broken config.
+- Gateway run-loop hardening: post-restart startup failures are now caught without killing the process, and the gateway lock is released on failed restart attempts so daemon restart/stop can recover cleanly.
 - Release/hotfix workflows tightened: skills now require copying the personal `~/powerdirector/powerdirector.config.json` into the test instance, pinning test ports to gateway/UI `4007` and terminal `4008`, and running release/hotfix-focused QA via agent-browser (minimum 3 default-model exchanges, chat render verification, zero errors, and validation that shipped fixes are observable in behavior/UI).
 
 ## [1.1.0-beta.3] - 2026-03-15

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { withFetchPreconnect } from "../test-utils/fetch-mock.js";
 import * as cdpModule from "./cdp.js";
+import { InvalidBrowserNavigationUrlError } from "./navigation-guard.js";
 import * as pwAiModule from "./pw-ai-module.js";
 import type { BrowserServerState } from "./server-context.js";
 import "./server-context.chrome-test-harness.js";
@@ -215,6 +216,22 @@ describe("browser server-context remote profile tab operations", () => {
     const tabs = await remote.listTabs();
     expect(tabs.map((t) => t.targetId)).toEqual(["T1"]);
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("blocks remote CDP tab-open fallback under strict SSRF policy", async () => {
+    vi.spyOn(pwAiModule, "getPwAiModule").mockResolvedValue(null);
+
+    const fetchMock = makeUnexpectedFetchMock();
+    global.fetch = withFetchPreconnect(fetchMock);
+    const state = makeState("remote");
+    state.resolved.ssrfPolicy = { allowPrivateNetwork: false };
+    const ctx = createBrowserRouteContext({ getState: () => state });
+    const remote = ctx.forProfile("remote");
+
+    await expect(remote.openTab("https://example.com")).rejects.toBeInstanceOf(
+      InvalidBrowserNavigationUrlError,
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

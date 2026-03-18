@@ -2,7 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import { SsrFBlockedError, type LookupFn } from "../infra/net/ssrf.js";
 import {
   assertBrowserNavigationAllowed,
+  assertBrowserNavigationRedirectChainAllowed,
+  assertBrowserNavigationResultAllowed,
   InvalidBrowserNavigationUrlError,
+  requiresInspectableBrowserNavigationRedirects,
 } from "./navigation-guard.js";
 
 function createLookupFn(address: string): LookupFn {
@@ -68,5 +71,67 @@ describe("browser navigation guard", () => {
         url: "not a url",
       }),
     ).rejects.toBeInstanceOf(InvalidBrowserNavigationUrlError);
+  });
+
+  it("allows about:blank as a non-network result URL", async () => {
+    await expect(
+      assertBrowserNavigationResultAllowed({
+        url: "about:blank",
+      }),
+    ).resolves.toBeUndefined();
+  });
+
+  it("blocks private intermediate redirect hops", async () => {
+    const publicLookup = createLookupFn("93.184.216.34");
+    const privateLookup = createLookupFn("127.0.0.1");
+    const finalRequest = {
+      url: () => "https://public.example/final",
+      redirectedFrom: () => ({
+        url: () => "http://private.example/internal",
+        redirectedFrom: () => ({
+          url: () => "https://public.example/start",
+          redirectedFrom: () => null,
+        }),
+      }),
+    };
+
+    await expect(
+      assertBrowserNavigationRedirectChainAllowed({
+        request: finalRequest,
+        lookupFn: vi.fn(async (hostname: string) =>
+          hostname === "private.example"
+            ? privateLookup(hostname, { all: true })
+            : publicLookup(hostname, { all: true }),
+        ) as unknown as LookupFn,
+      }),
+    ).rejects.toBeInstanceOf(SsrFBlockedError);
+  });
+
+  it("allows redirect chains when each hop resolves publicly", async () => {
+    const lookupFn = createLookupFn("93.184.216.34");
+    const finalRequest = {
+      url: () => "https://public.example/final",
+      redirectedFrom: () => ({
+        url: () => "https://public.example/middle",
+        redirectedFrom: () => ({
+          url: () => "https://public.example/start",
+          redirectedFrom: () => null,
+        }),
+      }),
+    };
+
+    await expect(
+      assertBrowserNavigationRedirectChainAllowed({
+        request: finalRequest,
+        lookupFn,
+      }),
+    ).resolves.toBeUndefined();
+  });
+
+  it("requires redirect-hop inspection unless private-network navigation is enabled", () => {
+    expect(requiresInspectableBrowserNavigationRedirects()).toBe(true);
+    expect(requiresInspectableBrowserNavigationRedirects({ allowPrivateNetwork: true })).toBe(
+      false,
+    );
   });
 });

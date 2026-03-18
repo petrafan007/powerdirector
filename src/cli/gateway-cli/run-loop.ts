@@ -23,10 +23,19 @@ export async function runGatewayLoop(params: {
   start: () => Promise<Awaited<ReturnType<typeof startGatewayServer>>>;
   runtime: typeof defaultRuntime;
 }) {
-  const lock = await acquireGatewayLock();
+  let lock = await acquireGatewayLock();
   let server: Awaited<ReturnType<typeof startGatewayServer>> | null = null;
   let shuttingDown = false;
   let restartResolver: (() => void) | null = null;
+  let isFirstStart = true;
+
+  const releaseLockIfHeld = async (): Promise<void> => {
+    if (!lock) {
+      return;
+    }
+    await lock.release();
+    lock = null;
+  };
 
   const cleanupSignals = () => {
     process.removeListener("SIGTERM", onSigterm);
@@ -152,13 +161,30 @@ export async function runGatewayLoop(params: {
     // eslint-disable-next-line no-constant-condition
     while (true) {
       onIteration();
-      server = await params.start();
+      try {
+        if (!lock) {
+          lock = await acquireGatewayLock();
+        }
+        server = await params.start();
+        isFirstStart = false;
+      } catch (err) {
+        if (isFirstStart) {
+          throw err;
+        }
+        server = null;
+        await releaseLockIfHeld();
+        const errMsg = err instanceof Error ? err.message : String(err);
+        const errStack = err instanceof Error && err.stack ? `\n${err.stack}` : "";
+        gatewayLog.error(
+          `gateway startup failed: ${errMsg}. Process will stay alive; fix the issue and restart.${errStack}`,
+        );
+      }
       await new Promise<void>((resolve) => {
         restartResolver = resolve;
       });
     }
   } finally {
-    await lock?.release();
+    await releaseLockIfHeld();
     cleanupSignals();
   }
 }
