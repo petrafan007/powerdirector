@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Config loader now fails closed: any validation/load error halts startup; when both a gateway token and password are present, `gateway.auth.mode` is mandatory and enforced before boot. Implemented via `validateConfigObjectRaw` in `config-manager`.
 - Sandbox security tightened: Docker sandbox requests using `network: container:<id>` are blocked by default (host mode was already blocked) with unit coverage in `validate-sandbox-security.test.ts`.
 - Gateway/UI network interface probing hardened to avoid `uv_interface_addresses` crashes on restricted hosts, unblocking UI build of `/api/instances`.
+- Agent workspace file boundaries hardened: `agents.files.get/set` now reject symlinks, hardlinks, and any path that resolves outside the workspace; links are treated as missing in listings and guarded by new unit tests.
 - Release/hotfix workflows tightened: skills now require copying the personal `~/powerdirector/powerdirector.config.json` into the test instance, pinning test ports to gateway/UI `4007` and terminal `4008`, and running release/hotfix-focused QA via agent-browser (minimum 3 default-model exchanges, chat render verification, zero errors, and validation that shipped fixes are observable in behavior/UI).
 
 ## [1.1.0-beta.3] - 2026-03-15

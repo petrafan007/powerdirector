@@ -61,15 +61,17 @@ const MEMORY_FILE_NAMES = [DEFAULT_MEMORY_FILENAME, DEFAULT_MEMORY_ALT_FILENAME]
 
 const ALLOWED_FILE_NAMES = new Set<string>([...BOOTSTRAP_FILE_NAMES, ...MEMORY_FILE_NAMES]);
 
-function resolveAgentWorkspaceFileOrRespondError(
+async function resolveAgentWorkspaceFileOrRespondError(
   params: Record<string, unknown>,
   respond: RespondFn,
-): {
+): Promise<{
   cfg: ReturnType<typeof loadConfig>;
   agentId: string;
   workspaceDir: string;
+  workspaceRealpath: string;
+  filePath: string;
   name: string;
-} | null {
+} | null> {
   const cfg = loadConfig();
   const rawAgentId = params.agentId;
   const agentId = resolveAgentIdOrError(
@@ -89,23 +91,38 @@ function resolveAgentWorkspaceFileOrRespondError(
     return null;
   }
   const workspaceDir = resolveAgentWorkspaceDir(cfg, agentId);
-  return { cfg, agentId, workspaceDir, name };
+  const workspaceResolved = path.resolve(workspaceDir);
+  const workspaceRealpath = await realpathOrSame(workspaceResolved);
+  const allowedBases = [workspaceResolved, workspaceRealpath];
+  const filePath = path.resolve(workspaceResolved, name);
+  if (!isPathInsideWorkspace(filePath, allowedBases)) {
+    respond(
+      false,
+      undefined,
+      errorShape(ErrorCodes.INVALID_REQUEST, "file path escapes workspace boundary"),
+    );
+    return null;
+  }
+
+  return { cfg, agentId, workspaceDir, workspaceRealpath, filePath, name };
 }
 
 type FileMeta = {
   size: number;
   updatedAtMs: number;
+  linkCount: number;
 };
 
 async function statFile(filePath: string): Promise<FileMeta | null> {
   try {
-    const stat = await fs.stat(filePath);
-    if (!stat.isFile()) {
+    const stat = await fs.lstat(filePath);
+    if (stat.isSymbolicLink() || !stat.isFile()) {
       return null;
     }
     return {
       size: stat.size,
       updatedAtMs: Math.floor(stat.mtimeMs),
+      linkCount: stat.nlink,
     };
   } catch {
     return null;
@@ -184,6 +201,75 @@ function sanitizeIdentityLine(value: string): string {
 
 function resolveOptionalStringParam(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function isPathInsideWorkspace(targetPath: string, allowedBases: string[]): boolean {
+  const normalized = path.resolve(targetPath);
+  return allowedBases.some((base) => normalized === base || normalized.startsWith(`${base}${path.sep}`));
+}
+
+async function realpathOrSame(targetPath: string): Promise<string> {
+  try {
+    return await fs.realpath(targetPath);
+  } catch {
+    return path.resolve(targetPath);
+  }
+}
+
+async function assertWorkspaceFileIsSafe(params: {
+  filePath: string;
+  allowedBases: string[];
+  respond: RespondFn;
+}): Promise<false | { stat: import("node:fs").Stats | null }> {
+  const { filePath, allowedBases, respond } = params;
+
+  const parentReal = await realpathOrSame(path.dirname(filePath));
+  if (!isPathInsideWorkspace(parentReal, allowedBases)) {
+    respond(
+      false,
+      undefined,
+      errorShape(ErrorCodes.INVALID_REQUEST, "refusing to access file outside workspace"),
+    );
+    return false;
+  }
+
+  let lstat: import("node:fs").Stats | null = null;
+  try {
+    lstat = await fs.lstat(filePath);
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException)?.code;
+    if (code === "ENOENT" || code === "ENOTDIR") {
+      return { stat: null };
+    }
+    throw err;
+  }
+
+  if (lstat.isSymbolicLink()) {
+    respond(
+      false,
+      undefined,
+      errorShape(ErrorCodes.INVALID_REQUEST, "symlinked agent workspace files are blocked"),
+    );
+    return false;
+  }
+  if (!isPathInsideWorkspace(await realpathOrSame(filePath), allowedBases)) {
+    respond(
+      false,
+      undefined,
+      errorShape(ErrorCodes.INVALID_REQUEST, "file resolved outside workspace"),
+    );
+    return false;
+  }
+  if (lstat.nlink > 1) {
+    respond(
+      false,
+      undefined,
+      errorShape(ErrorCodes.INVALID_REQUEST, "hardlinked agent workspace files are blocked"),
+    );
+    return false;
+  }
+
+  return { stat: lstat };
 }
 
 async function moveToTrashBestEffort(pathname: string): Promise<void> {
@@ -447,13 +533,27 @@ export const agentsHandlers: GatewayRequestHandlers = {
       );
       return;
     }
-    const resolved = resolveAgentWorkspaceFileOrRespondError(params, respond);
+    const resolved = await resolveAgentWorkspaceFileOrRespondError(params, respond);
     if (!resolved) {
       return;
     }
-    const { agentId, workspaceDir, name } = resolved;
-    const filePath = path.join(workspaceDir, name);
-    const meta = await statFile(filePath);
+    const { agentId, workspaceDir, workspaceRealpath, filePath, name } = resolved;
+    const allowedBases = [path.resolve(workspaceDir), workspaceRealpath];
+
+    const safety = await assertWorkspaceFileIsSafe({
+      filePath,
+      workspaceRealpath,
+      allowedBases,
+      respond,
+    });
+    if (!safety) {
+      return;
+    }
+
+    const meta =
+      safety.stat != null
+        ? { size: safety.stat.size, updatedAtMs: Math.floor(safety.stat.mtimeMs) }
+        : await statFile(filePath);
     if (!meta) {
       respond(
         true,
@@ -498,13 +598,25 @@ export const agentsHandlers: GatewayRequestHandlers = {
       );
       return;
     }
-    const resolved = resolveAgentWorkspaceFileOrRespondError(params, respond);
+    const resolved = await resolveAgentWorkspaceFileOrRespondError(params, respond);
     if (!resolved) {
       return;
     }
-    const { agentId, workspaceDir, name } = resolved;
+    const { agentId, workspaceDir, workspaceRealpath, filePath, name } = resolved;
+    const allowedBases = [path.resolve(workspaceDir), workspaceRealpath];
+
     await fs.mkdir(workspaceDir, { recursive: true });
-    const filePath = path.join(workspaceDir, name);
+
+    const safety = await assertWorkspaceFileIsSafe({
+      filePath,
+      workspaceRealpath,
+      allowedBases,
+      respond,
+    });
+    if (!safety) {
+      return;
+    }
+
     const content = String(params.content ?? "");
     await fs.writeFile(filePath, content, "utf-8");
     const meta = await statFile(filePath);
