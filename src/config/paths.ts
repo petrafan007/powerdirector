@@ -184,7 +184,7 @@ export function resolveConfigPath(
     return resolveUserPath(override, env, homedir);
   }
   const stateOverride = env.POWERDIRECTOR_STATE_DIR?.trim() || env.POWERDIRECTOR_STATE_DIR?.trim();
-  const projectRoot = findProjectRoot();
+  const projectRoot = resolvePowerDirectorRoot();
   const candidates = [
     path.join(stateDir, CONFIG_FILENAME),
     ...LEGACY_CONFIG_FILENAMES.map((name) => path.join(stateDir, name)),
@@ -233,7 +233,7 @@ export function resolveDefaultConfigCandidates(
   }
 
   const candidates: string[] = [];
-  const projectRoot = findProjectRoot();
+  const projectRoot = resolvePowerDirectorRoot();
   if (projectRoot) {
     candidates.push(path.join(projectRoot, CONFIG_FILENAME));
     candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
