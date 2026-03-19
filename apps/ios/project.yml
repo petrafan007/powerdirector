@@ -1,6 +1,6 @@
-name: OpenClaw
+name: PowerDirector
 options:
-  bundleIdPrefix: ai.openclaw
+  bundleIdPrefix: ai.powerdirector
   deploymentTarget:
     iOS: "18.0"
   xcodeVersion: "16.0"
@@ -8,25 +8,35 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
+    ENABLE_APP_INTENTS_METADATA_GENERATION: NO
 
 packages:
-  OpenClawKit:
-    path: ../shared/OpenClawKit
+  PowerDirectorKit:
+    path: ../shared/PowerDirectorKit
   Swabble:
     path: ../../Swabble
 
 schemes:
-  OpenClaw:
+  PowerDirector:
     shared: true
     build:
       targets:
-        OpenClaw: all
+        PowerDirector: all
     test:
       targets:
-        - OpenClawTests
+        - PowerDirectorTests
+        - PowerDirectorLogicTests
+  PowerDirectorLogicTests:
+    shared: true
+    build:
+      targets:
+        PowerDirectorLogicTests: all
+    test:
+      targets:
+        - PowerDirectorLogicTests
 
 targets:
-  OpenClaw:
+  PowerDirector:
     type: application
     platform: iOS
     configFiles:
@@ -35,14 +45,16 @@ targets:
     sources:
       - path: Sources
     dependencies:
-      - target: OpenClawShareExtension
+      - target: PowerDirectorShareExtension
         embed: true
-      - target: OpenClawWatchApp
-      - package: OpenClawKit
-      - package: OpenClawKit
-        product: OpenClawChatUI
-      - package: OpenClawKit
-        product: OpenClawProtocol
+      - target: PowerDirectorActivityWidget
+        embed: true
+      - target: PowerDirectorWatchApp
+      - package: PowerDirectorKit
+      - package: PowerDirectorKit
+        product: PowerDirectorChatUI
+      - package: PowerDirectorKit
+        product: PowerDirectorProtocol
       - package: Swabble
         product: SwabbleKit
       - sdk: AppIntents.framework
@@ -75,41 +87,50 @@ targets:
     settings:
       base:
         CODE_SIGN_IDENTITY: "Apple Development"
-        CODE_SIGN_ENTITLEMENTS: Sources/OpenClaw.entitlements
-        CODE_SIGN_STYLE: "$(OPENCLAW_CODE_SIGN_STYLE)"
-        DEVELOPMENT_TEAM: "$(OPENCLAW_DEVELOPMENT_TEAM)"
-        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENCLAW_APP_BUNDLE_ID)"
-        PROVISIONING_PROFILE_SPECIFIER: "$(OPENCLAW_APP_PROFILE)"
+        CODE_SIGN_ENTITLEMENTS: Sources/PowerDirector.entitlements
+        CODE_SIGN_STYLE: "$(POWERDIRECTOR_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(POWERDIRECTOR_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(POWERDIRECTOR_APP_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(POWERDIRECTOR_APP_PROFILE)"
+        TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
+        SUPPORTS_LIVE_ACTIVITIES: YES
         ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
     info:
       path: Sources/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw
+        CFBundleDisplayName: PowerDirector
         CFBundleIconName: AppIcon
         CFBundleURLTypes:
-          - CFBundleURLName: ai.openclaw.ios
+          - CFBundleURLName: ai.powerdirector.ios
             CFBundleURLSchemes:
-              - openclaw
-        CFBundleShortVersionString: "2026.2.19"
-        CFBundleVersion: "20260219"
+              - powerdirector
+        CFBundleShortVersionString: "2026.3.8"
+        CFBundleVersion: "20260308"
         UILaunchScreen: {}
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         UIBackgroundModes:
           - audio
           - remote-notification
-        NSLocalNetworkUsageDescription: OpenClaw discovers and connects to your OpenClaw gateway on the local network.
+        BGTaskSchedulerPermittedIdentifiers:
+          - ai.powerdirector.ios.bgrefresh
+        NSLocalNetworkUsageDescription: PowerDirector discovers and connects to your PowerDirector gateway on the local network.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoadsInWebContent: true
         NSBonjourServices:
-          - _openclaw-gw._tcp
-        NSCameraUsageDescription: OpenClaw can capture photos or short video clips when requested via the gateway.
-        NSLocationWhenInUseUsageDescription: OpenClaw uses your location when you allow location sharing.
-        NSLocationAlwaysAndWhenInUseUsageDescription: OpenClaw can share your location in the background when you enable Always.
-        NSMicrophoneUsageDescription: OpenClaw needs microphone access for voice wake.
-        NSSpeechRecognitionUsageDescription: OpenClaw uses on-device speech recognition for voice wake.
+          - _powerdirector-gw._tcp
+        NSCameraUsageDescription: PowerDirector can capture photos or short video clips when requested via the gateway.
+        NSLocationWhenInUseUsageDescription: PowerDirector uses your location when you allow location sharing.
+        NSLocationAlwaysAndWhenInUseUsageDescription: PowerDirector can share your location in the background when you enable Always.
+        NSMicrophoneUsageDescription: PowerDirector needs microphone access for voice wake.
+        NSMotionUsageDescription: PowerDirector may use motion data to support device-aware interactions and automations.
+        NSPhotoLibraryUsageDescription: PowerDirector needs photo library access when you choose existing photos to share with your assistant.
+        NSSpeechRecognitionUsageDescription: PowerDirector uses on-device speech recognition for voice wake.
+        NSSupportsLiveActivities: true
+        ITSAppUsesNonExemptEncryption: false
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
@@ -121,7 +142,7 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
 
-  OpenClawShareExtension:
+  PowerDirectorShareExtension:
     type: app-extension
     platform: iOS
     configFiles:
@@ -130,22 +151,25 @@ targets:
     sources:
       - path: ShareExtension
     dependencies:
-      - package: OpenClawKit
+      - package: PowerDirectorKit
+      - sdk: AppIntents.framework
     settings:
       base:
         CODE_SIGN_IDENTITY: "Apple Development"
-        CODE_SIGN_STYLE: "$(OPENCLAW_CODE_SIGN_STYLE)"
-        DEVELOPMENT_TEAM: "$(OPENCLAW_DEVELOPMENT_TEAM)"
-        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENCLAW_SHARE_BUNDLE_ID)"
-        PROVISIONING_PROFILE_SPECIFIER: "$(OPENCLAW_SHARE_PROFILE)"
+        CODE_SIGN_STYLE: "$(POWERDIRECTOR_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(POWERDIRECTOR_DEVELOPMENT_TEAM)"
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        PRODUCT_BUNDLE_IDENTIFIER: "$(POWERDIRECTOR_SHARE_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(POWERDIRECTOR_SHARE_PROFILE)"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
     info:
       path: ShareExtension/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw Share
-        CFBundleShortVersionString: "2026.2.19"
-        CFBundleVersion: "20260219"
+        CFBundleDisplayName: PowerDirector Share
+        CFBundleShortVersionString: "2026.3.8"
+        CFBundleVersion: "20260308"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionPrincipalClass: "$(PRODUCT_MODULE_NAME).ShareViewController"
@@ -156,36 +180,70 @@ targets:
               NSExtensionActivationSupportsImageWithMaxCount: 10
               NSExtensionActivationSupportsMovieWithMaxCount: 1
 
-  OpenClawWatchApp:
+  PowerDirectorActivityWidget:
+    type: app-extension
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: ActivityWidget
+      - path: Sources/LiveActivity/PowerDirectorActivityAttributes.swift
+    dependencies:
+      - sdk: WidgetKit.framework
+      - sdk: ActivityKit.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(POWERDIRECTOR_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(POWERDIRECTOR_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(POWERDIRECTOR_ACTIVITY_WIDGET_BUNDLE_ID)"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        SUPPORTS_LIVE_ACTIVITIES: YES
+    info:
+      path: ActivityWidget/Info.plist
+      properties:
+        CFBundleDisplayName: PowerDirector Activity
+        CFBundleShortVersionString: "2026.3.8"
+        CFBundleVersion: "20260308"
+        NSSupportsLiveActivities: true
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+  PowerDirectorWatchApp:
     type: application.watchapp2
     platform: watchOS
     deploymentTarget: "11.0"
     sources:
       - path: WatchApp
     dependencies:
-      - target: OpenClawWatchExtension
+      - target: PowerDirectorWatchExtension
     configFiles:
       Debug: Config/Signing.xcconfig
       Release: Config/Signing.xcconfig
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENCLAW_WATCH_APP_BUNDLE_ID)"
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        PRODUCT_BUNDLE_IDENTIFIER: "$(POWERDIRECTOR_WATCH_APP_BUNDLE_ID)"
     info:
       path: WatchApp/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw
-        CFBundleShortVersionString: "2026.2.19"
-        CFBundleVersion: "20260219"
-        WKCompanionAppBundleIdentifier: "$(OPENCLAW_APP_BUNDLE_ID)"
+        CFBundleDisplayName: PowerDirector
+        CFBundleShortVersionString: "2026.3.8"
+        CFBundleVersion: "20260308"
+        WKCompanionAppBundleIdentifier: "$(POWERDIRECTOR_APP_BUNDLE_ID)"
         WKWatchKitApp: true
 
-  OpenClawWatchExtension:
+  PowerDirectorWatchExtension:
     type: watchkit2-extension
     platform: watchOS
     deploymentTarget: "11.0"
     sources:
       - path: WatchExtension/Sources
     dependencies:
+      - sdk: AppIntents.framework
       - sdk: WatchConnectivity.framework
       - sdk: UserNotifications.framework
     configFiles:
@@ -193,38 +251,73 @@ targets:
       Release: Config/Signing.xcconfig
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: "$(OPENCLAW_WATCH_EXTENSION_BUNDLE_ID)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(POWERDIRECTOR_WATCH_EXTENSION_BUNDLE_ID)"
     info:
       path: WatchExtension/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw
-        CFBundleShortVersionString: "2026.2.19"
-        CFBundleVersion: "20260219"
+        CFBundleDisplayName: PowerDirector
+        CFBundleShortVersionString: "2026.3.8"
+        CFBundleVersion: "20260308"
         NSExtension:
           NSExtensionAttributes:
-            WKAppBundleIdentifier: "$(OPENCLAW_WATCH_APP_BUNDLE_ID)"
+            WKAppBundleIdentifier: "$(POWERDIRECTOR_WATCH_APP_BUNDLE_ID)"
           NSExtensionPointIdentifier: com.apple.watchkit
 
-  OpenClawTests:
+  PowerDirectorTests:
     type: bundle.unit-test
     platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
     sources:
       - path: Tests
+        excludes:
+          - Logic
     dependencies:
-      - target: OpenClaw
+      - target: PowerDirector
       - package: Swabble
         product: SwabbleKit
       - sdk: AppIntents.framework
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ai.openclaw.ios.tests
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(POWERDIRECTOR_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(POWERDIRECTOR_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.powerdirector.ios.tests
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/OpenClaw.app/OpenClaw"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/PowerDirector.app/PowerDirector"
         BUNDLE_LOADER: "$(TEST_HOST)"
     info:
       path: Tests/Info.plist
       properties:
-        CFBundleDisplayName: OpenClawTests
-        CFBundleShortVersionString: "2026.2.19"
-        CFBundleVersion: "20260219"
+        CFBundleDisplayName: PowerDirectorTests
+        CFBundleShortVersionString: "2026.3.8"
+        CFBundleVersion: "20260308"
+
+  PowerDirectorLogicTests:
+    type: bundle.unit-test
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: Tests/Logic
+    dependencies:
+      - package: PowerDirectorKit
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(POWERDIRECTOR_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(POWERDIRECTOR_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.powerdirector.ios.logic-tests
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+    info:
+      path: Tests/Info.plist
+      properties:
+        CFBundleDisplayName: PowerDirectorLogicTests
+        CFBundleShortVersionString: "2026.3.8"
+        CFBundleVersion: "20260308"

@@ -1,9 +1,10 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { resolveBrowserConfig } from "./config.js";
+import { resolveBrowserConfig, resolveProfile } from "./config.js";
 import {
   refreshResolvedBrowserConfigFromDisk,
   resolveBrowserProfileWithHotReload,
 } from "./resolved-config-refresh.js";
+import type { BrowserServerState } from "./server-context.types.js";
 
 let cfgProfiles: Record<string, { cdpPort?: number; cdpUrl?: string; color?: string }> = {};
 
@@ -165,5 +166,43 @@ describe("server-context hot-reload profiles", () => {
       mode: "cached",
     });
     expect(Object.keys(state.resolved.profiles)).toContain("desktop");
+  });
+
+  it("marks existing runtime state for reconcile when profile invariants change", async () => {
+    const cfg = loadConfig();
+    const resolved = resolveBrowserConfig(cfg.browser, cfg);
+    const powerdirectorProfile = resolveProfile(resolved, "powerdirector");
+    expect(powerdirectorProfile).toBeTruthy();
+    const state: BrowserServerState = {
+      server: null,
+      port: 18791,
+      resolved,
+      profiles: new Map([
+        [
+          "powerdirector",
+          {
+            profile: powerdirectorProfile!,
+            running: { pid: 123 } as never,
+            lastTargetId: "tab-1",
+            reconcile: null,
+          },
+        ],
+      ]),
+    };
+
+    cfgProfiles.powerdirector = { cdpPort: 19999, color: "#FF4500" };
+    cachedConfig = null;
+
+    refreshResolvedBrowserConfigFromDisk({
+      current: state,
+      refreshConfigFromDisk: true,
+      mode: "cached",
+    });
+
+    const runtime = state.profiles.get("powerdirector");
+    expect(runtime).toBeTruthy();
+    expect(runtime?.profile.cdpPort).toBe(19999);
+    expect(runtime?.lastTargetId).toBeNull();
+    expect(runtime?.reconcile?.reason).toContain("cdpPort");
   });
 });

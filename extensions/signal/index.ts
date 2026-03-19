@@ -1,5 +1,5 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/signal";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/signal";
 import { signalPlugin } from "./src/channel.js";
 import { setSignalRuntime } from "./src/runtime.js";
 

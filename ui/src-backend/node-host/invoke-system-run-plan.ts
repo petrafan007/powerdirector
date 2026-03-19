@@ -6,7 +6,7 @@
  * runtimes in addition to the POSIX shell and node interpreters already
  * handled by the core allowlist path.
  *
- * Ported from upstream OpenClaw v2026.3.8 (commit cf3a479b).
+ * Ported from upstream PowerDirector v2026.3.8 (commit cf3a479b).
  */
 
 import fs from "node:fs";

@@ -1,5 +1,5 @@
-import type { ChannelPlugin, PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { ChannelPlugin, PowerDirectorPluginApi } from "powerdirector/plugin-sdk/irc";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/irc";
 import { ircPlugin } from "./src/channel.js";
 import { setIrcRuntime } from "./src/runtime.js";
 

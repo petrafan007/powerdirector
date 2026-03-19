@@ -1,4 +1,4 @@
-import type { LookupFn, SsrFPolicy } from "powerdirector/plugin-sdk";
+import type { LookupFn, SsrFPolicy } from "powerdirector/plugin-sdk/tlon";
 import { UrbitHttpError } from "./errors.js";
 import { urbitFetch } from "./fetch.js";
 

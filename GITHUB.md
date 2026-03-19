@@ -15,7 +15,7 @@ This revision is the concrete plan for shipping *PowerDirector* to GitHub from t
 1) **Full backup (pre-flight, no git yet)**
    - Tarball the current runtime to `<runtime-dir>_backup_$(date +%Y%m%d_%H%M%S).tar.gz`
    - Exclude: `node_modules`, `ui/.next`, `dist`, `logs`, `nohup.out`, `*.log`, `gemini_tmp_images`, `media` (large), `powerdirector.db` (optional: include separate secure copy if desired)
-   - Include: `src`, `ui`, `config`, `docs`, `scripts`, `tests`, `openclaw-source`, `package-lock.json`, `powerdirector.config.json`, `powerdirector.config.json.bak`, `LICENSE`, `README.md`, `GITHUB.md`, `RELEASE_NOTES_*`, `TASKS.md`, `QA.md`
+   - Include: `src`, `ui`, `config`, `docs`, `scripts`, `tests`, `powerdirector-source`, `package-lock.json`, `powerdirector.config.json`, `powerdirector.config.json.bak`, `LICENSE`, `README.md`, `GITHUB.md`, `RELEASE_NOTES_*`, `TASKS.md`, `QA.md`
 2) **Stage repo workspace**
    - Create `<repo-source-dir>`
    - `rsync` sanitized source from `<runtime-dir>/` into `<repo-source-dir>/`

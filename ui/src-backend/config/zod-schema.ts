@@ -779,4 +779,4 @@ export const PowerDirectorSchema = z
   });
 
 // Keep the legacy alias for backward compatibility.
-export const OpenClawSchema = PowerDirectorSchema;
+export const PowerDirectorSchema = PowerDirectorSchema;

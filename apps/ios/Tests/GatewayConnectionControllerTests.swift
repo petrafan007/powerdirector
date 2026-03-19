@@ -1,33 +1,8 @@
-import OpenClawKit
+import PowerDirectorKit
 import Foundation
 import Testing
 import UIKit
-@testable import OpenClaw
-
-private func withUserDefaults<T>(_ updates: [String: Any?], _ body: () throws -> T) rethrows -> T {
-    let defaults = UserDefaults.standard
-    var snapshot: [String: Any?] = [:]
-    for key in updates.keys {
-        snapshot[key] = defaults.object(forKey: key)
-    }
-    for (key, value) in updates {
-        if let value {
-            defaults.set(value, forKey: key)
-        } else {
-            defaults.removeObject(forKey: key)
-        }
-    }
-    defer {
-        for (key, value) in snapshot {
-            if let value {
-                defaults.set(value, forKey: key)
-            } else {
-                defaults.removeObject(forKey: key)
-            }
-        }
-    }
-    return try body()
-}
+@testable import PowerDirector
 
 @Suite(.serialized) struct GatewayConnectionControllerTests {
     @Test @MainActor func resolvedDisplayNameSetsDefaultWhenMissing() {
@@ -49,65 +24,84 @@ private func withUserDefaults<T>(_ updates: [String: Any?], _ body: () throws ->
             "node.instanceId": "ios-test",
             "node.displayName": "Test Node",
             "camera.enabled": true,
-            "location.enabledMode": OpenClawLocationMode.always.rawValue,
+            "location.enabledMode": PowerDirectorLocationMode.always.rawValue,
             VoiceWakePreferences.enabledKey: true,
         ]) {
             let appModel = NodeAppModel()
             let controller = GatewayConnectionController(appModel: appModel, startDiscovery: false)
             let caps = Set(controller._test_currentCaps())
 
-            #expect(caps.contains(OpenClawCapability.canvas.rawValue))
-            #expect(caps.contains(OpenClawCapability.screen.rawValue))
-            #expect(caps.contains(OpenClawCapability.camera.rawValue))
-            #expect(caps.contains(OpenClawCapability.location.rawValue))
-            #expect(caps.contains(OpenClawCapability.voiceWake.rawValue))
+            #expect(caps.contains(PowerDirectorCapability.canvas.rawValue))
+            #expect(caps.contains(PowerDirectorCapability.screen.rawValue))
+            #expect(caps.contains(PowerDirectorCapability.camera.rawValue))
+            #expect(caps.contains(PowerDirectorCapability.location.rawValue))
+            #expect(caps.contains(PowerDirectorCapability.voiceWake.rawValue))
         }
     }
 
     @Test @MainActor func currentCommandsIncludeLocationWhenEnabled() {
         withUserDefaults([
             "node.instanceId": "ios-test",
-            "location.enabledMode": OpenClawLocationMode.whileUsing.rawValue,
+            "location.enabledMode": PowerDirectorLocationMode.whileUsing.rawValue,
         ]) {
             let appModel = NodeAppModel()
             let controller = GatewayConnectionController(appModel: appModel, startDiscovery: false)
             let commands = Set(controller._test_currentCommands())
 
-            #expect(commands.contains(OpenClawLocationCommand.get.rawValue))
+            #expect(commands.contains(PowerDirectorLocationCommand.get.rawValue))
         }
     }
     @Test @MainActor func currentCommandsExcludeDangerousSystemExecCommands() {
         withUserDefaults([
             "node.instanceId": "ios-test",
             "camera.enabled": true,
-            "location.enabledMode": OpenClawLocationMode.whileUsing.rawValue,
+            "location.enabledMode": PowerDirectorLocationMode.whileUsing.rawValue,
         ]) {
             let appModel = NodeAppModel()
             let controller = GatewayConnectionController(appModel: appModel, startDiscovery: false)
             let commands = Set(controller._test_currentCommands())
 
             // iOS should expose notify, but not host shell/exec-approval commands.
-            #expect(commands.contains(OpenClawSystemCommand.notify.rawValue))
-            #expect(!commands.contains(OpenClawSystemCommand.run.rawValue))
-            #expect(!commands.contains(OpenClawSystemCommand.which.rawValue))
-            #expect(!commands.contains(OpenClawSystemCommand.execApprovalsGet.rawValue))
-            #expect(!commands.contains(OpenClawSystemCommand.execApprovalsSet.rawValue))
+            #expect(commands.contains(PowerDirectorSystemCommand.notify.rawValue))
+            #expect(!commands.contains(PowerDirectorSystemCommand.run.rawValue))
+            #expect(!commands.contains(PowerDirectorSystemCommand.which.rawValue))
+            #expect(!commands.contains(PowerDirectorSystemCommand.execApprovalsGet.rawValue))
+            #expect(!commands.contains(PowerDirectorSystemCommand.execApprovalsSet.rawValue))
         }
     }
 
     @Test @MainActor func loadLastConnectionReadsSavedValues() {
-        withUserDefaults([:]) {
-            GatewaySettingsStore.saveLastGatewayConnectionManual(
-                host: "gateway.example.com",
-                port: 443,
-                useTLS: true,
-                stableID: "manual|gateway.example.com|443")
-            let loaded = GatewaySettingsStore.loadLastGatewayConnection()
-            #expect(loaded == .manual(host: "gateway.example.com", port: 443, useTLS: true, stableID: "manual|gateway.example.com|443"))
+        let prior = KeychainStore.loadString(service: "ai.powerdirector.gateway", account: "lastConnection")
+        defer {
+            if let prior {
+                _ = KeychainStore.saveString(prior, service: "ai.powerdirector.gateway", account: "lastConnection")
+            } else {
+                _ = KeychainStore.delete(service: "ai.powerdirector.gateway", account: "lastConnection")
+            }
         }
+        _ = KeychainStore.delete(service: "ai.powerdirector.gateway", account: "lastConnection")
+
+        GatewaySettingsStore.saveLastGatewayConnectionManual(
+            host: "gateway.example.com",
+            port: 443,
+            useTLS: true,
+            stableID: "manual|gateway.example.com|443")
+        let loaded = GatewaySettingsStore.loadLastGatewayConnection()
+        #expect(loaded == .manual(host: "gateway.example.com", port: 443, useTLS: true, stableID: "manual|gateway.example.com|443"))
     }
 
     @Test @MainActor func loadLastConnectionReturnsNilForInvalidData() {
+        let prior = KeychainStore.loadString(service: "ai.powerdirector.gateway", account: "lastConnection")
+        defer {
+            if let prior {
+                _ = KeychainStore.saveString(prior, service: "ai.powerdirector.gateway", account: "lastConnection")
+            } else {
+                _ = KeychainStore.delete(service: "ai.powerdirector.gateway", account: "lastConnection")
+            }
+        }
+        _ = KeychainStore.delete(service: "ai.powerdirector.gateway", account: "lastConnection")
+
+        // Plant legacy UserDefaults with invalid host/port to exercise migration + validation.
         withUserDefaults([
             "gateway.last.kind": "manual",
             "gateway.last.host": "",

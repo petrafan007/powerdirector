@@ -1,6 +1,6 @@
-import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.ts";
-import type { MsgContext } from "../auto-reply/templating.ts";
-import type { PowerDirectorConfig } from "../config/config.ts";
+import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.js";
+import type { MsgContext } from "../auto-reply/templating.js";
+import type { PowerDirectorConfig } from "../config/config.js";
 import { formatLinkUnderstandingBody } from "./format.js";
 import { runLinkUnderstanding } from "./runner.js";
 

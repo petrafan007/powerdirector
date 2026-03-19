@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import type { PluginRuntime } from "powerdirector/plugin-sdk";
+import type { PluginRuntime } from "powerdirector/plugin-sdk/msteams";
 
 export const msteamsRuntimeStub = {
   state: {

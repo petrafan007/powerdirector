@@ -59,6 +59,19 @@ describe("agent delivery helpers", () => {
     expect(resolved.resolvedTo).toBe("+1999");
   });
 
+  it("does not inject a default deliverable channel when session has none", () => {
+    const plan = resolveAgentDeliveryPlan({
+      sessionEntry: undefined,
+      requestedChannel: "last",
+      explicitTo: undefined,
+      accountId: undefined,
+      wantsDelivery: true,
+    });
+
+    expect(plan.resolvedChannel).toBe("webchat");
+    expect(plan.deliveryTargetMode).toBeUndefined();
+  });
+
   it("skips outbound target resolution when explicit target validation is disabled", () => {
     const plan = resolveAgentDeliveryPlan({
       sessionEntry: {
@@ -84,41 +97,40 @@ describe("agent delivery helpers", () => {
     expect(resolved.resolvedTo).toBe("+1555");
   });
 
-  it("passes normalized turnSourceChannel through to delivery target resolution", () => {
-    // When a turn-source channel is provided, the plan should use it (not the session lastChannel).
-    // The session was last active on telegram, but the turn came from whatsapp.
+  it("prefers turn-source delivery context over session last route", () => {
     const plan = resolveAgentDeliveryPlan({
       sessionEntry: {
         sessionId: "s4",
         updatedAt: 4,
-        deliveryContext: { channel: "telegram", to: "tg-user" },
+        deliveryContext: { channel: "slack", to: "U_WRONG", accountId: "wrong" },
       },
       requestedChannel: "last",
-      wantsDelivery: true,
       turnSourceChannel: "whatsapp",
-      turnSourceTo: "+1555",
-      turnSourceAccountId: "wa-acct",
+      turnSourceTo: "+17775550123",
+      turnSourceAccountId: "work",
+      accountId: undefined,
+      wantsDelivery: true,
     });
 
-    // With turnSourceChannel pinned to whatsapp, channel must resolve to whatsapp
     expect(plan.resolvedChannel).toBe("whatsapp");
-    expect(plan.baseDelivery.channel).toBe("whatsapp");
-    expect(plan.baseDelivery.to).toBe("+1555");
+    expect(plan.resolvedTo).toBe("+17775550123");
+    expect(plan.resolvedAccountId).toBe("work");
   });
 
-  it("ignores invalid turnSourceChannel values (non-deliverable channels)", () => {
+  it("does not reuse mutable session to when only turnSourceChannel is provided", () => {
     const plan = resolveAgentDeliveryPlan({
       sessionEntry: {
         sessionId: "s5",
         updatedAt: 5,
-        deliveryContext: { channel: "whatsapp", to: "+1555" },
+        deliveryContext: { channel: "slack", to: "U_WRONG" },
       },
       requestedChannel: "last",
+      turnSourceChannel: "whatsapp",
+      accountId: undefined,
       wantsDelivery: true,
-      turnSourceChannel: "not-a-real-channel",
     });
 
-    // Falls back to session delivery normally
     expect(plan.resolvedChannel).toBe("whatsapp");
+    expect(plan.resolvedTo).toBeUndefined();
   });
 });

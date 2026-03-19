@@ -5,12 +5,14 @@ import path from "node:path";
 import { resolveStateDir } from "../../config/paths.js";
 import { resolvePowerDirectorPackageRoot } from "../../infra/powerdirector-root.js";
 import { readPackageName, readPackageVersion } from "../../infra/package-json.js";
+import { normalizePackageTagInput } from "../../infra/package-tag.js";
 import { trimLogTail } from "../../infra/restart-sentinel.js";
 import { parseSemver } from "../../infra/runtime-guard.js";
 import { fetchNpmTagVersion } from "../../infra/update-check.js";
 import {
   detectGlobalInstallManagerByPresence,
   detectGlobalInstallManagerForRoot,
+  type CommandRunner,
   type GlobalInstallManager,
 } from "../../infra/update-global.js";
 import type { UpdateStepProgress, UpdateStepResult } from "../../infra/update-runner.js";
@@ -22,6 +24,7 @@ import { pathExists } from "../../utils.js";
 export type UpdateCommandOptions = {
   json?: boolean;
   restart?: boolean;
+  dryRun?: boolean;
   channel?: string;
   tag?: string;
   timeout?: string;
@@ -49,29 +52,14 @@ export function parseTimeoutMsOrExit(timeout?: string): number | undefined | nul
   return timeoutMs;
 }
 
-const POWERDIRECTOR_REPO_URL =
-  process.env.POWERDIRECTOR_GIT_REPO_URL?.trim() ||
-  "https://github.com/petrafan007/powerdirector.git";
+const POWERDIRECTOR_REPO_URL = "https://github.com/powerdirector/powerdirector.git";
 const MAX_LOG_CHARS = 8000;
 
 export const DEFAULT_PACKAGE_NAME = "powerdirector";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
 
 export function normalizeTag(value?: string | null): string | null {
-  if (!value) {
-    return null;
-  }
-  const trimmed = value.trim();
-  if (!trimmed) {
-    return null;
-  }
-  if (trimmed.startsWith("powerdirector@")) {
-    return trimmed.slice("powerdirector@".length);
-  }
-  if (trimmed.startsWith(`${DEFAULT_PACKAGE_NAME}@`)) {
-    return trimmed.slice(`${DEFAULT_PACKAGE_NAME}@`.length);
-  }
-  return trimmed;
+  return normalizePackageTagInput(value, ["powerdirector", DEFAULT_PACKAGE_NAME]);
 }
 
 export function normalizeVersionTag(tag: string): string | null {
@@ -213,7 +201,7 @@ export async function ensureGitCheckout(params: {
     const empty = await isEmptyDir(params.dir);
     if (!empty) {
       throw new Error(
-        `POWERDIRECTOR_GIT_DIR points at a non-git directory: ${params.dir}. Set POWERDIRECTOR_GIT_DIR to an empty folder or a powerdirector checkout.`,
+        `POWERDIRECTOR_GIT_DIR points at a non-git directory: ${params.dir}. Set POWERDIRECTOR_GIT_DIR to an empty folder or an powerdirector checkout.`,
       );
     }
 
@@ -238,10 +226,7 @@ export async function resolveGlobalManager(params: {
   installKind: "git" | "package" | "unknown";
   timeoutMs: number;
 }): Promise<GlobalInstallManager> {
-  const runCommand = async (argv: string[], options: { timeoutMs: number }) => {
-    const res = await runCommandWithTimeout(argv, options);
-    return { stdout: res.stdout, stderr: res.stderr, code: res.code };
-  };
+  const runCommand = createGlobalCommandRunner();
 
   if (params.installKind === "package") {
     const detected = await detectGlobalInstallManagerForRoot(
@@ -282,4 +267,11 @@ export async function tryWriteCompletionCache(root: string, jsonMode: boolean): 
     const detail = stderr ? ` (${stderr})` : "";
     defaultRuntime.log(theme.warn(`Completion cache update failed${detail}.`));
   }
+}
+
+export function createGlobalCommandRunner(): CommandRunner {
+  return async (argv, options) => {
+    const res = await runCommandWithTimeout(argv, options);
+    return { stdout: res.stdout, stderr: res.stderr, code: res.code };
+  };
 }

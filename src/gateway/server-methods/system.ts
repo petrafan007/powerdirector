@@ -1,33 +1,13 @@
 import { resolveMainSessionKeyFromConfig } from "../../config/sessions.js";
 import { getLastHeartbeatEvent } from "../../infra/heartbeat-events.js";
 import { setHeartbeatsEnabled } from "../../infra/heartbeat-runner.js";
-import { scheduleGatewaySigusr1Restart } from "../../infra/restart.js";
 import { enqueueSystemEvent, isSystemEventContextChanged } from "../../infra/system-events.js";
 import { listSystemPresence, updateSystemPresence } from "../../infra/system-presence.js";
-import { formatControlPlaneActor, resolveControlPlaneActor } from "../control-plane-audit.js";
 import { ErrorCodes, errorShape } from "../protocol/index.js";
 import { broadcastPresenceSnapshot } from "../server/presence-events.js";
-import { parseRestartRequestParams } from "./restart-request.js";
 import type { GatewayRequestHandlers } from "./types.js";
 
 export const systemHandlers: GatewayRequestHandlers = {
-  "system.restart": ({ params, respond, client, context }) => {
-    const actor = resolveControlPlaneActor(client);
-    const { note, restartDelayMs } = parseRestartRequestParams(params);
-    const restart = scheduleGatewaySigusr1Restart({
-      delayMs: restartDelayMs ?? 1000,
-      reason: "system.restart",
-      audit: {
-        actor: actor.actor,
-        deviceId: actor.deviceId,
-        clientIp: actor.clientIp,
-      },
-    });
-    context.logGateway.info(
-      `system.restart requested ${formatControlPlaneActor(actor)} reason=${note ?? "unspecified"}`,
-    );
-    respond(true, { ok: true, restart }, undefined);
-  },
   "last-heartbeat": ({ respond }) => {
     respond(true, getLastHeartbeatEvent(), undefined);
   },

@@ -1,5 +1,5 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/imessage";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/imessage";
 import { imessagePlugin } from "./src/channel.js";
 import { setIMessageRuntime } from "./src/runtime.js";
 

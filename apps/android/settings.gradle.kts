@@ -14,5 +14,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "OpenClawNodeAndroid"
+rootProject.name = "PowerDirectorNodeAndroid"
 include(":app")
+include(":benchmark")

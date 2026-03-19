@@ -1,10 +1,10 @@
 {
   "name": "@powerdirector/bluebubbles",
-  "version": "2026.2.19",
+  "version": "2026.3.8-beta.1",
   "description": "PowerDirector BlueBubbles channel plugin",
   "type": "module",
-  "devDependencies": {
-    "powerdirector": "workspace:*"
+  "dependencies": {
+    "zod": "^4.3.6"
   },
   "powerdirector": {
     "extensions": [

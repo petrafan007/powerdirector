@@ -1,5 +1,5 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/whatsapp";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/whatsapp";
 import { whatsappPlugin } from "./src/channel.js";
 import { setWhatsAppRuntime } from "./src/runtime.js";
 

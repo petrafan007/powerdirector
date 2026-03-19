@@ -1,5 +1,5 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/slack";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/slack";
 import { slackPlugin } from "./src/channel.js";
 import { setSlackRuntime } from "./src/runtime.js";
 

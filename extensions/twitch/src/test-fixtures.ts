@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
 import { afterEach, beforeEach, vi } from "vitest";
 
 export const BASE_TWITCH_TEST_ACCOUNT = {

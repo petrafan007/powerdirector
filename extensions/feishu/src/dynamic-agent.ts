@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { PowerDirectorConfig, PluginRuntime } from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig, PluginRuntime } from "powerdirector/plugin-sdk/feishu";
 import type { DynamicAgentCreationConfig } from "./types.js";
 
 export type MaybeCreateDynamicAgentResult = {

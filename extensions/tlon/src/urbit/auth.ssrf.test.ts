@@ -1,5 +1,5 @@
-import type { LookupFn } from "powerdirector/plugin-sdk";
-import { SsrFBlockedError } from "powerdirector/plugin-sdk";
+import type { LookupFn } from "powerdirector/plugin-sdk/tlon";
+import { SsrFBlockedError } from "powerdirector/plugin-sdk/tlon";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { authenticate } from "./auth.js";
 

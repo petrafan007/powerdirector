@@ -1,4 +1,4 @@
-import { isBlockedHostnameOrIp } from "powerdirector/plugin-sdk";
+import { isBlockedHostnameOrIp } from "powerdirector/plugin-sdk/tlon";
 
 export type UrbitBaseUrlValidation =
   | { ok: true; baseUrl: string; hostname: string }

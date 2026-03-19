@@ -1,10 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
+import { MANIFEST_KEY } from "../../compat/legacy-names.js";
 import { discoverPowerDirectorPlugins } from "../../plugins/discovery.js";
-import {
-  POWERDIRECTOR_MANIFEST_KEY,
-  type PowerDirectorPackageManifest,
-} from "../../plugins/manifest.js";
+import type { PowerDirectorPackageManifest } from "../../plugins/manifest.js";
 import type { PluginOrigin } from "../../plugins/types.js";
 import { CONFIG_DIR, isRecord, resolveUserPath } from "../../utils.js";
 import type { ChannelMeta } from "./types.js";
@@ -61,7 +59,7 @@ const DEFAULT_CATALOG_PATHS = [
 
 const ENV_CATALOG_PATHS = ["POWERDIRECTOR_PLUGIN_CATALOG_PATHS", "POWERDIRECTOR_MPM_CATALOG_PATHS"];
 
-type ManifestKey = typeof POWERDIRECTOR_MANIFEST_KEY;
+type ManifestKey = typeof MANIFEST_KEY;
 
 function parseCatalogEntries(raw: unknown): ExternalCatalogEntry[] {
   if (Array.isArray(raw)) {
@@ -223,7 +221,7 @@ function buildCatalogEntry(candidate: {
 }
 
 function buildExternalCatalogEntry(entry: ExternalCatalogEntry): ChannelPluginCatalogEntry | null {
-  const manifest = entry[POWERDIRECTOR_MANIFEST_KEY];
+  const manifest = entry[MANIFEST_KEY];
   return buildCatalogEntry({
     packageName: entry.name,
     packageManifest: manifest,

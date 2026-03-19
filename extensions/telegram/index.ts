@@ -1,5 +1,5 @@
-import type { ChannelPlugin, PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { ChannelPlugin, PowerDirectorPluginApi } from "powerdirector/plugin-sdk/telegram";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/telegram";
 import { telegramPlugin } from "./src/channel.js";
 import { setTelegramRuntime } from "./src/runtime.js";
 

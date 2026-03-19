@@ -1,10 +1,6 @@
-import type {
-  PowerDirectorConfig,
-  PluginRuntime,
-  ResolvedLineAccount,
-  RuntimeEnv,
-} from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig, PluginRuntime, ResolvedLineAccount } from "powerdirector/plugin-sdk/line";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createRuntimeEnv } from "../../test-utils/runtime-env.js";
 import { linePlugin } from "./channel.js";
 import { setLineRuntime } from "./runtime.js";
 
@@ -47,15 +43,40 @@ function createRuntime(): { runtime: PluginRuntime; mocks: LineRuntimeMocks } {
   return { runtime, mocks: { writeConfigFile, resolveLineAccount } };
 }
 
+function resolveAccount(
+  resolveLineAccount: LineRuntimeMocks["resolveLineAccount"],
+  cfg: PowerDirectorConfig,
+  accountId: string,
+): ResolvedLineAccount {
+  const resolver = resolveLineAccount as unknown as (params: {
+    cfg: PowerDirectorConfig;
+    accountId?: string;
+  }) => ResolvedLineAccount;
+  return resolver({ cfg, accountId });
+}
+
+async function runLogoutScenario(params: { cfg: PowerDirectorConfig; accountId: string }): Promise<{
+  result: Awaited<ReturnType<NonNullable<NonNullable<typeof linePlugin.gateway>["logoutAccount"]>>>;
+  mocks: LineRuntimeMocks;
+}> {
+  const { runtime, mocks } = createRuntime();
+  setLineRuntime(runtime);
+  const account = resolveAccount(mocks.resolveLineAccount, params.cfg, params.accountId);
+  const result = await linePlugin.gateway!.logoutAccount!({
+    accountId: params.accountId,
+    cfg: params.cfg,
+    account,
+    runtime: createRuntimeEnv(),
+  });
+  return { result, mocks };
+}
+
 describe("linePlugin gateway.logoutAccount", () => {
   beforeEach(() => {
     setLineRuntime(createRuntime().runtime);
   });
 
   it("clears tokenFile/secretFile on default account logout", async () => {
-    const { runtime, mocks } = createRuntime();
-    setLineRuntime(runtime);
-
     const cfg: PowerDirectorConfig = {
       channels: {
         line: {
@@ -64,27 +85,9 @@ describe("linePlugin gateway.logoutAccount", () => {
         },
       },
     };
-    const runtimeEnv: RuntimeEnv = {
-      log: vi.fn(),
-      error: vi.fn(),
-      exit: vi.fn((code: number): never => {
-        throw new Error(`exit ${code}`);
-      }),
-    };
-    const resolveAccount = mocks.resolveLineAccount as unknown as (params: {
-      cfg: PowerDirectorConfig;
-      accountId?: string;
-    }) => ResolvedLineAccount;
-    const account = resolveAccount({
+    const { result, mocks } = await runLogoutScenario({
       cfg,
       accountId: DEFAULT_ACCOUNT_ID,
-    });
-
-    const result = await linePlugin.gateway!.logoutAccount!({
-      accountId: DEFAULT_ACCOUNT_ID,
-      cfg,
-      account,
-      runtime: runtimeEnv,
     });
 
     expect(result.cleared).toBe(true);
@@ -93,9 +96,6 @@ describe("linePlugin gateway.logoutAccount", () => {
   });
 
   it("clears tokenFile/secretFile on account logout", async () => {
-    const { runtime, mocks } = createRuntime();
-    setLineRuntime(runtime);
-
     const cfg: PowerDirectorConfig = {
       channels: {
         line: {
@@ -108,31 +108,35 @@ describe("linePlugin gateway.logoutAccount", () => {
         },
       },
     };
-    const runtimeEnv: RuntimeEnv = {
-      log: vi.fn(),
-      error: vi.fn(),
-      exit: vi.fn((code: number): never => {
-        throw new Error(`exit ${code}`);
-      }),
-    };
-    const resolveAccount = mocks.resolveLineAccount as unknown as (params: {
-      cfg: PowerDirectorConfig;
-      accountId?: string;
-    }) => ResolvedLineAccount;
-    const account = resolveAccount({
+    const { result, mocks } = await runLogoutScenario({
       cfg,
       accountId: "primary",
-    });
-
-    const result = await linePlugin.gateway!.logoutAccount!({
-      accountId: "primary",
-      cfg,
-      account,
-      runtime: runtimeEnv,
     });
 
     expect(result.cleared).toBe(true);
     expect(result.loggedOut).toBe(true);
     expect(mocks.writeConfigFile).toHaveBeenCalledWith({});
+  });
+
+  it("does not write config when account has no token/secret fields", async () => {
+    const cfg: PowerDirectorConfig = {
+      channels: {
+        line: {
+          accounts: {
+            primary: {
+              name: "Primary",
+            },
+          },
+        },
+      },
+    };
+    const { result, mocks } = await runLogoutScenario({
+      cfg,
+      accountId: "primary",
+    });
+
+    expect(result.cleared).toBe(false);
+    expect(result.loggedOut).toBe(true);
+    expect(mocks.writeConfigFile).not.toHaveBeenCalled();
   });
 });

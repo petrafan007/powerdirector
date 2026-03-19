@@ -44,10 +44,12 @@ describe("shouldRegisterPrimarySubcommand", () => {
   it("skips eager primary registration for help/version invocations", () => {
     expect(shouldRegisterPrimarySubcommand(["node", "powerdirector", "status", "--help"])).toBe(false);
     expect(shouldRegisterPrimarySubcommand(["node", "powerdirector", "-V"])).toBe(false);
+    expect(shouldRegisterPrimarySubcommand(["node", "powerdirector", "-v"])).toBe(false);
   });
 
   it("keeps eager primary registration for regular command runs", () => {
     expect(shouldRegisterPrimarySubcommand(["node", "powerdirector", "status"])).toBe(true);
+    expect(shouldRegisterPrimarySubcommand(["node", "powerdirector", "acp", "-v"])).toBe(true);
   });
 });
 
@@ -107,10 +109,12 @@ describe("shouldEnsureCliPath", () => {
   it("skips path bootstrap for help/version invocations", () => {
     expect(shouldEnsureCliPath(["node", "powerdirector", "--help"])).toBe(false);
     expect(shouldEnsureCliPath(["node", "powerdirector", "-V"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "powerdirector", "-v"])).toBe(false);
   });
 
   it("skips path bootstrap for read-only fast paths", () => {
     expect(shouldEnsureCliPath(["node", "powerdirector", "status"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "powerdirector", "--log-level", "debug", "status"])).toBe(false);
     expect(shouldEnsureCliPath(["node", "powerdirector", "sessions", "--json"])).toBe(false);
     expect(shouldEnsureCliPath(["node", "powerdirector", "config", "get", "update"])).toBe(false);
     expect(shouldEnsureCliPath(["node", "powerdirector", "models", "status", "--json"])).toBe(false);
@@ -119,5 +123,6 @@ describe("shouldEnsureCliPath", () => {
   it("keeps path bootstrap for mutating or unknown commands", () => {
     expect(shouldEnsureCliPath(["node", "powerdirector", "message", "send"])).toBe(true);
     expect(shouldEnsureCliPath(["node", "powerdirector", "voicecall", "status"])).toBe(true);
+    expect(shouldEnsureCliPath(["node", "powerdirector", "acp", "-v"])).toBe(true);
   });
 });

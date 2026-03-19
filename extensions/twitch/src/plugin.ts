@@ -5,8 +5,8 @@
  * This is the primary entry point for the Twitch channel integration.
  */
 
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk";
-import { buildChannelConfigSchema } from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
+import { buildChannelConfigSchema } from "powerdirector/plugin-sdk/twitch";
 import { twitchMessageActions } from "./actions.js";
 import { removeClientManager } from "./client-manager-registry.js";
 import { TwitchConfigSchema } from "./config-schema.js";

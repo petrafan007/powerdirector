@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/mattermost";
 import { expect, vi } from "vitest";
 
 export function createMattermostTestConfig(): PowerDirectorConfig {

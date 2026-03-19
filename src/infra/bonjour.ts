@@ -147,7 +147,7 @@ export async function startGatewayBonjourAdvertiser(
 
   const gateway = responder.createService({
     name: safeServiceName(instanceName),
-    type: "pd-gw",
+    type: "powerdirector-gw",
     protocol: Protocol.TCP,
     port: opts.gatewayPort,
     domain: "local",

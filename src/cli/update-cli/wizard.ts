@@ -107,7 +107,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
         const empty = await isEmptyDir(gitDir);
         if (!empty) {
           defaultRuntime.error(
-            `POWERDIRECTOR_GIT_DIR points at a non-git directory: ${gitDir}. Set POWERDIRECTOR_GIT_DIR to an empty folder or a powerdirector checkout.`,
+            `POWERDIRECTOR_GIT_DIR points at a non-git directory: ${gitDir}. Set POWERDIRECTOR_GIT_DIR to an empty folder or an powerdirector checkout.`,
           );
           defaultRuntime.exit(1);
           return;

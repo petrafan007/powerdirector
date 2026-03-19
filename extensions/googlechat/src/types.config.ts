@@ -1,3 +1,3 @@
-import type { GoogleChatAccountConfig, GoogleChatConfig } from "powerdirector/plugin-sdk";
+import type { GoogleChatAccountConfig, GoogleChatConfig } from "powerdirector/plugin-sdk/googlechat";
 
 export type { GoogleChatAccountConfig, GoogleChatConfig };

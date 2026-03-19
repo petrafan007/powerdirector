@@ -1,4 +1,4 @@
-import type { ChannelAccountSnapshot, ChannelStatusIssue } from "powerdirector/plugin-sdk";
+import type { ChannelAccountSnapshot, ChannelStatusIssue } from "powerdirector/plugin-sdk/zalo";
 
 type ZaloAccountStatus = {
   accountId?: unknown;

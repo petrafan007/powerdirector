@@ -1,18 +1,30 @@
 import { describe, expect, it } from "vitest";
 import type { PowerDirectorConfig } from "../../config/config.js";
+import { normalizeAccountId } from "../../routing/session-key.js";
 import { createAccountListHelpers } from "./account-helpers.js";
 
 const { listConfiguredAccountIds, listAccountIds, resolveDefaultAccountId } =
   createAccountListHelpers("testchannel");
 
-function cfg(accounts?: Record<string, unknown> | null): PowerDirectorConfig {
+function cfg(accounts?: Record<string, unknown> | null, defaultAccount?: string): PowerDirectorConfig {
   if (accounts === null) {
-    return { channels: { testchannel: {} } } as unknown as PowerDirectorConfig;
+    return {
+      channels: {
+        testchannel: defaultAccount ? { defaultAccount } : {},
+      },
+    } as unknown as PowerDirectorConfig;
   }
-  if (accounts === undefined) {
+  if (accounts === undefined && !defaultAccount) {
     return {} as unknown as PowerDirectorConfig;
   }
-  return { channels: { testchannel: { accounts } } } as unknown as PowerDirectorConfig;
+  return {
+    channels: {
+      testchannel: {
+        ...(accounts === undefined ? {} : { accounts }),
+        ...(defaultAccount ? { defaultAccount } : {}),
+      },
+    },
+  } as unknown as PowerDirectorConfig;
 }
 
 describe("createAccountListHelpers", () => {
@@ -41,6 +53,22 @@ describe("createAccountListHelpers", () => {
     });
   });
 
+  describe("with normalizeAccountId option", () => {
+    const normalized = createAccountListHelpers("testchannel", { normalizeAccountId });
+
+    it("normalizes and deduplicates configured account ids", () => {
+      expect(
+        normalized.listConfiguredAccountIds(
+          cfg({
+            "Router D": {},
+            "router-d": {},
+            "Personal A": {},
+          }),
+        ),
+      ).toEqual(["router-d", "personal-a"]);
+    });
+  });
+
   describe("listAccountIds", () => {
     it('returns ["default"] for empty config', () => {
       expect(listAccountIds({} as PowerDirectorConfig)).toEqual(["default"]);
@@ -56,6 +84,18 @@ describe("createAccountListHelpers", () => {
   });
 
   describe("resolveDefaultAccountId", () => {
+    it("prefers configured defaultAccount when it matches a configured account id", () => {
+      expect(resolveDefaultAccountId(cfg({ alpha: {}, beta: {} }, "beta"))).toBe("beta");
+    });
+
+    it("normalizes configured defaultAccount before matching", () => {
+      expect(resolveDefaultAccountId(cfg({ "router-d": {} }, "Router D"))).toBe("router-d");
+    });
+
+    it("falls back when configured defaultAccount is missing", () => {
+      expect(resolveDefaultAccountId(cfg({ beta: {}, alpha: {} }, "missing"))).toBe("alpha");
+    });
+
     it('returns "default" when present', () => {
       expect(resolveDefaultAccountId(cfg({ default: {}, other: {} }))).toBe("default");
     });

@@ -2,7 +2,7 @@ import type {
   AnyAgentTool,
   PowerDirectorPluginApi,
   PowerDirectorPluginToolFactory,
-} from "../../src/plugins/types.js";
+} from "powerdirector/plugin-sdk/lobster";
 import { createLobsterTool } from "./src/lobster-tool.js";
 
 export default function register(api: PowerDirectorPluginApi) {

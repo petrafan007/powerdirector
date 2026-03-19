@@ -1,4 +1,4 @@
-import type { ClawdbotConfig } from "powerdirector/plugin-sdk";
+import type { ClawdbotConfig } from "powerdirector/plugin-sdk/feishu";
 import { resolveFeishuAccount } from "./accounts.js";
 import { createFeishuClient } from "./client.js";
 

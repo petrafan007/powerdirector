@@ -21,7 +21,7 @@ export const isNixMode = resolveIsNixMode();
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moldbot", ".moltbot"] as const;
 const NEW_STATE_DIRNAME = ".powerdirector";
 const CONFIG_FILENAME = "powerdirector.config.json";
-const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+const LEGACY_CONFIG_FILENAMES = ["powerdirector.config.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function findProjectRoot(): string | null {
   let current = process.cwd();

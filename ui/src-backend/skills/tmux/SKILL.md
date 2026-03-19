@@ -12,7 +12,7 @@ Use tmux only when you need an interactive TTY. Prefer exec background mode for 
 ## Quickstart (isolated socket, exec tool)
 
 ```bash
-SOCKET_DIR="${OPENCLAW_TMUX_SOCKET_DIR:-${CLAWDBOT_TMUX_SOCKET_DIR:-${TMPDIR:-/tmp}/powerdirector-tmux-sockets}}"
+SOCKET_DIR="${POWERDIRECTOR_TMUX_SOCKET_DIR:-${CLAWDBOT_TMUX_SOCKET_DIR:-${TMPDIR:-/tmp}/powerdirector-tmux-sockets}}"
 mkdir -p "$SOCKET_DIR"
 SOCKET="$SOCKET_DIR/powerdirector.sock"
 SESSION=powerdirector-python
@@ -32,8 +32,8 @@ To monitor:
 
 ## Socket convention
 
-- Use `OPENCLAW_TMUX_SOCKET_DIR` (legacy `CLAWDBOT_TMUX_SOCKET_DIR` also supported).
-- Default socket path: `"$OPENCLAW_TMUX_SOCKET_DIR/powerdirector.sock"`.
+- Use `POWERDIRECTOR_TMUX_SOCKET_DIR` (legacy `CLAWDBOT_TMUX_SOCKET_DIR` also supported).
+- Default socket path: `"$POWERDIRECTOR_TMUX_SOCKET_DIR/powerdirector.sock"`.
 
 ## Targeting panes and naming
 
@@ -44,7 +44,7 @@ To monitor:
 ## Finding sessions
 
 - List sessions on your socket: `{baseDir}/scripts/find-sessions.sh -S "$SOCKET"`.
-- Scan all sockets: `{baseDir}/scripts/find-sessions.sh --all` (uses `OPENCLAW_TMUX_SOCKET_DIR`).
+- Scan all sockets: `{baseDir}/scripts/find-sessions.sh --all` (uses `POWERDIRECTOR_TMUX_SOCKET_DIR`).
 
 ## Sending input safely
 

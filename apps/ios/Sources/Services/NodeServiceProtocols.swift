@@ -1,12 +1,15 @@
 import CoreLocation
 import Foundation
-import OpenClawKit
+import PowerDirectorKit
 import UIKit
+
+typealias PowerDirectorCameraSnapResult = (format: String, base64: String, width: Int, height: Int)
+typealias PowerDirectorCameraClipResult = (format: String, base64: String, durationMs: Int, hasAudio: Bool)
 
 protocol CameraServicing: Sendable {
     func listDevices() async -> [CameraController.CameraDeviceInfo]
-    func snap(params: OpenClawCameraSnapParams) async throws -> (format: String, base64: String, width: Int, height: Int)
-    func clip(params: OpenClawCameraClipParams) async throws -> (format: String, base64: String, durationMs: Int, hasAudio: Bool)
+    func snap(params: PowerDirectorCameraSnapParams) async throws -> PowerDirectorCameraSnapResult
+    func clip(params: PowerDirectorCameraClipParams) async throws -> PowerDirectorCameraClipResult
 }
 
 protocol ScreenRecordingServicing: Sendable {
@@ -22,47 +25,48 @@ protocol ScreenRecordingServicing: Sendable {
 protocol LocationServicing: Sendable {
     func authorizationStatus() -> CLAuthorizationStatus
     func accuracyAuthorization() -> CLAccuracyAuthorization
-    func ensureAuthorization(mode: OpenClawLocationMode) async -> CLAuthorizationStatus
+    func ensureAuthorization(mode: PowerDirectorLocationMode) async -> CLAuthorizationStatus
     func currentLocation(
-        params: OpenClawLocationGetParams,
-        desiredAccuracy: OpenClawLocationAccuracy,
+        params: PowerDirectorLocationGetParams,
+        desiredAccuracy: PowerDirectorLocationAccuracy,
         maxAgeMs: Int?,
         timeoutMs: Int?) async throws -> CLLocation
     func startLocationUpdates(
-        desiredAccuracy: OpenClawLocationAccuracy,
+        desiredAccuracy: PowerDirectorLocationAccuracy,
         significantChangesOnly: Bool) -> AsyncStream<CLLocation>
     func stopLocationUpdates()
     func startMonitoringSignificantLocationChanges(onUpdate: @escaping @Sendable (CLLocation) -> Void)
     func stopMonitoringSignificantLocationChanges()
 }
 
+@MainActor
 protocol DeviceStatusServicing: Sendable {
-    func status() async throws -> OpenClawDeviceStatusPayload
-    func info() -> OpenClawDeviceInfoPayload
+    func status() async throws -> PowerDirectorDeviceStatusPayload
+    func info() -> PowerDirectorDeviceInfoPayload
 }
 
 protocol PhotosServicing: Sendable {
-    func latest(params: OpenClawPhotosLatestParams) async throws -> OpenClawPhotosLatestPayload
+    func latest(params: PowerDirectorPhotosLatestParams) async throws -> PowerDirectorPhotosLatestPayload
 }
 
 protocol ContactsServicing: Sendable {
-    func search(params: OpenClawContactsSearchParams) async throws -> OpenClawContactsSearchPayload
-    func add(params: OpenClawContactsAddParams) async throws -> OpenClawContactsAddPayload
+    func search(params: PowerDirectorContactsSearchParams) async throws -> PowerDirectorContactsSearchPayload
+    func add(params: PowerDirectorContactsAddParams) async throws -> PowerDirectorContactsAddPayload
 }
 
 protocol CalendarServicing: Sendable {
-    func events(params: OpenClawCalendarEventsParams) async throws -> OpenClawCalendarEventsPayload
-    func add(params: OpenClawCalendarAddParams) async throws -> OpenClawCalendarAddPayload
+    func events(params: PowerDirectorCalendarEventsParams) async throws -> PowerDirectorCalendarEventsPayload
+    func add(params: PowerDirectorCalendarAddParams) async throws -> PowerDirectorCalendarAddPayload
 }
 
 protocol RemindersServicing: Sendable {
-    func list(params: OpenClawRemindersListParams) async throws -> OpenClawRemindersListPayload
-    func add(params: OpenClawRemindersAddParams) async throws -> OpenClawRemindersAddPayload
+    func list(params: PowerDirectorRemindersListParams) async throws -> PowerDirectorRemindersListPayload
+    func add(params: PowerDirectorRemindersAddParams) async throws -> PowerDirectorRemindersAddPayload
 }
 
 protocol MotionServicing: Sendable {
-    func activities(params: OpenClawMotionActivityParams) async throws -> OpenClawMotionActivityPayload
-    func pedometer(params: OpenClawPedometerParams) async throws -> OpenClawPedometerPayload
+    func activities(params: PowerDirectorMotionActivityParams) async throws -> PowerDirectorMotionActivityPayload
+    func pedometer(params: PowerDirectorPedometerParams) async throws -> PowerDirectorPedometerPayload
 }
 
 struct WatchMessagingStatus: Sendable, Equatable {
@@ -73,6 +77,17 @@ struct WatchMessagingStatus: Sendable, Equatable {
     var activationState: String
 }
 
+struct WatchQuickReplyEvent: Sendable, Equatable {
+    var replyId: String
+    var promptId: String
+    var actionId: String
+    var actionLabel: String?
+    var sessionKey: String?
+    var note: String?
+    var sentAtMs: Int?
+    var transport: String
+}
+
 struct WatchNotificationSendResult: Sendable, Equatable {
     var deliveredImmediately: Bool
     var queuedForDelivery: Bool
@@ -81,11 +96,10 @@ struct WatchNotificationSendResult: Sendable, Equatable {
 
 protocol WatchMessagingServicing: AnyObject, Sendable {
     func status() async -> WatchMessagingStatus
+    func setReplyHandler(_ handler: (@Sendable (WatchQuickReplyEvent) -> Void)?)
     func sendNotification(
         id: String,
-        title: String,
-        body: String,
-        priority: OpenClawNotificationPriority?) async throws -> WatchNotificationSendResult
+        params: PowerDirectorWatchNotifyParams) async throws -> WatchNotificationSendResult
 }
 
 extension CameraController: CameraServicing {}

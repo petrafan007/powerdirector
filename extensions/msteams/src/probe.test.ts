@@ -1,4 +1,4 @@
-import type { MSTeamsConfig } from "powerdirector/plugin-sdk";
+import type { MSTeamsConfig } from "powerdirector/plugin-sdk/msteams";
 import { describe, expect, it, vi } from "vitest";
 
 const hostMockState = vi.hoisted(() => ({

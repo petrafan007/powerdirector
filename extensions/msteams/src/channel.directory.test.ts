@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig, RuntimeEnv } from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig, RuntimeEnv } from "powerdirector/plugin-sdk/msteams";
 import { describe, expect, it } from "vitest";
 import { msteamsPlugin } from "./channel.js";
 

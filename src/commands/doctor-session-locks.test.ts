@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { captureEnv } from "../test-utils/env.js";
 
 const note = vi.hoisted(() => vi.fn());
 
@@ -13,21 +14,17 @@ import { noteSessionLockHealth } from "./doctor-session-locks.js";
 
 describe("noteSessionLockHealth", () => {
   let root: string;
-  let prevStateDir: string | undefined;
+  let envSnapshot: ReturnType<typeof captureEnv>;
 
   beforeEach(async () => {
-    note.mockReset();
-    prevStateDir = process.env.POWERDIRECTOR_STATE_DIR;
+    note.mockClear();
+    envSnapshot = captureEnv(["POWERDIRECTOR_STATE_DIR"]);
     root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-doctor-locks-"));
     process.env.POWERDIRECTOR_STATE_DIR = root;
   });
 
   afterEach(async () => {
-    if (prevStateDir === undefined) {
-      delete process.env.POWERDIRECTOR_STATE_DIR;
-    } else {
-      process.env.POWERDIRECTOR_STATE_DIR = prevStateDir;
-    }
+    envSnapshot.restore();
     await fs.rm(root, { recursive: true, force: true });
   });
 

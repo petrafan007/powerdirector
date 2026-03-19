@@ -1,7 +1,8 @@
 import Foundation
-import OpenClawKit
+import PowerDirectorKit
 import UIKit
 
+@MainActor
 final class DeviceStatusService: DeviceStatusServicing {
     private let networkStatus: NetworkStatusService
 
@@ -9,14 +10,14 @@ final class DeviceStatusService: DeviceStatusServicing {
         self.networkStatus = networkStatus
     }
 
-    func status() async throws -> OpenClawDeviceStatusPayload {
+    func status() async throws -> PowerDirectorDeviceStatusPayload {
         let battery = self.batteryStatus()
         let thermal = self.thermalStatus()
         let storage = self.storageStatus()
         let network = await self.networkStatus.currentStatus()
         let uptime = ProcessInfo.processInfo.systemUptime
 
-        return OpenClawDeviceStatusPayload(
+        return PowerDirectorDeviceStatusPayload(
             battery: battery,
             thermal: thermal,
             storage: storage,
@@ -24,14 +25,14 @@ final class DeviceStatusService: DeviceStatusServicing {
             uptimeSeconds: uptime)
     }
 
-    func info() -> OpenClawDeviceInfoPayload {
+    func info() -> PowerDirectorDeviceInfoPayload {
         let device = UIDevice.current
-        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "dev"
-        let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+        let appVersion = DeviceInfoHelper.appVersion()
+        let appBuild = DeviceStatusService.fallbackAppBuild(DeviceInfoHelper.appBuild())
         let locale = Locale.preferredLanguages.first ?? Locale.current.identifier
-        return OpenClawDeviceInfoPayload(
+        return PowerDirectorDeviceInfoPayload(
             deviceName: device.name,
-            modelIdentifier: Self.modelIdentifier(),
+            modelIdentifier: DeviceInfoHelper.modelIdentifier(),
             systemName: device.systemName,
             systemVersion: device.systemVersion,
             appVersion: appVersion,
@@ -39,49 +40,44 @@ final class DeviceStatusService: DeviceStatusServicing {
             locale: locale)
     }
 
-    private func batteryStatus() -> OpenClawBatteryStatusPayload {
+    private func batteryStatus() -> PowerDirectorBatteryStatusPayload {
         let device = UIDevice.current
         device.isBatteryMonitoringEnabled = true
         let level = device.batteryLevel >= 0 ? Double(device.batteryLevel) : nil
-        let state: OpenClawBatteryState = switch device.batteryState {
+        let state: PowerDirectorBatteryState = switch device.batteryState {
         case .charging: .charging
         case .full: .full
         case .unplugged: .unplugged
         case .unknown: .unknown
         @unknown default: .unknown
         }
-        return OpenClawBatteryStatusPayload(
+        return PowerDirectorBatteryStatusPayload(
             level: level,
             state: state,
             lowPowerModeEnabled: ProcessInfo.processInfo.isLowPowerModeEnabled)
     }
 
-    private func thermalStatus() -> OpenClawThermalStatusPayload {
-        let state: OpenClawThermalState = switch ProcessInfo.processInfo.thermalState {
+    private func thermalStatus() -> PowerDirectorThermalStatusPayload {
+        let state: PowerDirectorThermalState = switch ProcessInfo.processInfo.thermalState {
         case .nominal: .nominal
         case .fair: .fair
         case .serious: .serious
         case .critical: .critical
         @unknown default: .nominal
         }
-        return OpenClawThermalStatusPayload(state: state)
+        return PowerDirectorThermalStatusPayload(state: state)
     }
 
-    private func storageStatus() -> OpenClawStorageStatusPayload {
+    private func storageStatus() -> PowerDirectorStorageStatusPayload {
         let attrs = (try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory())) ?? [:]
         let total = (attrs[.systemSize] as? NSNumber)?.int64Value ?? 0
         let free = (attrs[.systemFreeSize] as? NSNumber)?.int64Value ?? 0
         let used = max(0, total - free)
-        return OpenClawStorageStatusPayload(totalBytes: total, freeBytes: free, usedBytes: used)
+        return PowerDirectorStorageStatusPayload(totalBytes: total, freeBytes: free, usedBytes: used)
     }
 
-    private static func modelIdentifier() -> String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machine = withUnsafeBytes(of: &systemInfo.machine) { ptr in
-            String(bytes: ptr.prefix { $0 != 0 }, encoding: .utf8)
-        }
-        let trimmed = machine?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        return trimmed.isEmpty ? "unknown" : trimmed
+    /// Fallback for payloads that require a non-empty build (e.g. "0").
+    private static func fallbackAppBuild(_ build: String) -> String {
+        build.isEmpty ? "0" : build
     }
 }

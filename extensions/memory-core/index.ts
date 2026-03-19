@@ -1,5 +1,5 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/memory-core";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/memory-core";
 
 const memoryCorePlugin = {
   id: "memory-core",

@@ -1,17 +1,19 @@
 {
   "name": "@powerdirector/googlechat",
-  "version": "2026.2.19",
+  "version": "2026.3.8-beta.1",
   "private": true,
   "description": "PowerDirector Google Chat channel plugin",
   "type": "module",
   "dependencies": {
-    "google-auth-library": "^10.5.0"
-  },
-  "devDependencies": {
-    "powerdirector": "workspace:*"
+    "google-auth-library": "^10.6.1"
   },
   "peerDependencies": {
-    "powerdirector": ">=2026.1.26"
+    "powerdirector": ">=2026.3.2"
+  },
+  "peerDependenciesMeta": {
+    "powerdirector": {
+      "optional": true
+    }
   },
   "powerdirector": {
     "extensions": [
@@ -35,6 +37,11 @@
       "npmSpec": "@powerdirector/googlechat",
       "localPath": "extensions/googlechat",
       "defaultChoice": "npm"
+    },
+    "releaseChecks": {
+      "rootDependencyMirrorAllowlist": [
+        "google-auth-library"
+      ]
     }
   }
 }

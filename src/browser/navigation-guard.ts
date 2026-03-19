@@ -1,4 +1,6 @@
+import { hasProxyEnvConfigured } from "../infra/net/proxy-env.js";
 import {
+  isPrivateNetworkAllowedByPolicy,
   resolvePinnedHostnameWithPolicy,
   type LookupFn,
   type SsrFPolicy,
@@ -8,6 +10,7 @@ const NETWORK_NAVIGATION_PROTOCOLS = new Set(["http:", "https:"]);
 const SAFE_NON_NETWORK_URLS = new Set(["about:blank"]);
 
 function isAllowedNonNetworkNavigationUrl(parsed: URL): boolean {
+  // Keep non-network navigation explicit; about:blank is the only allowed bootstrap URL.
   return SAFE_NON_NETWORK_URLS.has(parsed.href);
 }
 
@@ -34,7 +37,7 @@ export function withBrowserNavigationPolicy(
 }
 
 export function requiresInspectableBrowserNavigationRedirects(ssrfPolicy?: SsrFPolicy): boolean {
-  return !Boolean(ssrfPolicy?.allowPrivateNetwork);
+  return !isPrivateNetworkAllowedByPolicy(ssrfPolicy);
 }
 
 export async function assertBrowserNavigationAllowed(
@@ -59,7 +62,19 @@ export async function assertBrowserNavigationAllowed(
     if (isAllowedNonNetworkNavigationUrl(parsed)) {
       return;
     }
-    return;
+    throw new InvalidBrowserNavigationUrlError(
+      `Navigation blocked: unsupported protocol "${parsed.protocol}"`,
+    );
+  }
+
+  // Browser network stacks may apply env proxy routing at connect-time, which
+  // can bypass strict destination-binding intent from pre-navigation DNS checks.
+  // In strict mode, fail closed unless private-network navigation is explicitly
+  // enabled by policy.
+  if (hasProxyEnvConfigured() && !isPrivateNetworkAllowedByPolicy(opts.ssrfPolicy)) {
+    throw new InvalidBrowserNavigationUrlError(
+      "Navigation blocked: strict browser SSRF policy cannot be enforced while env proxy variables are set",
+    );
   }
 
   await resolvePinnedHostnameWithPolicy(parsed.hostname, {
@@ -68,6 +83,11 @@ export async function assertBrowserNavigationAllowed(
   });
 }
 
+/**
+ * Best-effort post-navigation guard for final page URLs.
+ * Only validates network URLs (http/https) and about:blank to avoid false
+ * positives on browser-internal error pages (e.g. chrome-error://).
+ */
 export async function assertBrowserNavigationResultAllowed(
   opts: {
     url: string;
@@ -104,9 +124,9 @@ export async function assertBrowserNavigationRedirectChainAllowed(
     chain.push(current.url());
     current = current.redirectedFrom();
   }
-  for (let i = chain.length - 1; i >= 0; i -= 1) {
+  for (const url of chain.toReversed()) {
     await assertBrowserNavigationAllowed({
-      url: chain[i] ?? "",
+      url,
       lookupFn: opts.lookupFn,
       ssrfPolicy: opts.ssrfPolicy,
     });

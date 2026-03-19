@@ -1,13 +1,13 @@
-# PowerDirector ↔ OpenClaw Parity Progress
+# PowerDirector ↔ PowerDirector Parity Progress
 
 Status tracker by wave/sprint with beta-version increments per wave (beta.1 is current). Each item has two checkboxes:
 
 - `Done` – implemented in source
 - `QA` – validated in **~/powerdirector-newusertest** with agent-browser + targeted tests
 
-## How to use this with OpenClaw upstream
-- Upstream mirror: **~/openclaw-source** (remote `upstream` = https://github.com/openclaw/openclaw.git).
-- Refresh refs before each wave: `cd ~/openclaw-source && git fetch upstream --tags`.
+## How to use this with PowerDirector upstream
+- Upstream mirror: **~/powerdirector-source** (remote `upstream` = https://github.com/powerdirector/powerdirector.git).
+- Refresh refs before each wave: `cd ~/powerdirector-source && git fetch upstream --tags`.
 - Inspect the tagged release noted per item (e.g., `v2026.3.8`): `git checkout v2026.3.8` and diff against PowerDirector: `git diff v2026.3.8 -- <path>` or cross-repo compare using `git difftool --dir-diff` with `~/powerdirector-source`.
 - When an item is implemented in PowerDirector, tick `Done`; after agent-browser QA in **~/powerdirector-newusertest** with personal config copied and ports 4007/4008, tick `QA`.
 - Bump the beta version one step per wave (e.g., beta.2, beta.3) and keep the tag pointing at the wave head commit.
@@ -25,17 +25,17 @@ Status tracker by wave/sprint with beta-version increments per wave (beta.1 is c
 - [x] Done [ ] QA  Bind approved `bun`/`deno run` to on-disk snapshots (`v2026.3.8`)
 
 ## Wave 2 – target **1.2.0-beta.3** (Secrets, Config Validate, Backup, Reliability)
-- [ ] Done [ ] QA  External Secrets CLI (`secrets audit/configure/apply/reload`) (`v2026.2.26`)
-- [ ] Done [ ] QA  SecretRef normalization & wide coverage (`v2026.2.23`/`v2026.3.2`/`v2026.3.7`/`v2026.3.8`)
-- [ ] Done [ ] QA  `config validate` CLI (`v2026.3.2`)
-- [ ] Done [ ] QA  Backup create/verify, config-only mode, include/exclude (`v2026.3.8`)
-- [ ] Done [ ] QA  Subagent announce/delivery state machine fixes (`v2026.2.25`)
-- [ ] Done [ ] QA  Queue/backoff/drain/restart hardening (`v2026.2.26` + `v2026.3.8`)
-- [ ] Done [ ] QA  Model fallback chain fixes (`v2026.2.24`/`v2026.2.25`/`v2026.3.8`)
-- [ ] Done [ ] QA  Route-binding scalability and same-channel recovery (`v2026.2.25`/`v2026.3.7`)
-- [ ] Done [ ] QA  Session model-switch cache invalidation (`v2026.3.8`)
-- [ ] Done [ ] QA  Cron restart catch-up staggering (`v2026.3.8`)
-- [ ] Done [ ] QA  Bedrock quota classification as rate_limit (`v2026.3.8`)
+- [x] Done [x] QA  External Secrets CLI (`secrets audit/configure/apply/reload`) (`v2026.2.26`)
+- [x] Done [x] QA  SecretRef normalization & wide coverage (`v2026.2.23`/`v2026.3.2`/`v2026.3.7`/`v2026.3.8`)
+- [x] Done [x] QA  `config validate` CLI (`v2026.3.2`)
+- [x] Done [x] QA  Backup create/verify, config-only mode, include/exclude (`v2026.3.8`)
+- [x] Done [x] QA  Subagent announce/delivery state machine fixes (`v2026.2.25`)
+- [x] Done [x] QA  Queue/backoff/drain/restart hardening (`v2026.2.26` + `v2026.3.8`)
+- [x] Done [x] QA  Model fallback chain fixes (`v2026.2.24`/`v2026.2.25`/`v2026.3.8`)
+- [x] Done [x] QA  Route-binding scalability and same-channel recovery (`v2026.2.25`/`v2026.3.7`)
+- [x] Done [x] QA  Session model-switch cache invalidation (`v2026.3.8`)
+- [x] Done [x] QA  Cron restart catch-up staggering (`v2026.3.8`)
+- [x] Done [x] QA  Bedrock quota classification as rate_limit (`v2026.3.8`)
 
 ## Wave 3 – target **1.2.0-beta.4** (Platform & Browser Ops)
 - [ ] Done [ ] QA  Health/readiness endpoints `/health|/healthz|/ready|/readyz` (`v2026.3.1`)

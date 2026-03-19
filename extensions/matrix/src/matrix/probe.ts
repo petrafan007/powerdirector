@@ -1,4 +1,4 @@
-import type { BaseProbeResult } from "powerdirector/plugin-sdk";
+import type { BaseProbeResult } from "powerdirector/plugin-sdk/matrix";
 import { createMatrixClient, isBunRuntime } from "./client.js";
 
 export type MatrixProbe = BaseProbeResult & {

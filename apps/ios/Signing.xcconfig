@@ -2,14 +2,17 @@
 // Auto-selected local team overrides live in .local-signing.xcconfig (git-ignored).
 // Manual local overrides can go in LocalSigning.xcconfig (git-ignored).
 
-OPENCLAW_CODE_SIGN_STYLE = Manual
-OPENCLAW_DEVELOPMENT_TEAM = Y5PE65HELJ
+POWERDIRECTOR_CODE_SIGN_STYLE = Manual
+POWERDIRECTOR_DEVELOPMENT_TEAM = Y5PE65HELJ
 
-OPENCLAW_APP_BUNDLE_ID = ai.openclaw.ios
-OPENCLAW_SHARE_BUNDLE_ID = ai.openclaw.ios.share
+POWERDIRECTOR_APP_BUNDLE_ID = ai.powerdirector.client
+POWERDIRECTOR_SHARE_BUNDLE_ID = ai.powerdirector.client.share
+POWERDIRECTOR_WATCH_APP_BUNDLE_ID = ai.powerdirector.client.watchkitapp
+POWERDIRECTOR_WATCH_EXTENSION_BUNDLE_ID = ai.powerdirector.client.watchkitapp.extension
+POWERDIRECTOR_ACTIVITY_WIDGET_BUNDLE_ID = ai.powerdirector.client.activitywidget
 
-OPENCLAW_APP_PROFILE = ai.openclaw.ios Development
-OPENCLAW_SHARE_PROFILE = ai.openclaw.ios.share Development
+POWERDIRECTOR_APP_PROFILE = ai.powerdirector.client Development
+POWERDIRECTOR_SHARE_PROFILE = ai.powerdirector.client.share Development
 
 // Keep local includes after defaults: xcconfig is evaluated top-to-bottom,
 // so later assignments in local files override the defaults above.

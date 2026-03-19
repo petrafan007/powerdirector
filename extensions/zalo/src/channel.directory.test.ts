@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig, RuntimeEnv } from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig, RuntimeEnv } from "powerdirector/plugin-sdk/zalo";
 import { describe, expect, it } from "vitest";
 import { zaloPlugin } from "./channel.js";
 

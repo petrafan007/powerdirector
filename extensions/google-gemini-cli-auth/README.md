@@ -2,6 +2,12 @@
 
 OAuth provider plugin for **Gemini CLI** (Google Code Assist).
 
+## Account safety caution
+
+- This plugin is an unofficial integration and is not endorsed by Google.
+- Some users have reported account restrictions or suspensions after using third-party Gemini CLI and Antigravity OAuth clients.
+- Use caution, review the applicable Google terms, and avoid using a mission-critical account.
+
 ## Enable
 
 Bundled plugins are disabled by default. Enable this one:
@@ -31,5 +37,5 @@ brew install gemini-cli
 
 Override auto-detected credentials with:
 
-- `OPENCLAW_GEMINI_OAUTH_CLIENT_ID` / `GEMINI_CLI_OAUTH_CLIENT_ID`
-- `OPENCLAW_GEMINI_OAUTH_CLIENT_SECRET` / `GEMINI_CLI_OAUTH_CLIENT_SECRET`
+- `POWERDIRECTOR_GEMINI_OAUTH_CLIENT_ID` / `GEMINI_CLI_OAUTH_CLIENT_ID`
+- `POWERDIRECTOR_GEMINI_OAUTH_CLIENT_SECRET` / `GEMINI_CLI_OAUTH_CLIENT_SECRET`

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0-beta.3] - 2026-03-18
+
+### Added
+- **[Wave 2] External Secrets CLI** (`v2026.2.26`): New `secrets` sub-command group (`audit`, `configure`, `apply`, `reload`) for managing encrypted secrets and runtime secret resolution. Documentation added to `docs/cli/secrets.md`.
+- **[Wave 2] Config Validate CLI** (`v2026.3.2`): Added `config validate` command to perform deep schema and integrity validation of the active configuration without starting the gateway.
+- **[Wave 2] Backup System** (`v2026.3.8`): New `backup` sub-command group (`create`, `verify`) with support for `--dry-run`, config-only mode, and inclusion/exclusion of workspaces and sessions.
+
+### Changed / Fixed
+- **[Wave 2] SecretRef Normalization & Runtime Isolation** (`v2026.3.8`): The gateway now operates on a "secrets runtime snapshot" that is activated at startup and can be hot-reloaded. Required secret references in config now fail-closed at startup if unresolved.
+- **[Wave 2] Subagent State Machine & Dispatch Fixes** (`v2026.2.25`): Hardened the internal gateway dispatch for plugin-spawned subagents. Added `setFallbackGatewayContext` to support subagent operations from non-WebSocket paths (e.g., Telegram polling, WhatsApp).
+- **[Wave 2] Reliability & Hardening** (`v2026.3.8`):
+    - **Model Fallbacks**: Fixed edge cases in the fallback chain where certain provider errors didn't trigger a switch.
+    - **Cron Staggering**: Added restart catch-up staggering to prevent a thundering herd of cron jobs when the gateway starts after downtime.
+    - **Bedrock Classification**: AWS Bedrock `too-many-tokens-per-day` errors are now correctly classified as `rate_limit` to trigger appropriate backoff/fallback behavior.
+- **[Wave 2] Secure Config Includes**: `src/config/includes.ts` now uses boundary-checked file reads with a 2MB limit to prevent SSRF or directory traversal via `$include` directives.
+
 ## [1.2.0-beta.2] - 2026-03-18
 
 ### Changed / Fixed
@@ -16,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0-beta.1] - 2026-03-17
 
 ### Added
-- Parity roadmap brief (`powerdirector-v1.2.0-beta1.md`) that enumerates P0/P1/P2 targets from OpenClaw releases (v2026.2.23–v2026.3.8) with release-by-release notes and an implementation checklist for this cycle.
+- Parity roadmap brief (`powerdirector-v1.2.0-beta1.md`) that enumerates P0/P1/P2 targets from PowerDirector releases (v2026.2.23–v2026.3.8) with release-by-release notes and an implementation checklist for this cycle.
 
 ### Changed
 - Bumped gateway and UI package versions to `1.2.0-beta.1`.

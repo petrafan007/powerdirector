@@ -1,290 +1,327 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { describe, expect, it } from "vitest";
+import { formatExecCommand } from "../infra/system-run-command.js";
 import {
-  BUN_SUBCOMMANDS,
-  looksLikePathToken,
-  resolveBunScriptOperandIndex,
-  resolveDenoRunScriptOperandIndex,
-  resolveOptionFilteredFileOperandIndex,
-  resolveOptionFilteredPositionalIndex,
-  resolvesToExistingFileSync,
+  buildSystemRunApprovalPlan,
+  hardenApprovedExecutionPaths,
 } from "./invoke-system-run-plan.js";
 
-// ---------------------------------------------------------------------------
-// Helpers: mock fs.statSync so we can test without real files
-// ---------------------------------------------------------------------------
+type PathTokenSetup = {
+  expected: string;
+};
 
-vi.mock("node:fs", async () => {
-  const actual = await vi.importActual<typeof import("node:fs")>("node:fs");
-  return { ...actual };
-});
+type HardeningCase = {
+  name: string;
+  mode: "build-plan" | "harden";
+  argv: string[];
+  shellCommand?: string | null;
+  withPathToken?: boolean;
+  expectedArgv: (ctx: { pathToken: PathTokenSetup | null }) => string[];
+  expectedArgvChanged?: boolean;
+  expectedCmdText?: string;
+  checkRawCommandMatchesArgv?: boolean;
+};
 
-import fs from "node:fs";
+type ScriptOperandFixture = {
+  command: string[];
+  scriptPath: string;
+  initialBody: string;
+  expectedArgvIndex: number;
+};
 
-let statSyncSpy: ReturnType<typeof vi.spyOn>;
-const existingFiles = new Set<string>();
+type RuntimeFixture = {
+  name: string;
+  argv: string[];
+  scriptName: string;
+  initialBody: string;
+  expectedArgvIndex: number;
+  binName?: string;
+};
 
-beforeEach(() => {
-  existingFiles.clear();
-  statSyncSpy = vi.spyOn(fs, "statSync").mockImplementation((filePath: unknown) => {
-    const fp = String(filePath);
-    const match = [...existingFiles].some((f) => fp.endsWith(f) || fp === f);
-    if (match) {
-      return { isFile: () => true } as ReturnType<typeof fs.statSync>;
+function createScriptOperandFixture(tmp: string, fixture?: RuntimeFixture): ScriptOperandFixture {
+  if (fixture) {
+    return {
+      command: fixture.argv,
+      scriptPath: path.join(tmp, fixture.scriptName),
+      initialBody: fixture.initialBody,
+      expectedArgvIndex: fixture.expectedArgvIndex,
+    };
+  }
+  if (process.platform === "win32") {
+    return {
+      command: [process.execPath, "./run.js"],
+      scriptPath: path.join(tmp, "run.js"),
+      initialBody: 'console.log("SAFE");\n',
+      expectedArgvIndex: 1,
+    };
+  }
+  return {
+    command: ["/bin/sh", "./run.sh"],
+    scriptPath: path.join(tmp, "run.sh"),
+    initialBody: "#!/bin/sh\necho SAFE\n",
+    expectedArgvIndex: 1,
+  };
+}
+
+function withFakeRuntimeBin<T>(params: { binName: string; run: () => T }): T {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `powerdirector-${params.binName}-bin-`));
+  const binDir = path.join(tmp, "bin");
+  fs.mkdirSync(binDir, { recursive: true });
+  const runtimePath =
+    process.platform === "win32"
+      ? path.join(binDir, `${params.binName}.cmd`)
+      : path.join(binDir, params.binName);
+  const runtimeBody =
+    process.platform === "win32" ? "@echo off\r\nexit /b 0\r\n" : "#!/bin/sh\nexit 0\n";
+  fs.writeFileSync(runtimePath, runtimeBody, { mode: 0o755 });
+  if (process.platform !== "win32") {
+    fs.chmodSync(runtimePath, 0o755);
+  }
+  const oldPath = process.env.PATH;
+  process.env.PATH = `${binDir}${path.delimiter}${oldPath ?? ""}`;
+  try {
+    return params.run();
+  } finally {
+    if (oldPath === undefined) {
+      delete process.env.PATH;
+    } else {
+      process.env.PATH = oldPath;
     }
-    throw new Error("ENOENT");
-  });
-});
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+}
 
-afterEach(() => {
-  statSyncSpy.mockRestore();
-});
+describe("hardenApprovedExecutionPaths", () => {
+  const cases: HardeningCase[] = [
+    {
+      name: "preserves shell-wrapper argv during approval hardening",
+      mode: "build-plan",
+      argv: ["env", "sh", "-c", "echo SAFE"],
+      expectedArgv: () => ["env", "sh", "-c", "echo SAFE"],
+      expectedCmdText: "echo SAFE",
+    },
+    {
+      name: "preserves dispatch-wrapper argv during approval hardening",
+      mode: "harden",
+      argv: ["env", "tr", "a", "b"],
+      shellCommand: null,
+      expectedArgv: () => ["env", "tr", "a", "b"],
+      expectedArgvChanged: false,
+    },
+    {
+      name: "pins direct PATH-token executable during approval hardening",
+      mode: "harden",
+      argv: ["poccmd", "SAFE"],
+      shellCommand: null,
+      withPathToken: true,
+      expectedArgv: ({ pathToken }) => [pathToken!.expected, "SAFE"],
+      expectedArgvChanged: true,
+    },
+    {
+      name: "preserves env-wrapper PATH-token argv during approval hardening",
+      mode: "harden",
+      argv: ["env", "poccmd", "SAFE"],
+      shellCommand: null,
+      withPathToken: true,
+      expectedArgv: () => ["env", "poccmd", "SAFE"],
+      expectedArgvChanged: false,
+    },
+    {
+      name: "rawCommand matches hardened argv after executable path pinning",
+      mode: "build-plan",
+      argv: ["poccmd", "hello"],
+      withPathToken: true,
+      expectedArgv: ({ pathToken }) => [pathToken!.expected, "hello"],
+      checkRawCommandMatchesArgv: true,
+    },
+  ];
 
-// ---------------------------------------------------------------------------
-// looksLikePathToken
-// ---------------------------------------------------------------------------
+  for (const testCase of cases) {
+    it.runIf(process.platform !== "win32")(testCase.name, () => {
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-approval-hardening-"));
+      const oldPath = process.env.PATH;
+      let pathToken: PathTokenSetup | null = null;
+      if (testCase.withPathToken) {
+        const binDir = path.join(tmp, "bin");
+        fs.mkdirSync(binDir, { recursive: true });
+        const link = path.join(binDir, "poccmd");
+        fs.symlinkSync("/bin/echo", link);
+        pathToken = { expected: fs.realpathSync(link) };
+        process.env.PATH = `${binDir}${path.delimiter}${oldPath ?? ""}`;
+      }
+      try {
+        if (testCase.mode === "build-plan") {
+          const prepared = buildSystemRunApprovalPlan({
+            command: testCase.argv,
+            cwd: tmp,
+          });
+          expect(prepared.ok).toBe(true);
+          if (!prepared.ok) {
+            throw new Error("unreachable");
+          }
+          expect(prepared.plan.argv).toEqual(testCase.expectedArgv({ pathToken }));
+          if (testCase.expectedCmdText) {
+            expect(prepared.cmdText).toBe(testCase.expectedCmdText);
+          }
+          if (testCase.checkRawCommandMatchesArgv) {
+            expect(prepared.plan.rawCommand).toBe(formatExecCommand(prepared.plan.argv));
+          }
+          return;
+        }
 
-describe("looksLikePathToken", () => {
-  it("returns true for tokens starting with ./", () => {
-    expect(looksLikePathToken("./run.ts")).toBe(true);
-  });
-
-  it("returns true for tokens starting with /", () => {
-    expect(looksLikePathToken("/abs/path.ts")).toBe(true);
-  });
-
-  it("returns true for tokens with a file extension", () => {
-    expect(looksLikePathToken("script.ts")).toBe(true);
-    expect(looksLikePathToken("script.js")).toBe(true);
-  });
-
-  it("returns false for bare words without extension", () => {
-    expect(looksLikePathToken("install")).toBe(false);
-    expect(looksLikePathToken("test")).toBe(false);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// resolvesToExistingFileSync
-// ---------------------------------------------------------------------------
-
-describe("resolvesToExistingFileSync", () => {
-  it("returns true for a registered file", () => {
-    existingFiles.add("/cwd/run.ts");
-    expect(resolvesToExistingFileSync("run.ts", "/cwd")).toBe(true);
-  });
-
-  it("returns false for a missing file", () => {
-    expect(resolvesToExistingFileSync("missing.ts", "/cwd")).toBe(false);
-  });
-
-  it("returns false for empty operand", () => {
-    expect(resolvesToExistingFileSync("", "/cwd")).toBe(false);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// resolveOptionFilteredPositionalIndex
-// ---------------------------------------------------------------------------
-
-describe("resolveOptionFilteredPositionalIndex", () => {
-  it("returns the index of the first positional token", () => {
-    expect(
-      resolveOptionFilteredPositionalIndex({
-        argv: ["bun", "install"],
-        startIndex: 1,
-      }),
-    ).toBe(1);
-  });
-
-  it("skips known options with values", () => {
-    expect(
-      resolveOptionFilteredPositionalIndex({
-        argv: ["bun", "--config", "bunfig.toml", "run.ts"],
-        startIndex: 1,
-        optionsWithValue: new Set(["--config"]),
-      }),
-    ).toBe(3);
-  });
-
-  it("handles -- terminator correctly", () => {
-    expect(
-      resolveOptionFilteredPositionalIndex({
-        argv: ["bun", "--", "run.ts"],
-        startIndex: 1,
-      }),
-    ).toBe(2);
-  });
-
-  it("returns null for - (stdin)", () => {
-    expect(
-      resolveOptionFilteredPositionalIndex({
-        argv: ["bun", "-"],
-        startIndex: 1,
-      }),
-    ).toBeNull();
-  });
-
-  it("returns null when no positionals", () => {
-    expect(
-      resolveOptionFilteredPositionalIndex({
-        argv: ["bun", "--flag"],
-        startIndex: 1,
-      }),
-    ).toBeNull();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// resolveOptionFilteredFileOperandIndex
-// ---------------------------------------------------------------------------
-
-describe("resolveOptionFilteredFileOperandIndex", () => {
-  it("returns null when file does not exist", () => {
-    expect(
-      resolveOptionFilteredFileOperandIndex({
-        argv: ["deno", "run", "script.ts"],
-        startIndex: 2,
-        cwd: "/proj",
-      }),
-    ).toBeNull();
-  });
-
-  it("returns the index when file exists", () => {
-    existingFiles.add("/proj/script.ts");
-    expect(
-      resolveOptionFilteredFileOperandIndex({
-        argv: ["deno", "run", "script.ts"],
-        startIndex: 2,
-        cwd: "/proj",
-      }),
-    ).toBe(2);
-  });
-
-  it("returns null after -- when file does not exist", () => {
-    expect(
-      resolveOptionFilteredFileOperandIndex({
-        argv: ["deno", "run", "--", "missing.ts"],
-        startIndex: 2,
-        cwd: "/proj",
-      }),
-    ).toBeNull();
-  });
-
-  it("returns the index after -- when file exists", () => {
-    existingFiles.add("/proj/real.ts");
-    expect(
-      resolveOptionFilteredFileOperandIndex({
-        argv: ["deno", "run", "--", "real.ts"],
-        startIndex: 2,
-        cwd: "/proj",
-      }),
-    ).toBe(3);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// resolveBunScriptOperandIndex
-// ---------------------------------------------------------------------------
-
-describe("resolveBunScriptOperandIndex", () => {
-  it("returns null for known subcommands (install)", () => {
-    expect(resolveBunScriptOperandIndex({ argv: ["bun", "install"], cwd: "/" })).toBeNull();
-  });
-
-  it("returns null for known subcommands (test)", () => {
-    expect(resolveBunScriptOperandIndex({ argv: ["bun", "test"], cwd: "/" })).toBeNull();
-  });
-
-  it("verifies BUN_SUBCOMMANDS includes common entries", () => {
-    expect(BUN_SUBCOMMANDS.has("install")).toBe(true);
-    expect(BUN_SUBCOMMANDS.has("run")).toBe(true);
-    expect(BUN_SUBCOMMANDS.has("add")).toBe(true);
-  });
-
-  it("returns null for bare word without extension (not path-like)", () => {
-    expect(resolveBunScriptOperandIndex({ argv: ["bun", "myapp"], cwd: "/" })).toBeNull();
-  });
-
-  it("returns index for direct file (`bun ./run.ts`)", () => {
-    existingFiles.add("/proj/run.ts");
-    // ./run.ts looks like a path token AND resolves to a file
-    const idx = resolveBunScriptOperandIndex({ argv: ["bun", "./run.ts"], cwd: "/proj" });
-    expect(idx).toBe(1);
-  });
-
-  it("returns index for `bun run ./script.ts` after scanning past 'run'", () => {
-    existingFiles.add("/proj/script.ts");
-    const idx = resolveBunScriptOperandIndex({
-      argv: ["bun", "run", "./script.ts"],
-      cwd: "/proj",
+        const hardened = hardenApprovedExecutionPaths({
+          approvedByAsk: true,
+          argv: testCase.argv,
+          shellCommand: testCase.shellCommand ?? null,
+          cwd: tmp,
+        });
+        expect(hardened.ok).toBe(true);
+        if (!hardened.ok) {
+          throw new Error("unreachable");
+        }
+        expect(hardened.argv).toEqual(testCase.expectedArgv({ pathToken }));
+        if (typeof testCase.expectedArgvChanged === "boolean") {
+          expect(hardened.argvChanged).toBe(testCase.expectedArgvChanged);
+        }
+      } finally {
+        if (testCase.withPathToken) {
+          if (oldPath === undefined) {
+            delete process.env.PATH;
+          } else {
+            process.env.PATH = oldPath;
+          }
+        }
+        fs.rmSync(tmp, { recursive: true, force: true });
+      }
     });
-    expect(idx).toBe(2);
-  });
+  }
 
-  it("returns index for `bun run` with flag before file", () => {
-    existingFiles.add("/proj/script.ts");
-    const idx = resolveBunScriptOperandIndex({
-      argv: ["bun", "run", "--hot", "./script.ts"],
-      cwd: "/proj",
+  const mutableOperandCases: RuntimeFixture[] = [
+    {
+      name: "bun direct file",
+      binName: "bun",
+      argv: ["bun", "./run.ts"],
+      scriptName: "run.ts",
+      initialBody: 'console.log("SAFE");\n',
+      expectedArgvIndex: 1,
+    },
+    {
+      name: "bun run file",
+      binName: "bun",
+      argv: ["bun", "run", "./run.ts"],
+      scriptName: "run.ts",
+      initialBody: 'console.log("SAFE");\n',
+      expectedArgvIndex: 2,
+    },
+    {
+      name: "deno run file with flags",
+      binName: "deno",
+      argv: ["deno", "run", "-A", "--allow-read", "--", "./run.ts"],
+      scriptName: "run.ts",
+      initialBody: 'console.log("SAFE");\n',
+      expectedArgvIndex: 5,
+    },
+  ];
+
+  for (const runtimeCase of mutableOperandCases) {
+    it(`captures mutable ${runtimeCase.name} operands in approval plans`, () => {
+      withFakeRuntimeBin({
+        binName: runtimeCase.binName!,
+        run: () => {
+          const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-approval-script-plan-"));
+          const fixture = createScriptOperandFixture(tmp, runtimeCase);
+          fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
+          try {
+            const prepared = buildSystemRunApprovalPlan({
+              command: fixture.command,
+              cwd: tmp,
+            });
+            expect(prepared.ok).toBe(true);
+            if (!prepared.ok) {
+              throw new Error("unreachable");
+            }
+            expect(prepared.plan.mutableFileOperand).toEqual({
+              argvIndex: fixture.expectedArgvIndex,
+              path: fs.realpathSync(fixture.scriptPath),
+              sha256: expect.any(String),
+            });
+          } finally {
+            fs.rmSync(tmp, { recursive: true, force: true });
+          }
+        },
+      });
     });
-    expect(idx).toBe(3);
+  }
+
+  it("captures mutable shell script operands in approval plans", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-approval-script-plan-"));
+    const fixture = createScriptOperandFixture(tmp);
+    fs.writeFileSync(fixture.scriptPath, fixture.initialBody);
+    if (process.platform !== "win32") {
+      fs.chmodSync(fixture.scriptPath, 0o755);
+    }
+    try {
+      const prepared = buildSystemRunApprovalPlan({
+        command: fixture.command,
+        cwd: tmp,
+      });
+      expect(prepared.ok).toBe(true);
+      if (!prepared.ok) {
+        throw new Error("unreachable");
+      }
+      expect(prepared.plan.mutableFileOperand).toEqual({
+        argvIndex: fixture.expectedArgvIndex,
+        path: fs.realpathSync(fixture.scriptPath),
+        sha256: expect.any(String),
+      });
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
   });
 
-  it("returns null when bun run file does not exist", () => {
-    const idx = resolveBunScriptOperandIndex({
-      argv: ["bun", "run", "./missing.ts"],
-      cwd: "/proj",
+  it("does not snapshot bun package script names", () => {
+    withFakeRuntimeBin({
+      binName: "bun",
+      run: () => {
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-bun-package-script-"));
+        try {
+          const prepared = buildSystemRunApprovalPlan({
+            command: ["bun", "run", "dev"],
+            cwd: tmp,
+          });
+          expect(prepared.ok).toBe(true);
+          if (!prepared.ok) {
+            throw new Error("unreachable");
+          }
+          expect(prepared.plan.mutableFileOperand).toBeUndefined();
+        } finally {
+          fs.rmSync(tmp, { recursive: true, force: true });
+        }
+      },
     });
-    expect(idx).toBeNull();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// resolveDenoRunScriptOperandIndex
-// ---------------------------------------------------------------------------
-
-describe("resolveDenoRunScriptOperandIndex", () => {
-  it("returns null when second arg is not 'run'", () => {
-    expect(resolveBunScriptOperandIndex({ argv: ["deno", "fmt"], cwd: "/" })).toBeNull();
-    expect(resolveDenoRunScriptOperandIndex({ argv: ["deno", "fmt"], cwd: "/" })).toBeNull();
   });
 
-  it("returns null when deno run file does not exist", () => {
-    expect(
-      resolveDenoRunScriptOperandIndex({
-        argv: ["deno", "run", "script.ts"],
-        cwd: "/proj",
-      }),
-    ).toBeNull();
-  });
-
-  it("returns the file index for `deno run script.ts`", () => {
-    existingFiles.add("/proj/script.ts");
-    expect(
-      resolveDenoRunScriptOperandIndex({
-        argv: ["deno", "run", "script.ts"],
-        cwd: "/proj",
-      }),
-    ).toBe(2);
-  });
-
-  it("returns the file index past flags for `deno run --allow-net script.ts`", () => {
-    existingFiles.add("/proj/script.ts");
-    expect(
-      resolveDenoRunScriptOperandIndex({
-        argv: ["deno", "run", "--allow-net", "script.ts"],
-        cwd: "/proj",
-      }),
-    ).toBe(3);
-  });
-
-  it("handles -- separator before script", () => {
-    existingFiles.add("/proj/script.ts");
-    expect(
-      resolveDenoRunScriptOperandIndex({
-        argv: ["deno", "run", "--", "script.ts"],
-        cwd: "/proj",
-      }),
-    ).toBe(3);
+  it("does not snapshot deno eval invocations", () => {
+    withFakeRuntimeBin({
+      binName: "deno",
+      run: () => {
+        const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-deno-eval-"));
+        try {
+          const prepared = buildSystemRunApprovalPlan({
+            command: ["deno", "eval", "console.log('SAFE')"],
+            cwd: tmp,
+          });
+          expect(prepared.ok).toBe(true);
+          if (!prepared.ok) {
+            throw new Error("unreachable");
+          }
+          expect(prepared.plan.mutableFileOperand).toBeUndefined();
+        } finally {
+          fs.rmSync(tmp, { recursive: true, force: true });
+        }
+      },
+    });
   });
 });

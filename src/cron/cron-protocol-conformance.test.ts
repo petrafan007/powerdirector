@@ -29,7 +29,7 @@ function extractDeliveryModes(schema: SchemaLike): string[] {
   return Array.from(new Set(unionModes));
 }
 
-const UI_FILES = ["ui/types.ts", "ui/ui-types.ts", "ui/views/cron.ts"];
+const UI_FILES = ["ui/src/ui/types.ts", "ui/src/ui/ui-types.ts", "ui/src/ui/views/cron.ts"];
 
 const SWIFT_MODEL_CANDIDATES = [`${MACOS_APP_SOURCES_DIR}/CronModels.swift`];
 const SWIFT_STATUS_CANDIDATES = [`${MACOS_APP_SOURCES_DIR}/GatewayConnection.swift`];
@@ -77,7 +77,7 @@ describe("cron protocol conformance", () => {
 
   it("cron status shape matches gateway fields in UI + Swift", async () => {
     const cwd = process.cwd();
-    const uiTypes = await fs.readFile(path.join(cwd, "ui/types.ts"), "utf-8");
+    const uiTypes = await fs.readFile(path.join(cwd, "ui/src/ui/types.ts"), "utf-8");
     expect(uiTypes.includes("export type CronStatus")).toBe(true);
     expect(uiTypes.includes("jobs:")).toBe(true);
     expect(uiTypes.includes("jobCount")).toBe(false);

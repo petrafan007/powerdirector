@@ -283,6 +283,9 @@ export function truncateUtf16Safe(input: string, maxLen: number): string {
 }
 
 export function resolveUserPath(input: string): string {
+  if (!input) {
+    return "";
+  }
   const trimmed = input.trim();
   if (!trimmed) {
     return trimmed;
@@ -302,10 +305,7 @@ export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const override =
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.CLAWDBOT_STATE_DIR?.trim();
+  const override = env.POWERDIRECTOR_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
     return resolveUserPath(override);
   }
@@ -330,7 +330,7 @@ function resolveHomeDisplayPrefix(): { home: string; prefix: string } | undefine
   if (!home) {
     return undefined;
   }
-  const explicitHome = process.env.POWERDIRECTOR_HOME?.trim() || process.env.POWERDIRECTOR_HOME?.trim();
+  const explicitHome = process.env.POWERDIRECTOR_HOME?.trim();
   if (explicitHome) {
     return { home, prefix: "$POWERDIRECTOR_HOME" };
   }

@@ -6,7 +6,7 @@
 
 PowerDirector is a high-performance orchestration platform designed for running resilient, tool-capable AI assistants across dozens of chat platforms and model providers. It bridges the gap between raw LLM APIs and an operator-grade production terminal. 
 
-Originally forked from OpenClaw, PowerDirector has evolved into a specialized command-and-control center for AI agents. It prioritizes **High-Fidelity Interaction**, enabling agents to perform real-world system tasks—like administrative shell operations, IoT management, and multi-channel broadcasting—with the transparency and responsiveness of a live production environment. 
+Originally forked from PowerDirector, PowerDirector has evolved into a specialized command-and-control center for AI agents. It prioritizes **High-Fidelity Interaction**, enabling agents to perform real-world system tasks—like administrative shell operations, IoT management, and multi-channel broadcasting—with the transparency and responsiveness of a live production environment. 
 
 Whether you are managing a fleet of remote nodes via the Node Host server or interacting with a local instance through the PTY-backed interactive shell, PowerDirector ensures zero-downtime reliability through a sophisticated circuit-breaker and fallback routing architecture.
 

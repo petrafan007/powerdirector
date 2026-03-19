@@ -1,4 +1,4 @@
-import type { AnyAgentTool, PowerDirectorPluginApi } from "../../src/plugins/types.js";
+import type { AnyAgentTool, PowerDirectorPluginApi } from "powerdirector/plugin-sdk/llm-task";
 import { createLlmTaskTool } from "./src/llm-task-tool.js";
 
 export default function register(api: PowerDirectorPluginApi) {

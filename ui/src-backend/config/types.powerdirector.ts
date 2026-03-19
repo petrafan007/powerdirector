@@ -44,10 +44,10 @@ export type PowerDirectorConfig = {
     vars?: Record<string, string>;
     /** Sugar: allow env vars directly under env (string values only). */
     [key: string]:
-    | string
-    | Record<string, string>
-    | { enabled?: boolean; timeoutMs?: number }
-    | undefined;
+      | string
+      | Record<string, string>
+      | { enabled?: boolean; timeoutMs?: number }
+      | undefined;
   };
   wizard?: {
     lastRunAt?: string;
@@ -63,12 +63,6 @@ export type PowerDirectorConfig = {
     channel?: "stable" | "beta" | "dev";
     /** Check for updates on gateway start (npm installs only). */
     checkOnStart?: boolean;
-    auto?: {
-      enabled?: boolean;
-      stableDelayHours?: number;
-      stableJitterHours?: number;
-      betaCheckIntervalHours?: number;
-    };
   };
   browser?: BrowserConfig;
   ui?: {

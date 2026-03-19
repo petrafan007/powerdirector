@@ -5,7 +5,7 @@ import {
   readNumberParam,
   readReactionParams,
   readStringParam,
-} from "powerdirector/plugin-sdk";
+} from "powerdirector/plugin-sdk/matrix";
 import {
   deleteMatrixMessage,
   editMatrixMessage,

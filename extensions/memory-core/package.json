@@ -1,14 +1,16 @@
 {
   "name": "@powerdirector/memory-core",
-  "version": "2026.2.19",
+  "version": "2026.3.8-beta.1",
   "private": true,
   "description": "PowerDirector core memory search plugin",
   "type": "module",
-  "devDependencies": {
-    "powerdirector": "workspace:*"
-  },
   "peerDependencies": {
-    "powerdirector": ">=2026.1.26"
+    "powerdirector": ">=2026.3.2"
+  },
+  "peerDependenciesMeta": {
+    "powerdirector": {
+      "optional": true
+    }
   },
   "powerdirector": {
     "extensions": [

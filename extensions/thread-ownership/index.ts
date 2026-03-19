@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig, PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
+import type { PowerDirectorConfig, PowerDirectorPluginApi } from "powerdirector/plugin-sdk/thread-ownership";
 
 type ThreadOwnershipConfig = {
   forwarderUrl?: string;

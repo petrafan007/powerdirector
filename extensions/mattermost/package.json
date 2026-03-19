@@ -1,11 +1,11 @@
 {
   "name": "@powerdirector/mattermost",
-  "version": "2026.2.19",
-  "private": true,
+  "version": "2026.3.8-beta.1",
   "description": "PowerDirector Mattermost channel plugin",
   "type": "module",
-  "devDependencies": {
-    "powerdirector": "workspace:*"
+  "dependencies": {
+    "ws": "^8.19.0",
+    "zod": "^4.3.6"
   },
   "powerdirector": {
     "extensions": [

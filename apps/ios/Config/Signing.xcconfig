@@ -1,9 +1,10 @@
 // Shared iOS signing defaults for local development + CI.
-OPENCLAW_IOS_DEFAULT_TEAM = Y5PE65HELJ
-OPENCLAW_IOS_SELECTED_TEAM = $(OPENCLAW_IOS_DEFAULT_TEAM)
-OPENCLAW_APP_BUNDLE_ID = ai.openclaw.ios
-OPENCLAW_WATCH_APP_BUNDLE_ID = ai.openclaw.ios.watchkitapp
-OPENCLAW_WATCH_EXTENSION_BUNDLE_ID = ai.openclaw.ios.watchkitapp.extension
+POWERDIRECTOR_IOS_DEFAULT_TEAM = Y5PE65HELJ
+POWERDIRECTOR_IOS_SELECTED_TEAM = $(POWERDIRECTOR_IOS_DEFAULT_TEAM)
+POWERDIRECTOR_APP_BUNDLE_ID = ai.powerdirector.ios
+POWERDIRECTOR_WATCH_APP_BUNDLE_ID = ai.powerdirector.ios.watchkitapp
+POWERDIRECTOR_WATCH_EXTENSION_BUNDLE_ID = ai.powerdirector.ios.watchkitapp.extension
+POWERDIRECTOR_ACTIVITY_WIDGET_BUNDLE_ID = ai.powerdirector.ios.activitywidget
 
 // Local contributors can override this by running scripts/ios-configure-signing.sh.
 // Keep include after defaults: xcconfig is evaluated top-to-bottom.
@@ -12,7 +13,7 @@ OPENCLAW_WATCH_EXTENSION_BUNDLE_ID = ai.openclaw.ios.watchkitapp.extension
 
 CODE_SIGN_STYLE = Automatic
 CODE_SIGN_IDENTITY = Apple Development
-DEVELOPMENT_TEAM = $(OPENCLAW_IOS_SELECTED_TEAM)
+DEVELOPMENT_TEAM = $(POWERDIRECTOR_IOS_SELECTED_TEAM)
 
 // Let Xcode manage provisioning for the selected local team.
 PROVISIONING_PROFILE_SPECIFIER =

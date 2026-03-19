@@ -1,4 +1,4 @@
-import { MarkdownConfigSchema } from "powerdirector/plugin-sdk";
+import { MarkdownConfigSchema } from "powerdirector/plugin-sdk/twitch";
 import { z } from "zod";
 
 /**

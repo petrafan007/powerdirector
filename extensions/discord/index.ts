@@ -1,7 +1,8 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/discord";
+import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/discord";
 import { discordPlugin } from "./src/channel.js";
 import { setDiscordRuntime } from "./src/runtime.js";
+import { registerDiscordSubagentHooks } from "./src/subagent-hooks.js";
 
 const plugin = {
   id: "discord",
@@ -11,6 +12,7 @@ const plugin = {
   register(api: PowerDirectorPluginApi) {
     setDiscordRuntime(api.runtime);
     api.registerChannel({ plugin: discordPlugin });
+    registerDiscordSubagentHooks(api);
   },
 };
 

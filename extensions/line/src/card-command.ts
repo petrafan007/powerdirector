@@ -1,4 +1,4 @@
-import type { LineChannelData, PowerDirectorPluginApi, ReplyPayload } from "powerdirector/plugin-sdk";
+import type { LineChannelData, PowerDirectorPluginApi, ReplyPayload } from "powerdirector/plugin-sdk/line";
 import {
   createActionCard,
   createImageCard,
@@ -7,7 +7,7 @@ import {
   createReceiptCard,
   type CardAction,
   type ListItem,
-} from "powerdirector/plugin-sdk";
+} from "powerdirector/plugin-sdk/line";
 
 const CARD_USAGE = `Usage: /card <type> "title" "body" [options]
 

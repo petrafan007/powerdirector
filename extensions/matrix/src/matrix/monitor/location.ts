@@ -3,7 +3,7 @@ import {
   formatLocationText,
   toLocationContext,
   type NormalizedLocation,
-} from "powerdirector/plugin-sdk";
+} from "powerdirector/plugin-sdk/matrix";
 import { EventType } from "./types.js";
 
 export type MatrixLocationPayload = {

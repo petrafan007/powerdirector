@@ -5,8 +5,8 @@
  * resolves agent routes, and handles replies.
  */
 
-import type { ReplyPayload, PowerDirectorConfig } from "powerdirector/plugin-sdk";
-import { createReplyPrefixOptions } from "powerdirector/plugin-sdk";
+import type { ReplyPayload, PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
+import { createReplyPrefixOptions } from "powerdirector/plugin-sdk/twitch";
 import { checkTwitchAccessControl } from "./access-control.js";
 import { getOrCreateClientManager } from "./client-manager-registry.js";
 import { getTwitchRuntime } from "./runtime.js";

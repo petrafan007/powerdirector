@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import "./bootstrap.js";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { getReplyFromConfig } from "./auto-reply/reply.js";
@@ -34,6 +33,7 @@ import { enableConsoleCapture } from "./logging.js";
 import { runCommandWithTimeout, runExec } from "./process/exec.js";
 import { assertWebChannel, normalizeE164, toWhatsappJid } from "./utils.js";
 
+loadDotEnv({ quiet: true });
 normalizeEnv();
 ensurePowerDirectorCliOnPath();
 

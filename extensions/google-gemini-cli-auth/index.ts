@@ -3,12 +3,12 @@ import {
   emptyPluginConfigSchema,
   type PowerDirectorPluginApi,
   type ProviderAuthContext,
-} from "powerdirector/plugin-sdk";
+} from "powerdirector/plugin-sdk/google-gemini-cli-auth";
 import { loginGeminiCliOAuth } from "./oauth.js";
 
 const PROVIDER_ID = "google-gemini-cli";
 const PROVIDER_LABEL = "Gemini CLI OAuth";
-const DEFAULT_MODEL = "google-gemini-cli/gemini-3-pro-preview";
+const DEFAULT_MODEL = "google-gemini-cli/gemini-3.1-pro-preview";
 const ENV_VARS = [
   "POWERDIRECTOR_GEMINI_OAUTH_CLIENT_ID",
   "POWERDIRECTOR_GEMINI_OAUTH_CLIENT_SECRET",

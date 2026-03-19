@@ -1,11 +1,18 @@
 export {
   clearConfigCache,
+  ConfigRuntimeRefreshError,
+  clearRuntimeConfigSnapshot,
   createConfigIO,
+  getRuntimeConfigSnapshot,
+  getRuntimeConfigSourceSnapshot,
   loadConfig,
+  readBestEffortConfig,
   parseConfigJson5,
   readConfigFileSnapshot,
   readConfigFileSnapshotForWrite,
   resolveConfigSnapshotHash,
+  setRuntimeConfigSnapshotRefreshHandler,
+  setRuntimeConfigSnapshot,
   writeConfigFile,
 } from "./io.js";
 export { migrateLegacyConfig } from "./legacy-migrate.js";
@@ -18,6 +25,3 @@ export {
   validateConfigObjectRawWithPlugins,
   validateConfigObjectWithPlugins,
 } from "./validation.js";
-export { PowerDirectorSchema } from "./zod-schema.js";
-export type { PowerDirectorConfig } from "./types.powerdirector.js";
-export type { PowerDirectorConfig as powerdirectorConfig } from "./types.powerdirector.js";

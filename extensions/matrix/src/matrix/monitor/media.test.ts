@@ -1,4 +1,4 @@
-import type { PluginRuntime } from "powerdirector/plugin-sdk";
+import type { PluginRuntime } from "powerdirector/plugin-sdk/matrix";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { setMatrixRuntime } from "../../runtime.js";
 import { downloadMatrixMedia } from "./media.js";

@@ -77,7 +77,7 @@ describe("push APNs env config", () => {
       POWERDIRECTOR_APNS_TEAM_ID: "TEAM123",
       POWERDIRECTOR_APNS_KEY_ID: "KEY123",
       POWERDIRECTOR_APNS_PRIVATE_KEY_P8:
-        "-----BEGIN PRIVATE KEY-----\\nline-a\\nline-b\\n-----END PRIVATE KEY-----",
+        "-----BEGIN PRIVATE KEY-----\\nline-a\\nline-b\\n-----END PRIVATE KEY-----", // pragma: allowlist secret
     } as NodeJS.ProcessEnv;
     const resolved = await resolveApnsAuthConfigFromEnv(env);
     expect(resolved.ok).toBe(true);

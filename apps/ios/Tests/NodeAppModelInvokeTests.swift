@@ -1,36 +1,38 @@
-import OpenClawKit
+import PowerDirectorKit
 import Foundation
 import Testing
 import UIKit
-@testable import OpenClaw
+@testable import PowerDirector
 
-private func withUserDefaults<T>(_ updates: [String: Any?], _ body: () throws -> T) rethrows -> T {
-    let defaults = UserDefaults.standard
-    var snapshot: [String: Any?] = [:]
-    for key in updates.keys {
-        snapshot[key] = defaults.object(forKey: key)
+private func makeAgentDeepLinkURL(
+    message: String,
+    deliver: Bool = false,
+    to: String? = nil,
+    channel: String? = nil,
+    key: String? = nil) -> URL
+{
+    var components = URLComponents()
+    components.scheme = "powerdirector"
+    components.host = "agent"
+    var queryItems: [URLQueryItem] = [URLQueryItem(name: "message", value: message)]
+    if deliver {
+        queryItems.append(URLQueryItem(name: "deliver", value: "1"))
     }
-    for (key, value) in updates {
-        if let value {
-            defaults.set(value, forKey: key)
-        } else {
-            defaults.removeObject(forKey: key)
-        }
+    if let to {
+        queryItems.append(URLQueryItem(name: "to", value: to))
     }
-    defer {
-        for (key, value) in snapshot {
-            if let value {
-                defaults.set(value, forKey: key)
-            } else {
-                defaults.removeObject(forKey: key)
-            }
-        }
+    if let channel {
+        queryItems.append(URLQueryItem(name: "channel", value: channel))
     }
-    return try body()
+    if let key {
+        queryItems.append(URLQueryItem(name: "key", value: key))
+    }
+    components.queryItems = queryItems
+    return components.url!
 }
 
 @MainActor
-private final class MockWatchMessagingService: WatchMessagingServicing, @unchecked Sendable {
+private final class MockWatchMessagingService: @preconcurrency WatchMessagingServicing, @unchecked Sendable {
     var currentStatus = WatchMessagingStatus(
         supported: true,
         paired: true,
@@ -42,30 +44,34 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
         queuedForDelivery: false,
         transport: "sendMessage")
     var sendError: Error?
-    var lastSent: (id: String, title: String, body: String, priority: OpenClawNotificationPriority?)?
+    var lastSent: (id: String, params: PowerDirectorWatchNotifyParams)?
+    private var replyHandler: (@Sendable (WatchQuickReplyEvent) -> Void)?
 
     func status() async -> WatchMessagingStatus {
         self.currentStatus
     }
 
-    func sendNotification(
-        id: String,
-        title: String,
-        body: String,
-        priority: OpenClawNotificationPriority?) async throws -> WatchNotificationSendResult
-    {
-        self.lastSent = (id: id, title: title, body: body, priority: priority)
+    func setReplyHandler(_ handler: (@Sendable (WatchQuickReplyEvent) -> Void)?) {
+        self.replyHandler = handler
+    }
+
+    func sendNotification(id: String, params: PowerDirectorWatchNotifyParams) async throws -> WatchNotificationSendResult {
+        self.lastSent = (id: id, params: params)
         if let sendError = self.sendError {
             throw sendError
         }
         return self.nextSendResult
+    }
+
+    func emitReply(_ event: WatchQuickReplyEvent) {
+        self.replyHandler?(event)
     }
 }
 
 @Suite(.serialized) struct NodeAppModelInvokeTests {
     @Test @MainActor func decodeParamsFailsWithoutJSON() {
         #expect(throws: Error.self) {
-            _ = try NodeAppModel._test_decodeParams(OpenClawCanvasNavigateParams.self, from: nil)
+            _ = try NodeAppModel._test_decodeParams(PowerDirectorCanvasNavigateParams.self, from: nil)
         }
     }
 
@@ -94,7 +100,7 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
         let appModel = NodeAppModel()
         appModel.setScenePhase(.background)
 
-        let req = BridgeInvokeRequest(id: "bg", command: OpenClawCanvasCommand.present.rawValue)
+        let req = BridgeInvokeRequest(id: "bg", command: PowerDirectorCanvasCommand.present.rawValue)
         let res = await appModel._test_handleInvoke(req)
         #expect(res.ok == false)
         #expect(res.error?.code == .backgroundUnavailable)
@@ -102,7 +108,7 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
 
     @Test @MainActor func handleInvokeRejectsCameraWhenDisabled() async {
         let appModel = NodeAppModel()
-        let req = BridgeInvokeRequest(id: "cam", command: OpenClawCameraCommand.snap.rawValue)
+        let req = BridgeInvokeRequest(id: "cam", command: PowerDirectorCameraCommand.snap.rawValue)
 
         let defaults = UserDefaults.standard
         let key = "camera.enabled"
@@ -124,13 +130,13 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
 
     @Test @MainActor func handleInvokeRejectsInvalidScreenFormat() async {
         let appModel = NodeAppModel()
-        let params = OpenClawScreenRecordParams(format: "gif")
+        let params = PowerDirectorScreenRecordParams(format: "gif")
         let data = try? JSONEncoder().encode(params)
         let json = data.flatMap { String(data: $0, encoding: .utf8) }
 
         let req = BridgeInvokeRequest(
             id: "screen",
-            command: OpenClawScreenCommand.record.rawValue,
+            command: PowerDirectorScreenCommand.record.rawValue,
             paramsJSON: json)
 
         let res = await appModel._test_handleInvoke(req)
@@ -142,29 +148,29 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
         let appModel = NodeAppModel()
         appModel.screen.navigate(to: "http://example.com")
 
-        let present = BridgeInvokeRequest(id: "present", command: OpenClawCanvasCommand.present.rawValue)
+        let present = BridgeInvokeRequest(id: "present", command: PowerDirectorCanvasCommand.present.rawValue)
         let presentRes = await appModel._test_handleInvoke(present)
         #expect(presentRes.ok == true)
         #expect(appModel.screen.urlString.isEmpty)
 
         // Loopback URLs are rejected (they are not meaningful for a remote gateway).
-        let navigateParams = OpenClawCanvasNavigateParams(url: "http://example.com/")
+        let navigateParams = PowerDirectorCanvasNavigateParams(url: "http://example.com/")
         let navData = try JSONEncoder().encode(navigateParams)
         let navJSON = String(decoding: navData, as: UTF8.self)
         let navigate = BridgeInvokeRequest(
             id: "nav",
-            command: OpenClawCanvasCommand.navigate.rawValue,
+            command: PowerDirectorCanvasCommand.navigate.rawValue,
             paramsJSON: navJSON)
         let navRes = await appModel._test_handleInvoke(navigate)
         #expect(navRes.ok == true)
         #expect(appModel.screen.urlString == "http://example.com/")
 
-        let evalParams = OpenClawCanvasEvalParams(javaScript: "1+1")
+        let evalParams = PowerDirectorCanvasEvalParams(javaScript: "1+1")
         let evalData = try JSONEncoder().encode(evalParams)
         let evalJSON = String(decoding: evalData, as: UTF8.self)
         let eval = BridgeInvokeRequest(
             id: "eval",
-            command: OpenClawCanvasCommand.evalJS.rawValue,
+            command: PowerDirectorCanvasCommand.evalJS.rawValue,
             paramsJSON: evalJSON)
         let evalRes = await appModel._test_handleInvoke(eval)
         #expect(evalRes.ok == true)
@@ -173,21 +179,56 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
         #expect(payload?["result"] as? String == "2")
     }
 
+    @Test @MainActor func pendingForegroundActionsReplayCanvasNavigate() async throws {
+        let appModel = NodeAppModel()
+        let navigateParams = PowerDirectorCanvasNavigateParams(url: "http://example.com/")
+        let navData = try JSONEncoder().encode(navigateParams)
+        let navJSON = String(decoding: navData, as: UTF8.self)
+
+        await appModel._test_applyPendingForegroundNodeActions([
+            (
+                id: "pending-nav-1",
+                command: PowerDirectorCanvasCommand.navigate.rawValue,
+                paramsJSON: navJSON
+            ),
+        ])
+
+        #expect(appModel.screen.urlString == "http://example.com/")
+    }
+
+    @Test @MainActor func pendingForegroundActionsDoNotApplyWhileBackgrounded() async throws {
+        let appModel = NodeAppModel()
+        appModel.setScenePhase(.background)
+        let navigateParams = PowerDirectorCanvasNavigateParams(url: "http://example.com/")
+        let navData = try JSONEncoder().encode(navigateParams)
+        let navJSON = String(decoding: navData, as: UTF8.self)
+
+        await appModel._test_applyPendingForegroundNodeActions([
+            (
+                id: "pending-nav-bg",
+                command: PowerDirectorCanvasCommand.navigate.rawValue,
+                paramsJSON: navJSON
+            ),
+        ])
+
+        #expect(appModel.screen.urlString.isEmpty)
+    }
+
     @Test @MainActor func handleInvokeA2UICommandsFailWhenHostMissing() async throws {
         let appModel = NodeAppModel()
 
-        let reset = BridgeInvokeRequest(id: "reset", command: OpenClawCanvasA2UICommand.reset.rawValue)
+        let reset = BridgeInvokeRequest(id: "reset", command: PowerDirectorCanvasA2UICommand.reset.rawValue)
         let resetRes = await appModel._test_handleInvoke(reset)
         #expect(resetRes.ok == false)
         #expect(resetRes.error?.message.contains("A2UI_HOST_NOT_CONFIGURED") == true)
 
         let jsonl = "{\"beginRendering\":{}}"
-        let pushParams = OpenClawCanvasA2UIPushJSONLParams(jsonl: jsonl)
+        let pushParams = PowerDirectorCanvasA2UIPushJSONLParams(jsonl: jsonl)
         let pushData = try JSONEncoder().encode(pushParams)
         let pushJSON = String(decoding: pushData, as: UTF8.self)
         let push = BridgeInvokeRequest(
             id: "push",
-            command: OpenClawCanvasA2UICommand.pushJSONL.rawValue,
+            command: PowerDirectorCanvasA2UICommand.pushJSONL.rawValue,
             paramsJSON: pushJSON)
         let pushRes = await appModel._test_handleInvoke(push)
         #expect(pushRes.ok == false)
@@ -211,13 +252,13 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
             reachable: false,
             activationState: "inactive")
         let appModel = NodeAppModel(watchMessagingService: watchService)
-        let req = BridgeInvokeRequest(id: "watch-status", command: OpenClawWatchCommand.status.rawValue)
+        let req = BridgeInvokeRequest(id: "watch-status", command: PowerDirectorWatchCommand.status.rawValue)
 
         let res = await appModel._test_handleInvoke(req)
         #expect(res.ok == true)
 
         let payloadData = try #require(res.payloadJSON?.data(using: .utf8))
-        let payload = try JSONDecoder().decode(OpenClawWatchStatusPayload.self, from: payloadData)
+        let payload = try JSONDecoder().decode(PowerDirectorWatchStatusPayload.self, from: payloadData)
         #expect(payload.supported == true)
         #expect(payload.reachable == false)
         #expect(payload.activationState == "inactive")
@@ -230,25 +271,25 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
             queuedForDelivery: true,
             transport: "transferUserInfo")
         let appModel = NodeAppModel(watchMessagingService: watchService)
-        let params = OpenClawWatchNotifyParams(
-            title: "OpenClaw",
+        let params = PowerDirectorWatchNotifyParams(
+            title: "PowerDirector",
             body: "Meeting with Peter is at 4pm",
             priority: .timeSensitive)
         let paramsData = try JSONEncoder().encode(params)
         let paramsJSON = String(decoding: paramsData, as: UTF8.self)
         let req = BridgeInvokeRequest(
             id: "watch-notify",
-            command: OpenClawWatchCommand.notify.rawValue,
+            command: PowerDirectorWatchCommand.notify.rawValue,
             paramsJSON: paramsJSON)
 
         let res = await appModel._test_handleInvoke(req)
         #expect(res.ok == true)
-        #expect(watchService.lastSent?.title == "OpenClaw")
-        #expect(watchService.lastSent?.body == "Meeting with Peter is at 4pm")
-        #expect(watchService.lastSent?.priority == .timeSensitive)
+        #expect(watchService.lastSent?.params.title == "PowerDirector")
+        #expect(watchService.lastSent?.params.body == "Meeting with Peter is at 4pm")
+        #expect(watchService.lastSent?.params.priority == .timeSensitive)
 
         let payloadData = try #require(res.payloadJSON?.data(using: .utf8))
-        let payload = try JSONDecoder().decode(OpenClawWatchNotifyPayload.self, from: payloadData)
+        let payload = try JSONDecoder().decode(PowerDirectorWatchNotifyPayload.self, from: payloadData)
         #expect(payload.deliveredImmediately == false)
         #expect(payload.queuedForDelivery == true)
         #expect(payload.transport == "transferUserInfo")
@@ -257,18 +298,91 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
     @Test @MainActor func handleInvokeWatchNotifyRejectsEmptyMessage() async throws {
         let watchService = MockWatchMessagingService()
         let appModel = NodeAppModel(watchMessagingService: watchService)
-        let params = OpenClawWatchNotifyParams(title: "   ", body: "\n")
+        let params = PowerDirectorWatchNotifyParams(title: "   ", body: "\n")
         let paramsData = try JSONEncoder().encode(params)
         let paramsJSON = String(decoding: paramsData, as: UTF8.self)
         let req = BridgeInvokeRequest(
             id: "watch-notify-empty",
-            command: OpenClawWatchCommand.notify.rawValue,
+            command: PowerDirectorWatchCommand.notify.rawValue,
             paramsJSON: paramsJSON)
 
         let res = await appModel._test_handleInvoke(req)
         #expect(res.ok == false)
         #expect(res.error?.code == .invalidRequest)
         #expect(watchService.lastSent == nil)
+    }
+
+    @Test @MainActor func handleInvokeWatchNotifyAddsDefaultActionsForPrompt() async throws {
+        let watchService = MockWatchMessagingService()
+        let appModel = NodeAppModel(watchMessagingService: watchService)
+        let params = PowerDirectorWatchNotifyParams(
+            title: "Task",
+            body: "Action needed",
+            priority: .passive,
+            promptId: "prompt-123")
+        let paramsData = try JSONEncoder().encode(params)
+        let paramsJSON = String(decoding: paramsData, as: UTF8.self)
+        let req = BridgeInvokeRequest(
+            id: "watch-notify-default-actions",
+            command: PowerDirectorWatchCommand.notify.rawValue,
+            paramsJSON: paramsJSON)
+
+        let res = await appModel._test_handleInvoke(req)
+        #expect(res.ok == true)
+        #expect(watchService.lastSent?.params.risk == .low)
+        let actionIDs = watchService.lastSent?.params.actions?.map(\.id)
+        #expect(actionIDs == ["done", "snooze_10m", "open_phone", "escalate"])
+    }
+
+    @Test @MainActor func handleInvokeWatchNotifyAddsApprovalDefaults() async throws {
+        let watchService = MockWatchMessagingService()
+        let appModel = NodeAppModel(watchMessagingService: watchService)
+        let params = PowerDirectorWatchNotifyParams(
+            title: "Approval",
+            body: "Allow command?",
+            promptId: "prompt-approval",
+            kind: "approval")
+        let paramsData = try JSONEncoder().encode(params)
+        let paramsJSON = String(decoding: paramsData, as: UTF8.self)
+        let req = BridgeInvokeRequest(
+            id: "watch-notify-approval-defaults",
+            command: PowerDirectorWatchCommand.notify.rawValue,
+            paramsJSON: paramsJSON)
+
+        let res = await appModel._test_handleInvoke(req)
+        #expect(res.ok == true)
+        let actionIDs = watchService.lastSent?.params.actions?.map(\.id)
+        #expect(actionIDs == ["approve", "decline", "open_phone", "escalate"])
+        #expect(watchService.lastSent?.params.actions?[1].style == "destructive")
+    }
+
+    @Test @MainActor func handleInvokeWatchNotifyDerivesPriorityFromRiskAndCapsActions() async throws {
+        let watchService = MockWatchMessagingService()
+        let appModel = NodeAppModel(watchMessagingService: watchService)
+        let params = PowerDirectorWatchNotifyParams(
+            title: "Urgent",
+            body: "Check now",
+            risk: .high,
+            actions: [
+                PowerDirectorWatchAction(id: "a1", label: "A1"),
+                PowerDirectorWatchAction(id: "a2", label: "A2"),
+                PowerDirectorWatchAction(id: "a3", label: "A3"),
+                PowerDirectorWatchAction(id: "a4", label: "A4"),
+                PowerDirectorWatchAction(id: "a5", label: "A5"),
+            ])
+        let paramsData = try JSONEncoder().encode(params)
+        let paramsJSON = String(decoding: paramsData, as: UTF8.self)
+        let req = BridgeInvokeRequest(
+            id: "watch-notify-derive-priority",
+            command: PowerDirectorWatchCommand.notify.rawValue,
+            paramsJSON: paramsJSON)
+
+        let res = await appModel._test_handleInvoke(req)
+        #expect(res.ok == true)
+        #expect(watchService.lastSent?.params.priority == .timeSensitive)
+        #expect(watchService.lastSent?.params.risk == .high)
+        let actionIDs = watchService.lastSent?.params.actions?.map(\.id)
+        #expect(actionIDs == ["a1", "a2", "a3", "a4"])
     }
 
     @Test @MainActor func handleInvokeWatchNotifyReturnsUnavailableOnDeliveryFailure() async throws {
@@ -278,12 +392,12 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
             code: 1,
             userInfo: [NSLocalizedDescriptionKey: "WATCH_UNAVAILABLE: no paired Apple Watch"])
         let appModel = NodeAppModel(watchMessagingService: watchService)
-        let params = OpenClawWatchNotifyParams(title: "OpenClaw", body: "Delivery check")
+        let params = PowerDirectorWatchNotifyParams(title: "PowerDirector", body: "Delivery check")
         let paramsData = try JSONEncoder().encode(params)
         let paramsJSON = String(decoding: paramsData, as: UTF8.self)
         let req = BridgeInvokeRequest(
             id: "watch-notify-fail",
-            command: OpenClawWatchCommand.notify.rawValue,
+            command: PowerDirectorWatchCommand.notify.rawValue,
             paramsJSON: paramsJSON)
 
         let res = await appModel._test_handleInvoke(req)
@@ -292,9 +406,25 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
         #expect(res.error?.message.contains("WATCH_UNAVAILABLE") == true)
     }
 
+    @Test @MainActor func watchReplyQueuesWhenGatewayOffline() async {
+        let watchService = MockWatchMessagingService()
+        let appModel = NodeAppModel(watchMessagingService: watchService)
+        watchService.emitReply(
+            WatchQuickReplyEvent(
+                replyId: "reply-offline-1",
+                promptId: "prompt-1",
+                actionId: "approve",
+                actionLabel: "Approve",
+                sessionKey: "ios",
+                note: nil,
+                sentAtMs: 1234,
+                transport: "transferUserInfo"))
+        #expect(appModel._test_queuedWatchReplyCount() == 1)
+    }
+
     @Test @MainActor func handleDeepLinkSetsErrorWhenNotConnected() async {
         let appModel = NodeAppModel()
-        let url = URL(string: "openclaw://agent?message=hello")!
+        let url = URL(string: "powerdirector://agent?message=hello")!
         await appModel.handleDeepLink(url: url)
         #expect(appModel.screen.errorText?.contains("Gateway not connected") == true)
     }
@@ -302,9 +432,75 @@ private final class MockWatchMessagingService: WatchMessagingServicing, @uncheck
     @Test @MainActor func handleDeepLinkRejectsOversizedMessage() async {
         let appModel = NodeAppModel()
         let msg = String(repeating: "a", count: 20001)
-        let url = URL(string: "openclaw://agent?message=\(msg)")!
+        let url = URL(string: "powerdirector://agent?message=\(msg)")!
         await appModel.handleDeepLink(url: url)
         #expect(appModel.screen.errorText?.contains("Deep link too large") == true)
+    }
+
+    @Test @MainActor func handleDeepLinkRequiresConfirmationWhenConnectedAndUnkeyed() async {
+        let appModel = NodeAppModel()
+        appModel._test_setGatewayConnected(true)
+        let url = makeAgentDeepLinkURL(message: "hello from deep link")
+
+        await appModel.handleDeepLink(url: url)
+        #expect(appModel.pendingAgentDeepLinkPrompt != nil)
+        #expect(appModel.openChatRequestID == 0)
+
+        await appModel.approvePendingAgentDeepLinkPrompt()
+        #expect(appModel.pendingAgentDeepLinkPrompt == nil)
+        #expect(appModel.openChatRequestID == 1)
+    }
+
+    @Test @MainActor func handleDeepLinkCoalescesPromptWhenRateLimited() async throws {
+        let appModel = NodeAppModel()
+        appModel._test_setGatewayConnected(true)
+
+        await appModel.handleDeepLink(url: makeAgentDeepLinkURL(message: "first prompt"))
+        let firstPrompt = try #require(appModel.pendingAgentDeepLinkPrompt)
+
+        await appModel.handleDeepLink(url: makeAgentDeepLinkURL(message: "second prompt"))
+        let coalescedPrompt = try #require(appModel.pendingAgentDeepLinkPrompt)
+
+        #expect(coalescedPrompt.id != firstPrompt.id)
+        #expect(coalescedPrompt.messagePreview.contains("second prompt"))
+    }
+
+    @Test @MainActor func handleDeepLinkStripsDeliveryFieldsWhenUnkeyed() async throws {
+        let appModel = NodeAppModel()
+        appModel._test_setGatewayConnected(true)
+        let url = makeAgentDeepLinkURL(
+            message: "route this",
+            deliver: true,
+            to: "123456",
+            channel: "telegram")
+
+        await appModel.handleDeepLink(url: url)
+        let prompt = try #require(appModel.pendingAgentDeepLinkPrompt)
+        #expect(prompt.request.deliver == false)
+        #expect(prompt.request.to == nil)
+        #expect(prompt.request.channel == nil)
+    }
+
+    @Test @MainActor func handleDeepLinkRejectsLongUnkeyedMessageWhenConnected() async {
+        let appModel = NodeAppModel()
+        appModel._test_setGatewayConnected(true)
+        let message = String(repeating: "x", count: 241)
+        let url = makeAgentDeepLinkURL(message: message)
+
+        await appModel.handleDeepLink(url: url)
+        #expect(appModel.pendingAgentDeepLinkPrompt == nil)
+        #expect(appModel.screen.errorText?.contains("blocked") == true)
+    }
+
+    @Test @MainActor func handleDeepLinkBypassesPromptWithValidKey() async {
+        let appModel = NodeAppModel()
+        appModel._test_setGatewayConnected(true)
+        let key = NodeAppModel._test_currentDeepLinkKey()
+        let url = makeAgentDeepLinkURL(message: "trusted request", key: key)
+
+        await appModel.handleDeepLink(url: url)
+        #expect(appModel.pendingAgentDeepLinkPrompt == nil)
+        #expect(appModel.openChatRequestID == 1)
     }
 
     @Test @MainActor func sendVoiceTranscriptThrowsWhenGatewayOffline() async {

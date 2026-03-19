@@ -26,7 +26,7 @@ export async function GET() {
             sessionsCount,
             cronEnabled: typeof cronStatus?.enabled === 'boolean' ? cronStatus.enabled : null,
             cronNext: typeof cronStatus?.nextWakeAtMs === 'number' ? cronStatus.nextWakeAtMs : null,
-            // OpenClaw tracks this client-side from channel refresh actions.
+            // PowerDirector tracks this client-side from channel refresh actions.
             lastChannelsRefresh: null,
             lastError: null
         });

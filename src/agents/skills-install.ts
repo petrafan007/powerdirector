@@ -120,13 +120,10 @@ function buildInstallCommand(
 } {
   switch (spec.kind) {
     case "brew": {
-      if (spec.formula) {
-        return { argv: ["brew", "install", spec.formula] };
+      if (!spec.formula) {
+        return { argv: null, error: "missing brew formula" };
       }
-      if (spec.cask) {
-        return { argv: ["brew", "install", "--cask", spec.cask] };
-      }
-      return { argv: null, error: "missing brew formula" };
+      return { argv: ["brew", "install", spec.formula] };
     }
     case "node": {
       if (!spec.package) {
@@ -150,18 +147,6 @@ function buildInstallCommand(
     }
     case "download": {
       return { argv: null, error: "download install handled separately" };
-    }
-    case "apt": {
-      if (!spec.package) {
-        return { argv: null, error: "missing apt package" };
-      }
-      return { argv: ["apt-get", "install", "-y", spec.package] };
-    }
-    case "pipx": {
-      if (!spec.package) {
-        return { argv: null, error: "missing pipx package" };
-      }
-      return { argv: ["pipx", "install", "--force", spec.package] };
     }
     default:
       return { argv: null, error: "unsupported installer" };
@@ -260,7 +245,7 @@ async function runBestEffortCommand(
 }
 
 function resolveBrewMissingFailure(spec: SkillInstallSpec): SkillInstallResult {
-  const formula = spec.formula ?? spec.cask ?? "this package";
+  const formula = spec.formula ?? "this package";
   const hint =
     process.platform === "linux"
       ? `Homebrew is not installed. Install it from https://brew.sh or install "${formula}" manually using your system package manager (e.g. apt, dnf, pacman).`
@@ -381,82 +366,6 @@ async function ensureGoInstalled(params: {
   });
 }
 
-async function ensurePipxInstalled(params: {
-  spec: SkillInstallSpec;
-  brewExe?: string;
-  timeoutMs: number;
-}): Promise<SkillInstallResult | undefined> {
-  if (params.spec.kind !== "pipx" || hasBinary("pipx")) {
-    return undefined;
-  }
-
-  if (params.brewExe) {
-    const brewResult = await runCommandSafely([params.brewExe, "install", "pipx"], {
-      timeoutMs: params.timeoutMs,
-    });
-    if (brewResult.code === 0) {
-      return undefined;
-    }
-    return createInstallFailure({
-      message: "Failed to install pipx (brew)",
-      ...brewResult,
-    });
-  }
-
-  if (hasBinary("apt-get")) {
-    const aptInstallArgv = ["apt-get", "install", "-y", "pipx"];
-    const isRoot = typeof process.getuid === "function" && process.getuid() === 0;
-    if (isRoot) {
-      await runBestEffortCommand(["apt-get", "update", "-qq"], { timeoutMs: params.timeoutMs });
-      const aptResult = await runCommandSafely(aptInstallArgv, { timeoutMs: params.timeoutMs });
-      if (aptResult.code === 0) {
-        return undefined;
-      }
-      return createInstallFailure({
-        message: "Failed to install pipx (apt)",
-        ...aptResult,
-      });
-    }
-
-    if (!hasBinary("sudo")) {
-      return createInstallFailure({
-        message:
-          "pipx is not installed and apt requires root/sudo. Install pipx manually, then retry.",
-      });
-    }
-
-    const sudoCheck = await runCommandSafely(["sudo", "-n", "true"], {
-      timeoutMs: 5_000,
-    });
-    if (sudoCheck.code !== 0) {
-      return createInstallFailure({
-        message:
-          "pipx is not installed and sudo is unavailable (or requires password). Install pipx manually, then retry.",
-        ...sudoCheck,
-      });
-    }
-
-    await runBestEffortCommand(["sudo", "apt-get", "update", "-qq"], {
-      timeoutMs: params.timeoutMs,
-    });
-    const aptResult = await runCommandSafely(["sudo", ...aptInstallArgv], {
-      timeoutMs: params.timeoutMs,
-    });
-    if (aptResult.code === 0) {
-      return undefined;
-    }
-    return createInstallFailure({
-      message: "Failed to install pipx (apt)",
-      ...aptResult,
-    });
-  }
-
-  return createInstallFailure({
-    message:
-      "pipx is not installed. Install manually: https://pipx.pypa.io/stable/installation/",
-  });
-}
-
 async function executeInstallCommand(params: {
   argv: string[] | null;
   timeoutMs: number;
@@ -544,79 +453,16 @@ export async function installSkill(params: SkillInstallRequest): Promise<SkillIn
     return withWarnings(goInstallFailure, warnings);
   }
 
-  const pipxInstallFailure = await ensurePipxInstalled({ spec, brewExe, timeoutMs });
-  if (pipxInstallFailure) {
-    return withWarnings(pipxInstallFailure, warnings);
-  }
-
   const argv = command.argv ? [...command.argv] : null;
   if (spec.kind === "brew" && brewExe && argv?.[0] === "brew") {
     argv[0] = brewExe;
   }
-  if (spec.kind === "apt") {
-    if (!hasBinary("apt-get")) {
-      return withWarnings(
-        createInstallFailure({
-          message: "apt-get is not available on this host.",
-        }),
-        warnings,
-      );
-    }
-    const isRoot = typeof process.getuid === "function" && process.getuid() === 0;
-    if (isRoot) {
-      await runBestEffortCommand(["apt-get", "update", "-qq"], { timeoutMs });
-    } else {
-      if (!hasBinary("sudo")) {
-        return withWarnings(
-          createInstallFailure({
-            message:
-              "apt installer requires root/sudo but sudo is not installed. Install manually or run as root.",
-          }),
-          warnings,
-        );
-      }
-      const sudoCheck = await runCommandSafely(["sudo", "-n", "true"], {
-        timeoutMs: 5_000,
-      });
-      if (sudoCheck.code !== 0) {
-        return withWarnings(
-          createInstallFailure({
-            message:
-              "apt installer requires non-interactive sudo, but sudo failed. Install manually or grant passwordless sudo for apt-get.",
-            ...sudoCheck,
-          }),
-          warnings,
-        );
-      }
-      await runBestEffortCommand(["sudo", "apt-get", "update", "-qq"], { timeoutMs });
-      if (argv?.[0] === "apt-get") {
-        argv.unshift("sudo");
-      }
-    }
-  }
 
   let env: NodeJS.ProcessEnv | undefined;
-  // If uv was auto-installed via brew but brew's bin dir isn't on PATH for this
-  // service process, execute uv via absolute path to avoid ENOENT.
-  if (spec.kind === "uv" && argv?.[0] === "uv") {
-    const brewBin = await resolveBrewBinDir(timeoutMs, brewExe);
-    if (brewBin) {
-      const uvBinary = process.platform === "win32" ? "uv.exe" : "uv";
-      const uvPath = path.join(brewBin, uvBinary);
-      if (fs.existsSync(uvPath)) {
-        argv[0] = uvPath;
-      } else {
-        env = {
-          ...(env ?? {}),
-          PATH: `${brewBin}${path.delimiter}${process.env.PATH ?? ""}`,
-        };
-      }
-    }
-  }
   if (spec.kind === "go" && brewExe) {
     const brewBin = await resolveBrewBinDir(timeoutMs, brewExe);
     if (brewBin) {
-      env = { ...(env ?? {}), GOBIN: brewBin };
+      env = { GOBIN: brewBin };
     }
   }
 

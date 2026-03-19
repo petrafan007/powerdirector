@@ -1,8 +1,9 @@
-import OpenClawChatUI
-import OpenClawKit
-import OpenClawProtocol
+import PowerDirectorChatUI
+import PowerDirectorKit
+import PowerDirectorProtocol
 import Observation
 import os
+import Security
 import SwiftUI
 import UIKit
 import UserNotifications
@@ -37,11 +38,28 @@ private final class NotificationInvokeLatch<T: Sendable>: @unchecked Sendable {
         cont?.resume(returning: response)
     }
 }
+
+private enum IOSDeepLinkAgentPolicy {
+    static let maxMessageChars = 20000
+    static let maxUnkeyedConfirmChars = 240
+}
+
 @MainActor
 @Observable
+// swiftlint:disable type_body_length file_length
 final class NodeAppModel {
-    private let deepLinkLogger = Logger(subsystem: "ai.openclaw.ios", category: "DeepLink")
-    private let pushWakeLogger = Logger(subsystem: "ai.openclaw.ios", category: "PushWake")
+    struct AgentDeepLinkPrompt: Identifiable, Equatable {
+        let id: String
+        let messagePreview: String
+        let urlPreview: String
+        let request: AgentDeepLink
+    }
+
+    private let deepLinkLogger = Logger(subsystem: "ai.powerdirector.ios", category: "DeepLink")
+    private let pushWakeLogger = Logger(subsystem: "ai.powerdirector.ios", category: "PushWake")
+    private let pendingActionLogger = Logger(subsystem: "ai.powerdirector.ios", category: "PendingAction")
+    private let locationWakeLogger = Logger(subsystem: "ai.powerdirector.ios", category: "LocationWake")
+    private let watchReplyLogger = Logger(subsystem: "ai.powerdirector.ios", category: "WatchReply")
     enum CameraHUDKind {
         case photo
         case recording
@@ -72,6 +90,10 @@ final class NodeAppModel {
     var gatewayAgents: [AgentSummary] = []
     var lastShareEventText: String = "No share events yet."
     var openChatRequestID: Int = 0
+    private(set) var pendingAgentDeepLinkPrompt: AgentDeepLinkPrompt?
+    private var queuedAgentDeepLinkPrompt: AgentDeepLinkPrompt?
+    private var lastAgentDeepLinkPromptAt: Date = .distantPast
+    @ObservationIgnored private var queuedAgentDeepLinkPromptTask: Task<Void, Never>?
 
     // Primary "node" connection: used for device capabilities and node.invoke requests.
     private let nodeGateway = GatewayNodeSession()
@@ -103,6 +125,13 @@ final class NodeAppModel {
     private var backgroundTalkKeptActive = false
     private var backgroundedAt: Date?
     private var reconnectAfterBackgroundArmed = false
+    private var backgroundGraceTaskID: UIBackgroundTaskIdentifier = .invalid
+    @ObservationIgnored private var backgroundGraceTaskTimer: Task<Void, Never>?
+    private var backgroundReconnectSuppressed = false
+    private var backgroundReconnectLeaseUntil: Date?
+    private var lastSignificantLocationWakeAt: Date?
+    @ObservationIgnored private let watchReplyCoordinator = WatchReplyCoordinator()
+    private var pendingForegroundActionDrainInFlight = false
 
     private var gatewayConnected = false
     private var operatorConnected = false
@@ -149,6 +178,11 @@ final class NodeAppModel {
         self.talkMode = talkMode
         self.apnsDeviceTokenHex = UserDefaults.standard.string(forKey: Self.apnsDeviceTokenUserDefaultsKey)
         GatewayDiagnostics.bootstrap()
+        self.watchMessagingService.setReplyHandler { [weak self] event in
+            Task { @MainActor in
+                await self?.handleWatchQuickReply(event)
+            }
+        }
 
         self.voiceWake.configure { [weak self] cmd in
             guard let self else { return }
@@ -199,7 +233,7 @@ final class NodeAppModel {
         }()
         guard !userAction.isEmpty else { return }
 
-        guard let name = OpenClawCanvasA2UIAction.extractActionName(userAction) else { return }
+        guard let name = PowerDirectorCanvasA2UIAction.extractActionName(userAction) else { return }
         let actionId: String = {
             let id = (userAction["id"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             return id.isEmpty ? UUID().uuidString : id
@@ -221,15 +255,15 @@ final class NodeAppModel {
             deviceName: UIDevice.current.name,
             interfaceIdiom: UIDevice.current.userInterfaceIdiom)
         let instanceId = (UserDefaults.standard.string(forKey: "node.instanceId") ?? "ios-node").lowercased()
-        let contextJSON = OpenClawCanvasA2UIAction.compactJSON(userAction["context"])
+        let contextJSON = PowerDirectorCanvasA2UIAction.compactJSON(userAction["context"])
         let sessionKey = self.mainSessionKey
 
-        let messageContext = OpenClawCanvasA2UIAction.AgentMessageContext(
+        let messageContext = PowerDirectorCanvasA2UIAction.AgentMessageContext(
             actionName: name,
             session: .init(key: sessionKey, surfaceId: surfaceId),
             component: .init(id: sourceComponentId, host: host, instanceId: instanceId),
             contextJSON: contextJSON)
-        let message = OpenClawCanvasA2UIAction.formatAgentMessage(messageContext)
+        let message = PowerDirectorCanvasA2UIAction.formatAgentMessage(messageContext)
 
         let ok: Bool
         var errorText: String?
@@ -254,7 +288,7 @@ final class NodeAppModel {
             }
         }
 
-        let js = OpenClawCanvasA2UIAction.jsDispatchA2UIActionStatus(actionId: actionId, ok: ok, error: errorText)
+        let js = PowerDirectorCanvasA2UIAction.jsDispatchA2UIActionStatus(actionId: actionId, ok: ok, error: errorText)
         do {
             _ = try await self.screen.eval(javaScript: js)
         } catch {
@@ -271,6 +305,7 @@ final class NodeAppModel {
             self.stopGatewayHealthMonitor()
             self.backgroundedAt = Date()
             self.reconnectAfterBackgroundArmed = true
+            self.beginBackgroundConnectionGracePeriod()
             // Release voice wake mic in background.
             self.backgroundVoiceWakeSuspended = self.voiceWake.suspendForExternalAudioCapture()
             let shouldKeepTalkActive = keepTalkActive && self.talkMode.isEnabled
@@ -278,6 +313,8 @@ final class NodeAppModel {
             self.backgroundTalkSuspended = self.talkMode.suspendForBackground(keepActive: shouldKeepTalkActive)
         case .active, .inactive:
             self.isBackgrounded = false
+            self.endBackgroundConnectionGracePeriod(reason: "scene_foreground")
+            self.clearBackgroundReconnectSuppression(reason: "scene_foreground")
             if self.operatorConnected {
                 self.startGatewayHealthMonitor()
             }
@@ -293,6 +330,9 @@ final class NodeAppModel {
                         self.backgroundTalkKeptActive = false
                     }
                     await self.talkMode.resumeAfterBackground(wasSuspended: suspended, wasKeptActive: keptActive)
+                }
+                Task { [weak self] in
+                    await self?.resumePendingForegroundNodeActionsIfNeeded(trigger: "scene_active")
                 }
             }
             if phase == .active, self.reconnectAfterBackgroundArmed {
@@ -329,7 +369,100 @@ final class NodeAppModel {
             }
         @unknown default:
             self.isBackgrounded = false
+            self.endBackgroundConnectionGracePeriod(reason: "scene_unknown")
+            self.clearBackgroundReconnectSuppression(reason: "scene_unknown")
         }
+    }
+
+    private func beginBackgroundConnectionGracePeriod(seconds: TimeInterval = 25) {
+        self.grantBackgroundReconnectLease(seconds: seconds, reason: "scene_background_grace")
+        self.endBackgroundConnectionGracePeriod(reason: "restart")
+        let taskID = UIApplication.shared.beginBackgroundTask(withName: "gateway-background-grace") { [weak self] in
+            Task { @MainActor in
+                self?.suppressBackgroundReconnect(
+                    reason: "background_grace_expired",
+                    disconnectIfNeeded: true)
+                self?.endBackgroundConnectionGracePeriod(reason: "expired")
+            }
+        }
+        guard taskID != .invalid else {
+            self.pushWakeLogger.info("Background grace unavailable: beginBackgroundTask returned invalid")
+            return
+        }
+        self.backgroundGraceTaskID = taskID
+        self.pushWakeLogger.info("Background grace started seconds=\(seconds, privacy: .public)")
+        self.backgroundGraceTaskTimer = Task { [weak self] in
+            guard let self else { return }
+            try? await Task.sleep(nanoseconds: UInt64(max(1, seconds) * 1_000_000_000))
+            await MainActor.run {
+                self.suppressBackgroundReconnect(reason: "background_grace_timer", disconnectIfNeeded: true)
+                self.endBackgroundConnectionGracePeriod(reason: "timer")
+            }
+        }
+    }
+
+    private func endBackgroundConnectionGracePeriod(reason: String) {
+        self.backgroundGraceTaskTimer?.cancel()
+        self.backgroundGraceTaskTimer = nil
+        guard self.backgroundGraceTaskID != .invalid else { return }
+        UIApplication.shared.endBackgroundTask(self.backgroundGraceTaskID)
+        self.backgroundGraceTaskID = .invalid
+        self.pushWakeLogger.info("Background grace ended reason=\(reason, privacy: .public)")
+    }
+
+    private func grantBackgroundReconnectLease(seconds: TimeInterval, reason: String) {
+        guard self.isBackgrounded else { return }
+        let leaseSeconds = max(5, seconds)
+        let leaseUntil = Date().addingTimeInterval(leaseSeconds)
+        if let existing = self.backgroundReconnectLeaseUntil, existing > leaseUntil {
+            // Keep the longer lease if one is already active.
+        } else {
+            self.backgroundReconnectLeaseUntil = leaseUntil
+        }
+        let wasSuppressed = self.backgroundReconnectSuppressed
+        self.backgroundReconnectSuppressed = false
+        let leaseLogMessage =
+            "Background reconnect lease reason=\(reason) "
+            + "seconds=\(leaseSeconds) wasSuppressed=\(wasSuppressed)"
+        self.pushWakeLogger.info("\(leaseLogMessage, privacy: .public)")
+    }
+
+    private func suppressBackgroundReconnect(reason: String, disconnectIfNeeded: Bool) {
+        guard self.isBackgrounded else { return }
+        let hadLease = self.backgroundReconnectLeaseUntil != nil
+        let changed = hadLease || !self.backgroundReconnectSuppressed
+        self.backgroundReconnectLeaseUntil = nil
+        self.backgroundReconnectSuppressed = true
+        guard changed else { return }
+        let suppressLogMessage =
+            "Background reconnect suppressed reason=\(reason) "
+            + "disconnect=\(disconnectIfNeeded)"
+        self.pushWakeLogger.info("\(suppressLogMessage, privacy: .public)")
+        guard disconnectIfNeeded else { return }
+        Task { [weak self] in
+            guard let self else { return }
+            await self.operatorGateway.disconnect()
+            await self.nodeGateway.disconnect()
+            await MainActor.run {
+                self.operatorConnected = false
+                self.gatewayConnected = false
+                self.talkMode.updateGatewayConnected(false)
+                if self.isBackgrounded {
+                    self.gatewayStatusText = "Background idle"
+                    self.gatewayServerName = nil
+                    self.gatewayRemoteAddress = nil
+                    self.showLocalCanvasOnDisconnect()
+                }
+            }
+        }
+    }
+
+    private func clearBackgroundReconnectSuppression(reason: String) {
+        let changed = self.backgroundReconnectSuppressed || self.backgroundReconnectLeaseUntil != nil
+        self.backgroundReconnectSuppressed = false
+        self.backgroundReconnectLeaseUntil = nil
+        guard changed else { return }
+        self.pushWakeLogger.info("Background reconnect cleared reason=\(reason, privacy: .public)")
     }
 
     func setVoiceWakeEnabled(_ enabled: Bool) {
@@ -366,7 +499,7 @@ final class NodeAppModel {
         }
     }
 
-    func requestLocationPermissions(mode: OpenClawLocationMode) async -> Bool {
+    func requestLocationPermissions(mode: PowerDirectorLocationMode) async -> Bool {
         guard mode != .off else { return true }
         let status = await self.locationService.ensureAuthorization(mode: mode)
         switch status {
@@ -379,38 +512,20 @@ final class NodeAppModel {
         }
     }
 
-    private func applyMainSessionKey(_ key: String?) {
-        let trimmed = (key ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        let current = self.mainSessionBaseKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmed == current { return }
-        self.mainSessionBaseKey = trimmed
-        self.talkMode.updateMainSessionKey(self.mainSessionKey)
-    }
-
     var seamColor: Color {
         Self.color(fromHex: self.seamColorHex) ?? Self.defaultSeamColor
     }
 
     private static let defaultSeamColor = Color(red: 79 / 255.0, green: 122 / 255.0, blue: 154 / 255.0)
     private static let apnsDeviceTokenUserDefaultsKey = "push.apns.deviceTokenHex"
+    private static let deepLinkKeyUserDefaultsKey = "deeplink.agent.key"
+    private static let canvasUnattendedDeepLinkKey: String = NodeAppModel.generateDeepLinkKey()
     private static var apnsEnvironment: String {
 #if DEBUG
         "sandbox"
 #else
         "production"
 #endif
-    }
-
-    private static func color(fromHex raw: String?) -> Color? {
-        let trimmed = (raw ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return nil }
-        let hex = trimmed.hasPrefix("#") ? String(trimmed.dropFirst()) : trimmed
-        guard hex.count == 6, let value = Int(hex, radix: 16) else { return nil }
-        let r = Double((value >> 16) & 0xFF) / 255.0
-        let g = Double((value >> 8) & 0xFF) / 255.0
-        let b = Double(value & 0xFF) / 255.0
-        return Color(red: r, green: g, blue: b)
     }
 
     private func refreshBrandingFromGateway() async {
@@ -503,7 +618,7 @@ final class NodeAppModel {
         self.voiceWakeSyncTask = Task { [weak self] in
             guard let self else { return }
 
-            if !(await self.isGatewayHealthMonitorDisabled()) {
+            if !self.isGatewayHealthMonitorDisabled() {
                 await self.refreshWakeWordsFromGateway()
             }
 
@@ -558,17 +673,21 @@ final class NodeAppModel {
         self.gatewayHealthMonitor.start(
             check: { [weak self] in
                 guard let self else { return false }
-                if await self.isGatewayHealthMonitorDisabled() { return true }
+                if await MainActor.run(body: { self.isGatewayHealthMonitorDisabled() }) { return true }
                 do {
-                    let data = try await self.operatorGateway.request(method: "health", paramsJSON: nil, timeoutSeconds: 6)
-                    guard let decoded = try? JSONDecoder().decode(OpenClawGatewayHealthOK.self, from: data) else {
+                    let data = try await self.operatorGateway.request(
+                        method: "health",
+                        paramsJSON: nil,
+                        timeoutSeconds: 6
+                    )
+                    guard let decoded = try? JSONDecoder().decode(PowerDirectorGatewayHealthOK.self, from: data) else {
                         return false
                     }
                     return decoded.ok ?? false
                 } catch {
                     if let gatewayError = error as? GatewayResponseError {
                         let lower = gatewayError.message.lowercased()
-                        if lower.contains("unauthorized role") {
+                        if lower.contains("unauthorized role") || lower.contains("missing scope") {
                             await self.setGatewayHealthMonitorDisabled(true)
                             return true
                         }
@@ -593,117 +712,6 @@ final class NodeAppModel {
         self.gatewayHealthMonitor.stop()
     }
 
-    private func refreshWakeWordsFromGateway() async {
-        do {
-            let data = try await self.operatorGateway.request(method: "voicewake.get", paramsJSON: "{}", timeoutSeconds: 8)
-            guard let triggers = VoiceWakePreferences.decodeGatewayTriggers(from: data) else { return }
-            VoiceWakePreferences.saveTriggerWords(triggers)
-        } catch {
-            if let gatewayError = error as? GatewayResponseError {
-                let lower = gatewayError.message.lowercased()
-                if lower.contains("unauthorized role") {
-                    await self.setGatewayHealthMonitorDisabled(true)
-                    return
-                }
-            }
-            // Best-effort only.
-        }
-    }
-
-    private func isGatewayHealthMonitorDisabled() -> Bool {
-        self.gatewayHealthMonitorDisabled
-    }
-
-    private func setGatewayHealthMonitorDisabled(_ disabled: Bool) {
-        self.gatewayHealthMonitorDisabled = disabled
-    }
-
-    func sendVoiceTranscript(text: String, sessionKey: String?) async throws {
-        if await !self.isGatewayConnected() {
-            throw NSError(domain: "Gateway", code: 10, userInfo: [
-                NSLocalizedDescriptionKey: "Gateway not connected",
-            ])
-        }
-        struct Payload: Codable {
-            var text: String
-            var sessionKey: String?
-        }
-        let payload = Payload(text: text, sessionKey: sessionKey)
-        let data = try JSONEncoder().encode(payload)
-        guard let json = String(bytes: data, encoding: .utf8) else {
-            throw NSError(domain: "NodeAppModel", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "Failed to encode voice transcript payload as UTF-8",
-            ])
-        }
-        await self.nodeGateway.sendEvent(event: "voice.transcript", payloadJSON: json)
-    }
-
-    func handleDeepLink(url: URL) async {
-        guard let route = DeepLinkParser.parse(url) else { return }
-
-        switch route {
-        case let .agent(link):
-            await self.handleAgentDeepLink(link, originalURL: url)
-        case .gateway:
-            break
-        }
-    }
-
-    private func handleAgentDeepLink(_ link: AgentDeepLink, originalURL: URL) async {
-        let message = link.message.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !message.isEmpty else { return }
-        self.deepLinkLogger.info(
-            "agent deep link received messageChars=\(message.count) url=\(originalURL.absoluteString, privacy: .public)"
-        )
-
-        if message.count > 20000 {
-            self.screen.errorText = "Deep link too large (message exceeds 20,000 characters)."
-            self.recordShareEvent("Rejected: message too large (\(message.count) chars).")
-            return
-        }
-
-        guard await self.isGatewayConnected() else {
-            self.screen.errorText = "Gateway not connected (cannot forward deep link)."
-            self.recordShareEvent("Failed: gateway not connected.")
-            self.deepLinkLogger.error("agent deep link rejected: gateway not connected")
-            return
-        }
-
-        do {
-            try await self.sendAgentRequest(link: link)
-            self.screen.errorText = nil
-            self.recordShareEvent("Sent to gateway (\(message.count) chars).")
-            self.deepLinkLogger.info("agent deep link forwarded to gateway")
-            self.openChatRequestID &+= 1
-        } catch {
-            self.screen.errorText = "Agent request failed: \(error.localizedDescription)"
-            self.recordShareEvent("Failed: \(error.localizedDescription)")
-            self.deepLinkLogger.error("agent deep link send failed: \(error.localizedDescription, privacy: .public)")
-        }
-    }
-
-    private func sendAgentRequest(link: AgentDeepLink) async throws {
-        if link.message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            throw NSError(domain: "DeepLink", code: 1, userInfo: [
-                NSLocalizedDescriptionKey: "invalid agent message",
-            ])
-        }
-
-        // iOS gateway forwards to the gateway; no local auth prompts here.
-        // (Key-based unattended auth is handled on macOS for openclaw:// links.)
-        let data = try JSONEncoder().encode(link)
-        guard let json = String(bytes: data, encoding: .utf8) else {
-            throw NSError(domain: "NodeAppModel", code: 2, userInfo: [
-                NSLocalizedDescriptionKey: "Failed to encode agent request payload as UTF-8",
-            ])
-        }
-        await self.nodeGateway.sendEvent(event: "agent.request", payloadJSON: json)
-    }
-
-    private func isGatewayConnected() async -> Bool {
-        self.gatewayConnected
-    }
-
     private func handleInvoke(_ req: BridgeInvokeRequest) async -> BridgeInvokeResponse {
         let command = req.command
 
@@ -711,7 +719,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: PowerDirectorNodeError(
                     code: .backgroundUnavailable,
                     message: "NODE_BACKGROUND_UNAVAILABLE: canvas/camera/screen commands require foreground"))
         }
@@ -720,7 +728,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: PowerDirectorNodeError(
                     code: .unavailable,
                     message: "CAMERA_DISABLED: enable Camera in iOS Settings → Camera → Allow Camera"))
         }
@@ -733,12 +741,12 @@ final class NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                    error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
             case .handlerUnavailable:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(code: .unavailable, message: "node handler unavailable"))
+                    error: PowerDirectorNodeError(code: .unavailable, message: "node handler unavailable"))
             }
         } catch {
             if command.hasPrefix("camera.") {
@@ -748,7 +756,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .unavailable, message: error.localizedDescription))
+                error: PowerDirectorNodeError(code: .unavailable, message: error.localizedDescription))
         }
     }
 
@@ -763,7 +771,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: PowerDirectorNodeError(
                     code: .unavailable,
                     message: "LOCATION_DISABLED: enable Location in Settings"))
         }
@@ -771,12 +779,12 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: PowerDirectorNodeError(
                     code: .backgroundUnavailable,
                     message: "LOCATION_BACKGROUND_UNAVAILABLE: background location requires Always"))
         }
-        let params = (try? Self.decodeParams(OpenClawLocationGetParams.self, from: req.paramsJSON)) ??
-            OpenClawLocationGetParams()
+        let params = (try? Self.decodeParams(PowerDirectorLocationGetParams.self, from: req.paramsJSON)) ??
+            PowerDirectorLocationGetParams()
         let desired = params.desiredAccuracy ??
             (self.isLocationPreciseEnabled() ? .precise : .balanced)
         let status = self.locationService.authorizationStatus()
@@ -784,7 +792,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: PowerDirectorNodeError(
                     code: .unavailable,
                     message: "LOCATION_PERMISSION_REQUIRED: grant Location permission"))
         }
@@ -792,7 +800,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(
+                error: PowerDirectorNodeError(
                     code: .unavailable,
                     message: "LOCATION_PERMISSION_REQUIRED: enable Always for background access"))
         }
@@ -802,7 +810,7 @@ final class NodeAppModel {
             maxAgeMs: params.maxAgeMs,
             timeoutMs: params.timeoutMs)
         let isPrecise = self.locationService.accuracyAuthorization() == .fullAccuracy
-        let payload = OpenClawLocationPayload(
+        let payload = PowerDirectorLocationPayload(
             lat: location.coordinate.latitude,
             lon: location.coordinate.longitude,
             accuracyMeters: location.horizontalAccuracy,
@@ -818,10 +826,10 @@ final class NodeAppModel {
 
     private func handleCanvasInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawCanvasCommand.present.rawValue:
+        case PowerDirectorCanvasCommand.present.rawValue:
             // iOS ignores placement hints; canvas always fills the screen.
-            let params = (try? Self.decodeParams(OpenClawCanvasPresentParams.self, from: req.paramsJSON)) ??
-                OpenClawCanvasPresentParams()
+            let params = (try? Self.decodeParams(PowerDirectorCanvasPresentParams.self, from: req.paramsJSON)) ??
+                PowerDirectorCanvasPresentParams()
             let url = params.url?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if url.isEmpty {
                 self.screen.showDefaultCanvas()
@@ -829,20 +837,20 @@ final class NodeAppModel {
                 self.screen.navigate(to: url)
             }
             return BridgeInvokeResponse(id: req.id, ok: true)
-        case OpenClawCanvasCommand.hide.rawValue:
+        case PowerDirectorCanvasCommand.hide.rawValue:
             self.screen.showDefaultCanvas()
             return BridgeInvokeResponse(id: req.id, ok: true)
-        case OpenClawCanvasCommand.navigate.rawValue:
-            let params = try Self.decodeParams(OpenClawCanvasNavigateParams.self, from: req.paramsJSON)
+        case PowerDirectorCanvasCommand.navigate.rawValue:
+            let params = try Self.decodeParams(PowerDirectorCanvasNavigateParams.self, from: req.paramsJSON)
             self.screen.navigate(to: params.url)
             return BridgeInvokeResponse(id: req.id, ok: true)
-        case OpenClawCanvasCommand.evalJS.rawValue:
-            let params = try Self.decodeParams(OpenClawCanvasEvalParams.self, from: req.paramsJSON)
+        case PowerDirectorCanvasCommand.evalJS.rawValue:
+            let params = try Self.decodeParams(PowerDirectorCanvasEvalParams.self, from: req.paramsJSON)
             let result = try await self.screen.eval(javaScript: params.javaScript)
             let payload = try Self.encodePayload(["result": result])
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: payload)
-        case OpenClawCanvasCommand.snapshot.rawValue:
-            let params = try? Self.decodeParams(OpenClawCanvasSnapshotParams.self, from: req.paramsJSON)
+        case PowerDirectorCanvasCommand.snapshot.rawValue:
+            let params = try? Self.decodeParams(PowerDirectorCanvasSnapshotParams.self, from: req.paramsJSON)
             let format = params?.format ?? .jpeg
             let maxWidth: CGFloat? = {
                 if let raw = params?.maxWidth, raw > 0 { return CGFloat(raw) }
@@ -866,80 +874,82 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleCanvasA2UIInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         let command = req.command
         switch command {
-        case OpenClawCanvasA2UICommand.reset.rawValue:
-            guard let a2uiUrl = await self.resolveA2UIHostURL() else {
+        case PowerDirectorCanvasA2UICommand.reset.rawValue:
+            switch await self.ensureA2UIReadyWithCapabilityRefresh(timeoutMs: 5000) {
+            case .ready:
+                break
+            case .hostNotConfigured:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: PowerDirectorNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_NOT_CONFIGURED: gateway did not advertise canvas host"))
-            }
-            self.screen.navigate(to: a2uiUrl)
-            if await !self.screen.waitForA2UIReady(timeoutMs: 5000) {
+            case .hostUnavailable:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: PowerDirectorNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_UNAVAILABLE: A2UI host not reachable"))
             }
-
             let json = try await self.screen.eval(javaScript: """
             (() => {
-              const host = globalThis.openclawA2UI;
-              if (!host) return JSON.stringify({ ok: false, error: "missing openclawA2UI" });
+              const host = globalThis.powerdirectorA2UI;
+              if (!host) return JSON.stringify({ ok: false, error: "missing powerdirectorA2UI" });
               return JSON.stringify(host.reset());
             })()
             """)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawCanvasA2UICommand.push.rawValue, OpenClawCanvasA2UICommand.pushJSONL.rawValue:
-            let messages: [OpenClawKit.AnyCodable]
-            if command == OpenClawCanvasA2UICommand.pushJSONL.rawValue {
-                let params = try Self.decodeParams(OpenClawCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
-                messages = try OpenClawCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
+
+        case PowerDirectorCanvasA2UICommand.push.rawValue, PowerDirectorCanvasA2UICommand.pushJSONL.rawValue:
+            let messages: [PowerDirectorKit.AnyCodable]
+            if command == PowerDirectorCanvasA2UICommand.pushJSONL.rawValue {
+                let params = try Self.decodeParams(PowerDirectorCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
+                messages = try PowerDirectorCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
             } else {
                 do {
-                    let params = try Self.decodeParams(OpenClawCanvasA2UIPushParams.self, from: req.paramsJSON)
+                    let params = try Self.decodeParams(PowerDirectorCanvasA2UIPushParams.self, from: req.paramsJSON)
                     messages = params.messages
                 } catch {
                     // Be forgiving: some clients still send JSONL payloads to `canvas.a2ui.push`.
-                    let params = try Self.decodeParams(OpenClawCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
-                    messages = try OpenClawCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
+                    let params = try Self.decodeParams(PowerDirectorCanvasA2UIPushJSONLParams.self, from: req.paramsJSON)
+                    messages = try PowerDirectorCanvasA2UIJSONL.decodeMessagesFromJSONL(params.jsonl)
                 }
             }
 
-            guard let a2uiUrl = await self.resolveA2UIHostURL() else {
+            switch await self.ensureA2UIReadyWithCapabilityRefresh(timeoutMs: 5000) {
+            case .ready:
+                break
+            case .hostNotConfigured:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: PowerDirectorNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_NOT_CONFIGURED: gateway did not advertise canvas host"))
-            }
-            self.screen.navigate(to: a2uiUrl)
-            if await !self.screen.waitForA2UIReady(timeoutMs: 5000) {
+            case .hostUnavailable:
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: PowerDirectorNodeError(
                         code: .unavailable,
                         message: "A2UI_HOST_UNAVAILABLE: A2UI host not reachable"))
             }
 
-            let messagesJSON = try OpenClawCanvasA2UIJSONL.encodeMessagesJSONArray(messages)
+            let messagesJSON = try PowerDirectorCanvasA2UIJSONL.encodeMessagesJSONArray(messages)
             let js = """
             (() => {
               try {
-                const host = globalThis.openclawA2UI;
-                if (!host) return JSON.stringify({ ok: false, error: "missing openclawA2UI" });
+                const host = globalThis.powerdirectorA2UI;
+                if (!host) return JSON.stringify({ ok: false, error: "missing powerdirectorA2UI" });
                 const messages = \(messagesJSON);
                 return JSON.stringify(host.applyMessages(messages));
               } catch (e) {
@@ -953,24 +963,24 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleCameraInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawCameraCommand.list.rawValue:
+        case PowerDirectorCameraCommand.list.rawValue:
             let devices = await self.camera.listDevices()
             struct Payload: Codable {
                 var devices: [CameraController.CameraDeviceInfo]
             }
             let payload = try Self.encodePayload(Payload(devices: devices))
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: payload)
-        case OpenClawCameraCommand.snap.rawValue:
+        case PowerDirectorCameraCommand.snap.rawValue:
             self.showCameraHUD(text: "Taking photo…", kind: .photo)
             self.triggerCameraFlash()
-            let params = (try? Self.decodeParams(OpenClawCameraSnapParams.self, from: req.paramsJSON)) ??
-                OpenClawCameraSnapParams()
+            let params = (try? Self.decodeParams(PowerDirectorCameraSnapParams.self, from: req.paramsJSON)) ??
+                PowerDirectorCameraSnapParams()
             let res = try await self.camera.snap(params: params)
 
             struct Payload: Codable {
@@ -986,9 +996,9 @@ final class NodeAppModel {
                 height: res.height))
             self.showCameraHUD(text: "Photo captured", kind: .success, autoHideSeconds: 1.6)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: payload)
-        case OpenClawCameraCommand.clip.rawValue:
-            let params = (try? Self.decodeParams(OpenClawCameraClipParams.self, from: req.paramsJSON)) ??
-                OpenClawCameraClipParams()
+        case PowerDirectorCameraCommand.clip.rawValue:
+            let params = (try? Self.decodeParams(PowerDirectorCameraClipParams.self, from: req.paramsJSON)) ??
+                PowerDirectorCameraClipParams()
 
             let suspended = (params.includeAudio ?? true) ? self.voiceWake.suspendForExternalAudioCapture() : false
             defer { self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: suspended) }
@@ -1013,13 +1023,13 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleScreenRecordInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = (try? Self.decodeParams(OpenClawScreenRecordParams.self, from: req.paramsJSON)) ??
-            OpenClawScreenRecordParams()
+        let params = (try? Self.decodeParams(PowerDirectorScreenRecordParams.self, from: req.paramsJSON)) ??
+            PowerDirectorScreenRecordParams()
         if let format = params.format, format.lowercased() != "mp4" {
             throw NSError(domain: "Screen", code: 30, userInfo: [
                 NSLocalizedDescriptionKey: "INVALID_REQUEST: screen format must be mp4",
@@ -1055,14 +1065,14 @@ final class NodeAppModel {
     }
 
     private func handleSystemNotify(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = try Self.decodeParams(OpenClawSystemNotifyParams.self, from: req.paramsJSON)
+        let params = try Self.decodeParams(PowerDirectorSystemNotifyParams.self, from: req.paramsJSON)
         let title = params.title.trimmingCharacters(in: .whitespacesAndNewlines)
         let body = params.body.trimmingCharacters(in: .whitespacesAndNewlines)
         if title.isEmpty, body.isEmpty {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty notification"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty notification"))
         }
 
         let finalStatus = await self.requestNotificationAuthorizationIfNeeded()
@@ -1070,7 +1080,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .unavailable, message: "NOT_AUTHORIZED: notifications"))
+                error: PowerDirectorNodeError(code: .unavailable, message: "NOT_AUTHORIZED: notifications"))
         }
 
         let addResult = await self.runNotificationCall(timeoutSeconds: 2.0) { [notificationCenter] in
@@ -1103,19 +1113,19 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
+                error: PowerDirectorNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
         }
         return BridgeInvokeResponse(id: req.id, ok: true)
     }
 
     private func handleChatPushInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = try Self.decodeParams(OpenClawChatPushParams.self, from: req.paramsJSON)
+        let params = try Self.decodeParams(PowerDirectorChatPushParams.self, from: req.paramsJSON)
         let text = params.text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty chat.push text"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: empty chat.push text"))
         }
 
         let finalStatus = await self.requestNotificationAuthorizationIfNeeded()
@@ -1123,7 +1133,7 @@ final class NodeAppModel {
         if finalStatus == .authorized || finalStatus == .provisional || finalStatus == .ephemeral {
             let addResult = await self.runNotificationCall(timeoutSeconds: 2.0) { [notificationCenter] in
                 let content = UNMutableNotificationContent()
-                content.title = "OpenClaw"
+                content.title = "PowerDirector"
                 content.body = text
                 content.sound = .default
                 content.userInfo = ["messageId": messageId]
@@ -1137,7 +1147,7 @@ final class NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
+                    error: PowerDirectorNodeError(code: .unavailable, message: "NOTIFICATION_FAILED: \(error.message)"))
             }
         }
 
@@ -1148,7 +1158,7 @@ final class NodeAppModel {
             }
         }
 
-        let payload = OpenClawChatPushPayload(messageId: messageId)
+        let payload = PowerDirectorChatPushPayload(messageId: messageId)
         let json = try Self.encodePayload(payload)
         return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
     }
@@ -1210,11 +1220,11 @@ final class NodeAppModel {
 
     private func handleDeviceInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawDeviceCommand.status.rawValue:
+        case PowerDirectorDeviceCommand.status.rawValue:
             let payload = try await self.deviceStatusService.status()
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawDeviceCommand.info.rawValue:
+        case PowerDirectorDeviceCommand.info.rawValue:
             let payload = self.deviceStatusService.info()
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1222,13 +1232,13 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handlePhotosInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
-        let params = (try? Self.decodeParams(OpenClawPhotosLatestParams.self, from: req.paramsJSON)) ??
-            OpenClawPhotosLatestParams()
+        let params = (try? Self.decodeParams(PowerDirectorPhotosLatestParams.self, from: req.paramsJSON)) ??
+            PowerDirectorPhotosLatestParams()
         let payload = try await self.photosService.latest(params: params)
         let json = try Self.encodePayload(payload)
         return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1236,14 +1246,14 @@ final class NodeAppModel {
 
     private func handleContactsInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawContactsCommand.search.rawValue:
-            let params = (try? Self.decodeParams(OpenClawContactsSearchParams.self, from: req.paramsJSON)) ??
-                OpenClawContactsSearchParams()
+        case PowerDirectorContactsCommand.search.rawValue:
+            let params = (try? Self.decodeParams(PowerDirectorContactsSearchParams.self, from: req.paramsJSON)) ??
+                PowerDirectorContactsSearchParams()
             let payload = try await self.contactsService.search(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawContactsCommand.add.rawValue:
-            let params = try Self.decodeParams(OpenClawContactsAddParams.self, from: req.paramsJSON)
+        case PowerDirectorContactsCommand.add.rawValue:
+            let params = try Self.decodeParams(PowerDirectorContactsAddParams.self, from: req.paramsJSON)
             let payload = try await self.contactsService.add(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1251,20 +1261,20 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleCalendarInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawCalendarCommand.events.rawValue:
-            let params = (try? Self.decodeParams(OpenClawCalendarEventsParams.self, from: req.paramsJSON)) ??
-                OpenClawCalendarEventsParams()
+        case PowerDirectorCalendarCommand.events.rawValue:
+            let params = (try? Self.decodeParams(PowerDirectorCalendarEventsParams.self, from: req.paramsJSON)) ??
+                PowerDirectorCalendarEventsParams()
             let payload = try await self.calendarService.events(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawCalendarCommand.add.rawValue:
-            let params = try Self.decodeParams(OpenClawCalendarAddParams.self, from: req.paramsJSON)
+        case PowerDirectorCalendarCommand.add.rawValue:
+            let params = try Self.decodeParams(PowerDirectorCalendarAddParams.self, from: req.paramsJSON)
             let payload = try await self.calendarService.add(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1272,20 +1282,20 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleRemindersInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawRemindersCommand.list.rawValue:
-            let params = (try? Self.decodeParams(OpenClawRemindersListParams.self, from: req.paramsJSON)) ??
-                OpenClawRemindersListParams()
+        case PowerDirectorRemindersCommand.list.rawValue:
+            let params = (try? Self.decodeParams(PowerDirectorRemindersListParams.self, from: req.paramsJSON)) ??
+                PowerDirectorRemindersListParams()
             let payload = try await self.remindersService.list(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawRemindersCommand.add.rawValue:
-            let params = try Self.decodeParams(OpenClawRemindersAddParams.self, from: req.paramsJSON)
+        case PowerDirectorRemindersCommand.add.rawValue:
+            let params = try Self.decodeParams(PowerDirectorRemindersAddParams.self, from: req.paramsJSON)
             let payload = try await self.remindersService.add(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1293,21 +1303,21 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleMotionInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawMotionCommand.activity.rawValue:
-            let params = (try? Self.decodeParams(OpenClawMotionActivityParams.self, from: req.paramsJSON)) ??
-                OpenClawMotionActivityParams()
+        case PowerDirectorMotionCommand.activity.rawValue:
+            let params = (try? Self.decodeParams(PowerDirectorMotionActivityParams.self, from: req.paramsJSON)) ??
+                PowerDirectorMotionActivityParams()
             let payload = try await self.motionService.activities(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawMotionCommand.pedometer.rawValue:
-            let params = (try? Self.decodeParams(OpenClawPedometerParams.self, from: req.paramsJSON)) ??
-                OpenClawPedometerParams()
+        case PowerDirectorMotionCommand.pedometer.rawValue:
+            let params = (try? Self.decodeParams(PowerDirectorPedometerParams.self, from: req.paramsJSON)) ??
+                PowerDirectorPedometerParams()
             let payload = try await self.motionService.pedometer(params: params)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
@@ -1315,30 +1325,30 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
     private func handleTalkInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawTalkCommand.pttStart.rawValue:
+        case PowerDirectorTalkCommand.pttStart.rawValue:
             self.pttVoiceWakeSuspended = self.voiceWake.suspendForExternalAudioCapture()
             let payload = try await self.talkMode.beginPushToTalk()
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawTalkCommand.pttStop.rawValue:
+        case PowerDirectorTalkCommand.pttStop.rawValue:
             let payload = await self.talkMode.endPushToTalk()
             self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: self.pttVoiceWakeSuspended)
             self.pttVoiceWakeSuspended = false
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawTalkCommand.pttCancel.rawValue:
+        case PowerDirectorTalkCommand.pttCancel.rawValue:
             let payload = await self.talkMode.cancelPushToTalk()
             self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: self.pttVoiceWakeSuspended)
             self.pttVoiceWakeSuspended = false
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawTalkCommand.pttOnce.rawValue:
+        case PowerDirectorTalkCommand.pttOnce.rawValue:
             self.pttVoiceWakeSuspended = self.voiceWake.suspendForExternalAudioCapture()
             defer {
                 self.voiceWake.resumeAfterExternalAudioCapture(wasSuspended: self.pttVoiceWakeSuspended)
@@ -1351,7 +1361,7 @@ final class NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
@@ -1368,113 +1378,113 @@ private extension NodeAppModel {
             }
         }
 
-        register([OpenClawLocationCommand.get.rawValue]) { [weak self] req in
+        register([PowerDirectorLocationCommand.get.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleLocationInvoke(req)
         }
 
         register([
-            OpenClawCanvasCommand.present.rawValue,
-            OpenClawCanvasCommand.hide.rawValue,
-            OpenClawCanvasCommand.navigate.rawValue,
-            OpenClawCanvasCommand.evalJS.rawValue,
-            OpenClawCanvasCommand.snapshot.rawValue,
+            PowerDirectorCanvasCommand.present.rawValue,
+            PowerDirectorCanvasCommand.hide.rawValue,
+            PowerDirectorCanvasCommand.navigate.rawValue,
+            PowerDirectorCanvasCommand.evalJS.rawValue,
+            PowerDirectorCanvasCommand.snapshot.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCanvasInvoke(req)
         }
 
         register([
-            OpenClawCanvasA2UICommand.reset.rawValue,
-            OpenClawCanvasA2UICommand.push.rawValue,
-            OpenClawCanvasA2UICommand.pushJSONL.rawValue,
+            PowerDirectorCanvasA2UICommand.reset.rawValue,
+            PowerDirectorCanvasA2UICommand.push.rawValue,
+            PowerDirectorCanvasA2UICommand.pushJSONL.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCanvasA2UIInvoke(req)
         }
 
         register([
-            OpenClawCameraCommand.list.rawValue,
-            OpenClawCameraCommand.snap.rawValue,
-            OpenClawCameraCommand.clip.rawValue,
+            PowerDirectorCameraCommand.list.rawValue,
+            PowerDirectorCameraCommand.snap.rawValue,
+            PowerDirectorCameraCommand.clip.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCameraInvoke(req)
         }
 
-        register([OpenClawScreenCommand.record.rawValue]) { [weak self] req in
+        register([PowerDirectorScreenCommand.record.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleScreenRecordInvoke(req)
         }
 
-        register([OpenClawSystemCommand.notify.rawValue]) { [weak self] req in
+        register([PowerDirectorSystemCommand.notify.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleSystemNotify(req)
         }
 
-        register([OpenClawChatCommand.push.rawValue]) { [weak self] req in
+        register([PowerDirectorChatCommand.push.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleChatPushInvoke(req)
         }
 
         register([
-            OpenClawDeviceCommand.status.rawValue,
-            OpenClawDeviceCommand.info.rawValue,
+            PowerDirectorDeviceCommand.status.rawValue,
+            PowerDirectorDeviceCommand.info.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleDeviceInvoke(req)
         }
 
         register([
-            OpenClawWatchCommand.status.rawValue,
-            OpenClawWatchCommand.notify.rawValue,
+            PowerDirectorWatchCommand.status.rawValue,
+            PowerDirectorWatchCommand.notify.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleWatchInvoke(req)
         }
 
-        register([OpenClawPhotosCommand.latest.rawValue]) { [weak self] req in
+        register([PowerDirectorPhotosCommand.latest.rawValue]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handlePhotosInvoke(req)
         }
 
         register([
-            OpenClawContactsCommand.search.rawValue,
-            OpenClawContactsCommand.add.rawValue,
+            PowerDirectorContactsCommand.search.rawValue,
+            PowerDirectorContactsCommand.add.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleContactsInvoke(req)
         }
 
         register([
-            OpenClawCalendarCommand.events.rawValue,
-            OpenClawCalendarCommand.add.rawValue,
+            PowerDirectorCalendarCommand.events.rawValue,
+            PowerDirectorCalendarCommand.add.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleCalendarInvoke(req)
         }
 
         register([
-            OpenClawRemindersCommand.list.rawValue,
-            OpenClawRemindersCommand.add.rawValue,
+            PowerDirectorRemindersCommand.list.rawValue,
+            PowerDirectorRemindersCommand.add.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleRemindersInvoke(req)
         }
 
         register([
-            OpenClawMotionCommand.activity.rawValue,
-            OpenClawMotionCommand.pedometer.rawValue,
+            PowerDirectorMotionCommand.activity.rawValue,
+            PowerDirectorMotionCommand.pedometer.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleMotionInvoke(req)
         }
 
         register([
-            OpenClawTalkCommand.pttStart.rawValue,
-            OpenClawTalkCommand.pttStop.rawValue,
-            OpenClawTalkCommand.pttCancel.rawValue,
-            OpenClawTalkCommand.pttOnce.rawValue,
+            PowerDirectorTalkCommand.pttStart.rawValue,
+            PowerDirectorTalkCommand.pttStop.rawValue,
+            PowerDirectorTalkCommand.pttCancel.rawValue,
+            PowerDirectorTalkCommand.pttOnce.rawValue,
         ]) { [weak self] req in
             guard let self else { throw NodeCapabilityRouter.RouterError.handlerUnavailable }
             return try await self.handleTalkInvoke(req)
@@ -1485,9 +1495,9 @@ private extension NodeAppModel {
 
     func handleWatchInvoke(_ req: BridgeInvokeRequest) async throws -> BridgeInvokeResponse {
         switch req.command {
-        case OpenClawWatchCommand.status.rawValue:
+        case PowerDirectorWatchCommand.status.rawValue:
             let status = await self.watchMessagingService.status()
-            let payload = OpenClawWatchStatusPayload(
+            let payload = PowerDirectorWatchStatusPayload(
                 supported: status.supported,
                 paired: status.paired,
                 appInstalled: status.appInstalled,
@@ -1495,25 +1505,33 @@ private extension NodeAppModel {
                 activationState: status.activationState)
             let json = try Self.encodePayload(payload)
             return BridgeInvokeResponse(id: req.id, ok: true, payloadJSON: json)
-        case OpenClawWatchCommand.notify.rawValue:
-            let params = try Self.decodeParams(OpenClawWatchNotifyParams.self, from: req.paramsJSON)
-            let title = params.title.trimmingCharacters(in: .whitespacesAndNewlines)
-            let body = params.body.trimmingCharacters(in: .whitespacesAndNewlines)
+        case PowerDirectorWatchCommand.notify.rawValue:
+            let params = try Self.decodeParams(PowerDirectorWatchNotifyParams.self, from: req.paramsJSON)
+            let normalizedParams = Self.normalizeWatchNotifyParams(params)
+            let title = normalizedParams.title
+            let body = normalizedParams.body
             if title.isEmpty && body.isEmpty {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: PowerDirectorNodeError(
                         code: .invalidRequest,
                         message: "INVALID_REQUEST: empty watch notification"))
             }
             do {
                 let result = try await self.watchMessagingService.sendNotification(
                     id: req.id,
-                    title: title,
-                    body: body,
-                    priority: params.priority)
-                let payload = OpenClawWatchNotifyPayload(
+                    params: normalizedParams)
+                if result.queuedForDelivery || !result.deliveredImmediately {
+                    let invokeID = req.id
+                    Task { @MainActor in
+                        await WatchPromptNotificationBridge.scheduleMirroredWatchPromptNotificationIfNeeded(
+                            invokeID: invokeID,
+                            params: normalizedParams,
+                            sendResult: result)
+                    }
+                }
+                let payload = PowerDirectorWatchNotifyPayload(
                     deliveredImmediately: result.deliveredImmediately,
                     queuedForDelivery: result.queuedForDelivery,
                     transport: result.transport)
@@ -1523,7 +1541,7 @@ private extension NodeAppModel {
                 return BridgeInvokeResponse(
                     id: req.id,
                     ok: false,
-                    error: OpenClawNodeError(
+                    error: PowerDirectorNodeError(
                         code: .unavailable,
                         message: error.localizedDescription))
             }
@@ -1531,13 +1549,13 @@ private extension NodeAppModel {
             return BridgeInvokeResponse(
                 id: req.id,
                 ok: false,
-                error: OpenClawNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
+                error: PowerDirectorNodeError(code: .invalidRequest, message: "INVALID_REQUEST: unknown command"))
         }
     }
 
-    func locationMode() -> OpenClawLocationMode {
+    func locationMode() -> PowerDirectorLocationMode {
         let raw = UserDefaults.standard.string(forKey: "location.enabledMode") ?? "off"
-        return OpenClawLocationMode(rawValue: raw) ?? .off
+        return PowerDirectorLocationMode(rawValue: raw) ?? .off
     }
 
     func isLocationPreciseEnabled() -> Bool {
@@ -1683,6 +1701,7 @@ extension NodeAppModel {
         self.operatorGatewayTask = nil
         self.voiceWakeSyncTask?.cancel()
         self.voiceWakeSyncTask = nil
+        LiveActivityManager.shared.handleDisconnect()
         self.gatewayHealthMonitor.stop()
         Task {
             await self.operatorGateway.disconnect()
@@ -1719,10 +1738,28 @@ private extension NodeAppModel {
         self.operatorConnected = false
         self.voiceWakeSyncTask?.cancel()
         self.voiceWakeSyncTask = nil
+        LiveActivityManager.shared.handleDisconnect()
         self.gatewayDefaultAgentId = nil
         self.gatewayAgents = []
         self.selectedAgentId = GatewaySettingsStore.loadGatewaySelectedAgentId(stableID: stableID)
         self.apnsLastRegisteredTokenHex = nil
+    }
+
+    func refreshBackgroundReconnectSuppressionIfNeeded(source: String) {
+        guard self.isBackgrounded else { return }
+        guard !self.backgroundReconnectSuppressed else { return }
+        guard let leaseUntil = self.backgroundReconnectLeaseUntil else {
+            self.suppressBackgroundReconnect(reason: "\(source):no_lease", disconnectIfNeeded: true)
+            return
+        }
+        if Date() >= leaseUntil {
+            self.suppressBackgroundReconnect(reason: "\(source):lease_expired", disconnectIfNeeded: true)
+        }
+    }
+
+    func shouldPauseReconnectLoopInBackground(source: String) -> Bool {
+        self.refreshBackgroundReconnectSuppressionIfNeeded(source: source)
+        return self.isBackgrounded && self.backgroundReconnectSuppressed
     }
 
     func startOperatorGatewayLoop(
@@ -1745,6 +1782,10 @@ private extension NodeAppModel {
                 }
                 if !self.gatewayAutoReconnectEnabled {
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    continue
+                }
+                if self.shouldPauseReconnectLoopInBackground(source: "operator_loop") {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
                     continue
                 }
                 if await self.isOperatorConnected() {
@@ -1773,10 +1814,12 @@ private extension NodeAppModel {
                             }
                             GatewayDiagnostics.log(
                                 "operator gateway connected host=\(url.host ?? "?") scheme=\(url.scheme ?? "?")")
+                            await self.talkMode.reloadConfig()
                             await self.refreshBrandingFromGateway()
                             await self.refreshAgentsFromGateway()
                             await self.refreshShareRouteFromGateway()
                             await self.startVoiceWakeSync()
+                            await MainActor.run { LiveActivityManager.shared.handleReconnect() }
                             await MainActor.run { self.startGatewayHealthMonitor() }
                         },
                         onDisconnected: { [weak self] reason in
@@ -1784,6 +1827,7 @@ private extension NodeAppModel {
                             await MainActor.run {
                                 self.operatorConnected = false
                                 self.talkMode.updateGatewayConnected(false)
+                                LiveActivityManager.shared.handleDisconnect()
                             }
                             GatewayDiagnostics.log("operator gateway disconnected reason=\(reason)")
                             await MainActor.run { self.stopGatewayHealthMonitor() }
@@ -1793,7 +1837,7 @@ private extension NodeAppModel {
                             BridgeInvokeResponse(
                                 id: req.id,
                                 ok: false,
-                                error: OpenClawNodeError(
+                                error: PowerDirectorNodeError(
                                     code: .invalidRequest,
                                     message: "INVALID_REQUEST: operator session cannot invoke node commands"))
                         })
@@ -1810,6 +1854,8 @@ private extension NodeAppModel {
         }
     }
 
+    // Legacy reconnect state machine; follow-up refactor needed to split into helpers.
+    // swiftlint:disable:next function_body_length
     func startNodeGatewayLoop(
         url: URL,
         stableID: String,
@@ -1834,6 +1880,10 @@ private extension NodeAppModel {
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     continue
                 }
+                if self.shouldPauseReconnectLoopInBackground(source: "node_loop") {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                    continue
+                }
                 if await self.isGatewayConnected() {
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     continue
@@ -1842,6 +1892,14 @@ private extension NodeAppModel {
                     self.gatewayStatusText = (attempt == 0) ? "Connecting…" : "Reconnecting…"
                     self.gatewayServerName = nil
                     self.gatewayRemoteAddress = nil
+                    let liveActivity = LiveActivityManager.shared
+                    if liveActivity.isActive {
+                        liveActivity.handleConnecting()
+                    } else {
+                        liveActivity.startActivity(
+                            agentName: self.selectedAgentId ?? "main",
+                            sessionKey: self.mainSessionKey)
+                    }
                 }
 
                 do {
@@ -1877,13 +1935,24 @@ private extension NodeAppModel {
                                     sessionKey: relayData.sessionKey,
                                     deliveryChannel: relayData.deliveryChannel,
                                     deliveryTo: relayData.deliveryTo))
-                            GatewayDiagnostics.log("gateway connected host=\(url.host ?? "?") scheme=\(url.scheme ?? "?")")
+                            GatewayDiagnostics.log(
+                                "gateway connected host=\(url.host ?? "?") "
+                                    + "scheme=\(url.scheme ?? "?")"
+                            )
                             if let addr = await self.nodeGateway.currentRemoteAddress() {
                                 await MainActor.run { self.gatewayRemoteAddress = addr }
                             }
                             await self.showA2UIOnConnectIfNeeded()
                             await self.onNodeGatewayConnected()
-                            await MainActor.run { SignificantLocationMonitor.startIfNeeded(locationService: self.locationService, locationMode: self.locationMode(), gateway: self.nodeGateway) }
+                            await MainActor.run {
+                                SignificantLocationMonitor.startIfNeeded(
+                                    locationService: self.locationService,
+                                    locationMode: self.locationMode(),
+                                    gateway: self.nodeGateway,
+                                    beforeSend: { [weak self] in
+                                        await self?.handleSignificantLocationWakeIfNeeded()
+                                    })
+                            }
                         },
                         onDisconnected: { [weak self] reason in
                             guard let self else { return }
@@ -1901,7 +1970,7 @@ private extension NodeAppModel {
                                 return BridgeInvokeResponse(
                                     id: req.id,
                                     ok: false,
-                                    error: OpenClawNodeError(
+                                    error: PowerDirectorNodeError(
                                         code: .unavailable,
                                         message: "UNAVAILABLE: node not ready"))
                             }
@@ -1964,9 +2033,11 @@ private extension NodeAppModel {
                             self.gatewayPairingRequestId = requestId
                             if let requestId, !requestId.isEmpty {
                                 self.gatewayStatusText =
-                                    "Pairing required (requestId: \(requestId)). Approve on gateway and return to OpenClaw."
+                                    "Pairing required (requestId: \(requestId)). "
+                                        + "Approve on gateway and return to PowerDirector."
                             } else {
-                                self.gatewayStatusText = "Pairing required. Approve on gateway and return to OpenClaw."
+                                self.gatewayStatusText =
+                                    "Pairing required. Approve on gateway and return to PowerDirector."
                             }
                         }
                         // Hard stop the underlying WebSocket watchdog reconnects so the UI stays stable and
@@ -2015,14 +2086,12 @@ private extension NodeAppModel {
             clientId: clientId,
             clientMode: "ui",
             clientDisplayName: displayName,
-            // Operator traffic should authenticate via shared gateway auth only.
-            // Including device identity here can trigger duplicate pairing flows.
-            includeDeviceIdentity: false)
+            includeDeviceIdentity: true)
     }
 
     func legacyClientIdFallback(currentClientId: String, error: Error) -> String? {
         let normalizedClientId = currentClientId.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard normalizedClientId == "openclaw-ios" else { return nil }
+        guard normalizedClientId == "powerdirector-ios" else { return nil }
         let message = error.localizedDescription.lowercased()
         guard message.contains("invalid connect params"), message.contains("/client/id") else {
             return nil
@@ -2036,6 +2105,22 @@ private extension NodeAppModel {
 }
 
 extension NodeAppModel {
+    private struct PendingForegroundNodeAction: Decodable {
+        var id: String
+        var command: String
+        var paramsJSON: String?
+        var enqueuedAtMs: Int?
+    }
+
+    private struct PendingForegroundNodeActionsResponse: Decodable {
+        var nodeId: String?
+        var actions: [PendingForegroundNodeAction]
+    }
+
+    private struct PendingForegroundNodeActionsAckRequest: Encodable {
+        var ids: [String]
+    }
+
     private func refreshShareRouteFromGateway() async {
         struct Params: Codable {
             var includeGlobal: Bool
@@ -2098,8 +2183,8 @@ extension NodeAppModel {
         self.recordShareEvent("Share self-test running…")
 
         let payload = SharedContentPayload(
-            title: "OpenClaw Share Self-Test",
-            url: URL(string: "https://openclaw.ai/share-self-test"),
+            title: "PowerDirector Share Self-Test",
+            url: URL(string: "https://powerdirector.ai/share-self-test"),
             text: "Validate iOS share->deep-link->gateway forwarding.")
         guard let deepLink = ShareToAgentDeepLink.buildURL(
             from: payload,
@@ -2132,15 +2217,237 @@ extension NodeAppModel {
     /// Back-compat hook retained for older gateway-connect flows.
     func onNodeGatewayConnected() async {
         await self.registerAPNsTokenIfNeeded()
+        await self.flushQueuedWatchRepliesIfConnected()
+        await self.resumePendingForegroundNodeActionsIfNeeded(trigger: "node_connected")
+    }
+
+    private func resumePendingForegroundNodeActionsIfNeeded(trigger: String) async {
+        guard !self.isBackgrounded else { return }
+        guard await self.isGatewayConnected() else { return }
+        guard !self.pendingForegroundActionDrainInFlight else { return }
+
+        self.pendingForegroundActionDrainInFlight = true
+        defer { self.pendingForegroundActionDrainInFlight = false }
+
+        do {
+            let payload = try await self.nodeGateway.request(
+                method: "node.pending.pull",
+                paramsJSON: "{}",
+                timeoutSeconds: 6)
+            let decoded = try JSONDecoder().decode(
+                PendingForegroundNodeActionsResponse.self,
+                from: payload)
+            guard !decoded.actions.isEmpty else { return }
+            self.pendingActionLogger.info(
+                "Pending actions pulled trigger=\(trigger, privacy: .public) "
+                    + "count=\(decoded.actions.count, privacy: .public)")
+            await self.applyPendingForegroundNodeActions(decoded.actions, trigger: trigger)
+        } catch {
+            // Best-effort only.
+        }
+    }
+
+    private func applyPendingForegroundNodeActions(
+        _ actions: [PendingForegroundNodeAction],
+        trigger: String) async
+    {
+        for action in actions {
+            guard !self.isBackgrounded else {
+                self.pendingActionLogger.info(
+                    "Pending action replay paused trigger=\(trigger, privacy: .public): app backgrounded")
+                return
+            }
+            let req = BridgeInvokeRequest(
+                id: action.id,
+                command: action.command,
+                paramsJSON: action.paramsJSON)
+            let result = await self.handleInvoke(req)
+            self.pendingActionLogger.info(
+                "Pending action replay trigger=\(trigger, privacy: .public) "
+                    + "id=\(action.id, privacy: .public) command=\(action.command, privacy: .public) "
+                    + "ok=\(result.ok, privacy: .public)")
+            guard result.ok else { return }
+            let acked = await self.ackPendingForegroundNodeAction(
+                id: action.id,
+                trigger: trigger,
+                command: action.command)
+            guard acked else { return }
+        }
+    }
+
+    private func ackPendingForegroundNodeAction(
+        id: String,
+        trigger: String,
+        command: String) async -> Bool
+    {
+        do {
+            let payload = try JSONEncoder().encode(PendingForegroundNodeActionsAckRequest(ids: [id]))
+            let paramsJSON = String(decoding: payload, as: UTF8.self)
+            _ = try await self.nodeGateway.request(
+                method: "node.pending.ack",
+                paramsJSON: paramsJSON,
+                timeoutSeconds: 6)
+            return true
+        } catch {
+            self.pendingActionLogger.error(
+                "Pending action ack failed trigger=\(trigger, privacy: .public) "
+                    + "id=\(id, privacy: .public) command=\(command, privacy: .public) "
+                    + "error=\(String(describing: error), privacy: .public)")
+            return false
+        }
+    }
+
+    private func handleWatchQuickReply(_ event: WatchQuickReplyEvent) async {
+        switch self.watchReplyCoordinator.ingest(event, isGatewayConnected: await self.isGatewayConnected()) {
+        case .dropMissingFields:
+            self.watchReplyLogger.info("watch reply dropped: missing replyId/actionId")
+        case .deduped(let replyId):
+            self.watchReplyLogger.debug(
+                "watch reply deduped replyId=\(replyId, privacy: .public)")
+        case .queue(let replyId, let actionId):
+            self.watchReplyLogger.info(
+                "watch reply queued replyId=\(replyId, privacy: .public) action=\(actionId, privacy: .public)")
+        case .forward:
+            await self.forwardWatchReplyToAgent(event)
+        }
+    }
+
+    private func flushQueuedWatchRepliesIfConnected() async {
+        for event in self.watchReplyCoordinator.drainIfConnected(await self.isGatewayConnected()) {
+            await self.forwardWatchReplyToAgent(event)
+        }
+    }
+
+    private func forwardWatchReplyToAgent(_ event: WatchQuickReplyEvent) async {
+        let sessionKey = event.sessionKey?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let effectiveSessionKey = (sessionKey?.isEmpty == false) ? sessionKey : self.mainSessionKey
+        let message = Self.makeWatchReplyAgentMessage(event)
+        let link = AgentDeepLink(
+            message: message,
+            sessionKey: effectiveSessionKey,
+            thinking: "low",
+            deliver: false,
+            to: nil,
+            channel: nil,
+            timeoutSeconds: nil,
+            key: event.replyId)
+        do {
+            try await self.sendAgentRequest(link: link)
+            let forwardedMessage =
+                "watch reply forwarded replyId=\(event.replyId) "
+                + "action=\(event.actionId)"
+            self.watchReplyLogger.info("\(forwardedMessage, privacy: .public)")
+            self.openChatRequestID &+= 1
+        } catch {
+            let failedMessage =
+                "watch reply forwarding failed replyId=\(event.replyId) "
+                + "error=\(error.localizedDescription)"
+            self.watchReplyLogger.error("\(failedMessage, privacy: .public)")
+            self.watchReplyCoordinator.requeueFront(event)
+        }
+    }
+
+    private static func makeWatchReplyAgentMessage(_ event: WatchQuickReplyEvent) -> String {
+        let actionLabel = event.actionLabel?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let promptId = event.promptId.trimmingCharacters(in: .whitespacesAndNewlines)
+        let transport = event.transport.trimmingCharacters(in: .whitespacesAndNewlines)
+        let summary = actionLabel?.isEmpty == false ? actionLabel! : event.actionId
+        var lines: [String] = []
+        lines.append("Watch reply: \(summary)")
+        lines.append("promptId=\(promptId.isEmpty ? "unknown" : promptId)")
+        lines.append("actionId=\(event.actionId)")
+        lines.append("replyId=\(event.replyId)")
+        if !transport.isEmpty {
+            lines.append("transport=\(transport)")
+        }
+        if let sentAtMs = event.sentAtMs {
+            lines.append("sentAtMs=\(sentAtMs)")
+        }
+        if let note = event.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
+            lines.append("note=\(note)")
+        }
+        return lines.joined(separator: "\n")
     }
 
     func handleSilentPushWake(_ userInfo: [AnyHashable: Any]) async -> Bool {
+        let wakeId = Self.makePushWakeAttemptID()
         guard Self.isSilentPushPayload(userInfo) else {
-            self.pushWakeLogger.info("Ignored APNs payload: not silent push")
+            self.pushWakeLogger.info("Ignored APNs payload wakeId=\(wakeId, privacy: .public): not silent push")
             return false
         }
-        self.pushWakeLogger.info("Silent push received; attempting reconnect if needed")
-        return await self.reconnectGatewaySessionsForSilentPushIfNeeded()
+        let pushKind = Self.powerdirectorPushKind(userInfo)
+        let receivedMessage =
+            "Silent push received wakeId=\(wakeId) "
+            + "kind=\(pushKind) "
+            + "backgrounded=\(self.isBackgrounded) "
+            + "autoReconnect=\(self.gatewayAutoReconnectEnabled)"
+        self.pushWakeLogger.info("\(receivedMessage, privacy: .public)")
+        let result = await self.reconnectGatewaySessionsForSilentPushIfNeeded(wakeId: wakeId)
+        let outcomeMessage =
+            "Silent push outcome wakeId=\(wakeId) "
+            + "applied=\(result.applied) "
+            + "reason=\(result.reason) "
+            + "durationMs=\(result.durationMs)"
+        self.pushWakeLogger.info("\(outcomeMessage, privacy: .public)")
+        return result.applied
+    }
+
+    func handleBackgroundRefreshWake(trigger: String = "bg_app_refresh") async -> Bool {
+        let wakeId = Self.makePushWakeAttemptID()
+        let receivedMessage =
+            "Background refresh wake received wakeId=\(wakeId) "
+            + "trigger=\(trigger) "
+            + "backgrounded=\(self.isBackgrounded) "
+            + "autoReconnect=\(self.gatewayAutoReconnectEnabled)"
+        self.pushWakeLogger.info("\(receivedMessage, privacy: .public)")
+        let result = await self.reconnectGatewaySessionsForSilentPushIfNeeded(wakeId: wakeId)
+        let outcomeMessage =
+            "Background refresh wake outcome wakeId=\(wakeId) "
+            + "applied=\(result.applied) "
+            + "reason=\(result.reason) "
+            + "durationMs=\(result.durationMs)"
+        self.pushWakeLogger.info("\(outcomeMessage, privacy: .public)")
+        return result.applied
+    }
+
+    func handleSignificantLocationWakeIfNeeded() async {
+        let wakeId = Self.makePushWakeAttemptID()
+        let now = Date()
+        let throttleWindowSeconds: TimeInterval = 180
+
+        if await self.isGatewayConnected() {
+            self.locationWakeLogger.info(
+                "Location wake no-op wakeId=\(wakeId, privacy: .public): already connected")
+            return
+        }
+        if let last = self.lastSignificantLocationWakeAt,
+           now.timeIntervalSince(last) < throttleWindowSeconds
+        {
+            let throttledMessage =
+                "Location wake throttled wakeId=\(wakeId) "
+                + "elapsedSec=\(now.timeIntervalSince(last))"
+            self.locationWakeLogger.info("\(throttledMessage, privacy: .public)")
+            return
+        }
+        self.lastSignificantLocationWakeAt = now
+
+        let beginMessage =
+            "Location wake begin wakeId=\(wakeId) "
+            + "backgrounded=\(self.isBackgrounded) "
+            + "autoReconnect=\(self.gatewayAutoReconnectEnabled)"
+        self.locationWakeLogger.info("\(beginMessage, privacy: .public)")
+        let result = await self.reconnectGatewaySessionsForSilentPushIfNeeded(wakeId: wakeId)
+        let triggerMessage =
+            "Location wake trigger wakeId=\(wakeId) "
+            + "applied=\(result.applied) "
+            + "reason=\(result.reason) "
+            + "durationMs=\(result.durationMs)"
+        self.locationWakeLogger.info("\(triggerMessage, privacy: .public)")
+
+        guard result.applied else { return }
+        let connected = await self.waitForGatewayConnection(timeoutMs: 5000, pollMs: 250)
+        self.locationWakeLogger.info(
+            "Location wake post-check wakeId=\(wakeId, privacy: .public) connected=\(connected, privacy: .public)")
     }
 
     func updateAPNsDeviceToken(_ tokenData: Data) {
@@ -2210,28 +2517,383 @@ extension NodeAppModel {
         return false
     }
 
-    private func reconnectGatewaySessionsForSilentPushIfNeeded() async -> Bool {
-        guard self.isBackgrounded else {
-            self.pushWakeLogger.info("Wake no-op: app not backgrounded")
-            return false
+    private static func makePushWakeAttemptID() -> String {
+        let raw = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+        return String(raw.prefix(8))
+    }
+
+    private static func powerdirectorPushKind(_ userInfo: [AnyHashable: Any]) -> String {
+        if let payload = userInfo["powerdirector"] as? [String: Any],
+           let kind = payload["kind"] as? String
+        {
+            let trimmed = kind.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty { return trimmed }
         }
-        guard self.gatewayAutoReconnectEnabled else {
-            self.pushWakeLogger.info("Wake no-op: auto reconnect disabled")
-            return false
+        if let payload = userInfo["powerdirector"] as? [AnyHashable: Any],
+           let kind = payload["kind"] as? String
+        {
+            let trimmed = kind.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty { return trimmed }
         }
-        guard self.activeGatewayConnectConfig != nil else {
-            self.pushWakeLogger.info("Wake no-op: no active gateway config")
-            return false
+        return "unknown"
+    }
+
+    private struct SilentPushWakeAttemptResult {
+        var applied: Bool
+        var reason: String
+        var durationMs: Int
+    }
+
+    private func waitForGatewayConnection(timeoutMs: Int, pollMs: Int) async -> Bool {
+        let clampedTimeoutMs = max(0, timeoutMs)
+        let pollIntervalNs = UInt64(max(50, pollMs)) * 1_000_000
+        let deadline = Date().addingTimeInterval(Double(clampedTimeoutMs) / 1000.0)
+        while Date() < deadline {
+            if await self.isGatewayConnected() {
+                return true
+            }
+            try? await Task.sleep(nanoseconds: pollIntervalNs)
+        }
+        return await self.isGatewayConnected()
+    }
+
+    private func reconnectGatewaySessionsForSilentPushIfNeeded(
+        wakeId: String
+    ) async -> SilentPushWakeAttemptResult {
+        let startedAt = Date()
+        let makeResult: (Bool, String) -> SilentPushWakeAttemptResult = { applied, reason in
+            let durationMs = Int(Date().timeIntervalSince(startedAt) * 1000)
+            return SilentPushWakeAttemptResult(
+                applied: applied,
+                reason: reason,
+                durationMs: max(0, durationMs))
         }
 
+        guard self.isBackgrounded else {
+            self.pushWakeLogger.info("Wake no-op wakeId=\(wakeId, privacy: .public): app not backgrounded")
+            return makeResult(false, "not_backgrounded")
+        }
+        guard self.gatewayAutoReconnectEnabled else {
+            self.pushWakeLogger.info("Wake no-op wakeId=\(wakeId, privacy: .public): auto reconnect disabled")
+            return makeResult(false, "auto_reconnect_disabled")
+        }
+        guard let cfg = self.activeGatewayConnectConfig else {
+            self.pushWakeLogger.info("Wake no-op wakeId=\(wakeId, privacy: .public): no active gateway config")
+            return makeResult(false, "no_active_gateway_config")
+        }
+
+        self.pushWakeLogger.info(
+            "Wake reconnect begin wakeId=\(wakeId, privacy: .public) stableID=\(cfg.stableID, privacy: .public)")
+        self.grantBackgroundReconnectLease(seconds: 30, reason: "wake_\(wakeId)")
         await self.operatorGateway.disconnect()
         await self.nodeGateway.disconnect()
         self.operatorConnected = false
         self.gatewayConnected = false
         self.gatewayStatusText = "Reconnecting…"
         self.talkMode.updateGatewayConnected(false)
-        self.pushWakeLogger.info("Wake reconnect trigger applied")
-        return true
+        self.applyGatewayConnectConfig(cfg)
+        self.pushWakeLogger.info("Wake reconnect trigger applied wakeId=\(wakeId, privacy: .public)")
+        return makeResult(true, "reconnect_triggered")
+    }
+}
+
+extension NodeAppModel {
+    private func refreshWakeWordsFromGateway() async {
+        do {
+            let data = try await self.operatorGateway.request(
+                method: "voicewake.get",
+                paramsJSON: "{}",
+                timeoutSeconds: 8
+            )
+            guard let triggers = VoiceWakePreferences.decodeGatewayTriggers(from: data) else { return }
+            VoiceWakePreferences.saveTriggerWords(triggers)
+        } catch {
+            if let gatewayError = error as? GatewayResponseError {
+                let lower = gatewayError.message.lowercased()
+                if lower.contains("unauthorized role") || lower.contains("missing scope") {
+                    self.setGatewayHealthMonitorDisabled(true)
+                    return
+                }
+            }
+            // Best-effort only.
+        }
+    }
+
+    private func isGatewayHealthMonitorDisabled() -> Bool {
+        self.gatewayHealthMonitorDisabled
+    }
+
+    private func setGatewayHealthMonitorDisabled(_ disabled: Bool) {
+        self.gatewayHealthMonitorDisabled = disabled
+    }
+
+    func sendVoiceTranscript(text: String, sessionKey: String?) async throws {
+        if await !self.isGatewayConnected() {
+            throw NSError(domain: "Gateway", code: 10, userInfo: [
+                NSLocalizedDescriptionKey: "Gateway not connected",
+            ])
+        }
+        struct Payload: Codable {
+            var text: String
+            var sessionKey: String?
+        }
+        let payload = Payload(text: text, sessionKey: sessionKey)
+        let data = try JSONEncoder().encode(payload)
+        guard let json = String(bytes: data, encoding: .utf8) else {
+            throw NSError(domain: "NodeAppModel", code: 1, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to encode voice transcript payload as UTF-8",
+            ])
+        }
+        await self.nodeGateway.sendEvent(event: "voice.transcript", payloadJSON: json)
+    }
+
+    func handleDeepLink(url: URL) async {
+        guard let route = DeepLinkParser.parse(url) else { return }
+
+        switch route {
+        case let .agent(link):
+            await self.handleAgentDeepLink(link, originalURL: url)
+        case .gateway:
+            break
+        }
+    }
+
+    private func handleAgentDeepLink(_ link: AgentDeepLink, originalURL: URL) async {
+        let message = link.message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !message.isEmpty else { return }
+        self.deepLinkLogger.info(
+            "agent deep link received messageChars=\(message.count) url=\(originalURL.absoluteString, privacy: .public)"
+        )
+
+        if message.count > IOSDeepLinkAgentPolicy.maxMessageChars {
+            self.screen.errorText = "Deep link too large (message exceeds "
+                + "\(IOSDeepLinkAgentPolicy.maxMessageChars) characters)."
+            self.recordShareEvent("Rejected: message too large (\(message.count) chars).")
+            return
+        }
+
+        guard await self.isGatewayConnected() else {
+            self.screen.errorText = "Gateway not connected (cannot forward deep link)."
+            self.recordShareEvent("Failed: gateway not connected.")
+            self.deepLinkLogger.error("agent deep link rejected: gateway not connected")
+            return
+        }
+
+        let allowUnattended = self.isUnattendedDeepLinkAllowed(link.key)
+        if !allowUnattended {
+            if message.count > IOSDeepLinkAgentPolicy.maxUnkeyedConfirmChars {
+                self.screen.errorText = "Deep link blocked (message too long without key)."
+                self.recordShareEvent(
+                    "Rejected: deep link over \(IOSDeepLinkAgentPolicy.maxUnkeyedConfirmChars) chars without key.")
+                self.deepLinkLogger.error(
+                    "agent deep link rejected: unkeyed message too long chars=\(message.count, privacy: .public)")
+                return
+            }
+            let urlText = originalURL.absoluteString
+            let prompt = AgentDeepLinkPrompt(
+                id: UUID().uuidString,
+                messagePreview: message,
+                urlPreview: urlText.count > 500 ? "\(urlText.prefix(500))…" : urlText,
+                request: self.effectiveAgentDeepLinkForPrompt(link))
+
+            let promptIntervalSeconds = 5.0
+            let elapsed = Date().timeIntervalSince(self.lastAgentDeepLinkPromptAt)
+            if elapsed < promptIntervalSeconds {
+                if self.pendingAgentDeepLinkPrompt != nil {
+                    self.pendingAgentDeepLinkPrompt = prompt
+                    self.recordShareEvent("Updated local confirmation request (\(message.count) chars).")
+                    self.deepLinkLogger.debug("agent deep link prompt coalesced into active confirmation")
+                    return
+                }
+
+                let remaining = max(0, promptIntervalSeconds - elapsed)
+                self.queueAgentDeepLinkPrompt(prompt, initialDelaySeconds: remaining)
+                self.recordShareEvent("Queued local confirmation (\(message.count) chars).")
+                self.deepLinkLogger.debug("agent deep link prompt queued due to rate limit")
+                return
+            }
+
+            self.presentAgentDeepLinkPrompt(prompt)
+            self.recordShareEvent("Awaiting local confirmation (\(message.count) chars).")
+            self.deepLinkLogger.info("agent deep link requires local confirmation")
+            return
+        }
+
+        await self.submitAgentDeepLink(link, messageCharCount: message.count)
+    }
+
+    private func sendAgentRequest(link: AgentDeepLink) async throws {
+        if link.message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            throw NSError(domain: "DeepLink", code: 1, userInfo: [
+                NSLocalizedDescriptionKey: "invalid agent message",
+            ])
+        }
+
+        let data = try JSONEncoder().encode(link)
+        guard let json = String(bytes: data, encoding: .utf8) else {
+            throw NSError(domain: "NodeAppModel", code: 2, userInfo: [
+                NSLocalizedDescriptionKey: "Failed to encode agent request payload as UTF-8",
+            ])
+        }
+        await self.nodeGateway.sendEvent(event: "agent.request", payloadJSON: json)
+    }
+
+    private func isGatewayConnected() async -> Bool {
+        self.gatewayConnected
+    }
+
+    private func applyMainSessionKey(_ key: String?) {
+        let trimmed = (key ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        let current = self.mainSessionBaseKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed == current { return }
+        self.mainSessionBaseKey = trimmed
+        self.talkMode.updateMainSessionKey(self.mainSessionKey)
+    }
+
+    private static func color(fromHex raw: String?) -> Color? {
+        let trimmed = (raw ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        let hex = trimmed.hasPrefix("#") ? String(trimmed.dropFirst()) : trimmed
+        guard hex.count == 6, let value = Int(hex, radix: 16) else { return nil }
+        let r = Double((value >> 16) & 0xFF) / 255.0
+        let g = Double((value >> 8) & 0xFF) / 255.0
+        let b = Double(value & 0xFF) / 255.0
+        return Color(red: r, green: g, blue: b)
+    }
+
+    func approvePendingAgentDeepLinkPrompt() async {
+        guard let prompt = self.pendingAgentDeepLinkPrompt else { return }
+        self.pendingAgentDeepLinkPrompt = nil
+        guard await self.isGatewayConnected() else {
+            self.screen.errorText = "Gateway not connected (cannot forward deep link)."
+            self.recordShareEvent("Failed: gateway not connected.")
+            self.deepLinkLogger.error("agent deep link approval failed: gateway not connected")
+            return
+        }
+        await self.submitAgentDeepLink(prompt.request, messageCharCount: prompt.messagePreview.count)
+    }
+
+    func declinePendingAgentDeepLinkPrompt() {
+        guard self.pendingAgentDeepLinkPrompt != nil else { return }
+        self.pendingAgentDeepLinkPrompt = nil
+        self.screen.errorText = "Deep link cancelled."
+        self.recordShareEvent("Cancelled: deep link confirmation declined.")
+        self.deepLinkLogger.info("agent deep link cancelled by local user")
+    }
+
+    private func presentAgentDeepLinkPrompt(_ prompt: AgentDeepLinkPrompt) {
+        self.lastAgentDeepLinkPromptAt = Date()
+        self.pendingAgentDeepLinkPrompt = prompt
+    }
+
+    private func queueAgentDeepLinkPrompt(_ prompt: AgentDeepLinkPrompt, initialDelaySeconds: TimeInterval) {
+        self.queuedAgentDeepLinkPrompt = prompt
+        guard self.queuedAgentDeepLinkPromptTask == nil else { return }
+
+        self.queuedAgentDeepLinkPromptTask = Task { [weak self] in
+            guard let self else { return }
+            let delayNs = UInt64(max(0, initialDelaySeconds) * 1_000_000_000)
+            if delayNs > 0 {
+                do {
+                    try await Task.sleep(nanoseconds: delayNs)
+                } catch {
+                    return
+                }
+            }
+            await self.deliverQueuedAgentDeepLinkPrompt()
+        }
+    }
+
+    private func deliverQueuedAgentDeepLinkPrompt() async {
+        defer { self.queuedAgentDeepLinkPromptTask = nil }
+        let promptIntervalSeconds = 5.0
+        while let prompt = self.queuedAgentDeepLinkPrompt {
+            if self.pendingAgentDeepLinkPrompt != nil {
+                do {
+                    try await Task.sleep(nanoseconds: 200_000_000)
+                } catch {
+                    return
+                }
+                continue
+            }
+
+            let elapsed = Date().timeIntervalSince(self.lastAgentDeepLinkPromptAt)
+            if elapsed < promptIntervalSeconds {
+                let remaining = max(0, promptIntervalSeconds - elapsed)
+                do {
+                    try await Task.sleep(nanoseconds: UInt64(remaining * 1_000_000_000))
+                } catch {
+                    return
+                }
+                continue
+            }
+
+            self.queuedAgentDeepLinkPrompt = nil
+            self.presentAgentDeepLinkPrompt(prompt)
+            self.recordShareEvent("Awaiting local confirmation (\(prompt.messagePreview.count) chars).")
+            self.deepLinkLogger.info("agent deep link queued prompt delivered")
+        }
+    }
+
+    private func submitAgentDeepLink(_ link: AgentDeepLink, messageCharCount: Int) async {
+        do {
+            try await self.sendAgentRequest(link: link)
+            self.screen.errorText = nil
+            self.recordShareEvent("Sent to gateway (\(messageCharCount) chars).")
+            self.deepLinkLogger.info("agent deep link forwarded to gateway")
+            self.openChatRequestID &+= 1
+        } catch {
+            self.screen.errorText = "Agent request failed: \(error.localizedDescription)"
+            self.recordShareEvent("Failed: \(error.localizedDescription)")
+            self.deepLinkLogger.error("agent deep link send failed: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    private func effectiveAgentDeepLinkForPrompt(_ link: AgentDeepLink) -> AgentDeepLink {
+        // Without a trusted key, strip delivery/routing knobs to reduce exfiltration risk.
+        AgentDeepLink(
+            message: link.message,
+            sessionKey: link.sessionKey,
+            thinking: link.thinking,
+            deliver: false,
+            to: nil,
+            channel: nil,
+            timeoutSeconds: link.timeoutSeconds,
+            key: link.key)
+    }
+
+    private func isUnattendedDeepLinkAllowed(_ key: String?) -> Bool {
+        let normalizedKey = key?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard !normalizedKey.isEmpty else { return false }
+        return normalizedKey == Self.canvasUnattendedDeepLinkKey || normalizedKey == Self.expectedDeepLinkKey()
+    }
+
+    private static func expectedDeepLinkKey() -> String {
+        let defaults = UserDefaults.standard
+        if let key = defaults.string(forKey: self.deepLinkKeyUserDefaultsKey), !key.isEmpty {
+            return key
+        }
+        let key = self.generateDeepLinkKey()
+        defaults.set(key, forKey: self.deepLinkKeyUserDefaultsKey)
+        return key
+    }
+
+    private static func generateDeepLinkKey() -> String {
+        var bytes = [UInt8](repeating: 0, count: 32)
+        _ = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
+        let data = Data(bytes)
+        return data
+            .base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
+    }
+}
+
+extension NodeAppModel {
+    func _bridgeConsumeMirroredWatchReply(_ event: WatchQuickReplyEvent) async {
+        await self.handleWatchQuickReply(event)
     }
 }
 
@@ -2272,5 +2934,31 @@ extension NodeAppModel {
     func _test_applyTalkModeSync(enabled: Bool, phase: String? = nil) {
         self.applyTalkModeSync(enabled: enabled, phase: phase)
     }
+
+    func _test_queuedWatchReplyCount() -> Int {
+        self.watchReplyCoordinator.queuedCount
+    }
+
+    func _test_setGatewayConnected(_ connected: Bool) {
+        self.gatewayConnected = connected
+    }
+
+    func _test_applyPendingForegroundNodeActions(
+        _ actions: [(id: String, command: String, paramsJSON: String?)]) async
+    {
+        let mapped = actions.map { action in
+            PendingForegroundNodeAction(
+                id: action.id,
+                command: action.command,
+                paramsJSON: action.paramsJSON,
+                enqueuedAtMs: nil)
+        }
+        await self.applyPendingForegroundNodeActions(mapped, trigger: "test")
+    }
+
+    static func _test_currentDeepLinkKey() -> String {
+        self.expectedDeepLinkKey()
+    }
 }
 #endif
+// swiftlint:enable type_body_length file_length

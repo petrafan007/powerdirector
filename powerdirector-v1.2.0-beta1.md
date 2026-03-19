@@ -1,7 +1,7 @@
 # PowerDirector parity upgrade brief
 
 ## Mission
-Port the highest-value OpenClaw changes released after 2026-02-23 into PowerDirector. Prioritize core runtime parity only: security, config and secrets, delivery correctness, browser and gateway hardening, and operator tooling. Do not spend this pass on cosmetic UI work, branding cleanup, app packaging, or docs churn.
+Port the highest-value PowerDirector changes released after 2026-02-23 into PowerDirector. Prioritize core runtime parity only: security, config and secrets, delivery correctness, browser and gateway hardening, and operator tooling. Do not spend this pass on cosmetic UI work, branding cleanup, app packaging, or docs churn.
 
 
 ## Read first
@@ -9,9 +9,9 @@ Port the highest-value OpenClaw changes released after 2026-02-23 into PowerDire
 - `TASKS.md`
 
 ## Non-negotiable constraints
-- OpenClaw source is the parity source of truth EXCEPT if it would break ANY existing working functionality or PowerDirector specific features and functionality. 
+- PowerDirector source is the parity source of truth EXCEPT if it would break ANY existing working functionality or PowerDirector specific features and functionality. 
 - Preserve all PowerDirector-specific behavior already called out in `TASKS.md`.
-- Keep `powerdirector` and `pdir` naming in user-facing CLI, docs, config, and UI. Do not reintroduce `openclaw` branding into PowerDirector surfaces.
+- Keep `powerdirector` and `pdir` naming in user-facing CLI, docs, config, and UI. Do not reintroduce `powerdirector` branding into PowerDirector surfaces.
 - Preserve the current PowerDirector port assignments and current PowerDirector defaults. Do not adopt upstream defaults blindly.
 - Preserve the existing Chat Interface behavior.
 - Preserve PowerDirector's strict configured fallback chain and the All Models Failed modal. Port upstream fallback correctness fixes without broadening fallback to unconfigured providers.
@@ -25,7 +25,7 @@ Port the highest-value OpenClaw changes released after 2026-02-23 into PowerDire
   - ContextEngine: `v2026.3.7` plus `v2026.3.8`
 - Skip mobile and desktop app work (`apps/**`, iOS, macOS, Android), localization, store packaging, docs-only churn, and branding-only churn unless a shared runtime or security fix depends on it.
 
-## Clone and build the latest version of OpenClaw at ~/openclaw-source and use that as a reference for this upgrade.
+## Clone and build the latest version of PowerDirector at ~/powerdirector-source and use that as a reference for this upgrade.
 
 ## Repo areas to focus on
 Primary targets:
@@ -52,7 +52,7 @@ Avoid first unless required by a shared-core fix:
 
 ## Working setup
 ```bash
-git remote add upstream https://github.com/openclaw/openclaw.git || true
+git remote add upstream https://github.com/powerdirector/powerdirector.git || true
 git fetch upstream --tags
 git checkout -b parity/post-2026-02-23-core
 pnpm install
@@ -237,13 +237,13 @@ Leave a short owner handoff note with:
 - exact commands run for validation
 - any unresolved risks or follow-up work
 
-## PowerDirector parity roadmap vs OpenClaw
+## PowerDirector parity roadmap vs PowerDirector
 
 Generated: 2026-03-10
 
 ### Scope
 
-This roadmap is based on the OpenClaw release notes published after 2026-02-23.
+This roadmap is based on the PowerDirector release notes published after 2026-02-23.
 
 I treated the cutoff like this:
 - Included: `v2026.2.23` because it was published on 2026-02-24.
@@ -342,7 +342,7 @@ These are the changes most likely to matter for correctness, safety, and day-2 o
   - Key refs: SecretRef normalization for auth profiles, SecretRef coverage across 64 credential targets, SecretRef support for `gateway.auth.token`, config/runtime snapshot integrity after writes
   - Why it matters: you do not want half-integrated SecretRefs.
 
-- [ ] **`openclaw config validate` equivalent**
+- [ ] **`powerdirector config validate` equivalent**
   - Release: `v2026.3.2`
   - Key ref: `#31220`
   - Why it matters: this pairs directly with the fail-closed config behavior.
@@ -723,11 +723,11 @@ Unless these surfaces are central to PowerDirector right now, I would not burn t
 
 ### Reference release URLs
 
-- https://github.com/openclaw/openclaw/releases/tag/v2026.2.23
-- https://github.com/openclaw/openclaw/releases/tag/v2026.2.24
-- https://github.com/openclaw/openclaw/releases/tag/v2026.2.25
-- https://github.com/openclaw/openclaw/releases/tag/v2026.2.26
-- https://github.com/openclaw/openclaw/releases/tag/v2026.3.1
-- https://github.com/openclaw/openclaw/releases/tag/v2026.3.2
-- https://github.com/openclaw/openclaw/releases/tag/v2026.3.7
-- https://github.com/openclaw/openclaw/releases/tag/v2026.3.8
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.2.23
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.2.24
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.2.25
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.2.26
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.3.1
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.3.2
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.3.7
+- https://github.com/powerdirector/powerdirector/releases/tag/v2026.3.8

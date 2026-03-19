@@ -11,7 +11,7 @@ function resolveInstallId(installSpecs: any[]): string | null {
         return null;
     }
 
-    // Match OpenClaw behavior: use the first install option shown to the user.
+    // Match PowerDirector behavior: use the first install option shown to the user.
     const first = installSpecs[0];
     const kind = typeof first?.kind === 'string' && first.kind.trim().length > 0
         ? first.kind.trim()

@@ -1,5 +1,5 @@
 import Foundation
-import OpenClawKit
+import PowerDirectorKit
 
 @MainActor
 final class NodeCapabilityRouter {

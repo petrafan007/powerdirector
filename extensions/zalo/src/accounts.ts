@@ -1,37 +1,13 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
+import { createAccountListHelpers, type PowerDirectorConfig } from "powerdirector/plugin-sdk/zalo";
 import { resolveZaloToken } from "./token.js";
 import type { ResolvedZaloAccount, ZaloAccountConfig, ZaloConfig } from "./types.js";
 
 export type { ResolvedZaloAccount };
 
-function listConfiguredAccountIds(cfg: PowerDirectorConfig): string[] {
-  const accounts = (cfg.channels?.zalo as ZaloConfig | undefined)?.accounts;
-  if (!accounts || typeof accounts !== "object") {
-    return [];
-  }
-  return Object.keys(accounts).filter(Boolean);
-}
-
-export function listZaloAccountIds(cfg: PowerDirectorConfig): string[] {
-  const ids = listConfiguredAccountIds(cfg);
-  if (ids.length === 0) {
-    return [DEFAULT_ACCOUNT_ID];
-  }
-  return ids.toSorted((a, b) => a.localeCompare(b));
-}
-
-export function resolveDefaultZaloAccountId(cfg: PowerDirectorConfig): string {
-  const zaloConfig = cfg.channels?.zalo as ZaloConfig | undefined;
-  if (zaloConfig?.defaultAccount?.trim()) {
-    return zaloConfig.defaultAccount.trim();
-  }
-  const ids = listZaloAccountIds(cfg);
-  if (ids.includes(DEFAULT_ACCOUNT_ID)) {
-    return DEFAULT_ACCOUNT_ID;
-  }
-  return ids[0] ?? DEFAULT_ACCOUNT_ID;
-}
+const { listAccountIds: listZaloAccountIds, resolveDefaultAccountId: resolveDefaultZaloAccountId } =
+  createAccountListHelpers("zalo");
+export { listZaloAccountIds, resolveDefaultZaloAccountId };
 
 function resolveAccountConfig(
   cfg: PowerDirectorConfig,
@@ -54,6 +30,7 @@ function mergeZaloAccountConfig(cfg: PowerDirectorConfig, accountId: string): Za
 export function resolveZaloAccount(params: {
   cfg: PowerDirectorConfig;
   accountId?: string | null;
+  allowUnresolvedSecretRef?: boolean;
 }): ResolvedZaloAccount {
   const accountId = normalizeAccountId(params.accountId);
   const baseEnabled = (params.cfg.channels?.zalo as ZaloConfig | undefined)?.enabled !== false;
@@ -63,6 +40,7 @@ export function resolveZaloAccount(params: {
   const tokenResolution = resolveZaloToken(
     params.cfg.channels?.zalo as ZaloConfig | undefined,
     accountId,
+    { allowUnresolvedSecretRef: params.allowUnresolvedSecretRef },
   );
 
   return {

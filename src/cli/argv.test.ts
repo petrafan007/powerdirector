@@ -3,11 +3,15 @@ import {
   buildParseArgv,
   getFlagValue,
   getCommandPath,
+  getCommandPositionalsWithRootOptions,
+  getCommandPathWithRootOptions,
   getPrimaryCommand,
   getPositiveIntFlagValue,
   getVerboseFlag,
   hasHelpOrVersion,
   hasFlag,
+  isRootHelpInvocation,
+  isRootVersionInvocation,
   shouldMigrateState,
   shouldMigrateStateFromPath,
 } from "./argv.js";
@@ -29,8 +33,113 @@ describe("argv helpers", () => {
       argv: ["node", "powerdirector", "status"],
       expected: false,
     },
+    {
+      name: "root -v alias",
+      argv: ["node", "powerdirector", "-v"],
+      expected: true,
+    },
+    {
+      name: "root -v alias with profile",
+      argv: ["node", "powerdirector", "--profile", "work", "-v"],
+      expected: true,
+    },
+    {
+      name: "root -v alias with log-level",
+      argv: ["node", "powerdirector", "--log-level", "debug", "-v"],
+      expected: true,
+    },
+    {
+      name: "subcommand -v should not be treated as version",
+      argv: ["node", "powerdirector", "acp", "-v"],
+      expected: false,
+    },
+    {
+      name: "root -v alias with equals profile",
+      argv: ["node", "powerdirector", "--profile=work", "-v"],
+      expected: true,
+    },
+    {
+      name: "subcommand path after global root flags should not be treated as version",
+      argv: ["node", "powerdirector", "--dev", "skills", "list", "-v"],
+      expected: false,
+    },
   ])("detects help/version flags: $name", ({ argv, expected }) => {
     expect(hasHelpOrVersion(argv)).toBe(expected);
+  });
+
+  it.each([
+    {
+      name: "root --version",
+      argv: ["node", "powerdirector", "--version"],
+      expected: true,
+    },
+    {
+      name: "root -V",
+      argv: ["node", "powerdirector", "-V"],
+      expected: true,
+    },
+    {
+      name: "root -v alias with profile",
+      argv: ["node", "powerdirector", "--profile", "work", "-v"],
+      expected: true,
+    },
+    {
+      name: "subcommand version flag",
+      argv: ["node", "powerdirector", "status", "--version"],
+      expected: false,
+    },
+    {
+      name: "unknown root flag with version",
+      argv: ["node", "powerdirector", "--unknown", "--version"],
+      expected: false,
+    },
+  ])("detects root-only version invocations: $name", ({ argv, expected }) => {
+    expect(isRootVersionInvocation(argv)).toBe(expected);
+  });
+
+  it.each([
+    {
+      name: "root --help",
+      argv: ["node", "powerdirector", "--help"],
+      expected: true,
+    },
+    {
+      name: "root -h",
+      argv: ["node", "powerdirector", "-h"],
+      expected: true,
+    },
+    {
+      name: "root --help with profile",
+      argv: ["node", "powerdirector", "--profile", "work", "--help"],
+      expected: true,
+    },
+    {
+      name: "subcommand --help",
+      argv: ["node", "powerdirector", "status", "--help"],
+      expected: false,
+    },
+    {
+      name: "help before subcommand token",
+      argv: ["node", "powerdirector", "--help", "status"],
+      expected: false,
+    },
+    {
+      name: "help after -- terminator",
+      argv: ["node", "powerdirector", "nodes", "run", "--", "git", "--help"],
+      expected: false,
+    },
+    {
+      name: "unknown root flag before help",
+      argv: ["node", "powerdirector", "--unknown", "--help"],
+      expected: false,
+    },
+    {
+      name: "unknown root flag after help",
+      argv: ["node", "powerdirector", "--help", "--unknown"],
+      expected: false,
+    },
+  ])("detects root-only help invocations: $name", ({ argv, expected }) => {
+    expect(isRootHelpInvocation(argv)).toBe(expected);
   });
 
   it.each([
@@ -53,6 +162,50 @@ describe("argv helpers", () => {
     expect(getCommandPath(argv, 2)).toEqual(expected);
   });
 
+  it("extracts command path while skipping known root option values", () => {
+    expect(
+      getCommandPathWithRootOptions(
+        ["node", "powerdirector", "--profile", "work", "--no-color", "config", "validate"],
+        2,
+      ),
+    ).toEqual(["config", "validate"]);
+  });
+
+  it("extracts routed config get positionals with interleaved root options", () => {
+    expect(
+      getCommandPositionalsWithRootOptions(
+        ["node", "powerdirector", "config", "get", "--log-level", "debug", "update.channel", "--json"],
+        {
+          commandPath: ["config", "get"],
+          booleanFlags: ["--json"],
+        },
+      ),
+    ).toEqual(["update.channel"]);
+  });
+
+  it("extracts routed config unset positionals with interleaved root options", () => {
+    expect(
+      getCommandPositionalsWithRootOptions(
+        ["node", "powerdirector", "config", "unset", "--profile", "work", "update.channel"],
+        {
+          commandPath: ["config", "unset"],
+        },
+      ),
+    ).toEqual(["update.channel"]);
+  });
+
+  it("returns null when routed command sees unknown options", () => {
+    expect(
+      getCommandPositionalsWithRootOptions(
+        ["node", "powerdirector", "config", "get", "--mystery", "value", "update.channel"],
+        {
+          commandPath: ["config", "get"],
+          booleanFlags: ["--json"],
+        },
+      ),
+    ).toBeNull();
+  });
+
   it.each([
     {
       name: "returns first command token",
@@ -63,6 +216,11 @@ describe("argv helpers", () => {
       name: "returns null when no command exists",
       argv: ["node", "powerdirector"],
       expected: null,
+    },
+    {
+      name: "skips known root option values",
+      argv: ["node", "powerdirector", "--log-level", "debug", "status"],
+      expected: "status",
     },
   ])("returns primary command: $name", ({ argv, expected }) => {
     expect(getPrimaryCommand(argv)).toBe(expected);
@@ -173,6 +331,18 @@ describe("argv helpers", () => {
       {
         rawArgs: ["/usr/bin/node-22.2.0", "powerdirector", "status"],
         expected: ["/usr/bin/node-22.2.0", "powerdirector", "status"],
+      },
+      {
+        rawArgs: ["node24", "powerdirector", "status"],
+        expected: ["node24", "powerdirector", "status"],
+      },
+      {
+        rawArgs: ["/usr/bin/node24", "powerdirector", "status"],
+        expected: ["/usr/bin/node24", "powerdirector", "status"],
+      },
+      {
+        rawArgs: ["node24.exe", "powerdirector", "status"],
+        expected: ["node24.exe", "powerdirector", "status"],
       },
       {
         rawArgs: ["nodejs", "powerdirector", "status"],

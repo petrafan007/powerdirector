@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SsrFBlockedError, type LookupFn } from "../infra/net/ssrf.js";
 import {
   assertBrowserNavigationAllowed,
@@ -14,6 +14,10 @@ function createLookupFn(address: string): LookupFn {
 }
 
 describe("browser navigation guard", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("blocks private loopback URLs by default", async () => {
     await expect(
       assertBrowserNavigationAllowed({
@@ -22,12 +26,44 @@ describe("browser navigation guard", () => {
     ).rejects.toBeInstanceOf(SsrFBlockedError);
   });
 
-  it("allows non-network schemes", async () => {
+  it("allows about:blank", async () => {
     await expect(
       assertBrowserNavigationAllowed({
         url: "about:blank",
       }),
     ).resolves.toBeUndefined();
+  });
+
+  it("blocks file URLs", async () => {
+    await expect(
+      assertBrowserNavigationAllowed({
+        url: "file:///etc/passwd",
+      }),
+    ).rejects.toBeInstanceOf(InvalidBrowserNavigationUrlError);
+  });
+
+  it("blocks data URLs", async () => {
+    await expect(
+      assertBrowserNavigationAllowed({
+        url: "data:text/html,<h1>owned</h1>",
+      }),
+    ).rejects.toBeInstanceOf(InvalidBrowserNavigationUrlError);
+  });
+
+  it("blocks javascript URLs", async () => {
+    await expect(
+      assertBrowserNavigationAllowed({
+        url: "javascript:alert(1)",
+      }),
+    ).rejects.toBeInstanceOf(InvalidBrowserNavigationUrlError);
+  });
+
+  it("blocks non-blank about URLs", async () => {
+    await expect(
+      assertBrowserNavigationAllowed({
+        url: "about:srcdoc",
+      }),
+    ).rejects.toBeInstanceOf(InvalidBrowserNavigationUrlError);
   });
 
   it("allows blocked hostnames when explicitly allowed", async () => {
@@ -65,6 +101,29 @@ describe("browser navigation guard", () => {
     expect(lookupFn).toHaveBeenCalledWith("example.com", { all: true });
   });
 
+  it("blocks strict policy navigation when env proxy is configured", async () => {
+    vi.stubEnv("HTTP_PROXY", "http://127.0.0.1:7890");
+    const lookupFn = createLookupFn("93.184.216.34");
+    await expect(
+      assertBrowserNavigationAllowed({
+        url: "https://example.com",
+        lookupFn,
+      }),
+    ).rejects.toBeInstanceOf(InvalidBrowserNavigationUrlError);
+  });
+
+  it("allows env proxy navigation when private-network mode is explicitly enabled", async () => {
+    vi.stubEnv("HTTP_PROXY", "http://127.0.0.1:7890");
+    const lookupFn = createLookupFn("93.184.216.34");
+    await expect(
+      assertBrowserNavigationAllowed({
+        url: "https://example.com",
+        lookupFn,
+        ssrfPolicy: { dangerouslyAllowPrivateNetwork: true },
+      }),
+    ).resolves.toBeUndefined();
+  });
+
   it("rejects invalid URLs", async () => {
     await expect(
       assertBrowserNavigationAllowed({
@@ -73,10 +132,20 @@ describe("browser navigation guard", () => {
     ).rejects.toBeInstanceOf(InvalidBrowserNavigationUrlError);
   });
 
-  it("allows about:blank as a non-network result URL", async () => {
+  it("validates final network URLs after navigation", async () => {
+    const lookupFn = createLookupFn("127.0.0.1");
     await expect(
       assertBrowserNavigationResultAllowed({
-        url: "about:blank",
+        url: "http://private.test",
+        lookupFn,
+      }),
+    ).rejects.toBeInstanceOf(SsrFBlockedError);
+  });
+
+  it("ignores non-network browser-internal final URLs", async () => {
+    await expect(
+      assertBrowserNavigationResultAllowed({
+        url: "chrome-error://chromewebdata/",
       }),
     ).resolves.toBeUndefined();
   });
@@ -107,7 +176,7 @@ describe("browser navigation guard", () => {
     ).rejects.toBeInstanceOf(SsrFBlockedError);
   });
 
-  it("allows redirect chains when each hop resolves publicly", async () => {
+  it("allows redirect chains when every hop is public", async () => {
     const lookupFn = createLookupFn("93.184.216.34");
     const finalRequest = {
       url: () => "https://public.example/final",
@@ -128,7 +197,7 @@ describe("browser navigation guard", () => {
     ).resolves.toBeUndefined();
   });
 
-  it("requires redirect-hop inspection unless private-network navigation is enabled", () => {
+  it("treats default browser SSRF mode as requiring redirect-hop inspection", () => {
     expect(requiresInspectableBrowserNavigationRedirects()).toBe(true);
     expect(requiresInspectableBrowserNavigationRedirects({ allowPrivateNetwork: true })).toBe(
       false,

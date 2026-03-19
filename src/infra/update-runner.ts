@@ -1,5 +1,4 @@
 import fs from "node:fs/promises";
-import { existsSync, type Dirent } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { type CommandOptions, runCommandWithTimeout } from "../process/exec.js";
@@ -9,11 +8,15 @@ import {
 } from "./control-ui-assets.js";
 import { detectPackageManager as detectPackageManagerImpl } from "./detect-package-manager.js";
 import { readPackageName, readPackageVersion } from "./package-json.js";
+import { normalizePackageTagInput } from "./package-tag.js";
 import { trimLogTail } from "./restart-sentinel.js";
+import { resolveStableNodePath } from "./stable-node-path.js";
 import {
   channelToNpmTag,
   DEFAULT_PACKAGE_CHANNEL,
   DEV_BRANCH,
+  isBetaTag,
+  isStableTag,
   type UpdateChannel,
 } from "./update-channels.js";
 import { compareSemverStrings } from "./update-check.js";
@@ -21,19 +24,8 @@ import {
   cleanupGlobalRenameDirs,
   detectGlobalInstallManagerForRoot,
   globalInstallArgs,
+  globalInstallFallbackArgs,
 } from "./update-global.js";
-import {
-  buildGitDirtyCheckArgv,
-  createGitRuntimeBackup,
-  filterBlockingGitDirtyStatus,
-  GIT_SAFE_TEMP_ROOT_DIR_NAMES,
-  GIT_SAFE_TEMP_ROOT_DIR_PREFIXES,
-  isSafeGitTempRootDirPath,
-  restorePreservedGitRuntimeFiles,
-  snapshotPreservedGitRuntimeFiles,
-  type GitRuntimeBackup,
-} from "./update-git-runtime-files.js";
-import { resolveGitChannelTag } from "./update-git-channel.js";
 
 export type UpdateStepResult = {
   name: string;
@@ -52,7 +44,6 @@ export type UpdateRunResult = {
   reason?: string;
   before?: { sha?: string | null; version?: string | null };
   after?: { sha?: string | null; version?: string | null };
-  backup?: GitRuntimeBackup;
   steps: UpdateStepResult[];
   durationMs: number;
 };
@@ -96,17 +87,6 @@ const PREFLIGHT_MAX_COMMITS = 10;
 const START_DIRS = ["cwd", "argv1", "process"];
 const DEFAULT_PACKAGE_NAME = "powerdirector";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
-
-function createUpdateCommandEnv(overrides?: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
-  const env: NodeJS.ProcessEnv = {
-    ...process.env,
-    ...(overrides ?? {}),
-  };
-  // Next.js sets TURBOPACK=auto in the server runtime; strip it so `next build --webpack`
-  // inside updater jobs does not inherit conflicting bundler flags.
-  env.TURBOPACK = undefined;
-  return env;
-}
 
 function normalizeDir(value?: string | null) {
   if (!value) {
@@ -168,6 +148,49 @@ async function readBranchName(
   }
   const branch = res.stdout.trim();
   return branch || null;
+}
+
+async function listGitTags(
+  runCommand: CommandRunner,
+  root: string,
+  timeoutMs: number,
+  pattern = "v*",
+): Promise<string[]> {
+  const res = await runCommand(["git", "-C", root, "tag", "--list", pattern, "--sort=-v:refname"], {
+    timeoutMs,
+  }).catch(() => null);
+  if (!res || res.code !== 0) {
+    return [];
+  }
+  return res.stdout
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+async function resolveChannelTag(
+  runCommand: CommandRunner,
+  root: string,
+  timeoutMs: number,
+  channel: Exclude<UpdateChannel, "dev">,
+): Promise<string | null> {
+  const tags = await listGitTags(runCommand, root, timeoutMs);
+  if (channel === "beta") {
+    const betaTag = tags.find((tag) => isBetaTag(tag)) ?? null;
+    const stableTag = tags.find((tag) => isStableTag(tag)) ?? null;
+    if (!betaTag) {
+      return stableTag;
+    }
+    if (!stableTag) {
+      return betaTag;
+    }
+    const cmp = compareSemverStrings(betaTag, stableTag);
+    if (cmp != null && cmp < 0) {
+      return stableTag;
+    }
+    return betaTag;
+  }
+  return tags.find((tag) => isStableTag(tag)) ?? null;
 }
 
 async function resolveGitRoot(
@@ -244,11 +267,7 @@ async function runStep(opts: RunStepOptions): Promise<UpdateStepResult> {
   progress?.onStepStart?.(stepInfo);
 
   const started = Date.now();
-  const result = await runCommand(argv, {
-    cwd,
-    timeoutMs,
-    env: createUpdateCommandEnv(env),
-  });
+  const result = await runCommand(argv, { cwd, timeoutMs, env });
   const durationMs = Date.now() - started;
 
   const stderrTail = trimLogTail(result.stderr, MAX_LOG_CHARS);
@@ -269,71 +288,6 @@ async function runStep(opts: RunStepOptions): Promise<UpdateStepResult> {
     stdoutTail: trimLogTail(result.stdout, MAX_LOG_CHARS),
     stderrTail: trimLogTail(result.stderr, MAX_LOG_CHARS),
   };
-}
-
-type InlineStepOptions<T> = {
-  name: string;
-  command: string;
-  cwd: string;
-  progress?: UpdateStepProgress;
-  stepIndex: number;
-  totalSteps: number;
-  work: () => Promise<T>;
-};
-
-async function runInlineStep<T>(
-  opts: InlineStepOptions<T>,
-): Promise<{ step: UpdateStepResult; value?: T; error?: unknown }> {
-  const { name, command, cwd, progress, stepIndex, totalSteps, work } = opts;
-  const stepInfo: UpdateStepInfo = {
-    name,
-    command,
-    index: stepIndex,
-    total: totalSteps,
-  };
-
-  progress?.onStepStart?.(stepInfo);
-
-  const started = Date.now();
-  try {
-    const value = await work();
-    const durationMs = Date.now() - started;
-    progress?.onStepComplete?.({
-      ...stepInfo,
-      durationMs,
-      exitCode: 0,
-    });
-    return {
-      value,
-      step: {
-        name,
-        command,
-        cwd,
-        durationMs,
-        exitCode: 0,
-      },
-    };
-  } catch (error) {
-    const durationMs = Date.now() - started;
-    const stderrTail = trimLogTail(error instanceof Error ? error.message : String(error), MAX_LOG_CHARS);
-    progress?.onStepComplete?.({
-      ...stepInfo,
-      durationMs,
-      exitCode: 1,
-      stderrTail,
-    });
-    return {
-      error,
-      step: {
-        name,
-        command,
-        cwd,
-        durationMs,
-        exitCode: 1,
-        stderrTail,
-      },
-    };
-  }
 }
 
 function managerScriptArgs(manager: "pnpm" | "bun" | "npm", script: string, args: string[] = []) {
@@ -360,70 +314,7 @@ function managerInstallArgs(manager: "pnpm" | "bun" | "npm") {
 }
 
 function normalizeTag(tag?: string) {
-  const trimmed = tag?.trim();
-  if (!trimmed) {
-    return "latest";
-  }
-  if (trimmed.startsWith("powerdirector@")) {
-    return trimmed.slice("powerdirector@".length);
-  }
-  if (trimmed.startsWith(`${DEFAULT_PACKAGE_NAME}@`)) {
-    return trimmed.slice(`${DEFAULT_PACKAGE_NAME}@`.length);
-  }
-  return trimmed;
-}
-
-function shouldConsiderSafeTempRootDir(name: string): boolean {
-  if (GIT_SAFE_TEMP_ROOT_DIR_NAMES.includes(name as (typeof GIT_SAFE_TEMP_ROOT_DIR_NAMES)[number])) {
-    return true;
-  }
-  return GIT_SAFE_TEMP_ROOT_DIR_PREFIXES.some((prefix) => name.startsWith(prefix));
-}
-
-async function cleanupGitSafeTempRootDirs(
-  root: string,
-  runCommand: CommandRunner,
-  timeoutMs: number,
-): Promise<{ removed: string[]; skipped: string[] }> {
-  const removed: string[] = [];
-  const skipped: string[] = [];
-  let entries: Dirent[] = [];
-
-  try {
-    entries = await fs.readdir(root, { withFileTypes: true });
-  } catch {
-    return { removed, skipped };
-  }
-
-  for (const entry of entries) {
-    if (!entry.isDirectory() || !shouldConsiderSafeTempRootDir(entry.name)) {
-      continue;
-    }
-
-    const relativePath = `${entry.name}/`;
-    if (!isSafeGitTempRootDirPath(relativePath)) {
-      continue;
-    }
-
-    const trackedCheck = await runCommand(
-      ["git", "-C", root, "ls-files", "--others", "--exclude-standard", "--directory", "--no-empty-directory", "--", entry.name],
-      { cwd: root, timeoutMs },
-    );
-    const listedUntracked = trackedCheck.stdout
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean);
-
-    if (!listedUntracked.some((line) => isSafeGitTempRootDirPath(line))) {
-      skipped.push(relativePath);
-      continue;
-    }
-
-    await fs.rm(path.join(root, entry.name), { recursive: true, force: true });
-    removed.push(relativePath);
-  }
-
-  return { removed, skipped };
+  return normalizePackageTagInput(tag, ["powerdirector", DEFAULT_PACKAGE_NAME]) ?? "latest";
 }
 
 export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<UpdateRunResult> {
@@ -462,19 +353,6 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       totalSteps: gitTotalSteps,
     };
   };
-  const inlineStep = <T>(name: string, command: string, cwd: string, work: () => Promise<T>) => {
-    const currentIndex = stepIndex;
-    stepIndex += 1;
-    return runInlineStep({
-      name,
-      command,
-      cwd,
-      work,
-      progress,
-      stepIndex: currentIndex,
-      totalSteps: gitTotalSteps,
-    });
-  };
 
   const pkgRoot = await findPackageRoot(candidates);
 
@@ -502,16 +380,10 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     });
     const beforeSha = beforeShaResult.stdout.trim() || null;
     const beforeVersion = await readPackageVersion(gitRoot);
-    const preservedRuntimeFiles = await snapshotPreservedGitRuntimeFiles(gitRoot);
-    let runtimeBackup: GitRuntimeBackup | null = null;
     const channel: UpdateChannel = opts.channel ?? "dev";
     const branch = channel === "dev" ? await readBranchName(runCommand, gitRoot, timeoutMs) : null;
     const needsCheckoutMain = channel === "dev" && branch !== DEV_BRANCH;
-    const resetRuntimeFilesStepCount = preservedRuntimeFiles.length > 0 ? 1 : 0;
-    gitTotalSteps =
-      (channel === "dev" ? (needsCheckoutMain ? 11 : 10) : 9) + resetRuntimeFilesStepCount + 2;
-    const attachGitRuntimeBackup = (result: UpdateRunResult): UpdateRunResult =>
-      runtimeBackup ? { ...result, backup: runtimeBackup } : result;
+    gitTotalSteps = channel === "dev" ? (needsCheckoutMain ? 11 : 10) : 9;
     const buildGitErrorResult = (reason: string): UpdateRunResult => ({
       status: "error",
       mode: "git",
@@ -521,66 +393,27 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       steps,
       durationMs: Date.now() - startedAt,
     });
-    const finalizeGitResult = async (result: UpdateRunResult): Promise<UpdateRunResult> => {
-      const nextResult = attachGitRuntimeBackup(result);
-      if (preservedRuntimeFiles.length === 0) {
-        return nextResult;
-      }
-
-      try {
-        await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
-      } catch (error) {
-        return {
-          ...nextResult,
-          status: "error",
-          reason: "restore-runtime-files-failed",
-          steps: [
-            ...nextResult.steps,
-            {
-              name: "restore runtime files",
-              command: `restore ${preservedRuntimeFiles.map((file) => file.relativePath).join(" ")}`,
-              cwd: gitRoot,
-              durationMs: 0,
-              exitCode: 1,
-              stderrTail: error instanceof Error ? error.message : String(error),
-            },
-          ],
-        };
-      }
-
-      return nextResult;
-    };
     const runGitCheckoutOrFail = async (name: string, argv: string[]) => {
       const checkoutStep = await runStep(step(name, argv, gitRoot));
       steps.push(checkoutStep);
       if (checkoutStep.exitCode !== 0) {
-        return finalizeGitResult(buildGitErrorResult("checkout-failed"));
+        return buildGitErrorResult("checkout-failed");
       }
       return null;
     };
 
-    const cleanupTempStep = await inlineStep(
-      "cleanup safe temp artifacts",
-      "cleanup safe temp artifacts",
-      gitRoot,
-      async () => cleanupGitSafeTempRootDirs(gitRoot, runCommand, timeoutMs),
-    );
-    steps.push(cleanupTempStep.step);
-    if (cleanupTempStep.error) {
-      return finalizeGitResult(buildGitErrorResult("cleanup-safe-temp-failed"));
-    }
-
     const statusCheck = await runStep(
       step(
         "clean check",
-        buildGitDirtyCheckArgv(gitRoot),
+        ["git", "-C", gitRoot, "status", "--porcelain", "--", ":!dist/control-ui/"],
         gitRoot,
       ),
     );
     steps.push(statusCheck);
-    const hasUncommittedChanges = filterBlockingGitDirtyStatus(statusCheck.stdoutTail ?? "").length > 0;
+    const hasUncommittedChanges =
+      statusCheck.stdoutTail && statusCheck.stdoutTail.trim().length > 0;
     if (hasUncommittedChanges) {
-      return finalizeGitResult({
+      return {
         status: "skipped",
         mode: "git",
         root: gitRoot,
@@ -588,38 +421,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         before: { sha: beforeSha, version: beforeVersion },
         steps,
         durationMs: Date.now() - startedAt,
-      });
-    }
-
-    const backupStep = await inlineStep(
-      "backup runtime files",
-      "backup runtime files",
-      gitRoot,
-      async () => createGitRuntimeBackup(gitRoot),
-    );
-    steps.push(backupStep.step);
-    if (backupStep.step.exitCode !== 0 || !backupStep.value) {
-      return finalizeGitResult(buildGitErrorResult("backup-runtime-files-failed"));
-    }
-    runtimeBackup = backupStep.value;
-
-    if (preservedRuntimeFiles.length > 0 || true) {
-      const resetPaths = [
-        ...preservedRuntimeFiles
-          .map((file) => file.relativePath)
-          .filter((path) => path !== "powerdirector.config.json"),
-        "ui/src-backend/",
-      ];
-      const resetRuntimeFilesStep = await runStep(
-        step(
-          "reset runtime files",
-          ["git", "-C", gitRoot, "checkout", "--", ...resetPaths],
-          gitRoot,
-        ),
-      );
-      // Force exitCode 0 to ignore legitimate checkout failures for untracked config files.
-      resetRuntimeFilesStep.exitCode = 0;
-      steps.push(resetRuntimeFilesStep);
+      };
     }
 
     if (channel === "dev") {
@@ -653,7 +455,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       );
       steps.push(upstreamStep);
       if (upstreamStep.exitCode !== 0) {
-        return finalizeGitResult({
+        return {
           status: "skipped",
           mode: "git",
           root: gitRoot,
@@ -661,28 +463,13 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       const fetchStep = await runStep(
-        step(
-          "git fetch",
-          ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags", "--force"],
-          gitRoot,
-        ),
+        step("git fetch", ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags"], gitRoot),
       );
       steps.push(fetchStep);
-      if (fetchStep.exitCode !== 0) {
-        return finalizeGitResult({
-          status: "error",
-          mode: "git",
-          root: gitRoot,
-          reason: "fetch-failed",
-          before: { sha: beforeSha, version: beforeVersion },
-          steps,
-          durationMs: Date.now() - startedAt,
-        });
-      }
 
       const upstreamShaStep = await runStep(
         step(
@@ -694,7 +481,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       steps.push(upstreamShaStep);
       const upstreamSha = upstreamShaStep.stdoutTail?.trim();
       if (!upstreamShaStep.stdoutTail || !upstreamSha) {
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -702,7 +489,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       const revListStep = await runStep(
@@ -714,7 +501,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       );
       steps.push(revListStep);
       if (revListStep.exitCode !== 0) {
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -722,7 +509,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       const candidates = (revListStep.stdoutTail ?? "")
@@ -730,7 +517,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         .map((line) => line.trim())
         .filter(Boolean);
       if (candidates.length === 0) {
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -738,7 +525,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       const manager = await detectPackageManager(gitRoot);
@@ -753,8 +540,8 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       );
       steps.push(worktreeStep);
       if (worktreeStep.exitCode !== 0) {
-        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => { });
-        return finalizeGitResult({
+        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => {});
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -762,7 +549,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       let selectedSha: string | null = null;
@@ -821,11 +608,11 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           cwd: gitRoot,
           timeoutMs,
         }).catch(() => null);
-        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => { });
+        await fs.rm(preflightRoot, { recursive: true, force: true }).catch(() => {});
       }
 
       if (!selectedSha) {
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -833,7 +620,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       const rebaseStep = await runStep(
@@ -854,7 +641,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           stdoutTail: trimLogTail(abortResult.stdout, MAX_LOG_CHARS),
           stderrTail: trimLogTail(abortResult.stderr, MAX_LOG_CHARS),
         });
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -862,19 +649,15 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
     } else {
       const fetchStep = await runStep(
-        step(
-          "git fetch",
-          ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags", "--force"],
-          gitRoot,
-        ),
+        step("git fetch", ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags"], gitRoot),
       );
       steps.push(fetchStep);
       if (fetchStep.exitCode !== 0) {
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -882,12 +665,12 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
-      const tag = await resolveGitChannelTag(runCommand, gitRoot, timeoutMs, channel);
+      const tag = await resolveChannelTag(runCommand, gitRoot, timeoutMs, channel);
       if (!tag) {
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -895,7 +678,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       const failure = await runGitCheckoutOrFail(`git checkout ${tag}`, [
@@ -916,7 +699,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     const depsStep = await runStep(step("deps install", managerInstallArgs(manager), gitRoot));
     steps.push(depsStep);
     if (depsStep.exitCode !== 0) {
-      return finalizeGitResult({
+      return {
         status: "error",
         mode: "git",
         root: gitRoot,
@@ -924,13 +707,13 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         before: { sha: beforeSha, version: beforeVersion },
         steps,
         durationMs: Date.now() - startedAt,
-      });
+      };
     }
 
     const buildStep = await runStep(step("build", managerScriptArgs(manager, "build"), gitRoot));
     steps.push(buildStep);
     if (buildStep.exitCode !== 0) {
-      return finalizeGitResult({
+      return {
         status: "error",
         mode: "git",
         root: gitRoot,
@@ -938,7 +721,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         before: { sha: beforeSha, version: beforeVersion },
         steps,
         durationMs: Date.now() - startedAt,
-      });
+      };
     }
 
     const uiBuildStep = await runStep(
@@ -946,7 +729,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     );
     steps.push(uiBuildStep);
     if (uiBuildStep.exitCode !== 0) {
-      return finalizeGitResult({
+      return {
         status: "error",
         mode: "git",
         root: gitRoot,
@@ -954,7 +737,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         before: { sha: beforeSha, version: beforeVersion },
         steps,
         durationMs: Date.now() - startedAt,
-      });
+      };
     }
 
     const doctorEntry = path.join(gitRoot, "powerdirector.mjs");
@@ -971,7 +754,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         exitCode: 1,
         stderrTail: `missing ${doctorEntry}`,
       });
-      return finalizeGitResult({
+      return {
         status: "error",
         mode: "git",
         root: gitRoot,
@@ -979,70 +762,36 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         before: { sha: beforeSha, version: beforeVersion },
         steps,
         durationMs: Date.now() - startedAt,
-      });
-    }
-
-    // CRITICAL: Restore preserved runtime files (e.g. the user's powerdirector.config.json)
-    // BEFORE running doctor. Previously this restore only happened inside finalizeGitResult,
-    // which runs AFTER doctor — meaning doctor ran against the template config from the
-    // git tag rather than the user's actual config, overwriting it.
-    let runtimeFilesRestored = false;
-    if (preservedRuntimeFiles.length > 0) {
-      try {
-        await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
-
-        // EXTRA SAFEGUARD: Verify config.json exists before proceeding to doctor
-        const configPath = path.join(gitRoot, "powerdirector.config.json");
-        if (!existsSync(configPath)) {
-          throw new Error("Critical failure: powerdirector.config.json missing after pre-doctor restoration. Aborting update to prevent wipe.");
-        }
-
-        runtimeFilesRestored = true;
-        console.log(`[update-runner] Restored preserved runtime files before doctor step.`);
-      } catch (error) {
-        console.warn(`[update-runner] Early restore of preserved runtime files failed: ${error instanceof Error ? error.message : String(error)}`);
-        // If it failed and it's an update, we MUST abort for safety
-        return finalizeGitResult({
-          status: "error",
-          mode: "git",
-          root: gitRoot,
-          reason: "config-restoration-failed",
-          before: { sha: beforeSha, version: beforeVersion },
-          steps,
-          durationMs: Date.now() - startedAt,
-        });
-      }
+      };
     }
 
     // Use --fix so that doctor auto-strips unknown config keys introduced by
     // schema changes between versions, preventing a startup validation crash.
-    const doctorArgv = [process.execPath, doctorEntry, "doctor", "--non-interactive", "--fix"];
+    const doctorNodePath = await resolveStableNodePath(process.execPath);
+    const doctorArgv = [doctorNodePath, doctorEntry, "doctor", "--non-interactive", "--fix"];
     const doctorStep = await runStep(
       step("powerdirector doctor", doctorArgv, gitRoot, { POWERDIRECTOR_UPDATE_IN_PROGRESS: "1" }),
     );
     steps.push(doctorStep);
 
-    // After doctor, re-restore preserved files in case doctor overwrote them
-    // (e.g. doctor --fix may rewrite powerdirector.config.json).
-    if (preservedRuntimeFiles.length > 0 && runtimeFilesRestored) {
-      try {
-        await restorePreservedGitRuntimeFiles(preservedRuntimeFiles);
-        console.log(`[update-runner] Re-restored preserved runtime files after doctor step.`);
-      } catch (error) {
-        console.warn(`[update-runner] Post-doctor re-restore of preserved runtime files failed: ${error instanceof Error ? error.message : String(error)}`);
-      }
-    }
-
     const uiIndexHealth = await resolveControlUiDistIndexHealth({ root: gitRoot });
     if (!uiIndexHealth.exists) {
       const repairArgv = managerScriptArgs(manager, "ui:build");
-      const repairStep = await runStep(
-        step("ui:build (post-doctor repair)", repairArgv, gitRoot),
-      );
+      const started = Date.now();
+      const repairResult = await runCommand(repairArgv, { cwd: gitRoot, timeoutMs });
+      const repairStep: UpdateStepResult = {
+        name: "ui:build (post-doctor repair)",
+        command: repairArgv.join(" "),
+        cwd: gitRoot,
+        durationMs: Date.now() - started,
+        exitCode: repairResult.code,
+        stdoutTail: trimLogTail(repairResult.stdout, MAX_LOG_CHARS),
+        stderrTail: trimLogTail(repairResult.stderr, MAX_LOG_CHARS),
+      };
       steps.push(repairStep);
 
-      if (repairStep.exitCode !== 0) {
-        return finalizeGitResult({
+      if (repairResult.code !== 0) {
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -1050,7 +799,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
 
       const repairedUiIndexHealth = await resolveControlUiDistIndexHealth({ root: gitRoot });
@@ -1065,7 +814,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           exitCode: 1,
           stderrTail: `missing ${uiIndexPath}`,
         });
-        return finalizeGitResult({
+        return {
           status: "error",
           mode: "git",
           root: gitRoot,
@@ -1073,7 +822,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           before: { sha: beforeSha, version: beforeVersion },
           steps,
           durationMs: Date.now() - startedAt,
-        });
+        };
       }
     }
 
@@ -1084,7 +833,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     steps.push(afterShaStep);
     const afterVersion = await readPackageVersion(gitRoot);
 
-    return finalizeGitResult({
+    return {
       status: failedStep ? "error" : "ok",
       mode: "git",
       root: gitRoot,
@@ -1096,7 +845,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       },
       steps,
       durationMs: Date.now() - startedAt,
-    });
+    };
   }
 
   if (!pkgRoot) {
@@ -1120,6 +869,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     const channel = opts.channel ?? DEFAULT_PACKAGE_CHANNEL;
     const tag = normalizeTag(opts.tag ?? channelToNpmTag(channel));
     const spec = `${packageName}@${tag}`;
+    const steps: UpdateStepResult[] = [];
     const updateStep = await runStep({
       runCommand,
       name: "global update",
@@ -1130,13 +880,33 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       stepIndex: 0,
       totalSteps: 1,
     });
-    const steps = [updateStep];
+    steps.push(updateStep);
+
+    let finalStep = updateStep;
+    if (updateStep.exitCode !== 0) {
+      const fallbackArgv = globalInstallFallbackArgs(globalManager, spec);
+      if (fallbackArgv) {
+        const fallbackStep = await runStep({
+          runCommand,
+          name: "global update (omit optional)",
+          argv: fallbackArgv,
+          cwd: pkgRoot,
+          timeoutMs,
+          progress,
+          stepIndex: 0,
+          totalSteps: 1,
+        });
+        steps.push(fallbackStep);
+        finalStep = fallbackStep;
+      }
+    }
+
     const afterVersion = await readPackageVersion(pkgRoot);
     return {
-      status: updateStep.exitCode === 0 ? "ok" : "error",
+      status: finalStep.exitCode === 0 ? "ok" : "error",
       mode: globalManager,
       root: pkgRoot,
-      reason: updateStep.exitCode === 0 ? undefined : updateStep.name,
+      reason: finalStep.exitCode === 0 ? undefined : finalStep.name,
       before: { version: beforeVersion },
       after: { version: afterVersion },
       steps,
