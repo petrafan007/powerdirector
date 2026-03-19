@@ -23,10 +23,9 @@ echo "Syncing required app resources..."
 mkdir -p "$TARGET_DIR/apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources"
 cp "$APPS_SRC/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json" "$TARGET_DIR/apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/" 2>/dev/null || true
 
-# Selective sync for extensions/ - only provider-catalogs needed for discovery
+# Selective sync for extensions/
 echo "Syncing required extensions..."
 mkdir -p "$TARGET_DIR/extensions"
-# Copy all extension contents but keep it selective to avoid OOM
 # We need provider-catalog.ts and other core extension files for some UI routes
 rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/node_modules/**" "$EXTENSIONS_SRC/" "$TARGET_DIR/extensions/"
 
@@ -37,5 +36,9 @@ find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\.\/[^'\"]
 # Fix relative imports to apps/ and extensions/
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\.\.\/\.\.\/apps\//\.\/apps\//g" {} +
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\.\.\/\.\.\/extensions\//\.\/extensions\//g" {} +
+
+# Matches: import('./foo.js') or import("./foo.js") etc.
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import(['\"]\(\.\/[^'\"]*\)\.js['\"])/import('\1')/g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import(['\"]\(\.\.\/[^'\"]*\)\.js['\"])/import('\1')/g" {} +
 
 echo "Backend sync and import sanitization complete."
