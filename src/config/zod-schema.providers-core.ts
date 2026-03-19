@@ -457,7 +457,7 @@ const DiscordVoiceSchema = z
   .strict()
   .optional();
 
-export const DiscordAccountSchema = z
+const DiscordAccountBaseSchema = z
   .object({
     name: z.string().optional(),
     capabilities: z.array(z.string()).optional(),
@@ -604,7 +604,9 @@ export const DiscordAccountSchema = z
       .strict()
       .optional(),
   })
-  .strict()
+  .strict();
+
+export const DiscordAccountSchema = DiscordAccountBaseSchema
   .superRefine((value, ctx) => {
     normalizeDiscordStreamingConfig(value);
 
@@ -657,7 +659,7 @@ export const DiscordAccountSchema = z
     // can inherit top-level allowFrom via runtime shallow merge.
   });
 
-export const DiscordConfigSchema = DiscordAccountSchema.extend({
+export const DiscordConfigSchema = DiscordAccountBaseSchema.extend({
   accounts: z.record(z.string(), DiscordAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
 }).superRefine((value, ctx) => {
@@ -842,7 +844,7 @@ const SlackReplyToModeByChatTypeSchema = z
   })
   .strict();
 
-export const SlackAccountSchema = z
+const SlackAccountBaseSchema = z
   .object({
     name: z.string().optional(),
     mode: z.enum(["socket", "http"]).optional(),
@@ -912,7 +914,9 @@ export const SlackAccountSchema = z
     ackReaction: z.string().optional(),
     typingReaction: z.string().optional(),
   })
-  .strict()
+  .strict();
+
+export const SlackAccountSchema = SlackAccountBaseSchema
   .superRefine((value) => {
     normalizeSlackStreamingConfig(value);
 
@@ -920,7 +924,7 @@ export const SlackAccountSchema = z
     // can inherit top-level allowFrom via runtime shallow merge.
   });
 
-export const SlackConfigSchema = SlackAccountSchema.safeExtend({
+export const SlackConfigSchema = SlackAccountBaseSchema.extend({
   mode: z.enum(["socket", "http"]).optional().default("socket"),
   signingSecret: SecretInputSchema.optional().register(sensitive),
   webhookPath: z.string().optional().default("/slack/events"),

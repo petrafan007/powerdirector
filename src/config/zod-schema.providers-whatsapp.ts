@@ -34,7 +34,7 @@ const WhatsAppAckReactionSchema = z
   .strict()
   .optional();
 
-const WhatsAppSharedSchema = z.object({
+const WhatsAppSharedBaseSchema = z.object({
   enabled: z.boolean().optional(),
   capabilities: z.array(z.string()).optional(),
   markdown: MarkdownConfigSchema,
@@ -108,7 +108,43 @@ function enforceAllowlistDmPolicyAllowFrom(params: {
   });
 }
 
-export const WhatsAppAccountSchema = WhatsAppSharedSchema.extend({
+const WhatsAppSharedSchema = WhatsAppSharedBaseSchema.superRefine((value, ctx) => {
+    enforceOpenDmPolicyAllowFromStar({
+      dmPolicy: value.dmPolicy,
+      allowFrom: value.allowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.dmPolicy="open" requires channels.whatsapp.allowFrom to include "*"',
+    });
+    enforceAllowlistDmPolicyAllowFrom({
+      dmPolicy: value.dmPolicy,
+      allowFrom: value.allowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.dmPolicy="allowlist" requires channels.whatsapp.allowFrom to contain at least one string',
+    });
+
+    const groupPolicy = value.groupPolicy;
+    const groupAllowFrom = value.groupAllowFrom;
+    enforceOpenDmPolicyAllowFromStar({
+      dmPolicy: groupPolicy,
+      allowFrom: groupAllowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.groupPolicy="open" requires channels.whatsapp.groupAllowFrom to include "*"',
+      path: ["groupAllowFrom"],
+    });
+    enforceAllowlistDmPolicyAllowFrom({
+      dmPolicy: groupPolicy,
+      allowFrom: groupAllowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.groupPolicy="allowlist" requires channels.whatsapp.groupAllowFrom to contain at least one string',
+      path: ["groupAllowFrom"],
+    });
+  });
+
+export const WhatsAppAccountSchema = WhatsAppSharedBaseSchema.extend({
   name: z.string().optional(),
   enabled: z.boolean().optional(),
   /** Override auth directory for this WhatsApp account (Baileys multi-file auth state). */
@@ -116,7 +152,7 @@ export const WhatsAppAccountSchema = WhatsAppSharedSchema.extend({
   mediaMaxMb: z.number().int().positive().optional(),
 }).strict();
 
-export const WhatsAppConfigSchema = WhatsAppSharedSchema.extend({
+export const WhatsAppConfigSchema = WhatsAppSharedBaseSchema.extend({
   accounts: z.record(z.string(), WhatsAppAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
   mediaMaxMb: z.number().int().positive().optional().default(50),
