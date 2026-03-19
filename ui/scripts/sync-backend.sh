@@ -37,8 +37,4 @@ find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\.\/[^'\"]
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\.\.\/\.\.\/apps\//\.\/apps\//g" {} +
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\.\.\/\.\.\/extensions\//\.\/extensions\//g" {} +
 
-# Matches: import('./foo.js') or import("./foo.js") etc.
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import(['\"]\(\.\/[^'\"]*\)\.js['\"])/import('\1')/g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import(['\"]\(\.\.\/[^'\"]*\)\.js['\"])/import('\1')/g" {} +
-
 echo "Backend sync and import sanitization complete."
