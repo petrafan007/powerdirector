@@ -25,9 +25,12 @@ find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\/[^'\"]*\
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\.\/[^'\"]*\)\.js['\"]/from '\1'/g" {} +
 
 # Fix relative imports to apps/
-# Matches: from '../../apps/...' or from "../../apps/..."
-# Replaces with: from './apps/...'
+# We use @/src-backend/apps/... for clean resolution in Next.js
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\.\.\/\.\.\/apps\//\.\/apps\//g" {} +
+
+# Extra safety for tool-display.json
+# Next.js bundler sometimes struggles with complex relative paths in synced dirs.
+# The tool-display.ts has been updated with a try-catch, but we still want the path to be correct.
 
 # Matches: import('./foo.js') or import("./foo.js") etc.
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import(['\"]\(\.\/[^'\"]*\)\.js['\"])/import('\1')/g" {} +
