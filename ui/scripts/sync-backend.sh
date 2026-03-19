@@ -33,8 +33,8 @@ rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/nod
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\/[^'\"]*\)\.js['\"]/from '\1'/g" {} +
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\.\/[^'\"]*\)\.js['\"]/from '\1'/g" {} +
 
-# Fix relative imports to apps/ and extensions/
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\.\.\/\.\.\/apps\//\.\/apps\//g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\.\.\/\.\.\/extensions\//\.\/extensions\//g" {} +
+# Fix relative imports to apps/ and extensions/ using Next.js path aliases
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+apps\\//@\\/src-backend\\/apps\\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+extensions\\//@\\/src-backend\\/extensions\\//g" {} +
 
 echo "Backend sync and import sanitization complete."
