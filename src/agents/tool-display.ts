@@ -1,4 +1,3 @@
-import SHARED_TOOL_DISPLAY_JSON from "../../apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json" with { type: "json" };
 import { redactToolDetail } from "../logging/redact.js";
 import { shortenHomeInString } from "../utils.js";
 import {
@@ -10,6 +9,15 @@ import {
   type ToolDisplaySpec as ToolDisplaySpecBase,
 } from "./tool-display-common.js";
 import TOOL_DISPLAY_OVERRIDES_JSON from "./tool-display-overrides.json" with { type: "json" };
+
+let SHARED_TOOL_DISPLAY_JSON: any = { tools: {} };
+try {
+  // Use dynamic import to allow build-time failure tolerance
+  const mod = await import("../../apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json", { with: { type: "json" } });
+  SHARED_TOOL_DISPLAY_JSON = mod.default;
+} catch {
+  // Fallback to empty if not found or build-time error
+}
 
 type ToolDisplaySpec = ToolDisplaySpecBase & {
   emoji?: string;
