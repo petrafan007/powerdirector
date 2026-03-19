@@ -9,8 +9,14 @@ import {
 
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
-  while (current && typeof current.unwrap === 'function') {
-    current = current.unwrap();
+  while (current) {
+    if (typeof current.unwrap === 'function') {
+      current = current.unwrap();
+    } else if (typeof current.innerType === 'function') {
+      current = current.innerType();
+    } else {
+      break;
+    }
   }
   return current;
 }
@@ -101,13 +107,13 @@ export const uiSchema = uiBaseSchema
   .strict()
   .optional();
 
-export const modelEntrySchema = ModelDefinitionSchema.extend({
+export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZodObject).extend({
   alias: z.string().optional(),
   rateLimit: z.number().optional(),
   timeoutOverride: z.number().optional(),
 }).strict();
 
-export const modelProviderSchema = ModelProviderSchema.extend({
+export const modelProviderSchema = (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).extend({
   baseUrl: z.string().min(1).optional(),
   models: z.array(modelEntrySchema).optional(),
 }).strict();
