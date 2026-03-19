@@ -18,7 +18,7 @@ export type ConfigureCandidate = {
   path: string;
   pathSegments: string[];
   label: string;
-  configFile: "powerdirector.config.json" | "auth-profiles.json";
+  configFile: "powerdirector.json" | "auth-profiles.json";
   expectedResolvedValue: "string" | "string-or-object";
   existingRef?: SecretRef;
   isDerived?: boolean;
@@ -102,7 +102,7 @@ export function buildConfigureCandidatesForScope(params: {
         path: entry.path,
         pathSegments: [...entry.pathSegments],
         label: entry.path,
-        configFile: "powerdirector.config.json" as const,
+        configFile: "powerdirector.json" as const,
         expectedResolvedValue: entry.entry.expectedResolvedValue,
         ...(resolved.ref ? { existingRef: resolved.ref } : {}),
         ...(pathExists || refPathExists ? {} : { isDerived: true }),

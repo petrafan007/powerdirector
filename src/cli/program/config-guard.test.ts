@@ -18,7 +18,7 @@ function makeSnapshot() {
     valid: true,
     issues: [],
     legacyIssues: [],
-    path: "/tmp/powerdirector.config.json",
+    path: "/tmp/powerdirector.json",
   };
 }
 

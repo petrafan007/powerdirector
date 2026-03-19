@@ -42,7 +42,7 @@ function createCommandWithTimeoutResult() {
 
 function createLegacyConfigSnapshot() {
   return {
-    path: "/tmp/powerdirector.config.json",
+    path: "/tmp/powerdirector.json",
     exists: false,
     raw: null,
     parsed: {},
@@ -157,7 +157,7 @@ export const runLegacyStateMigrations = vi.fn().mockResolvedValue({
 }) as unknown as MockFn;
 
 const DEFAULT_CONFIG_SNAPSHOT = {
-  path: "/tmp/powerdirector.config.json",
+  path: "/tmp/powerdirector.json",
   exists: true,
   raw: "{}",
   parsed: {},
@@ -187,7 +187,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../config/config.js")>();
   return {
     ...actual,
-    CONFIG_PATH: "/tmp/powerdirector.config.json",
+    CONFIG_PATH: "/tmp/powerdirector.json",
     createConfigIO,
     readConfigFileSnapshot,
     writeConfigFile,
@@ -258,7 +258,7 @@ vi.mock("../pairing/pairing-store.js", () => ({
   upsertChannelPairingRequest: vi.fn().mockResolvedValue({ code: "000000", created: false }),
 }));
 
-vi.mock("../telegram/token.js", () => ({
+vi.mock("../../extensions/telegram/api.js", () => ({
   resolveTelegramToken: vi.fn(() => ({ token: "", source: "none" })),
 }));
 

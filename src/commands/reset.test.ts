@@ -31,7 +31,7 @@ describe("resetCommand", () => {
     vi.clearAllMocks();
     resolveCleanupPlanFromDisk.mockReturnValue({
       stateDir: "/tmp/.powerdirector",
-      configPath: "/tmp/.powerdirector/powerdirector.config.json",
+      configPath: "/tmp/.powerdirector/powerdirector.json",
       oauthDir: "/tmp/.powerdirector/credentials",
       configInsideState: true,
       oauthInsideState: true,

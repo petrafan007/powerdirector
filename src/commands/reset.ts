@@ -69,7 +69,7 @@ export async function resetCommand(runtime: RuntimeEnv, opts: ResetOptions) {
         {
           value: "config",
           label: "Config only",
-          hint: "powerdirector.config.json",
+          hint: "powerdirector.json",
         },
         {
           value: "config+creds+sessions",

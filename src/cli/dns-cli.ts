@@ -7,7 +7,7 @@ import { pickPrimaryTailnetIPv4, pickPrimaryTailnetIPv6 } from "../infra/tailnet
 import { getWideAreaZonePath, resolveWideAreaDiscoveryDomain } from "../infra/widearea-dns.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
-import { renderTable } from "../terminal/table.js";
+import { getTerminalTableWidth, renderTable } from "../terminal/table.js";
 import { theme } from "../terminal/theme.js";
 
 type RunOpts = { allowFailure?: boolean; inherit?: boolean };
@@ -133,7 +133,7 @@ export function registerDnsCli(program: Command) {
       }
       const zonePath = getWideAreaZonePath(wideAreaDomain);
 
-      const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+      const tableWidth = getTerminalTableWidth();
       defaultRuntime.log(theme.heading("DNS setup"));
       defaultRuntime.log(
         renderTable({
@@ -153,7 +153,7 @@ export function registerDnsCli(program: Command) {
         }).trimEnd(),
       );
       defaultRuntime.log("");
-      defaultRuntime.log(theme.heading("Recommended ~/.powerdirector/powerdirector.config.json:"));
+      defaultRuntime.log(theme.heading("Recommended ~/.powerdirector/powerdirector.json:"));
       defaultRuntime.log(
         JSON.stringify(
           {
@@ -254,7 +254,7 @@ export function registerDnsCli(program: Command) {
         defaultRuntime.log("");
         defaultRuntime.log(
           theme.muted(
-            "Note: enable discovery.wideArea.enabled in ~/.powerdirector/powerdirector.config.json on the gateway and restart the gateway so it writes the DNS-SD zone.",
+            "Note: enable discovery.wideArea.enabled in ~/.powerdirector/powerdirector.json on the gateway and restart the gateway so it writes the DNS-SD zone.",
           ),
         );
       }

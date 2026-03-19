@@ -8,8 +8,8 @@
  * - Account ID normalization
  */
 
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { PowerDirectorConfig } from "../api.js";
 import { resolveTwitchToken, type TwitchTokenSource } from "./token.js";
 
 describe("token", () => {

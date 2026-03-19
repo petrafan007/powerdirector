@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/msteams";
-import { loadOutboundMediaFromUrl } from "powerdirector/plugin-sdk/msteams";
+import type { PowerDirectorConfig } from "../runtime-api.js";
+import { loadOutboundMediaFromUrl } from "../runtime-api.js";
 import { createMSTeamsConversationStoreFs } from "./conversation-store-fs.js";
 import {
   classifyMSTeamsSendError,

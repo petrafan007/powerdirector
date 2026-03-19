@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
-import { fetchWithSsrFGuard } from "powerdirector/plugin-sdk/nextcloud-talk";
-import type { RuntimeEnv } from "powerdirector/plugin-sdk/nextcloud-talk";
+import { fetchWithSsrFGuard, type RuntimeEnv } from "../runtime-api.js";
 import type { ResolvedNextcloudTalkAccount } from "./accounts.js";
 import { normalizeResolvedSecretInputString } from "./secret-input.js";
 

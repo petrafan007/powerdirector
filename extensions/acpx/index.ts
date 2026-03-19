@@ -1,4 +1,4 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/acpx";
+import type { PowerDirectorPluginApi } from "./runtime-api.js";
 import { createAcpxPluginConfigSchema } from "./src/config.js";
 import { createAcpxRuntimeService } from "./src/service.js";
 

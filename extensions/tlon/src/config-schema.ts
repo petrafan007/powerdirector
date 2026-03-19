@@ -1,4 +1,4 @@
-import { buildChannelConfigSchema } from "powerdirector/plugin-sdk/tlon";
+import { buildChannelConfigSchema } from "powerdirector/plugin-sdk/core";
 import { z } from "zod";
 
 const ShipSchema = z.string().min(1);

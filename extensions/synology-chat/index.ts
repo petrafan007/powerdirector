@@ -1,17 +1,14 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/synology-chat";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/synology-chat";
-import { createSynologyChatPlugin } from "./src/channel.js";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
+import { synologyChatPlugin } from "./src/channel.js";
 import { setSynologyRuntime } from "./src/runtime.js";
 
-const plugin = {
+export { synologyChatPlugin } from "./src/channel.js";
+export { setSynologyRuntime } from "./src/runtime.js";
+
+export default defineChannelPluginEntry({
   id: "synology-chat",
   name: "Synology Chat",
   description: "Native Synology Chat channel plugin for PowerDirector",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: PowerDirectorPluginApi) {
-    setSynologyRuntime(api.runtime);
-    api.registerChannel({ plugin: createSynologyChatPlugin() });
-  },
-};
-
-export default plugin;
+  plugin: synologyChatPlugin,
+  setRuntime: setSynologyRuntime,
+});

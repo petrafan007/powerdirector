@@ -34,7 +34,7 @@ describe("backupCreateCommand atomic archive write", () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
     const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-failure-"));
     try {
-      await fs.writeFile(path.join(stateDir, "powerdirector.config.json"), JSON.stringify({}), "utf8");
+      await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");
       await fs.writeFile(path.join(stateDir, "state.txt"), "state\n", "utf8");
 
       tarCreateMock.mockRejectedValueOnce(new Error("disk full"));
@@ -66,7 +66,7 @@ describe("backupCreateCommand atomic archive write", () => {
     const realLink = fs.link.bind(fs);
     const linkSpy = vi.spyOn(fs, "link");
     try {
-      await fs.writeFile(path.join(stateDir, "powerdirector.config.json"), JSON.stringify({}), "utf8");
+      await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");
       await fs.writeFile(path.join(stateDir, "state.txt"), "state\n", "utf8");
 
       tarCreateMock.mockImplementationOnce(async ({ file }: { file: string }) => {
@@ -102,7 +102,7 @@ describe("backupCreateCommand atomic archive write", () => {
     const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-copy-fallback-"));
     const linkSpy = vi.spyOn(fs, "link");
     try {
-      await fs.writeFile(path.join(stateDir, "powerdirector.config.json"), JSON.stringify({}), "utf8");
+      await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");
       await fs.writeFile(path.join(stateDir, "state.txt"), "state\n", "utf8");
 
       tarCreateMock.mockImplementationOnce(async ({ file }: { file: string }) => {

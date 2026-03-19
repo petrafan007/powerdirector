@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   createConfigIO: vi.fn().mockReturnValue({
-    configPath: "/tmp/powerdirector-dev/powerdirector.config.json",
+    configPath: "/tmp/powerdirector-dev/powerdirector.json",
   }),
 }));
 
@@ -10,16 +10,22 @@ vi.mock("./io.js", () => ({
   createConfigIO: mocks.createConfigIO,
 }));
 
-import { formatConfigPath, logConfigUpdated } from "./logging.js";
+let formatConfigPath: typeof import("./logging.js").formatConfigPath;
+let logConfigUpdated: typeof import("./logging.js").logConfigUpdated;
+
+beforeEach(async () => {
+  vi.resetModules();
+  ({ formatConfigPath, logConfigUpdated } = await import("./logging.js"));
+});
 
 describe("config logging", () => {
   it("formats the live config path when no explicit path is provided", () => {
-    expect(formatConfigPath()).toBe("/tmp/powerdirector-dev/powerdirector.config.json");
+    expect(formatConfigPath()).toBe("/tmp/powerdirector-dev/powerdirector.json");
   });
 
   it("logs the live config path when no explicit path is provided", () => {
     const runtime = { log: vi.fn() };
     logConfigUpdated(runtime as never);
-    expect(runtime.log).toHaveBeenCalledWith("Updated /tmp/powerdirector-dev/powerdirector.config.json");
+    expect(runtime.log).toHaveBeenCalledWith("Updated /tmp/powerdirector-dev/powerdirector.json");
   });
 });

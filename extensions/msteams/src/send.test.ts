@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/msteams";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 import { sendMessageMSTeams } from "./send.js";
 
 const mockState = vi.hoisted(() => ({
@@ -11,7 +11,7 @@ const mockState = vi.hoisted(() => ({
   sendMSTeamsMessages: vi.fn(),
 }));
 
-vi.mock("powerdirector/plugin-sdk/msteams", () => ({
+vi.mock("../runtime-api.js", () => ({
   loadOutboundMediaFromUrl: mockState.loadOutboundMediaFromUrl,
 }));
 

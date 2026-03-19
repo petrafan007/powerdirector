@@ -1,5 +1,5 @@
 import { normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
-import { createAccountListHelpers } from "powerdirector/plugin-sdk/matrix";
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-resolution";
 import { hasConfiguredSecretInput } from "../secret-input.js";
 import type { CoreConfig, MatrixConfig } from "../types.js";
 import { resolveMatrixConfigForAccount } from "./client.js";

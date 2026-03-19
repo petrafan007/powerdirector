@@ -4,7 +4,7 @@ import type {
   DmPolicy,
   GroupPolicy,
   SecretInput,
-} from "powerdirector/plugin-sdk/nextcloud-talk";
+} from "../runtime-api.js";
 
 export type { DmPolicy, GroupPolicy };
 

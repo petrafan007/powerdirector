@@ -1,8 +1,4 @@
-import type {
-  ChannelDirectoryEntry,
-  PowerDirectorConfig,
-  RuntimeEnv,
-} from "powerdirector/plugin-sdk/mattermost";
+import type { ChannelDirectoryEntry, PowerDirectorConfig, RuntimeEnv } from "../runtime-api.js";
 import { listMattermostAccountIds, resolveMattermostAccount } from "./accounts.js";
 import {
   createMattermostClient,

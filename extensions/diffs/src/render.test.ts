@@ -23,8 +23,7 @@ describe("renderDiffDocument", () => {
     expect(rendered.html).toContain("data-powerdirector-diff-root");
     expect(rendered.html).toContain("src/example.ts");
     expect(rendered.html).toContain("/plugins/diffs/assets/viewer.js");
-    expect(rendered.imageHtml).not.toContain("/plugins/diffs/assets/viewer.js");
-    expect(rendered.imageHtml).toContain('data-powerdirector-diffs-ready="true"');
+    expect(rendered.imageHtml).toContain("/plugins/diffs/assets/viewer.js");
     expect(rendered.imageHtml).toContain("max-width: 960px;");
     expect(rendered.imageHtml).toContain("--diffs-font-size: 16px;");
     expect(rendered.html).toContain("min-height: 100vh;");

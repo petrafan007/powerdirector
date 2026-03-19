@@ -3,7 +3,10 @@ import path from "node:path";
 import { Logger as TsLogger } from "tslog";
 import { getCommandPathWithRootOptions } from "../cli/argv.js";
 import type { PowerDirectorConfig } from "../config/types.js";
-import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir.js";
+import {
+  POSIX_POWERDIRECTOR_TMP_DIR,
+  resolvePreferredPowerDirectorTmpDir,
+} from "../infra/tmp-powerdirector-dir.js";
 import { readLoggingConfig } from "./config.js";
 import type { ConsoleStyle } from "./console.js";
 import { resolveEnvLogLevelOverride } from "./env-log-level.js";
@@ -12,8 +15,34 @@ import { resolveNodeRequireFromMeta } from "./node-require.js";
 import { loggingState } from "./state.js";
 import { formatLocalIsoWithOffset } from "./timestamps.js";
 
-export const DEFAULT_LOG_DIR = resolvePreferredPowerDirectorTmpDir();
-export const DEFAULT_LOG_FILE = path.join(DEFAULT_LOG_DIR, "powerdirector.log"); // legacy single-file path
+type ProcessWithBuiltinModule = NodeJS.Process & {
+  getBuiltinModule?: (id: string) => unknown;
+};
+
+function canUseNodeFs(): boolean {
+  const getBuiltinModule = (process as ProcessWithBuiltinModule).getBuiltinModule;
+  if (typeof getBuiltinModule !== "function") {
+    return false;
+  }
+  try {
+    return getBuiltinModule("fs") !== undefined;
+  } catch {
+    return false;
+  }
+}
+
+function resolveDefaultLogDir(): string {
+  return canUseNodeFs() ? resolvePreferredPowerDirectorTmpDir() : POSIX_POWERDIRECTOR_TMP_DIR;
+}
+
+function resolveDefaultLogFile(defaultLogDir: string): string {
+  return canUseNodeFs()
+    ? path.join(defaultLogDir, "powerdirector.log")
+    : `${POSIX_POWERDIRECTOR_TMP_DIR}/powerdirector.log`;
+}
+
+export const DEFAULT_LOG_DIR = resolveDefaultLogDir();
+export const DEFAULT_LOG_FILE = resolveDefaultLogFile(DEFAULT_LOG_DIR); // legacy single-file path
 
 const LOG_PREFIX = "powerdirector";
 const LOG_SUFFIX = ".log";
@@ -71,6 +100,14 @@ function canUseSilentVitestFileLogFastPath(envLevel: LogLevel | undefined): bool
 }
 
 function resolveSettings(): ResolvedSettings {
+  if (!canUseNodeFs()) {
+    return {
+      level: "silent",
+      file: DEFAULT_LOG_FILE,
+      maxFileBytes: DEFAULT_MAX_LOG_FILE_BYTES,
+    };
+  }
+
   const envLevel = resolveEnvLogLevelOverride();
   // Test runs default file logs to silent. Skip config reads and fallback load in the
   // common case to avoid pulling heavy config/schema stacks on startup.

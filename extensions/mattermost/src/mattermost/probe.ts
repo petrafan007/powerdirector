@@ -1,4 +1,4 @@
-import type { BaseProbeResult } from "powerdirector/plugin-sdk/mattermost";
+import type { BaseProbeResult } from "../runtime-api.js";
 import { normalizeMattermostBaseUrl, readMattermostError, type MattermostUser } from "./client.js";
 
 export type MattermostProbe = BaseProbeResult & {

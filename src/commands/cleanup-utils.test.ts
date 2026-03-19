@@ -21,7 +21,7 @@ describe("buildCleanupPlan", () => {
     const plan = buildCleanupPlan({
       cfg: cfg as unknown as PowerDirectorConfig,
       stateDir: path.join(tmpRoot, "powerdirector-state"),
-      configPath: path.join(tmpRoot, "powerdirector-state", "powerdirector.config.json"),
+      configPath: path.join(tmpRoot, "powerdirector-state", "powerdirector.json"),
       oauthDir: path.join(tmpRoot, "powerdirector-oauth"),
     });
 
@@ -73,7 +73,7 @@ describe("cleanup path removals", () => {
     await removeStateAndLinkedPaths(
       {
         stateDir: path.join(tmpRoot, "state"),
-        configPath: path.join(tmpRoot, "state", "powerdirector.config.json"),
+        configPath: path.join(tmpRoot, "state", "powerdirector.json"),
         oauthDir: path.join(tmpRoot, "oauth"),
         configInsideState: true,
         oauthInsideState: false,
@@ -87,7 +87,7 @@ describe("cleanup path removals", () => {
       .join("\n");
     expect(joinedLogs).toContain("/tmp/powerdirector-cleanup/state");
     expect(joinedLogs).toContain("/tmp/powerdirector-cleanup/oauth");
-    expect(joinedLogs).not.toContain("powerdirector.config.json");
+    expect(joinedLogs).not.toContain("powerdirector.json");
   });
 
   it("removes every workspace directory", async () => {

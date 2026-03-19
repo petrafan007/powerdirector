@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/moonshot-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector Moonshot provider plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

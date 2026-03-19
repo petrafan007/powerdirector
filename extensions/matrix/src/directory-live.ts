@@ -1,4 +1,4 @@
-import type { ChannelDirectoryEntry } from "powerdirector/plugin-sdk/matrix";
+import type { ChannelDirectoryEntry } from "../runtime-api.js";
 import { resolveMatrixAuth } from "./matrix/client.js";
 
 type MatrixUserResult = {

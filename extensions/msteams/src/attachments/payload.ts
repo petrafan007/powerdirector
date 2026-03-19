@@ -1,4 +1,4 @@
-import { buildMediaPayload } from "powerdirector/plugin-sdk/msteams";
+import { buildMediaPayload } from "../../runtime-api.js";
 
 export function buildMSTeamsMediaPayload(
   mediaList: Array<{ path: string; contentType?: string }>,

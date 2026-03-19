@@ -1,5 +1,5 @@
-import type { PluginRuntime } from "powerdirector/plugin-sdk/bluebubbles";
-import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/compat";
+import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "./runtime-api.js";
 
 const runtimeStore = createPluginRuntimeStore<PluginRuntime>("BlueBubbles runtime not initialized");
 type LegacyRuntimeLogShape = { log?: (message: string) => void };

@@ -3,24 +3,24 @@ import type { PowerDirectorConfig } from "../config/config.js";
 import { readConfigFileSnapshot } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
-import { runNonInteractiveOnboardingLocal } from "./onboard-non-interactive/local.js";
-import { runNonInteractiveOnboardingRemote } from "./onboard-non-interactive/remote.js";
+import { runNonInteractiveLocalSetup } from "./onboard-non-interactive/local.js";
+import { runNonInteractiveRemoteSetup } from "./onboard-non-interactive/remote.js";
 import type { OnboardOptions } from "./onboard-types.js";
 
-export async function runNonInteractiveOnboarding(
+export async function runNonInteractiveSetup(
   opts: OnboardOptions,
   runtime: RuntimeEnv = defaultRuntime,
 ) {
   const snapshot = await readConfigFileSnapshot();
   if (snapshot.exists && !snapshot.valid) {
     runtime.error(
-      `Config invalid. Run \`${formatCliCommand("powerdirector doctor")}\` to repair it, then re-run onboarding.`,
+      `Config invalid. Run \`${formatCliCommand("powerdirector doctor")}\` to repair it, then re-run setup.`,
     );
     runtime.exit(1);
     return;
   }
 
-  const baseConfig: PowerDirectorConfig = snapshot.valid ? snapshot.config : {};
+  const baseConfig: PowerDirectorConfig = snapshot.valid ? (snapshot.exists ? snapshot.config : {}) : {};
   const mode = opts.mode ?? "local";
   if (mode !== "local" && mode !== "remote") {
     runtime.error(`Invalid --mode "${String(mode)}" (use local|remote).`);
@@ -29,9 +29,9 @@ export async function runNonInteractiveOnboarding(
   }
 
   if (mode === "remote") {
-    await runNonInteractiveOnboardingRemote({ opts, runtime, baseConfig });
+    await runNonInteractiveRemoteSetup({ opts, runtime, baseConfig });
     return;
   }
 
-  await runNonInteractiveOnboardingLocal({ opts, runtime, baseConfig });
+  await runNonInteractiveLocalSetup({ opts, runtime, baseConfig });
 }

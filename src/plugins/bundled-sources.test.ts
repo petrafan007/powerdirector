@@ -103,6 +103,34 @@ describe("bundled plugin sources", () => {
     expect(missing).toBeUndefined();
   });
 
+  it("forwards an explicit env to bundled discovery helpers", () => {
+    discoverPowerDirectorPluginsMock.mockReturnValue({
+      candidates: [],
+      diagnostics: [],
+    });
+
+    const env = { HOME: "/tmp/powerdirector-home" } as NodeJS.ProcessEnv;
+
+    resolveBundledPluginSources({
+      workspaceDir: "/workspace",
+      env,
+    });
+    findBundledPluginSource({
+      lookup: { kind: "pluginId", value: "feishu" },
+      workspaceDir: "/workspace",
+      env,
+    });
+
+    expect(discoverPowerDirectorPluginsMock).toHaveBeenNthCalledWith(1, {
+      workspaceDir: "/workspace",
+      env,
+    });
+    expect(discoverPowerDirectorPluginsMock).toHaveBeenNthCalledWith(2, {
+      workspaceDir: "/workspace",
+      env,
+    });
+  });
+
   it("finds bundled source by plugin id", () => {
     discoverPowerDirectorPluginsMock.mockReturnValue({
       candidates: [

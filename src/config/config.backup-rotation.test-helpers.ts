@@ -3,7 +3,7 @@ import { expect } from "vitest";
 
 export const IS_WINDOWS = process.platform === "win32";
 
-export function resolveConfigPathFromTempState(fileName = "powerdirector.config.json"): string {
+export function resolveConfigPathFromTempState(fileName = "powerdirector.json"): string {
   const stateDir = process.env.POWERDIRECTOR_STATE_DIR?.trim();
   if (!stateDir) {
     throw new Error("Expected POWERDIRECTOR_STATE_DIR to be set by withTempHome");

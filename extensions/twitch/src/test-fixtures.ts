@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
 import { afterEach, beforeEach, vi } from "vitest";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 
 export const BASE_TWITCH_TEST_ACCOUNT = {
   username: "testbot",

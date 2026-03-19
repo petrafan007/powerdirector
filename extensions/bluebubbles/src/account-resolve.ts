@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/bluebubbles";
 import { resolveBlueBubblesAccount } from "./accounts.js";
+import type { PowerDirectorConfig } from "./runtime-api.js";
 import { normalizeResolvedSecretInputString } from "./secret-input.js";
 
 export type BlueBubblesAccountResolveOpts = {

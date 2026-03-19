@@ -1,10 +1,10 @@
 {
   "name": "@powerdirector/acpx",
-  "version": "2026.3.8-beta.1",
+  "version": "2026.3.14",
   "description": "PowerDirector ACP runtime backend via acpx",
   "type": "module",
   "dependencies": {
-    "acpx": "0.1.15"
+    "acpx": "0.3.0"
   },
   "powerdirector": {
     "extensions": [

@@ -1,5 +1,6 @@
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
-import { createAccountListHelpers, type PowerDirectorConfig } from "powerdirector/plugin-sdk/bluebubbles";
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-helpers";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 import { hasConfiguredSecretInput, normalizeSecretInputString } from "./secret-input.js";
 import { normalizeBlueBubblesServerUrl, type BlueBubblesAccountConfig } from "./types.js";
 

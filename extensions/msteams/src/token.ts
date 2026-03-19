@@ -1,4 +1,4 @@
-import type { MSTeamsConfig } from "powerdirector/plugin-sdk/msteams";
+import type { MSTeamsConfig } from "../runtime-api.js";
 import {
   hasConfiguredSecretInput,
   normalizeResolvedSecretInputString,

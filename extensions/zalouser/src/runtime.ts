@@ -1,5 +1,5 @@
-import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/compat";
-import type { PluginRuntime } from "powerdirector/plugin-sdk/zalouser";
+import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "../runtime-api.js";
 
 const { setRuntime: setZalouserRuntime, getRuntime: getZalouserRuntime } =
   createPluginRuntimeStore<PluginRuntime>("Zalouser runtime not initialized");

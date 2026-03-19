@@ -1,1 +1,1 @@
-export { withFileLock } from "powerdirector/plugin-sdk/msteams";
+export { withFileLock } from "../runtime-api.js";

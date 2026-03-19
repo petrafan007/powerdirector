@@ -14,7 +14,7 @@ async function withTempConfig(
   run: (configPath: string) => Promise<void>,
 ): Promise<void> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-env-io-"));
-  const configPath = path.join(dir, "powerdirector.config.json");
+  const configPath = path.join(dir, "powerdirector.json");
   await fs.writeFile(configPath, configContent);
   try {
     await run(configPath);

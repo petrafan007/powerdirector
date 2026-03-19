@@ -1,52 +1,92 @@
+import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { formatPluginSourceForTable } from "./source-display.js";
+import { withEnv } from "../test-utils/env.js";
+import { formatPluginSourceForTable, resolvePluginSourceRoots } from "./source-display.js";
+
+function createPluginSourceRoots() {
+  const stockRoot = path.resolve(
+    path.sep,
+    "opt",
+    "homebrew",
+    "lib",
+    "node_modules",
+    "powerdirector",
+    "extensions",
+  );
+  const globalRoot = path.resolve(path.sep, "Users", "x", ".powerdirector", "extensions");
+  const workspaceRoot = path.resolve(path.sep, "Users", "x", "ws", ".powerdirector", "extensions");
+  return {
+    stock: stockRoot,
+    global: globalRoot,
+    workspace: workspaceRoot,
+  };
+}
 
 describe("formatPluginSourceForTable", () => {
   it("shortens bundled plugin sources under the stock root", () => {
+    const roots = createPluginSourceRoots();
     const out = formatPluginSourceForTable(
       {
         origin: "bundled",
-        source: "/opt/homebrew/lib/node_modules/powerdirector/extensions/bluebubbles/index.ts",
+        source: path.join(roots.stock, "bluebubbles", "index.ts"),
       },
-      {
-        stock: "/opt/homebrew/lib/node_modules/powerdirector/extensions",
-        global: "/Users/x/.powerdirector/extensions",
-        workspace: "/Users/x/ws/.powerdirector/extensions",
-      },
+      roots,
     );
     expect(out.value).toBe("stock:bluebubbles/index.ts");
     expect(out.rootKey).toBe("stock");
   });
 
   it("shortens workspace plugin sources under the workspace root", () => {
+    const roots = createPluginSourceRoots();
     const out = formatPluginSourceForTable(
       {
         origin: "workspace",
-        source: "/Users/x/ws/.powerdirector/extensions/matrix/index.ts",
+        source: path.join(roots.workspace, "matrix", "index.ts"),
       },
-      {
-        stock: "/opt/homebrew/lib/node_modules/powerdirector/extensions",
-        global: "/Users/x/.powerdirector/extensions",
-        workspace: "/Users/x/ws/.powerdirector/extensions",
-      },
+      roots,
     );
     expect(out.value).toBe("workspace:matrix/index.ts");
     expect(out.rootKey).toBe("workspace");
   });
 
   it("shortens global plugin sources under the global root", () => {
+    const roots = createPluginSourceRoots();
     const out = formatPluginSourceForTable(
       {
         origin: "global",
-        source: "/Users/x/.powerdirector/extensions/zalo/index.js",
+        source: path.join(roots.global, "zalo", "index.js"),
       },
-      {
-        stock: "/opt/homebrew/lib/node_modules/powerdirector/extensions",
-        global: "/Users/x/.powerdirector/extensions",
-        workspace: "/Users/x/ws/.powerdirector/extensions",
-      },
+      roots,
     );
     expect(out.value).toBe("global:zalo/index.js");
     expect(out.rootKey).toBe("global");
+  });
+
+  it("resolves source roots from an explicit env override", () => {
+    const ignoredHome = path.resolve(path.sep, "tmp", "ignored-home");
+    const homeDir = path.resolve(path.sep, "tmp", "powerdirector-home");
+    const roots = withEnv(
+      {
+        POWERDIRECTOR_BUNDLED_PLUGINS_DIR: path.join(ignoredHome, "ignored-bundled"),
+        POWERDIRECTOR_STATE_DIR: path.join(ignoredHome, "ignored-state"),
+        HOME: ignoredHome,
+      },
+      () =>
+        resolvePluginSourceRoots({
+          env: {
+            ...process.env,
+            HOME: homeDir,
+            POWERDIRECTOR_BUNDLED_PLUGINS_DIR: "~/bundled",
+            POWERDIRECTOR_STATE_DIR: "~/state",
+          },
+          workspaceDir: "~/ws",
+        }),
+    );
+
+    expect(roots).toEqual({
+      stock: path.join(homeDir, "bundled"),
+      global: path.join(homeDir, "state", "extensions"),
+      workspace: path.join(homeDir, "ws", ".powerdirector", "extensions"),
+    });
   });
 });

@@ -1,0 +1,30 @@
+import {
+  buildHuggingfaceModelDefinition,
+  HUGGINGFACE_BASE_URL,
+  HUGGINGFACE_MODEL_CATALOG,
+} from "powerdirector/plugin-sdk/provider-models";
+import {
+  applyProviderConfigWithModelCatalogPreset,
+  type PowerDirectorConfig,
+} from "powerdirector/plugin-sdk/provider-onboard";
+
+export const HUGGINGFACE_DEFAULT_MODEL_REF = "huggingface/deepseek-ai/DeepSeek-R1";
+
+function applyHuggingfacePreset(cfg: PowerDirectorConfig, primaryModelRef?: string): PowerDirectorConfig {
+  return applyProviderConfigWithModelCatalogPreset(cfg, {
+    providerId: "huggingface",
+    api: "openai-completions",
+    baseUrl: HUGGINGFACE_BASE_URL,
+    catalogModels: HUGGINGFACE_MODEL_CATALOG.map(buildHuggingfaceModelDefinition),
+    aliases: [{ modelRef: HUGGINGFACE_DEFAULT_MODEL_REF, alias: "Hugging Face" }],
+    primaryModelRef,
+  });
+}
+
+export function applyHuggingfaceProviderConfig(cfg: PowerDirectorConfig): PowerDirectorConfig {
+  return applyHuggingfacePreset(cfg);
+}
+
+export function applyHuggingfaceConfig(cfg: PowerDirectorConfig): PowerDirectorConfig {
+  return applyHuggingfacePreset(cfg, HUGGINGFACE_DEFAULT_MODEL_REF);
+}

@@ -1,10 +1,10 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/discord";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/core";
+import { resolveDiscordAccount } from "./accounts.js";
 import {
   autoBindSpawnedDiscordSubagent,
   listThreadBindingsBySessionKey,
-  resolveDiscordAccount,
   unbindThreadBindingsBySessionKey,
-} from "powerdirector/plugin-sdk/discord";
+} from "./monitor/thread-bindings.js";
 
 function summarizeError(err: unknown): string {
   if (err instanceof Error) {

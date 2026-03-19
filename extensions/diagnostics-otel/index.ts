@@ -1,15 +1,11 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/diagnostics-otel";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/diagnostics-otel";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
 import { createDiagnosticsOtelService } from "./src/service.js";
 
-const plugin = {
+export default definePluginEntry({
   id: "diagnostics-otel",
   name: "Diagnostics OpenTelemetry",
   description: "Export diagnostics events to OpenTelemetry",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: PowerDirectorPluginApi) {
+  register(api) {
     api.registerService(createDiagnosticsOtelService());
   },
-};
-
-export default plugin;
+});

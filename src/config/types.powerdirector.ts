@@ -1,11 +1,9 @@
-import type { AcpConfig } from "./types.acp.js";
 import type { AgentBinding, AgentsConfig } from "./types.agents.js";
 import type { ApprovalsConfig } from "./types.approvals.js";
 import type { AuthConfig } from "./types.auth.js";
 import type { DiagnosticsConfig, LoggingConfig, SessionConfig, WebConfig } from "./types.base.js";
 import type { BrowserConfig } from "./types.browser.js";
 import type { ChannelsConfig } from "./types.channels.js";
-import type { CliConfig } from "./types.cli.js";
 import type { CronConfig } from "./types.cron.js";
 import type {
   CanvasHostConfig,
@@ -24,7 +22,6 @@ import type {
 import type { ModelsConfig } from "./types.models.js";
 import type { NodeHostConfig } from "./types.node-host.js";
 import type { PluginsConfig } from "./types.plugins.js";
-import type { SecretsConfig } from "./types.secrets.js";
 import type { SkillsConfig } from "./types.skills.js";
 import type { ToolsConfig } from "./types.tools.js";
 
@@ -36,7 +33,6 @@ export type PowerDirectorConfig = {
     lastTouchedAt?: string;
   };
   auth?: AuthConfig;
-  acp?: AcpConfig;
   env?: {
     /** Opt-in: import missing secrets from a login shell environment (exec `$SHELL -l -c 'env -0'`). */
     shellEnv?: {
@@ -48,10 +44,10 @@ export type PowerDirectorConfig = {
     vars?: Record<string, string>;
     /** Sugar: allow env vars directly under env (string values only). */
     [key: string]:
-      | string
-      | Record<string, string>
-      | { enabled?: boolean; timeoutMs?: number }
-      | undefined;
+    | string
+    | Record<string, string>
+    | { enabled?: boolean; timeoutMs?: number }
+    | undefined;
   };
   wizard?: {
     lastRunAt?: string;
@@ -62,21 +58,15 @@ export type PowerDirectorConfig = {
   };
   diagnostics?: DiagnosticsConfig;
   logging?: LoggingConfig;
-  cli?: CliConfig;
   update?: {
     /** Update channel for git + npm installs ("stable", "beta", or "dev"). */
     channel?: "stable" | "beta" | "dev";
     /** Check for updates on gateway start (npm installs only). */
     checkOnStart?: boolean;
-    /** Core auto-update policy for package installs. */
     auto?: {
-      /** Enable background auto-update checks and apply logic. Default: false. */
       enabled?: boolean;
-      /** Stable channel minimum delay before auto-apply. Default: 6. */
       stableDelayHours?: number;
-      /** Additional stable-channel jitter window. Default: 12. */
       stableJitterHours?: number;
-      /** Beta channel check cadence. Default: 1 hour. */
       betaCheckIntervalHours?: number;
     };
   };
@@ -84,28 +74,6 @@ export type PowerDirectorConfig = {
   ui?: {
     /** Accent color for PowerDirector UI chrome (hex). */
     seamColor?: string;
-    /** Theme for the PowerDirector UI. */
-    theme?: string;
-    /** Font size for the PowerDirector UI. */
-    fontSize?: number;
-    /** Font family for the PowerDirector UI. */
-    fontFamily?: string;
-    /** Sidebar width for the PowerDirector UI. */
-    sidebarWidth?: number;
-    /** Show timestamps in chat messages. */
-    showTimestamps?: boolean;
-    /** Show tool calls in chat messages. */
-    showToolCalls?: boolean;
-    /** Enable code highlighting in markdown. */
-    codeHighlighting?: boolean;
-    /** Enable markdown rendering. */
-    markdownRendering?: boolean;
-    /** Maximum number of chats to show in the sidebar. */
-    maxSidebarChats?: number;
-    /** Enable chat tabs. */
-    chatTabs?: boolean;
-    /** Maximum number of chat tabs. */
-    maxChatTabs?: number;
     assistant?: {
       /** Assistant display name for UI surfaces. */
       name?: string;
@@ -113,17 +81,6 @@ export type PowerDirectorConfig = {
       avatar?: string;
     };
   };
-  terminal?: {
-    /** Shell to use for the terminal. */
-    shell?: string;
-    /** Bind address for the terminal WebSocket server. */
-    bind?: string;
-    /** Idle timeout for the terminal (minutes). */
-    autoTimeoutMinutes?: number;
-    /** Port for the terminal WebSocket. */
-    port?: number;
-  };
-  secrets?: SecretsConfig;
   skills?: SkillsConfig;
   plugins?: PluginsConfig;
   models?: ModelsConfig;
@@ -133,22 +90,6 @@ export type PowerDirectorConfig = {
   bindings?: AgentBinding[];
   broadcast?: BroadcastConfig;
   audio?: AudioConfig;
-  media?: {
-    /** Preserve original uploaded filenames when storing inbound media. */
-    preserveFilenames?: boolean;
-    /** Optional retention window for persisted inbound media cleanup. */
-    ttlHours?: number;
-    /** Image generation settings. */
-    imageGeneration?: {
-      enabled?: boolean;
-      provider?: string;
-      model?: string;
-      /** Default size for generated images. */
-      defaultSize?: string;
-    };
-    /** Maximum upload size for media files (bytes or string like "10mb"). */
-    maxUploadSize?: number | string;
-  };
   messages?: MessagesConfig;
   commands?: CommandsConfig;
   approvals?: ApprovalsConfig;
@@ -167,8 +108,6 @@ export type PowerDirectorConfig = {
 export type ConfigValidationIssue = {
   path: string;
   message: string;
-  allowedValues?: string[];
-  allowedValuesHiddenCount?: number;
 };
 
 export type LegacyConfigIssue = {

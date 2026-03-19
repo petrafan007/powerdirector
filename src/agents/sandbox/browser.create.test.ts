@@ -48,6 +48,7 @@ vi.mock("../../browser/bridge-server.js", () => ({
 function buildConfig(enableNoVnc: boolean): SandboxConfig {
   return {
     mode: "all",
+    backend: "docker",
     scope: "session",
     workspaceAccess: "none",
     workspaceRoot: "/tmp/powerdirector-sandboxes",
@@ -60,6 +61,12 @@ function buildConfig(enableNoVnc: boolean): SandboxConfig {
       network: "none",
       capDrop: ["ALL"],
       env: { LANG: "C.UTF-8" },
+    },
+    ssh: {
+      command: "ssh",
+      workspaceRoot: "/tmp/powerdirector-sandboxes",
+      strictHostKeyChecking: true,
+      updateHostKeys: true,
     },
     browser: {
       enabled: true,

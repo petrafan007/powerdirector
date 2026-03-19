@@ -8,7 +8,7 @@ import {
   extensionForMime,
   extractOriginalFilename,
   getFileExtension,
-} from "powerdirector/plugin-sdk/msteams";
+} from "../runtime-api.js";
 
 /**
  * Detect MIME type from URL extension or data URL.

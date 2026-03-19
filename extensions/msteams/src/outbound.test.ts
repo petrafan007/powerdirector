@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/msteams";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 
 const mocks = vi.hoisted(() => ({
   sendMessageMSTeams: vi.fn(),

@@ -1,5 +1,5 @@
-import type { MSTeamsConfig } from "powerdirector/plugin-sdk/msteams";
 import { describe, expect, it, vi } from "vitest";
+import type { MSTeamsConfig } from "../runtime-api.js";
 
 const hostMockState = vi.hoisted(() => ({
   tokenError: null as Error | null,

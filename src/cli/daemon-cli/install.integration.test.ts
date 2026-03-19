@@ -57,7 +57,7 @@ describe("runDaemonInstall integration", () => {
       "CLAWDBOT_GATEWAY_PASSWORD",
     ]);
     tempHome = await makeTempWorkspace("powerdirector-daemon-install-int-");
-    configPath = path.join(tempHome, "powerdirector.config.json");
+    configPath = path.join(tempHome, "powerdirector.json");
     process.env.HOME = tempHome;
     process.env.POWERDIRECTOR_STATE_DIR = tempHome;
     process.env.POWERDIRECTOR_CONFIG_PATH = configPath;

@@ -5,7 +5,7 @@ const writeConfigFile = vi.fn().mockResolvedValue(undefined);
 const loadConfig = vi.fn().mockReturnValue({});
 
 vi.mock("../config/config.js", () => ({
-  CONFIG_PATH: "/tmp/powerdirector.config.json",
+  CONFIG_PATH: "/tmp/powerdirector.json",
   readConfigFileSnapshot,
   writeConfigFile,
   loadConfig,
@@ -13,7 +13,7 @@ vi.mock("../config/config.js", () => ({
 
 function mockConfigSnapshot(config: Record<string, unknown> = {}) {
   readConfigFileSnapshot.mockResolvedValue({
-    path: "/tmp/powerdirector.config.json",
+    path: "/tmp/powerdirector.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -108,6 +108,45 @@ describe("models set + fallbacks", () => {
     await modelsSetCommand("Z.AI/glm-4.7", runtime);
 
     expectWrittenPrimaryModel("zai/glm-4.7");
+  });
+
+  it("keeps canonical OpenRouter native ids in models set", async () => {
+    mockConfigSnapshot({});
+    const runtime = makeRuntime();
+
+    await modelsSetCommand("openrouter/hunter-alpha", runtime);
+
+    expectWrittenPrimaryModel("openrouter/hunter-alpha");
+  });
+
+  it("migrates legacy duplicated OpenRouter keys on write", async () => {
+    mockConfigSnapshot({
+      agents: {
+        defaults: {
+          models: {
+            "openrouter/openrouter/hunter-alpha": {
+              params: { thinking: "high" },
+            },
+          },
+        },
+      },
+    });
+    const runtime = makeRuntime();
+
+    await modelsSetCommand("openrouter/hunter-alpha", runtime);
+
+    expect(writeConfigFile).toHaveBeenCalledTimes(1);
+    const written = getWrittenConfig();
+    expect(written.agents).toEqual({
+      defaults: {
+        model: { primary: "openrouter/hunter-alpha" },
+        models: {
+          "openrouter/hunter-alpha": {
+            params: { thinking: "high" },
+          },
+        },
+      },
+    });
   });
 
   it("rewrites string defaults.model to object form when setting primary", async () => {

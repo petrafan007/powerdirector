@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/device-pair";
-import { listDevicePairing } from "powerdirector/plugin-sdk/device-pair";
+import type { PowerDirectorPluginApi } from "./api.js";
+import { listDevicePairing } from "./api.js";
 
 const NOTIFY_STATE_FILE = "device-pair-notify.json";
 const NOTIFY_POLL_INTERVAL_MS = 10_000;

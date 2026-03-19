@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/minimax-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector MiniMax provider and OAuth plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

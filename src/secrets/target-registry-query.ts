@@ -16,7 +16,7 @@ import type {
 
 const COMPILED_SECRET_TARGET_REGISTRY = SECRET_TARGET_REGISTRY.map(compileTargetRegistryEntry);
 const POWERDIRECTOR_COMPILED_SECRET_TARGETS = COMPILED_SECRET_TARGET_REGISTRY.filter(
-  (entry) => entry.configFile === "powerdirector.config.json",
+  (entry) => entry.configFile === "powerdirector.json",
 );
 const AUTH_PROFILES_COMPILED_SECRET_TARGETS = COMPILED_SECRET_TARGET_REGISTRY.filter(
   (entry) => entry.configFile === "auth-profiles.json",
@@ -233,6 +233,24 @@ export function resolvePlanTargetAgainstRegistry(candidate: {
       if (!resolved.accountId || resolved.accountId !== candidate.accountId) {
         continue;
       }
+    }
+    return resolved;
+  }
+  return null;
+}
+
+export function resolveConfigSecretTargetByPath(pathSegments: string[]): ResolvedPlanTarget | null {
+  for (const entry of POWERDIRECTOR_COMPILED_SECRET_TARGETS) {
+    if (!entry.includeInPlan) {
+      continue;
+    }
+    const matched = matchPathTokens(pathSegments, entry.pathTokens);
+    if (!matched) {
+      continue;
+    }
+    const resolved = toResolvedPlanTarget(entry, pathSegments, matched.captures);
+    if (!resolved) {
+      continue;
     }
     return resolved;
   }

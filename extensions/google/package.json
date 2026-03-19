@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/google-plugin",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector Google plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

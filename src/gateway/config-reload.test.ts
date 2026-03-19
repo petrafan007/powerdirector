@@ -276,7 +276,7 @@ function createWatcherMock() {
 
 function makeSnapshot(partial: Partial<ConfigFileSnapshot> = {}): ConfigFileSnapshot {
   return {
-    path: "/tmp/powerdirector.config.json",
+    path: "/tmp/powerdirector.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -306,7 +306,7 @@ function createReloaderHarness(readSnapshot: () => Promise<ConfigFileSnapshot>) 
     onHotReload,
     onRestart,
     log,
-    watchPath: "/tmp/powerdirector.config.json",
+    watchPath: "/tmp/powerdirector.json",
   });
   return { watcher, onHotReload, onRestart, log, reloader };
 }

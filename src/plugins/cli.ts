@@ -8,7 +8,11 @@ import type { PluginLogger } from "./types.js";
 
 const log = createSubsystemLogger("plugins");
 
-export function registerPluginCliCommands(program: Command, cfg?: PowerDirectorConfig) {
+export function registerPluginCliCommands(
+  program: Command,
+  cfg?: PowerDirectorConfig,
+  env?: NodeJS.ProcessEnv,
+) {
   const config = cfg ?? loadConfig();
   const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
   const logger: PluginLogger = {
@@ -20,6 +24,7 @@ export function registerPluginCliCommands(program: Command, cfg?: PowerDirectorC
   const registry = loadPowerDirectorPlugins({
     config,
     workspaceDir,
+    env,
     logger,
   });
 

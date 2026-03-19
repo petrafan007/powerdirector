@@ -1,11 +1,11 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/mattermost";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 import {
   evaluateSenderGroupAccessForPolicy,
   isDangerousNameMatchingEnabled,
   resolveAllowlistMatchSimple,
   resolveControlCommandGate,
   resolveEffectiveAllowFromLists,
-} from "powerdirector/plugin-sdk/mattermost";
+} from "../runtime-api.js";
 import type { ResolvedMattermostAccount } from "./accounts.js";
 import type { MattermostChannel } from "./client.js";
 

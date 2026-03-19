@@ -4,8 +4,8 @@ import {
   isHttpsUrlAllowedByHostnameSuffixAllowlist,
   isPrivateIpAddress,
   normalizeHostnameSuffixAllowlist,
-} from "powerdirector/plugin-sdk/msteams";
-import type { SsrFPolicy } from "powerdirector/plugin-sdk/msteams";
+} from "../../runtime-api.js";
+import type { SsrFPolicy } from "../../runtime-api.js";
 import type { MSTeamsAttachmentLike } from "./types.js";
 
 type InlineImageCandidate =

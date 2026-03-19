@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
 import { describe, expect, it } from "vitest";
+import type { PowerDirectorConfig } from "../api.js";
 import { twitchPlugin } from "./plugin.js";
 
 describe("twitchPlugin.status.buildAccountSnapshot", () => {

@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/googlechat";
 import { describe, expect, it } from "vitest";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 import { resolveGoogleChatAccount } from "./accounts.js";
 
 describe("resolveGoogleChatAccount", () => {

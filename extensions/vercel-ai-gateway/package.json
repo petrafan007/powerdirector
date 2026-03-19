@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/vercel-ai-gateway-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector Vercel AI Gateway provider plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

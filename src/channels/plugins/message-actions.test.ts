@@ -1,52 +1,62 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { Type } from "@sinclair/typebox";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PowerDirectorConfig } from "../../config/config.js";
 import { setActivePluginRegistry } from "../../plugins/runtime.js";
+import { defaultRuntime } from "../../runtime.js";
 import {
   createChannelTestPluginBase,
   createTestRegistry,
 } from "../../test-utils/channel-plugins.js";
 import {
-  supportsChannelMessageButtons,
-  supportsChannelMessageButtonsForChannel,
-  supportsChannelMessageCards,
-  supportsChannelMessageCardsForChannel,
-} from "./message-actions.js";
+  __testing,
+  channelSupportsMessageCapability,
+  channelSupportsMessageCapabilityForChannel,
+  listChannelMessageActions,
+  listChannelMessageCapabilities,
+  listChannelMessageCapabilitiesForChannel,
+  resolveChannelMessageToolSchemaProperties,
+} from "./message-action-discovery.js";
+import type { ChannelMessageCapability } from "./message-capabilities.js";
 import type { ChannelPlugin } from "./types.js";
 
 const emptyRegistry = createTestRegistry([]);
 
 function createMessageActionsPlugin(params: {
   id: "discord" | "telegram";
-  supportsButtons: boolean;
-  supportsCards: boolean;
+  capabilities: readonly ChannelMessageCapability[];
+  aliases?: string[];
 }): ChannelPlugin {
+  const base = createChannelTestPluginBase({
+    id: params.id,
+    label: params.id === "discord" ? "Discord" : "Telegram",
+    capabilities: { chatTypes: ["direct", "group"] },
+    config: {
+      listAccountIds: () => ["default"],
+    },
+  });
   return {
-    ...createChannelTestPluginBase({
-      id: params.id,
-      label: params.id === "discord" ? "Discord" : "Telegram",
-      capabilities: { chatTypes: ["direct", "group"] },
-      config: {
-        listAccountIds: () => ["default"],
-      },
-    }),
+    ...base,
+    meta: {
+      ...base.meta,
+      ...(params.aliases ? { aliases: params.aliases } : {}),
+    },
     actions: {
-      listActions: () => ["send"],
-      supportsButtons: () => params.supportsButtons,
-      supportsCards: () => params.supportsCards,
+      describeMessageTool: () => ({
+        actions: ["send"],
+        capabilities: params.capabilities,
+      }),
     },
   };
 }
 
 const buttonsPlugin = createMessageActionsPlugin({
   id: "discord",
-  supportsButtons: true,
-  supportsCards: false,
+  capabilities: ["interactive", "buttons"],
 });
 
 const cardsPlugin = createMessageActionsPlugin({
   id: "telegram",
-  supportsButtons: false,
-  supportsCards: true,
+  capabilities: ["cards"],
 });
 
 function activateMessageActionTestRegistry() {
@@ -59,29 +69,162 @@ function activateMessageActionTestRegistry() {
 }
 
 describe("message action capability checks", () => {
+  const errorSpy = vi.spyOn(defaultRuntime, "error").mockImplementation(() => undefined);
+
   afterEach(() => {
     setActivePluginRegistry(emptyRegistry);
+    __testing.resetLoggedMessageActionErrors();
+    errorSpy.mockClear();
   });
 
-  it("aggregates buttons/card support across plugins", () => {
+  it("aggregates capabilities across plugins", () => {
     activateMessageActionTestRegistry();
 
-    expect(supportsChannelMessageButtons({} as PowerDirectorConfig)).toBe(true);
-    expect(supportsChannelMessageCards({} as PowerDirectorConfig)).toBe(true);
+    expect(listChannelMessageCapabilities({} as PowerDirectorConfig).toSorted()).toEqual([
+      "buttons",
+      "cards",
+      "interactive",
+    ]);
+    expect(channelSupportsMessageCapability({} as PowerDirectorConfig, "interactive")).toBe(true);
+    expect(channelSupportsMessageCapability({} as PowerDirectorConfig, "buttons")).toBe(true);
+    expect(channelSupportsMessageCapability({} as PowerDirectorConfig, "cards")).toBe(true);
   });
 
   it("checks per-channel capabilities", () => {
     activateMessageActionTestRegistry();
 
     expect(
-      supportsChannelMessageButtonsForChannel({ cfg: {} as PowerDirectorConfig, channel: "discord" }),
+      listChannelMessageCapabilitiesForChannel({
+        cfg: {} as PowerDirectorConfig,
+        channel: "discord",
+      }),
+    ).toEqual(["interactive", "buttons"]);
+    expect(
+      listChannelMessageCapabilitiesForChannel({
+        cfg: {} as PowerDirectorConfig,
+        channel: "telegram",
+      }),
+    ).toEqual(["cards"]);
+    expect(
+      channelSupportsMessageCapabilityForChannel(
+        { cfg: {} as PowerDirectorConfig, channel: "discord" },
+        "interactive",
+      ),
     ).toBe(true);
     expect(
-      supportsChannelMessageButtonsForChannel({ cfg: {} as PowerDirectorConfig, channel: "telegram" }),
+      channelSupportsMessageCapabilityForChannel(
+        { cfg: {} as PowerDirectorConfig, channel: "telegram" },
+        "interactive",
+      ),
     ).toBe(false);
     expect(
-      supportsChannelMessageCardsForChannel({ cfg: {} as PowerDirectorConfig, channel: "telegram" }),
+      channelSupportsMessageCapabilityForChannel(
+        { cfg: {} as PowerDirectorConfig, channel: "discord" },
+        "buttons",
+      ),
     ).toBe(true);
-    expect(supportsChannelMessageCardsForChannel({ cfg: {} as PowerDirectorConfig })).toBe(false);
+    expect(
+      channelSupportsMessageCapabilityForChannel(
+        { cfg: {} as PowerDirectorConfig, channel: "telegram" },
+        "buttons",
+      ),
+    ).toBe(false);
+    expect(
+      channelSupportsMessageCapabilityForChannel(
+        { cfg: {} as PowerDirectorConfig, channel: "telegram" },
+        "cards",
+      ),
+    ).toBe(true);
+    expect(channelSupportsMessageCapabilityForChannel({ cfg: {} as PowerDirectorConfig }, "cards")).toBe(
+      false,
+    );
+  });
+
+  it("normalizes channel aliases for per-channel capability checks", () => {
+    setActivePluginRegistry(
+      createTestRegistry([
+        {
+          pluginId: "telegram",
+          source: "test",
+          plugin: createMessageActionsPlugin({
+            id: "telegram",
+            aliases: ["tg"],
+            capabilities: ["cards"],
+          }),
+        },
+      ]),
+    );
+
+    expect(
+      listChannelMessageCapabilitiesForChannel({
+        cfg: {} as PowerDirectorConfig,
+        channel: "tg",
+      }),
+    ).toEqual(["cards"]);
+  });
+
+  it("uses unified message tool discovery for actions, capabilities, and schema", () => {
+    const unifiedPlugin: ChannelPlugin = {
+      ...createChannelTestPluginBase({
+        id: "discord",
+        label: "Discord",
+        capabilities: { chatTypes: ["direct", "group"] },
+        config: {
+          listAccountIds: () => ["default"],
+        },
+      }),
+      actions: {
+        describeMessageTool: () => ({
+          actions: ["react"],
+          capabilities: ["interactive"],
+          schema: {
+            properties: {
+              components: Type.Array(Type.String()),
+            },
+          },
+        }),
+      },
+    };
+    setActivePluginRegistry(
+      createTestRegistry([{ pluginId: "discord", source: "test", plugin: unifiedPlugin }]),
+    );
+
+    expect(listChannelMessageActions({} as PowerDirectorConfig)).toEqual(["send", "broadcast", "react"]);
+    expect(listChannelMessageCapabilities({} as PowerDirectorConfig)).toEqual(["interactive"]);
+    expect(
+      resolveChannelMessageToolSchemaProperties({
+        cfg: {} as PowerDirectorConfig,
+        channel: "discord",
+      }),
+    ).toHaveProperty("components");
+  });
+
+  it("skips crashing action/capability discovery paths and logs once", () => {
+    const crashingPlugin: ChannelPlugin = {
+      ...createChannelTestPluginBase({
+        id: "discord",
+        label: "Discord",
+        capabilities: { chatTypes: ["direct", "group"] },
+        config: {
+          listAccountIds: () => ["default"],
+        },
+      }),
+      actions: {
+        describeMessageTool: () => {
+          throw new Error("boom");
+        },
+      },
+    };
+    setActivePluginRegistry(
+      createTestRegistry([{ pluginId: "discord", source: "test", plugin: crashingPlugin }]),
+    );
+
+    expect(listChannelMessageActions({} as PowerDirectorConfig)).toEqual(["send", "broadcast"]);
+    expect(listChannelMessageCapabilities({} as PowerDirectorConfig)).toEqual([]);
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+
+    expect(listChannelMessageActions({} as PowerDirectorConfig)).toEqual(["send", "broadcast"]);
+    expect(listChannelMessageCapabilities({} as PowerDirectorConfig)).toEqual([]);
+    expect(errorSpy).toHaveBeenCalledTimes(1);
   });
 });

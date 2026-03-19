@@ -1,6 +1,6 @@
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-helpers";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
-import { isSecretRef } from "powerdirector/plugin-sdk/googlechat";
-import { createAccountListHelpers, type PowerDirectorConfig } from "powerdirector/plugin-sdk/googlechat";
+import { isSecretRef, type PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 import type { GoogleChatAccountConfig } from "./types.config.js";
 
 export type GoogleChatCredentialSource = "file" | "inline" | "env" | "none";

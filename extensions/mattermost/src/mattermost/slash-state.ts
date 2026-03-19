@@ -10,7 +10,7 @@
  */
 
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/mattermost";
+import type { PowerDirectorPluginApi } from "../runtime-api.js";
 import type { ResolvedMattermostAccount } from "./accounts.js";
 import { resolveSlashCommandConfig, type MattermostRegisteredCommand } from "./slash-commands.js";
 import { createSlashCommandHttpHandler } from "./slash-http.js";
@@ -86,8 +86,8 @@ export function activateSlashCommands(params: {
   registeredCommands: MattermostRegisteredCommand[];
   triggerMap?: Map<string, string>;
   api: {
-    cfg: import("powerdirector/plugin-sdk/mattermost").PowerDirectorConfig;
-    runtime: import("powerdirector/plugin-sdk/mattermost").RuntimeEnv;
+    cfg: import("../runtime-api.js").PowerDirectorConfig;
+    runtime: import("../runtime-api.js").RuntimeEnv;
   };
   log?: (msg: string) => void;
 }) {

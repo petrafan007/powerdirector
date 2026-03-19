@@ -3,10 +3,7 @@
  */
 
 import * as crypto from "node:crypto";
-import {
-  createFixedWindowRateLimiter,
-  type FixedWindowRateLimiter,
-} from "powerdirector/plugin-sdk/synology-chat";
+import { createFixedWindowRateLimiter, type FixedWindowRateLimiter } from "../api.js";
 
 export type DmAuthorizationResult =
   | { allowed: true }

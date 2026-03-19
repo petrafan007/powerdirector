@@ -1,8 +1,8 @@
 import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/diffs";
 import { chromium } from "playwright-core";
+import type { PowerDirectorConfig } from "../api.js";
 import type { DiffRenderOptions, DiffTheme } from "./types.js";
 import { VIEWER_ASSET_PREFIX, getServedViewerAsset } from "./viewer-assets.js";
 

@@ -1,4 +1,4 @@
-import type { BaseProbeResult } from "powerdirector/plugin-sdk/zalouser";
+import type { BaseProbeResult } from "../runtime-api.js";
 import type { ZcaUserInfo } from "./types.js";
 import { getZaloUserInfo } from "./zalo-js.js";
 

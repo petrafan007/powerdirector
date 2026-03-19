@@ -1,6 +1,6 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type FakeFsEntry = { kind: "file"; content: string } | { kind: "dir" };
 
@@ -93,12 +93,10 @@ describe("resolvePowerDirectorPackageRoot", () => {
   let resolvePowerDirectorPackageRoot: typeof import("./powerdirector-root.js").resolvePowerDirectorPackageRoot;
   let resolvePowerDirectorPackageRootSync: typeof import("./powerdirector-root.js").resolvePowerDirectorPackageRootSync;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    vi.resetModules();
     ({ resolvePowerDirectorPackageRoot, resolvePowerDirectorPackageRootSync } =
       await import("./powerdirector-root.js"));
-  });
-
-  beforeEach(() => {
     state.entries.clear();
     state.realpaths.clear();
     state.realpathErrors.clear();
@@ -141,6 +139,19 @@ describe("resolvePowerDirectorPackageRoot", () => {
     expect(resolvePowerDirectorPackageRootSync({ moduleUrl })).toBe(pkgRoot);
   });
 
+  it("falls through from a non-powerdirector moduleUrl candidate to cwd", async () => {
+    const wrongPkgRoot = fx("moduleurl-fallthrough", "wrong");
+    const cwdPkgRoot = fx("moduleurl-fallthrough", "cwd");
+    setFile(path.join(wrongPkgRoot, "package.json"), JSON.stringify({ name: "not-powerdirector" }));
+    setFile(path.join(cwdPkgRoot, "package.json"), JSON.stringify({ name: "powerdirector" }));
+    const moduleUrl = pathToFileURL(path.join(wrongPkgRoot, "dist", "index.js")).toString();
+
+    expect(resolvePowerDirectorPackageRootSync({ moduleUrl, cwd: cwdPkgRoot })).toBe(cwdPkgRoot);
+    await expect(resolvePowerDirectorPackageRoot({ moduleUrl, cwd: cwdPkgRoot })).resolves.toBe(
+      cwdPkgRoot,
+    );
+  });
+
   it("ignores invalid moduleUrl values and falls back to cwd", async () => {
     const pkgRoot = fx("invalid-moduleurl");
     setFile(path.join(pkgRoot, "package.json"), JSON.stringify({ name: "powerdirector" }));
@@ -158,6 +169,16 @@ describe("resolvePowerDirectorPackageRoot", () => {
     setFile(path.join(pkgRoot, "package.json"), JSON.stringify({ name: "not-powerdirector" }));
 
     expect(resolvePowerDirectorPackageRootSync({ cwd: pkgRoot })).toBeNull();
+  });
+
+  it("falls back from a symlinked argv1 to the node_modules package root", () => {
+    const project = fx("symlink-node-modules-fallback");
+    const argv1 = path.join(project, "node_modules", ".bin", "powerdirector");
+    state.realpaths.set(abs(argv1), abs(path.join(project, "versions", "current", "powerdirector.mjs")));
+    const pkgRoot = path.join(project, "node_modules", "powerdirector");
+    setFile(path.join(pkgRoot, "package.json"), JSON.stringify({ name: "powerdirector" }));
+
+    expect(resolvePowerDirectorPackageRootSync({ argv1 })).toBe(pkgRoot);
   });
 
   it("async resolver matches sync behavior", async () => {

@@ -1,3 +1,3 @@
-import type { GoogleChatAccountConfig, GoogleChatConfig } from "powerdirector/plugin-sdk/googlechat";
+import type { GoogleChatAccountConfig, GoogleChatConfig } from "../runtime-api.js";
 
 export type { GoogleChatAccountConfig, GoogleChatConfig };

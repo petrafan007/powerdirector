@@ -44,7 +44,7 @@ function resetRuntime() {
 
 function mockSnapshot(token: unknown = "abc") {
   readConfigFileSnapshotMock.mockResolvedValue({
-    path: "/tmp/powerdirector.config.json",
+    path: "/tmp/powerdirector.json",
     exists: true,
     raw: "{}",
     parsed: {},

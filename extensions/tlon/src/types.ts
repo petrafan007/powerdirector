@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/tlon";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 
 export type TlonResolvedAccount = {
   accountId: string;

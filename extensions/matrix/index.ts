@@ -1,22 +1,14 @@
-import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/matrix";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/matrix";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { matrixPlugin } from "./src/channel.js";
-import { ensureMatrixCryptoRuntime } from "./src/matrix/deps.js";
 import { setMatrixRuntime } from "./src/runtime.js";
 
-const plugin = {
+export { matrixPlugin } from "./src/channel.js";
+export { setMatrixRuntime } from "./src/runtime.js";
+
+export default defineChannelPluginEntry({
   id: "matrix",
   name: "Matrix",
-  description: "Matrix channel plugin (matrix-js-sdk)",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: PowerDirectorPluginApi) {
-    setMatrixRuntime(api.runtime);
-    void ensureMatrixCryptoRuntime({ log: api.logger.info }).catch((err) => {
-      const message = err instanceof Error ? err.message : String(err);
-      api.logger.warn?.(`matrix: crypto runtime bootstrap failed: ${message}`);
-    });
-    api.registerChannel({ plugin: matrixPlugin });
-  },
-};
-
-export default plugin;
+  description: "Matrix channel plugin",
+  plugin: matrixPlugin,
+  setRuntime: setMatrixRuntime,
+});

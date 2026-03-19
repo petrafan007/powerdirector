@@ -140,7 +140,7 @@ powerdirector hooks disable command-logger
 
 ## Configuration
 
-Hooks can be configured in `~/.powerdirector/powerdirector.config.json`:
+Hooks can be configured in `~/.powerdirector/powerdirector.json`:
 
 ```json
 {

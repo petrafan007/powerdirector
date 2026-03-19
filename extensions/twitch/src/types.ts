@@ -22,7 +22,7 @@ import type {
   PowerDirectorConfig,
   OutboundDeliveryResult,
   RuntimeEnv,
-} from "powerdirector/plugin-sdk/twitch";
+} from "../runtime-api.js";
 
 // ============================================================================
 // Twitch-Specific Types

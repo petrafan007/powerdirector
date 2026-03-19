@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/xai-plugin",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector xAI plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -17,6 +17,7 @@ import {
   buildMentionRegexes,
   matchesMentionPatterns,
   normalizeMentionText,
+  stripMentions,
 } from "./reply/mentions.js";
 import { initSessionState } from "./reply/session.js";
 import { applyTemplate, type MsgContext, type TemplateContext } from "./templating.js";
@@ -394,10 +395,10 @@ describe("initSessionState BodyStripped", () => {
 });
 
 describe("mention helpers", () => {
-  it("builds regexes and skips invalid patterns", () => {
+  it("builds regexes and skips invalid or unsafe patterns", () => {
     const regexes = buildMentionRegexes({
       messages: {
-        groupChat: { mentionPatterns: ["\\bpowerdirector\\b", "(invalid"] },
+        groupChat: { mentionPatterns: ["\\bpowerdirector\\b", "(invalid", "(a+)+$"] },
       },
     });
     expect(regexes).toHaveLength(1);
@@ -434,6 +435,20 @@ describe("mention helpers", () => {
     );
     expect(matchesMentionPatterns("workbot: hi", regexes)).toBe(true);
     expect(matchesMentionPatterns("global: hi", regexes)).toBe(false);
+  });
+
+  it("strips safe mention patterns and ignores unsafe ones", () => {
+    const stripped = stripMentions("powerdirector " + "a".repeat(28) + "!", {} as MsgContext, {
+      messages: {
+        groupChat: { mentionPatterns: ["\\bpowerdirector\\b", "(a+)+$"] },
+      },
+    });
+    expect(stripped).toBe(`${"a".repeat(28)}!`);
+  });
+
+  it("strips provider mention regexes without config compilation", () => {
+    const stripped = stripMentions("<@12345> hello", { Provider: "discord" } as MsgContext, {});
+    expect(stripped).toBe("hello");
   });
 });
 

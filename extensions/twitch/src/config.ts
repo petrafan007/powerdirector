@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 import type { TwitchAccountConfig } from "./types.js";
 
 /**

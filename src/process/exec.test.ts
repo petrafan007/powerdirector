@@ -3,6 +3,7 @@ import { EventEmitter } from "node:events";
 import fs from "node:fs";
 import process from "node:process";
 import { describe, expect, it, vi } from "vitest";
+import { POWERDIRECTOR_CLI_ENV_VALUE } from "../infra/powerdirector-exec-env.js";
 import { attachChildProcessBridge } from "./child-process-bridge.js";
 import { resolveCommandEnv, runCommandWithTimeout, shouldSpawnWithShell } from "./exec.js";
 
@@ -31,6 +32,7 @@ describe("runCommandWithTimeout", () => {
     expect(resolved.POWERDIRECTOR_BASE_ENV).toBe("base");
     expect(resolved.POWERDIRECTOR_TEST_ENV).toBe("ok");
     expect(resolved.POWERDIRECTOR_TO_REMOVE).toBeUndefined();
+    expect(resolved.POWERDIRECTOR_CLI).toBe(POWERDIRECTOR_CLI_ENV_VALUE);
   });
 
   it("suppresses npm fund prompts for npm argv", async () => {

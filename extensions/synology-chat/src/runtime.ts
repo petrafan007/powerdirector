@@ -1,5 +1,5 @@
-import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/compat";
-import type { PluginRuntime } from "powerdirector/plugin-sdk/synology-chat";
+import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "../api.js";
 
 const { setRuntime: setSynologyRuntime, getRuntime: getSynologyRuntime } =
   createPluginRuntimeStore<PluginRuntime>(

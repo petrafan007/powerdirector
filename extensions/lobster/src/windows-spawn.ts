@@ -2,7 +2,7 @@ import {
   applyWindowsSpawnProgramPolicy,
   materializeWindowsSpawnProgram,
   resolveWindowsSpawnProgramCandidate,
-} from "powerdirector/plugin-sdk/lobster";
+} from "../runtime-api.js";
 
 type SpawnTarget = {
   command: string;

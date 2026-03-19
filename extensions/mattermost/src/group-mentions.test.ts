@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/mattermost";
 import { describe, expect, it } from "vitest";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 import { resolveMattermostGroupRequireMention } from "./group-mentions.js";
 
 describe("resolveMattermostGroupRequireMention", () => {

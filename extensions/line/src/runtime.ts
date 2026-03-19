@@ -1,5 +1,5 @@
-import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/compat";
-import type { PluginRuntime } from "powerdirector/plugin-sdk/line";
+import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "../api.js";
 
 const { setRuntime: setLineRuntime, getRuntime: getLineRuntime } =
   createPluginRuntimeStore<PluginRuntime>("LINE runtime not initialized - plugin not registered");

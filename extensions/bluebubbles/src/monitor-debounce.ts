@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/bluebubbles";
 import type { NormalizedWebhookMessage } from "./monitor-normalize.js";
 import type { BlueBubblesCoreRuntime, WebhookTarget } from "./monitor-shared.js";
+import type { PowerDirectorConfig } from "./runtime-api.js";
 
 /**
  * Entry type for debouncing inbound messages.

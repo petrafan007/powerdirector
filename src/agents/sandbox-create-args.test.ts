@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { POWERDIRECTOR_CLI_ENV_VALUE } from "../infra/powerdirector-exec-env.js";
 import { buildSandboxCreateArgs } from "./sandbox/docker.js";
 import type { SandboxDockerConfig } from "./sandbox/types.js";
 
@@ -113,7 +114,14 @@ describe("buildSandboxCreateArgs", () => {
         "1.5",
       ]),
     );
-    expect(args).toEqual(expect.arrayContaining(["--env", "LANG=C.UTF-8"]));
+    expect(args).toEqual(
+      expect.arrayContaining([
+        "--env",
+        "LANG=C.UTF-8",
+        "--env",
+        `POWERDIRECTOR_CLI=${POWERDIRECTOR_CLI_ENV_VALUE}`,
+      ]),
+    );
 
     const ulimitValues: string[] = [];
     for (let i = 0; i < args.length; i += 1) {
@@ -126,6 +134,33 @@ describe("buildSandboxCreateArgs", () => {
     }
     expect(ulimitValues).toEqual(
       expect.arrayContaining(["nofile=1024:2048", "nproc=128", "core=0"]),
+    );
+  });
+
+  it("preserves the PowerDirector exec marker when strict env sanitization is enabled", () => {
+    const cfg = createSandboxConfig({
+      env: {
+        NODE_ENV: "test",
+      },
+    });
+
+    const args = buildSandboxCreateArgs({
+      name: "powerdirector-sbx-marker",
+      cfg,
+      scopeKey: "main",
+      createdAtMs: 1700000000000,
+      envSanitizationOptions: {
+        strictMode: true,
+      },
+    });
+
+    expect(args).toEqual(
+      expect.arrayContaining([
+        "--env",
+        "NODE_ENV=test",
+        "--env",
+        `POWERDIRECTOR_CLI=${POWERDIRECTOR_CLI_ENV_VALUE}`,
+      ]),
     );
   });
 

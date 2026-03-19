@@ -1,6 +1,6 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredPowerDirectorTmpDir } from "powerdirector/plugin-sdk/zalouser";
+import { resolvePreferredPowerDirectorTmpDir } from "../runtime-api.js";
 
 export async function writeQrDataUrlToTempFile(
   qrDataUrl: string,

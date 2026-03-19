@@ -28,7 +28,7 @@ describe("config identity defaults", () => {
     const configDir = path.join(home, ".powerdirector");
     await fs.mkdir(configDir, { recursive: true });
     await fs.writeFile(
-      path.join(configDir, "powerdirector.config.json"),
+      path.join(configDir, "powerdirector.json"),
       JSON.stringify(config, null, 2),
       "utf-8",
     );
@@ -131,8 +131,8 @@ describe("config identity defaults", () => {
               api: "anthropic-messages",
               models: [
                 {
-                  id: "MiniMax-M2.5",
-                  name: "MiniMax M2.5",
+                  id: "MiniMax-M2.7",
+                  name: "MiniMax M2.7",
                   reasoning: false,
                   input: ["text"],
                   cost: {

@@ -5,10 +5,13 @@ import type { SandboxContext } from "./sandbox.js";
 function createSandboxContext(overrides?: Partial<SandboxContext>): SandboxContext {
   const base = {
     enabled: true,
+    backendId: "docker",
     sessionKey: "session:test",
     workspaceDir: "/tmp/powerdirector-sandbox",
     agentWorkspaceDir: "/tmp/powerdirector-workspace",
     workspaceAccess: "none",
+    runtimeId: "powerdirector-sbx-test",
+    runtimeLabel: "powerdirector-sbx-test",
     containerName: "powerdirector-sbx-test",
     containerWorkdir: "/workspace",
     docker: {

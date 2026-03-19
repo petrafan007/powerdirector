@@ -10,7 +10,7 @@ const resolveGatewayProgramArguments = vi.fn(async (_opts?: unknown) => ({
 const serviceInstall = vi.fn().mockResolvedValue(undefined);
 const serviceUninstall = vi.fn().mockResolvedValue(undefined);
 const serviceStop = vi.fn().mockResolvedValue(undefined);
-const serviceRestart = vi.fn().mockResolvedValue(undefined);
+const serviceRestart = vi.fn().mockResolvedValue({ outcome: "completed" });
 const serviceIsLoaded = vi.fn().mockResolvedValue(false);
 const serviceReadCommand = vi.fn().mockResolvedValue(null);
 const serviceReadRuntime = vi.fn().mockResolvedValue({ status: "running" });
@@ -48,20 +48,24 @@ vi.mock("../daemon/program-args.js", () => ({
   resolveGatewayProgramArguments: (opts: unknown) => resolveGatewayProgramArguments(opts),
 }));
 
-vi.mock("../daemon/service.js", () => ({
-  resolveGatewayService: () => ({
-    label: "LaunchAgent",
-    loadedText: "loaded",
-    notLoadedText: "not loaded",
-    install: serviceInstall,
-    uninstall: serviceUninstall,
-    stop: serviceStop,
-    restart: serviceRestart,
-    isLoaded: serviceIsLoaded,
-    readCommand: serviceReadCommand,
-    readRuntime: serviceReadRuntime,
-  }),
-}));
+vi.mock("../daemon/service.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../daemon/service.js")>();
+  return {
+    ...actual,
+    resolveGatewayService: () => ({
+      label: "LaunchAgent",
+      loadedText: "loaded",
+      notLoadedText: "not loaded",
+      install: serviceInstall,
+      uninstall: serviceUninstall,
+      stop: serviceStop,
+      restart: serviceRestart,
+      isLoaded: serviceIsLoaded,
+      readCommand: serviceReadCommand,
+      readRuntime: serviceReadRuntime,
+    }),
+  };
+});
 
 vi.mock("../daemon/legacy.js", () => ({
   findLegacyGatewayServices: async () => [],
@@ -125,7 +129,7 @@ describe("daemon-cli coverage", () => {
       "POWERDIRECTOR_PROFILE",
     ]);
     process.env.POWERDIRECTOR_STATE_DIR = "/tmp/powerdirector-cli-state";
-    process.env.POWERDIRECTOR_CONFIG_PATH = "/tmp/powerdirector-cli-state/powerdirector.config.json";
+    process.env.POWERDIRECTOR_CONFIG_PATH = "/tmp/powerdirector-cli-state/powerdirector.json";
     delete process.env.POWERDIRECTOR_GATEWAY_PORT;
     delete process.env.POWERDIRECTOR_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
@@ -159,7 +163,7 @@ describe("daemon-cli coverage", () => {
       environment: {
         POWERDIRECTOR_PROFILE: "dev",
         POWERDIRECTOR_STATE_DIR: "/tmp/powerdirector-daemon-state",
-        POWERDIRECTOR_CONFIG_PATH: "/tmp/powerdirector-daemon-state/powerdirector.config.json",
+        POWERDIRECTOR_CONFIG_PATH: "/tmp/powerdirector-daemon-state/powerdirector.json",
         POWERDIRECTOR_GATEWAY_PORT: "19001",
       },
       sourcePath: "/tmp/ai.powerdirector.gateway.plist",

@@ -7,6 +7,7 @@ import {
   clearRuntimeConfigSnapshot,
   getRuntimeConfigSourceSnapshot,
   loadConfig,
+  projectConfigOntoRuntimeSourceSnapshot,
   setRuntimeConfigSnapshotRefreshHandler,
   setRuntimeConfigSnapshot,
   writeConfigFile,
@@ -61,6 +62,46 @@ describe("runtime config snapshot writes", () => {
     });
   });
 
+  it("skips source projection for non-runtime-derived configs", async () => {
+    await withTempHome("powerdirector-config-runtime-projection-shape-", async () => {
+      const sourceConfig: PowerDirectorConfig = {
+        ...createSourceConfig(),
+        gateway: {
+          auth: {
+            mode: "token",
+          },
+        },
+      };
+      const runtimeConfig: PowerDirectorConfig = {
+        ...createRuntimeConfig(),
+        gateway: {
+          auth: {
+            mode: "token",
+          },
+        },
+      };
+      const independentConfig: PowerDirectorConfig = {
+        models: {
+          providers: {
+            openai: {
+              baseUrl: "https://api.openai.com/v1",
+              apiKey: "sk-independent-config", // pragma: allowlist secret
+              models: [],
+            },
+          },
+        },
+      };
+
+      try {
+        setRuntimeConfigSnapshot(runtimeConfig, sourceConfig);
+        const projected = projectConfigOntoRuntimeSourceSnapshot(independentConfig);
+        expect(projected).toBe(independentConfig);
+      } finally {
+        resetRuntimeConfigState();
+      }
+    });
+  });
+
   it("clears runtime source snapshot when runtime snapshot is cleared", async () => {
     const sourceConfig = createSourceConfig();
     const runtimeConfig = createRuntimeConfig();
@@ -72,7 +113,7 @@ describe("runtime config snapshot writes", () => {
 
   it("preserves source secret refs when writeConfigFile receives runtime-resolved config", async () => {
     await withTempHome("powerdirector-config-runtime-write-", async (home) => {
-      const configPath = path.join(home, ".powerdirector", "powerdirector.config.json");
+      const configPath = path.join(home, ".powerdirector", "powerdirector.json");
       const sourceConfig = createSourceConfig();
       const runtimeConfig = createRuntimeConfig();
 
@@ -101,7 +142,7 @@ describe("runtime config snapshot writes", () => {
 
   it("refreshes the runtime snapshot after writes so follow-up reads see persisted changes", async () => {
     await withTempHome("powerdirector-config-runtime-write-refresh-", async (home) => {
-      const configPath = path.join(home, ".powerdirector", "powerdirector.config.json");
+      const configPath = path.join(home, ".powerdirector", "powerdirector.json");
       const sourceConfig: PowerDirectorConfig = {
         models: {
           providers: {
@@ -174,7 +215,7 @@ describe("runtime config snapshot writes", () => {
 
   it("keeps the last-known-good runtime snapshot active while a specialized refresh is pending", async () => {
     await withTempHome("powerdirector-config-runtime-refresh-pending-", async (home) => {
-      const configPath = path.join(home, ".powerdirector", "powerdirector.config.json");
+      const configPath = path.join(home, ".powerdirector", "powerdirector.json");
       const sourceConfig = createSourceConfig();
       const runtimeConfig = createRuntimeConfig();
       const nextRuntimeConfig: PowerDirectorConfig = {

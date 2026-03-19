@@ -1,17 +1,15 @@
-import type { ChannelPlugin, PowerDirectorPluginApi } from "powerdirector/plugin-sdk/irc";
-import { emptyPluginConfigSchema } from "powerdirector/plugin-sdk/irc";
+import type { ChannelPlugin } from "powerdirector/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { ircPlugin } from "./src/channel.js";
 import { setIrcRuntime } from "./src/runtime.js";
 
-const plugin = {
+export { ircPlugin } from "./src/channel.js";
+export { setIrcRuntime } from "./src/runtime.js";
+
+export default defineChannelPluginEntry({
   id: "irc",
   name: "IRC",
   description: "IRC channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: PowerDirectorPluginApi) {
-    setIrcRuntime(api.runtime);
-    api.registerChannel({ plugin: ircPlugin as ChannelPlugin });
-  },
-};
-
-export default plugin;
+  plugin: ircPlugin as ChannelPlugin,
+  setRuntime: setIrcRuntime,
+});

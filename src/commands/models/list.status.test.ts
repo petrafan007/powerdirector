@@ -61,11 +61,13 @@ const mocks = vi.hoisted(() => {
       }
       return null;
     }),
+    hasUsableCustomProviderApiKey: vi.fn().mockReturnValue(false),
+    resolveUsableCustomProviderApiKey: vi.fn().mockReturnValue(null),
     getCustomProviderApiKey: vi.fn().mockReturnValue(undefined),
     getShellEnvAppliedKeys: vi.fn().mockReturnValue(["OPENAI_API_KEY", "ANTHROPIC_OAUTH_TOKEN"]),
     shouldEnableShellEnvFallback: vi.fn().mockReturnValue(true),
     createConfigIO: vi.fn().mockReturnValue({
-      configPath: "/tmp/powerdirector-dev/powerdirector.config.json",
+      configPath: "/tmp/powerdirector-dev/powerdirector.json",
     }),
     loadConfig: vi.fn().mockReturnValue({
       agents: {
@@ -106,6 +108,8 @@ vi.mock("../../agents/auth-profiles.js", async (importOriginal) => {
 
 vi.mock("../../agents/model-auth.js", () => ({
   resolveEnvApiKey: mocks.resolveEnvApiKey,
+  hasUsableCustomProviderApiKey: mocks.hasUsableCustomProviderApiKey,
+  resolveUsableCustomProviderApiKey: mocks.resolveUsableCustomProviderApiKey,
   getCustomProviderApiKey: mocks.getCustomProviderApiKey,
 }));
 
@@ -204,7 +208,7 @@ describe("modelsStatusCommand auth overview", () => {
 
     expect(mocks.resolvePowerDirectorAgentDir).toHaveBeenCalled();
     expect(payload.defaultModel).toBe("anthropic/claude-opus-4-5");
-    expect(payload.configPath).toBe("/tmp/powerdirector-dev/powerdirector.config.json");
+    expect(payload.configPath).toBe("/tmp/powerdirector-dev/powerdirector.json");
     expect(payload.auth.storePath).toBe("/tmp/powerdirector-agent/auth-profiles.json");
     expect(payload.auth.shellEnvFallback.enabled).toBe(true);
     expect(payload.auth.shellEnvFallback.appliedKeys).toContain("OPENAI_API_KEY");

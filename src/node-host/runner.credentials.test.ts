@@ -19,6 +19,17 @@ function createRemoteGatewayTokenRefConfig(tokenId: string): PowerDirectorConfig
   } as PowerDirectorConfig;
 }
 
+async function expectNoGatewayCredentials(
+  config: PowerDirectorConfig,
+  env: Record<string, string | undefined>,
+) {
+  await withEnvAsync(env, async () => {
+    const credentials = await resolveNodeHostGatewayCredentials({ config });
+    expect(credentials.token).toBeUndefined();
+    expect(credentials.password).toBeUndefined();
+  });
+}
+
 describe("resolveNodeHostGatewayCredentials", () => {
   it("does not inherit gateway.remote token in local mode", async () => {
     const config = {
@@ -28,17 +39,10 @@ describe("resolveNodeHostGatewayCredentials", () => {
       },
     } as PowerDirectorConfig;
 
-    await withEnvAsync(
-      {
-        POWERDIRECTOR_GATEWAY_TOKEN: undefined,
-        POWERDIRECTOR_GATEWAY_PASSWORD: undefined,
-      },
-      async () => {
-        const credentials = await resolveNodeHostGatewayCredentials({ config });
-        expect(credentials.token).toBeUndefined();
-        expect(credentials.password).toBeUndefined();
-      },
-    );
+    await expectNoGatewayCredentials(config, {
+      POWERDIRECTOR_GATEWAY_TOKEN: undefined,
+      POWERDIRECTOR_GATEWAY_PASSWORD: undefined,
+    });
   });
 
   it("ignores unresolved gateway.remote token refs in local mode", async () => {
@@ -56,18 +60,11 @@ describe("resolveNodeHostGatewayCredentials", () => {
       },
     } as PowerDirectorConfig;
 
-    await withEnvAsync(
-      {
-        POWERDIRECTOR_GATEWAY_TOKEN: undefined,
-        POWERDIRECTOR_GATEWAY_PASSWORD: undefined,
-        MISSING_REMOTE_GATEWAY_TOKEN: undefined,
-      },
-      async () => {
-        const credentials = await resolveNodeHostGatewayCredentials({ config });
-        expect(credentials.token).toBeUndefined();
-        expect(credentials.password).toBeUndefined();
-      },
-    );
+    await expectNoGatewayCredentials(config, {
+      POWERDIRECTOR_GATEWAY_TOKEN: undefined,
+      POWERDIRECTOR_GATEWAY_PASSWORD: undefined,
+      MISSING_REMOTE_GATEWAY_TOKEN: undefined,
+    });
   });
 
   it("resolves remote token SecretRef values", async () => {
@@ -76,6 +73,7 @@ describe("resolveNodeHostGatewayCredentials", () => {
     await withEnvAsync(
       {
         POWERDIRECTOR_GATEWAY_TOKEN: undefined,
+        POWERDIRECTOR_GATEWAY_PASSWORD: undefined,
         REMOTE_GATEWAY_TOKEN: "token-from-ref",
       },
       async () => {
@@ -91,6 +89,7 @@ describe("resolveNodeHostGatewayCredentials", () => {
     await withEnvAsync(
       {
         POWERDIRECTOR_GATEWAY_TOKEN: "token-from-env",
+        POWERDIRECTOR_GATEWAY_PASSWORD: undefined,
         REMOTE_GATEWAY_TOKEN: "token-from-ref",
       },
       async () => {
@@ -106,6 +105,7 @@ describe("resolveNodeHostGatewayCredentials", () => {
     await withEnvAsync(
       {
         POWERDIRECTOR_GATEWAY_TOKEN: undefined,
+        POWERDIRECTOR_GATEWAY_PASSWORD: undefined,
         MISSING_REMOTE_GATEWAY_TOKEN: undefined,
       },
       async () => {

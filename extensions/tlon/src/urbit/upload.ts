@@ -2,7 +2,7 @@
  * Upload an image from a URL to Tlon storage.
  */
 import { uploadFile } from "@tloncorp/api";
-import { fetchWithSsrFGuard } from "powerdirector/plugin-sdk/tlon";
+import { fetchWithSsrFGuard } from "powerdirector/plugin-sdk/infra-runtime";
 import { getDefaultSsrFPolicy } from "./context.js";
 
 /**

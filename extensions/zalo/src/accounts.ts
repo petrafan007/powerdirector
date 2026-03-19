@@ -1,5 +1,6 @@
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-helpers";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
-import { createAccountListHelpers, type PowerDirectorConfig } from "powerdirector/plugin-sdk/zalo";
+import type { PowerDirectorConfig } from "./runtime-api.js";
 import { resolveZaloToken } from "./token.js";
 import type { ResolvedZaloAccount, ZaloAccountConfig, ZaloConfig } from "./types.js";
 

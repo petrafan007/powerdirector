@@ -1,4 +1,4 @@
-import type { AnyAgentTool, PowerDirectorPluginApi } from "powerdirector/plugin-sdk/feishu";
+import type { AnyAgentTool, PowerDirectorPluginApi } from "../runtime-api.js";
 
 type ToolContextLike = {
   agentAccountId?: string;

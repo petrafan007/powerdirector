@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "powerdirector/plugin-sdk/feishu";
+import type { RuntimeEnv } from "../runtime-api.js";
 import { probeFeishu } from "./probe.js";
 import type { ResolvedFeishuAccount } from "./types.js";
 

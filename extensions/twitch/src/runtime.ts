@@ -1,5 +1,5 @@
-import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/compat";
-import type { PluginRuntime } from "powerdirector/plugin-sdk/twitch";
+import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "../runtime-api.js";
 
 const { setRuntime: setTwitchRuntime, getRuntime: getTwitchRuntime } =
   createPluginRuntimeStore<PluginRuntime>("Twitch runtime not initialized");

@@ -11,8 +11,28 @@ import type { PowerDirectorConfig } from "./types.js";
  * - Missing dependencies should produce actionable Nix-specific error messages
  * - Config is managed externally (read-only from Nix perspective)
  */
+export function resolvePowerDirectorRoot(startDir: string = process.cwd()): string {
+  let current = path.resolve(startDir);
+  for (let i = 0; i < 10; i++) {
+    if (fs.existsSync(path.join(current, "package.json"))) {
+      try {
+        const pkg = JSON.parse(fs.readFileSync(path.join(current, "package.json"), "utf8"));
+        if (pkg.name === "powerdirector") {
+          return current;
+        }
+      } catch {
+        // ignore parse errors
+      }
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return path.resolve(startDir);
+}
+
 export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.POWERDIRECTOR_NIX_MODE === "1";
+  return env.POWERDIRECTOR_NIX_MODE === "1" || env.POWERDIRECTOR_NIX_MODE === "1";
 }
 
 export const isNixMode = resolveIsNixMode();
@@ -21,7 +41,28 @@ export const isNixMode = resolveIsNixMode();
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moldbot", ".moltbot"] as const;
 const NEW_STATE_DIRNAME = ".powerdirector";
 const CONFIG_FILENAME = "powerdirector.config.json";
-const LEGACY_CONFIG_FILENAMES = ["clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+
+function findProjectRoot(): string | null {
+  let current = process.cwd();
+  const root = path.parse(current).root;
+  while (current !== root) {
+    if (fs.existsSync(path.join(current, "package.json"))) {
+      // Heuristic: check if this seems like the project root (e.g. has src)
+      if (fs.existsSync(path.join(current, "src"))) {
+        return current;
+      }
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return null;
+}
+
+export function resolvePowerDirectorRoot(): string {
+  return findProjectRoot() || process.cwd();
+}
 
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);
@@ -62,14 +103,14 @@ export function resolveStateDir(
   homedir: () => string = envHomedir(env),
 ): string {
   const effectiveHomedir = () => resolveRequiredHomeDir(env, homedir);
-  const override = env.POWERDIRECTOR_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
+  const override =
+    env.POWERDIRECTOR_STATE_DIR?.trim() ||
+    env.POWERDIRECTOR_STATE_DIR?.trim() ||
+    env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
     return resolveUserPath(override, env, effectiveHomedir);
   }
   const newDir = newStateDir(effectiveHomedir);
-  if (env.POWERDIRECTOR_TEST_FAST === "1") {
-    return newDir;
-  }
   const legacyDirs = legacyStateDirs(effectiveHomedir);
   const hasNew = fs.existsSync(newDir);
   if (hasNew) {
@@ -119,7 +160,10 @@ export function resolveCanonicalConfigPath(
   env: NodeJS.ProcessEnv = process.env,
   stateDir: string = resolveStateDir(env, envHomedir(env)),
 ): string {
-  const override = env.POWERDIRECTOR_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
+  const override =
+    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
+    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
+    env.CLAWDBOT_CONFIG_PATH?.trim();
   if (override) {
     return resolveUserPath(override, env, envHomedir(env));
   }
@@ -134,9 +178,6 @@ export function resolveConfigPathCandidate(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = envHomedir(env),
 ): string {
-  if (env.POWERDIRECTOR_TEST_FAST === "1") {
-    return resolveCanonicalConfigPath(env, resolveStateDir(env, homedir));
-  }
   const candidates = resolveDefaultConfigCandidates(env, homedir);
   const existing = candidates.find((candidate) => {
     try {
@@ -159,18 +200,20 @@ export function resolveConfigPath(
   stateDir: string = resolveStateDir(env, envHomedir(env)),
   homedir: () => string = envHomedir(env),
 ): string {
-  const override = env.POWERDIRECTOR_CONFIG_PATH?.trim();
+  const override = env.POWERDIRECTOR_CONFIG_PATH?.trim() || env.POWERDIRECTOR_CONFIG_PATH?.trim();
   if (override) {
     return resolveUserPath(override, env, homedir);
   }
-  if (env.POWERDIRECTOR_TEST_FAST === "1") {
-    return path.join(stateDir, CONFIG_FILENAME);
-  }
-  const stateOverride = env.POWERDIRECTOR_STATE_DIR?.trim();
+  const stateOverride = env.POWERDIRECTOR_STATE_DIR?.trim() || env.POWERDIRECTOR_STATE_DIR?.trim();
+  const projectRoot = findProjectRoot();
   const candidates = [
     path.join(stateDir, CONFIG_FILENAME),
     ...LEGACY_CONFIG_FILENAMES.map((name) => path.join(stateDir, name)),
   ];
+  if (projectRoot) {
+    candidates.push(path.join(projectRoot, CONFIG_FILENAME));
+    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
+  }
   const existing = candidates.find((candidate) => {
     try {
       return fs.existsSync(candidate);
@@ -202,13 +245,25 @@ export function resolveDefaultConfigCandidates(
   homedir: () => string = envHomedir(env),
 ): string[] {
   const effectiveHomedir = () => resolveRequiredHomeDir(env, homedir);
-  const explicit = env.POWERDIRECTOR_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
+  const explicit =
+    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
+    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
+    env.CLAWDBOT_CONFIG_PATH?.trim();
   if (explicit) {
     return [resolveUserPath(explicit, env, effectiveHomedir)];
   }
 
   const candidates: string[] = [];
-  const powerdirectorStateDir = env.POWERDIRECTOR_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
+  const projectRoot = findProjectRoot();
+  if (projectRoot) {
+    candidates.push(path.join(projectRoot, CONFIG_FILENAME));
+    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
+  }
+
+  const powerdirectorStateDir =
+    env.POWERDIRECTOR_STATE_DIR?.trim() ||
+    env.POWERDIRECTOR_STATE_DIR?.trim() ||
+    env.CLAWDBOT_STATE_DIR?.trim();
   if (powerdirectorStateDir) {
     const resolved = resolveUserPath(powerdirectorStateDir, env, effectiveHomedir);
     candidates.push(path.join(resolved, CONFIG_FILENAME));
@@ -223,7 +278,7 @@ export function resolveDefaultConfigCandidates(
   return candidates;
 }
 
-export const DEFAULT_GATEWAY_PORT = 18789;
+export const DEFAULT_GATEWAY_PORT = 3007;
 
 /**
  * Gateway lock directory (ephemeral).
@@ -249,7 +304,7 @@ export function resolveOAuthDir(
   env: NodeJS.ProcessEnv = process.env,
   stateDir: string = resolveStateDir(env, envHomedir(env)),
 ): string {
-  const override = env.POWERDIRECTOR_OAUTH_DIR?.trim();
+  const override = env.POWERDIRECTOR_OAUTH_DIR?.trim() || env.POWERDIRECTOR_OAUTH_DIR?.trim();
   if (override) {
     return resolveUserPath(override, env, envHomedir(env));
   }

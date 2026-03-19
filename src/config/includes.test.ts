@@ -16,7 +16,7 @@ const CONFIG_DIR = path.join(ROOT_DIR, "config");
 const ETC_POWERDIRECTOR_DIR = path.join(ROOT_DIR, "etc", "powerdirector");
 const SHARED_DIR = path.join(ROOT_DIR, "shared");
 
-const DEFAULT_BASE_PATH = path.join(CONFIG_DIR, "powerdirector.config.json");
+const DEFAULT_BASE_PATH = path.join(CONFIG_DIR, "powerdirector.json");
 
 function configPath(...parts: string[]) {
   return path.join(CONFIG_DIR, ...parts);
@@ -322,7 +322,7 @@ describe("resolveConfigIncludes", () => {
         resolve(
           { $include: "../../shared/common.json" },
           { [sharedPath("common.json")]: { shared: true } },
-          configPath("sub", "powerdirector.config.json"),
+          configPath("sub", "powerdirector.json"),
         ),
       /escapes config directory/,
     );
@@ -634,7 +634,7 @@ describe("security: path traversal protection (CWE-22)", () => {
 
         const result = resolveConfigIncludes(
           { $include: "./includes/extra.json5" },
-          path.join(linkRoot, "powerdirector.config.json"),
+          path.join(linkRoot, "powerdirector.json"),
         );
         expect(result).toEqual({ logging: { redactSensitive: "tools" } });
       } finally {
@@ -667,7 +667,7 @@ describe("security: path traversal protection (CWE-22)", () => {
         expect(() =>
           resolveConfigIncludes(
             { $include: "./extra.json5" },
-            path.join(configDir, "powerdirector.config.json"),
+            path.join(configDir, "powerdirector.json"),
           ),
         ).toThrow(/security checks|hardlink/i);
       } finally {
@@ -685,7 +685,7 @@ describe("security: path traversal protection (CWE-22)", () => {
         await fs.writeFile(includePath, `{"blob":"${payload}"}`, "utf-8");
 
         expect(() =>
-          resolveConfigIncludes({ $include: "./big.json5" }, path.join(configDir, "powerdirector.config.json")),
+          resolveConfigIncludes({ $include: "./big.json5" }, path.join(configDir, "powerdirector.json")),
         ).toThrow(/security checks|max/i);
       } finally {
         await fs.rm(tempRoot, { recursive: true, force: true });

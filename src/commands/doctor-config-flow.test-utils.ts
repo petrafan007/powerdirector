@@ -14,7 +14,7 @@ export async function runDoctorConfigWithInput<T>(params: {
     const configDir = path.join(home, ".powerdirector");
     await fs.mkdir(configDir, { recursive: true });
     await fs.writeFile(
-      path.join(configDir, "powerdirector.config.json"),
+      path.join(configDir, "powerdirector.json"),
       JSON.stringify(params.config, null, 2),
       "utf-8",
     );

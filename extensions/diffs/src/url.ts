@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/diffs";
+import type { PowerDirectorConfig } from "../api.js";
 
 const DEFAULT_GATEWAY_PORT = 18789;
 

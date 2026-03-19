@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import {
-  getRuntimeConfigSnapshot,
   getRuntimeConfigSourceSnapshot,
+  projectConfigOntoRuntimeSourceSnapshot,
   type PowerDirectorConfig,
   loadConfig,
 } from "../config/config.js";
@@ -42,19 +42,31 @@ async function writeModelsFileAtomic(targetPath: string, contents: string): Prom
   await fs.rename(tempPath, targetPath);
 }
 
-function resolveModelsConfigInput(config?: PowerDirectorConfig): PowerDirectorConfig {
+function resolveModelsConfigInput(config?: PowerDirectorConfig): {
+  config: PowerDirectorConfig;
+  sourceConfigForSecrets: PowerDirectorConfig;
+} {
   const runtimeSource = getRuntimeConfigSourceSnapshot();
-  if (!runtimeSource) {
-    return config ?? loadConfig();
-  }
   if (!config) {
-    return runtimeSource;
+    const loaded = loadConfig();
+    return {
+      config: runtimeSource ?? loaded,
+      sourceConfigForSecrets: runtimeSource ?? loaded,
+    };
   }
-  const runtimeResolved = getRuntimeConfigSnapshot();
-  if (runtimeResolved && config === runtimeResolved) {
-    return runtimeSource;
+  if (!runtimeSource) {
+    return {
+      config,
+      sourceConfigForSecrets: config,
+    };
   }
-  return config;
+  const projected = projectConfigOntoRuntimeSourceSnapshot(config);
+  return {
+    config: projected,
+    // If projection is skipped (for example incompatible top-level shape),
+    // keep managed secret persistence anchored to the active source snapshot.
+    sourceConfigForSecrets: projected === config ? runtimeSource : projected,
+  };
 }
 
 async function withModelsJsonWriteLock<T>(targetPath: string, run: () => Promise<T>): Promise<T> {
@@ -80,7 +92,8 @@ export async function ensurePowerDirectorModelsJson(
   config?: PowerDirectorConfig,
   agentDirOverride?: string,
 ): Promise<{ agentDir: string; wrote: boolean }> {
-  const cfg = resolveModelsConfigInput(config);
+  const resolved = resolveModelsConfigInput(config);
+  const cfg = resolved.config;
   const agentDir = agentDirOverride?.trim() ? agentDirOverride.trim() : resolvePowerDirectorAgentDir();
   const targetPath = path.join(agentDir, "models.json");
 
@@ -91,6 +104,7 @@ export async function ensurePowerDirectorModelsJson(
     const existingModelsFile = await readExistingModelsFile(targetPath);
     const plan = await planPowerDirectorModelsJson({
       cfg,
+      sourceConfigForSecrets: resolved.sourceConfigForSecrets,
       agentDir,
       env,
       existingRaw: existingModelsFile.raw,

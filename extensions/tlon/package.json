@@ -1,6 +1,6 @@
 {
   "name": "@powerdirector/tlon",
-  "version": "2026.3.8-beta.1",
+  "version": "2026.3.14",
   "description": "PowerDirector Tlon/Urbit channel plugin",
   "type": "module",
   "dependencies": {
@@ -13,6 +13,7 @@
     "extensions": [
       "./index.ts"
     ],
+    "setupEntry": "./setup-entry.ts",
     "channel": {
       "id": "tlon",
       "label": "Tlon",
@@ -27,13 +28,6 @@
       "npmSpec": "@powerdirector/tlon",
       "localPath": "extensions/tlon",
       "defaultChoice": "npm"
-    },
-    "releaseChecks": {
-      "rootDependencyMirrorAllowlist": [
-        "@tloncorp/api",
-        "@tloncorp/tlon-skill",
-        "@urbit/aura"
-      ]
     }
   }
 }

@@ -1,0 +1,5 @@
+import PowerDirectorKit
+import PowerDirectorProtocol
+
+typealias ProtoAnyCodable = PowerDirectorProtocol.AnyCodable
+typealias KitAnyCodable = PowerDirectorKit.AnyCodable

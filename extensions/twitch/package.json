@@ -1,6 +1,6 @@
 {
   "name": "@powerdirector/twitch",
-  "version": "2026.3.8-beta.1",
+  "version": "2026.3.14",
   "description": "PowerDirector Twitch channel plugin",
   "type": "module",
   "dependencies": {
@@ -12,6 +12,16 @@
   "powerdirector": {
     "extensions": [
       "./index.ts"
-    ]
+    ],
+    "channel": {
+      "id": "twitch",
+      "label": "Twitch",
+      "selectionLabel": "Twitch (Chat)",
+      "docsPath": "/channels/twitch",
+      "blurb": "Twitch chat integration",
+      "aliases": [
+        "twitch-chat"
+      ]
+    }
   }
 }

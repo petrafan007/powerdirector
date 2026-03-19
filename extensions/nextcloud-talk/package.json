@@ -1,6 +1,6 @@
 {
   "name": "@powerdirector/nextcloud-talk",
-  "version": "2026.3.8-beta.1",
+  "version": "2026.3.14",
   "description": "PowerDirector Nextcloud Talk channel plugin",
   "type": "module",
   "dependencies": {
@@ -10,6 +10,7 @@
     "extensions": [
       "./index.ts"
     ],
+    "setupEntry": "./setup-entry.ts",
     "channel": {
       "id": "nextcloud-talk",
       "label": "Nextcloud Talk",
@@ -28,6 +29,9 @@
       "npmSpec": "@powerdirector/nextcloud-talk",
       "localPath": "extensions/nextcloud-talk",
       "defaultChoice": "npm"
+    },
+    "release": {
+      "publishToNpm": true
     }
   }
 }

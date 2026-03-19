@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { PowerDirectorConfig } from "../../config/config.js";
-import { buildAccountScopedDmSecurityPolicy, formatPairingApproveHint } from "./helpers.js";
+import {
+  buildAccountScopedDmSecurityPolicy,
+  formatPairingApproveHint,
+  parseOptionalDelimitedEntries,
+} from "./helpers.js";
 
 function cfgWithChannel(channelKey: string, accounts?: Record<string, unknown>): PowerDirectorConfig {
   return {
@@ -91,5 +95,20 @@ describe("buildAccountScopedDmSecurityPolicy", () => {
       approveHint: "powerdirector pairing approve synology-chat <code>",
       normalizeEntry: undefined,
     });
+  });
+});
+
+describe("parseOptionalDelimitedEntries", () => {
+  it("returns undefined for empty input", () => {
+    expect(parseOptionalDelimitedEntries("  ")).toBeUndefined();
+  });
+
+  it("splits comma, newline, and semicolon separated entries", () => {
+    expect(parseOptionalDelimitedEntries("alpha, beta\ngamma; delta")).toEqual([
+      "alpha",
+      "beta",
+      "gamma",
+      "delta",
+    ]);
   });
 });

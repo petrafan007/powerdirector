@@ -5,7 +5,7 @@ def rename_all(root_dir):
     for root, dirs, files in os.walk(root_dir, topdown=False):
         for name in dirs + files:
             full_path = os.path.join(root, name)
-            if any(s in name for s in ["OpenClaw", "openclaw", "OPENCLAW"]):
+            if any(s in name for s in ["PowerDirector", "powerdirector", "POWERDIRECTOR"]):
                 paths_to_rename.append(full_path)
 
     # Sort by depth (number of parts in path) descending
@@ -15,7 +15,7 @@ def rename_all(root_dir):
         if not os.path.exists(old_path):
             continue
         dir_name, old_name = os.path.split(old_path)
-        new_name = old_name.replace("OpenClaw", "PowerDirector").replace("openclaw", "powerdirector").replace("OPENCLAW", "POWERDIRECTOR")
+        new_name = old_name.replace("PowerDirector", "PowerDirector").replace("powerdirector", "powerdirector").replace("POWERDIRECTOR", "POWERDIRECTOR")
         new_path = os.path.join(dir_name, new_name)
         
         if old_path != new_path:

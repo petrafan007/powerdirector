@@ -8,7 +8,6 @@ import {
   ensureDir,
   jidToE164,
   normalizeE164,
-  normalizePath,
   resolveConfigDir,
   resolveHomeDir,
   resolveJidToE164,
@@ -17,41 +16,23 @@ import {
   shortenHomePath,
   sleep,
   toWhatsappJid,
-  withWhatsAppPrefix,
 } from "./utils.js";
 
-function withTempDirSync<T>(prefix: string, run: (dir: string) => T): T {
+async function withTempDir<T>(
+  prefix: string,
+  run: (dir: string) => T | Promise<T>,
+): Promise<Awaited<T>> {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
   try {
-    return run(dir);
+    return await run(dir);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 }
 
-describe("normalizePath", () => {
-  it("adds leading slash when missing", () => {
-    expect(normalizePath("foo")).toBe("/foo");
-  });
-
-  it("keeps existing slash", () => {
-    expect(normalizePath("/bar")).toBe("/bar");
-  });
-});
-
-describe("withWhatsAppPrefix", () => {
-  it("adds whatsapp prefix", () => {
-    expect(withWhatsAppPrefix("+1555")).toBe("whatsapp:+1555");
-  });
-
-  it("leaves prefixed intact", () => {
-    expect(withWhatsAppPrefix("whatsapp:+1555")).toBe("whatsapp:+1555");
-  });
-});
-
 describe("ensureDir", () => {
   it("creates nested directory", async () => {
-    await withTempDirSync("powerdirector-test-", async (tmp) => {
+    await withTempDir("powerdirector-test-", async (tmp) => {
       const target = path.join(tmp, "nested", "dir");
       await ensureDir(target);
       expect(fs.existsSync(target)).toBe(true);
@@ -106,16 +87,16 @@ describe("jidToE164", () => {
     spy.mockRestore();
   });
 
-  it("maps @lid from authDir mapping files", () => {
-    withTempDirSync("powerdirector-auth-", (authDir) => {
+  it("maps @lid from authDir mapping files", async () => {
+    await withTempDir("powerdirector-auth-", (authDir) => {
       const mappingPath = path.join(authDir, "lid-mapping-456_reverse.json");
       fs.writeFileSync(mappingPath, JSON.stringify("5559876"));
       expect(jidToE164("456@lid", { authDir })).toBe("+5559876");
     });
   });
 
-  it("maps @hosted.lid from authDir mapping files", () => {
-    withTempDirSync("powerdirector-auth-", (authDir) => {
+  it("maps @hosted.lid from authDir mapping files", async () => {
+    await withTempDir("powerdirector-auth-", (authDir) => {
       const mappingPath = path.join(authDir, "lid-mapping-789_reverse.json");
       fs.writeFileSync(mappingPath, JSON.stringify(4440001));
       expect(jidToE164("789@hosted.lid", { authDir })).toBe("+4440001");
@@ -126,9 +107,9 @@ describe("jidToE164", () => {
     expect(jidToE164("1555000:2@hosted")).toBe("+1555000");
   });
 
-  it("falls back through lidMappingDirs in order", () => {
-    withTempDirSync("powerdirector-lid-a-", (first) => {
-      withTempDirSync("powerdirector-lid-b-", (second) => {
+  it("falls back through lidMappingDirs in order", async () => {
+    await withTempDir("powerdirector-lid-a-", async (first) => {
+      await withTempDir("powerdirector-lid-b-", (second) => {
         const mappingPath = path.join(second, "lid-mapping-321_reverse.json");
         fs.writeFileSync(mappingPath, JSON.stringify("123321"));
         expect(jidToE164("321@lid", { lidMappingDirs: [first, second] })).toBe("+123321");
@@ -149,6 +130,15 @@ describe("resolveConfigDir", () => {
       await fs.promises.rm(root, { recursive: true, force: true });
     }
   });
+
+  it("expands POWERDIRECTOR_STATE_DIR using the provided env", () => {
+    const env = {
+      HOME: "/tmp/powerdirector-home",
+      POWERDIRECTOR_STATE_DIR: "~/state",
+    } as NodeJS.ProcessEnv;
+
+    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/powerdirector-home", "state"));
+  });
 });
 
 describe("resolveHomeDir", () => {
@@ -167,8 +157,8 @@ describe("shortenHomePath", () => {
     vi.stubEnv("POWERDIRECTOR_HOME", "/srv/powerdirector-home");
     vi.stubEnv("HOME", "/home/other");
 
-    expect(shortenHomePath(`${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.config.json`)).toBe(
-      "$POWERDIRECTOR_HOME/.powerdirector/powerdirector.config.json",
+    expect(shortenHomePath(`${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.json`)).toBe(
+      "$POWERDIRECTOR_HOME/.powerdirector/powerdirector.json",
     );
 
     vi.unstubAllEnvs();
@@ -181,8 +171,8 @@ describe("shortenHomeInString", () => {
     vi.stubEnv("HOME", "/home/other");
 
     expect(
-      shortenHomeInString(`config: ${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.config.json`),
-    ).toBe("config: $POWERDIRECTOR_HOME/.powerdirector/powerdirector.config.json");
+      shortenHomeInString(`config: ${path.resolve("/srv/powerdirector-home")}/.powerdirector/powerdirector.json`),
+    ).toBe("config: $POWERDIRECTOR_HOME/.powerdirector/powerdirector.json");
 
     vi.unstubAllEnvs();
   });
@@ -216,11 +206,13 @@ describe("resolveJidToE164", () => {
 
 describe("resolveUserPath", () => {
   it("expands ~ to home dir", () => {
-    expect(resolveUserPath("~")).toBe(path.resolve(os.homedir()));
+    expect(resolveUserPath("~", {}, () => "/Users/thoffman")).toBe(path.resolve("/Users/thoffman"));
   });
 
   it("expands ~/ to home dir", () => {
-    expect(resolveUserPath("~/powerdirector")).toBe(path.resolve(os.homedir(), "powerdirector"));
+    expect(resolveUserPath("~/powerdirector", {}, () => "/Users/thoffman")).toBe(
+      path.resolve("/Users/thoffman", "powerdirector"),
+    );
   });
 
   it("resolves relative paths", () => {
@@ -234,6 +226,15 @@ describe("resolveUserPath", () => {
     expect(resolveUserPath("~/powerdirector")).toBe(path.resolve("/srv/powerdirector-home", "powerdirector"));
 
     vi.unstubAllEnvs();
+  });
+
+  it("uses the provided env for tilde expansion", () => {
+    const env = {
+      HOME: "/tmp/powerdirector-home",
+      POWERDIRECTOR_HOME: "/srv/powerdirector-home",
+    } as NodeJS.ProcessEnv;
+
+    expect(resolveUserPath("~/powerdirector", env)).toBe(path.resolve("/srv/powerdirector-home", "powerdirector"));
   });
 
   it("keeps blank paths blank", () => {

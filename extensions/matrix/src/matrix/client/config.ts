@@ -1,5 +1,5 @@
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
-import { fetchWithSsrFGuard } from "powerdirector/plugin-sdk/matrix";
+import { fetchWithSsrFGuard } from "../../../runtime-api.js";
 import { getMatrixRuntime } from "../../runtime.js";
 import {
   normalizeResolvedSecretInputString,

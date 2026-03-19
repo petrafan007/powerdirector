@@ -47,6 +47,7 @@ struct PowerDirectorLiveActivity: Widget {
             Spacer()
             trailingView(state: context.state)
         }
+        .padding(.horizontal, 12)
         .padding(.vertical, 4)
     }
 

@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/mattermost";
+import type { PowerDirectorConfig } from "../runtime-api.js";
 import { resolveMattermostAccount } from "./accounts.js";
 import { createMattermostClient, fetchMattermostMe, type MattermostClient } from "./client.js";
 

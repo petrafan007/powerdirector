@@ -1,3 +1,4 @@
+import SHARED_TOOL_DISPLAY_JSON from "../../apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json" with { type: "json" };
 import { redactToolDetail } from "../logging/redact.js";
 import { shortenHomeInString } from "../utils.js";
 import {
@@ -9,25 +10,6 @@ import {
   type ToolDisplaySpec as ToolDisplaySpecBase,
 } from "./tool-display-common.js";
 import TOOL_DISPLAY_OVERRIDES_JSON from "./tool-display-overrides.json" with { type: "json" };
-
-// During Next.js builds, the apps/ directory might not be correctly linked in all environments.
-// We use a safe try-import pattern or a fallback to ensure the build doesn't crash.
-let SHARED_TOOL_DISPLAY_JSON: any = { tools: {} };
-try {
-  // @ts-ignore
-  const mod = await import("../../apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json", { with: { type: "json" } });
-  SHARED_TOOL_DISPLAY_JSON = mod.default;
-} catch {
-  try {
-    // Fallback for Next.js environments where the apps/ directory is synced into src-backend/apps/
-    // and accessible via the @/ alias.
-    // @ts-ignore
-    const mod = await import("@/src-backend/apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json", { with: { type: "json" } });
-    SHARED_TOOL_DISPLAY_JSON = mod.default;
-  } catch {
-    // Fallback handled by the initializer above
-  }
-}
 
 type ToolDisplaySpec = ToolDisplaySpecBase & {
   emoji?: string;

@@ -98,18 +98,16 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
   ATTR_SERVICE_NAME: "service.name",
 }));
 
-vi.mock("powerdirector/plugin-sdk/diagnostics-otel", async () => {
-  const actual = await vi.importActual<typeof import("powerdirector/plugin-sdk/diagnostics-otel")>(
-    "powerdirector/plugin-sdk/diagnostics-otel",
-  );
+vi.mock("../api.js", async () => {
+  const actual = await vi.importActual<typeof import("../api.js")>("../api.js");
   return {
     ...actual,
     registerLogTransport: registerLogTransportMock,
   };
 });
 
-import type { PowerDirectorPluginServiceContext } from "powerdirector/plugin-sdk/diagnostics-otel";
-import { emitDiagnosticEvent } from "powerdirector/plugin-sdk/diagnostics-otel";
+import type { PowerDirectorPluginServiceContext } from "../api.js";
+import { emitDiagnosticEvent } from "../api.js";
 import { createDiagnosticsOtelService } from "./service.js";
 
 const OTEL_TEST_STATE_DIR = "/tmp/powerdirector-diagnostics-otel-test";

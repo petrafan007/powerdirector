@@ -1,5 +1,8 @@
-import type { LookupFn, SsrFPolicy } from "powerdirector/plugin-sdk/tlon";
-import { fetchWithSsrFGuard } from "powerdirector/plugin-sdk/tlon";
+import {
+  fetchWithSsrFGuard,
+  type LookupFn,
+  type SsrFPolicy,
+} from "powerdirector/plugin-sdk/infra-runtime";
 import { validateUrbitBaseUrl } from "./base-url.js";
 import { UrbitUrlError } from "./errors.js";
 

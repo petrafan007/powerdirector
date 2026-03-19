@@ -1,5 +1,5 @@
-import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/compat";
-import type { PluginRuntime } from "powerdirector/plugin-sdk/nextcloud-talk";
+import { createPluginRuntimeStore } from "powerdirector/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "../runtime-api.js";
 
 const { setRuntime: setNextcloudTalkRuntime, getRuntime: getNextcloudTalkRuntime } =
   createPluginRuntimeStore<PluginRuntime>("Nextcloud Talk runtime not initialized");

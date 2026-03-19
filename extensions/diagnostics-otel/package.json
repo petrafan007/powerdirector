@@ -1,6 +1,6 @@
 {
   "name": "@powerdirector/diagnostics-otel",
-  "version": "2026.3.8-beta.1",
+  "version": "2026.3.14",
   "description": "PowerDirector diagnostics OpenTelemetry exporter",
   "type": "module",
   "dependencies": {
@@ -19,6 +19,9 @@
   "powerdirector": {
     "extensions": [
       "./index.ts"
-    ]
+    ],
+    "release": {
+      "publishToNpm": true
+    }
   }
 }

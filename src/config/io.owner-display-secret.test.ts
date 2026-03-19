@@ -22,7 +22,7 @@ async function waitForPersistedSecret(configPath: string, expectedSecret: string
 describe("config io owner display secret autofill", () => {
   it("auto-generates and persists commands.ownerDisplaySecret in hash mode", async () => {
     await withTempHome("powerdirector-owner-display-secret-", async (home) => {
-      const configPath = path.join(home, ".powerdirector", "powerdirector.config.json");
+      const configPath = path.join(home, ".powerdirector", "powerdirector.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(
         configPath,

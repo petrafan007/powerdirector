@@ -1,6 +1,6 @@
 import { EventEmitter } from "node:events";
-import type { PowerDirectorConfig, RuntimeEnv } from "powerdirector/plugin-sdk/msteams";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { PowerDirectorConfig, RuntimeEnv } from "../runtime-api.js";
 import type { MSTeamsConversationStore } from "./conversation-store.js";
 import type { MSTeamsPollStore } from "./polls.js";
 
@@ -15,7 +15,7 @@ const expressControl = vi.hoisted(() => ({
   mode: { value: "listening" as "listening" | "error" },
 }));
 
-vi.mock("powerdirector/plugin-sdk/msteams", () => ({
+vi.mock("../runtime-api.js", () => ({
   DEFAULT_WEBHOOK_MAX_BODY_BYTES: 1024 * 1024,
   normalizeSecretInputString: (value: unknown) =>
     typeof value === "string" && value.trim() ? value.trim() : undefined,

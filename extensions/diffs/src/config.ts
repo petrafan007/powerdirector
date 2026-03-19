@@ -1,4 +1,4 @@
-import type { PowerDirectorPluginConfigSchema } from "powerdirector/plugin-sdk/diffs";
+import type { PowerDirectorPluginConfigSchema } from "../api.js";
 import {
   DIFF_IMAGE_QUALITY_PRESETS,
   DIFF_INDICATORS,
