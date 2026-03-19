@@ -38,6 +38,7 @@ find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+apps\\
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+extensions\\//@\\/src-backend\\/extensions\\//g" {} +
 
 # Fix absolute plugin-sdk imports
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]powerdirector\/plugin-sdk\//from '@\/src-backend\/plugin-sdk\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from 'powerdirector\/plugin-sdk\//from '@\/src-backend\/plugin-sdk\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from \\\"powerdirector\/plugin-sdk\//from \\\"@\/src-backend\/plugin-sdk\//g" {} +
 
 echo "Backend sync and import sanitization complete."
