@@ -9,14 +9,14 @@ import {
 
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
-  while (current) {
+  while (current && typeof current.extend !== 'function') {
     if (typeof current.unwrap === 'function') {
       current = current.unwrap();
     } else if (typeof current.innerType === 'function') {
       current = current.innerType();
-    } else if (current._def?.typeName === 'ZodEffects') {
+    } else if (current._def?.schema) {
       current = current._def.schema;
-    } else if (current._def?.typeName === 'ZodPipeline') {
+    } else if (current._def?.in) {
       current = current._def.in;
     } else {
       break;
