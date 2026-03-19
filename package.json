@@ -45,7 +45,8 @@
     "./plugin-sdk/twitch": "./dist/plugin-sdk/twitch.js",
     "./plugin-sdk/voice-call": "./dist/plugin-sdk/voice-call.js",
     "./plugin-sdk/zalo": "./dist/plugin-sdk/zalo.js",
-    "./plugin-sdk/zalouser": "./dist/plugin-sdk/zalouser.js"
+    "./plugin-sdk/zalouser": "./dist/plugin-sdk/zalouser.js",
+    "./plugin-sdk/keyed-async-queue": "./dist/plugin-sdk/keyed-async-queue.js"
   },
   "scripts": {
     "test": "vitest run src/gateway/call.test.ts src/config/redact-snapshot.test.ts src/memory/qmd-manager.test.ts",
