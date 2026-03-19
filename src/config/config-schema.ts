@@ -25,6 +25,8 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   return current;
 }
 
+const rootBaseSchema = unwrapSchema(BasePowerDirectorSchema) as z.AnyZodObject;
+
 const terminalSchema = z
   .object({
     shell: z.enum(['bash', 'zsh']).optional(),
@@ -43,10 +45,10 @@ const terminalSchema = z
   .strict()
   .optional();
 
-const updateBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.update) as z.AnyZodObject;
+const updateBaseSchema = unwrapSchema(rootBaseSchema.shape.update) as z.AnyZodObject;
 export const updateSchema = updateBaseSchema.strict().optional();
 
-const authBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.auth) as z.AnyZodObject;
+const authBaseSchema = unwrapSchema(rootBaseSchema.shape.auth) as z.AnyZodObject;
 export const authSchema = authBaseSchema
   .safeExtend({
     profiles: z
@@ -70,7 +72,7 @@ export const authSchema = authBaseSchema
   .strict()
   .optional();
 
-const agentsBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.agents) as z.AnyZodObject;
+const agentsBaseSchema = unwrapSchema(rootBaseSchema.shape.agents) as z.AnyZodObject;
 const agentDefaultsBaseSchema = unwrapSchema((agentsBaseSchema as any).shape.defaults) as z.AnyZodObject;
 const imageGenModelCompatSchema = z
   .object({
@@ -93,7 +95,7 @@ export const agentsSchema = agentsBaseSchema
   .strict()
   .optional();
 
-const uiBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.ui) as z.AnyZodObject;
+const uiBaseSchema = unwrapSchema(rootBaseSchema.shape.ui) as z.AnyZodObject;
 export const uiSchema = uiBaseSchema
   .safeExtend({
     theme: z.enum(['dark', 'light', 'system']).optional(),
@@ -130,7 +132,7 @@ export const modelsSchema = modelsBaseSchema
   .strict()
   .optional();
 
-const mediaBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.media) as z.AnyZodObject;
+const mediaBaseSchema = unwrapSchema(rootBaseSchema.shape.media) as z.AnyZodObject;
 export const mediaSchema = mediaBaseSchema
   .safeExtend({
     imageGeneration: z
@@ -149,7 +151,7 @@ export const mediaSchema = mediaBaseSchema
   .strict()
   .optional();
 
-export const configSchema = (BasePowerDirectorSchema as z.AnyZodObject)
+export const configSchema = rootBaseSchema
   .safeExtend({
     update: updateSchema,
     auth: authSchema,

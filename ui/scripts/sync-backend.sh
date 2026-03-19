@@ -16,7 +16,7 @@ rm -rf "$TARGET_DIR"
 mkdir -p "$TARGET_DIR"
 
 # Sync src/ but exclude tests and large binaries to save memory during build
-rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" "$BACKEND_SRC/" "$TARGET_DIR/"
+rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" --exclude="**/media/**" "$BACKEND_SRC/" "$TARGET_DIR/"
 
 # Selective sync for apps/ - only Resources needed for tool-display.json
 echo "Syncing required app resources..."
@@ -30,15 +30,23 @@ mkdir -p "$TARGET_DIR/extensions"
 rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/node_modules/**" "$EXTENSIONS_SRC/" "$TARGET_DIR/extensions/"
 
 # Sanitize imports in the copied files
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\/[^'\"]*\)\.js['\"]/from '\1'/g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\.\/[^'\"]*\)\.js['\"]/from '\1'/g" {} +
+# Preserves quotes by using a capturing group for the content and keeping the delimiters
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from '\(\.\/[^'\"]*\)\.js'/from '\1'/g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from \"\(\.\/[^'\"]*\)\.js\"/from \"\1\"/g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from '\(\.\.\/[^'\"]*\)\.js'/from '\1'/g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from \"\(\.\.\/[^'\"]*\)\.js\"/from \"\1\"/g" {} +
 
 # Fix relative imports to apps/ and extensions/ using Next.js path aliases
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+apps\\//@\\/src-backend\\/apps\\//g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+extensions\\//@\\/src-backend\\/extensions\\//g" {} +
+# Map any number of ../../../apps/ to @/src-backend/apps/
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\(['\"]\)\(\.\.\/\)\+apps\//\1@\/src-backend\/apps\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\(['\"]\)\(\.\.\/\)\+extensions\//\1@\/src-backend\/extensions\//g" {} +
 
-# Fix absolute plugin-sdk imports
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from 'powerdirector\/plugin-sdk\//from '@\/src-backend\/plugin-sdk\//g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from \\\"powerdirector\/plugin-sdk\//from \\\"@\/src-backend\/plugin-sdk\//g" {} +
+# Fix absolute powerdirector/ imports
+# Map 'powerdirector/foo' or "powerdirector/foo" to '@/src-backend/foo' while preserving quotes
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\(['\"]\)\powerdirector\//\1@\/src-backend\//g" {} +
+
+# Matches: import('./foo.js') or import("./foo.js") etc.
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import('\(\.\/[^'\"]*\)\.js')/import('\1')/g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import(\"\(\.\/[^'\"]*\)\.js\")/import(\"\1\")/g" {} +
 
 echo "Backend sync and import sanitization complete."
