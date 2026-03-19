@@ -16,7 +16,7 @@ rm -rf "$TARGET_DIR"
 mkdir -p "$TARGET_DIR"
 
 # Sync src/ but exclude tests and large binaries to save memory during build
-rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" --exclude="**/media/**" "$BACKEND_SRC/" "$TARGET_DIR/"
+rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" "$BACKEND_SRC/" "$TARGET_DIR/"
 
 # Selective sync for apps/ - only Resources needed for tool-display.json
 echo "Syncing required app resources..."
@@ -36,5 +36,8 @@ find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\.\/[^'\"]
 # Fix relative imports to apps/ and extensions/ using Next.js path aliases
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+apps\\//@\\/src-backend\\/apps\\//g" {} +
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\\(\\.\\.\\/\\)\\+extensions\\//@\\/src-backend\\/extensions\\//g" {} +
+
+# Fix absolute plugin-sdk imports
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]powerdirector\/plugin-sdk\//from '@\/src-backend\/plugin-sdk\//g" {} +
 
 echo "Backend sync and import sanitization complete."
