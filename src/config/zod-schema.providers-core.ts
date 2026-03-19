@@ -292,7 +292,7 @@ export const TelegramAccountSchema = TelegramAccountSchemaBase.superRefine((valu
   validateTelegramCustomCommands(value, ctx);
 });
 
-export const TelegramConfigSchema = TelegramAccountSchemaBase.extend({
+export const TelegramConfigSchema = TelegramAccountSchemaBase.safeExtend({
   accounts: z.record(z.string(), TelegramAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
 }).superRefine((value, ctx) => {
@@ -659,7 +659,7 @@ export const DiscordAccountSchema = DiscordAccountBaseSchema
     // can inherit top-level allowFrom via runtime shallow merge.
   });
 
-export const DiscordConfigSchema = DiscordAccountBaseSchema.extend({
+export const DiscordConfigSchema = DiscordAccountBaseSchema.safeExtend({
   accounts: z.record(z.string(), DiscordAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
 }).superRefine((value, ctx) => {
@@ -798,7 +798,7 @@ export const GoogleChatAccountSchema = z
   })
   .strict();
 
-export const GoogleChatConfigSchema = GoogleChatAccountSchema.extend({
+export const GoogleChatConfigSchema = GoogleChatAccountSchema.safeExtend({
   accounts: z.record(z.string(), GoogleChatAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
 });
@@ -924,7 +924,7 @@ export const SlackAccountSchema = SlackAccountBaseSchema
     // can inherit top-level allowFrom via runtime shallow merge.
   });
 
-export const SlackConfigSchema = SlackAccountBaseSchema.extend({
+export const SlackConfigSchema = SlackAccountBaseSchema.safeExtend({
   mode: z.enum(["socket", "http"]).optional().default("socket"),
   signingSecret: SecretInputSchema.optional().register(sensitive),
   webhookPath: z.string().optional().default("/slack/events"),
@@ -1056,7 +1056,7 @@ export const SignalAccountSchemaBase = z
 // Validation is enforced at the top-level SignalConfigSchema instead.
 export const SignalAccountSchema = SignalAccountSchemaBase;
 
-export const SignalConfigSchema = SignalAccountSchemaBase.extend({
+export const SignalConfigSchema = SignalAccountSchemaBase.safeExtend({
   accounts: z.record(z.string(), SignalAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
 }).superRefine((value, ctx) => {
@@ -1206,7 +1206,7 @@ export const IrcAccountSchema = IrcAccountSchemaBase.superRefine((value, ctx) =>
   }
 });
 
-export const IrcConfigSchema = IrcAccountSchemaBase.extend({
+export const IrcConfigSchema = IrcAccountSchemaBase.safeExtend({
   accounts: z.record(z.string(), IrcAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
 }).superRefine((value, ctx) => {
@@ -1298,7 +1298,7 @@ export const IMessageAccountSchemaBase = z
 // Validation is enforced at the top-level IMessageConfigSchema instead.
 export const IMessageAccountSchema = IMessageAccountSchemaBase;
 
-export const IMessageConfigSchema = IMessageAccountSchemaBase.extend({
+export const IMessageConfigSchema = IMessageAccountSchemaBase.safeExtend({
   accounts: z.record(z.string(), IMessageAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
 }).superRefine((value, ctx) => {
@@ -1410,7 +1410,7 @@ export const BlueBubblesAccountSchemaBase = z
 // Validation is enforced at the top-level BlueBubblesConfigSchema instead.
 export const BlueBubblesAccountSchema = BlueBubblesAccountSchemaBase;
 
-export const BlueBubblesConfigSchema = BlueBubblesAccountSchemaBase.extend({
+export const BlueBubblesConfigSchema = BlueBubblesAccountSchemaBase.safeExtend({
   accounts: z.record(z.string(), BlueBubblesAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
   actions: BlueBubblesActionSchema,

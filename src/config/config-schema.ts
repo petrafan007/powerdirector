@@ -48,7 +48,7 @@ export const updateSchema = updateBaseSchema.strict().optional();
 
 const authBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.auth) as z.AnyZodObject;
 export const authSchema = authBaseSchema
-  .extend({
+  .safeExtend({
     profiles: z
       .record(
         z.string(),
@@ -80,14 +80,14 @@ const imageGenModelCompatSchema = z
   .strict()
   .optional();
 const agentDefaultsCompatSchema = agentDefaultsBaseSchema
-  .extend({
+  .safeExtend({
     imageGenModel: imageGenModelCompatSchema,
     maxTurns: z.number().int().positive().optional(),
   })
   .strict()
   .optional();
 export const agentsSchema = agentsBaseSchema
-  .extend({
+  .safeExtend({
     defaults: agentDefaultsCompatSchema,
   })
   .strict()
@@ -95,7 +95,7 @@ export const agentsSchema = agentsBaseSchema
 
 const uiBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.ui) as z.AnyZodObject;
 export const uiSchema = uiBaseSchema
-  .extend({
+  .safeExtend({
     theme: z.enum(['dark', 'light', 'system']).optional(),
     fontSize: z.number().int().min(10).max(24).optional(),
     fontFamily: z.string().optional(),
@@ -111,20 +111,20 @@ export const uiSchema = uiBaseSchema
   .strict()
   .optional();
 
-export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZodObject).extend({
+export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZodObject).safeExtend({
   alias: z.string().optional(),
   rateLimit: z.number().optional(),
   timeoutOverride: z.number().optional(),
 }).strict();
 
-export const modelProviderSchema = (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).extend({
+export const modelProviderSchema = (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).safeExtend({
   baseUrl: z.string().min(1).optional(),
   models: z.array(modelEntrySchema).optional(),
 }).strict();
 
 const modelsBaseSchema = unwrapSchema(ModelsConfigSchema) as z.AnyZodObject;
 export const modelsSchema = modelsBaseSchema
-  .extend({
+  .safeExtend({
     providers: z.record(z.string(), modelProviderSchema).optional(),
   })
   .strict()
@@ -132,7 +132,7 @@ export const modelsSchema = modelsBaseSchema
 
 const mediaBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.media) as z.AnyZodObject;
 export const mediaSchema = mediaBaseSchema
-  .extend({
+  .safeExtend({
     imageGeneration: z
       .object({
         enabled: z.boolean().optional(),
@@ -150,7 +150,7 @@ export const mediaSchema = mediaBaseSchema
   .optional();
 
 export const configSchema = (BasePowerDirectorSchema as z.AnyZodObject)
-  .extend({
+  .safeExtend({
     update: updateSchema,
     auth: authSchema,
     agents: agentsSchema,
