@@ -26,10 +26,9 @@ cp "$APPS_SRC/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-di
 # Selective sync for extensions/ - only provider-catalogs needed for discovery
 echo "Syncing required extensions..."
 mkdir -p "$TARGET_DIR/extensions"
-find "$EXTENSIONS_SRC" -maxdepth 2 -name "provider-catalog.ts" -exec cp --parents {} "$TARGET_DIR/" \; 2>/dev/null || true
-# provider-catalog resolution
-find "$TARGET_DIR/home/jcavallarojr/powerdirector-newusertest/extensions" -type f -exec mv {} "$TARGET_DIR/extensions/" 2>/dev/null || true
-rm -rf "$TARGET_DIR/home" 2>/dev/null || true
+# Copy all extension contents but keep it selective to avoid OOM
+# We need provider-catalog.ts and other core extension files for some UI routes
+rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/node_modules/**" "$EXTENSIONS_SRC/" "$TARGET_DIR/extensions/"
 
 # Sanitize imports in the copied files
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from ['\"]\(\.\/[^'\"]*\)\.js['\"]/from '\1'/g" {} +
