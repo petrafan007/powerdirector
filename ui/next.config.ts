@@ -53,6 +53,8 @@ const nextConfig: NextConfig = {
     "@line/bot-sdk",
     "@mariozechner/pi-ai",
     "@mariozechner/pi-agent-core",
+    "node-llama-cpp",
+    "@napi-rs/canvas",
   ],
   typescript: {
     // UI build imports backend runtime modules from ../src; backend typechecking is enforced via root `npm run build`.
