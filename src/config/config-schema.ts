@@ -14,6 +14,10 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
       current = current.unwrap();
     } else if (typeof current.innerType === 'function') {
       current = current.innerType();
+    } else if (current._def?.typeName === 'ZodEffects') {
+      current = current._def.schema;
+    } else if (current._def?.typeName === 'ZodPipeline') {
+      current = current._def.in;
     } else {
       break;
     }
