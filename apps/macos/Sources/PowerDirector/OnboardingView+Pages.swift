@@ -503,7 +503,7 @@ extension OnboardingView {
                                     let saved = await self.saveAgentWorkspace(AgentWorkspace.displayPath(for: url))
                                     if saved {
                                         self.workspaceStatus =
-                                            "Saved to ~/.powerdirector/powerdirector.config.json (agents.defaults.workspace)"
+                                            "Saved to ~/.powerdirector/powerdirector.json (agents.defaults.workspace)"
                                     }
                                 }
                             }

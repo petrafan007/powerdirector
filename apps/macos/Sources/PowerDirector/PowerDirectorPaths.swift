@@ -29,7 +29,7 @@ enum PowerDirectorPaths {
 
     private static func resolveConfigCandidate(in dir: URL) -> URL? {
         let candidates = [
-            dir.appendingPathComponent("powerdirector.config.json"),
+            dir.appendingPathComponent("powerdirector.json"),
         ]
         return candidates.first(where: { FileManager().fileExists(atPath: $0.path) })
     }
@@ -44,7 +44,7 @@ enum PowerDirectorPaths {
         if let existing = self.resolveConfigCandidate(in: stateDir) {
             return existing
         }
-        return stateDir.appendingPathComponent("powerdirector.config.json")
+        return stateDir.appendingPathComponent("powerdirector.json")
     }
 
     static var workspaceURL: URL {

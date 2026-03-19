@@ -30,7 +30,7 @@ struct OnboardingViewSmokeTests {
     @Test func `select remote gateway clears stale ssh target when endpoint unresolved`() async {
         let override = FileManager().temporaryDirectory
             .appendingPathComponent("powerdirector-config-\(UUID().uuidString)")
-            .appendingPathComponent("powerdirector.config.json")
+            .appendingPathComponent("powerdirector.json")
             .path
 
         await TestIsolation.withEnvValues(["POWERDIRECTOR_CONFIG_PATH": override]) {

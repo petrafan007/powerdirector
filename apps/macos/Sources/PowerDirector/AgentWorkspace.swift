@@ -268,7 +268,7 @@ enum AgentWorkspace {
         - Timezone (optional)
         - Notes
 
-        3) ~/.powerdirector/powerdirector.config.json
+        3) ~/.powerdirector/powerdirector.json
         Set identity.name, identity.theme, identity.emoji to match IDENTITY.md.
 
         ## Cleanup

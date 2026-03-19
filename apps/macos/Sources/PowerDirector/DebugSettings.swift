@@ -423,7 +423,7 @@ struct DebugSettings: View {
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
                             } else {
-                                Text("Used by the CLI session loader; stored in ~/.powerdirector/powerdirector.config.json.")
+                                Text("Used by the CLI session loader; stored in ~/.powerdirector/powerdirector.json.")
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
                             }

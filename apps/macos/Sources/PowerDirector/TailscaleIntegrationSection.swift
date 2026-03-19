@@ -236,7 +236,7 @@ struct TailscaleIntegrationSection: View {
             .textFieldStyle(.roundedBorder)
             .frame(maxWidth: 240)
             .onSubmit { Task { await self.applySettings() } }
-        Text("Stored in ~/.powerdirector/powerdirector.config.json. Prefer POWERDIRECTOR_GATEWAY_PASSWORD for production.")
+        Text("Stored in ~/.powerdirector/powerdirector.json. Prefer POWERDIRECTOR_GATEWAY_PASSWORD for production.")
             .font(.caption)
             .foregroundStyle(.secondary)
         Button("Update password") { Task { await self.applySettings() } }
@@ -295,9 +295,9 @@ struct TailscaleIntegrationSection: View {
         }
 
         if self.connectionMode == .local, !self.isPaused {
-            self.statusMessage = "Saved to ~/.powerdirector/powerdirector.config.json. Restarting gateway…"
+            self.statusMessage = "Saved to ~/.powerdirector/powerdirector.json. Restarting gateway…"
         } else {
-            self.statusMessage = "Saved to ~/.powerdirector/powerdirector.config.json. Restart the gateway to apply."
+            self.statusMessage = "Saved to ~/.powerdirector/powerdirector.json. Restart the gateway to apply."
         }
         self.restartGatewayIfNeeded()
     }

@@ -7,7 +7,7 @@ struct PowerDirectorConfigFileTests {
     private func makeConfigOverridePath() -> String {
         FileManager().temporaryDirectory
             .appendingPathComponent("powerdirector-config-\(UUID().uuidString)")
-            .appendingPathComponent("powerdirector.config.json")
+            .appendingPathComponent("powerdirector.json")
             .path
     }
 
@@ -93,7 +93,7 @@ struct PowerDirectorConfigFileTests {
             "POWERDIRECTOR_STATE_DIR": dir,
         ]) {
             #expect(PowerDirectorConfigFile.stateDirURL().path == dir)
-            #expect(PowerDirectorConfigFile.url().path == "\(dir)/powerdirector.config.json")
+            #expect(PowerDirectorConfigFile.url().path == "\(dir)/powerdirector.json")
         }
     }
 
@@ -102,7 +102,7 @@ struct PowerDirectorConfigFileTests {
     func `save dict appends config audit log`() async throws {
         let stateDir = FileManager().temporaryDirectory
             .appendingPathComponent("powerdirector-state-\(UUID().uuidString)", isDirectory: true)
-        let configPath = stateDir.appendingPathComponent("powerdirector.config.json")
+        let configPath = stateDir.appendingPathComponent("powerdirector.json")
         let auditPath = stateDir.appendingPathComponent("logs/config-audit.jsonl")
 
         defer { try? FileManager().removeItem(at: stateDir) }
