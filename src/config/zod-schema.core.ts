@@ -280,10 +280,11 @@ export const ModelProviderSchema = z
     defaultModel: z.string().optional(),
   })
   .strict()
-  .transform((val) => {
+  .transform((val: any) => {
     if (val.baseURL && !val.baseUrl) {
       val.baseUrl = val.baseURL;
     }
+    delete val.baseURL;
     return val;
   });
 

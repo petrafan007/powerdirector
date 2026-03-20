@@ -63,7 +63,6 @@ export type ModelDefinitionConfig = {
 
 export type ModelProviderConfig = {
   baseUrl?: string;
-  baseURL?: string;
   apiKey?: SecretInput;
   auth?: ModelProviderAuthMode;
   api?: ModelApi;
