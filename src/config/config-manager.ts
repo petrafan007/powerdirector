@@ -110,6 +110,7 @@ export class ConfigManager {
                     provider.baseUrl = provider.baseURL.trim();
                 }
             }
+            delete provider.baseURL;
             if (!Array.isArray(provider.models)) {
                 provider.models = [];
             }
