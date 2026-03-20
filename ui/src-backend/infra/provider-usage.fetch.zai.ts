@@ -1,6 +1,6 @@
-import { buildUsageHttpErrorSnapshot, fetchJson } from './provider-usage.fetch.shared';
-import { clampPercent, PROVIDER_LABELS } from './provider-usage.shared';
-import type { ProviderUsageSnapshot, UsageWindow } from './provider-usage.types';
+import { buildUsageHttpErrorSnapshot, fetchJson } from "./provider-usage.fetch.shared";
+import { clampPercent, PROVIDER_LABELS } from "./provider-usage.shared";
+import type { ProviderUsageSnapshot, UsageWindow } from "./provider-usage.types";
 
 type ZaiUsageResponse = {
   success?: boolean;
@@ -46,11 +46,12 @@ export async function fetchZaiUsage(
 
   const data = (await res.json()) as ZaiUsageResponse;
   if (!data.success || data.code !== 200) {
+    const errorMessage = typeof data.msg === "string" ? data.msg.trim() : "";
     return {
       provider: "zai",
       displayName: PROVIDER_LABELS.zai,
       windows: [],
-      error: data.msg || "API error",
+      error: errorMessage || "API error",
     };
   }
 

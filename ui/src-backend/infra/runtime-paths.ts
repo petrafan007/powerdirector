@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import { resolveStateDir } from '../config/config';
+import { resolveStateDir } from "../config/config";
 
 export function resolveDefaultMediaStorageDir(
   env: NodeJS.ProcessEnv = process.env,

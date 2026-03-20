@@ -1,22 +1,24 @@
-import { formatCliCommand } from '../cli/command-format';
+import { formatCliCommand } from "../cli/command-format";
 import type {
   GatewayAuthChoice,
   OnboardMode,
   OnboardOptions,
   ResetScope,
-} from '../commands/onboard-types';
-import type { PowerDirectorConfig } from '../config/config';
+} from "../commands/onboard-types";
+import type { PowerDirectorConfig } from "../config/config";
 import {
   DEFAULT_GATEWAY_PORT,
   readConfigFileSnapshot,
   resolveGatewayPort,
   writeConfigFile,
-} from '../config/config';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { resolveUserPath } from '../utils';
-import type { QuickstartGatewayDefaults, WizardFlow } from './onboarding.types';
-import { WizardCancelledError, type WizardPrompter } from './prompts';
+} from "../config/config";
+import { normalizeSecretInputString } from "../config/types.secrets";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { resolveUserPath } from "../utils";
+import { resolveOnboardingSecretInputString } from "./onboarding.secret-input";
+import type { QuickstartGatewayDefaults, WizardFlow } from "./onboarding.types";
+import { WizardCancelledError, type WizardPrompter } from "./prompts";
 
 async function requireRiskAcknowledgement(params: {
   opts: OnboardOptions;
@@ -31,15 +33,21 @@ async function requireRiskAcknowledgement(params: {
       "Security warning — please read.",
       "",
       "PowerDirector is a hobby project and still in beta. Expect sharp edges.",
+      "By default, PowerDirector is a personal agent: one trusted operator boundary.",
       "This bot can read files and run actions if tools are enabled.",
       "A bad prompt can trick it into doing unsafe things.",
       "",
-      "If you’re not comfortable with basic security and access control, don’t run PowerDirector.",
+      "PowerDirector is not a hostile multi-tenant boundary by default.",
+      "If multiple users can message one tool-enabled agent, they share that delegated tool authority.",
+      "",
+      "If you’re not comfortable with security hardening and access control, don’t run PowerDirector.",
       "Ask someone experienced to help before enabling tools or exposing it to the internet.",
       "",
       "Recommended baseline:",
       "- Pairing/allowlists + mention gating.",
+      "- Multi-user/shared inbox: split trust boundaries (separate gateway/credentials, ideally separate OS users/hosts).",
       "- Sandbox + least-privilege tools.",
+      "- Shared inboxes: isolate DM sessions (`session.dmScope: per-channel-peer`) and keep tool access minimal.",
       "- Keep secrets out of the agent’s reachable filesystem.",
       "- Use the strongest available model for any bot with tools or untrusted inboxes.",
       "",
@@ -53,7 +61,8 @@ async function requireRiskAcknowledgement(params: {
   );
 
   const ok = await params.prompter.confirm({
-    message: "I understand this is powerful and inherently risky. Continue?",
+    message:
+      "I understand this is personal-by-default and shared/multi-user use requires lock-down. Continue?",
     initialValue: false,
   });
   if (!ok) {
@@ -66,7 +75,7 @@ export async function runOnboardingWizard(
   runtime: RuntimeEnv = defaultRuntime,
   prompter: WizardPrompter,
 ) {
-  const onboardHelpers = await import('../commands/onboard-helpers');
+  const onboardHelpers = await import("../commands/onboard-helpers");
   onboardHelpers.printWizardHeader(runtime);
   await prompter.intro("PowerDirector onboarding");
   await requireRiskAcknowledgement({ opts, prompter });
@@ -272,16 +281,78 @@ export async function runOnboardingWizard(
 
   const localPort = resolveGatewayPort(baseConfig);
   const localUrl = `ws://127.0.0.1:${localPort}`;
+  let localGatewayToken = process.env.POWERDIRECTOR_GATEWAY_TOKEN ?? process.env.CLAWDBOT_GATEWAY_TOKEN;
+  try {
+    const resolvedGatewayToken = await resolveOnboardingSecretInputString({
+      config: baseConfig,
+      value: baseConfig.gateway?.auth?.token,
+      path: "gateway.auth.token",
+      env: process.env,
+    });
+    if (resolvedGatewayToken) {
+      localGatewayToken = resolvedGatewayToken;
+    }
+  } catch (error) {
+    await prompter.note(
+      [
+        "Could not resolve gateway.auth.token SecretRef for onboarding probe.",
+        error instanceof Error ? error.message : String(error),
+      ].join("\n"),
+      "Gateway auth",
+    );
+  }
+  let localGatewayPassword =
+    process.env.POWERDIRECTOR_GATEWAY_PASSWORD ?? process.env.CLAWDBOT_GATEWAY_PASSWORD;
+  try {
+    const resolvedGatewayPassword = await resolveOnboardingSecretInputString({
+      config: baseConfig,
+      value: baseConfig.gateway?.auth?.password,
+      path: "gateway.auth.password",
+      env: process.env,
+    });
+    if (resolvedGatewayPassword) {
+      localGatewayPassword = resolvedGatewayPassword;
+    }
+  } catch (error) {
+    await prompter.note(
+      [
+        "Could not resolve gateway.auth.password SecretRef for onboarding probe.",
+        error instanceof Error ? error.message : String(error),
+      ].join("\n"),
+      "Gateway auth",
+    );
+  }
+
   const localProbe = await onboardHelpers.probeGatewayReachable({
     url: localUrl,
-    token: baseConfig.gateway?.auth?.token ?? process.env.POWERDIRECTOR_GATEWAY_TOKEN,
-    password: baseConfig.gateway?.auth?.password ?? process.env.POWERDIRECTOR_GATEWAY_PASSWORD,
+    token: localGatewayToken,
+    password: localGatewayPassword,
   });
   const remoteUrl = baseConfig.gateway?.remote?.url?.trim() ?? "";
+  let remoteGatewayToken = normalizeSecretInputString(baseConfig.gateway?.remote?.token);
+  try {
+    const resolvedRemoteGatewayToken = await resolveOnboardingSecretInputString({
+      config: baseConfig,
+      value: baseConfig.gateway?.remote?.token,
+      path: "gateway.remote.token",
+      env: process.env,
+    });
+    if (resolvedRemoteGatewayToken) {
+      remoteGatewayToken = resolvedRemoteGatewayToken;
+    }
+  } catch (error) {
+    await prompter.note(
+      [
+        "Could not resolve gateway.remote.token SecretRef for onboarding probe.",
+        error instanceof Error ? error.message : String(error),
+      ].join("\n"),
+      "Gateway auth",
+    );
+  }
   const remoteProbe = remoteUrl
     ? await onboardHelpers.probeGatewayReachable({
         url: remoteUrl,
-        token: baseConfig.gateway?.remote?.token,
+        token: remoteGatewayToken,
       })
     : null;
 
@@ -312,9 +383,11 @@ export async function runOnboardingWizard(
         })) as OnboardMode));
 
   if (mode === "remote") {
-    const { promptRemoteGatewayConfig } = await import('../commands/onboard-remote');
-    const { logConfigUpdated } = await import('../config/logging');
-    let nextConfig = await promptRemoteGatewayConfig(baseConfig, prompter);
+    const { promptRemoteGatewayConfig } = await import("../commands/onboard-remote");
+    const { logConfigUpdated } = await import("../config/logging");
+    let nextConfig = await promptRemoteGatewayConfig(baseConfig, prompter, {
+      secretInputMode: opts.secretInputMode,
+    });
     nextConfig = onboardHelpers.applyWizardMetadata(nextConfig, { command: "onboard", mode });
     await writeConfigFile(nextConfig);
     logConfigUpdated(runtime);
@@ -333,15 +406,15 @@ export async function runOnboardingWizard(
 
   const workspaceDir = resolveUserPath(workspaceInput.trim() || onboardHelpers.DEFAULT_WORKSPACE);
 
-  const { applyOnboardingLocalWorkspaceConfig } = await import('../commands/onboard-config');
+  const { applyOnboardingLocalWorkspaceConfig } = await import("../commands/onboard-config");
   let nextConfig: PowerDirectorConfig = applyOnboardingLocalWorkspaceConfig(baseConfig, workspaceDir);
 
-  const { ensureAuthProfileStore } = await import('../agents/auth-profiles');
-  const { promptAuthChoiceGrouped } = await import('../commands/auth-choice-prompt');
-  const { promptCustomApiConfig } = await import('../commands/onboard-custom');
+  const { ensureAuthProfileStore } = await import("../agents/auth-profiles");
+  const { promptAuthChoiceGrouped } = await import("../commands/auth-choice-prompt");
+  const { promptCustomApiConfig } = await import("../commands/onboard-custom");
   const { applyAuthChoice, resolvePreferredProviderForAuthChoice, warnIfModelConfigLooksOff } =
-    await import('../commands/auth-choice');
-  const { applyPrimaryModel, promptDefaultModel } = await import('../commands/model-picker');
+    await import("../commands/auth-choice");
+  const { applyPrimaryModel, promptDefaultModel } = await import("../commands/model-picker");
 
   const authStore = ensureAuthProfileStore(undefined, {
     allowKeychainPrompt: false,
@@ -360,6 +433,7 @@ export async function runOnboardingWizard(
       prompter,
       runtime,
       config: nextConfig,
+      secretInputMode: opts.secretInputMode,
     });
     nextConfig = customResult.config;
   } else {
@@ -396,13 +470,14 @@ export async function runOnboardingWizard(
 
   await warnIfModelConfigLooksOff(nextConfig, prompter);
 
-  const { configureGatewayForOnboarding } = await import('./onboarding.gateway-config');
+  const { configureGatewayForOnboarding } = await import("./onboarding.gateway-config");
   const gateway = await configureGatewayForOnboarding({
     flow,
     baseConfig,
     nextConfig,
     localPort,
     quickstartGateway,
+    secretInputMode: opts.secretInputMode,
     prompter,
     runtime,
   });
@@ -412,8 +487,8 @@ export async function runOnboardingWizard(
   if (opts.skipChannels ?? opts.skipProviders) {
     await prompter.note("Skipping channel setup.", "Channels");
   } else {
-    const { listChannelPlugins } = await import('../channels/plugins/index');
-    const { setupChannels } = await import('../commands/onboard-channels');
+    const { listChannelPlugins } = await import("../channels/plugins/index");
+    const { setupChannels } = await import("../commands/onboard-channels");
     const quickstartAllowFromChannels =
       flow === "quickstart"
         ? listChannelPlugins()
@@ -426,31 +501,42 @@ export async function runOnboardingWizard(
       skipDmPolicyPrompt: flow === "quickstart",
       skipConfirm: flow === "quickstart",
       quickstartDefaults: flow === "quickstart",
+      secretInputMode: opts.secretInputMode,
     });
   }
 
   await writeConfigFile(nextConfig);
-  const { logConfigUpdated } = await import('../config/logging');
+  const { logConfigUpdated } = await import("../config/logging");
   logConfigUpdated(runtime);
   await onboardHelpers.ensureWorkspaceAndSessions(workspaceDir, runtime, {
     skipBootstrap: Boolean(nextConfig.agents?.defaults?.skipBootstrap),
   });
 
+  if (opts.skipSearch) {
+    await prompter.note("Skipping search setup.", "Search");
+  } else {
+    const { setupSearch } = await import("../commands/onboard-search");
+    nextConfig = await setupSearch(nextConfig, runtime, prompter, {
+      quickstartDefaults: flow === "quickstart",
+      secretInputMode: opts.secretInputMode,
+    });
+  }
+
   if (opts.skipSkills) {
     await prompter.note("Skipping skills setup.", "Skills");
   } else {
-    const { setupSkills } = await import('../commands/onboard-skills');
+    const { setupSkills } = await import("../commands/onboard-skills");
     nextConfig = await setupSkills(nextConfig, workspaceDir, runtime, prompter);
   }
 
   // Setup hooks (session memory on /new)
-  const { setupInternalHooks } = await import('../commands/onboard-hooks');
+  const { setupInternalHooks } = await import("../commands/onboard-hooks");
   nextConfig = await setupInternalHooks(nextConfig, runtime, prompter);
 
   nextConfig = onboardHelpers.applyWizardMetadata(nextConfig, { command: "onboard", mode });
   await writeConfigFile(nextConfig);
 
-  const { finalizeOnboardingWizard } = await import('./onboarding.finalize');
+  const { finalizeOnboardingWizard } = await import("./onboarding.finalize");
   const { launchedTui } = await finalizeOnboardingWizard({
     flow,
     opts,

@@ -10,30 +10,31 @@ import {
   type TopLevelComponents,
 } from "@buape/carbon";
 import { ButtonStyle, Routes } from "discord-api-types/v10";
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadSessionStore, resolveStorePath } from '../../config/sessions';
-import type { DiscordExecApprovalConfig } from '../../config/types.discord';
-import { buildGatewayConnectionDetails } from '../../gateway/call';
-import { GatewayClient } from '../../gateway/client';
-import type { EventFrame } from '../../gateway/protocol/index';
+import type { PowerDirectorConfig } from "../../config/config";
+import { loadSessionStore, resolveStorePath } from "../../config/sessions";
+import type { DiscordExecApprovalConfig } from "../../config/types.discord";
+import { buildGatewayConnectionDetails } from "../../gateway/call";
+import { GatewayClient } from "../../gateway/client";
+import { resolveGatewayConnectionAuth } from "../../gateway/connection-auth";
+import type { EventFrame } from "../../gateway/protocol/index";
 import type {
   ExecApprovalDecision,
   ExecApprovalRequest,
   ExecApprovalResolved,
-} from '../../infra/exec-approvals';
-import { logDebug, logError } from '../../logger';
-import { normalizeAccountId, resolveAgentIdFromSessionKey } from '../../routing/session-key';
-import type { RuntimeEnv } from '../../runtime';
+} from "../../infra/exec-approvals";
+import { logDebug, logError } from "../../logger";
+import { normalizeAccountId, resolveAgentIdFromSessionKey } from "../../routing/session-key";
+import type { RuntimeEnv } from "../../runtime";
+import { compileSafeRegex, testRegexWithBoundedInput } from "../../security/safe-regex";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
   normalizeMessageChannel,
-} from '../../utils/message-channel';
-import { createDiscordClient, stripUndefinedFields } from '../send.shared';
-import { DiscordUiContainer } from '../ui';
+} from "../../utils/message-channel";
+import { createDiscordClient, stripUndefinedFields } from "../send.shared";
+import { DiscordUiContainer } from "../ui";
 
 const EXEC_APPROVAL_KEY = "execapproval";
-
 export type { ExecApprovalRequest, ExecApprovalResolved };
 
 /** Extract Discord channel ID from a session key like "agent:main:discord:channel:123456789" */
@@ -212,6 +213,9 @@ function buildExecApprovalMetadataLines(request: ExecApprovalRequest): string[] 
   if (request.request.host) {
     lines.push(`- Host: ${request.request.host}`);
   }
+  if (Array.isArray(request.request.envKeys) && request.request.envKeys.length > 0) {
+    lines.push(`- Env Overrides: ${request.request.envKeys.join(", ")}`);
+  }
   if (request.request.agentId) {
     lines.push(`- Agent: ${request.request.agentId}`);
   }
@@ -223,6 +227,12 @@ function buildExecApprovalPayload(container: DiscordUiContainer): MessagePayload
   return { components };
 }
 
+function formatCommandPreview(commandText: string, maxChars: number): string {
+  const commandRaw =
+    commandText.length > maxChars ? `${commandText.slice(0, maxChars)}...` : commandText;
+  return commandRaw.replace(/`/g, "\u200b`");
+}
+
 function createExecApprovalRequestContainer(params: {
   request: ExecApprovalRequest;
   cfg: PowerDirectorConfig;
@@ -230,8 +240,7 @@ function createExecApprovalRequestContainer(params: {
   actionRow?: Row<Button>;
 }): ExecApprovalContainer {
   const commandText = params.request.request.command;
-  const commandRaw = commandText.length > 1000 ? `${commandText.slice(0, 1000)}...` : commandText;
-  const commandPreview = commandRaw.replace(/`/g, "\u200b`");
+  const commandPreview = formatCommandPreview(commandText, 1000);
   const expiresAtSeconds = Math.max(0, Math.floor(params.request.expiresAtMs / 1000));
 
   return new ExecApprovalContainer({
@@ -255,8 +264,7 @@ function createResolvedContainer(params: {
   accountId: string;
 }): ExecApprovalContainer {
   const commandText = params.request.request.command;
-  const commandRaw = commandText.length > 500 ? `${commandText.slice(0, 500)}...` : commandText;
-  const commandPreview = commandRaw.replace(/`/g, "\u200b`");
+  const commandPreview = formatCommandPreview(commandText, 500);
 
   const decisionLabel =
     params.decision === "allow-once"
@@ -289,8 +297,7 @@ function createExpiredContainer(params: {
   accountId: string;
 }): ExecApprovalContainer {
   const commandText = params.request.request.command;
-  const commandRaw = commandText.length > 500 ? `${commandText.slice(0, 500)}...` : commandText;
-  const commandPreview = commandRaw.replace(/`/g, "\u200b`");
+  const commandPreview = formatCommandPreview(commandText, 500);
 
   return new ExecApprovalContainer({
     cfg: params.cfg,
@@ -361,11 +368,11 @@ export class DiscordExecApprovalHandler {
         return false;
       }
       const matches = config.sessionFilter.some((p) => {
-        try {
-          return session.includes(p) || new RegExp(p).test(session);
-        } catch {
-          return session.includes(p);
+        if (session.includes(p)) {
+          return true;
         }
+        const regex = compileSafeRegex(p);
+        return regex ? testRegexWithBoundedInput(regex, session) : false;
       });
       if (!matches) {
         return false;
@@ -394,13 +401,27 @@ export class DiscordExecApprovalHandler {
 
     logDebug("discord exec approvals: starting handler");
 
-    const { url: gatewayUrl } = buildGatewayConnectionDetails({
+    const { url: gatewayUrl, urlSource } = buildGatewayConnectionDetails({
       config: this.opts.cfg,
       url: this.opts.gatewayUrl,
+    });
+    const gatewayUrlOverrideSource =
+      urlSource === "cli --url"
+        ? "cli"
+        : urlSource === "env POWERDIRECTOR_GATEWAY_URL"
+          ? "env"
+          : undefined;
+    const auth = await resolveGatewayConnectionAuth({
+      config: this.opts.cfg,
+      env: process.env,
+      urlOverride: gatewayUrlOverrideSource ? gatewayUrl : undefined,
+      urlOverrideSource: gatewayUrlOverrideSource,
     });
 
     this.gatewayClient = new GatewayClient({
       url: gatewayUrl,
+      token: auth.token,
+      password: auth.password,
       clientName: GATEWAY_CLIENT_NAMES.GATEWAY_CLIENT,
       clientDisplayName: "Discord Exec Approvals",
       mode: GATEWAY_CLIENT_MODES.BACKEND,

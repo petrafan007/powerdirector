@@ -4,17 +4,17 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { Mock, vi } from "vitest";
-import type { MsgContext } from '../auto-reply/templating';
-import type { GetReplyOptions, ReplyPayload } from '../auto-reply/types';
-import type { ChannelPlugin, ChannelOutboundAdapter } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { applyPluginAutoEnable } from '../config/plugin-auto-enable';
-import type { AgentBinding } from '../config/types.agents';
-import type { HooksConfig } from '../config/types.hooks';
-import type { TailscaleWhoisIdentity } from '../infra/tailscale';
-import type { PluginRegistry } from '../plugins/registry';
-import { setActivePluginRegistry } from '../plugins/runtime';
-import { DEFAULT_ACCOUNT_ID } from '../routing/session-key';
+import type { MsgContext } from "../auto-reply/templating";
+import type { GetReplyOptions, ReplyPayload } from "../auto-reply/types";
+import type { ChannelPlugin, ChannelOutboundAdapter } from "../channels/plugins/types";
+import type { PowerDirectorConfig } from "../config/config";
+import { applyPluginAutoEnable } from "../config/plugin-auto-enable";
+import type { AgentBinding } from "../config/types.agents";
+import type { HooksConfig } from "../config/types.hooks";
+import type { TailscaleWhoisIdentity } from "../infra/tailscale";
+import type { PluginRegistry } from "../plugins/registry";
+import { setActivePluginRegistry } from "../plugins/runtime";
+import { DEFAULT_ACCOUNT_ID } from "../routing/session-key";
 
 type StubChannelOptions = {
   id: ChannelPlugin["id"];
@@ -144,13 +144,18 @@ const createStubPluginRegistry = (): PluginRegistry => ({
       plugin: createStubChannelPlugin({ id: "bluebubbles", label: "BlueBubbles" }),
     },
   ],
+  channelSetups: [],
   providers: [],
+  speechProviders: [],
+  mediaUnderstandingProviders: [],
+  imageGenerationProviders: [],
+  webSearchProviders: [],
   gatewayHandlers: {},
-  httpHandlers: [],
   httpRoutes: [],
   cliRegistrars: [],
   services: [],
   commands: [],
+  conversationBindingResolvedHandlers: [],
   diagnostics: [],
 });
 
@@ -203,7 +208,7 @@ const testConfigRoot = {
 
 export const setTestConfigRoot = (root: string) => {
   testConfigRoot.value = root;
-  process.env.POWERDIRECTOR_CONFIG_PATH = path.join(root, "powerdirector.config.json");
+  process.env.POWERDIRECTOR_CONFIG_PATH = path.join(root, "powerdirector.json");
 };
 
 export const testTailnetIPv4 = hoisted.testTailnetIPv4;
@@ -238,9 +243,9 @@ export const testIsNixMode = hoisted.testIsNixMode;
 export const sessionStoreSaveDelayMs = hoisted.sessionStoreSaveDelayMs;
 export const embeddedRunMock = hoisted.embeddedRunMock;
 
-vi.mock("../agents/pi-model-discovery.js", async () => {
-  const actual = await vi.importActual<typeof import('../agents/pi-model-discovery')>(
-    "../agents/pi-model-discovery.js",
+vi.mock("../agents/pi-model-discovery", async () => {
+  const actual = await vi.importActual<typeof import("../agents/pi-model-discovery")>(
+    "../agents/pi-model-discovery",
   );
 
   class MockModelRegistry extends actual.ModelRegistry {
@@ -260,28 +265,28 @@ vi.mock("../agents/pi-model-discovery.js", async () => {
   };
 });
 
-vi.mock("../cron/isolated-agent.js", () => ({
+vi.mock("../cron/isolated-agent", () => ({
   runCronIsolatedAgentTurn: (...args: unknown[]) =>
     (cronIsolatedRun as (...args: unknown[]) => unknown)(...args),
 }));
 
-vi.mock("../infra/tailnet.js", () => ({
+vi.mock("../infra/tailnet", () => ({
   pickPrimaryTailnetIPv4: () => testTailnetIPv4.value,
   pickPrimaryTailnetIPv6: () => undefined,
 }));
 
-vi.mock("../infra/tailscale.js", async () => {
+vi.mock("../infra/tailscale", async () => {
   const actual =
-    await vi.importActual<typeof import('../infra/tailscale')>("../infra/tailscale.js");
+    await vi.importActual<typeof import("../infra/tailscale")>("../infra/tailscale");
   return {
     ...actual,
     readTailscaleWhoisIdentity: async () => testTailscaleWhois.value,
   };
 });
 
-vi.mock("../config/sessions.js", async () => {
+vi.mock("../config/sessions", async () => {
   const actual =
-    await vi.importActual<typeof import('../config/sessions')>("../config/sessions.js");
+    await vi.importActual<typeof import("../config/sessions")>("../config/sessions");
   return {
     ...actual,
     saveSessionStore: vi.fn(async (storePath: string, store: unknown) => {
@@ -294,9 +299,9 @@ vi.mock("../config/sessions.js", async () => {
   };
 });
 
-vi.mock("../config/config.js", async () => {
-  const actual = await vi.importActual<typeof import('../config/config')>("../config/config.js");
-  const resolveConfigPath = () => path.join(testConfigRoot.value, "powerdirector.config.json");
+vi.mock("../config/config", async () => {
+  const actual = await vi.importActual<typeof import("../config/config")>("../config/config");
+  const resolveConfigPath = () => path.join(testConfigRoot.value, "powerdirector.json");
   const hashConfigRaw = (raw: string | null) =>
     crypto
       .createHash("sha256")
@@ -366,6 +371,130 @@ vi.mock("../config/config.js", async () => {
     }
   };
 
+  const composeTestConfig = (baseConfig: Record<string, unknown>) => {
+    const fileAgents =
+      baseConfig.agents &&
+      typeof baseConfig.agents === "object" &&
+      !Array.isArray(baseConfig.agents)
+        ? (baseConfig.agents as Record<string, unknown>)
+        : {};
+    const fileDefaults =
+      fileAgents.defaults &&
+      typeof fileAgents.defaults === "object" &&
+      !Array.isArray(fileAgents.defaults)
+        ? (fileAgents.defaults as Record<string, unknown>)
+        : {};
+    const defaults = {
+      model: { primary: "anthropic/claude-opus-4-6" },
+      workspace: path.join(os.tmpdir(), "powerdirector-gateway-test"),
+      ...fileDefaults,
+      ...testState.agentConfig,
+    };
+    const agents = testState.agentsConfig
+      ? { ...fileAgents, ...testState.agentsConfig, defaults }
+      : { ...fileAgents, defaults };
+
+    const fileBindings = Array.isArray(baseConfig.bindings)
+      ? (baseConfig.bindings as AgentBinding[])
+      : undefined;
+
+    const fileChannels =
+      baseConfig.channels &&
+      typeof baseConfig.channels === "object" &&
+      !Array.isArray(baseConfig.channels)
+        ? ({ ...(baseConfig.channels as Record<string, unknown>) } as Record<string, unknown>)
+        : {};
+    const overrideChannels =
+      testState.channelsConfig && typeof testState.channelsConfig === "object"
+        ? { ...testState.channelsConfig }
+        : {};
+    const mergedChannels = { ...fileChannels, ...overrideChannels };
+    if (testState.allowFrom !== undefined) {
+      const existing =
+        mergedChannels.whatsapp &&
+        typeof mergedChannels.whatsapp === "object" &&
+        !Array.isArray(mergedChannels.whatsapp)
+          ? (mergedChannels.whatsapp as Record<string, unknown>)
+          : {};
+      mergedChannels.whatsapp = {
+        ...existing,
+        allowFrom: testState.allowFrom,
+      };
+    }
+    const channels = Object.keys(mergedChannels).length > 0 ? mergedChannels : undefined;
+
+    const fileSession =
+      baseConfig.session &&
+      typeof baseConfig.session === "object" &&
+      !Array.isArray(baseConfig.session)
+        ? (baseConfig.session as Record<string, unknown>)
+        : {};
+    const session: Record<string, unknown> = {
+      ...fileSession,
+      mainKey: fileSession.mainKey ?? "main",
+    };
+    if (typeof testState.sessionStorePath === "string") {
+      session.store = testState.sessionStorePath;
+    }
+    if (testState.sessionConfig) {
+      Object.assign(session, testState.sessionConfig);
+    }
+
+    const fileGateway =
+      baseConfig.gateway &&
+      typeof baseConfig.gateway === "object" &&
+      !Array.isArray(baseConfig.gateway)
+        ? ({ ...(baseConfig.gateway as Record<string, unknown>) } as Record<string, unknown>)
+        : {};
+    if (testState.gatewayBind) {
+      fileGateway.bind = testState.gatewayBind;
+    }
+    if (testState.gatewayAuth) {
+      fileGateway.auth = testState.gatewayAuth;
+    }
+    if (testState.gatewayControlUi) {
+      fileGateway.controlUi = testState.gatewayControlUi;
+    }
+    const gateway = Object.keys(fileGateway).length > 0 ? fileGateway : undefined;
+
+    const fileCanvasHost =
+      baseConfig.canvasHost &&
+      typeof baseConfig.canvasHost === "object" &&
+      !Array.isArray(baseConfig.canvasHost)
+        ? ({ ...(baseConfig.canvasHost as Record<string, unknown>) } as Record<string, unknown>)
+        : {};
+    if (typeof testState.canvasHostPort === "number") {
+      fileCanvasHost.port = testState.canvasHostPort;
+    }
+    const canvasHost = Object.keys(fileCanvasHost).length > 0 ? fileCanvasHost : undefined;
+
+    const hooks = testState.hooksConfig ?? (baseConfig.hooks as HooksConfig | undefined);
+
+    const fileCron =
+      baseConfig.cron && typeof baseConfig.cron === "object" && !Array.isArray(baseConfig.cron)
+        ? ({ ...(baseConfig.cron as Record<string, unknown>) } as Record<string, unknown>)
+        : {};
+    if (typeof testState.cronEnabled === "boolean") {
+      fileCron.enabled = testState.cronEnabled;
+    }
+    if (typeof testState.cronStorePath === "string") {
+      fileCron.store = testState.cronStorePath;
+    }
+    const cron = Object.keys(fileCron).length > 0 ? fileCron : undefined;
+
+    return {
+      ...baseConfig,
+      agents,
+      bindings: testState.bindingsConfig ?? fileBindings,
+      channels,
+      session,
+      gateway,
+      canvasHost,
+      hooks,
+      cron,
+    } as PowerDirectorConfig;
+  };
+
   const writeConfigFile = vi.fn(async (cfg: Record<string, unknown>) => {
     const configPath = resolveConfigPath();
     await fs.mkdir(path.dirname(configPath), { recursive: true });
@@ -388,6 +517,8 @@ vi.mock("../config/config.js", async () => {
       config: testState.migrationConfig ?? (raw as Record<string, unknown>),
       changes: testState.migrationChanges,
     }),
+    applyConfigOverrides: (cfg: PowerDirectorConfig) =>
+      composeTestConfig(cfg as Record<string, unknown>),
     loadConfig: () => {
       const configPath = resolveConfigPath();
       let fileConfig: Record<string, unknown> = {};
@@ -399,129 +530,8 @@ vi.mock("../config/config.js", async () => {
       } catch {
         fileConfig = {};
       }
-
-      const fileAgents =
-        fileConfig.agents &&
-        typeof fileConfig.agents === "object" &&
-        !Array.isArray(fileConfig.agents)
-          ? (fileConfig.agents as Record<string, unknown>)
-          : {};
-      const fileDefaults =
-        fileAgents.defaults &&
-        typeof fileAgents.defaults === "object" &&
-        !Array.isArray(fileAgents.defaults)
-          ? (fileAgents.defaults as Record<string, unknown>)
-          : {};
-      const defaults = {
-        model: { primary: "anthropic/claude-opus-4-6" },
-        workspace: path.join(os.tmpdir(), "powerdirector-gateway-test"),
-        ...fileDefaults,
-        ...testState.agentConfig,
-      };
-      const agents = testState.agentsConfig
-        ? { ...fileAgents, ...testState.agentsConfig, defaults }
-        : { ...fileAgents, defaults };
-
-      const fileBindings = Array.isArray(fileConfig.bindings)
-        ? (fileConfig.bindings as AgentBinding[])
-        : undefined;
-
-      const fileChannels =
-        fileConfig.channels &&
-        typeof fileConfig.channels === "object" &&
-        !Array.isArray(fileConfig.channels)
-          ? ({ ...(fileConfig.channels as Record<string, unknown>) } as Record<string, unknown>)
-          : {};
-      const overrideChannels =
-        testState.channelsConfig && typeof testState.channelsConfig === "object"
-          ? { ...testState.channelsConfig }
-          : {};
-      const mergedChannels = { ...fileChannels, ...overrideChannels };
-      if (testState.allowFrom !== undefined) {
-        const existing =
-          mergedChannels.whatsapp &&
-          typeof mergedChannels.whatsapp === "object" &&
-          !Array.isArray(mergedChannels.whatsapp)
-            ? (mergedChannels.whatsapp as Record<string, unknown>)
-            : {};
-        mergedChannels.whatsapp = {
-          ...existing,
-          allowFrom: testState.allowFrom,
-        };
-      }
-      const channels = Object.keys(mergedChannels).length > 0 ? mergedChannels : undefined;
-
-      const fileSession =
-        fileConfig.session &&
-        typeof fileConfig.session === "object" &&
-        !Array.isArray(fileConfig.session)
-          ? (fileConfig.session as Record<string, unknown>)
-          : {};
-      const session: Record<string, unknown> = {
-        ...fileSession,
-        mainKey: fileSession.mainKey ?? "main",
-      };
-      if (typeof testState.sessionStorePath === "string") {
-        session.store = testState.sessionStorePath;
-      }
-      if (testState.sessionConfig) {
-        Object.assign(session, testState.sessionConfig);
-      }
-
-      const fileGateway =
-        fileConfig.gateway &&
-        typeof fileConfig.gateway === "object" &&
-        !Array.isArray(fileConfig.gateway)
-          ? ({ ...(fileConfig.gateway as Record<string, unknown>) } as Record<string, unknown>)
-          : {};
-      if (testState.gatewayBind) {
-        fileGateway.bind = testState.gatewayBind;
-      }
-      if (testState.gatewayAuth) {
-        fileGateway.auth = testState.gatewayAuth;
-      }
-      if (testState.gatewayControlUi) {
-        fileGateway.controlUi = testState.gatewayControlUi;
-      }
-      const gateway = Object.keys(fileGateway).length > 0 ? fileGateway : undefined;
-
-      const fileCanvasHost =
-        fileConfig.canvasHost &&
-        typeof fileConfig.canvasHost === "object" &&
-        !Array.isArray(fileConfig.canvasHost)
-          ? ({ ...(fileConfig.canvasHost as Record<string, unknown>) } as Record<string, unknown>)
-          : {};
-      if (typeof testState.canvasHostPort === "number") {
-        fileCanvasHost.port = testState.canvasHostPort;
-      }
-      const canvasHost = Object.keys(fileCanvasHost).length > 0 ? fileCanvasHost : undefined;
-
-      const hooks = testState.hooksConfig ?? (fileConfig.hooks as HooksConfig | undefined);
-
-      const fileCron =
-        fileConfig.cron && typeof fileConfig.cron === "object" && !Array.isArray(fileConfig.cron)
-          ? ({ ...(fileConfig.cron as Record<string, unknown>) } as Record<string, unknown>)
-          : {};
-      if (typeof testState.cronEnabled === "boolean") {
-        fileCron.enabled = testState.cronEnabled;
-      }
-      if (typeof testState.cronStorePath === "string") {
-        fileCron.store = testState.cronStorePath;
-      }
-      const cron = Object.keys(fileCron).length > 0 ? fileCron : undefined;
-
-      const config = {
-        ...fileConfig,
-        agents,
-        bindings: testState.bindingsConfig ?? fileBindings,
-        channels,
-        session,
-        gateway,
-        canvasHost,
-        hooks,
-        cron,
-      };
-      return applyPluginAutoEnable({ config, env: process.env }).config;
+      return applyPluginAutoEnable({ config: composeTestConfig(fileConfig), env: process.env })
+        .config;
     },
     parseConfigJson5: (raw: string) => {
       try {
@@ -540,9 +550,9 @@ vi.mock("../config/config.js", async () => {
   };
 });
 
-vi.mock("../agents/pi-embedded.js", async () => {
-  const actual = await vi.importActual<typeof import('../agents/pi-embedded')>(
-    "../agents/pi-embedded.js",
+vi.mock("../agents/pi-embedded", async () => {
+  const actual = await vi.importActual<typeof import("../agents/pi-embedded")>(
+    "../agents/pi-embedded",
   );
   return {
     ...actual,
@@ -558,21 +568,21 @@ vi.mock("../agents/pi-embedded.js", async () => {
   };
 });
 
-vi.mock("../commands/health.js", () => ({
+vi.mock("../commands/health", () => ({
   getHealthSnapshot: vi.fn().mockResolvedValue({ ok: true, stub: true }),
 }));
-vi.mock("../commands/status.js", () => ({
+vi.mock("../commands/status", () => ({
   getStatusSummary: vi.fn().mockResolvedValue({ ok: true }),
 }));
-vi.mock("../web/outbound.js", () => ({
+vi.mock("@/src-backend/extensions/whatsapp/runtime-api", () => ({
   sendMessageWhatsApp: (...args: unknown[]) =>
     (hoisted.sendWhatsAppMock as (...args: unknown[]) => unknown)(...args),
   sendPollWhatsApp: (...args: unknown[]) =>
     (hoisted.sendWhatsAppMock as (...args: unknown[]) => unknown)(...args),
 }));
-vi.mock("../channels/web/index.js", async () => {
-  const actual = await vi.importActual<typeof import('../channels/web/index')>(
-    "../channels/web/index.js",
+vi.mock("../channels/web/index", async () => {
+  const actual = await vi.importActual<typeof import("../channels/web/index")>(
+    "../channels/web/index",
   );
   return {
     ...actual,
@@ -580,14 +590,16 @@ vi.mock("../channels/web/index.js", async () => {
       (hoisted.sendWhatsAppMock as (...args: unknown[]) => unknown)(...args),
   };
 });
-vi.mock("../commands/agent.js", () => ({
+vi.mock("../commands/agent", () => ({
   agentCommand,
+  agentCommandFromIngress: agentCommand,
 }));
-vi.mock("../auto-reply/reply.js", () => ({
-  getReplyFromConfig,
+vi.mock("../auto-reply/reply", () => ({
+  getReplyFromConfig: (...args: Parameters<GetReplyFromConfigFn>) =>
+    hoisted.getReplyFromConfig(...args),
 }));
-vi.mock("../cli/deps.js", async () => {
-  const actual = await vi.importActual<typeof import('../cli/deps')>("../cli/deps.js");
+vi.mock("../cli/deps", async () => {
+  const actual = await vi.importActual<typeof import("../cli/deps")>("../cli/deps");
   const base = actual.createDefaultDeps();
   return {
     ...actual,
@@ -599,9 +611,9 @@ vi.mock("../cli/deps.js", async () => {
   };
 });
 
-vi.mock("../plugins/loader.js", async () => {
+vi.mock("../plugins/loader", async () => {
   const actual =
-    await vi.importActual<typeof import('../plugins/loader')>("../plugins/loader.js");
+    await vi.importActual<typeof import("../plugins/loader")>("../plugins/loader");
   return {
     ...actual,
     loadPowerDirectorPlugins: () => pluginRegistryState.registry,

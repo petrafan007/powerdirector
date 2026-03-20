@@ -1,25 +1,114 @@
-import { lookupContextTokens } from '../agents/context';
-import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
-import { resolveConfiguredModelRef } from '../agents/model-selection';
-import { loadConfig } from '../config/config';
-import {
-  loadSessionStore,
-  resolveFreshSessionTotalTokens,
-  resolveMainSessionKey,
-  resolveStorePath,
-  type SessionEntry,
-} from '../config/sessions';
-import {
-  classifySessionKey,
-  listAgentsForGateway,
-  resolveSessionModelRef,
-} from '../gateway/session-utils';
-import { buildChannelSummary } from '../infra/channel-summary';
-import { resolveHeartbeatSummaryForAgent } from '../infra/heartbeat-runner';
-import { peekSystemEvents } from '../infra/system-events';
-import { parseAgentSessionKey } from '../routing/session-key';
-import { resolveLinkChannelContext } from './status.link-channel';
-import type { HeartbeatStatus, SessionStatus, StatusSummary } from './status.types';
+import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults";
+import { hasPotentialConfiguredChannels } from "../channels/config-presence";
+import { resolveAgentModelPrimaryValue } from "../config/model-input";
+import { resolveMainSessionKey } from "../config/sessions/main-session";
+import { resolveStorePath } from "../config/sessions/paths";
+import { readSessionStoreReadOnly } from "../config/sessions/store-read";
+import { resolveFreshSessionTotalTokens, type SessionEntry } from "../config/sessions/types";
+import type { PowerDirectorConfig } from "../config/types";
+import { listGatewayAgentsBasic } from "../gateway/agent-list";
+import { resolveHeartbeatSummaryForAgent } from "../infra/heartbeat-summary";
+import { peekSystemEvents } from "../infra/system-events";
+import { parseAgentSessionKey } from "../routing/session-key";
+import { createLazyRuntimeSurface } from "../shared/lazy-runtime";
+import { resolveRuntimeServiceVersion } from "../version";
+import type { HeartbeatStatus, SessionStatus, StatusSummary } from "./status.types";
+
+let channelSummaryModulePromise: Promise<typeof import("../infra/channel-summary")> | undefined;
+let linkChannelModulePromise: Promise<typeof import("./status.link-channel")> | undefined;
+let configIoModulePromise: Promise<typeof import("../config/io")> | undefined;
+
+function loadChannelSummaryModule() {
+  channelSummaryModulePromise ??= import("../infra/channel-summary");
+  return channelSummaryModulePromise;
+}
+
+function loadLinkChannelModule() {
+  linkChannelModulePromise ??= import("./status.link-channel");
+  return linkChannelModulePromise;
+}
+
+const loadStatusSummaryRuntimeModule = createLazyRuntimeSurface(
+  () => import("./status.summary.runtime"),
+  ({ statusSummaryRuntime }) => statusSummaryRuntime,
+);
+
+function loadConfigIoModule() {
+  configIoModulePromise ??= import("../config/io");
+  return configIoModulePromise;
+}
+
+function parseStatusModelRef(
+  raw: string,
+  defaultProvider: string,
+): { provider: string; model: string } | null {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return null;
+  }
+  const slash = trimmed.indexOf("/");
+  if (slash === -1) {
+    return { provider: defaultProvider, model: trimmed };
+  }
+  const provider = trimmed.slice(0, slash).trim();
+  const model = trimmed.slice(slash + 1).trim();
+  if (!provider || !model) {
+    return null;
+  }
+  return { provider, model };
+}
+
+function resolveConfiguredStatusModelRef(params: {
+  cfg: PowerDirectorConfig;
+  defaultProvider: string;
+  defaultModel: string;
+}): { provider: string; model: string } {
+  const rawModel = resolveAgentModelPrimaryValue(params.cfg.agents?.defaults?.model) ?? "";
+  if (rawModel) {
+    const trimmed = rawModel.trim();
+    const configuredModels = params.cfg.agents?.defaults?.models ?? {};
+    if (!trimmed.includes("/")) {
+      const aliasKey = trimmed.toLowerCase();
+      for (const [modelKey, entry] of Object.entries(configuredModels)) {
+        const aliasValue = (entry as { alias?: unknown } | undefined)?.alias;
+        const alias = typeof aliasValue === "string" ? aliasValue.trim() : "";
+        if (!alias || alias.toLowerCase() !== aliasKey) {
+          continue;
+        }
+        const parsed = parseStatusModelRef(modelKey, params.defaultProvider);
+        if (parsed) {
+          return parsed;
+        }
+      }
+      return { provider: "anthropic", model: trimmed };
+    }
+    const parsed = parseStatusModelRef(trimmed, params.defaultProvider);
+    if (parsed) {
+      return parsed;
+    }
+  }
+
+  const configuredProviders = params.cfg.models?.providers;
+  if (configuredProviders && typeof configuredProviders === "object") {
+    const hasDefaultProvider = Boolean(configuredProviders[params.defaultProvider]);
+    if (!hasDefaultProvider) {
+      const availableProvider = Object.entries(configuredProviders).find(
+        ([, providerCfg]) =>
+          providerCfg &&
+          Array.isArray(providerCfg.models) &&
+          providerCfg.models.length > 0 &&
+          providerCfg.models[0]?.id,
+      );
+      if (availableProvider) {
+        const [providerName, providerCfg] = availableProvider;
+        const firstModel = providerCfg.models[0];
+        return { provider: providerName, model: firstModel.id };
+      }
+    }
+  }
+
+  return { provider: params.defaultProvider, model: params.defaultModel };
+}
 
 const buildFlags = (entry?: SessionEntry): string[] => {
   if (!entry) {
@@ -33,6 +122,9 @@ const buildFlags = (entry?: SessionEntry): string[] => {
   const verbose = entry?.verboseLevel;
   if (typeof verbose === "string" && verbose.length > 0) {
     flags.push(`verbose:${verbose}`);
+  }
+  if (typeof entry?.fastMode === "boolean") {
+    flags.push(entry.fastMode ? "fast" : "fast:off");
   }
   const reasoning = entry?.reasoningLevel;
   if (typeof reasoning === "string" && reasoning.length > 0) {
@@ -76,12 +168,23 @@ export function redactSensitiveStatusSummary(summary: StatusSummary): StatusSumm
 }
 
 export async function getStatusSummary(
-  options: { includeSensitive?: boolean } = {},
+  options: {
+    includeSensitive?: boolean;
+    config?: PowerDirectorConfig;
+    sourceConfig?: PowerDirectorConfig;
+  } = {},
 ): Promise<StatusSummary> {
   const { includeSensitive = true } = options;
-  const cfg = loadConfig();
-  const linkContext = await resolveLinkChannelContext(cfg);
-  const agentList = listAgentsForGateway(cfg);
+  const { classifySessionKey, resolveContextTokensForModel, resolveSessionModelRef } =
+    await loadStatusSummaryRuntimeModule();
+  const cfg = options.config ?? (await loadConfigIoModule()).loadConfig();
+  const needsChannelPlugins = hasPotentialConfiguredChannels(cfg);
+  const linkContext = needsChannelPlugins
+    ? await loadLinkChannelModule().then(({ resolveLinkChannelContext }) =>
+        resolveLinkChannelContext(cfg),
+      )
+    : null;
+  const agentList = listGatewayAgentsBasic(cfg);
   const heartbeatAgents: HeartbeatStatus[] = agentList.agents.map((agent) => {
     const summary = resolveHeartbeatSummaryForAgent(cfg, agent.id);
     return {
@@ -91,23 +194,32 @@ export async function getStatusSummary(
       everyMs: summary.everyMs,
     } satisfies HeartbeatStatus;
   });
-  const channelSummary = await buildChannelSummary(cfg, {
-    colorize: true,
-    includeAllowFrom: true,
-  });
+  const channelSummary = needsChannelPlugins
+    ? await loadChannelSummaryModule().then(({ buildChannelSummary }) =>
+        buildChannelSummary(cfg, {
+          colorize: true,
+          includeAllowFrom: true,
+          sourceConfig: options.sourceConfig,
+        }),
+      )
+    : [];
   const mainSessionKey = resolveMainSessionKey(cfg);
   const queuedSystemEvents = peekSystemEvents(mainSessionKey);
 
-  const resolved = resolveConfiguredModelRef({
+  const resolved = resolveConfiguredStatusModelRef({
     cfg,
     defaultProvider: DEFAULT_PROVIDER,
     defaultModel: DEFAULT_MODEL,
   });
   const configModel = resolved.model ?? DEFAULT_MODEL;
   const configContextTokens =
-    cfg.agents?.defaults?.contextTokens ??
-    lookupContextTokens(configModel) ??
-    DEFAULT_CONTEXT_TOKENS;
+    resolveContextTokensForModel({
+      cfg,
+      provider: resolved.provider ?? DEFAULT_PROVIDER,
+      model: configModel,
+      contextTokensOverride: cfg.agents?.defaults?.contextTokens,
+      fallbackContextTokens: DEFAULT_CONTEXT_TOKENS,
+    }) ?? DEFAULT_CONTEXT_TOKENS;
 
   const now = Date.now();
   const storeCache = new Map<string, Record<string, SessionEntry | undefined>>();
@@ -116,7 +228,7 @@ export async function getStatusSummary(
     if (cached) {
       return cached;
     }
-    const store = loadSessionStore(storePath);
+    const store = readSessionStoreReadOnly(storePath);
     storeCache.set(storePath, store);
     return store;
   };
@@ -132,7 +244,13 @@ export async function getStatusSummary(
         const resolvedModel = resolveSessionModelRef(cfg, entry, opts.agentIdOverride);
         const model = resolvedModel.model ?? configModel ?? null;
         const contextTokens =
-          entry?.contextTokens ?? lookupContextTokens(model) ?? configContextTokens ?? null;
+          resolveContextTokensForModel({
+            cfg,
+            provider: resolvedModel.provider,
+            model,
+            contextTokensOverride: entry?.contextTokens,
+            fallbackContextTokens: configContextTokens ?? undefined,
+          }) ?? null;
         const total = resolveFreshSessionTotalTokens(entry);
         const totalTokensFresh =
           typeof entry?.totalTokens === "number" ? entry?.totalTokensFresh !== false : false;
@@ -153,6 +271,7 @@ export async function getStatusSummary(
           updatedAt,
           age,
           thinkingLevel: entry?.thinkingLevel,
+          fastMode: entry?.fastMode,
           verboseLevel: entry?.verboseLevel,
           reasoningLevel: entry?.reasoningLevel,
           elevatedLevel: entry?.elevatedLevel,
@@ -160,6 +279,8 @@ export async function getStatusSummary(
           abortedLastRun: entry?.abortedLastRun,
           inputTokens: entry?.inputTokens,
           outputTokens: entry?.outputTokens,
+          cacheRead: entry?.cacheRead,
+          cacheWrite: entry?.cacheWrite,
           totalTokens: total ?? null,
           totalTokensFresh,
           remainingTokens: remaining,
@@ -192,6 +313,7 @@ export async function getStatusSummary(
   const totalSessions = allSessions.length;
 
   const summary: StatusSummary = {
+    runtimeVersion: resolveRuntimeServiceVersion(process.env),
     linkChannel: linkContext
       ? {
           id: linkContext.plugin.id,

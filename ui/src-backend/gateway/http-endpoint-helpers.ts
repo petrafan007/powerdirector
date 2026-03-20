@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { AuthRateLimiter } from './auth-rate-limit';
-import type { ResolvedGatewayAuth } from './auth';
-import { authorizeGatewayBearerRequestOrReply } from './http-auth-helpers';
-import { readJsonBodyOrError, sendMethodNotAllowed } from './http-common';
+import type { AuthRateLimiter } from "./auth-rate-limit";
+import type { ResolvedGatewayAuth } from "./auth";
+import { authorizeGatewayBearerRequestOrReply } from "./http-auth-helpers";
+import { readJsonBodyOrError, sendMethodNotAllowed } from "./http-common";
 
 export async function handleGatewayPostJsonEndpoint(
   req: IncomingMessage,
@@ -12,6 +12,7 @@ export async function handleGatewayPostJsonEndpoint(
     auth: ResolvedGatewayAuth;
     maxBodyBytes: number;
     trustedProxies?: string[];
+    allowRealIpFallback?: boolean;
     rateLimiter?: AuthRateLimiter;
   },
 ): Promise<false | { body: unknown } | undefined> {
@@ -30,6 +31,7 @@ export async function handleGatewayPostJsonEndpoint(
     res,
     auth: opts.auth,
     trustedProxies: opts.trustedProxies,
+    allowRealIpFallback: opts.allowRealIpFallback,
     rateLimiter: opts.rateLimiter,
   });
   if (!authorized) {

@@ -1,7 +1,8 @@
-import { createAccountListHelpers } from '../channels/plugins/account-helpers';
-import type { PowerDirectorConfig } from '../config/config';
-import type { SignalAccountConfig } from '../config/types';
-import { normalizeAccountId } from '../routing/session-key';
+import { createAccountListHelpers } from "../channels/plugins/account-helpers";
+import type { PowerDirectorConfig } from "../config/config";
+import type { SignalAccountConfig } from "../config/types";
+import { resolveAccountEntry } from "../routing/account-lookup";
+import { normalizeAccountId } from "../routing/session-key";
 
 export type ResolvedSignalAccount = {
   accountId: string;
@@ -20,11 +21,7 @@ function resolveAccountConfig(
   cfg: PowerDirectorConfig,
   accountId: string,
 ): SignalAccountConfig | undefined {
-  const accounts = cfg.channels?.signal?.accounts;
-  if (!accounts || typeof accounts !== "object") {
-    return undefined;
-  }
-  return accounts[accountId] as SignalAccountConfig | undefined;
+  return resolveAccountEntry(cfg.channels?.signal?.accounts, accountId);
 }
 
 function mergeSignalAccountConfig(cfg: PowerDirectorConfig, accountId: string): SignalAccountConfig {

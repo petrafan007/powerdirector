@@ -1,14 +1,14 @@
 import type { Command } from "commander";
-import { resolveChannelDefaultAccountId } from '../channels/plugins/helpers';
-import { getChannelPlugin } from '../channels/plugins/index';
-import { loadConfig } from '../config/config';
-import { danger } from '../globals';
-import { resolveMessageChannelSelection } from '../infra/outbound/channel-selection';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { renderTable } from '../terminal/table';
-import { theme } from '../terminal/theme';
-import { formatHelpExamples } from './help-format';
+import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers";
+import { getChannelPlugin } from "../channels/plugins/index";
+import { loadConfig } from "../config/config";
+import { danger } from "../globals";
+import { resolveMessageChannelSelection } from "../infra/outbound/channel-selection";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { getTerminalTableWidth, renderTable } from "../terminal/table";
+import { theme } from "../terminal/theme";
+import { formatHelpExamples } from "./help-format";
 
 function parseLimit(value: unknown): number | null {
   if (typeof value === "number" && Number.isFinite(value)) {
@@ -48,7 +48,7 @@ function printDirectoryList(params: {
     return;
   }
 
-  const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+  const tableWidth = getTerminalTableWidth();
   defaultRuntime.log(`${theme.heading(params.title)} ${theme.muted(`(${params.entries.length})`)}`);
   defaultRuntime.log(
     renderTable({
@@ -166,7 +166,7 @@ export function registerDirectoryCli(program: Command) {
           defaultRuntime.log(theme.muted("Not available."));
           return;
         }
-        const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+        const tableWidth = getTerminalTableWidth();
         defaultRuntime.log(theme.heading("Self"));
         defaultRuntime.log(
           renderTable({

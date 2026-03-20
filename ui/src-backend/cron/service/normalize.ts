@@ -1,6 +1,6 @@
-import { normalizeAgentId } from '../../routing/session-key';
-import { truncateUtf16Safe } from '../../utils';
-import type { CronPayload } from '../types';
+import { normalizeAgentId } from "../../routing/session-key";
+import { truncateUtf16Safe } from "../../utils";
+import type { CronPayload } from "../types";
 
 export function normalizeRequiredName(raw: unknown) {
   if (typeof raw !== "string") {

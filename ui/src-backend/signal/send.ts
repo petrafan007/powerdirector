@@ -1,13 +1,14 @@
-import { loadConfig } from '../config/config';
-import { resolveMarkdownTableMode } from '../config/markdown-tables';
-import { mediaKindFromMime } from '../media/constants';
-import { resolveOutboundAttachmentFromUrl } from '../media/outbound-attachment';
-import { resolveSignalAccount } from './accounts';
-import { signalRpcRequest } from './client';
-import { markdownToSignalText, type SignalTextStyleRange } from './format';
-import { resolveSignalRpcContext } from './rpc-context';
+import { loadConfig, type PowerDirectorConfig } from "../config/config";
+import { resolveMarkdownTableMode } from "../config/markdown-tables";
+import { kindFromMime } from "../media/mime";
+import { resolveOutboundAttachmentFromUrl } from "../media/outbound-attachment";
+import { resolveSignalAccount } from "./accounts";
+import { signalRpcRequest } from "./client";
+import { markdownToSignalText, type SignalTextStyleRange } from "./format";
+import { resolveSignalRpcContext } from "./rpc-context";
 
 export type SignalSendOpts = {
+  cfg?: PowerDirectorConfig;
   baseUrl?: string;
   account?: string;
   accountId?: string;
@@ -100,7 +101,7 @@ export async function sendMessageSignal(
   text: string,
   opts: SignalSendOpts = {},
 ): Promise<SignalSendResult> {
-  const cfg = loadConfig();
+  const cfg = opts.cfg ?? loadConfig();
   const accountInfo = resolveSignalAccount({
     cfg,
     accountId: opts.accountId,
@@ -130,7 +131,7 @@ export async function sendMessageSignal(
       localRoots: opts.mediaLocalRoots,
     });
     attachments = [resolved.path];
-    const kind = mediaKindFromMime(resolved.contentType ?? undefined);
+    const kind = kindFromMime(resolved.contentType ?? undefined);
     if (!message && kind) {
       // Avoid sending an empty body when only attachments exist.
       message = kind === "image" ? "<media:image>" : `<media:${kind}>`;

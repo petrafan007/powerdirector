@@ -1,23 +1,12 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionEntry } from '../config/sessions';
+import type { PowerDirectorConfig } from "../config/config";
+import type { SessionEntry } from "../config/sessions";
 import {
   ensureAuthProfileStore,
   resolveAuthProfileDisplayLabel,
   resolveAuthProfileOrder,
-} from './auth-profiles';
-import { getCustomProviderApiKey, resolveEnvApiKey } from './model-auth';
-import { normalizeProviderId } from './model-selection';
-
-function formatApiKeySnippet(apiKey: string): string {
-  const compact = apiKey.replace(/\s+/g, "");
-  if (!compact) {
-    return "unknown";
-  }
-  const edge = compact.length >= 12 ? 6 : 4;
-  const head = compact.slice(0, edge);
-  const tail = compact.slice(-edge);
-  return `${head}…${tail}`;
-}
+} from "./auth-profiles";
+import { resolveEnvApiKey, resolveUsableCustomProviderApiKey } from "./model-auth";
+import { normalizeProviderId } from "./model-selection";
 
 export function resolveModelAuthLabel(params: {
   provider?: string;
@@ -57,9 +46,9 @@ export function resolveModelAuthLabel(params: {
       return `oauth${label ? ` (${label})` : ""}`;
     }
     if (profile.type === "token") {
-      return `token ${formatApiKeySnippet(profile.token)}${label ? ` (${label})` : ""}`;
+      return `token${label ? ` (${label})` : ""}`;
     }
-    return `api-key ${formatApiKeySnippet(profile.key ?? "")}${label ? ` (${label})` : ""}`;
+    return `api-key${label ? ` (${label})` : ""}`;
   }
 
   const envKey = resolveEnvApiKey(providerKey);
@@ -67,12 +56,15 @@ export function resolveModelAuthLabel(params: {
     if (envKey.source.includes("OAUTH_TOKEN")) {
       return `oauth (${envKey.source})`;
     }
-    return `api-key ${formatApiKeySnippet(envKey.apiKey)} (${envKey.source})`;
+    return `api-key (${envKey.source})`;
   }
 
-  const customKey = getCustomProviderApiKey(params.cfg, providerKey);
+  const customKey = resolveUsableCustomProviderApiKey({
+    cfg: params.cfg,
+    provider: providerKey,
+  });
   if (customKey) {
-    return `api-key ${formatApiKeySnippet(customKey)} (models.json)`;
+    return `api-key (models.json)`;
   }
 
   return "unknown";

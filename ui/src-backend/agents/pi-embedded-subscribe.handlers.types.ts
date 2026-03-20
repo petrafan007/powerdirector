@@ -1,19 +1,19 @@
 import type { AgentEvent, AgentMessage } from "@mariozechner/pi-agent-core";
-import type { ReplyDirectiveParseResult } from '../auto-reply/reply/reply-directives';
-import type { ReasoningLevel } from '../auto-reply/thinking';
-import type { InlineCodeState } from '../markdown/code-spans';
-import type { HookRunner } from '../plugins/hooks';
-import type { EmbeddedBlockChunker } from './pi-embedded-block-chunker';
-import type { MessagingToolSend } from './pi-embedded-messaging';
+import type { ReplyDirectiveParseResult } from "../auto-reply/reply/reply-directives";
+import type { ReasoningLevel } from "../auto-reply/thinking";
+import type { InlineCodeState } from "../markdown/code-spans";
+import type { HookRunner } from "../plugins/hooks";
+import type { EmbeddedBlockChunker } from "./pi-embedded-block-chunker";
+import type { MessagingToolSend } from "./pi-embedded-messaging";
 import type {
   BlockReplyChunking,
   SubscribeEmbeddedPiSessionParams,
-} from './pi-embedded-subscribe.types';
-import type { NormalizedUsage } from './usage';
+} from "./pi-embedded-subscribe.types";
+import type { NormalizedUsage } from "./usage";
 
 export type EmbeddedSubscribeLogger = {
-  debug: (message: string) => void;
-  warn: (message: string) => void;
+  debug: (message: string, meta?: Record<string, unknown>) => void;
+  warn: (message: string, meta?: Record<string, unknown>) => void;
 };
 
 export type ToolErrorSummary = {
@@ -76,6 +76,7 @@ export type EmbeddedPiSubscribeState = {
   pendingMessagingTargets: Map<string, MessagingToolSend>;
   successfulCronAdds: number;
   pendingMessagingMediaUrls: Map<string, string[]>;
+  deterministicApprovalPromptSent: boolean;
   lastAssistant?: AgentMessage;
 };
 
@@ -132,7 +133,13 @@ export type EmbeddedPiSubscribeContext = {
  */
 export type ToolHandlerParams = Pick<
   SubscribeEmbeddedPiSessionParams,
-  "runId" | "onBlockReplyFlush" | "onAgentEvent" | "onToolResult"
+  | "runId"
+  | "onBlockReplyFlush"
+  | "onAgentEvent"
+  | "onToolResult"
+  | "sessionKey"
+  | "sessionId"
+  | "agentId"
 >;
 
 export type ToolHandlerState = Pick<
@@ -149,6 +156,7 @@ export type ToolHandlerState = Pick<
   | "messagingToolSentMediaUrls"
   | "messagingToolSentTargets"
   | "successfulCronAdds"
+  | "deterministicApprovalPromptSent"
 >;
 
 export type ToolHandlerContext = {

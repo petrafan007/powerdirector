@@ -1,16 +1,21 @@
-import { formatCliCommand } from '../cli/command-format';
-import { readConfigFileSnapshot } from '../config/config';
-import { assertSupportedRuntime } from '../infra/runtime-guard';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { resolveUserPath } from '../utils';
-import { isDeprecatedAuthChoice, normalizeLegacyOnboardAuthChoice } from './auth-choice-legacy';
-import { DEFAULT_WORKSPACE, handleReset } from './onboard-helpers';
-import { runInteractiveOnboarding } from './onboard-interactive';
-import { runNonInteractiveOnboarding } from './onboard-non-interactive';
-import type { OnboardOptions } from './onboard-types';
+import { formatCliCommand } from "../cli/command-format";
+import { readConfigFileSnapshot } from "../config/config";
+import { assertSupportedRuntime } from "../infra/runtime-guard";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { resolveUserPath } from "../utils";
+import { isDeprecatedAuthChoice, normalizeLegacyOnboardAuthChoice } from "./auth-choice-legacy";
+import { DEFAULT_WORKSPACE, handleReset } from "./onboard-helpers";
+import { runInteractiveSetup } from "./onboard-interactive";
+import { runNonInteractiveSetup } from "./onboard-non-interactive";
+import type { OnboardOptions, ResetScope } from "./onboard-types";
 
-export async function onboardCommand(opts: OnboardOptions, runtime: RuntimeEnv = defaultRuntime) {
+const VALID_RESET_SCOPES = new Set<ResetScope>(["config", "config+creds+sessions", "full"]);
+
+export async function setupWizardCommand(
+  opts: OnboardOptions,
+  runtime: RuntimeEnv = defaultRuntime,
+) {
   assertSupportedRuntime(runtime);
   const originalAuthChoice = opts.authChoice;
   const normalizedAuthChoice = normalizeLegacyOnboardAuthChoice(originalAuthChoice);
@@ -35,11 +40,26 @@ export async function onboardCommand(opts: OnboardOptions, runtime: RuntimeEnv =
     normalizedAuthChoice === opts.authChoice && flow === opts.flow
       ? opts
       : { ...opts, authChoice: normalizedAuthChoice, flow };
+  if (
+    normalizedOpts.secretInputMode &&
+    normalizedOpts.secretInputMode !== "plaintext" && // pragma: allowlist secret
+    normalizedOpts.secretInputMode !== "ref" // pragma: allowlist secret
+  ) {
+    runtime.error('Invalid --secret-input-mode. Use "plaintext" or "ref".');
+    runtime.exit(1);
+    return;
+  }
+
+  if (normalizedOpts.resetScope && !VALID_RESET_SCOPES.has(normalizedOpts.resetScope)) {
+    runtime.error('Invalid --reset-scope. Use "config", "config+creds+sessions", or "full".');
+    runtime.exit(1);
+    return;
+  }
 
   if (normalizedOpts.nonInteractive && normalizedOpts.acceptRisk !== true) {
     runtime.error(
       [
-        "Non-interactive onboarding requires explicit risk acknowledgement.",
+        "Non-interactive setup requires explicit risk acknowledgement.",
         "Read: https://docs.powerdirector.ai/security",
         `Re-run with: ${formatCliCommand("powerdirector onboard --non-interactive --accept-risk ...")}`,
       ].join("\n"),
@@ -53,13 +73,14 @@ export async function onboardCommand(opts: OnboardOptions, runtime: RuntimeEnv =
     const baseConfig = snapshot.valid ? snapshot.config : {};
     const workspaceDefault =
       normalizedOpts.workspace ?? baseConfig.agents?.defaults?.workspace ?? DEFAULT_WORKSPACE;
-    await handleReset("full", resolveUserPath(workspaceDefault), runtime);
+    const resetScope: ResetScope = normalizedOpts.resetScope ?? "config+creds+sessions";
+    await handleReset(resetScope, resolveUserPath(workspaceDefault), runtime);
   }
 
   if (process.platform === "win32") {
     runtime.log(
       [
-        "Windows detected — PowerDirector runs great on WSL2!",
+        "Windows detected - PowerDirector runs great on WSL2!",
         "Native Windows might be trickier.",
         "Quick setup: wsl --install (one command, one reboot)",
         "Guide: https://docs.powerdirector.ai/windows",
@@ -68,11 +89,14 @@ export async function onboardCommand(opts: OnboardOptions, runtime: RuntimeEnv =
   }
 
   if (normalizedOpts.nonInteractive) {
-    await runNonInteractiveOnboarding(normalizedOpts, runtime);
+    await runNonInteractiveSetup(normalizedOpts, runtime);
     return;
   }
 
-  await runInteractiveOnboarding(normalizedOpts, runtime);
+  await runInteractiveSetup(normalizedOpts, runtime);
 }
 
-export type { OnboardOptions } from './onboard-types';
+export const onboardCommand = setupWizardCommand;
+
+export type { OnboardOptions } from "./onboard-types";
+export type { OnboardOptions as SetupWizardOptions } from "./onboard-types";

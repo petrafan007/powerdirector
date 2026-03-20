@@ -2,12 +2,13 @@ import crypto from "node:crypto";
 import path from "node:path";
 import type { AgentMessage, StreamFn } from "@mariozechner/pi-agent-core";
 import type { Api, Model } from "@mariozechner/pi-ai";
-import { resolveStateDir } from '../config/paths';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { resolveUserPath } from '../utils';
-import { parseBooleanValue } from '../utils/boolean';
-import { safeJsonStringify } from '../utils/safe-json';
-import { getQueuedFileWriter, type QueuedFileWriter } from './queued-file-writer';
+import { resolveStateDir } from "../config/paths";
+import { createSubsystemLogger } from "../logging/subsystem";
+import { resolveUserPath } from "../utils";
+import { parseBooleanValue } from "../utils/boolean";
+import { safeJsonStringify } from "../utils/safe-json";
+import { redactImageDataForDiagnostics } from "./payload-redaction";
+import { getQueuedFileWriter, type QueuedFileWriter } from "./queued-file-writer";
 
 type PayloadLogStage = "request" | "usage";
 
@@ -103,6 +104,7 @@ export function createAnthropicPayloadLogger(params: {
   modelId?: string;
   modelApi?: string | null;
   workspaceDir?: string;
+  writer?: PayloadLogWriter;
 }): AnthropicPayloadLogger | null {
   const env = params.env ?? process.env;
   const cfg = resolvePayloadLogConfig(env);
@@ -110,7 +112,7 @@ export function createAnthropicPayloadLogger(params: {
     return null;
   }
 
-  const writer = getWriter(cfg.filePath);
+  const writer = params.writer ?? getWriter(cfg.filePath);
   const base: Omit<PayloadLogEvent, "ts" | "stage"> = {
     runId: params.runId,
     sessionId: params.sessionId,
@@ -135,14 +137,15 @@ export function createAnthropicPayloadLogger(params: {
         return streamFn(model, context, options);
       }
       const nextOnPayload = (payload: unknown) => {
+        const redactedPayload = redactImageDataForDiagnostics(payload);
         record({
           ...base,
           ts: new Date().toISOString(),
           stage: "request",
-          payload,
-          payloadDigest: digest(payload),
+          payload: redactedPayload,
+          payloadDigest: digest(redactedPayload),
         });
-        options?.onPayload?.(payload);
+        return options?.onPayload?.(payload, model);
       };
       return streamFn(model, context, {
         ...options,

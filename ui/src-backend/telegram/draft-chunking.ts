@@ -1,7 +1,8 @@
-import { resolveTextChunkLimit } from '../auto-reply/chunk';
-import { getChannelDock } from '../channels/dock';
-import type { PowerDirectorConfig } from '../config/config';
-import { normalizeAccountId } from '../routing/session-key';
+import { resolveTextChunkLimit } from "../auto-reply/chunk";
+import { getChannelDock } from "../channels/dock";
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveAccountEntry } from "../routing/account-lookup";
+import { normalizeAccountId } from "../routing/session-key";
 
 const DEFAULT_TELEGRAM_DRAFT_STREAM_MIN = 200;
 const DEFAULT_TELEGRAM_DRAFT_STREAM_MAX = 800;
@@ -19,9 +20,8 @@ export function resolveTelegramDraftStreamingChunking(
     fallbackLimit: providerChunkLimit,
   });
   const normalizedAccountId = normalizeAccountId(accountId);
-  const draftCfg =
-    cfg?.channels?.telegram?.accounts?.[normalizedAccountId]?.draftChunk ??
-    cfg?.channels?.telegram?.draftChunk;
+  const accountCfg = resolveAccountEntry(cfg?.channels?.telegram?.accounts, normalizedAccountId);
+  const draftCfg = accountCfg?.draftChunk ?? cfg?.channels?.telegram?.draftChunk;
 
   const maxRequested = Math.max(
     1,

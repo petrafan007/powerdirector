@@ -1,6 +1,7 @@
-import { resolveEmbeddedSessionLane } from '../../../agents/pi-embedded';
-import { clearCommandLane } from '../../../process/command-queue';
-import { clearFollowupQueue } from './state';
+import { resolveEmbeddedSessionLane } from "../../../agents/pi-embedded";
+import { clearCommandLane } from "../../../process/command-queue";
+import { clearFollowupDrainCallback } from "./drain";
+import { clearFollowupQueue } from "./state";
 
 export type ClearSessionQueueResult = {
   followupCleared: number;
@@ -22,6 +23,7 @@ export function clearSessionQueues(keys: Array<string | undefined>): ClearSessio
     seen.add(cleaned);
     clearedKeys.push(cleaned);
     followupCleared += clearFollowupQueue(cleaned);
+    clearFollowupDrainCallback(cleaned);
     laneCleared += clearCommandLane(resolveEmbeddedSessionLane(cleaned));
   }
 

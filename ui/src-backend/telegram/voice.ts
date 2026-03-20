@@ -1,4 +1,4 @@
-import { isTelegramVoiceCompatibleAudio } from '../media/audio';
+import { isTelegramVoiceCompatibleAudio } from "../media/audio";
 
 export function resolveTelegramVoiceDecision(opts: {
   wantsVoice: boolean;

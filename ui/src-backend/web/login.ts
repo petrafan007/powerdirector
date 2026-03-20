@@ -1,11 +1,11 @@
 import { DisconnectReason } from "@whiskeysockets/baileys";
-import { formatCliCommand } from '../cli/command-format';
-import { loadConfig } from '../config/config';
-import { danger, info, success } from '../globals';
-import { logInfo } from '../logger';
-import { defaultRuntime, type RuntimeEnv } from '../runtime';
-import { resolveWhatsAppAccount } from './accounts';
-import { createWaSocket, formatError, logoutWeb, waitForWaConnection } from './session';
+import { formatCliCommand } from "../cli/command-format";
+import { loadConfig } from "../config/config";
+import { danger, info, success } from "../globals";
+import { logInfo } from "../logger";
+import { defaultRuntime, type RuntimeEnv } from "../runtime";
+import { resolveWhatsAppAccount } from "./accounts";
+import { createWaSocket, formatError, logoutWeb, waitForWaConnection } from "./session";
 
 export async function loginWeb(
   verbose: boolean,

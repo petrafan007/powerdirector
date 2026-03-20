@@ -1,0 +1,19 @@
+import type { PowerDirectorConfig } from "../../config/config";
+import { buildAgentSessionKey, type RoutePeer } from "../../routing/resolve-route";
+
+export function buildOutboundBaseSessionKey(params: {
+  cfg: PowerDirectorConfig;
+  agentId: string;
+  channel: string;
+  accountId?: string | null;
+  peer: RoutePeer;
+}): string {
+  return buildAgentSessionKey({
+    agentId: params.agentId,
+    channel: params.channel,
+    accountId: params.accountId,
+    peer: params.peer,
+    dmScope: params.cfg.session?.dmScope ?? "main",
+    identityLinks: params.cfg.session?.identityLinks,
+  });
+}

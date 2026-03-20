@@ -1,0 +1,61 @@
+import type { PowerDirectorConfig } from "../config/config";
+import type { ExplicitGatewayAuth } from "./call";
+import { resolveGatewayCredentialsWithSecretInputs } from "./call";
+import type {
+  GatewayCredentialMode,
+  GatewayCredentialPrecedence,
+  GatewayRemoteCredentialFallback,
+  GatewayRemoteCredentialPrecedence,
+} from "./credentials";
+import { resolveGatewayCredentialsFromConfig } from "./credentials";
+
+export type GatewayConnectionAuthOptions = {
+  config: PowerDirectorConfig;
+  env?: NodeJS.ProcessEnv;
+  explicitAuth?: ExplicitGatewayAuth;
+  urlOverride?: string;
+  urlOverrideSource?: "cli" | "env";
+  modeOverride?: GatewayCredentialMode;
+  includeLegacyEnv?: boolean;
+  localTokenPrecedence?: GatewayCredentialPrecedence;
+  localPasswordPrecedence?: GatewayCredentialPrecedence;
+  remoteTokenPrecedence?: GatewayRemoteCredentialPrecedence;
+  remotePasswordPrecedence?: GatewayRemoteCredentialPrecedence;
+  remoteTokenFallback?: GatewayRemoteCredentialFallback;
+  remotePasswordFallback?: GatewayRemoteCredentialFallback;
+};
+
+function toGatewayCredentialOptions(
+  params: Omit<GatewayConnectionAuthOptions, "config"> & { cfg: PowerDirectorConfig },
+) {
+  return {
+    cfg: params.cfg,
+    env: params.env,
+    explicitAuth: params.explicitAuth,
+    urlOverride: params.urlOverride,
+    urlOverrideSource: params.urlOverrideSource,
+    modeOverride: params.modeOverride,
+    includeLegacyEnv: params.includeLegacyEnv,
+    localTokenPrecedence: params.localTokenPrecedence,
+    localPasswordPrecedence: params.localPasswordPrecedence,
+    remoteTokenPrecedence: params.remoteTokenPrecedence,
+    remotePasswordPrecedence: params.remotePasswordPrecedence,
+    remoteTokenFallback: params.remoteTokenFallback,
+    remotePasswordFallback: params.remotePasswordFallback,
+  };
+}
+
+export async function resolveGatewayConnectionAuth(
+  params: GatewayConnectionAuthOptions,
+): Promise<{ token?: string; password?: string }> {
+  return await resolveGatewayCredentialsWithSecretInputs({
+    config: params.config,
+    ...toGatewayCredentialOptions({ ...params, cfg: params.config }),
+  });
+}
+
+export function resolveGatewayConnectionAuthFromConfig(
+  params: Omit<GatewayConnectionAuthOptions, "config"> & { cfg: PowerDirectorConfig },
+): { token?: string; password?: string } {
+  return resolveGatewayCredentialsFromConfig(toGatewayCredentialOptions(params));
+}

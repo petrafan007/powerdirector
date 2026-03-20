@@ -1,29 +1,29 @@
-import type { AgentBinding, AgentsConfig } from './types.agents';
-import type { ApprovalsConfig } from './types.approvals';
-import type { AuthConfig } from './types.auth';
-import type { DiagnosticsConfig, LoggingConfig, SessionConfig, WebConfig } from './types.base';
-import type { BrowserConfig } from './types.browser';
-import type { ChannelsConfig } from './types.channels';
-import type { CronConfig } from './types.cron';
+import type { AgentBinding, AgentsConfig } from "./types.agents";
+import type { ApprovalsConfig } from "./types.approvals";
+import type { AuthConfig } from "./types.auth";
+import type { DiagnosticsConfig, LoggingConfig, SessionConfig, WebConfig } from "./types.base";
+import type { BrowserConfig } from "./types.browser";
+import type { ChannelsConfig } from "./types.channels";
+import type { CronConfig } from "./types.cron";
 import type {
   CanvasHostConfig,
   DiscoveryConfig,
   GatewayConfig,
   TalkConfig,
-} from './types.gateway';
-import type { HooksConfig } from './types.hooks';
-import type { MemoryConfig } from './types.memory';
+} from "./types.gateway";
+import type { HooksConfig } from "./types.hooks";
+import type { MemoryConfig } from "./types.memory";
 import type {
   AudioConfig,
   BroadcastConfig,
   CommandsConfig,
   MessagesConfig,
-} from './types.messages';
-import type { ModelsConfig } from './types.models';
-import type { NodeHostConfig } from './types.node-host';
-import type { PluginsConfig } from './types.plugins';
-import type { SkillsConfig } from './types.skills';
-import type { ToolsConfig } from './types.tools';
+} from "./types.messages";
+import type { ModelsConfig } from "./types.models";
+import type { NodeHostConfig } from "./types.node-host";
+import type { PluginsConfig } from "./types.plugins";
+import type { SkillsConfig } from "./types.skills";
+import type { ToolsConfig } from "./types.tools";
 
 export type PowerDirectorConfig = {
   meta?: {
@@ -44,10 +44,10 @@ export type PowerDirectorConfig = {
     vars?: Record<string, string>;
     /** Sugar: allow env vars directly under env (string values only). */
     [key: string]:
-      | string
-      | Record<string, string>
-      | { enabled?: boolean; timeoutMs?: number }
-      | undefined;
+    | string
+    | Record<string, string>
+    | { enabled?: boolean; timeoutMs?: number }
+    | undefined;
   };
   wizard?: {
     lastRunAt?: string;
@@ -63,6 +63,12 @@ export type PowerDirectorConfig = {
     channel?: "stable" | "beta" | "dev";
     /** Check for updates on gateway start (npm installs only). */
     checkOnStart?: boolean;
+    auto?: {
+      enabled?: boolean;
+      stableDelayHours?: number;
+      stableJitterHours?: number;
+      betaCheckIntervalHours?: number;
+    };
   };
   browser?: BrowserConfig;
   ui?: {

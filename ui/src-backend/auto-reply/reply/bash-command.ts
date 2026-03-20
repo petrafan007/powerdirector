@@ -1,15 +1,17 @@
-import { resolveSessionAgentId } from '../../agents/agent-scope';
-import { getFinishedSession, getSession, markExited } from '../../agents/bash-process-registry';
-import { createExecTool } from '../../agents/bash-tools';
-import { resolveSandboxRuntimeStatus } from '../../agents/sandbox';
-import { killProcessTree } from '../../agents/shell-utils';
-import type { PowerDirectorConfig } from '../../config/config';
-import { logVerbose } from '../../globals';
-import { clampInt } from '../../utils';
-import type { MsgContext } from '../templating';
-import type { ReplyPayload } from '../types';
-import { formatElevatedUnavailableMessage } from './elevated-unavailable';
-import { stripMentions, stripStructuralPrefixes } from './mentions';
+import { resolveSessionAgentId } from "../../agents/agent-scope";
+import { getFinishedSession, getSession, markExited } from "../../agents/bash-process-registry";
+import { createExecTool } from "../../agents/bash-tools";
+import { resolveSandboxRuntimeStatus } from "../../agents/sandbox";
+import { killProcessTree } from "../../agents/shell-utils";
+import { isCommandFlagEnabled } from "../../config/commands";
+import type { PowerDirectorConfig } from "../../config/config";
+import { logVerbose } from "../../globals";
+import { clampInt } from "../../utils";
+import type { MsgContext } from "../templating";
+import type { ReplyPayload } from "../types";
+import { buildDisabledCommandReply } from "./command-gates";
+import { formatElevatedUnavailableMessage } from "./elevated-unavailable";
+import { stripMentions, stripStructuralPrefixes } from "./mentions";
 
 const CHAT_BASH_SCOPE_KEY = "chat:bash";
 const DEFAULT_FOREGROUND_MS = 2000;
@@ -186,10 +188,12 @@ export async function handleBashChatCommand(params: {
     failures: Array<{ gate: string; key: string }>;
   };
 }): Promise<ReplyPayload> {
-  if (params.cfg.commands?.bash !== true) {
-    return {
-      text: "⚠️ bash is disabled. Set commands.bash=true to enable. Docs: https://docs.powerdirector.ai/tools/slash-commands#config",
-    };
+  if (!isCommandFlagEnabled(params.cfg, "bash")) {
+    return buildDisabledCommandReply({
+      label: "bash",
+      configKey: "bash",
+      docsUrl: "https://docs.powerdirector.ai/tools/slash-commands#config",
+    });
   }
 
   const agentId =

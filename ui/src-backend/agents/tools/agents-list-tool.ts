@@ -1,14 +1,14 @@
 import { Type } from "@sinclair/typebox";
-import { loadConfig } from '../../config/config';
+import { loadConfig } from "../../config/config";
 import {
   DEFAULT_AGENT_ID,
   normalizeAgentId,
   parseAgentSessionKey,
-} from '../../routing/session-key';
-import { resolveAgentConfig } from '../agent-scope';
-import type { AnyAgentTool } from './common';
-import { jsonResult } from './common';
-import { resolveInternalSessionKey, resolveMainSessionAlias } from './sessions-helpers';
+} from "../../routing/session-key";
+import { resolveAgentConfig } from "../agent-scope";
+import type { AnyAgentTool } from "./common";
+import { jsonResult } from "./common";
+import { resolveInternalSessionKey, resolveMainSessionAlias } from "./sessions-helpers";
 
 const AgentsListToolSchema = Type.Object({});
 
@@ -26,7 +26,8 @@ export function createAgentsListTool(opts?: {
   return {
     label: "Agents",
     name: "agents_list",
-    description: "List agent ids you can target with sessions_spawn (based on allowlists).",
+    description:
+      'List PowerDirector agent ids you can target with `sessions_spawn` when `runtime="subagent"` (based on subagent allowlists).',
     parameters: AgentsListToolSchema,
     execute: async () => {
       const cfg = loadConfig();

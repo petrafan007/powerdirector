@@ -1,4 +1,4 @@
-import type { ConsoleLoggerSettings, ConsoleStyle } from './logging/console';
+import type { ConsoleLoggerSettings, ConsoleStyle } from "./logging/console";
 import {
   enableConsoleCapture,
   getConsoleSettings,
@@ -8,10 +8,10 @@ import {
   setConsoleConfigLoaderForTests,
   setConsoleTimestampPrefix,
   shouldLogSubsystemToConsole,
-} from './logging/console';
-import type { LogLevel } from './logging/levels';
-import { ALLOWED_LOG_LEVELS, levelToMinLevel, normalizeLogLevel } from './logging/levels';
-import type { LoggerResolvedSettings, LoggerSettings, PinoLikeLogger } from './logging/logger';
+} from "./logging/console";
+import type { LogLevel } from "./logging/levels";
+import { ALLOWED_LOG_LEVELS, levelToMinLevel, normalizeLogLevel } from "./logging/levels";
+import type { LoggerResolvedSettings, LoggerSettings, PinoLikeLogger } from "./logging/logger";
 import {
   DEFAULT_LOG_DIR,
   DEFAULT_LOG_FILE,
@@ -22,14 +22,14 @@ import {
   resetLogger,
   setLoggerOverride,
   toPinoLikeLogger,
-} from './logging/logger';
-import type { SubsystemLogger } from './logging/subsystem';
+} from "./logging/logger";
+import type { SubsystemLogger } from "./logging/subsystem";
 import {
   createSubsystemLogger,
   createSubsystemRuntime,
   runtimeForLogger,
   stripRedundantSubsystemPrefixForConsole,
-} from './logging/subsystem';
+} from "./logging/subsystem";
 
 export {
   enableConsoleCapture,

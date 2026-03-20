@@ -1,11 +1,14 @@
 import { formatTimeAgo } from "../infra/format-time/format-relative.ts";
-import { formatTokenCount } from '../utils/usage-format';
-import { formatContextUsageLine } from './tui-formatters';
-import type { GatewayStatusSummary } from './tui-types';
+import { formatTokenCount } from "../utils/usage-format";
+import { formatContextUsageLine } from "./tui-formatters";
+import type { GatewayStatusSummary } from "./tui-types";
 
 export function formatStatusSummary(summary: GatewayStatusSummary) {
   const lines: string[] = [];
   lines.push("Gateway status");
+  if (summary.runtimeVersion) {
+    lines.push(`Version: ${summary.runtimeVersion}`);
+  }
 
   if (!summary.linkChannel) {
     lines.push("Link channel: unknown");

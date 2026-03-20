@@ -1,5 +1,5 @@
 import { beforeEach, vi } from "vitest";
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import type { MockFn } from "../test-utils/vitest-mock-fn";
 
 const { botApi, botCtorSpy } = vi.hoisted(() => ({
   botApi: {
@@ -27,14 +27,19 @@ const { loadConfig } = vi.hoisted(() => ({
   loadConfig: vi.fn(() => ({})),
 }));
 
+const { maybePersistResolvedTelegramTarget } = vi.hoisted(() => ({
+  maybePersistResolvedTelegramTarget: vi.fn(async () => {}),
+}));
+
 type TelegramSendTestMocks = {
   botApi: Record<string, MockFn>;
   botCtorSpy: MockFn;
   loadConfig: MockFn;
   loadWebMedia: MockFn;
+  maybePersistResolvedTelegramTarget: MockFn;
 };
 
-vi.mock("../web/media.js", () => ({
+vi.mock("../web/media", () => ({
   loadWebMedia,
 }));
 
@@ -54,22 +59,28 @@ vi.mock("grammy", () => ({
   InputFile: class {},
 }));
 
-vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+vi.mock("../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
     loadConfig,
   };
 });
 
+vi.mock("./target-writeback", () => ({
+  maybePersistResolvedTelegramTarget,
+}));
+
 export function getTelegramSendTestMocks(): TelegramSendTestMocks {
-  return { botApi, botCtorSpy, loadConfig, loadWebMedia };
+  return { botApi, botCtorSpy, loadConfig, loadWebMedia, maybePersistResolvedTelegramTarget };
 }
 
 export function installTelegramSendTestHooks() {
   beforeEach(() => {
     loadConfig.mockReturnValue({});
     loadWebMedia.mockReset();
+    maybePersistResolvedTelegramTarget.mockReset();
+    maybePersistResolvedTelegramTarget.mockResolvedValue(undefined);
     botCtorSpy.mockReset();
     for (const fn of Object.values(botApi)) {
       fn.mockReset();
@@ -78,5 +89,5 @@ export function installTelegramSendTestHooks() {
 }
 
 export async function importTelegramSendModule() {
-  return await import('./send');
+  return await import("./send");
 }

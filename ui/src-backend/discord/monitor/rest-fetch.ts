@@ -1,7 +1,7 @@
 import { ProxyAgent, fetch as undiciFetch } from "undici";
-import { danger } from '../../globals';
-import { wrapFetchWithAbortSignal } from '../../infra/fetch';
-import type { RuntimeEnv } from '../../runtime';
+import { danger } from "../../globals";
+import { wrapFetchWithAbortSignal } from "../../infra/fetch";
+import type { RuntimeEnv } from "../../runtime";
 
 export function resolveDiscordRestFetch(
   proxyUrl: string | undefined,

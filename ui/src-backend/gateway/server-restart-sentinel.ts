@@ -1,19 +1,19 @@
-import { resolveSessionAgentId } from '../agents/agent-scope';
-import { resolveAnnounceTargetFromKey } from '../agents/tools/sessions-send-helpers';
-import { normalizeChannelId } from '../channels/plugins/index';
-import type { CliDeps } from '../cli/deps';
-import { resolveMainSessionKeyFromConfig } from '../config/sessions';
-import { parseSessionThreadInfo } from '../config/sessions/delivery-info';
-import { deliverOutboundPayloads } from '../infra/outbound/deliver';
-import { resolveOutboundTarget } from '../infra/outbound/targets';
+import { resolveAnnounceTargetFromKey } from "../agents/tools/sessions-send-helpers";
+import { normalizeChannelId } from "../channels/plugins/index";
+import type { CliDeps } from "../cli/deps";
+import { resolveMainSessionKeyFromConfig } from "../config/sessions";
+import { parseSessionThreadInfo } from "../config/sessions/delivery-info";
+import { deliverOutboundPayloads } from "../infra/outbound/deliver";
+import { buildOutboundSessionContext } from "../infra/outbound/session-context";
+import { resolveOutboundTarget } from "../infra/outbound/targets";
 import {
   consumeRestartSentinel,
   formatRestartSentinelMessage,
   summarizeRestartSentinel,
-} from '../infra/restart-sentinel';
-import { enqueueSystemEvent } from '../infra/system-events';
-import { deliveryContextFromSession, mergeDeliveryContext } from '../utils/delivery-context';
-import { loadSessionEntry } from './session-utils';
+} from "../infra/restart-sentinel";
+import { enqueueSystemEvent } from "../infra/system-events";
+import { deliveryContextFromSession, mergeDeliveryContext } from "../utils/delivery-context";
+import { loadSessionEntry } from "./session-utils";
 
 export async function scheduleRestartSentinelWake(_params: { deps: CliDeps }) {
   const sentinel = await consumeRestartSentinel();
@@ -76,15 +76,28 @@ export async function scheduleRestartSentinelWake(_params: { deps: CliDeps }) {
     sessionThreadId ??
     (origin?.threadId != null ? String(origin.threadId) : undefined);
 
+  // Slack uses replyToId (thread_ts) for threading, not threadId.
+  // The reply path does this mapping but deliverOutboundPayloads does not,
+  // so we must convert here to ensure post-restart notifications land in
+  // the originating Slack thread. See #17716.
+  const isSlack = channel === "slack";
+  const replyToId = isSlack && threadId != null && threadId !== "" ? String(threadId) : undefined;
+  const resolvedThreadId = isSlack ? undefined : threadId;
+  const outboundSession = buildOutboundSessionContext({
+    cfg,
+    sessionKey,
+  });
+
   try {
     await deliverOutboundPayloads({
       cfg,
       channel,
       to: resolved.to,
       accountId: origin?.accountId,
-      threadId,
+      replyToId,
+      threadId: resolvedThreadId,
       payloads: [{ text: message }],
-      agentId: resolveSessionAgentId({ sessionKey, config: cfg }),
+      session: outboundSession,
       bestEffort: true,
     });
   } catch (err) {

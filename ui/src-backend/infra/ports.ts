@@ -1,12 +1,12 @@
-import net from "node:net";
-import { danger, info, shouldLogVerbose, warn } from '../globals';
-import { logDebug } from '../logger';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { isErrno } from './errors';
-import { formatPortDiagnostics } from './ports-format';
-import { inspectPortUsage } from './ports-inspect';
-import type { PortListener, PortListenerKind, PortUsage, PortUsageStatus } from './ports-types';
+import { danger, info, shouldLogVerbose, warn } from "../globals";
+import { logDebug } from "../logger";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { isErrno } from "./errors";
+import { formatPortDiagnostics } from "./ports-format";
+import { inspectPortUsage } from "./ports-inspect";
+import { tryListenOnPort } from "./ports-probe";
+import type { PortListener, PortListenerKind, PortUsage, PortUsageStatus } from "./ports-types";
 
 class PortInUseError extends Error {
   port: number;
@@ -31,15 +31,7 @@ export async function describePortOwner(port: number): Promise<string | undefine
 export async function ensurePortAvailable(port: number): Promise<void> {
   // Detect EADDRINUSE early with a friendly message.
   try {
-    await new Promise<void>((resolve, reject) => {
-      const tester = net
-        .createServer()
-        .once("error", (err) => reject(err))
-        .once("listening", () => {
-          tester.close(() => resolve());
-        })
-        .listen(port);
-    });
+    await tryListenOnPort({ port });
   } catch (err) {
     if (isErrno(err) && err.code === "EADDRINUSE") {
       throw new PortInUseError(port);
@@ -94,5 +86,5 @@ export async function handlePortError(
 
 export { PortInUseError };
 export type { PortListener, PortListenerKind, PortUsage, PortUsageStatus };
-export { buildPortHints, classifyPortListener, formatPortDiagnostics } from './ports-format';
-export { inspectPortUsage } from './ports-inspect';
+export { buildPortHints, classifyPortListener, formatPortDiagnostics } from "./ports-format";
+export { inspectPortUsage } from "./ports-inspect";

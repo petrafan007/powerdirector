@@ -1,27 +1,27 @@
-import { buildChannelUiCatalog } from '../../channels/plugins/catalog';
-import { resolveChannelDefaultAccountId } from '../../channels/plugins/helpers';
+import { buildChannelUiCatalog } from "../../channels/plugins/catalog";
+import { resolveChannelDefaultAccountId } from "../../channels/plugins/helpers";
 import {
   type ChannelId,
   getChannelPlugin,
   listChannelPlugins,
   normalizeChannelId,
-} from '../../channels/plugins/index';
-import { buildChannelAccountSnapshot } from '../../channels/plugins/status';
-import type { ChannelAccountSnapshot, ChannelPlugin } from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadConfig, readConfigFileSnapshot } from '../../config/config';
-import { getChannelActivity } from '../../infra/channel-activity';
-import { DEFAULT_ACCOUNT_ID } from '../../routing/session-key';
-import { defaultRuntime } from '../../runtime';
+} from "../../channels/plugins/index";
+import { buildChannelAccountSnapshot } from "../../channels/plugins/status";
+import type { ChannelAccountSnapshot, ChannelPlugin } from "../../channels/plugins/types";
+import type { PowerDirectorConfig } from "../../config/config";
+import { loadConfig, readConfigFileSnapshot } from "../../config/config";
+import { getChannelActivity } from "../../infra/channel-activity";
+import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key";
+import { defaultRuntime } from "../../runtime";
 import {
   ErrorCodes,
   errorShape,
   formatValidationErrors,
   validateChannelsLogoutParams,
   validateChannelsStatusParams,
-} from '../protocol/index';
-import { formatForLog } from '../ws-log';
-import type { GatewayRequestContext, GatewayRequestHandlers } from './types';
+} from "../protocol/index";
+import { formatForLog } from "../ws-log";
+import type { GatewayRequestContext, GatewayRequestHandlers } from "./types";
 
 type ChannelLogoutPayload = {
   channel: ChannelId;
@@ -82,38 +82,12 @@ export const channelsHandlers: GatewayRequestHandlers = {
     const probe = (params as { probe?: boolean }).probe === true;
     const timeoutMsRaw = (params as { timeoutMs?: unknown }).timeoutMs;
     const timeoutMs = typeof timeoutMsRaw === "number" ? Math.max(1000, timeoutMsRaw) : 10_000;
-    const requestedChannelRaw = (params as { channel?: unknown }).channel;
-    const requestedChannel =
-      typeof requestedChannelRaw === "string"
-        ? normalizeChannelId(requestedChannelRaw)
-        : null;
-    if (requestedChannelRaw !== undefined && !requestedChannel) {
-      respond(
-        false,
-        undefined,
-        errorShape(ErrorCodes.INVALID_REQUEST, "invalid channels.status channel"),
-      );
-      return;
-    }
-    const requestedAccountIdRaw = (params as { accountId?: unknown }).accountId;
-    const requestedAccountId =
-      typeof requestedAccountIdRaw === "string" && requestedAccountIdRaw.trim().length > 0
-        ? requestedAccountIdRaw.trim()
-        : null;
     const cfg = loadConfig();
     const runtime = context.getRuntimeSnapshot();
     const plugins = listChannelPlugins();
     const pluginMap = new Map<ChannelId, ChannelPlugin>(
       plugins.map((plugin) => [plugin.id, plugin]),
     );
-    if (requestedChannel && !pluginMap.has(requestedChannel)) {
-      respond(
-        false,
-        undefined,
-        errorShape(ErrorCodes.INVALID_REQUEST, `unknown channel: ${requestedChannel}`),
-      );
-      return;
-    }
 
     const resolveRuntimeSnapshot = (
       channelId: ChannelId,
@@ -161,12 +135,7 @@ export const channelsHandlers: GatewayRequestHandlers = {
         resolvedAccounts[accountId] = account;
         let probeResult: unknown;
         let lastProbeAt: number | null = null;
-        const shouldProbeAccount =
-          probe &&
-          enabled &&
-          (!requestedChannel || requestedChannel === channelId) &&
-          (!requestedAccountId || requestedAccountId === accountId);
-        if (shouldProbeAccount && plugin.status?.probeAccount) {
+        if (probe && enabled && plugin.status?.probeAccount) {
           let configured = true;
           if (plugin.config.isConfigured) {
             configured = await plugin.config.isConfigured(account, cfg);
@@ -181,7 +150,7 @@ export const channelsHandlers: GatewayRequestHandlers = {
           }
         }
         let auditResult: unknown;
-        if (shouldProbeAccount && plugin.status?.auditAccount) {
+        if (probe && enabled && plugin.status?.auditAccount) {
           let configured = true;
           if (plugin.config.isConfigured) {
             configured = await plugin.config.isConfigured(account, cfg);
@@ -239,10 +208,7 @@ export const channelsHandlers: GatewayRequestHandlers = {
     const channelsMap = payload.channels as Record<string, unknown>;
     const accountsMap = payload.channelAccounts as Record<string, unknown>;
     const defaultAccountIdMap = payload.channelDefaultAccountId as Record<string, unknown>;
-    const pluginsToReport = requestedChannel
-      ? plugins.filter((plugin) => plugin.id === requestedChannel)
-      : plugins;
-    for (const plugin of pluginsToReport) {
+    for (const plugin of plugins) {
       const { accounts, defaultAccountId, defaultAccount, resolvedAccounts } =
         await buildChannelAccounts(plugin.id);
       const fallbackAccount =

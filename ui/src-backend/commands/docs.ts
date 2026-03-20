@@ -1,9 +1,9 @@
-import { hasBinary } from '../agents/skills';
-import { formatCliCommand } from '../cli/command-format';
-import { runCommandWithTimeout } from '../process/exec';
-import type { RuntimeEnv } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { isRich, theme } from '../terminal/theme';
+import { hasBinary } from "../agents/skills";
+import { formatCliCommand } from "../cli/command-format";
+import { runCommandWithTimeout } from "../process/exec";
+import type { RuntimeEnv } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { isRich, theme } from "../terminal/theme";
 
 const SEARCH_TOOL = "https://docs.powerdirector.ai/mcp.SearchPowerDirector";
 const SEARCH_TIMEOUT_MS = 30_000;

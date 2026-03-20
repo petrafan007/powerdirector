@@ -3,29 +3,30 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { inspect } from "node:util";
 import { cancel, isCancel } from "@clack/prompts";
-import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from '../agents/workspace';
-import type { PowerDirectorConfig } from '../config/config';
-import { CONFIG_PATH } from '../config/config';
-import { resolveSessionTranscriptsDirForAgent } from '../config/sessions';
-import { callGateway } from '../gateway/call';
-import { normalizeControlUiBasePath } from '../gateway/control-ui-shared';
-import { pickPrimaryLanIPv4, isValidIPv4 } from '../gateway/net';
-import { isSafeExecutableValue } from '../infra/exec-safety';
-import { pickPrimaryTailnetIPv4 } from '../infra/tailnet';
-import { isWSL } from '../infra/wsl';
-import { runCommandWithTimeout } from '../process/exec';
-import type { RuntimeEnv } from '../runtime';
-import { stylePromptTitle } from '../terminal/prompt-style';
+import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from "../agents/workspace";
+import type { PowerDirectorConfig } from "../config/config";
+import { CONFIG_PATH } from "../config/config";
+import { resolveAgentModelPrimaryValue } from "../config/model-input";
+import { resolveSessionTranscriptsDirForAgent } from "../config/sessions";
+import { callGateway } from "../gateway/call";
+import { normalizeControlUiBasePath } from "../gateway/control-ui-shared";
+import { pickPrimaryLanIPv4, isValidIPv4 } from "../gateway/net";
+import { isSafeExecutableValue } from "../infra/exec-safety";
+import { pickPrimaryTailnetIPv4 } from "../infra/tailnet";
+import { isWSL } from "../infra/wsl";
+import { runCommandWithTimeout } from "../process/exec";
+import type { RuntimeEnv } from "../runtime";
+import { stylePromptTitle } from "../terminal/prompt-style";
 import {
   CONFIG_DIR,
   resolveUserPath,
   shortenHomeInString,
   shortenHomePath,
   sleep,
-} from '../utils';
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
-import { VERSION } from '../version';
-import type { NodeManagerChoice, OnboardMode, ResetScope } from './onboard-types';
+} from "../utils";
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel";
+import { VERSION } from "../version";
+import type { NodeManagerChoice, OnboardMode, ResetScope } from "./onboard-types";
 
 export function guardCancel<T>(value: T | symbol, runtime: RuntimeEnv): T {
   if (isCancel(value)) {
@@ -43,7 +44,7 @@ export function summarizeExistingConfig(config: PowerDirectorConfig): string {
     rows.push(shortenHomeInString(`workspace: ${defaults.workspace}`));
   }
   if (defaults?.model) {
-    const model = typeof defaults.model === "string" ? defaults.model : defaults.model.primary;
+    const model = resolveAgentModelPrimaryValue(defaults.model);
     if (model) {
       rows.push(shortenHomeInString(`model: ${model}`));
     }

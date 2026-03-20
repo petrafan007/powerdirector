@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import { NonEmptyString } from './primitives';
+import { NonEmptyString } from "./primitives";
 
 export const DevicePairListParamsSchema = Type.Object({}, { additionalProperties: false });
 
@@ -42,6 +42,7 @@ export const DevicePairRequestedEventSchema = Type.Object(
     publicKey: NonEmptyString,
     displayName: Type.Optional(NonEmptyString),
     platform: Type.Optional(NonEmptyString),
+    deviceFamily: Type.Optional(NonEmptyString),
     clientId: Type.Optional(NonEmptyString),
     clientMode: Type.Optional(NonEmptyString),
     role: Type.Optional(NonEmptyString),

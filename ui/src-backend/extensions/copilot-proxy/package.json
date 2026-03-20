@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/copilot-proxy",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector Copilot Proxy provider plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

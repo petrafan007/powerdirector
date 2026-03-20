@@ -1,23 +1,22 @@
-import fs from "node:fs";
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config";
+import { tryReadSecretFileSync } from "../infra/secret-file";
+import {
+  DEFAULT_ACCOUNT_ID,
+  normalizeAccountId as normalizeSharedAccountId,
+  normalizeOptionalAccountId,
+} from "../routing/account-id";
+import { resolveAccountEntry } from "../routing/account-lookup";
 import type {
   LineConfig,
   LineAccountConfig,
   ResolvedLineAccount,
   LineTokenSource,
-} from './types';
+} from "./types";
 
-export const DEFAULT_ACCOUNT_ID = "default";
+export { DEFAULT_ACCOUNT_ID } from "../routing/account-id";
 
 function readFileIfExists(filePath: string | undefined): string | undefined {
-  if (!filePath) {
-    return undefined;
-  }
-  try {
-    return fs.readFileSync(filePath, "utf-8").trim();
-  } catch {
-    return undefined;
-  }
+  return tryReadSecretFileSync(filePath, "LINE credential file", { rejectSymlink: true });
 }
 
 function resolveToken(params: {
@@ -100,10 +99,12 @@ export function resolveLineAccount(params: {
   cfg: PowerDirectorConfig;
   accountId?: string;
 }): ResolvedLineAccount {
-  const { cfg, accountId = DEFAULT_ACCOUNT_ID } = params;
+  const cfg = params.cfg;
+  const accountId = normalizeSharedAccountId(params.accountId);
   const lineConfig = cfg.channels?.line as LineConfig | undefined;
   const accounts = lineConfig?.accounts;
-  const accountConfig = accountId !== DEFAULT_ACCOUNT_ID ? accounts?.[accountId] : undefined;
+  const accountConfig =
+    accountId !== DEFAULT_ACCOUNT_ID ? resolveAccountEntry(accounts, accountId) : undefined;
 
   const { token, tokenSource } = resolveToken({
     accountId,
@@ -117,8 +118,16 @@ export function resolveLineAccount(params: {
     accountConfig,
   });
 
+  const {
+    accounts: _ignoredAccounts,
+    defaultAccount: _ignoredDefaultAccount,
+    ...lineBase
+  } = (lineConfig ?? {}) as LineConfig & {
+    accounts?: unknown;
+    defaultAccount?: unknown;
+  };
   const mergedConfig: LineConfig & LineAccountConfig = {
-    ...lineConfig,
+    ...lineBase,
     ...accountConfig,
   };
 
@@ -165,6 +174,15 @@ export function listLineAccountIds(cfg: PowerDirectorConfig): string[] {
 }
 
 export function resolveDefaultLineAccountId(cfg: PowerDirectorConfig): string {
+  const preferred = normalizeOptionalAccountId(
+    (cfg.channels?.line as LineConfig | undefined)?.defaultAccount,
+  );
+  if (
+    preferred &&
+    listLineAccountIds(cfg).some((accountId) => normalizeSharedAccountId(accountId) === preferred)
+  ) {
+    return preferred;
+  }
   const ids = listLineAccountIds(cfg);
   if (ids.includes(DEFAULT_ACCOUNT_ID)) {
     return DEFAULT_ACCOUNT_ID;
@@ -173,9 +191,5 @@ export function resolveDefaultLineAccountId(cfg: PowerDirectorConfig): string {
 }
 
 export function normalizeAccountId(accountId: string | undefined): string {
-  const trimmed = accountId?.trim().toLowerCase();
-  if (!trimmed || trimmed === "default") {
-    return DEFAULT_ACCOUNT_ID;
-  }
-  return trimmed;
+  return normalizeSharedAccountId(accountId);
 }

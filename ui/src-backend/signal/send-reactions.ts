@@ -2,12 +2,14 @@
  * Signal reactions via signal-cli JSON-RPC API
  */
 
-import { loadConfig } from '../config/config';
-import { resolveSignalAccount } from './accounts';
-import { signalRpcRequest } from './client';
-import { resolveSignalRpcContext } from './rpc-context';
+import { loadConfig } from "../config/config";
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveSignalAccount } from "./accounts";
+import { signalRpcRequest } from "./client";
+import { resolveSignalRpcContext } from "./rpc-context";
 
 export type SignalReactionOpts = {
+  cfg?: PowerDirectorConfig;
   baseUrl?: string;
   account?: string;
   accountId?: string;
@@ -75,8 +77,9 @@ async function sendReactionSignalCore(params: {
   opts: SignalReactionOpts;
   errors: SignalReactionErrorMessages;
 }): Promise<SignalReactionResult> {
+  const cfg = params.opts.cfg ?? loadConfig();
   const accountInfo = resolveSignalAccount({
-    cfg: loadConfig(),
+    cfg,
     accountId: params.opts.accountId,
   });
   const { baseUrl, account } = resolveSignalRpcContext(params.opts, accountInfo);

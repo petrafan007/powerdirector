@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { MsgContext } from '../templating';
-import { buildCommandTestParams as buildBaseCommandTestParams } from './commands.test-harness';
+import type { PowerDirectorConfig } from "../../config/config";
+import type { MsgContext } from "../templating";
+import { buildCommandTestParams as buildBaseCommandTestParams } from "./commands.test-harness";
 
 export function buildCommandTestParams(
   commandBody: string,

@@ -1,4 +1,4 @@
-import { escapeRegExp } from '../utils';
+import { escapeRegExp } from "../utils";
 /**
  * Convert standard Markdown formatting to WhatsApp-compatible markup.
  *

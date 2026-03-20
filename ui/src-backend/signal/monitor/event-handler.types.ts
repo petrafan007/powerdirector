@@ -1,9 +1,9 @@
-import type { HistoryEntry } from '../../auto-reply/reply/history';
-import type { ReplyPayload } from '../../auto-reply/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { DmPolicy, GroupPolicy, SignalReactionNotificationMode } from '../../config/types';
-import type { RuntimeEnv } from '../../runtime';
-import type { SignalSender } from '../identity';
+import type { HistoryEntry } from "../../auto-reply/reply/history";
+import type { ReplyPayload } from "../../auto-reply/types";
+import type { PowerDirectorConfig } from "../../config/config";
+import type { DmPolicy, GroupPolicy, SignalReactionNotificationMode } from "../../config/types";
+import type { RuntimeEnv } from "../../runtime";
+import type { SignalSender } from "../identity";
 
 export type SignalEnvelope = {
   sourceNumber?: string | null;
@@ -72,6 +72,7 @@ export type SignalEventHandlerDeps = {
   cfg: PowerDirectorConfig;
   baseUrl: string;
   account?: string;
+  accountUuid?: string;
   accountId: string;
   blockStreaming?: boolean;
   historyLimit: number;

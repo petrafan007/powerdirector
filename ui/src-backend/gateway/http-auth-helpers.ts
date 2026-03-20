@@ -1,22 +1,24 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { AuthRateLimiter } from './auth-rate-limit';
-import { authorizeGatewayConnect, type ResolvedGatewayAuth } from './auth';
-import { sendGatewayAuthFailure } from './http-common';
-import { getBearerToken } from './http-utils';
+import type { AuthRateLimiter } from "./auth-rate-limit";
+import { authorizeHttpGatewayConnect, type ResolvedGatewayAuth } from "./auth";
+import { sendGatewayAuthFailure } from "./http-common";
+import { getBearerToken } from "./http-utils";
 
 export async function authorizeGatewayBearerRequestOrReply(params: {
   req: IncomingMessage;
   res: ServerResponse;
   auth: ResolvedGatewayAuth;
   trustedProxies?: string[];
+  allowRealIpFallback?: boolean;
   rateLimiter?: AuthRateLimiter;
 }): Promise<boolean> {
   const token = getBearerToken(params.req);
-  const authResult = await authorizeGatewayConnect({
+  const authResult = await authorizeHttpGatewayConnect({
     auth: params.auth,
     connectAuth: token ? { token, password: token } : null,
     req: params.req,
     trustedProxies: params.trustedProxies,
+    allowRealIpFallback: params.allowRealIpFallback,
     rateLimiter: params.rateLimiter,
   });
   if (!authResult.ok) {

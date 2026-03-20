@@ -1,10 +1,11 @@
 import chalk from "chalk";
-import { isVerbose } from '../globals';
-import { shouldLogSubsystemToConsole } from '../logging/console';
-import { getDefaultRedactPatterns, redactSensitiveText } from '../logging/redact';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { parseAgentSessionKey } from '../routing/session-key';
-import { DEFAULT_WS_SLOW_MS, getGatewayWsLogStyle } from './ws-logging';
+import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { isVerbose } from "../globals";
+import { shouldLogSubsystemToConsole } from "../logging/console";
+import { getDefaultRedactPatterns, redactSensitiveText } from "../logging/redact";
+import { createSubsystemLogger } from "../logging/subsystem";
+import { parseAgentSessionKey } from "../routing/session-key";
+import { DEFAULT_WS_SLOW_MS, getGatewayWsLogStyle } from "./ws-logging";
 
 const LOG_VALUE_LIMIT = 240;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -204,9 +205,11 @@ export function summarizeAgentEventForWsLog(payload: unknown): Record<string, un
     if (text?.trim()) {
       extra.text = compactPreview(text);
     }
-    const mediaUrls = Array.isArray(data.mediaUrls) ? data.mediaUrls : undefined;
-    if (mediaUrls && mediaUrls.length > 0) {
-      extra.media = mediaUrls.length;
+    const mediaCount = resolveSendableOutboundReplyParts({
+      mediaUrls: Array.isArray(data.mediaUrls) ? data.mediaUrls : undefined,
+    }).mediaCount;
+    if (mediaCount > 0) {
+      extra.media = mediaCount;
     }
     return extra;
   }

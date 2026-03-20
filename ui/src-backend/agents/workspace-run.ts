@@ -1,15 +1,15 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { logWarn } from '../logger';
-import { redactIdentifier } from '../logging/redact-identifier';
+import type { PowerDirectorConfig } from "../config/config";
+import { logWarn } from "../logger";
+import { redactIdentifier } from "../logging/redact-identifier";
 import {
   classifySessionKeyShape,
   DEFAULT_AGENT_ID,
   normalizeAgentId,
   parseAgentSessionKey,
-} from '../routing/session-key';
-import { resolveUserPath } from '../utils';
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from './agent-scope';
-import { sanitizeForPromptLiteral } from './sanitize-for-prompt';
+} from "../routing/session-key";
+import { resolveUserPath } from "../utils";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "./agent-scope";
+import { sanitizeForPromptLiteral } from "./sanitize-for-prompt";
 
 export type WorkspaceFallbackReason = "missing" | "blank" | "invalid_type";
 type AgentIdSource = "explicit" | "session_key" | "default";

@@ -1,4 +1,4 @@
-import { parseStandardSetUnsetSlashCommand } from './commands-setunset-standard';
+import { parseStandardSetUnsetSlashCommand } from "./commands-setunset-standard";
 
 export type ConfigCommand =
   | { action: "show"; path?: string }

@@ -1,7 +1,8 @@
-import type { AuthProfileCredential } from '../agents/auth-profiles/types';
-import type { PowerDirectorConfig } from '../config/config';
-import type { ProviderAuthResult } from '../plugins/types';
+import type { AuthProfileCredential } from "../agents/auth-profiles/types";
+import type { PowerDirectorConfig } from "../config/config";
+import type { ProviderAuthResult } from "../plugins/types";
 
+/** Build the standard auth result payload for OAuth-style provider login flows. */
 export function buildOauthProviderAuthResult(params: {
   providerId: string;
   defaultModel: string;

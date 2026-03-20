@@ -1,6 +1,6 @@
-import { killProcessTree } from '../../kill-tree';
-import type { ManagedRunStdin } from '../types';
-import { toStringEnv } from './env';
+import { killProcessTree } from "../../kill-tree";
+import type { ManagedRunStdin, SpawnProcessAdapter } from "../types";
+import { toStringEnv } from "./env";
 
 const FORCE_KILL_WAIT_FALLBACK_MS = 4000;
 
@@ -32,15 +32,7 @@ type PtyModule = {
   };
 };
 
-export type PtyAdapter = {
-  pid?: number;
-  stdin?: ManagedRunStdin;
-  onStdout: (listener: (chunk: string) => void) => void;
-  onStderr: (listener: (chunk: string) => void) => void;
-  wait: () => Promise<{ code: number | null; signal: NodeJS.Signals | number | null }>;
-  kill: (signal?: NodeJS.Signals) => void;
-  dispose: () => void;
-};
+export type PtyAdapter = SpawnProcessAdapter;
 
 export async function createPtyAdapter(params: {
   shell: string;

@@ -1,32 +1,60 @@
 import { vi } from "vitest";
+import type {
+  PluginHookAgentContext,
+  PluginHookBeforeAgentStartResult,
+  PluginHookBeforeModelResolveResult,
+  PluginHookBeforePromptBuildResult,
+} from "../../plugins/types";
 
-vi.mock("../auth-profiles.js", () => ({
+export const mockedGlobalHookRunner = {
+  hasHooks: vi.fn((_hookName: string) => false),
+  runBeforeAgentStart: vi.fn(
+    async (
+      _event: { prompt: string; messages?: unknown[] },
+      _ctx: PluginHookAgentContext,
+    ): Promise<PluginHookBeforeAgentStartResult | undefined> => undefined,
+  ),
+  runBeforePromptBuild: vi.fn(
+    async (
+      _event: { prompt: string; messages: unknown[] },
+      _ctx: PluginHookAgentContext,
+    ): Promise<PluginHookBeforePromptBuildResult | undefined> => undefined,
+  ),
+  runBeforeModelResolve: vi.fn(
+    async (
+      _event: { prompt: string },
+      _ctx: PluginHookAgentContext,
+    ): Promise<PluginHookBeforeModelResolveResult | undefined> => undefined,
+  ),
+};
+
+vi.mock("../../plugins/hook-runner-global", () => ({
+  getGlobalHookRunner: vi.fn(() => mockedGlobalHookRunner),
+}));
+
+vi.mock("../auth-profiles", () => ({
   isProfileInCooldown: vi.fn(() => false),
   markAuthProfileFailure: vi.fn(async () => {}),
   markAuthProfileGood: vi.fn(async () => {}),
   markAuthProfileUsed: vi.fn(async () => {}),
 }));
 
-vi.mock("../usage.js", () => ({
+vi.mock("../usage", () => ({
   normalizeUsage: vi.fn((usage?: unknown) =>
     usage && typeof usage === "object" ? usage : undefined,
   ),
-  derivePromptTokens: vi.fn(
-    (usage?: { input?: number; cacheRead?: number; cacheWrite?: number }) => {
-      if (!usage) {
-        return undefined;
-      }
-      const input = usage.input ?? 0;
-      const cacheRead = usage.cacheRead ?? 0;
-      const cacheWrite = usage.cacheWrite ?? 0;
-      const sum = input + cacheRead + cacheWrite;
-      return sum > 0 ? sum : undefined;
-    },
+  derivePromptTokens: vi.fn((usage?: { input?: number; cacheRead?: number; cacheWrite?: number }) =>
+    usage
+      ? (() => {
+          const sum = (usage.input ?? 0) + (usage.cacheRead ?? 0) + (usage.cacheWrite ?? 0);
+          return sum > 0 ? sum : undefined;
+        })()
+      : undefined,
   ),
   hasNonzeroUsage: vi.fn(() => false),
 }));
 
-vi.mock("../workspace-run.js", () => ({
+vi.mock("../workspace-run", () => ({
   resolveRunWorkspaceDir: vi.fn((params: { workspaceDir: string }) => ({
     workspaceDir: params.workspaceDir,
     usedFallback: false,
@@ -36,7 +64,7 @@ vi.mock("../workspace-run.js", () => ({
   redactRunIdentifier: vi.fn((value?: string) => value ?? ""),
 }));
 
-vi.mock("../pi-embedded-helpers.js", () => ({
+vi.mock("../pi-embedded-helpers", () => ({
   formatBillingErrorMessage: vi.fn(() => ""),
   classifyFailoverReason: vi.fn(() => null),
   formatAssistantErrorText: vi.fn(() => ""),
@@ -56,15 +84,15 @@ vi.mock("../pi-embedded-helpers.js", () => ({
   pickFallbackThinkingLevel: vi.fn(() => null),
 }));
 
-vi.mock("./run/attempt.js", () => ({
+vi.mock("./run/attempt", () => ({
   runEmbeddedAttempt: vi.fn(),
 }));
 
-vi.mock("./compact.js", () => ({
+vi.mock("./compact", () => ({
   compactEmbeddedPiSessionDirect: vi.fn(),
 }));
 
-vi.mock("./model.js", () => ({
+vi.mock("./model", () => ({
   resolveModel: vi.fn(() => ({
     model: {
       id: "test-model",
@@ -80,7 +108,7 @@ vi.mock("./model.js", () => ({
   })),
 }));
 
-vi.mock("../model-auth.js", () => ({
+vi.mock("../model-auth", () => ({
   ensureAuthProfileStore: vi.fn(() => ({})),
   getApiKeyForModel: vi.fn(async () => ({
     apiKey: "test-key",
@@ -90,11 +118,11 @@ vi.mock("../model-auth.js", () => ({
   resolveAuthProfileOrder: vi.fn(() => []),
 }));
 
-vi.mock("../models-config.js", () => ({
+vi.mock("../models-config", () => ({
   ensurePowerDirectorModelsJson: vi.fn(async () => {}),
 }));
 
-vi.mock("../context-window-guard.js", () => ({
+vi.mock("../context-window-guard", () => ({
   CONTEXT_WINDOW_HARD_MIN_TOKENS: 1000,
   CONTEXT_WINDOW_WARN_BELOW_TOKENS: 5000,
   evaluateContextWindowGuard: vi.fn(() => ({
@@ -109,35 +137,35 @@ vi.mock("../context-window-guard.js", () => ({
   })),
 }));
 
-vi.mock("../../process/command-queue.js", () => ({
+vi.mock("../../process/command-queue", () => ({
   enqueueCommandInLane: vi.fn((_lane: string, task: () => unknown) => task()),
 }));
 
-vi.mock("../../utils/message-channel.js", () => ({
+vi.mock("../../utils/message-channel", () => ({
   isMarkdownCapableMessageChannel: vi.fn(() => true),
 }));
 
-vi.mock("../agent-paths.js", () => ({
+vi.mock("../agent-paths", () => ({
   resolvePowerDirectorAgentDir: vi.fn(() => "/tmp/agent-dir"),
 }));
 
-vi.mock("../defaults.js", () => ({
+vi.mock("../defaults", () => ({
   DEFAULT_CONTEXT_TOKENS: 200000,
   DEFAULT_MODEL: "test-model",
   DEFAULT_PROVIDER: "anthropic",
 }));
 
-vi.mock("../failover-error.js", () => ({
+vi.mock("../failover-error", () => ({
   FailoverError: class extends Error {},
   resolveFailoverStatus: vi.fn(),
 }));
 
-vi.mock("./lanes.js", () => ({
+vi.mock("./lanes", () => ({
   resolveSessionLane: vi.fn(() => "session-lane"),
   resolveGlobalLane: vi.fn(() => "global-lane"),
 }));
 
-vi.mock("./logger.js", () => ({
+vi.mock("./logger", () => ({
   log: {
     debug: vi.fn(),
     info: vi.fn(),
@@ -147,11 +175,11 @@ vi.mock("./logger.js", () => ({
   },
 }));
 
-vi.mock("./run/payloads.js", () => ({
+vi.mock("./run/payloads", () => ({
   buildEmbeddedRunPayloads: vi.fn(() => []),
 }));
 
-vi.mock("./tool-result-truncation.js", () => ({
+vi.mock("./tool-result-truncation", () => ({
   truncateOversizedToolResultsInSession: vi.fn(async () => ({
     truncated: false,
     truncatedCount: 0,
@@ -160,7 +188,7 @@ vi.mock("./tool-result-truncation.js", () => ({
   sessionLikelyHasOversizedToolResults: vi.fn(() => false),
 }));
 
-vi.mock("./utils.js", () => ({
+vi.mock("./utils", () => ({
   describeUnknownError: vi.fn((err: unknown) => {
     if (err instanceof Error) {
       return err.message;

@@ -1,14 +1,14 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveOAuthDir } from './config/paths';
-import { logVerbose, shouldLogVerbose } from './globals';
+import { resolveOAuthDir } from "./config/paths";
+import { logVerbose, shouldLogVerbose } from "./globals";
 import {
-  expandHomePrefix,
   resolveEffectiveHomeDir,
+  resolveHomeRelativePath,
   resolveRequiredHomeDir,
-} from './infra/home-dir';
-import { isPlainObject } from './infra/plain-object';
+} from "./infra/home-dir";
+import { isPlainObject } from "./infra/plain-object";
 
 export async function ensureDir(dir: string) {
   await fs.promises.mkdir(dir, { recursive: true });
@@ -71,17 +71,6 @@ export function assertWebChannel(input: string): asserts input is WebChannel {
   if (input !== "web") {
     throw new Error("Web channel must be 'web'");
   }
-}
-
-export function normalizePath(p: string): string {
-  if (!p.startsWith("/")) {
-    return `/${p}`;
-  }
-  return p;
-}
-
-export function withWhatsAppPrefix(number: string): string {
-  return number.startsWith("whatsapp:") ? number : `whatsapp:${number}`;
 }
 
 export function normalizeE164(number: string): string {
@@ -282,32 +271,24 @@ export function truncateUtf16Safe(input: string, maxLen: number): string {
   return sliceUtf16Safe(input, 0, limit);
 }
 
-export function resolveUserPath(input: string): string {
-  const trimmed = input.trim();
-  if (!trimmed) {
-    return trimmed;
+export function resolveUserPath(
+  input: string,
+  env: NodeJS.ProcessEnv = process.env,
+  homedir: () => string = os.homedir,
+): string {
+  if (!input) {
+    return "";
   }
-  if (trimmed.startsWith("~")) {
-    const expanded = expandHomePrefix(trimmed, {
-      home: resolveRequiredHomeDir(process.env, os.homedir),
-      env: process.env,
-      homedir: os.homedir,
-    });
-    return path.resolve(expanded);
-  }
-  return path.resolve(trimmed);
+  return resolveHomeRelativePath(input, { env, homedir });
 }
 
 export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const override =
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.CLAWDBOT_STATE_DIR?.trim();
+  const override = env.POWERDIRECTOR_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
-    return resolveUserPath(override);
+    return resolveUserPath(override, env, homedir);
   }
   const newDir = path.join(resolveRequiredHomeDir(env, homedir), ".powerdirector");
   try {
@@ -330,7 +311,7 @@ function resolveHomeDisplayPrefix(): { home: string; prefix: string } | undefine
   if (!home) {
     return undefined;
   }
-  const explicitHome = process.env.POWERDIRECTOR_HOME?.trim() || process.env.POWERDIRECTOR_HOME?.trim();
+  const explicitHome = process.env.POWERDIRECTOR_HOME?.trim();
   if (explicitHome) {
     return { home, prefix: "$POWERDIRECTOR_HOME" };
   }

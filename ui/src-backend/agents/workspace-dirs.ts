@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from './agent-scope';
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "./agent-scope";
 
 export function listAgentWorkspaceDirs(cfg: PowerDirectorConfig): string[] {
   const dirs = new Set<string>();

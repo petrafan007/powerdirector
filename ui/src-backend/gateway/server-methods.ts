@@ -1,57 +1,59 @@
-import { formatControlPlaneActor, resolveControlPlaneActor } from './control-plane-audit';
-import { consumeControlPlaneWriteBudget } from './control-plane-rate-limit';
-import {
-  ADMIN_SCOPE,
-  authorizeOperatorScopesForMethod,
-  isNodeRoleMethod,
-} from './method-scopes';
-import { ErrorCodes, errorShape } from './protocol/index';
-import { agentHandlers } from './server-methods/agent';
-import { agentsHandlers } from './server-methods/agents';
-import { browserHandlers } from './server-methods/browser';
-import { channelsHandlers } from './server-methods/channels';
-import { chatHandlers } from './server-methods/chat';
-import { configHandlers } from './server-methods/config';
-import { connectHandlers } from './server-methods/connect';
-import { cronHandlers } from './server-methods/cron';
-import { deviceHandlers } from './server-methods/devices';
-import { execApprovalsHandlers } from './server-methods/exec-approvals';
-import { healthHandlers } from './server-methods/health';
-import { logsHandlers } from './server-methods/logs';
-import { modelsHandlers } from './server-methods/models';
-import { nodeHandlers } from './server-methods/nodes';
-import { pushHandlers } from './server-methods/push';
-import { sendHandlers } from './server-methods/send';
-import { sessionsHandlers } from './server-methods/sessions';
-import { skillsHandlers } from './server-methods/skills';
-import { systemHandlers } from './server-methods/system';
-import { talkHandlers } from './server-methods/talk';
-import { ttsHandlers } from './server-methods/tts';
-import type { GatewayRequestHandlers, GatewayRequestOptions } from './server-methods/types';
-import { updateHandlers } from './server-methods/update';
-import { usageHandlers } from './server-methods/usage';
-import { voicewakeHandlers } from './server-methods/voicewake';
-import { webHandlers } from './server-methods/web';
-import { wizardHandlers } from './server-methods/wizard';
+import { withPluginRuntimeGatewayRequestScope } from "../plugins/runtime/gateway-request-scope";
+import { formatControlPlaneActor, resolveControlPlaneActor } from "./control-plane-audit";
+import { consumeControlPlaneWriteBudget } from "./control-plane-rate-limit";
+import { ADMIN_SCOPE, authorizeOperatorScopesForMethod } from "./method-scopes";
+import { ErrorCodes, errorShape } from "./protocol/index";
+import { isRoleAuthorizedForMethod, parseGatewayRole } from "./role-policy";
+import { agentHandlers } from "./server-methods/agent";
+import { agentsHandlers } from "./server-methods/agents";
+import { browserHandlers } from "./server-methods/browser";
+import { channelsHandlers } from "./server-methods/channels";
+import { chatHandlers } from "./server-methods/chat";
+import { configHandlers } from "./server-methods/config";
+import { connectHandlers } from "./server-methods/connect";
+import { cronHandlers } from "./server-methods/cron";
+import { deviceHandlers } from "./server-methods/devices";
+import { doctorHandlers } from "./server-methods/doctor";
+import { execApprovalsHandlers } from "./server-methods/exec-approvals";
+import { healthHandlers } from "./server-methods/health";
+import { logsHandlers } from "./server-methods/logs";
+import { modelsHandlers } from "./server-methods/models";
+import { nodePendingHandlers } from "./server-methods/nodes-pending";
+import { nodeHandlers } from "./server-methods/nodes";
+import { pushHandlers } from "./server-methods/push";
+import { sendHandlers } from "./server-methods/send";
+import { sessionsHandlers } from "./server-methods/sessions";
+import { skillsHandlers } from "./server-methods/skills";
+import { systemHandlers } from "./server-methods/system";
+import { talkHandlers } from "./server-methods/talk";
+import { toolsCatalogHandlers } from "./server-methods/tools-catalog";
+import { ttsHandlers } from "./server-methods/tts";
+import type { GatewayRequestHandlers, GatewayRequestOptions } from "./server-methods/types";
+import { updateHandlers } from "./server-methods/update";
+import { usageHandlers } from "./server-methods/usage";
+import { voicewakeHandlers } from "./server-methods/voicewake";
+import { webHandlers } from "./server-methods/web";
+import { wizardHandlers } from "./server-methods/wizard";
 
 const CONTROL_PLANE_WRITE_METHODS = new Set(["config.apply", "config.patch", "update.run"]);
 function authorizeGatewayMethod(method: string, client: GatewayRequestOptions["client"]) {
   if (!client?.connect) {
     return null;
   }
-  const role = client.connect.role ?? "operator";
+  if (method === "health") {
+    return null;
+  }
+  const roleRaw = client.connect.role ?? "operator";
+  const role = parseGatewayRole(roleRaw);
+  if (!role) {
+    return errorShape(ErrorCodes.INVALID_REQUEST, `unauthorized role: ${roleRaw}`);
+  }
   const scopes = client.connect.scopes ?? [];
-  if (isNodeRoleMethod(method)) {
-    if (role === "node") {
-      return null;
-    }
+  if (!isRoleAuthorizedForMethod(role, method)) {
     return errorShape(ErrorCodes.INVALID_REQUEST, `unauthorized role: ${role}`);
   }
   if (role === "node") {
-    return errorShape(ErrorCodes.INVALID_REQUEST, `unauthorized role: ${role}`);
-  }
-  if (role !== "operator") {
-    return errorShape(ErrorCodes.INVALID_REQUEST, `unauthorized role: ${role}`);
+    return null;
   }
   if (scopes.includes(ADMIN_SCOPE)) {
     return null;
@@ -72,18 +74,21 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
   ...chatHandlers,
   ...cronHandlers,
   ...deviceHandlers,
+  ...doctorHandlers,
   ...execApprovalsHandlers,
   ...webHandlers,
   ...modelsHandlers,
   ...configHandlers,
   ...wizardHandlers,
   ...talkHandlers,
+  ...toolsCatalogHandlers,
   ...ttsHandlers,
   ...skillsHandlers,
   ...sessionsHandlers,
   ...systemHandlers,
   ...updateHandlers,
   ...nodeHandlers,
+  ...nodePendingHandlers,
   ...pushHandlers,
   ...sendHandlers,
   ...usageHandlers,
@@ -136,12 +141,17 @@ export async function handleGatewayRequest(
     );
     return;
   }
-  await handler({
-    req,
-    params: (req.params ?? {}) as Record<string, unknown>,
-    client,
-    isWebchatConnect,
-    respond,
-    context,
-  });
+  const invokeHandler = () =>
+    handler({
+      req,
+      params: (req.params ?? {}) as Record<string, unknown>,
+      client,
+      isWebchatConnect,
+      respond,
+      context,
+    });
+  // All handlers run inside a request scope so that plugin runtime
+  // subagent methods (e.g. context engine tools spawning sub-agents
+  // during tool execution) can dispatch back into the gateway.
+  await withPluginRuntimeGatewayRequestScope({ context, client, isWebchatConnect }, invokeHandler);
 }

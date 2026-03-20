@@ -2,13 +2,15 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { Page } from "playwright-core";
-import { resolvePreferredPowerDirectorTmpDir } from '../infra/tmp-powerdirector-dir';
+import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir";
+import { writeViaSiblingTempPath } from "./output-atomic";
+import { DEFAULT_UPLOAD_DIR, resolveStrictExistingPathsWithinRoot } from "./paths";
 import {
   ensurePageState,
   getPageForTargetId,
   refLocator,
   restoreRoleRefsForTarget,
-} from './pw-session';
+} from "./pw-session";
 import {
   bumpDialogArmId,
   bumpDownloadArmId,
@@ -16,40 +18,12 @@ import {
   normalizeTimeoutMs,
   requireRef,
   toAIFriendlyError,
-} from './pw-tools-core.shared';
-
-function sanitizeDownloadFileName(fileName: string): string {
-  const trimmed = String(fileName ?? "").trim();
-  if (!trimmed) {
-    return "download.bin";
-  }
-
-  // `suggestedFilename()` is untrusted (influenced by remote servers). Force a basename so
-  // path separators/traversal can't escape the downloads dir on any platform.
-  let base = path.posix.basename(trimmed);
-  base = path.win32.basename(base);
-  let cleaned = "";
-  for (let i = 0; i < base.length; i++) {
-    const code = base.charCodeAt(i);
-    if (code < 0x20 || code === 0x7f) {
-      continue;
-    }
-    cleaned += base[i];
-  }
-  base = cleaned.trim();
-
-  if (!base || base === "." || base === "..") {
-    return "download.bin";
-  }
-  if (base.length > 200) {
-    base = base.slice(0, 200);
-  }
-  return base;
-}
+} from "./pw-tools-core.shared";
+import { sanitizeUntrustedFileName } from "./safe-filename";
 
 function buildTempDownloadPath(fileName: string): string {
   const id = crypto.randomUUID();
-  const safeName = sanitizeDownloadFileName(fileName);
+  const safeName = sanitizeUntrustedFileName(fileName, "download.bin");
   return path.join(resolvePreferredPowerDirectorTmpDir(), "downloads", `${id}-${safeName}`);
 }
 
@@ -110,13 +84,26 @@ type DownloadPayload = {
 
 async function saveDownloadPayload(download: DownloadPayload, outPath: string) {
   const suggested = download.suggestedFilename?.() || "download.bin";
-  const resolvedOutPath = outPath?.trim() || buildTempDownloadPath(suggested);
+  const requestedPath = outPath?.trim();
+  const resolvedOutPath = path.resolve(requestedPath || buildTempDownloadPath(suggested));
   await fs.mkdir(path.dirname(resolvedOutPath), { recursive: true });
-  await download.saveAs?.(resolvedOutPath);
+
+  if (!requestedPath) {
+    await download.saveAs?.(resolvedOutPath);
+  } else {
+    await writeViaSiblingTempPath({
+      rootDir: path.dirname(resolvedOutPath),
+      targetPath: resolvedOutPath,
+      writeTemp: async (tempPath) => {
+        await download.saveAs?.(tempPath);
+      },
+    });
+  }
+
   return {
     url: download.url?.() || "",
     suggestedFilename: suggested,
-    path: path.resolve(resolvedOutPath),
+    path: resolvedOutPath,
   };
 }
 
@@ -166,7 +153,20 @@ export async function armFileUploadViaPlaywright(opts: {
         }
         return;
       }
-      await fileChooser.setFiles(opts.paths);
+      const uploadPathsResult = await resolveStrictExistingPathsWithinRoot({
+        rootDir: DEFAULT_UPLOAD_DIR,
+        requestedPaths: opts.paths,
+        scopeLabel: `uploads directory (${DEFAULT_UPLOAD_DIR})`,
+      });
+      if (!uploadPathsResult.ok) {
+        try {
+          await page.keyboard.press("Escape");
+        } catch {
+          // Best-effort.
+        }
+        return;
+      }
+      await fileChooser.setFiles(uploadPathsResult.paths);
       try {
         const input =
           typeof fileChooser.element === "function"

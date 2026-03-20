@@ -1,18 +1,18 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { loadSessionStore, updateSessionStore } from '../config/sessions';
-import { parseSessionLabel } from '../sessions/session-label';
+import type { PowerDirectorConfig } from "../config/config";
+import { loadSessionStore, updateSessionStore } from "../config/sessions";
+import { parseSessionLabel } from "../sessions/session-label";
 import {
   ErrorCodes,
   type ErrorShape,
   errorShape,
   type SessionsResolveParams,
-} from './protocol/index';
+} from "./protocol/index";
 import {
   listSessionsFromStore,
   loadCombinedSessionStoreForGateway,
-  pruneLegacyStoreKeys,
+  migrateAndPruneGatewaySessionStoreKey,
   resolveGatewaySessionStoreTarget,
-} from './session-utils';
+} from "./session-utils";
 
 export type SessionsResolveResult = { ok: true; key: string } | { ok: false; error: ErrorShape };
 
@@ -58,13 +58,10 @@ export async function resolveSessionKeyFromResolveParams(params: {
       };
     }
     await updateSessionStore(target.storePath, (s) => {
-      const liveTarget = resolveGatewaySessionStoreTarget({ cfg, key, store: s });
-      const canonicalKey = liveTarget.canonicalKey;
-      // Migrate the first legacy entry to the canonical key.
-      if (!s[canonicalKey] && s[legacyKey]) {
-        s[canonicalKey] = s[legacyKey];
+      const { primaryKey } = migrateAndPruneGatewaySessionStoreKey({ cfg, key, store: s });
+      if (!s[primaryKey] && s[legacyKey]) {
+        s[primaryKey] = s[legacyKey];
       }
-      pruneLegacyStoreKeys({ store: s, canonicalKey, candidates: liveTarget.storeKeys });
     });
     return { ok: true, key: target.canonicalKey };
   }

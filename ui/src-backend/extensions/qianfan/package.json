@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/qianfan-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector Qianfan provider plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

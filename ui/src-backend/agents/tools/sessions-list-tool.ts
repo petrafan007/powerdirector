@@ -1,11 +1,15 @@
 import path from "node:path";
 import { Type } from "@sinclair/typebox";
-import { loadConfig } from '../../config/config';
-import { resolveSessionFilePath } from '../../config/sessions';
-import { callGateway } from '../../gateway/call';
-import { resolveAgentIdFromSessionKey } from '../../routing/session-key';
-import type { AnyAgentTool } from './common';
-import { jsonResult, readStringArrayParam } from './common';
+import { type PowerDirectorConfig, loadConfig } from "../../config/config";
+import {
+  resolveSessionFilePath,
+  resolveSessionFilePathOptions,
+  resolveStorePath,
+} from "../../config/sessions";
+import { callGateway } from "../../gateway/call";
+import { resolveAgentIdFromSessionKey } from "../../routing/session-key";
+import type { AnyAgentTool } from "./common";
+import { jsonResult, readStringArrayParam } from "./common";
 import {
   createSessionVisibilityGuard,
   createAgentToAgentPolicy,
@@ -17,7 +21,7 @@ import {
   resolveSandboxedSessionToolContext,
   type SessionListRow,
   stripToolMessages,
-} from './sessions-helpers';
+} from "./sessions-helpers";
 
 const SessionsListToolSchema = Type.Object({
   kinds: Type.Optional(Type.Array(Type.String())),
@@ -29,6 +33,7 @@ const SessionsListToolSchema = Type.Object({
 export function createSessionsListTool(opts?: {
   agentSessionKey?: string;
   sandboxed?: boolean;
+  config?: PowerDirectorConfig;
 }): AnyAgentTool {
   return {
     label: "Sessions",
@@ -37,7 +42,7 @@ export function createSessionsListTool(opts?: {
     parameters: SessionsListToolSchema,
     execute: async (_toolCallId, args) => {
       const params = args as Record<string, unknown>;
-      const cfg = loadConfig();
+      const cfg = opts?.config ?? loadConfig();
       const { mainKey, alias, requesterInternalKey, restrictToSpawned } =
         resolveSandboxedSessionToolContext({
           cfg,
@@ -154,15 +159,26 @@ export function createSessionsListTool(opts?: {
         const sessionFileRaw = (entry as { sessionFile?: unknown }).sessionFile;
         const sessionFile = typeof sessionFileRaw === "string" ? sessionFileRaw : undefined;
         let transcriptPath: string | undefined;
-        if (sessionId && storePath) {
+        if (sessionId) {
           try {
+            const agentId = resolveAgentIdFromSessionKey(key);
+            const trimmedStorePath = storePath?.trim();
+            let effectiveStorePath: string | undefined;
+            if (trimmedStorePath && trimmedStorePath !== "(multiple)") {
+              if (trimmedStorePath.includes("{agentId}") || trimmedStorePath.startsWith("~")) {
+                effectiveStorePath = resolveStorePath(trimmedStorePath, { agentId });
+              } else if (path.isAbsolute(trimmedStorePath)) {
+                effectiveStorePath = trimmedStorePath;
+              }
+            }
+            const filePathOpts = resolveSessionFilePathOptions({
+              agentId,
+              storePath: effectiveStorePath,
+            });
             transcriptPath = resolveSessionFilePath(
               sessionId,
               sessionFile ? { sessionFile } : undefined,
-              {
-                agentId: resolveAgentIdFromSessionKey(key),
-                sessionsDir: path.dirname(storePath),
-              },
+              filePathOpts,
             );
           } catch {
             transcriptPath = undefined;
@@ -188,6 +204,23 @@ export function createSessionsListTool(opts?: {
           model: typeof entry.model === "string" ? entry.model : undefined,
           contextTokens: typeof entry.contextTokens === "number" ? entry.contextTokens : undefined,
           totalTokens: typeof entry.totalTokens === "number" ? entry.totalTokens : undefined,
+          estimatedCostUsd:
+            typeof entry.estimatedCostUsd === "number" ? entry.estimatedCostUsd : undefined,
+          status: typeof entry.status === "string" ? entry.status : undefined,
+          startedAt: typeof entry.startedAt === "number" ? entry.startedAt : undefined,
+          endedAt: typeof entry.endedAt === "number" ? entry.endedAt : undefined,
+          runtimeMs: typeof entry.runtimeMs === "number" ? entry.runtimeMs : undefined,
+          childSessions: Array.isArray(entry.childSessions)
+            ? entry.childSessions
+                .filter((value): value is string => typeof value === "string")
+                .map((value) =>
+                  resolveDisplaySessionKey({
+                    key: value,
+                    alias,
+                    mainKey,
+                  }),
+                )
+            : undefined,
           thinkingLevel: typeof entry.thinkingLevel === "string" ? entry.thinkingLevel : undefined,
           verboseLevel: typeof entry.verboseLevel === "string" ? entry.verboseLevel : undefined,
           systemSent: typeof entry.systemSent === "boolean" ? entry.systemSent : undefined,

@@ -1,13 +1,17 @@
 import { ChannelType, type Client } from "@buape/carbon";
 import { Routes } from "discord-api-types/v10";
-import { createReplyReferencePlanner } from '../../auto-reply/reply/reply-reference';
-import type { ReplyToMode } from '../../config/config';
-import { logVerbose } from '../../globals';
-import { buildAgentSessionKey } from '../../routing/resolve-route';
-import { truncateUtf16Safe } from '../../utils';
-import type { DiscordChannelConfigResolved } from './allow-list';
-import type { DiscordMessageEvent } from './listeners';
-import { resolveDiscordChannelInfo, resolveDiscordMessageChannelId } from './message-utils';
+import { createReplyReferencePlanner } from "../../auto-reply/reply/reply-reference";
+import type { ReplyToMode } from "../../config/config";
+import { logVerbose } from "../../globals";
+import { buildAgentSessionKey } from "../../routing/resolve-route";
+import { truncateUtf16Safe } from "../../utils";
+import type { DiscordChannelConfigResolved } from "./allow-list";
+import type { DiscordMessageEvent } from "./listeners";
+import {
+  resolveDiscordChannelInfo,
+  resolveDiscordEmbedText,
+  resolveDiscordMessageChannelId,
+} from "./message-utils";
 
 export type DiscordThreadChannel = {
   id: string;
@@ -88,7 +92,7 @@ function isDiscordThreadType(type: ChannelType | undefined): boolean {
 export function resolveDiscordThreadChannel(params: {
   isGuildMessage: boolean;
   message: DiscordMessageEvent["message"];
-  channelInfo: import('./message-utils').DiscordChannelInfo | null;
+  channelInfo: import("./message-utils").DiscordChannelInfo | null;
   messageChannelId?: string;
 }): DiscordThreadChannel | null {
   if (!params.isGuildMessage) {
@@ -128,11 +132,15 @@ export function resolveDiscordThreadChannel(params: {
 export async function resolveDiscordThreadParentInfo(params: {
   client: Client;
   threadChannel: DiscordThreadChannel;
-  channelInfo: import('./message-utils').DiscordChannelInfo | null;
+  channelInfo: import("./message-utils").DiscordChannelInfo | null;
 }): Promise<DiscordThreadParentInfo> {
   const { threadChannel, channelInfo, client } = params;
-  const parentId =
+  let parentId =
     threadChannel.parentId ?? threadChannel.parent?.id ?? channelInfo?.parentId ?? undefined;
+  if (!parentId && threadChannel.id) {
+    const threadInfo = await resolveDiscordChannelInfo(client, threadChannel.id);
+    parentId = threadInfo?.parentId ?? undefined;
+  }
   if (!parentId) {
     return {};
   }
@@ -168,7 +176,7 @@ export async function resolveDiscordThreadStarter(params: {
       Routes.channelMessage(messageChannelId, params.channel.id),
     )) as {
       content?: string | null;
-      embeds?: Array<{ description?: string | null }>;
+      embeds?: Array<{ title?: string | null; description?: string | null }>;
       member?: { nick?: string | null; displayName?: string | null };
       author?: {
         id?: string | null;
@@ -180,7 +188,9 @@ export async function resolveDiscordThreadStarter(params: {
     if (!starter) {
       return null;
     }
-    const text = starter.content?.trim() ?? starter.embeds?.[0]?.description?.trim() ?? "";
+    const content = starter.content?.trim() ?? "";
+    const embedText = resolveDiscordEmbedText(starter.embeds?.[0]);
+    const text = content || embedText;
     if (!text) {
       return null;
     }

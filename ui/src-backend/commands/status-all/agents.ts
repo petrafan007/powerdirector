@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveAgentWorkspaceDir } from '../../agents/agent-scope';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadSessionStore, resolveStorePath } from '../../config/sessions';
-import { listAgentsForGateway } from '../../gateway/session-utils';
+import { resolveAgentWorkspaceDir } from "../../agents/agent-scope";
+import type { PowerDirectorConfig } from "../../config/config";
+import { loadSessionStore, resolveStorePath } from "../../config/sessions";
+import { listGatewayAgentsBasic } from "../../gateway/agent-list";
 
 async function fileExists(p: string): Promise<boolean> {
   try {
@@ -15,7 +15,7 @@ async function fileExists(p: string): Promise<boolean> {
 }
 
 export async function getAgentLocalStatuses(cfg: PowerDirectorConfig) {
-  const agentList = listAgentsForGateway(cfg);
+  const agentList = listGatewayAgentsBasic(cfg);
   const now = Date.now();
 
   const agents = await Promise.all(

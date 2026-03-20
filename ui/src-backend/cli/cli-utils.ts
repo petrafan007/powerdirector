@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { formatErrorMessage } from '../infra/errors';
+import { formatErrorMessage } from "../infra/errors";
 
 export { formatErrorMessage };
 

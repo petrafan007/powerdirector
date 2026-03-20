@@ -1,4 +1,4 @@
-import type { FlexBox, FlexBubble, FlexText } from './types';
+import type { FlexBox, FlexBubble, FlexText } from "./types";
 
 export function attachFooterText(bubble: FlexBubble, footer: string) {
   bubble.footer = {

@@ -1,5 +1,6 @@
-import { parseFrontmatterBlock } from '../markdown/frontmatter';
+import { parseFrontmatterBlock } from "../markdown/frontmatter";
 import {
+  applyPowerDirectorManifestInstallCommonFields,
   getFrontmatterString,
   normalizeStringList,
   parsePowerDirectorManifestInstallBase,
@@ -8,14 +9,14 @@ import {
   resolvePowerDirectorManifestInstall,
   resolvePowerDirectorManifestOs,
   resolvePowerDirectorManifestRequires,
-} from '../shared/frontmatter';
+} from "../shared/frontmatter";
 import type {
   PowerDirectorHookMetadata,
   HookEntry,
   HookInstallSpec,
   HookInvocationPolicy,
   ParsedHookFrontmatter,
-} from './types';
+} from "./types";
 
 export function parseFrontmatter(content: string): ParsedHookFrontmatter {
   return parseFrontmatterBlock(content);
@@ -27,19 +28,12 @@ function parseInstallSpec(input: unknown): HookInstallSpec | undefined {
     return undefined;
   }
   const { raw } = parsed;
-  const spec: HookInstallSpec = {
-    kind: parsed.kind as HookInstallSpec["kind"],
-  };
-
-  if (parsed.id) {
-    spec.id = parsed.id;
-  }
-  if (parsed.label) {
-    spec.label = parsed.label;
-  }
-  if (parsed.bins) {
-    spec.bins = parsed.bins;
-  }
+  const spec = applyPowerDirectorManifestInstallCommonFields<HookInstallSpec>(
+    {
+      kind: parsed.kind as HookInstallSpec["kind"],
+    },
+    parsed,
+  );
   if (typeof raw.package === "string") {
     spec.package = raw.package;
   }

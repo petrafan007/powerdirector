@@ -1,13 +1,16 @@
 import { z } from "zod";
-import { ToolPolicySchema } from './zod-schema.agent-runtime';
-import { ChannelHeartbeatVisibilitySchema } from './zod-schema.channels';
+import { ToolPolicySchema } from "./zod-schema.agent-runtime";
+import {
+  ChannelHealthMonitorSchema,
+  ChannelHeartbeatVisibilitySchema,
+} from "./zod-schema.channels";
 import {
   BlockStreamingCoalesceSchema,
   DmConfigSchema,
   DmPolicySchema,
   GroupPolicySchema,
   MarkdownConfigSchema,
-} from './zod-schema.core';
+} from "./zod-schema.core";
 
 const ToolPolicyBySenderSchema = z.record(z.string(), ToolPolicySchema).optional();
 
@@ -31,7 +34,8 @@ const WhatsAppAckReactionSchema = z
   .strict()
   .optional();
 
-const WhatsAppSharedSchema = z.object({
+const WhatsAppSharedBaseSchema = z.object({
+  enabled: z.boolean().optional(),
   capabilities: z.array(z.string()).optional(),
   markdown: MarkdownConfigSchema,
   configWrites: z.boolean().optional(),
@@ -55,6 +59,7 @@ const WhatsAppSharedSchema = z.object({
   ackReaction: WhatsAppAckReactionSchema,
   debounceMs: z.number().int().nonnegative().optional().default(0),
   heartbeat: ChannelHeartbeatVisibilitySchema,
+  healthMonitor: ChannelHealthMonitorSchema,
 });
 
 function enforceOpenDmPolicyAllowFromStar(params: {
@@ -62,6 +67,7 @@ function enforceOpenDmPolicyAllowFromStar(params: {
   allowFrom: unknown;
   ctx: z.RefinementCtx;
   message: string;
+  path?: Array<string | number>;
 }) {
   if (params.dmPolicy !== "open") {
     return;
@@ -74,30 +80,81 @@ function enforceOpenDmPolicyAllowFromStar(params: {
   }
   params.ctx.addIssue({
     code: z.ZodIssueCode.custom,
-    path: ["allowFrom"],
+    path: params.path ?? ["allowFrom"],
     message: params.message,
   });
 }
 
-export const WhatsAppAccountSchema = WhatsAppSharedSchema.extend({
+function enforceAllowlistDmPolicyAllowFrom(params: {
+  dmPolicy: unknown;
+  allowFrom: unknown;
+  ctx: z.RefinementCtx;
+  message: string;
+  path?: Array<string | number>;
+}) {
+  if (params.dmPolicy !== "allowlist") {
+    return;
+  }
+  const allow = (Array.isArray(params.allowFrom) ? params.allowFrom : [])
+    .map((v) => String(v).trim())
+    .filter(Boolean);
+  if (allow.length > 0) {
+    return;
+  }
+  params.ctx.addIssue({
+    code: z.ZodIssueCode.custom,
+    path: params.path ?? ["allowFrom"],
+    message: params.message,
+  });
+}
+
+const WhatsAppSharedSchema = WhatsAppSharedBaseSchema.superRefine((value, ctx) => {
+    enforceOpenDmPolicyAllowFromStar({
+      dmPolicy: value.dmPolicy,
+      allowFrom: value.allowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.dmPolicy="open" requires channels.whatsapp.allowFrom to include "*"',
+    });
+    enforceAllowlistDmPolicyAllowFrom({
+      dmPolicy: value.dmPolicy,
+      allowFrom: value.allowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.dmPolicy="allowlist" requires channels.whatsapp.allowFrom to contain at least one string',
+    });
+
+    const groupPolicy = value.groupPolicy;
+    const groupAllowFrom = value.groupAllowFrom;
+    enforceOpenDmPolicyAllowFromStar({
+      dmPolicy: groupPolicy,
+      allowFrom: groupAllowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.groupPolicy="open" requires channels.whatsapp.groupAllowFrom to include "*"',
+      path: ["groupAllowFrom"],
+    });
+    enforceAllowlistDmPolicyAllowFrom({
+      dmPolicy: groupPolicy,
+      allowFrom: groupAllowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.groupPolicy="allowlist" requires channels.whatsapp.groupAllowFrom to contain at least one string',
+      path: ["groupAllowFrom"],
+    });
+  });
+
+export const WhatsAppAccountSchema = WhatsAppSharedBaseSchema.extend({
   name: z.string().optional(),
   enabled: z.boolean().optional(),
   /** Override auth directory for this WhatsApp account (Baileys multi-file auth state). */
   authDir: z.string().optional(),
   mediaMaxMb: z.number().int().positive().optional(),
-})
-  .strict()
-  .superRefine((value, ctx) => {
-    enforceOpenDmPolicyAllowFromStar({
-      dmPolicy: value.dmPolicy,
-      allowFrom: value.allowFrom,
-      ctx,
-      message: 'channels.whatsapp.accounts.*.dmPolicy="open" requires allowFrom to include "*"',
-    });
-  });
+}).strict();
 
-export const WhatsAppConfigSchema = WhatsAppSharedSchema.extend({
+export const WhatsAppConfigSchema = WhatsAppSharedBaseSchema.safeExtend({
   accounts: z.record(z.string(), WhatsAppAccountSchema.optional()).optional(),
+  defaultAccount: z.string().optional(),
   mediaMaxMb: z.number().int().positive().optional().default(50),
   actions: z
     .object({
@@ -117,4 +174,37 @@ export const WhatsAppConfigSchema = WhatsAppSharedSchema.extend({
       message:
         'channels.whatsapp.dmPolicy="open" requires channels.whatsapp.allowFrom to include "*"',
     });
+    enforceAllowlistDmPolicyAllowFrom({
+      dmPolicy: value.dmPolicy,
+      allowFrom: value.allowFrom,
+      ctx,
+      message:
+        'channels.whatsapp.dmPolicy="allowlist" requires channels.whatsapp.allowFrom to contain at least one sender ID',
+    });
+    if (!value.accounts) {
+      return;
+    }
+    for (const [accountId, account] of Object.entries(value.accounts)) {
+      if (!account) {
+        continue;
+      }
+      const effectivePolicy = account.dmPolicy ?? value.dmPolicy;
+      const effectiveAllowFrom = account.allowFrom ?? value.allowFrom;
+      enforceOpenDmPolicyAllowFromStar({
+        dmPolicy: effectivePolicy,
+        allowFrom: effectiveAllowFrom,
+        ctx,
+        path: ["accounts", accountId, "allowFrom"],
+        message:
+          'channels.whatsapp.accounts.*.dmPolicy="open" requires channels.whatsapp.accounts.*.allowFrom (or channels.whatsapp.allowFrom) to include "*"',
+      });
+      enforceAllowlistDmPolicyAllowFrom({
+        dmPolicy: effectivePolicy,
+        allowFrom: effectiveAllowFrom,
+        ctx,
+        path: ["accounts", accountId, "allowFrom"],
+        message:
+          'channels.whatsapp.accounts.*.dmPolicy="allowlist" requires channels.whatsapp.accounts.*.allowFrom (or channels.whatsapp.allowFrom) to contain at least one sender ID',
+      });
+    }
   });

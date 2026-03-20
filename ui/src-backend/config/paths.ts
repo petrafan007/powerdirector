@@ -1,310 +1,181 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expandHomePrefix, resolveRequiredHomeDir } from '../infra/home-dir';
-import type { PowerDirectorConfig } from './types';
+import { expandHomePrefix, resolveRequiredHomeDir } from "../infra/home-dir";
+import type { PowerDirectorConfig } from "./types";
 
 /**
  * Nix mode detection: When POWERDIRECTOR_NIX_MODE=1, the gateway is running under Nix.
  * In this mode:
  * - No auto-install flows should be attempted
- * - Missing dependencies should produce actionable Nix-specific error messages
- * - Config is managed externally (read-only from Nix perspective)
+ * - Missing dependencies should be fatal errors
+ * - Config is expected to be immutable/managed by Nix
  */
 export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.POWERDIRECTOR_NIX_MODE === "1" || env.POWERDIRECTOR_NIX_MODE === "1";
+  return env.POWERDIRECTOR_NIX_MODE === "1";
 }
 
 export const isNixMode = resolveIsNixMode();
 
-// Support historical (and occasionally misspelled) legacy state dirs.
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moldbot", ".moltbot"] as const;
 const NEW_STATE_DIRNAME = ".powerdirector";
 const CONFIG_FILENAME = "powerdirector.config.json";
-const LEGACY_CONFIG_FILENAMES = ["powerdirector.config.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
-
-function findProjectRoot(): string | null {
-  let current = process.cwd();
-  const root = path.parse(current).root;
-  while (current !== root) {
-    if (fs.existsSync(path.join(current, "package.json"))) {
-      // Heuristic: check if this seems like the project root (e.g. has src)
-      if (fs.existsSync(path.join(current, "src"))) {
-        return current;
-      }
-    }
-    const parent = path.dirname(current);
-    if (parent === current) break;
-    current = parent;
-  }
-  return null;
-}
-
-export function resolvePowerDirectorRoot(): string {
-  return findProjectRoot() || process.cwd();
-}
+const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);
 }
 
 /** Build a homedir thunk that respects POWERDIRECTOR_HOME for the given env. */
-function envHomedir(env: NodeJS.ProcessEnv): () => string {
-  return () => resolveRequiredHomeDir(env, os.homedir);
-}
-
-function legacyStateDirs(homedir: () => string = resolveDefaultHomeDir): string[] {
-  return LEGACY_STATE_DIRNAMES.map((dir) => path.join(homedir(), dir));
-}
-
-function newStateDir(homedir: () => string = resolveDefaultHomeDir): string {
-  return path.join(homedir(), NEW_STATE_DIRNAME);
+function buildHomeDirResolver(env: NodeJS.ProcessEnv = process.env): () => string {
+  const custom = env.POWERDIRECTOR_HOME?.trim();
+  if (custom) {
+    const resolved = expandHomePrefix(custom, os.homedir);
+    return () => resolved;
+  }
+  return resolveDefaultHomeDir;
 }
 
 export function resolveLegacyStateDir(homedir: () => string = resolveDefaultHomeDir): string {
-  return legacyStateDirs(homedir)[0] ?? newStateDir(homedir);
+  return path.join(homedir(), ".powerdirector");
 }
 
 export function resolveLegacyStateDirs(homedir: () => string = resolveDefaultHomeDir): string[] {
-  return legacyStateDirs(homedir);
+  return LEGACY_STATE_DIRNAMES.map((dir) => path.join(homedir(), dir));
 }
 
 export function resolveNewStateDir(homedir: () => string = resolveDefaultHomeDir): string {
-  return newStateDir(homedir);
+  return path.join(homedir(), NEW_STATE_DIRNAME);
 }
 
-/**
- * State directory for mutable data (sessions, logs, caches).
- * Can be overridden via POWERDIRECTOR_STATE_DIR.
- * Default: ~/.powerdirector
- */
 export function resolveStateDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = envHomedir(env),
+  homedir: () => string = buildHomeDirResolver(env),
 ): string {
-  const effectiveHomedir = () => resolveRequiredHomeDir(env, homedir);
-  const override =
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.CLAWDBOT_STATE_DIR?.trim();
-  if (override) {
-    return resolveUserPath(override, env, effectiveHomedir);
+  const envDir = env.POWERDIRECTOR_STATE_DIR?.trim();
+  if (envDir) {
+    return expandHomePrefix(envDir, homedir);
   }
-  const newDir = newStateDir(effectiveHomedir);
-  const legacyDirs = legacyStateDirs(effectiveHomedir);
-  const hasNew = fs.existsSync(newDir);
-  if (hasNew) {
-    return newDir;
-  }
-  const existingLegacy = legacyDirs.find((dir) => {
-    try {
-      return fs.existsSync(dir);
-    } catch {
-      return false;
-    }
-  });
-  if (existingLegacy) {
-    return existingLegacy;
-  }
-  return newDir;
-}
-
-function resolveUserPath(
-  input: string,
-  env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = envHomedir(env),
-): string {
-  const trimmed = input.trim();
-  if (!trimmed) {
-    return trimmed;
-  }
-  if (trimmed.startsWith("~")) {
-    const expanded = expandHomePrefix(trimmed, {
-      home: resolveRequiredHomeDir(env, homedir),
-      env,
-      homedir,
-    });
-    return path.resolve(expanded);
-  }
-  return path.resolve(trimmed);
+  return resolveNewStateDir(homedir);
 }
 
 export const STATE_DIR = resolveStateDir();
 
-/**
- * Config file path (JSON5).
- * Can be overridden via POWERDIRECTOR_CONFIG_PATH.
- * Default: ~/.powerdirector/powerdirector.config.json (or $POWERDIRECTOR_STATE_DIR/powerdirector.config.json)
- */
+export function resolvePowerDirectorRoot(startDir: string = process.cwd()): string {
+  let current = path.resolve(startDir);
+  for (let i = 0; i < 10; i++) {
+    if (fs.existsSync(path.join(current, "package.json"))) {
+      try {
+        const pkg = JSON.parse(fs.readFileSync(path.join(current, "package.json"), "utf8"));
+        if (pkg.name === "powerdirector") {
+          return current;
+        }
+      } catch {
+        // ignore parse errors
+      }
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return path.resolve(startDir);
+}
+
 export function resolveCanonicalConfigPath(
   env: NodeJS.ProcessEnv = process.env,
-  stateDir: string = resolveStateDir(env, envHomedir(env)),
+  homedir: () => string = buildHomeDirResolver(env),
 ): string {
-  const override =
-    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
-    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
-    env.CLAWDBOT_CONFIG_PATH?.trim();
-  if (override) {
-    return resolveUserPath(override, env, envHomedir(env));
-  }
+  const stateDir = resolveStateDir(env, homedir);
   return path.join(stateDir, CONFIG_FILENAME);
 }
 
-/**
- * Resolve the active config path by preferring existing config candidates
- * before falling back to the canonical path.
- */
 export function resolveConfigPathCandidate(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = envHomedir(env),
-): string {
-  const candidates = resolveDefaultConfigCandidates(env, homedir);
-  const existing = candidates.find((candidate) => {
-    try {
-      return fs.existsSync(candidate);
-    } catch {
-      return false;
-    }
-  });
-  if (existing) {
-    return existing;
-  }
-  return resolveCanonicalConfigPath(env, resolveStateDir(env, homedir));
-}
-
-/**
- * Active config path (prefers existing config files).
- */
-export function resolveConfigPath(
-  env: NodeJS.ProcessEnv = process.env,
-  stateDir: string = resolveStateDir(env, envHomedir(env)),
-  homedir: () => string = envHomedir(env),
+  homedir: () => string = buildHomeDirResolver(env),
 ): string {
   const override = env.POWERDIRECTOR_CONFIG_PATH?.trim() || env.POWERDIRECTOR_CONFIG_PATH?.trim();
   if (override) {
-    return resolveUserPath(override, env, homedir);
+    return expandHomePrefix(override, homedir);
   }
-  const stateOverride = env.POWERDIRECTOR_STATE_DIR?.trim() || env.POWERDIRECTOR_STATE_DIR?.trim();
-  const projectRoot = findProjectRoot();
-  const candidates = [
-    path.join(stateDir, CONFIG_FILENAME),
-    ...LEGACY_CONFIG_FILENAMES.map((name) => path.join(stateDir, name)),
-  ];
+
+  const stateDir = resolveStateDir(env, homedir);
+  const newStatePath = path.join(stateDir, CONFIG_FILENAME);
+  if (fs.existsSync(newStatePath)) {
+    return newStatePath;
+  }
+
+  const legacyDirs = resolveLegacyStateDirs(homedir);
+  for (const dir of legacyDirs) {
+    const p = path.join(dir, CONFIG_FILENAME);
+    if (fs.existsSync(p)) {
+      return p;
+    }
+  }
+
+  const candidates: string[] = [];
+  const projectRoot = resolvePowerDirectorRoot();
   if (projectRoot) {
     candidates.push(path.join(projectRoot, CONFIG_FILENAME));
     candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
   }
-  const existing = candidates.find((candidate) => {
-    try {
-      return fs.existsSync(candidate);
-    } catch {
-      return false;
+
+  for (const p of candidates) {
+    if (fs.existsSync(p)) {
+      return p;
     }
-  });
-  if (existing) {
-    return existing;
   }
-  if (stateOverride) {
-    return path.join(stateDir, CONFIG_FILENAME);
-  }
-  const defaultStateDir = resolveStateDir(env, homedir);
-  if (path.resolve(stateDir) === path.resolve(defaultStateDir)) {
-    return resolveConfigPathCandidate(env, homedir);
-  }
-  return path.join(stateDir, CONFIG_FILENAME);
+
+  return newStatePath;
+}
+
+export function resolveConfigPath(
+  env: NodeJS.ProcessEnv = process.env,
+  homedir: () => string = buildHomeDirResolver(env),
+): string {
+  return resolveConfigPathCandidate(env, homedir);
 }
 
 export const CONFIG_PATH = resolveConfigPathCandidate();
 
-/**
- * Resolve default config path candidates across default locations.
- * Order: explicit config path → state-dir-derived paths → new default.
- */
 export function resolveDefaultConfigCandidates(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = envHomedir(env),
+  homedir: () => string = buildHomeDirResolver(env),
 ): string[] {
-  const effectiveHomedir = () => resolveRequiredHomeDir(env, homedir);
-  const explicit =
-    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
-    env.POWERDIRECTOR_CONFIG_PATH?.trim() ||
-    env.CLAWDBOT_CONFIG_PATH?.trim();
-  if (explicit) {
-    return [resolveUserPath(explicit, env, effectiveHomedir)];
-  }
-
-  const candidates: string[] = [];
-  const projectRoot = findProjectRoot();
+  const candidates: string[] = [resolveCanonicalConfigPath(env, homedir)];
+  const projectRoot = resolvePowerDirectorRoot();
   if (projectRoot) {
     candidates.push(path.join(projectRoot, CONFIG_FILENAME));
-    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(projectRoot, name)));
   }
-
-  const powerdirectorStateDir =
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.POWERDIRECTOR_STATE_DIR?.trim() ||
-    env.CLAWDBOT_STATE_DIR?.trim();
-  if (powerdirectorStateDir) {
-    const resolved = resolveUserPath(powerdirectorStateDir, env, effectiveHomedir);
-    candidates.push(path.join(resolved, CONFIG_FILENAME));
-    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(resolved, name)));
-  }
-
-  const defaultDirs = [newStateDir(effectiveHomedir), ...legacyStateDirs(effectiveHomedir)];
-  for (const dir of defaultDirs) {
-    candidates.push(path.join(dir, CONFIG_FILENAME));
-    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(dir, name)));
-  }
-  return candidates;
+  return Array.from(new Set(candidates));
 }
 
-export const DEFAULT_GATEWAY_PORT = 3007;
+export const DEFAULT_GATEWAY_PORT = 3012;
 
-/**
- * Gateway lock directory (ephemeral).
- * Default: os.tmpdir()/powerdirector-<uid> (uid suffix when available).
- */
 export function resolveGatewayLockDir(tmpdir: () => string = os.tmpdir): string {
-  const base = tmpdir();
-  const uid = typeof process.getuid === "function" ? process.getuid() : undefined;
-  const suffix = uid != null ? `powerdirector-${uid}` : "powerdirector";
-  return path.join(base, suffix);
+  return path.join(tmpdir(), "powerdirector-gateway-lock");
 }
 
-const OAUTH_FILENAME = "oauth.json";
-
-/**
- * OAuth credentials storage directory.
- *
- * Precedence:
- * - `POWERDIRECTOR_OAUTH_DIR` (explicit override)
- * - `$*_STATE_DIR/credentials` (canonical server/default)
- */
 export function resolveOAuthDir(
   env: NodeJS.ProcessEnv = process.env,
-  stateDir: string = resolveStateDir(env, envHomedir(env)),
+  homedir: () => string = buildHomeDirResolver(env),
 ): string {
-  const override = env.POWERDIRECTOR_OAUTH_DIR?.trim() || env.POWERDIRECTOR_OAUTH_DIR?.trim();
-  if (override) {
-    return resolveUserPath(override, env, envHomedir(env));
-  }
+  const stateDir = resolveStateDir(env, homedir);
   return path.join(stateDir, "credentials");
 }
 
 export function resolveOAuthPath(
+  provider: string,
   env: NodeJS.ProcessEnv = process.env,
-  stateDir: string = resolveStateDir(env, envHomedir(env)),
+  homedir: () => string = buildHomeDirResolver(env),
 ): string {
-  return path.join(resolveOAuthDir(env, stateDir), OAUTH_FILENAME);
+  const dir = resolveOAuthDir(env, homedir);
+  return path.join(dir, `${provider}.json`);
 }
 
-export function resolveGatewayPort(
-  cfg?: PowerDirectorConfig,
-  env: NodeJS.ProcessEnv = process.env,
-): number {
-  const envRaw = env.POWERDIRECTOR_GATEWAY_PORT?.trim() || env.CLAWDBOT_GATEWAY_PORT?.trim();
-  if (envRaw) {
-    const parsed = Number.parseInt(envRaw, 10);
+export function resolveGatewayPort(cfg?: PowerDirectorConfig, env: NodeJS.ProcessEnv = process.env): number {
+  const envPort = env.POWERDIRECTOR_GATEWAY_PORT?.trim();
+  if (envPort) {
+    const parsed = Number.parseInt(envPort, 10);
     if (Number.isFinite(parsed) && parsed > 0) {
       return parsed;
     }

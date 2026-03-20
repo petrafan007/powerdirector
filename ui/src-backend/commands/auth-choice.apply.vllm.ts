@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from './auth-choice.apply';
-import { promptAndConfigureVllm } from './vllm-setup';
+import type { PowerDirectorConfig } from "../config/config";
+import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply";
+import { promptAndConfigureVllm } from "./vllm-setup";
 
 function applyVllmDefaultModel(cfg: PowerDirectorConfig, modelRef: string): PowerDirectorConfig {
   const existingModel = cfg.agents?.defaults?.model;

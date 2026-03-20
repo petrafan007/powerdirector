@@ -7,11 +7,11 @@ type GatewayMockFn = ((opts: unknown) => unknown) & {
 
 export const callGatewayMock = vi.fn() as GatewayMockFn;
 
-vi.mock("../../gateway/call.js", () => ({
+vi.mock("../../gateway/call", () => ({
   callGateway: (opts: unknown) => callGatewayMock(opts),
 }));
 
-vi.mock("../agent-scope.js", () => ({
+vi.mock("../agent-scope", () => ({
   resolveSessionAgentId: () => "agent-123",
 }));
 

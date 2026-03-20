@@ -1,0 +1,14 @@
+import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { bluebubblesPlugin } from "./src/channel";
+import { setBlueBubblesRuntime } from "./src/runtime";
+
+export { bluebubblesPlugin } from "./src/channel";
+export { setBlueBubblesRuntime } from "./src/runtime";
+
+export default defineChannelPluginEntry({
+  id: "bluebubbles",
+  name: "BlueBubbles",
+  description: "BlueBubbles channel plugin (macOS app)",
+  plugin: bluebubblesPlugin,
+  setRuntime: setBlueBubblesRuntime,
+});

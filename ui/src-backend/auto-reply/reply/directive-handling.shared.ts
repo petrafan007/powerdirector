@@ -1,16 +1,9 @@
-import { formatCliCommand } from '../../cli/command-format';
-import type { ElevatedLevel, ReasoningLevel } from './directives';
-
-export const SYSTEM_MARK = "⚙️";
+import { formatCliCommand } from "../../cli/command-format";
+import { SYSTEM_MARK, prefixSystemMessage } from "../../infra/system-message";
+import type { ElevatedLevel, ReasoningLevel } from "./directives";
 
 export const formatDirectiveAck = (text: string): string => {
-  if (!text) {
-    return text;
-  }
-  if (text.startsWith(SYSTEM_MARK)) {
-    return text;
-  }
-  return `${SYSTEM_MARK} ${text}`;
+  return prefixSystemMessage(text);
 };
 
 export const formatOptionsLine = (options: string) => `Options: ${options}.`;

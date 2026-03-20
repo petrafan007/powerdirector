@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import JSON5 from "json5";
-import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from '../agents/workspace';
-import { type PowerDirectorConfig, createConfigIO, writeConfigFile } from '../config/config';
-import { formatConfigPath, logConfigUpdated } from '../config/logging';
-import { resolveSessionTranscriptsDir } from '../config/sessions';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { shortenHomePath } from '../utils';
+import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from "../agents/workspace";
+import { type PowerDirectorConfig, createConfigIO, writeConfigFile } from "../config/config";
+import { formatConfigPath, logConfigUpdated } from "../config/logging";
+import { resolveSessionTranscriptsDir } from "../config/sessions";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { shortenHomePath } from "../utils";
 
 async function readConfigFileRaw(configPath: string): Promise<{
   exists: boolean;
@@ -50,14 +50,30 @@ export async function setupCommand(
         workspace,
       },
     },
+    gateway: {
+      ...cfg.gateway,
+      mode: cfg.gateway?.mode ?? "local",
+    },
   };
 
-  if (!existingRaw.exists || defaults.workspace !== workspace) {
+  if (
+    !existingRaw.exists ||
+    defaults.workspace !== workspace ||
+    cfg.gateway?.mode !== next.gateway?.mode
+  ) {
     await writeConfigFile(next);
     if (!existingRaw.exists) {
       runtime.log(`Wrote ${formatConfigPath(configPath)}`);
     } else {
-      logConfigUpdated(runtime, { path: configPath, suffix: "(set agents.defaults.workspace)" });
+      const updates: string[] = [];
+      if (defaults.workspace !== workspace) {
+        updates.push("set agents.defaults.workspace");
+      }
+      if (cfg.gateway?.mode !== next.gateway?.mode) {
+        updates.push("set gateway.mode");
+      }
+      const suffix = updates.length > 0 ? `(${updates.join(", ")})` : undefined;
+      logConfigUpdated(runtime, { path: configPath, suffix });
     }
   } else {
     runtime.log(`Config OK: ${formatConfigPath(configPath)}`);

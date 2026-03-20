@@ -1,20 +1,20 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { SILENT_REPLY_TOKEN } from '../auto-reply/tokens';
-import type { CliDeps } from '../cli/deps';
-import { agentCommand } from '../commands/agent';
-import type { PowerDirectorConfig } from '../config/config';
+import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens";
+import type { CliDeps } from "../cli/deps";
+import { agentCommand } from "../commands/agent";
+import type { PowerDirectorConfig } from "../config/config";
 import {
   resolveAgentIdFromSessionKey,
   resolveAgentMainSessionKey,
   resolveMainSessionKey,
-} from '../config/sessions/main-session';
-import { resolveStorePath } from '../config/sessions/paths';
-import { loadSessionStore, updateSessionStore } from '../config/sessions/store';
-import type { SessionEntry } from '../config/sessions/types';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { type RuntimeEnv, defaultRuntime } from '../runtime';
+} from "../config/sessions/main-session";
+import { resolveStorePath } from "../config/sessions/paths";
+import { loadSessionStore, updateSessionStore } from "../config/sessions/store";
+import type { SessionEntry } from "../config/sessions/types";
+import { createSubsystemLogger } from "../logging/subsystem";
+import { type RuntimeEnv, defaultRuntime } from "../runtime";
 
 function generateBootSessionId(): string {
   const now = new Date();
@@ -177,6 +177,7 @@ export async function runBootOnce(params: {
         sessionKey,
         sessionId,
         deliver: false,
+        senderIsOwner: true,
       },
       bootRuntime,
       params.deps,

@@ -5,7 +5,7 @@ import {
   postbackAction,
   uriAction,
   type Action,
-} from './actions';
+} from "./actions";
 
 export { datetimePickerAction, messageAction, postbackAction, uriAction };
 
@@ -16,6 +16,23 @@ type CarouselTemplate = messagingApi.CarouselTemplate;
 type CarouselColumn = messagingApi.CarouselColumn;
 type ImageCarouselTemplate = messagingApi.ImageCarouselTemplate;
 type ImageCarouselColumn = messagingApi.ImageCarouselColumn;
+
+type TemplatePayloadAction = {
+  type?: "uri" | "postback" | "message";
+  uri?: string;
+  data?: string;
+  label: string;
+};
+
+function buildTemplatePayloadAction(action: TemplatePayloadAction): Action {
+  if (action.type === "uri" && action.uri) {
+    return uriAction(action.label, action.uri);
+  }
+  if (action.type === "postback" && action.data) {
+    return postbackAction(action.label, action.data, action.label);
+  }
+  return messageAction(action.label, action.data ?? action.label);
+}
 
 /**
  * Create a confirm template (yes/no style dialog)
@@ -267,7 +284,7 @@ export function createProductCarousel(
 // ReplyPayload Conversion
 // ============================================================================
 
-import type { LineTemplateMessagePayload } from './types';
+import type { LineTemplateMessagePayload } from "./types";
 
 /**
  * Convert a TemplateMessagePayload from ReplyPayload to a LINE TemplateMessage
@@ -293,16 +310,9 @@ export function buildTemplateMessageFromPayload(
     }
 
     case "buttons": {
-      const actions: Action[] = payload.actions.slice(0, 4).map((action) => {
-        if (action.type === "uri" && action.uri) {
-          return uriAction(action.label, action.uri);
-        }
-        if (action.type === "postback" && action.data) {
-          return postbackAction(action.label, action.data, action.label);
-        }
-        // Default to message action
-        return messageAction(action.label, action.data ?? action.label);
-      });
+      const actions: Action[] = payload.actions
+        .slice(0, 4)
+        .map((action) => buildTemplatePayloadAction(action));
 
       return createButtonTemplate(payload.title, payload.text, actions, {
         thumbnailImageUrl: payload.thumbnailImageUrl,
@@ -312,15 +322,9 @@ export function buildTemplateMessageFromPayload(
 
     case "carousel": {
       const columns: CarouselColumn[] = payload.columns.slice(0, 10).map((col) => {
-        const colActions: Action[] = col.actions.slice(0, 3).map((action) => {
-          if (action.type === "uri" && action.uri) {
-            return uriAction(action.label, action.uri);
-          }
-          if (action.type === "postback" && action.data) {
-            return postbackAction(action.label, action.data, action.label);
-          }
-          return messageAction(action.label, action.data ?? action.label);
-        });
+        const colActions: Action[] = col.actions
+          .slice(0, 3)
+          .map((action) => buildTemplatePayloadAction(action));
 
         return createCarouselColumn({
           title: col.title,

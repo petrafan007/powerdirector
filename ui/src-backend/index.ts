@@ -1,76 +1,57 @@
 #!/usr/bin/env node
-import "./bootstrap.js";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { getReplyFromConfig } from './auto-reply/reply';
-import { applyTemplate } from './auto-reply/templating';
-import { monitorWebChannel } from './channel-web';
-import { createDefaultDeps } from './cli/deps';
-import { promptYesNo } from './cli/prompt';
-import { waitForever } from './cli/wait';
-import { loadConfig } from './config/config';
-import {
-  deriveSessionKey,
-  loadSessionStore,
-  resolveSessionKey,
-  resolveStorePath,
-  saveSessionStore,
-} from './config/sessions';
-import { ensureBinary } from './infra/binaries';
-import { loadDotEnv } from './infra/dotenv';
-import { normalizeEnv } from './infra/env';
-import { formatUncaughtError } from './infra/errors';
-import { isMainModule } from './infra/is-main';
-import { ensurePowerDirectorCliOnPath } from './infra/path-env';
-import {
-  describePortOwner,
-  ensurePortAvailable,
-  handlePortError,
-  PortInUseError,
-} from './infra/ports';
-import { assertSupportedRuntime } from './infra/runtime-guard';
-import { installUnhandledRejectionHandler } from './infra/unhandled-rejections';
-import { enableConsoleCapture } from './logging';
-import { runCommandWithTimeout, runExec } from './process/exec';
-import { assertWebChannel, normalizeE164, toWhatsappJid } from './utils';
+import { formatUncaughtError } from "./infra/errors";
+import { isMainModule } from "./infra/is-main";
+import { installUnhandledRejectionHandler } from "./infra/unhandled-rejections";
 
-normalizeEnv();
-ensurePowerDirectorCliOnPath();
+const library = await import("./library");
 
-// Capture all console output into structured logs while keeping stdout/stderr behavior.
-enableConsoleCapture();
+export const assertWebChannel = library.assertWebChannel;
+export const applyTemplate = library.applyTemplate;
+export const createDefaultDeps = library.createDefaultDeps;
+export const deriveSessionKey = library.deriveSessionKey;
+export const describePortOwner = library.describePortOwner;
+export const ensureBinary = library.ensureBinary;
+export const ensurePortAvailable = library.ensurePortAvailable;
+export const getReplyFromConfig = library.getReplyFromConfig;
+export const handlePortError = library.handlePortError;
+export const loadConfig = library.loadConfig;
+export const loadSessionStore = library.loadSessionStore;
+export const monitorWebChannel = library.monitorWebChannel;
+export const normalizeE164 = library.normalizeE164;
+export const PortInUseError = library.PortInUseError;
+export const promptYesNo = library.promptYesNo;
+export const resolveSessionKey = library.resolveSessionKey;
+export const resolveStorePath = library.resolveStorePath;
+export const runCommandWithTimeout = library.runCommandWithTimeout;
+export const runExec = library.runExec;
+export const saveSessionStore = library.saveSessionStore;
+export const toWhatsappJid = library.toWhatsappJid;
+export const waitForever = library.waitForever;
 
-// Enforce the minimum supported runtime before doing any work.
-assertSupportedRuntime();
-
-import { buildProgram } from './cli/program';
-
-const program = buildProgram();
-
-export {
-  assertWebChannel,
-  applyTemplate,
-  createDefaultDeps,
-  deriveSessionKey,
-  describePortOwner,
-  ensureBinary,
-  ensurePortAvailable,
-  getReplyFromConfig,
-  handlePortError,
-  loadConfig,
-  loadSessionStore,
-  monitorWebChannel,
-  normalizeE164,
-  PortInUseError,
-  promptYesNo,
-  resolveSessionKey,
-  resolveStorePath,
-  runCommandWithTimeout,
-  runExec,
-  saveSessionStore,
-  toWhatsappJid,
-  waitForever,
+type LegacyCliDeps = {
+  installGaxiosFetchCompat: () => Promise<void>;
+  runCli: (argv: string[]) => Promise<void>;
 };
+
+async function loadLegacyCliDeps(): Promise<LegacyCliDeps> {
+  const [{ installGaxiosFetchCompat }, { runCli }] = await Promise.all([
+    import("./infra/gaxios-fetch-compat"),
+    import("./cli/run-main"),
+  ]);
+  return { installGaxiosFetchCompat, runCli };
+}
+
+// Legacy direct file entrypoint only. Package root exports now live in library.ts.
+export async function runLegacyCliEntry(
+  argv: string[] = process.argv,
+  deps?: LegacyCliDeps,
+): Promise<void> {
+  const { installGaxiosFetchCompat, runCli } = deps ?? (await loadLegacyCliDeps());
+  await installGaxiosFetchCompat();
+  await runCli(argv);
+}
 
 const isMain = isMainModule({
   currentFile: fileURLToPath(import.meta.url),
@@ -86,7 +67,7 @@ if (isMain) {
     process.exit(1);
   });
 
-  void program.parseAsync(process.argv).catch((err) => {
+  void runLegacyCliEntry(process.argv).catch((err) => {
     console.error("[powerdirector] CLI failed:", formatUncaughtError(err));
     process.exit(1);
   });

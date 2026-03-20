@@ -1,5 +1,5 @@
-import { ErrorCodes, errorShape } from '../protocol/index';
-import type { GatewayRequestHandlers } from './types';
+import { ErrorCodes, errorShape } from "../protocol/index";
+import type { GatewayRequestHandlers } from "./types";
 
 export const connectHandlers: GatewayRequestHandlers = {
   connect: ({ respond }) => {

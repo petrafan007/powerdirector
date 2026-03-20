@@ -1,4 +1,4 @@
-import { theme } from './theme';
+import { theme } from "./theme";
 
 export function styleHealthChannelLine(line: string, rich: boolean): string {
   if (!rich) {

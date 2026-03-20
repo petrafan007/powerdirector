@@ -1,4 +1,4 @@
-import { normalizeCommandBody } from './commands-registry';
+import { normalizeCommandBody } from "./commands-registry";
 
 export type GroupActivationMode = "mention" | "always";
 

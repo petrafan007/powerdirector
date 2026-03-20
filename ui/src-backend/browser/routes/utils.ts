@@ -1,6 +1,6 @@
-import { parseBooleanValue } from '../../utils/boolean';
-import type { BrowserRouteContext, ProfileContext } from '../server-context';
-import type { BrowserRequest, BrowserResponse } from './types';
+import { parseBooleanValue } from "../../utils/boolean";
+import type { BrowserRouteContext, ProfileContext } from "../server-context";
+import type { BrowserRequest, BrowserResponse } from "./types";
 
 /**
  * Extract profile name from query string or body and get profile context.

@@ -1,19 +1,10 @@
-import fs from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
-import { afterAll, beforeAll, vi } from "vitest";
+import { vi } from "vitest";
+import { installChromeUserDataDirHooks } from "./chrome-user-data-dir.test-harness";
 
 const chromeUserDataDir = { dir: "/tmp/powerdirector" };
+installChromeUserDataDirHooks(chromeUserDataDir);
 
-beforeAll(async () => {
-  chromeUserDataDir.dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-chrome-user-data-"));
-});
-
-afterAll(async () => {
-  await fs.rm(chromeUserDataDir.dir, { recursive: true, force: true });
-});
-
-vi.mock("./chrome.js", () => ({
+vi.mock("./chrome", () => ({
   isChromeCdpReady: vi.fn(async () => true),
   isChromeReachable: vi.fn(async () => true),
   launchPowerDirectorChrome: vi.fn(async () => {

@@ -1,4 +1,4 @@
-import { normalizeE164 } from '../utils';
+import { normalizeE164 } from "../utils";
 
 const WHATSAPP_USER_JID_RE = /^(\d+)(?::\d+)?@s\.whatsapp\.net$/i;
 const WHATSAPP_LID_RE = /^(\d+)@lid$/i;

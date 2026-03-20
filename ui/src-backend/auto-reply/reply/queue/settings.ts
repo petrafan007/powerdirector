@@ -1,8 +1,8 @@
-import { getChannelPlugin } from '../../../channels/plugins/index';
-import type { InboundDebounceByProvider } from '../../../config/types.messages';
-import { normalizeQueueDropPolicy, normalizeQueueMode } from './normalize';
-import { DEFAULT_QUEUE_CAP, DEFAULT_QUEUE_DEBOUNCE_MS, DEFAULT_QUEUE_DROP } from './state';
-import type { QueueMode, QueueSettings, ResolveQueueSettingsParams } from './types';
+import { getChannelPlugin } from "../../../channels/plugins/index";
+import type { InboundDebounceByProvider } from "../../../config/types.messages";
+import { normalizeQueueDropPolicy, normalizeQueueMode } from "./normalize";
+import { DEFAULT_QUEUE_CAP, DEFAULT_QUEUE_DEBOUNCE_MS, DEFAULT_QUEUE_DROP } from "./state";
+import type { QueueMode, QueueSettings, ResolveQueueSettingsParams } from "./types";
 
 function defaultQueueModeForChannel(_channel?: string): QueueMode {
   return "collect";

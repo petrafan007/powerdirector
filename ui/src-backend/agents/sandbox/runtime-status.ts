@@ -1,11 +1,11 @@
-import { formatCliCommand } from '../../cli/command-format';
-import type { PowerDirectorConfig } from '../../config/config';
-import { canonicalizeMainSessionAlias, resolveAgentMainSessionKey } from '../../config/sessions';
-import { resolveSessionAgentId } from '../agent-scope';
-import { expandToolGroups } from '../tool-policy';
-import { resolveSandboxConfigForAgent } from './config';
-import { resolveSandboxToolPolicyForAgent } from './tool-policy';
-import type { SandboxConfig, SandboxToolPolicyResolved } from './types';
+import { formatCliCommand } from "../../cli/command-format";
+import type { PowerDirectorConfig } from "../../config/config";
+import { canonicalizeMainSessionAlias, resolveAgentMainSessionKey } from "../../config/sessions";
+import { resolveSessionAgentId } from "../agent-scope";
+import { expandToolGroups } from "../tool-policy";
+import { resolveSandboxConfigForAgent } from "./config";
+import { resolveSandboxToolPolicyForAgent } from "./tool-policy";
+import type { SandboxConfig, SandboxToolPolicyResolved } from "./types";
 
 function shouldSandboxSession(cfg: SandboxConfig, sessionKey: string, mainSessionKey: string) {
   if (cfg.mode === "off") {

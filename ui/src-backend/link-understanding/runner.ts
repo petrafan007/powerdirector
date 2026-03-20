@@ -1,17 +1,17 @@
-import type { MsgContext } from "../auto-reply/templating.ts";
-import { applyTemplate } from "../auto-reply/templating.ts";
-import type { PowerDirectorConfig } from "../config/config.ts";
-import type { LinkModelConfig, LinkToolsConfig } from "../config/types.tools.ts";
-import { logVerbose, shouldLogVerbose } from "../globals.ts";
-import { CLI_OUTPUT_MAX_BUFFER } from "../media-understanding/defaults.ts";
-import { resolveTimeoutMs } from "../media-understanding/resolve.ts";
+import type { MsgContext } from "../auto-reply/templating";
+import { applyTemplate } from "../auto-reply/templating";
+import type { PowerDirectorConfig } from "../config/config";
+import type { LinkModelConfig, LinkToolsConfig } from "../config/types.tools";
+import { logVerbose, shouldLogVerbose } from "../globals";
+import { CLI_OUTPUT_MAX_BUFFER } from "../media-understanding/defaults";
+import { resolveTimeoutMs } from "../media-understanding/resolve";
 import {
   normalizeMediaUnderstandingChatType,
   resolveMediaUnderstandingScope,
-} from "../media-understanding/scope.ts";
-import { runExec } from "../process/exec.ts";
-import { DEFAULT_LINK_TIMEOUT_SECONDS } from './defaults';
-import { extractLinksFromMessage } from './detect';
+} from "../media-understanding/scope";
+import { runExec } from "../process/exec";
+import { DEFAULT_LINK_TIMEOUT_SECONDS } from "./defaults";
+import { extractLinksFromMessage } from "./detect";
 
 export type LinkUnderstandingResult = {
   urls: string[];

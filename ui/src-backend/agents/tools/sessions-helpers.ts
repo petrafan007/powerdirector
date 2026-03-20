@@ -3,7 +3,7 @@ export type {
   SessionAccessAction,
   SessionAccessResult,
   SessionToolsVisibility,
-} from './sessions-access';
+} from "./sessions-access";
 export {
   createAgentToAgentPolicy,
   createSessionVisibilityGuard,
@@ -11,10 +11,12 @@ export {
   resolveSandboxSessionToolsVisibility,
   resolveSandboxedSessionToolContext,
   resolveSessionToolsVisibility,
-} from './sessions-access';
-export type { SessionReferenceResolution } from './sessions-resolution';
+} from "./sessions-access";
+import { resolveSandboxedSessionToolContext } from "./sessions-access";
+export type { SessionReferenceResolution } from "./sessions-resolution";
 export {
   isRequesterSpawnedSessionVisible,
+  isResolvedSessionVisibleToRequester,
   listSpawnedSessionKeys,
   looksLikeSessionId,
   looksLikeSessionKey,
@@ -22,15 +24,19 @@ export {
   resolveInternalSessionKey,
   resolveMainSessionAlias,
   resolveSessionReference,
+  resolveVisibleSessionReference,
   shouldResolveSessionIdInput,
-} from './sessions-resolution';
-import { extractTextFromChatContent } from '../../shared/chat-content';
-import { sanitizeUserFacingText } from '../pi-embedded-helpers';
+  shouldVerifyRequesterSpawnedSessionVisibility,
+} from "./sessions-resolution";
+import { type PowerDirectorConfig, loadConfig } from "../../config/config";
+import { extractTextFromChatContent } from "../../shared/chat-content";
+import { sanitizeUserFacingText } from "../pi-embedded-helpers";
 import {
   stripDowngradedToolCallText,
   stripMinimaxToolCallXml,
+  stripModelSpecialTokens,
   stripThinkingTagsFromText,
-} from '../pi-embedded-utils';
+} from "../pi-embedded-utils";
 
 export type SessionKind = "main" | "group" | "cron" | "hook" | "node" | "other";
 
@@ -39,6 +45,8 @@ export type SessionListDeliveryContext = {
   to?: string;
   accountId?: string;
 };
+
+export type SessionRunStatus = "running" | "done" | "failed" | "killed" | "timeout";
 
 export type SessionListRow = {
   key: string;
@@ -52,6 +60,12 @@ export type SessionListRow = {
   model?: string;
   contextTokens?: number | null;
   totalTokens?: number | null;
+  estimatedCostUsd?: number;
+  status?: SessionRunStatus;
+  startedAt?: number;
+  endedAt?: number;
+  runtimeMs?: number;
+  childSessions?: string[];
   thinkingLevel?: string;
   verboseLevel?: string;
   systemSent?: boolean;
@@ -67,6 +81,22 @@ export type SessionListRow = {
 function normalizeKey(value?: string) {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
+}
+
+export function resolveSessionToolContext(opts?: {
+  agentSessionKey?: string;
+  sandboxed?: boolean;
+  config?: PowerDirectorConfig;
+}) {
+  const cfg = opts?.config ?? loadConfig();
+  return {
+    cfg,
+    ...resolveSandboxedSessionToolContext({
+      cfg,
+      agentSessionKey: opts?.agentSessionKey,
+      sandboxed: opts?.sandboxed,
+    }),
+  };
 }
 
 export function classifySessionKind(params: {
@@ -139,7 +169,9 @@ export function sanitizeTextContent(text: string): string {
   if (!text) {
     return text;
   }
-  return stripThinkingTagsFromText(stripDowngradedToolCallText(stripMinimaxToolCallXml(text)));
+  return stripThinkingTagsFromText(
+    stripDowngradedToolCallText(stripModelSpecialTokens(stripMinimaxToolCallXml(text))),
+  );
 }
 
 export function extractAssistantText(message: unknown): string | undefined {
@@ -160,9 +192,9 @@ export function extractAssistantText(message: unknown): string | undefined {
       normalizeText: (text) => text.trim(),
     }) ?? "";
   const stopReason = (message as { stopReason?: unknown }).stopReason;
-  const errorMessage = (message as { errorMessage?: unknown }).errorMessage;
-  const errorContext =
-    stopReason === "error" || (typeof errorMessage === "string" && Boolean(errorMessage.trim()));
+  // Gate on stopReason only — a non-error response with a stale/background errorMessage
+  // should not have its content rewritten with error templates (#13935).
+  const errorContext = stopReason === "error";
 
   return joined ? sanitizeUserFacingText(joined, { errorContext }) : undefined;
 }

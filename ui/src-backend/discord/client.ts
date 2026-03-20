@@ -1,9 +1,9 @@
 import { RequestClient } from "@buape/carbon";
-import { loadConfig } from '../config/config';
-import { createDiscordRetryRunner, type RetryRunner } from '../infra/retry-policy';
-import type { RetryConfig } from '../infra/retry';
-import { resolveDiscordAccount } from './accounts';
-import { normalizeDiscordToken } from './token';
+import { loadConfig } from "../config/config";
+import { createDiscordRetryRunner, type RetryRunner } from "../infra/retry-policy";
+import type { RetryConfig } from "../infra/retry";
+import { resolveDiscordAccount } from "./accounts";
+import { normalizeDiscordToken } from "./token";
 
 export type DiscordClientOpts = {
   token?: string;
@@ -14,11 +14,11 @@ export type DiscordClientOpts = {
 };
 
 function resolveToken(params: { explicit?: string; accountId: string; fallbackToken?: string }) {
-  const explicit = normalizeDiscordToken(params.explicit);
+  const explicit = normalizeDiscordToken(params.explicit, "channels.discord.token");
   if (explicit) {
     return explicit;
   }
-  const fallback = normalizeDiscordToken(params.fallbackToken);
+  const fallback = normalizeDiscordToken(params.fallbackToken, "channels.discord.token");
   if (!fallback) {
     throw new Error(
       `Discord bot token missing for account "${params.accountId}" (set discord.accounts.${params.accountId}.token or DISCORD_BOT_TOKEN for default).`,

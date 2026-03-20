@@ -1,0 +1,50 @@
+import type { MsgContext } from "../auto-reply/templating";
+import type { PowerDirectorConfig } from "../config/config";
+import {
+  type ActiveMediaModel,
+  buildProviderRegistry,
+  createMediaAttachmentCache,
+  normalizeMediaAttachments,
+  runCapability,
+} from "./runner";
+import type { MediaAttachment, MediaUnderstandingProvider } from "./types";
+
+export async function runAudioTranscription(params: {
+  ctx: MsgContext;
+  cfg: PowerDirectorConfig;
+  attachments?: MediaAttachment[];
+  agentDir?: string;
+  providers?: Record<string, MediaUnderstandingProvider>;
+  activeModel?: ActiveMediaModel;
+  localPathRoots?: readonly string[];
+}): Promise<{ transcript: string | undefined; attachments: MediaAttachment[] }> {
+  const attachments = params.attachments ?? normalizeMediaAttachments(params.ctx);
+  if (attachments.length === 0) {
+    return { transcript: undefined, attachments };
+  }
+
+  const providerRegistry = buildProviderRegistry(params.providers);
+  const cache = createMediaAttachmentCache(
+    attachments,
+    params.localPathRoots ? { localPathRoots: params.localPathRoots } : undefined,
+  );
+
+  try {
+    const result = await runCapability({
+      capability: "audio",
+      cfg: params.cfg,
+      ctx: params.ctx,
+      attachments: cache,
+      media: attachments,
+      agentDir: params.agentDir,
+      providerRegistry,
+      config: params.cfg.tools?.media?.audio,
+      activeModel: params.activeModel,
+    });
+    const output = result.outputs.find((entry) => entry.kind === "audio.transcription");
+    const transcript = output?.text?.trim();
+    return { transcript: transcript || undefined, attachments };
+  } finally {
+    await cache.cleanup();
+  }
+}

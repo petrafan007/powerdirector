@@ -1,6 +1,6 @@
 import { vi } from "vitest";
-import type { MockBaileysSocket } from '../../test/mocks/baileys';
-import { createMockBaileys } from '../../test/mocks/baileys';
+import type { MockBaileysSocket } from "../../test/mocks/baileys";
+import { createMockBaileys } from "../../test/mocks/baileys";
 
 // Use globalThis to store the mock config so it survives vi.mock hoisting
 const CONFIG_KEY = Symbol.for("powerdirector:testConfigMock");
@@ -30,8 +30,8 @@ export function resetLoadConfigMock() {
   (globalThis as Record<symbol, unknown>)[CONFIG_KEY] = () => DEFAULT_CONFIG;
 }
 
-vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+vi.mock("../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
     loadConfig: () => {
@@ -47,11 +47,11 @@ vi.mock("../config/config.js", async (importOriginal) => {
 // Some web modules live under `src/web/auto-reply/*` and import config via a different
 // relative path (`../../config/config.js`). Mock both specifiers so tests stay stable
 // across refactors that move files between folders.
-vi.mock("../../config/config.js", async (importOriginal) => {
+vi.mock("../../config/config", async (importOriginal) => {
   // `../../config/config.js` is correct for modules under `src/web/auto-reply/*`.
   // For typing in this file (which lives in `src/web/*`), refer to the same module
   // via the local relative path.
-  const actual = await importOriginal<typeof import('../config/config')>();
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
     loadConfig: () => {
@@ -64,14 +64,23 @@ vi.mock("../../config/config.js", async (importOriginal) => {
   };
 });
 
-vi.mock("../media/store.js", () => ({
-  saveMediaBuffer: vi.fn().mockImplementation(async (_buf: Buffer, contentType?: string) => ({
-    id: "mid",
-    path: "/tmp/mid",
-    size: _buf.length,
-    contentType,
-  })),
-}));
+vi.mock("../media/store", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../media/store")>();
+  const mockModule = Object.create(null) as Record<string, unknown>;
+  Object.defineProperties(mockModule, Object.getOwnPropertyDescriptors(actual));
+  Object.defineProperty(mockModule, "saveMediaBuffer", {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: vi.fn().mockImplementation(async (_buf: Buffer, contentType?: string) => ({
+      id: "mid",
+      path: "/tmp/mid",
+      size: _buf.length,
+      contentType,
+    })),
+  });
+  return mockModule;
+});
 
 vi.mock("@whiskeysockets/baileys", () => {
   const created = createMockBaileys();

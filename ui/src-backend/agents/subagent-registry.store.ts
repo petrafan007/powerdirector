@@ -1,9 +1,9 @@
 import os from "node:os";
 import path from "node:path";
-import { resolveStateDir } from '../config/paths';
-import { loadJsonFile, saveJsonFile } from '../infra/json-file';
-import { normalizeDeliveryContext } from '../utils/delivery-context';
-import type { SubagentRunRecord } from './subagent-registry';
+import { resolveStateDir } from "../config/paths";
+import { loadJsonFile, saveJsonFile } from "../infra/json-file";
+import { normalizeDeliveryContext } from "../utils/delivery-context";
+import type { SubagentRunRecord } from "./subagent-registry.types";
 
 export type PersistedSubagentRegistryVersion = 1 | 2;
 
@@ -101,6 +101,7 @@ export function loadSubagentRegistryFromDisk(): Map<string, SubagentRunRecord> {
       requesterOrigin,
       cleanupCompletedAt,
       cleanupHandled,
+      spawnMode: typed.spawnMode === "session" ? "session" : "run",
     });
     if (isLegacy) {
       migrated = true;

@@ -1,20 +1,21 @@
-import { clearSessionAuthProfileOverride } from '../../agents/auth-profiles/session-override';
-import { lookupContextTokens } from '../../agents/context';
-import { DEFAULT_CONTEXT_TOKENS } from '../../agents/defaults';
-import { loadModelCatalog } from '../../agents/model-catalog';
+import { clearSessionAuthProfileOverride } from "../../agents/auth-profiles/session-override";
+import { lookupContextTokens } from "../../agents/context";
+import { DEFAULT_CONTEXT_TOKENS } from "../../agents/defaults";
+import { loadModelCatalog } from "../../agents/model-catalog";
 import {
   buildAllowedModelSet,
   type ModelAliasIndex,
   modelKey,
   normalizeProviderId,
   resolveModelRefFromString,
+  resolveReasoningDefault,
   resolveThinkingDefault,
-} from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import { type SessionEntry, updateSessionStore } from '../../config/sessions';
-import { applyModelOverrideToSessionEntry } from '../../sessions/model-overrides';
-import { resolveThreadParentSessionKey } from '../../sessions/session-key-utils';
-import type { ThinkLevel } from './directives';
+} from "../../agents/model-selection";
+import type { PowerDirectorConfig } from "../../config/config";
+import { type SessionEntry, updateSessionStore } from "../../config/sessions";
+import { applyModelOverrideToSessionEntry } from "../../sessions/model-overrides";
+import { resolveThreadParentSessionKey } from "../../sessions/session-key-utils";
+import type { ThinkLevel } from "./directives";
 
 export type ModelDirectiveSelection = {
   provider: string;
@@ -32,6 +33,8 @@ type ModelSelectionState = {
   allowedModelCatalog: ModelCatalog;
   resetModelOverride: boolean;
   resolveDefaultThinkingLevel: () => Promise<ThinkLevel>;
+  /** Default reasoning level from model capability: "on" if model has reasoning, else "off". */
+  resolveDefaultReasoningLevel: () => Promise<"on" | "off">;
   needsModelCatalog: boolean;
 };
 
@@ -260,6 +263,7 @@ function scoreFuzzyMatch(params: {
 
 export async function createModelSelectionState(params: {
   cfg: PowerDirectorConfig;
+  agentId?: string;
   agentCfg: NonNullable<NonNullable<PowerDirectorConfig["agents"]>["defaults"]> | undefined;
   sessionEntry?: SessionEntry;
   sessionStore?: Record<string, SessionEntry>;
@@ -312,6 +316,7 @@ export async function createModelSelectionState(params: {
       catalog: modelCatalog,
       defaultProvider,
       defaultModel,
+      agentId: params.agentId,
     });
     allowedModelCatalog = allowed.allowedCatalog;
     allowedModelKeys = allowed.allowedKeys;
@@ -360,7 +365,7 @@ export async function createModelSelectionState(params: {
   }
 
   if (sessionEntry && sessionStore && sessionKey && sessionEntry.authProfileOverride) {
-    const { ensureAuthProfileStore } = await import('../../agents/auth-profiles');
+    const { ensureAuthProfileStore } = await import("../../agents/auth-profiles.runtime");
     const store = ensureAuthProfileStore(undefined, {
       allowKeychainPrompt: false,
     });
@@ -397,6 +402,19 @@ export async function createModelSelectionState(params: {
     return defaultThinkingLevel;
   };
 
+  const resolveDefaultReasoningLevel = async (): Promise<"on" | "off"> => {
+    let catalogForReasoning = modelCatalog ?? allowedModelCatalog;
+    if (!catalogForReasoning || catalogForReasoning.length === 0) {
+      modelCatalog = await loadModelCatalog({ config: cfg });
+      catalogForReasoning = modelCatalog;
+    }
+    return resolveReasoningDefault({
+      provider,
+      model,
+      catalog: catalogForReasoning,
+    });
+  };
+
   return {
     provider,
     model,
@@ -404,6 +422,7 @@ export async function createModelSelectionState(params: {
     allowedModelCatalog,
     resetModelOverride,
     resolveDefaultThinkingLevel,
+    resolveDefaultReasoningLevel,
     needsModelCatalog,
   };
 }

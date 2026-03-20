@@ -2,7 +2,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { vi } from "vitest";
-import * as replyModule from '../auto-reply/reply';
+import { telegramPlugin, setTelegramRuntime } from "@/src-backend/extensions/telegram/index";
+import * as replyModule from "../auto-reply/reply";
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveMainSessionKey } from "../config/sessions";
+import { setActivePluginRegistry } from "../plugins/runtime";
+import { createPluginRuntime } from "../plugins/runtime/index";
+import { createTestRegistry } from "../test-utils/channel-plugins";
 
 export type HeartbeatSessionSeed = {
   sessionId?: string;
@@ -19,18 +25,24 @@ export async function seedSessionStore(
 ): Promise<void> {
   await fs.writeFile(
     storePath,
-    JSON.stringify(
-      {
-        [sessionKey]: {
-          sessionId: session.sessionId ?? "sid",
-          updatedAt: session.updatedAt ?? Date.now(),
-          ...session,
-        },
+    JSON.stringify({
+      [sessionKey]: {
+        sessionId: session.sessionId ?? "sid",
+        updatedAt: session.updatedAt ?? Date.now(),
+        ...session,
       },
-      null,
-      2,
-    ),
+    }),
   );
+}
+
+export async function seedMainSessionStore(
+  storePath: string,
+  cfg: PowerDirectorConfig,
+  session: HeartbeatSessionSeed,
+): Promise<string> {
+  const sessionKey = resolveMainSessionKey(cfg);
+  await seedSessionStore(storePath, sessionKey, session);
+  return sessionKey;
 }
 
 export async function withTempHeartbeatSandbox<T>(
@@ -66,4 +78,28 @@ export async function withTempHeartbeatSandbox<T>(
     }
     await fs.rm(tmpDir, { recursive: true, force: true });
   }
+}
+
+export async function withTempTelegramHeartbeatSandbox<T>(
+  fn: (ctx: {
+    tmpDir: string;
+    storePath: string;
+    replySpy: ReturnType<typeof vi.spyOn>;
+  }) => Promise<T>,
+  options?: {
+    prefix?: string;
+  },
+): Promise<T> {
+  return withTempHeartbeatSandbox(fn, {
+    prefix: options?.prefix,
+    unsetEnvVars: ["TELEGRAM_BOT_TOKEN"],
+  });
+}
+
+export function setupTelegramHeartbeatPluginRuntimeForTests() {
+  const runtime = createPluginRuntime();
+  setTelegramRuntime(runtime);
+  setActivePluginRegistry(
+    createTestRegistry([{ pluginId: "telegram", plugin: telegramPlugin, source: "test" }]),
+  );
 }

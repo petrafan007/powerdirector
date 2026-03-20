@@ -1,12 +1,12 @@
-import { formatCliCommand } from '../../cli/command-format';
-import type { PowerDirectorConfig } from '../../config/config';
-import { writeConfigFile } from '../../config/config';
-import { logConfigUpdated } from '../../config/logging';
-import type { RuntimeEnv } from '../../runtime';
-import { applyWizardMetadata } from '../onboard-helpers';
-import type { OnboardOptions } from '../onboard-types';
+import { formatCliCommand } from "../../cli/command-format";
+import type { PowerDirectorConfig } from "../../config/config";
+import { writeConfigFile } from "../../config/config";
+import { logConfigUpdated } from "../../config/logging";
+import type { RuntimeEnv } from "../../runtime";
+import { applyWizardMetadata } from "../onboard-helpers";
+import type { OnboardOptions } from "../onboard-types";
 
-export async function runNonInteractiveOnboardingRemote(params: {
+export async function runNonInteractiveRemoteSetup(params: {
   opts: OnboardOptions;
   runtime: RuntimeEnv;
   baseConfig: PowerDirectorConfig;

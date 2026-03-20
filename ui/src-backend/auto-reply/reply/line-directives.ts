@@ -4,9 +4,9 @@ import {
   createAgendaCard,
   createDeviceControlCard,
   createAppleTvRemoteCard,
-} from '../../line/flex-templates';
-import type { LineChannelData } from '../../line/types';
-import type { ReplyPayload } from '../types';
+} from "../../line/flex-templates";
+import type { LineChannelData } from "../../line/types";
+import type { ReplyPayload } from "../types";
 
 /**
  * Parse LINE-specific directives from text and extract them into ReplyPayload fields.

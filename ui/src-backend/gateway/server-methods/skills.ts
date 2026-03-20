@@ -2,16 +2,16 @@ import {
   listAgentIds,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from '../../agents/agent-scope';
-import { installSkill } from '../../agents/skills-install';
-import { buildWorkspaceSkillStatus } from '../../agents/skills-status';
-import { loadWorkspaceSkillEntries, type SkillEntry } from '../../agents/skills';
-import { listAgentWorkspaceDirs } from '../../agents/workspace-dirs';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadConfig, writeConfigFile } from '../../config/config';
-import { getRemoteSkillEligibility } from '../../infra/skills-remote';
-import { normalizeAgentId } from '../../routing/session-key';
-import { normalizeSecretInput } from '../../utils/normalize-secret-input';
+} from "../../agents/agent-scope";
+import { installSkill } from "../../agents/skills-install";
+import { buildWorkspaceSkillStatus } from "../../agents/skills-status";
+import { loadWorkspaceSkillEntries, type SkillEntry } from "../../agents/skills";
+import { listAgentWorkspaceDirs } from "../../agents/workspace-dirs";
+import type { PowerDirectorConfig } from "../../config/config";
+import { loadConfig, writeConfigFile } from "../../config/config";
+import { getRemoteSkillEligibility } from "../../infra/skills-remote";
+import { normalizeAgentId } from "../../routing/session-key";
+import { normalizeSecretInput } from "../../utils/normalize-secret-input";
 import {
   ErrorCodes,
   errorShape,
@@ -20,8 +20,8 @@ import {
   validateSkillsInstallParams,
   validateSkillsStatusParams,
   validateSkillsUpdateParams,
-} from '../protocol/index';
-import type { GatewayRequestHandlers } from './types';
+} from "../protocol/index";
+import type { GatewayRequestHandlers } from "./types";
 
 function collectSkillBins(entries: SkillEntry[]): string[] {
   const bins = new Set<string>();

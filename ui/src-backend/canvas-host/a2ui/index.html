@@ -226,11 +226,11 @@
   </head>
   <body>
     <canvas id="powerdirector-canvas"></canvas>
-    <div id="powerdirector-status">
-      <div class="card">
+    <div id="powerdirector-status" role="status" aria-live="polite">
+      <section class="card">
         <div class="title" id="powerdirector-status-title">Ready</div>
         <div class="subtitle" id="powerdirector-status-subtitle">Waiting for agent</div>
-      </div>
+      </section>
     </div>
     <powerdirector-a2ui-host></powerdirector-a2ui-host>
     <script src="a2ui.bundle.js"></script>

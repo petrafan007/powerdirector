@@ -1,8 +1,9 @@
-import type { PwAiModule } from '../pw-ai-module';
-import { getPwAiModule as getPwAiModuleBase } from '../pw-ai-module';
-import type { BrowserRouteContext, ProfileContext } from '../server-context';
-import type { BrowserRequest, BrowserResponse } from './types';
-import { getProfileContext, jsonError } from './utils';
+import { toBrowserErrorResponse } from "../errors";
+import type { PwAiModule } from "../pw-ai-module";
+import { getPwAiModule as getPwAiModuleBase } from "../pw-ai-module";
+import type { BrowserRouteContext, ProfileContext } from "../server-context";
+import type { BrowserRequest, BrowserResponse } from "./types";
+import { getProfileContext, jsonError } from "./utils";
 
 export const SELECTOR_UNSUPPORTED_MESSAGE = [
   "Error: 'selector' is not supported. Use 'ref' from snapshot instead.",
@@ -36,6 +37,10 @@ export function handleRouteError(ctx: BrowserRouteContext, res: BrowserResponse,
   const mapped = ctx.mapTabError(err);
   if (mapped) {
     return jsonError(res, mapped.status, mapped.message);
+  }
+  const browserMapped = toBrowserErrorResponse(err);
+  if (browserMapped) {
+    return jsonError(res, browserMapped.status, browserMapped.message);
   }
   jsonError(res, 500, String(err));
 }

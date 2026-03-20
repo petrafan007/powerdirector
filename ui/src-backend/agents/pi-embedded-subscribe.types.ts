@@ -1,9 +1,10 @@
 import type { AgentSession } from "@mariozechner/pi-coding-agent";
-import type { ReasoningLevel, VerboseLevel } from '../auto-reply/thinking';
-import type { PowerDirectorConfig } from '../config/types.powerdirector';
-import type { HookRunner } from '../plugins/hooks';
-import type { BlockReplyChunking } from './pi-embedded-block-chunker';
-import type { BlockReplyPayload } from './pi-embedded-payloads';
+import type { ReasoningLevel, VerboseLevel } from "../auto-reply/thinking";
+import type { ReplyPayload } from "../auto-reply/types";
+import type { PowerDirectorConfig } from "../config/types.powerdirector";
+import type { HookRunner } from "../plugins/hooks";
+import type { BlockReplyChunking } from "./pi-embedded-block-chunker";
+import type { BlockReplyPayload } from "./pi-embedded-payloads";
 
 export type ToolResultFormat = "markdown" | "plain";
 
@@ -16,7 +17,7 @@ export type SubscribeEmbeddedPiSessionParams = {
   toolResultFormat?: ToolResultFormat;
   shouldEmitToolResult?: () => boolean;
   shouldEmitToolOutput?: () => boolean;
-  onToolResult?: (payload: { text?: string; mediaUrls?: string[] }) => void | Promise<void>;
+  onToolResult?: (payload: ReplyPayload) => void | Promise<void>;
   onReasoningStream?: (payload: { text?: string; mediaUrls?: string[] }) => void | Promise<void>;
   /** Called when a thinking/reasoning block ends (</think> tag processed). */
   onReasoningEnd?: () => void | Promise<void>;
@@ -31,6 +32,10 @@ export type SubscribeEmbeddedPiSessionParams = {
   enforceFinalTag?: boolean;
   config?: PowerDirectorConfig;
   sessionKey?: string;
+  /** Ephemeral session UUID — regenerated on /new and /reset. */
+  sessionId?: string;
+  /** Agent identity for hook context — resolved from session config in attempt.ts. */
+  agentId?: string;
 };
 
-export type { BlockReplyChunking } from './pi-embedded-block-chunker';
+export type { BlockReplyChunking } from "./pi-embedded-block-chunker";

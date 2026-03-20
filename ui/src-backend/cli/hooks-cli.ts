@@ -2,31 +2,36 @@ import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 import type { Command } from "commander";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig, writeConfigFile } from '../config/io';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope";
+import type { PowerDirectorConfig } from "../config/config";
+import { loadConfig, writeConfigFile } from "../config/io";
 import {
   buildWorkspaceHookStatus,
   type HookStatusEntry,
   type HookStatusReport,
-} from '../hooks/hooks-status';
+} from "../hooks/hooks-status";
 import {
   installHooksFromNpmSpec,
   installHooksFromPath,
   resolveHookInstallDir,
-} from '../hooks/install';
-import { recordHookInstall } from '../hooks/installs';
-import type { HookEntry } from '../hooks/types';
-import { loadWorkspaceHookEntries } from '../hooks/workspace';
-import { resolveArchiveKind } from '../infra/archive';
-import { buildPluginStatusReport } from '../plugins/status';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { renderTable } from '../terminal/table';
-import { theme } from '../terminal/theme';
-import { resolveUserPath, shortenHomePath } from '../utils';
-import { formatCliCommand } from './command-format';
-import { promptYesNo } from './prompt';
+} from "../hooks/install";
+import { recordHookInstall } from "../hooks/installs";
+import type { HookEntry } from "../hooks/types";
+import { loadWorkspaceHookEntries } from "../hooks/workspace";
+import { resolveArchiveKind } from "../infra/archive";
+import { buildPluginStatusReport } from "../plugins/status";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { getTerminalTableWidth, renderTable } from "../terminal/table";
+import { theme } from "../terminal/theme";
+import { resolveUserPath, shortenHomePath } from "../utils";
+import { formatCliCommand } from "./command-format";
+import { looksLikeLocalInstallSpec } from "./install-spec";
+import {
+  buildNpmInstallRecordFields,
+  resolvePinnedNpmInstallRecordForCli,
+} from "./npm-resolution";
+import { promptYesNo } from "./prompt";
 
 export type HooksListOptions = {
   json?: boolean;
@@ -179,6 +184,25 @@ function logGatewayRestartHint() {
   defaultRuntime.log("Restart the gateway to load hooks.");
 }
 
+function logIntegrityDriftWarning(
+  hookId: string,
+  drift: {
+    resolution: { resolvedSpec?: string };
+    spec: string;
+    expectedIntegrity: string;
+    actualIntegrity: string;
+  },
+) {
+  const specLabel = drift.resolution.resolvedSpec ?? drift.spec;
+  defaultRuntime.log(
+    theme.warn(
+      `Integrity drift detected for "${hookId}" (${specLabel})` +
+        `\nExpected: ${drift.expectedIntegrity}` +
+        `\nActual:   ${drift.actualIntegrity}`,
+    ),
+  );
+}
+
 async function readInstalledPackageVersion(dir: string): Promise<string | undefined> {
   try {
     const raw = await fsp.readFile(path.join(dir, "package.json"), "utf-8");
@@ -249,7 +273,7 @@ export function formatHooksList(report: HookStatusReport, opts: HooksListOptions
   }
 
   const eligible = hooks.filter((h) => h.eligible);
-  const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+  const tableWidth = getTerminalTableWidth();
   const rows = hooks.map((hook) => {
     const missing = formatHookMissingSummary(hook);
     return {
@@ -637,15 +661,7 @@ export function registerHooksCli(program: Command): void {
         process.exit(1);
       }
 
-      const looksLikePath =
-        raw.startsWith(".") ||
-        raw.startsWith("~") ||
-        path.isAbsolute(raw) ||
-        raw.endsWith(".zip") ||
-        raw.endsWith(".tgz") ||
-        raw.endsWith(".tar.gz") ||
-        raw.endsWith(".tar");
-      if (looksLikePath) {
+      if (looksLikeLocalInstallSpec(raw, [".zip", ".tgz", ".tar.gz", ".tar"])) {
         defaultRuntime.error(`Path not found: ${resolved}`);
         process.exit(1);
       }
@@ -660,29 +676,19 @@ export function registerHooksCli(program: Command): void {
       }
 
       let next = enableInternalHookEntries(cfg, result.hooks);
-      const resolvedSpec = result.npmResolution?.resolvedSpec;
-      const recordSpec = opts.pin && resolvedSpec ? resolvedSpec : raw;
-      if (opts.pin && !resolvedSpec) {
-        defaultRuntime.log(
-          theme.warn("Could not resolve exact npm version for --pin; storing original npm spec."),
-        );
-      }
-      if (opts.pin && resolvedSpec) {
-        defaultRuntime.log(`Pinned npm install record to ${resolvedSpec}.`);
-      }
+      const installRecord = resolvePinnedNpmInstallRecordForCli(
+        raw,
+        Boolean(opts.pin),
+        result.targetDir,
+        result.version,
+        result.npmResolution,
+        defaultRuntime.log,
+        theme.warn,
+      );
 
       next = recordHookInstall(next, {
         hookId: result.hookPackId,
-        source: "npm",
-        spec: recordSpec,
-        installPath: result.targetDir,
-        version: result.version,
-        resolvedName: result.npmResolution?.name,
-        resolvedVersion: result.npmResolution?.version,
-        resolvedSpec: result.npmResolution?.resolvedSpec,
-        integrity: result.npmResolution?.integrity,
-        shasum: result.npmResolution?.shasum,
-        resolvedAt: result.npmResolution?.resolvedAt,
+        ...installRecord,
         hooks: result.hooks,
       });
       await writeConfigFile(next);
@@ -741,14 +747,7 @@ export function registerHooksCli(program: Command): void {
             expectedHookPackId: hookId,
             expectedIntegrity: record.integrity,
             onIntegrityDrift: async (drift) => {
-              const specLabel = drift.resolution.resolvedSpec ?? drift.spec;
-              defaultRuntime.log(
-                theme.warn(
-                  `Integrity drift detected for "${hookId}" (${specLabel})` +
-                    `\nExpected: ${drift.expectedIntegrity}` +
-                    `\nActual:   ${drift.actualIntegrity}`,
-                ),
-              );
+              logIntegrityDriftWarning(hookId, drift);
               return true;
             },
             logger: createInstallLogger(),
@@ -774,14 +773,7 @@ export function registerHooksCli(program: Command): void {
           expectedHookPackId: hookId,
           expectedIntegrity: record.integrity,
           onIntegrityDrift: async (drift) => {
-            const specLabel = drift.resolution.resolvedSpec ?? drift.spec;
-            defaultRuntime.log(
-              theme.warn(
-                `Integrity drift detected for "${hookId}" (${specLabel})` +
-                  `\nExpected: ${drift.expectedIntegrity}` +
-                  `\nActual:   ${drift.actualIntegrity}`,
-              ),
-            );
+            logIntegrityDriftWarning(hookId, drift);
             return await promptYesNo(`Continue updating "${hookId}" with this artifact?`);
           },
           logger: createInstallLogger(),
@@ -794,16 +786,12 @@ export function registerHooksCli(program: Command): void {
         const nextVersion = result.version ?? (await readInstalledPackageVersion(result.targetDir));
         nextCfg = recordHookInstall(nextCfg, {
           hookId,
-          source: "npm",
-          spec: record.spec,
-          installPath: result.targetDir,
-          version: nextVersion,
-          resolvedName: result.npmResolution?.name,
-          resolvedVersion: result.npmResolution?.version,
-          resolvedSpec: result.npmResolution?.resolvedSpec,
-          integrity: result.npmResolution?.integrity,
-          shasum: result.npmResolution?.shasum,
-          resolvedAt: result.npmResolution?.resolvedAt,
+          ...buildNpmInstallRecordFields({
+            spec: record.spec,
+            installPath: result.targetDir,
+            version: nextVersion,
+            resolution: result.npmResolution,
+          }),
           hooks: result.hooks,
         });
         updatedCount += 1;

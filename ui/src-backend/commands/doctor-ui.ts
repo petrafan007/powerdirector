@@ -3,12 +3,12 @@ import path from "node:path";
 import {
   resolveControlUiDistIndexHealth,
   resolveControlUiDistIndexPathForRoot,
-} from '../infra/control-ui-assets';
-import { resolvePowerDirectorPackageRoot } from '../infra/powerdirector-root';
-import { runCommandWithTimeout } from '../process/exec';
-import type { RuntimeEnv } from '../runtime';
-import { note } from '../terminal/note';
-import type { DoctorPrompter } from './doctor-prompter';
+} from "../infra/control-ui-assets";
+import { resolvePowerDirectorPackageRoot } from "../infra/powerdirector-root";
+import { runCommandWithTimeout } from "../process/exec";
+import type { RuntimeEnv } from "../runtime";
+import { note } from "../terminal/note";
+import type { DoctorPrompter } from "./doctor-prompter";
 
 export async function maybeRepairUiProtocolFreshness(
   _runtime: RuntimeEnv,

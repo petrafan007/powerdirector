@@ -1,16 +1,16 @@
 import { confirm, isCancel } from "@clack/prompts";
-import { readConfigFileSnapshot } from '../../config/config';
+import { readConfigFileSnapshot } from "../../config/config";
 import {
   formatUpdateChannelLabel,
   normalizeUpdateChannel,
   resolveEffectiveUpdateChannel,
-} from '../../infra/update-channels';
-import { checkUpdateStatus } from '../../infra/update-check';
-import { defaultRuntime } from '../../runtime';
-import { selectStyled } from '../../terminal/prompt-select-styled';
-import { stylePromptMessage } from '../../terminal/prompt-style';
-import { theme } from '../../terminal/theme';
-import { pathExists } from '../../utils';
+} from "../../infra/update-channels";
+import { checkUpdateStatus } from "../../infra/update-check";
+import { defaultRuntime } from "../../runtime";
+import { selectStyled } from "../../terminal/prompt-select-styled";
+import { stylePromptMessage } from "../../terminal/prompt-style";
+import { theme } from "../../terminal/theme";
+import { pathExists } from "../../utils";
 import {
   isEmptyDir,
   isGitCheckout,
@@ -18,8 +18,8 @@ import {
   resolveGitInstallDir,
   resolveUpdateRoot,
   type UpdateWizardOptions,
-} from './shared';
-import { updateCommand } from './update-command';
+} from "./shared";
+import { updateCommand } from "./update-command";
 
 export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promise<void> {
   if (!process.stdin.isTTY) {
@@ -107,7 +107,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
         const empty = await isEmptyDir(gitDir);
         if (!empty) {
           defaultRuntime.error(
-            `POWERDIRECTOR_GIT_DIR points at a non-git directory: ${gitDir}. Set POWERDIRECTOR_GIT_DIR to an empty folder or a powerdirector checkout.`,
+            `POWERDIRECTOR_GIT_DIR points at a non-git directory: ${gitDir}. Set POWERDIRECTOR_GIT_DIR to an empty folder or an powerdirector checkout.`,
           );
           defaultRuntime.exit(1);
           return;

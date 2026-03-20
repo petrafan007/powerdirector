@@ -1,21 +1,22 @@
 import path from "node:path";
-import { finalizeInboundContext } from '../auto-reply/reply/inbound-context';
-import type { MsgContext } from '../auto-reply/templating';
-import type { PowerDirectorConfig } from '../config/config';
-import { logVerbose, shouldLogVerbose } from '../globals';
+import { finalizeInboundContext } from "../auto-reply/reply/inbound-context";
+import type { MsgContext } from "../auto-reply/templating";
+import type { PowerDirectorConfig } from "../config/config";
+import { logVerbose, shouldLogVerbose } from "../globals";
 import {
   extractFileContentFromSource,
   normalizeMimeType,
   resolveInputFileLimits,
-} from '../media/input-files';
-import { resolveAttachmentKind } from './attachments';
-import { runWithConcurrency } from './concurrency';
+} from "../media/input-files";
+import { resolveAttachmentKind } from "./attachments";
+import { runWithConcurrency } from "./concurrency";
+import { DEFAULT_ECHO_TRANSCRIPT_FORMAT, sendTranscriptEcho } from "./echo-transcript";
 import {
   extractMediaUserText,
   formatAudioTranscripts,
   formatMediaUnderstandingBody,
-} from './format';
-import { resolveConcurrency } from './resolve';
+} from "./format";
+import { resolveConcurrency } from "./resolve";
 import {
   type ActiveMediaModel,
   buildProviderRegistry,
@@ -23,13 +24,13 @@ import {
   normalizeMediaAttachments,
   resolveMediaAttachmentLocalRoots,
   runCapability,
-} from './runner';
+} from "./runner";
 import type {
   MediaUnderstandingCapability,
   MediaUnderstandingDecision,
   MediaUnderstandingOutput,
   MediaUnderstandingProvider,
-} from './types';
+} from "./types";
 
 export type ApplyMediaUnderstandingResult = {
   outputs: MediaUnderstandingOutput[];
@@ -382,7 +383,11 @@ async function extractFileBlocks(params: {
     }
     const utf16Charset = resolveUtf16Charset(bufferResult?.buffer);
     const textSample = decodeTextSample(bufferResult?.buffer);
-    const textLike = Boolean(utf16Charset) || looksLikeUtf8Text(bufferResult?.buffer);
+    // Do not coerce real PDFs into text/plain via printable-byte heuristics.
+    // PDFs have a dedicated extraction path in extractFileContentFromSource.
+    const allowTextHeuristic = normalizedRawMime !== "application/pdf";
+    const textLike =
+      allowTextHeuristic && (Boolean(utf16Charset) || looksLikeUtf8Text(bufferResult?.buffer));
     const guessedDelimited = textLike ? guessDelimitedMime(textSample) : undefined;
     const textHint =
       forcedTextMimeResolved ?? guessedDelimited ?? (textLike ? "text/plain" : undefined);
@@ -523,6 +528,16 @@ export async function applyMediaUnderstanding(params: {
         } else {
           ctx.CommandBody = transcript;
           ctx.RawBody = transcript;
+        }
+        // Echo transcript back to chat before agent processing, if configured.
+        const audioCfg = cfg.tools?.media?.audio;
+        if (audioCfg?.echoTranscript && transcript) {
+          await sendTranscriptEcho({
+            ctx,
+            cfg,
+            transcript,
+            format: audioCfg.echoFormat ?? DEFAULT_ECHO_TRANSCRIPT_FORMAT,
+          });
         }
       } else if (originalUserText) {
         ctx.CommandBody = originalUserText;

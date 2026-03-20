@@ -1,1 +1,1 @@
-import "./fast-tool-stubs.js";
+import "./fast-tool-stubs";

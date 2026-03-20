@@ -1,8 +1,8 @@
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { createInterface, type Interface } from "node:readline";
-import type { RuntimeEnv } from '../runtime';
-import { resolveUserPath } from '../utils';
-import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from './constants';
+import type { RuntimeEnv } from "../runtime";
+import { resolveUserPath } from "../utils";
+import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from "./constants";
 
 export type IMessageRpcError = {
   code?: number;

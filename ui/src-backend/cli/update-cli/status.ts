@@ -2,17 +2,17 @@ import {
   formatUpdateAvailableHint,
   formatUpdateOneLiner,
   resolveUpdateAvailability,
-} from '../../commands/status.update';
-import { readConfigFileSnapshot } from '../../config/config';
+} from "../../commands/status.update";
+import { readConfigFileSnapshot } from "../../config/config";
 import {
   normalizeUpdateChannel,
   resolveUpdateChannelDisplay,
-} from '../../infra/update-channels';
-import { checkUpdateStatus } from '../../infra/update-check';
-import { defaultRuntime } from '../../runtime';
-import { renderTable } from '../../terminal/table';
-import { theme } from '../../terminal/theme';
-import { parseTimeoutMsOrExit, resolveUpdateRoot, type UpdateStatusOptions } from './shared';
+} from "../../infra/update-channels";
+import { checkUpdateStatus } from "../../infra/update-check";
+import { defaultRuntime } from "../../runtime";
+import { getTerminalTableWidth, renderTable } from "../../terminal/table";
+import { theme } from "../../terminal/theme";
+import { parseTimeoutMsOrExit, resolveUpdateRoot, type UpdateStatusOptions } from "./shared";
 
 function formatGitStatusLine(params: {
   branch: string | null;
@@ -89,7 +89,7 @@ export async function updateStatusCommand(opts: UpdateStatusOptions): Promise<vo
     return;
   }
 
-  const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+  const tableWidth = getTerminalTableWidth();
   const installLabel =
     update.installKind === "git"
       ? `git (${update.root ?? "unknown"})`

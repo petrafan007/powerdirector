@@ -1,10 +1,10 @@
-import type { GatewayTlsConfig } from '../../config/types.gateway';
+import type { GatewayTlsConfig } from "../../config/types.gateway";
 import {
   type GatewayTlsRuntime,
   loadGatewayTlsRuntime as loadGatewayTlsRuntimeConfig,
-} from '../../infra/tls/gateway';
+} from "../../infra/tls/gateway";
 
-export type { GatewayTlsRuntime } from '../../infra/tls/gateway';
+export type { GatewayTlsRuntime } from "../../infra/tls/gateway";
 
 export async function loadGatewayTlsRuntime(
   cfg: GatewayTlsConfig | undefined,

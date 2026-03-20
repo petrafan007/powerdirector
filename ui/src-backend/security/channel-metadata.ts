@@ -1,4 +1,4 @@
-import { wrapExternalContent } from './external-content';
+import { wrapExternalContent } from "./external-content";
 
 const DEFAULT_MAX_CHARS = 800;
 const DEFAULT_MAX_ENTRY_CHARS = 400;

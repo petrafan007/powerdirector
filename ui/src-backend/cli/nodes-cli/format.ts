@@ -1,4 +1,4 @@
-export { parseNodeList, parsePairingList } from '../../shared/node-list-parse';
+export { parseNodeList, parsePairingList } from "../../shared/node-list-parse";
 
 export function formatPermissions(raw: unknown) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) {

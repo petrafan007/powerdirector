@@ -1,16 +1,18 @@
 import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
-import type { NormalizedUsage, UsageLike } from '../agents/usage';
-import { normalizeUsage } from '../agents/usage';
-import type { PowerDirectorConfig } from '../config/config';
+import type { NormalizedUsage, UsageLike } from "../agents/usage";
+import { normalizeUsage } from "../agents/usage";
+import { stripInboundMetadata } from "../auto-reply/reply/strip-inbound-meta";
+import type { PowerDirectorConfig } from "../config/config";
 import {
   resolveSessionFilePath,
   resolveSessionTranscriptsDirForAgent,
-} from '../config/sessions/paths';
-import type { SessionEntry } from '../config/sessions/types';
-import { countToolResults, extractToolCallNames } from '../utils/transcript-tools';
-import { estimateUsageCost, resolveModelCostConfig } from '../utils/usage-format';
+} from "../config/sessions/paths";
+import type { SessionEntry } from "../config/sessions/types";
+import { stripEnvelope, stripMessageIdHints } from "../shared/chat-envelope";
+import { countToolResults, extractToolCallNames } from "../utils/transcript-tools";
+import { estimateUsageCost, resolveModelCostConfig } from "../utils/usage-format";
 import type {
   CostBreakdown,
   CostUsageTotals,
@@ -30,7 +32,7 @@ import type {
   SessionToolUsage,
   SessionUsageTimePoint,
   SessionUsageTimeSeries,
-} from './session-cost-usage.types';
+} from "./session-cost-usage.types";
 
 export type {
   CostUsageDailyEntry,
@@ -49,7 +51,7 @@ export type {
   SessionToolUsage,
   SessionUsageTimePoint,
   SessionUsageTimeSeries,
-} from './session-cost-usage.types';
+} from "./session-cost-usage.types";
 
 const emptyTotals = (): CostUsageTotals => ({
   input: 0,
@@ -938,6 +940,13 @@ export async function loadSessionLogs(params: {
       }
 
       let content = contentParts.join("\n").trim();
+      if (!content) {
+        continue;
+      }
+      content = stripInboundMetadata(content);
+      if (role === "user") {
+        content = stripMessageIdHints(stripEnvelope(content)).trim();
+      }
       if (!content) {
         continue;
       }

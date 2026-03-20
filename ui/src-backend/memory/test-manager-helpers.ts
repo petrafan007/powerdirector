@@ -1,10 +1,12 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { getMemorySearchManager, type MemoryIndexManager } from './index';
+import type { PowerDirectorConfig } from "../config/config";
+import type { MemoryIndexManager } from "./index";
 
 export async function getRequiredMemoryIndexManager(params: {
   cfg: PowerDirectorConfig;
   agentId?: string;
 }): Promise<MemoryIndexManager> {
+  await import("./embedding.test-mocks");
+  const { getMemorySearchManager } = await import("./index");
   const result = await getMemorySearchManager({
     cfg: params.cfg,
     agentId: params.agentId ?? "main",

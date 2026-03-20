@@ -1,5 +1,6 @@
 import { vi } from "vitest";
-import type { TypingController } from './typing';
+import type { FollowupRun } from "./queue";
+import type { TypingController } from "./typing";
 
 export function createMockTypingController(
   overrides: Partial<TypingController> = {},
@@ -14,5 +15,51 @@ export function createMockTypingController(
     markDispatchIdle: vi.fn(),
     cleanup: vi.fn(),
     ...overrides,
+  };
+}
+
+export function createMockFollowupRun(
+  overrides: Partial<Omit<FollowupRun, "run">> & { run?: Partial<FollowupRun["run"]> } = {},
+): FollowupRun {
+  const base: FollowupRun = {
+    prompt: "hello",
+    summaryLine: "hello",
+    enqueuedAt: Date.now(),
+    originatingTo: "channel:C1",
+    run: {
+      agentId: "agent",
+      agentDir: "/tmp/agent",
+      sessionId: "session",
+      sessionKey: "main",
+      messageProvider: "whatsapp",
+      agentAccountId: "primary",
+      sessionFile: "/tmp/session.jsonl",
+      workspaceDir: "/tmp",
+      config: {},
+      skillsSnapshot: {
+        prompt: "",
+        skills: [],
+      },
+      provider: "anthropic",
+      model: "claude",
+      thinkLevel: "low",
+      verboseLevel: "off",
+      elevatedLevel: "off",
+      bashElevated: {
+        enabled: false,
+        allowed: false,
+        defaultLevel: "off",
+      },
+      timeoutMs: 1_000,
+      blockReplyBreak: "message_end",
+    },
+  };
+  return {
+    ...base,
+    ...overrides,
+    run: {
+      ...base.run,
+      ...overrides.run,
+    },
   };
 }

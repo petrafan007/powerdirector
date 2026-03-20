@@ -1,11 +1,10 @@
-import type { MsgContext } from '../../auto-reply/templating';
-import { normalizeChatType } from '../../channels/chat-type';
-import { resolveConversationLabel } from '../../channels/conversation-label';
-import { getChannelDock } from '../../channels/dock';
-import { normalizeChannelId } from '../../channels/plugins/index';
-import { normalizeMessageChannel } from '../../utils/message-channel';
-import { buildGroupDisplayName, resolveGroupSessionKey } from './group';
-import type { GroupKeyResolution, SessionEntry, SessionOrigin } from './types';
+import type { MsgContext } from "../../auto-reply/templating";
+import { normalizeChatType } from "../../channels/chat-type";
+import { resolveConversationLabel } from "../../channels/conversation-label";
+import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index";
+import { normalizeMessageChannel } from "../../utils/message-channel";
+import { buildGroupDisplayName, resolveGroupSessionKey } from "./group";
+import type { GroupKeyResolution, SessionEntry, SessionOrigin } from "./types";
 
 const mergeOrigin = (
   existing: SessionOrigin | undefined,
@@ -111,7 +110,7 @@ export function deriveGroupSessionPatch(params: {
   const normalizedChannel = normalizeChannelId(channel);
   const isChannelProvider = Boolean(
     normalizedChannel &&
-    getChannelDock(normalizedChannel)?.capabilities.chatTypes.includes("channel"),
+    getChannelPlugin(normalizedChannel)?.capabilities.chatTypes.includes("channel"),
   );
   const nextGroupChannel =
     explicitChannel ??

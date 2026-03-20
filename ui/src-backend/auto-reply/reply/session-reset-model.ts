@@ -1,17 +1,17 @@
-import { loadModelCatalog } from '../../agents/model-catalog';
+import { loadModelCatalog } from "../../agents/model-catalog";
 import {
   buildAllowedModelSet,
   modelKey,
   normalizeProviderId,
   resolveModelRefFromString,
   type ModelAliasIndex,
-} from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import { updateSessionStore } from '../../config/sessions';
-import { applyModelOverrideToSessionEntry } from '../../sessions/model-overrides';
-import type { MsgContext, TemplateContext } from '../templating';
-import { resolveModelDirectiveSelection, type ModelDirectiveSelection } from './model-selection';
+} from "../../agents/model-selection";
+import type { PowerDirectorConfig } from "../../config/config";
+import type { SessionEntry } from "../../config/sessions";
+import { updateSessionStore } from "../../config/sessions";
+import { applyModelOverrideToSessionEntry } from "../../sessions/model-overrides";
+import type { MsgContext, TemplateContext } from "../templating";
+import { resolveModelDirectiveSelection, type ModelDirectiveSelection } from "./model-selection";
 
 type ResetModelResult = {
   selection?: ModelDirectiveSelection;
@@ -87,6 +87,7 @@ function applySelectionToSession(params: {
 
 export async function applyResetModelOverride(params: {
   cfg: PowerDirectorConfig;
+  agentId?: string;
   resetTriggered: boolean;
   bodyStripped?: string;
   sessionCtx: TemplateContext;
@@ -118,6 +119,7 @@ export async function applyResetModelOverride(params: {
     catalog,
     defaultProvider: params.defaultProvider,
     defaultModel: params.defaultModel,
+    agentId: params.agentId,
   });
   const allowedModelKeys = allowed.allowedKeys;
   if (allowedModelKeys.size === 0) {

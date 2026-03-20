@@ -1,4 +1,4 @@
-import { attachFooterText } from './common';
+import { attachFooterText } from "./common";
 import type {
   Action,
   CardAction,
@@ -10,7 +10,7 @@ import type {
   FlexImage,
   FlexText,
   ListItem,
-} from './types';
+} from "./types";
 
 /**
  * Create an info card with title, body, and optional footer

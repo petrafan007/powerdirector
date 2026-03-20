@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { ChannelHeartbeatVisibilityConfig } from '../config/types.channels';
-import type { GatewayMessageChannel } from '../utils/message-channel';
+import type { PowerDirectorConfig } from "../config/config";
+import type { ChannelHeartbeatVisibilityConfig } from "../config/types.channels";
+import type { GatewayMessageChannel } from "../utils/message-channel";
 
 export type ResolvedHeartbeatVisibility = {
   showOk: boolean;

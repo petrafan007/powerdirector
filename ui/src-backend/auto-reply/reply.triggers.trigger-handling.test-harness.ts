@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
+import os from "node:os";
 import { join } from "node:path";
-import { afterEach, expect, vi } from "vitest";
-import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
-import type { PowerDirectorConfig } from '../config/config';
+import { afterAll, afterEach, beforeAll, expect, vi } from "vitest";
+import type { PowerDirectorConfig } from "../config/config";
 
 // Avoid exporting vitest mock types (TS2742 under pnpm + d.ts emit).
 // oxlint-disable-next-line typescript/no-explicit-any
@@ -35,7 +35,7 @@ export function getQueueEmbeddedPiMessageMock(): AnyMock {
   return piEmbeddedMocks.queueEmbeddedPiMessage;
 }
 
-vi.mock("../agents/pi-embedded.js", () => ({
+vi.mock("../agents/pi-embedded", () => ({
   abortEmbeddedPiRun: (...args: unknown[]) => piEmbeddedMocks.abortEmbeddedPiRun(...args),
   compactEmbeddedPiSession: (...args: unknown[]) =>
     piEmbeddedMocks.compactEmbeddedPiSession(...args),
@@ -61,7 +61,7 @@ export function getProviderUsageMocks(): AnyMocks {
   return providerUsageMocks;
 }
 
-vi.mock("../infra/provider-usage.js", () => providerUsageMocks);
+vi.mock("../infra/provider-usage", () => providerUsageMocks);
 
 const modelCatalogMocks = vi.hoisted(() => ({
   loadModelCatalog: vi.fn().mockResolvedValue([
@@ -80,7 +80,7 @@ const modelCatalogMocks = vi.hoisted(() => ({
     { provider: "openai", id: "gpt-4.1-mini", name: "GPT-4.1 mini" },
     { provider: "openai", id: "gpt-5.2", name: "GPT-5.2" },
     { provider: "openai-codex", id: "gpt-5.2", name: "GPT-5.2 (Codex)" },
-    { provider: "minimax", id: "MiniMax-M2.1", name: "MiniMax M2.1" },
+    { provider: "minimax", id: "MiniMax-M2.7", name: "MiniMax M2.7" },
   ]),
   resetModelCatalogCacheForTest: vi.fn(),
 }));
@@ -89,7 +89,7 @@ export function getModelCatalogMocks(): AnyMocks {
   return modelCatalogMocks;
 }
 
-vi.mock("../agents/model-catalog.js", () => modelCatalogMocks);
+vi.mock("../agents/model-catalog", () => modelCatalogMocks);
 
 const webSessionMocks = vi.hoisted(() => ({
   webAuthExists: vi.fn().mockResolvedValue(true),
@@ -101,21 +101,95 @@ export function getWebSessionMocks(): AnyMocks {
   return webSessionMocks;
 }
 
-vi.mock("../web/session.js", () => webSessionMocks);
+vi.mock("@/src-backend/extensions/whatsapp/runtime-api", () => webSessionMocks);
 
 export const MAIN_SESSION_KEY = "agent:main:main";
 
+type TempHomeEnvSnapshot = {
+  home: string | undefined;
+  userProfile: string | undefined;
+  homeDrive: string | undefined;
+  homePath: string | undefined;
+  powerdirectorHome: string | undefined;
+  stateDir: string | undefined;
+};
+
+let suiteTempHomeRoot = "";
+let suiteTempHomeId = 0;
+
+function snapshotTempHomeEnv(): TempHomeEnvSnapshot {
+  return {
+    home: process.env.HOME,
+    userProfile: process.env.USERPROFILE,
+    homeDrive: process.env.HOMEDRIVE,
+    homePath: process.env.HOMEPATH,
+    powerdirectorHome: process.env.POWERDIRECTOR_HOME,
+    stateDir: process.env.POWERDIRECTOR_STATE_DIR,
+  };
+}
+
+function restoreTempHomeEnv(snapshot: TempHomeEnvSnapshot): void {
+  const restoreKey = (key: string, value: string | undefined) => {
+    if (value === undefined) {
+      delete process.env[key];
+      return;
+    }
+    process.env[key] = value;
+  };
+
+  restoreKey("HOME", snapshot.home);
+  restoreKey("USERPROFILE", snapshot.userProfile);
+  restoreKey("HOMEDRIVE", snapshot.homeDrive);
+  restoreKey("HOMEPATH", snapshot.homePath);
+  restoreKey("POWERDIRECTOR_HOME", snapshot.powerdirectorHome);
+  restoreKey("POWERDIRECTOR_STATE_DIR", snapshot.stateDir);
+}
+
+function setTempHomeEnv(home: string): void {
+  process.env.HOME = home;
+  process.env.USERPROFILE = home;
+  delete process.env.POWERDIRECTOR_HOME;
+  process.env.POWERDIRECTOR_STATE_DIR = join(home, ".powerdirector");
+
+  if (process.platform !== "win32") {
+    return;
+  }
+  const match = home.match(/^([A-Za-z]:)(.*)$/);
+  if (!match) {
+    return;
+  }
+  process.env.HOMEDRIVE = match[1];
+  process.env.HOMEPATH = match[2] || "\\";
+}
+
+beforeAll(async () => {
+  suiteTempHomeRoot = await fs.mkdtemp(join(os.tmpdir(), "powerdirector-triggers-suite-"));
+});
+
+afterAll(async () => {
+  if (!suiteTempHomeRoot) {
+    return;
+  }
+  await fs.rm(suiteTempHomeRoot, { recursive: true, force: true }).catch(() => undefined);
+  suiteTempHomeRoot = "";
+  suiteTempHomeId = 0;
+});
+
 export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(
-    async (home) => {
-      // Avoid cross-test leakage if a test doesn't touch these mocks.
-      piEmbeddedMocks.runEmbeddedPiAgent.mockClear();
-      piEmbeddedMocks.abortEmbeddedPiRun.mockClear();
-      piEmbeddedMocks.compactEmbeddedPiSession.mockClear();
-      return await fn(home);
-    },
-    { prefix: "powerdirector-triggers-" },
-  );
+  const home = join(suiteTempHomeRoot, `case-${++suiteTempHomeId}`);
+  const snapshot = snapshotTempHomeEnv();
+  await fs.mkdir(join(home, ".powerdirector", "agents", "main", "sessions"), { recursive: true });
+  setTempHomeEnv(home);
+
+  try {
+    // Avoid cross-test leakage if a test doesn't touch these mocks.
+    piEmbeddedMocks.runEmbeddedPiAgent.mockClear();
+    piEmbeddedMocks.abortEmbeddedPiRun.mockClear();
+    piEmbeddedMocks.compactEmbeddedPiSession.mockClear();
+    return await fn(home);
+  } finally {
+    restoreTempHomeEnv(snapshot);
+  }
 }
 
 export function makeCfg(home: string): PowerDirectorConfig {
@@ -124,6 +198,10 @@ export function makeCfg(home: string): PowerDirectorConfig {
       defaults: {
         model: { primary: "anthropic/claude-opus-4-5" },
         workspace: join(home, "powerdirector"),
+        // Test harness: avoid 1s coalescer idle sleeps that dominate trigger suites.
+        blockStreamingCoalesce: { idleMs: 1 },
+        // Trigger tests assert routing/authorization behavior, not delivery pacing.
+        humanDelay: { mode: "off" },
       },
     },
     channels: {
@@ -131,12 +209,28 @@ export function makeCfg(home: string): PowerDirectorConfig {
         allowFrom: ["*"],
       },
     },
+    messages: {
+      queue: {
+        debounceMs: 0,
+      },
+    },
     session: { store: join(home, "sessions.json") },
   } as PowerDirectorConfig;
 }
 
 export async function loadGetReplyFromConfig() {
-  return (await import('./reply')).getReplyFromConfig;
+  return (await import("./reply")).getReplyFromConfig;
+}
+
+export function installTriggerHandlingReplyHarness(
+  setGetReplyFromConfig: (
+    getReplyFromConfig: typeof import("./reply").getReplyFromConfig,
+  ) => void,
+): void {
+  beforeAll(async () => {
+    setGetReplyFromConfig(await loadGetReplyFromConfig());
+  });
+  installTriggerHandlingE2eTestHooks();
 }
 
 export function requireSessionStorePath(cfg: { session?: { store?: string } }): string {
@@ -145,6 +239,13 @@ export function requireSessionStorePath(cfg: { session?: { store?: string } }): 
     throw new Error("expected session store path");
   }
   return storePath;
+}
+
+export async function readSessionStore(cfg: {
+  session?: { store?: string };
+}): Promise<Record<string, { elevatedLevel?: string }>> {
+  const storeRaw = await fs.readFile(requireSessionStorePath(cfg), "utf-8");
+  return JSON.parse(storeRaw) as Record<string, { elevatedLevel?: string }>;
 }
 
 export function makeWhatsAppElevatedCfg(
@@ -173,7 +274,7 @@ export function makeWhatsAppElevatedCfg(
 
 export async function runDirectElevatedToggleAndLoadStore(params: {
   cfg: PowerDirectorConfig;
-  getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+  getReplyFromConfig: typeof import("./reply").getReplyFromConfig;
   body?: string;
 }): Promise<{
   text: string | undefined;
@@ -196,17 +297,50 @@ export async function runDirectElevatedToggleAndLoadStore(params: {
   if (!storePath) {
     throw new Error("session.store is required in test config");
   }
-  const storeRaw = await fs.readFile(storePath, "utf-8");
-  const store = JSON.parse(storeRaw) as Record<string, { elevatedLevel?: string }>;
+  const store = await readSessionStore(params.cfg);
   return { text, store };
+}
+
+export async function expectInlineCommandHandledAndStripped(params: {
+  home: string;
+  getReplyFromConfig: typeof import("./reply").getReplyFromConfig;
+  body: string;
+  stripToken: string;
+  blockReplyContains: string;
+  requestOverrides?: Record<string, unknown>;
+}) {
+  const runEmbeddedPiAgentMock = mockRunEmbeddedPiAgentOk();
+  runEmbeddedPiAgentMock.mockClear();
+  const { blockReplies, handlers } = createBlockReplyCollector();
+  const res = await params.getReplyFromConfig(
+    {
+      Body: params.body,
+      From: "+1002",
+      To: "+2000",
+      CommandAuthorized: true,
+      ...params.requestOverrides,
+    },
+    handlers,
+    makeCfg(params.home),
+  );
+
+  const text = Array.isArray(res) ? res[0]?.text : res?.text;
+  expect(blockReplies.length).toBe(1);
+  expect(blockReplies[0]?.text).toContain(params.blockReplyContains);
+  expect(runEmbeddedPiAgentMock).toHaveBeenCalled();
+  const prompt = runEmbeddedPiAgentMock.mock.calls.at(-1)?.[0]?.prompt ?? "";
+  expect(prompt).not.toContain(params.stripToken);
+  expect(text).toBe("ok");
 }
 
 export async function runGreetingPromptForBareNewOrReset(params: {
   home: string;
   body: "/new" | "/reset";
-  getReplyFromConfig: typeof import('./reply').getReplyFromConfig;
+  getReplyFromConfig: typeof import("./reply").getReplyFromConfig;
 }) {
-  getRunEmbeddedPiAgentMock().mockResolvedValue({
+  const runEmbeddedPiAgentMock = getRunEmbeddedPiAgentMock();
+  runEmbeddedPiAgentMock.mockClear();
+  runEmbeddedPiAgentMock.mockResolvedValue({
     payloads: [{ text: "hello" }],
     meta: {
       durationMs: 1,
@@ -226,9 +360,10 @@ export async function runGreetingPromptForBareNewOrReset(params: {
   );
   const text = Array.isArray(res) ? res[0]?.text : res?.text;
   expect(text).toBe("hello");
-  expect(getRunEmbeddedPiAgentMock()).toHaveBeenCalledOnce();
-  const prompt = getRunEmbeddedPiAgentMock().mock.calls[0]?.[0]?.prompt ?? "";
+  expect(runEmbeddedPiAgentMock).toHaveBeenCalledOnce();
+  const prompt = runEmbeddedPiAgentMock.mock.calls.at(-1)?.[0]?.prompt ?? "";
   expect(prompt).toContain("A new session was started via /new or /reset");
+  expect(prompt).toContain("Run your Session Startup sequence");
 }
 
 export function installTriggerHandlingE2eTestHooks() {

@@ -1,4 +1,4 @@
-import type { ModelDefinitionConfig } from '../config/types.models';
+import type { ModelDefinitionConfig } from "../config/types.models";
 
 export const TOGETHER_BASE_URL = "https://api.together.xyz/v1";
 

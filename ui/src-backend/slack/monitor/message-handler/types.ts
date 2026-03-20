@@ -1,9 +1,9 @@
-import type { FinalizedMsgContext } from '../../../auto-reply/templating';
-import type { ResolvedAgentRoute } from '../../../routing/resolve-route';
-import type { ResolvedSlackAccount } from '../../accounts';
-import type { SlackMessageEvent } from '../../types';
-import type { SlackChannelConfigResolved } from '../channel-config';
-import type { SlackMonitorContext } from '../context';
+import type { FinalizedMsgContext } from "../../../auto-reply/templating";
+import type { ResolvedAgentRoute } from "../../../routing/resolve-route";
+import type { ResolvedSlackAccount } from "../../accounts";
+import type { SlackMessageEvent } from "../../types";
+import type { SlackChannelConfigResolved } from "../channel-config";
+import type { SlackMonitorContext } from "../context";
 
 export type PreparedSlackMessage = {
   ctx: SlackMonitorContext;
@@ -13,6 +13,7 @@ export type PreparedSlackMessage = {
   channelConfig: SlackChannelConfigResolved | null;
   replyTarget: string;
   ctxPayload: FinalizedMsgContext;
+  replyToMode: "off" | "first" | "all";
   isDirectMessage: boolean;
   isRoomish: boolean;
   historyKey: string;

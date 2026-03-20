@@ -3,20 +3,22 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { Command } from "commander";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import { loadConfig } from '../config/config';
-import { resolveStateDir } from '../config/paths';
-import { resolveSessionTranscriptsDirForAgent } from '../config/sessions/paths';
-import { setVerbose } from '../globals';
-import { getMemorySearchManager, type MemorySearchManagerResult } from '../memory/index';
-import { listMemoryFiles, normalizeExtraMemoryPaths } from '../memory/internal';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { colorize, isRich, theme } from '../terminal/theme';
-import { shortenHomeInString, shortenHomePath } from '../utils';
-import { formatErrorMessage, withManager } from './cli-utils';
-import { formatHelpExamples } from './help-format';
-import { withProgress, withProgressTotals } from './progress';
+import { resolveDefaultAgentId } from "../agents/agent-scope";
+import { loadConfig } from "../config/config";
+import { resolveStateDir } from "../config/paths";
+import { resolveSessionTranscriptsDirForAgent } from "../config/sessions/paths";
+import { setVerbose } from "../globals";
+import { getMemorySearchManager, type MemorySearchManagerResult } from "../memory/index";
+import { listMemoryFiles, normalizeExtraMemoryPaths } from "../memory/internal";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { colorize, isRich, theme } from "../terminal/theme";
+import { shortenHomeInString, shortenHomePath } from "../utils";
+import { formatErrorMessage, withManager } from "./cli-utils";
+import { resolveCommandSecretRefsViaGateway } from "./command-secret-gateway";
+import { getMemoryCommandSecretTargetIds } from "./command-secret-targets";
+import { formatHelpExamples } from "./help-format";
+import { withProgress, withProgressTotals } from "./progress";
 
 type MemoryCommandOptions = {
   agent?: string;
@@ -43,6 +45,41 @@ type MemorySourceScan = {
   totalFiles: number | null;
   issues: string[];
 };
+
+type LoadedMemoryCommandConfig = {
+  config: ReturnType<typeof loadConfig>;
+  diagnostics: string[];
+};
+
+async function loadMemoryCommandConfig(commandName: string): Promise<LoadedMemoryCommandConfig> {
+  const { resolvedConfig, diagnostics } = await resolveCommandSecretRefsViaGateway({
+    config: loadConfig(),
+    commandName,
+    targetIds: getMemoryCommandSecretTargetIds(),
+  });
+  return {
+    config: resolvedConfig,
+    diagnostics,
+  };
+}
+
+function emitMemorySecretResolveDiagnostics(
+  diagnostics: string[],
+  params?: { json?: boolean },
+): void {
+  if (diagnostics.length === 0) {
+    return;
+  }
+  const toStderr = params?.json === true;
+  for (const entry of diagnostics) {
+    const message = theme.warn(`[secrets] ${entry}`);
+    if (toStderr) {
+      defaultRuntime.error(message);
+    } else {
+      defaultRuntime.log(message);
+    }
+  }
+}
 
 function formatSourceLabel(source: string, workspaceDir: string, agentId: string): string {
   if (source === "memory") {
@@ -297,7 +334,8 @@ async function scanMemorySources(params: {
 
 export async function runMemoryStatus(opts: MemoryCommandOptions) {
   setVerbose(Boolean(opts.verbose));
-  const cfg = loadConfig();
+  const { config: cfg, diagnostics } = await loadMemoryCommandConfig("memory status");
+  emitMemorySecretResolveDiagnostics(diagnostics, { json: Boolean(opts.json) });
   const agentIds = resolveAgentIds(cfg, opts.agent);
   const allResults: Array<{
     agentId: string;
@@ -544,9 +582,14 @@ export function registerMemoryCli(program: Command) {
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
           ["powerdirector memory status", "Show index and provider status."],
+          ["powerdirector memory status --deep", "Probe embedding provider readiness."],
           ["powerdirector memory index --force", "Force a full reindex."],
-          ['powerdirector memory search --query "deployment notes"', "Search indexed memory entries."],
-          ["powerdirector memory status --json", "Output machine-readable JSON."],
+          ['powerdirector memory search "meeting notes"', "Quick search using positional query."],
+          [
+            'powerdirector memory search --query "deployment" --max-results 20',
+            "Limit results for focused troubleshooting.",
+          ],
+          ["powerdirector memory status --json", "Output machine-readable JSON (good for scripts)."],
         ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/memory", "docs.powerdirector.ai/cli/memory")}\n`,
     );
 
@@ -570,7 +613,8 @@ export function registerMemoryCli(program: Command) {
     .option("--verbose", "Verbose logging", false)
     .action(async (opts: MemoryCommandOptions) => {
       setVerbose(Boolean(opts.verbose));
-      const cfg = loadConfig();
+      const { config: cfg, diagnostics } = await loadMemoryCommandConfig("memory index");
+      emitMemorySecretResolveDiagnostics(diagnostics);
       const agentIds = resolveAgentIds(cfg, opts.agent);
       for (const agentId of agentIds) {
         await withMemoryManagerForAgent({
@@ -702,20 +746,31 @@ export function registerMemoryCli(program: Command) {
   memory
     .command("search")
     .description("Search memory files")
-    .argument("<query>", "Search query")
+    .argument("[query]", "Search query")
+    .option("--query <text>", "Search query (alternative to positional argument)")
     .option("--agent <id>", "Agent id (default: default agent)")
     .option("--max-results <n>", "Max results", (value: string) => Number(value))
     .option("--min-score <n>", "Minimum score", (value: string) => Number(value))
     .option("--json", "Print JSON")
     .action(
       async (
-        query: string,
+        queryArg: string | undefined,
         opts: MemoryCommandOptions & {
+          query?: string;
           maxResults?: number;
           minScore?: number;
         },
       ) => {
-        const cfg = loadConfig();
+        const query = opts.query ?? queryArg;
+        if (!query) {
+          defaultRuntime.error(
+            "Missing search query. Provide a positional query or use --query <text>.",
+          );
+          process.exitCode = 1;
+          return;
+        }
+        const { config: cfg, diagnostics } = await loadMemoryCommandConfig("memory search");
+        emitMemorySecretResolveDiagnostics(diagnostics, { json: Boolean(opts.json) });
         const agentId = resolveAgent(cfg, opts.agent);
         await withMemoryManagerForAgent({
           cfg,

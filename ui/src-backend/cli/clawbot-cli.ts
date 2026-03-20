@@ -1,7 +1,16 @@
 import type { Command } from "commander";
-import { registerQrCli } from './qr-cli';
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { registerQrCli } from "./qr-cli";
 
 export function registerClawbotCli(program: Command) {
-  const clawbot = program.command("clawbot").description("Legacy clawbot command aliases");
+  const clawbot = program
+    .command("clawbot")
+    .description("Legacy clawbot command aliases")
+    .addHelpText(
+      "after",
+      () =>
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/clawbot", "docs.powerdirector.ai/cli/clawbot")}\n`,
+    );
   registerQrCli(clawbot);
 }

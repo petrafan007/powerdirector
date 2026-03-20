@@ -1,7 +1,7 @@
 import * as fs from "node:fs/promises";
 import path from "node:path";
 import JSON5 from "json5";
-import { INCLUDE_KEY, MAX_INCLUDE_DEPTH } from './includes';
+import { INCLUDE_KEY, MAX_INCLUDE_DEPTH } from "./includes";
 
 function listDirectIncludes(parsed: unknown): string[] {
   const out: string[] = [];

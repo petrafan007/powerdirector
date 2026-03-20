@@ -1,9 +1,13 @@
-import type { ReplyPayload } from '../../auto-reply/types';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { GroupToolPolicyConfig } from '../../config/types.tools';
-import type { OutboundDeliveryResult, OutboundSendDeps } from '../../infra/outbound/deliver';
-import type { OutboundIdentity } from '../../infra/outbound/identity';
-import type { RuntimeEnv } from '../../runtime';
+import type { ReplyPayload } from "../../auto-reply/types";
+import type { ConfiguredBindingRule } from "../../config/bindings";
+import type { PowerDirectorConfig } from "../../config/config";
+import type { GroupToolPolicyConfig } from "../../config/types.tools";
+import type { ExecApprovalRequest, ExecApprovalResolved } from "../../infra/exec-approvals";
+import type { OutboundDeliveryResult, OutboundSendDeps } from "../../infra/outbound/deliver";
+import type { OutboundIdentity } from "../../infra/outbound/identity";
+import type { PluginRuntime } from "../../plugins/runtime/types";
+import type { RuntimeEnv } from "../../runtime";
+import type { ConfigWriteTarget } from "./config-writes";
 import type {
   ChannelAccountSnapshot,
   ChannelAccountState,
@@ -18,10 +22,48 @@ import type {
   ChannelSecurityDmPolicy,
   ChannelSetupInput,
   ChannelStatusIssue,
-} from './types.core';
+} from "./types.core";
+
+export type ChannelExecApprovalInitiatingSurfaceState =
+  | { kind: "enabled" }
+  | { kind: "disabled" }
+  | { kind: "unsupported" };
+
+export type ChannelExecApprovalForwardTarget = {
+  channel: string;
+  to: string;
+  accountId?: string | null;
+  threadId?: string | number | null;
+  source?: "session" | "target";
+};
+
+export type ChannelCapabilitiesDisplayTone = "default" | "muted" | "success" | "warn" | "error";
+
+export type ChannelCapabilitiesDisplayLine = {
+  text: string;
+  tone?: ChannelCapabilitiesDisplayTone;
+};
+
+export type ChannelCapabilitiesDiagnostics = {
+  lines?: ChannelCapabilitiesDisplayLine[];
+  details?: Record<string, unknown>;
+};
+
+type BivariantCallback<T extends (...args: never[]) => unknown> = {
+  bivarianceHack: T;
+}["bivarianceHack"];
 
 export type ChannelSetupAdapter = {
-  resolveAccountId?: (params: { cfg: PowerDirectorConfig; accountId?: string }) => string;
+  resolveAccountId?: (params: {
+    cfg: PowerDirectorConfig;
+    accountId?: string;
+    input?: ChannelSetupInput;
+  }) => string;
+  resolveBindingAccountId?: (params: {
+    cfg: PowerDirectorConfig;
+    agentId: string;
+    accountId?: string;
+  }) => string | undefined;
   applyAccountName?: (params: {
     cfg: PowerDirectorConfig;
     accountId: string;
@@ -42,6 +84,7 @@ export type ChannelSetupAdapter = {
 export type ChannelConfigAdapter<ResolvedAccount> = {
   listAccountIds: (cfg: PowerDirectorConfig) => string[];
   resolveAccount: (cfg: PowerDirectorConfig, accountId?: string | null) => ResolvedAccount;
+  inspectAccount?: (cfg: PowerDirectorConfig, accountId?: string | null) => unknown;
   defaultAccountId?: (cfg: PowerDirectorConfig) => string;
   setAccountEnabled?: (params: {
     cfg: PowerDirectorConfig;
@@ -57,12 +100,16 @@ export type ChannelConfigAdapter<ResolvedAccount> = {
   resolveAllowFrom?: (params: {
     cfg: PowerDirectorConfig;
     accountId?: string | null;
-  }) => string[] | undefined;
+  }) => Array<string | number> | undefined;
   formatAllowFrom?: (params: {
     cfg: PowerDirectorConfig;
     accountId?: string | null;
     allowFrom: Array<string | number>;
   }) => string[];
+  resolveDefaultTo?: (params: {
+    cfg: PowerDirectorConfig;
+    accountId?: string | null;
+  }) => string | undefined;
 };
 
 export type ChannelGroupAdapter = {
@@ -78,6 +125,8 @@ export type ChannelOutboundContext = {
   mediaUrl?: string;
   mediaLocalRoots?: readonly string[];
   gifPlayback?: boolean;
+  /** Send image as document to avoid Telegram compression. */
+  forceDocument?: boolean;
   replyToId?: string | null;
   threadId?: string | number | null;
   accountId?: string | null;
@@ -90,12 +139,23 @@ export type ChannelOutboundPayloadContext = ChannelOutboundContext & {
   payload: ReplyPayload;
 };
 
+export type ChannelOutboundFormattedContext = ChannelOutboundContext & {
+  abortSignal?: AbortSignal;
+};
+
 export type ChannelOutboundAdapter = {
   deliveryMode: "direct" | "gateway" | "hybrid";
   chunker?: ((text: string, limit: number) => string[]) | null;
   chunkerMode?: "text" | "markdown";
   textChunkLimit?: number;
   pollMaxOptions?: number;
+  normalizePayload?: (params: { payload: ReplyPayload }) => ReplyPayload | null;
+  shouldSkipPlainTextSanitization?: (params: { payload: ReplyPayload }) => boolean;
+  resolveEffectiveTextChunkLimit?: (params: {
+    cfg: PowerDirectorConfig;
+    accountId?: string | null;
+    fallbackLimit?: number;
+  }) => number | undefined;
   resolveTarget?: (params: {
     cfg?: PowerDirectorConfig;
     to?: string;
@@ -104,8 +164,16 @@ export type ChannelOutboundAdapter = {
     mode?: ChannelOutboundTargetMode;
   }) => { ok: true; to: string } | { ok: false; error: Error };
   sendPayload?: (ctx: ChannelOutboundPayloadContext) => Promise<OutboundDeliveryResult>;
+  sendFormattedText?: (ctx: ChannelOutboundFormattedContext) => Promise<OutboundDeliveryResult[]>;
+  sendFormattedMedia?: (
+    ctx: ChannelOutboundFormattedContext & { mediaUrl: string },
+  ) => Promise<OutboundDeliveryResult>;
   sendText?: (ctx: ChannelOutboundContext) => Promise<OutboundDeliveryResult>;
   sendMedia?: (ctx: ChannelOutboundContext) => Promise<OutboundDeliveryResult>;
+  /**
+   * Shared outbound poll adapter for channels that fit the common poll model.
+   * Channels with extra poll semantics should prefer `actions.handleAction("poll")`.
+   */
   sendPoll?: (ctx: ChannelPollContext) => Promise<ChannelPollResult>;
 };
 
@@ -122,12 +190,25 @@ export type ChannelStatusAdapter<ResolvedAccount, Probe = unknown, Audit = unkno
     timeoutMs: number;
     cfg: PowerDirectorConfig;
   }) => Promise<Probe>;
+  formatCapabilitiesProbe?: BivariantCallback<
+    (params: { probe: Probe }) => ChannelCapabilitiesDisplayLine[]
+  >;
   auditAccount?: (params: {
     account: ResolvedAccount;
     timeoutMs: number;
     cfg: PowerDirectorConfig;
     probe?: Probe;
   }) => Promise<Audit>;
+  buildCapabilitiesDiagnostics?: BivariantCallback<
+    (params: {
+      account: ResolvedAccount;
+      timeoutMs: number;
+      cfg: PowerDirectorConfig;
+      probe?: Probe;
+      audit?: Audit;
+      target?: string;
+    }) => Promise<ChannelCapabilitiesDiagnostics | undefined>
+  >;
   buildAccountSnapshot?: (params: {
     account: ResolvedAccount;
     cfg: PowerDirectorConfig;
@@ -159,6 +240,68 @@ export type ChannelGatewayContext<ResolvedAccount = unknown> = {
   log?: ChannelLogSink;
   getStatus: () => ChannelAccountSnapshot;
   setStatus: (next: ChannelAccountSnapshot) => void;
+  /**
+   * Optional channel runtime helpers for external channel plugins.
+   *
+   * This field provides access to advanced Plugin SDK features that are
+   * available to external plugins but not to built-in channels (which can
+   * directly import internal modules).
+   *
+   * ## Available Features
+   *
+   * - **reply**: AI response dispatching, formatting, and delivery
+   * - **routing**: Agent route resolution and matching
+   * - **text**: Text chunking, markdown processing, and control command detection
+   * - **session**: Session management and metadata tracking
+   * - **media**: Remote media fetching and buffer saving
+   * - **commands**: Command authorization and control command handling
+   * - **groups**: Group policy resolution and mention requirements
+   * - **pairing**: Channel pairing and allow-from management
+   *
+   * ## Use Cases
+   *
+   * External channel plugins (e.g., email, SMS, custom integrations) that need:
+   * - AI-powered response generation and delivery
+   * - Advanced text processing and formatting
+   * - Session tracking and management
+   * - Agent routing and policy resolution
+   *
+   * ## Example
+   *
+   * ```typescript
+   * const emailGatewayAdapter: ChannelGatewayAdapter<EmailAccount> = {
+   *   startAccount: async (ctx) => {
+   *     // Check availability (for backward compatibility)
+   *     if (!ctx.channelRuntime) {
+   *       ctx.log?.warn?.("channelRuntime not available - skipping AI features");
+   *       return;
+   *     }
+   *
+   *     // Use AI dispatch
+   *     await ctx.channelRuntime.reply.dispatchReplyWithBufferedBlockDispatcher({
+   *       ctx: { ... },
+   *       cfg: ctx.cfg,
+   *       dispatcherOptions: {
+   *         deliver: async (payload) => {
+   *           // Send reply via email
+   *         },
+   *       },
+   *     });
+   *   },
+   * };
+   * ```
+   *
+   * ## Backward Compatibility
+   *
+   * - This field is **optional** - channels that don't need it can ignore it
+   * - Built-in channels (slack, discord, etc.) typically don't use this field
+   *   because they can directly import internal modules
+   * - External plugins should check for undefined before using
+   *
+   * @since Plugin SDK 2026.2.19
+   * @see {@link https://docs.powerdirector.ai/plugins/developing-plugins | Plugin SDK documentation}
+   */
+  channelRuntime?: PluginRuntime["channel"];
 };
 
 export type ChannelLogoutResult = {
@@ -233,47 +376,37 @@ export type ChannelHeartbeatAdapter = {
   };
 };
 
+type ChannelDirectorySelfParams = {
+  cfg: PowerDirectorConfig;
+  accountId?: string | null;
+  runtime: RuntimeEnv;
+};
+
+type ChannelDirectoryListParams = {
+  cfg: PowerDirectorConfig;
+  accountId?: string | null;
+  query?: string | null;
+  limit?: number | null;
+  runtime: RuntimeEnv;
+};
+
+type ChannelDirectoryListGroupMembersParams = {
+  cfg: PowerDirectorConfig;
+  accountId?: string | null;
+  groupId: string;
+  limit?: number | null;
+  runtime: RuntimeEnv;
+};
+
 export type ChannelDirectoryAdapter = {
-  self?: (params: {
-    cfg: PowerDirectorConfig;
-    accountId?: string | null;
-    runtime: RuntimeEnv;
-  }) => Promise<ChannelDirectoryEntry | null>;
-  listPeers?: (params: {
-    cfg: PowerDirectorConfig;
-    accountId?: string | null;
-    query?: string | null;
-    limit?: number | null;
-    runtime: RuntimeEnv;
-  }) => Promise<ChannelDirectoryEntry[]>;
-  listPeersLive?: (params: {
-    cfg: PowerDirectorConfig;
-    accountId?: string | null;
-    query?: string | null;
-    limit?: number | null;
-    runtime: RuntimeEnv;
-  }) => Promise<ChannelDirectoryEntry[]>;
-  listGroups?: (params: {
-    cfg: PowerDirectorConfig;
-    accountId?: string | null;
-    query?: string | null;
-    limit?: number | null;
-    runtime: RuntimeEnv;
-  }) => Promise<ChannelDirectoryEntry[]>;
-  listGroupsLive?: (params: {
-    cfg: PowerDirectorConfig;
-    accountId?: string | null;
-    query?: string | null;
-    limit?: number | null;
-    runtime: RuntimeEnv;
-  }) => Promise<ChannelDirectoryEntry[]>;
-  listGroupMembers?: (params: {
-    cfg: PowerDirectorConfig;
-    accountId?: string | null;
-    groupId: string;
-    limit?: number | null;
-    runtime: RuntimeEnv;
-  }) => Promise<ChannelDirectoryEntry[]>;
+  self?: (params: ChannelDirectorySelfParams) => Promise<ChannelDirectoryEntry | null>;
+  listPeers?: (params: ChannelDirectoryListParams) => Promise<ChannelDirectoryEntry[]>;
+  listPeersLive?: (params: ChannelDirectoryListParams) => Promise<ChannelDirectoryEntry[]>;
+  listGroups?: (params: ChannelDirectoryListParams) => Promise<ChannelDirectoryEntry[]>;
+  listGroupsLive?: (params: ChannelDirectoryListParams) => Promise<ChannelDirectoryEntry[]>;
+  listGroupMembers?: (
+    params: ChannelDirectoryListGroupMembersParams,
+  ) => Promise<ChannelDirectoryEntry[]>;
 };
 
 export type ChannelResolveKind = "user" | "group";
@@ -306,6 +439,132 @@ export type ChannelElevatedAdapter = {
 export type ChannelCommandAdapter = {
   enforceOwnerForCommands?: boolean;
   skipWhenConfigEmpty?: boolean;
+};
+
+export type ChannelLifecycleAdapter = {
+  onAccountConfigChanged?: (params: {
+    prevCfg: PowerDirectorConfig;
+    nextCfg: PowerDirectorConfig;
+    accountId: string;
+    runtime: RuntimeEnv;
+  }) => Promise<void> | void;
+  onAccountRemoved?: (params: {
+    prevCfg: PowerDirectorConfig;
+    accountId: string;
+    runtime: RuntimeEnv;
+  }) => Promise<void> | void;
+};
+
+export type ChannelExecApprovalAdapter = {
+  getInitiatingSurfaceState?: (params: {
+    cfg: PowerDirectorConfig;
+    accountId?: string | null;
+  }) => ChannelExecApprovalInitiatingSurfaceState;
+  shouldSuppressLocalPrompt?: (params: {
+    cfg: PowerDirectorConfig;
+    accountId?: string | null;
+    payload: ReplyPayload;
+  }) => boolean;
+  hasConfiguredDmRoute?: (params: { cfg: PowerDirectorConfig }) => boolean;
+  shouldSuppressForwardingFallback?: (params: {
+    cfg: PowerDirectorConfig;
+    target: ChannelExecApprovalForwardTarget;
+    request: ExecApprovalRequest;
+  }) => boolean;
+  buildPendingPayload?: (params: {
+    cfg: PowerDirectorConfig;
+    request: ExecApprovalRequest;
+    target: ChannelExecApprovalForwardTarget;
+    nowMs: number;
+  }) => ReplyPayload | null;
+  buildResolvedPayload?: (params: {
+    cfg: PowerDirectorConfig;
+    resolved: ExecApprovalResolved;
+    target: ChannelExecApprovalForwardTarget;
+  }) => ReplyPayload | null;
+  beforeDeliverPending?: (params: {
+    cfg: PowerDirectorConfig;
+    target: ChannelExecApprovalForwardTarget;
+    payload: ReplyPayload;
+  }) => Promise<void> | void;
+};
+
+export type ChannelAllowlistAdapter = {
+  applyConfigEdit?: (params: {
+    cfg: PowerDirectorConfig;
+    parsedConfig: Record<string, unknown>;
+    accountId?: string | null;
+    scope: "dm" | "group";
+    action: "add" | "remove";
+    entry: string;
+  }) =>
+    | {
+        kind: "ok";
+        changed: boolean;
+        pathLabel: string;
+        writeTarget: ConfigWriteTarget;
+      }
+    | {
+        kind: "invalid-entry";
+      }
+    | Promise<
+        | {
+            kind: "ok";
+            changed: boolean;
+            pathLabel: string;
+            writeTarget: ConfigWriteTarget;
+          }
+        | {
+            kind: "invalid-entry";
+          }
+      >
+    | null;
+  readConfig?: (params: { cfg: PowerDirectorConfig; accountId?: string | null }) =>
+    | {
+        dmAllowFrom?: Array<string | number>;
+        groupAllowFrom?: Array<string | number>;
+        dmPolicy?: string;
+        groupPolicy?: string;
+        groupOverrides?: Array<{ label: string; entries: Array<string | number> }>;
+      }
+    | Promise<{
+        dmAllowFrom?: Array<string | number>;
+        groupAllowFrom?: Array<string | number>;
+        dmPolicy?: string;
+        groupPolicy?: string;
+        groupOverrides?: Array<{ label: string; entries: Array<string | number> }>;
+      }>;
+  resolveNames?: (params: {
+    cfg: PowerDirectorConfig;
+    accountId?: string | null;
+    scope: "dm" | "group";
+    entries: string[];
+  }) =>
+    | Array<{ input: string; resolved: boolean; name?: string | null }>
+    | Promise<Array<{ input: string; resolved: boolean; name?: string | null }>>;
+  supportsScope?: (params: { scope: "dm" | "group" | "all" }) => boolean;
+};
+
+export type ChannelConfiguredBindingConversationRef = {
+  conversationId: string;
+  parentConversationId?: string;
+};
+
+export type ChannelConfiguredBindingMatch = ChannelConfiguredBindingConversationRef & {
+  matchPriority?: number;
+};
+
+export type ChannelConfiguredBindingProvider = {
+  compileConfiguredBinding: (params: {
+    binding: ConfiguredBindingRule;
+    conversationId: string;
+  }) => ChannelConfiguredBindingConversationRef | null;
+  matchInboundConversation: (params: {
+    binding: ConfiguredBindingRule;
+    compiledBinding: ChannelConfiguredBindingConversationRef;
+    conversationId: string;
+    parentConversationId?: string;
+  }) => ChannelConfiguredBindingMatch | null;
 };
 
 export type ChannelSecurityAdapter<ResolvedAccount = unknown> = {

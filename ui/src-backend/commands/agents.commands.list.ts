@@ -1,18 +1,19 @@
-import { formatCliCommand } from '../cli/command-format';
-import type { AgentBinding } from '../config/types';
-import { normalizeAgentId } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { shortenHomePath } from '../utils';
-import { describeBinding } from './agents.bindings';
-import { requireValidConfig } from './agents.command-shared';
-import type { AgentSummary } from './agents.config';
-import { buildAgentSummaries } from './agents.config';
+import { formatCliCommand } from "../cli/command-format";
+import { listRouteBindings } from "../config/bindings";
+import type { AgentRouteBinding } from "../config/types";
+import { normalizeAgentId } from "../routing/session-key";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { shortenHomePath } from "../utils";
+import { describeBinding } from "./agents.bindings";
+import { requireValidConfig } from "./agents.command-shared";
+import type { AgentSummary } from "./agents.config";
+import { buildAgentSummaries } from "./agents.config";
 import {
   buildProviderStatusIndex,
   listProvidersForAgent,
   summarizeBindings,
-} from './agents.providers';
+} from "./agents.providers";
 
 type AgentsListOptions = {
   json?: boolean;
@@ -81,8 +82,8 @@ export async function agentsListCommand(
   }
 
   const summaries = buildAgentSummaries(cfg);
-  const bindingMap = new Map<string, AgentBinding[]>();
-  for (const binding of cfg.bindings ?? []) {
+  const bindingMap = new Map<string, AgentRouteBinding[]>();
+  for (const binding of listRouteBindings(cfg)) {
     const agentId = normalizeAgentId(binding.agentId);
     const list = bindingMap.get(agentId) ?? [];
     list.push(binding);

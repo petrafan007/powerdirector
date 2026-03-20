@@ -1,4 +1,4 @@
-import { ensurePageState, getPageForTargetId } from './pw-session';
+import { ensurePageState, getPageForTargetId } from "./pw-session";
 
 export async function cookiesGetViaPlaywright(opts: {
   cdpUrl: string;

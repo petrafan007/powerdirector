@@ -1,6 +1,6 @@
 import * as path from "node:path";
-import { resolveCliName } from './cli-name';
-import { asRecord, asString, resolveTempPathParts } from './nodes-media-utils';
+import { resolveCliName } from "./cli-name";
+import { asRecord, asString, resolveTempPathParts } from "./nodes-media-utils";
 
 export type CanvasSnapshotPayload = {
   format: string;

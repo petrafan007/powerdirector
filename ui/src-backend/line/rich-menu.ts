@@ -1,10 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { messagingApi } from "@line/bot-sdk";
-import { loadConfig } from '../config/config';
-import { logVerbose } from '../globals';
-import { resolveLineAccount } from './accounts';
-import { datetimePickerAction, messageAction, postbackAction, uriAction } from './actions';
-import { resolveLineChannelAccessToken } from './channel-access-token';
+import { loadConfig } from "../config/config";
+import { logVerbose } from "../globals";
+import { resolveLineAccount } from "./accounts";
+import { datetimePickerAction, messageAction, postbackAction, uriAction } from "./actions";
+import { resolveLineChannelAccessToken } from "./channel-access-token";
 
 type RichMenuRequest = messagingApi.RichMenuRequest;
 type RichMenuResponse = messagingApi.RichMenuResponse;

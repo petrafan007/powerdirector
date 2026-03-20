@@ -1,5 +1,5 @@
-import { splitArgsPreservingQuotes } from './arg-split';
-import { assertNoCmdLineBreak } from './cmd-set';
+import { splitArgsPreservingQuotes } from "./arg-split";
+import { assertNoCmdLineBreak } from "./cmd-set";
 
 export function quoteCmdScriptArg(value: string): string {
   assertNoCmdLineBreak(value, "Command argument");

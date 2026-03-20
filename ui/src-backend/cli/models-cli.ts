@@ -1,6 +1,5 @@
 import type { Command } from "commander";
 import {
-  githubCopilotLoginCommand,
   modelsAliasesAddCommand,
   modelsAliasesListCommand,
   modelsAliasesRemoveCommand,
@@ -24,11 +23,11 @@ import {
   modelsSetCommand,
   modelsSetImageCommand,
   modelsStatusCommand,
-} from '../commands/models';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { resolveOptionFromCommand, runCommandWithRuntime } from './cli-utils';
+} from "../commands/models";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { resolveOptionFromCommand, runCommandWithRuntime } from "./cli-utils";
 
 function runModelsCommand(action: () => Promise<void>) {
   return runCommandWithRuntime(defaultRuntime, action);
@@ -364,13 +363,13 @@ export function registerModelsCli(program: Command) {
   auth
     .command("login-github-copilot")
     .description("Login to GitHub Copilot via GitHub device flow (TTY required)")
-    .option("--profile-id <id>", "Auth profile id (default: github-copilot:github)")
     .option("--yes", "Overwrite existing profile without prompting", false)
     .action(async (opts) => {
       await runModelsCommand(async () => {
-        await githubCopilotLoginCommand(
+        await modelsAuthLoginCommand(
           {
-            profileId: opts.profileId as string | undefined,
+            provider: "github-copilot",
+            method: "device",
             yes: Boolean(opts.yes),
           },
           defaultRuntime,

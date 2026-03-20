@@ -1,22 +1,28 @@
-import { normalizeProviderId } from '../../agents/model-selection';
-import type { MediaUnderstandingProvider } from '../types';
-import { anthropicProvider } from './anthropic/index';
-import { deepgramProvider } from './deepgram/index';
-import { googleProvider } from './google/index';
-import { groqProvider } from './groq/index';
-import { minimaxProvider } from './minimax/index';
-import { openaiProvider } from './openai/index';
-import { zaiProvider } from './zai/index';
+import { normalizeProviderId } from "../../agents/model-selection";
+import type { PowerDirectorConfig } from "../../config/config";
+import { loadPowerDirectorPlugins } from "../../plugins/loader";
+import { getActivePluginRegistry } from "../../plugins/runtime";
+import type { MediaUnderstandingProvider } from "../types";
+import { deepgramProvider } from "./deepgram/index";
+import { groqProvider } from "./groq/index";
 
-const PROVIDERS: MediaUnderstandingProvider[] = [
-  groqProvider,
-  openaiProvider,
-  googleProvider,
-  anthropicProvider,
-  minimaxProvider,
-  zaiProvider,
-  deepgramProvider,
-];
+const PROVIDERS: MediaUnderstandingProvider[] = [groqProvider, deepgramProvider];
+
+function mergeProviderIntoRegistry(
+  registry: Map<string, MediaUnderstandingProvider>,
+  provider: MediaUnderstandingProvider,
+) {
+  const normalizedKey = normalizeMediaProviderId(provider.id);
+  const existing = registry.get(normalizedKey);
+  const merged = existing
+    ? {
+        ...existing,
+        ...provider,
+        capabilities: provider.capabilities ?? existing.capabilities,
+      }
+    : provider;
+  registry.set(normalizedKey, merged);
+}
 
 export function normalizeMediaProviderId(id: string): string {
   const normalized = normalizeProviderId(id);
@@ -28,10 +34,19 @@ export function normalizeMediaProviderId(id: string): string {
 
 export function buildMediaUnderstandingRegistry(
   overrides?: Record<string, MediaUnderstandingProvider>,
+  cfg?: PowerDirectorConfig,
 ): Map<string, MediaUnderstandingProvider> {
   const registry = new Map<string, MediaUnderstandingProvider>();
   for (const provider of PROVIDERS) {
-    registry.set(normalizeMediaProviderId(provider.id), provider);
+    mergeProviderIntoRegistry(registry, provider);
+  }
+  const active = getActivePluginRegistry();
+  const pluginRegistry =
+    (active?.mediaUnderstandingProviders?.length ?? 0) > 0
+      ? active
+      : loadPowerDirectorPlugins({ config: cfg });
+  for (const entry of pluginRegistry?.mediaUnderstandingProviders ?? []) {
+    mergeProviderIntoRegistry(registry, entry.provider);
   }
   if (overrides) {
     for (const [key, provider] of Object.entries(overrides)) {

@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig, HumanDelayConfig, IdentityConfig } from '../config/config';
-import { resolveAgentConfig } from './agent-scope';
+import type { PowerDirectorConfig, HumanDelayConfig, IdentityConfig } from "../config/config";
+import { resolveAgentConfig } from "./agent-scope";
 
 const DEFAULT_ACK_REACTION = "👀";
 

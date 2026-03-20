@@ -2,8 +2,8 @@ import { EventEmitter } from "node:events";
 import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { afterEach, beforeEach, vi } from "vitest";
-import { resetLogger, setLoggerOverride } from '../logging';
+import { afterEach, beforeEach, expect, vi } from "vitest";
+import { resetLogger, setLoggerOverride } from "../logging";
 
 // Avoid exporting vitest mock types (TS2742 under pnpm + d.ts emit).
 // oxlint-disable-next-line typescript/no-explicit-any
@@ -47,14 +47,18 @@ export type MockSock = {
   user: { id: string };
 };
 
+function createResolvedMock() {
+  return vi.fn().mockResolvedValue(undefined);
+}
+
 function createMockSock(): MockSock {
   const ev = new EventEmitter();
   return {
     ev,
     ws: { close: vi.fn() },
-    sendPresenceUpdate: vi.fn().mockResolvedValue(undefined),
-    sendMessage: vi.fn().mockResolvedValue(undefined),
-    readMessages: vi.fn().mockResolvedValue(undefined),
+    sendPresenceUpdate: createResolvedMock(),
+    sendMessage: createResolvedMock(),
+    readMessages: createResolvedMock(),
     updateMediaMessage: vi.fn(),
     logger: {},
     signalRepository: {
@@ -66,9 +70,18 @@ function createMockSock(): MockSock {
   };
 }
 
+function getPairingStoreMocks() {
+  const readChannelAllowFromStore = (...args: unknown[]) => readAllowFromStoreMock(...args);
+  const upsertChannelPairingRequest = (...args: unknown[]) => upsertPairingRequestMock(...args);
+  return {
+    readChannelAllowFromStore,
+    upsertChannelPairingRequest,
+  };
+}
+
 const sock: MockSock = createMockSock();
 
-vi.mock("../media/store.js", () => ({
+vi.mock("../media/store", () => ({
   saveMediaBuffer: vi.fn().mockResolvedValue({
     id: "mid",
     path: "/tmp/mid",
@@ -77,20 +90,17 @@ vi.mock("../media/store.js", () => ({
   }),
 }));
 
-vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+vi.mock("../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
     loadConfig: () => mockLoadConfig(),
   };
 });
 
-vi.mock("../pairing/pairing-store.js", () => ({
-  readChannelAllowFromStore: (...args: unknown[]) => readAllowFromStoreMock(...args),
-  upsertChannelPairingRequest: (...args: unknown[]) => upsertPairingRequestMock(...args),
-}));
+vi.mock("../pairing/pairing-store", () => getPairingStoreMocks());
 
-vi.mock("./session.js", () => ({
+vi.mock("./session", () => ({
   createWaSocket: vi.fn().mockResolvedValue(sock),
   waitForWaConnection: vi.fn().mockResolvedValue(undefined),
   getStatusCode: vi.fn(() => 500),
@@ -98,6 +108,16 @@ vi.mock("./session.js", () => ({
 
 export function getSock(): MockSock {
   return sock;
+}
+
+export function expectPairingPromptSent(sock: MockSock, jid: string, senderE164: string) {
+  expect(sock.sendMessage).toHaveBeenCalledTimes(1);
+  expect(sock.sendMessage).toHaveBeenCalledWith(jid, {
+    text: expect.stringContaining(`Your WhatsApp phone number: ${senderE164}`),
+  });
+  expect(sock.sendMessage).toHaveBeenCalledWith(jid, {
+    text: expect.stringContaining("Pairing code: PAIRCODE"),
+  });
 }
 
 let authDir: string | undefined;
@@ -120,7 +140,7 @@ export function installWebMonitorInboxUnitTestHooks(opts?: { authDir?: boolean }
       code: "PAIRCODE",
       created: true,
     });
-    const { resetWebInboundDedupe } = await import('./inbound');
+    const { resetWebInboundDedupe } = await import("./inbound");
     resetWebInboundDedupe();
     if (createAuthDir) {
       authDir = fsSync.mkdtempSync(path.join(os.tmpdir(), "powerdirector-auth-"));

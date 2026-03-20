@@ -1,18 +1,18 @@
-import { formatCliCommand } from '../cli/command-format';
+import { formatCliCommand } from "../cli/command-format";
 import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
-} from '../daemon/constants';
-import { resolveGatewayLogPaths } from '../daemon/launchd';
-import { formatRuntimeStatus } from '../daemon/runtime-format';
-import type { GatewayServiceRuntime } from '../daemon/service-runtime';
+} from "../daemon/constants";
+import { formatRuntimeStatus } from "../daemon/runtime-format";
+import { buildPlatformRuntimeLogHints } from "../daemon/runtime-hints";
+import type { GatewayServiceRuntime } from "../daemon/service-runtime";
 import {
   isSystemdUnavailableDetail,
   renderSystemdUnavailableHints,
-} from '../daemon/systemd-hints';
-import { isWSLEnv } from '../infra/wsl';
-import { getResolvedLoggerSettings } from '../logging';
+} from "../daemon/systemd-hints";
+import { isWSLEnv } from "../infra/wsl";
+import { getResolvedLoggerSettings } from "../logging";
 
 type RuntimeHintOptions = {
   platform?: NodeJS.Platform;
@@ -68,17 +68,14 @@ export function buildGatewayRuntimeHints(
     if (fileLog) {
       hints.push(`File logs: ${fileLog}`);
     }
-    if (platform === "darwin") {
-      const logs = resolveGatewayLogPaths(env);
-      hints.push(`Launchd stdout (if installed): ${logs.stdoutPath}`);
-      hints.push(`Launchd stderr (if installed): ${logs.stderrPath}`);
-    } else if (platform === "linux") {
-      const unit = resolveGatewaySystemdServiceName(env.POWERDIRECTOR_PROFILE);
-      hints.push(`Logs: journalctl --user -u ${unit}.service -n 200 --no-pager`);
-    } else if (platform === "win32") {
-      const task = resolveGatewayWindowsTaskName(env.POWERDIRECTOR_PROFILE);
-      hints.push(`Logs: schtasks /Query /TN "${task}" /V /FO LIST`);
-    }
+    hints.push(
+      ...buildPlatformRuntimeLogHints({
+        platform,
+        env,
+        systemdServiceName: resolveGatewaySystemdServiceName(env.POWERDIRECTOR_PROFILE),
+        windowsTaskName: resolveGatewayWindowsTaskName(env.POWERDIRECTOR_PROFILE),
+      }),
+    );
   }
   return hints;
 }

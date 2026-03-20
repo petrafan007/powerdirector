@@ -1,0 +1,61 @@
+import { createAccountListHelpers } from "@/src-backend/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
+import type { PowerDirectorConfig } from "./runtime-api";
+import { resolveZaloToken } from "./token";
+import type { ResolvedZaloAccount, ZaloAccountConfig, ZaloConfig } from "./types";
+
+export type { ResolvedZaloAccount };
+
+const { listAccountIds: listZaloAccountIds, resolveDefaultAccountId: resolveDefaultZaloAccountId } =
+  createAccountListHelpers("zalo");
+export { listZaloAccountIds, resolveDefaultZaloAccountId };
+
+function resolveAccountConfig(
+  cfg: PowerDirectorConfig,
+  accountId: string,
+): ZaloAccountConfig | undefined {
+  const accounts = (cfg.channels?.zalo as ZaloConfig | undefined)?.accounts;
+  if (!accounts || typeof accounts !== "object") {
+    return undefined;
+  }
+  return accounts[accountId] as ZaloAccountConfig | undefined;
+}
+
+function mergeZaloAccountConfig(cfg: PowerDirectorConfig, accountId: string): ZaloAccountConfig {
+  const raw = (cfg.channels?.zalo ?? {}) as ZaloConfig;
+  const { accounts: _ignored, defaultAccount: _ignored2, ...base } = raw;
+  const account = resolveAccountConfig(cfg, accountId) ?? {};
+  return { ...base, ...account };
+}
+
+export function resolveZaloAccount(params: {
+  cfg: PowerDirectorConfig;
+  accountId?: string | null;
+  allowUnresolvedSecretRef?: boolean;
+}): ResolvedZaloAccount {
+  const accountId = normalizeAccountId(params.accountId);
+  const baseEnabled = (params.cfg.channels?.zalo as ZaloConfig | undefined)?.enabled !== false;
+  const merged = mergeZaloAccountConfig(params.cfg, accountId);
+  const accountEnabled = merged.enabled !== false;
+  const enabled = baseEnabled && accountEnabled;
+  const tokenResolution = resolveZaloToken(
+    params.cfg.channels?.zalo as ZaloConfig | undefined,
+    accountId,
+    { allowUnresolvedSecretRef: params.allowUnresolvedSecretRef },
+  );
+
+  return {
+    accountId,
+    name: merged.name?.trim() || undefined,
+    enabled,
+    token: tokenResolution.token,
+    tokenSource: tokenResolution.source,
+    config: merged,
+  };
+}
+
+export function listEnabledZaloAccounts(cfg: PowerDirectorConfig): ResolvedZaloAccount[] {
+  return listZaloAccountIds(cfg)
+    .map((accountId) => resolveZaloAccount({ cfg, accountId }))
+    .filter((account) => account.enabled);
+}

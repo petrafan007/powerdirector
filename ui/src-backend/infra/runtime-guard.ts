@@ -1,5 +1,5 @@
 import process from "node:process";
-import { defaultRuntime, type RuntimeEnv } from '../runtime';
+import { defaultRuntime, type RuntimeEnv } from "../runtime";
 
 export type RuntimeKind = "node" | "unknown";
 
@@ -9,7 +9,7 @@ type Semver = {
   patch: number;
 };
 
-const MIN_NODE: Semver = { major: 22, minor: 12, patch: 0 };
+const MIN_NODE: Semver = { major: 22, minor: 16, patch: 0 };
 
 export type RuntimeDetails = {
   kind: RuntimeKind;
@@ -88,7 +88,7 @@ export function assertSupportedRuntime(
 
   runtime.error(
     [
-      "powerdirector requires Node >=22.12.0.",
+      "powerdirector requires Node >=22.16.0.",
       `Detected: ${runtimeLabel} (exec: ${execLabel}).`,
       `PATH searched: ${details.pathEnv}`,
       "Install Node: https://nodejs.org/en/download",

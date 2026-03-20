@@ -1,21 +1,33 @@
-import { isTruthyEnvValue } from '../infra/env';
-import { defaultRuntime } from '../runtime';
-import { VERSION } from '../version';
-import { getCommandPath, hasHelpOrVersion } from './argv';
-import { emitCliBanner } from './banner';
-import { ensurePluginRegistryLoaded } from './plugin-registry';
-import { ensureConfigReady } from './program/config-guard';
-import { findRoutedCommand } from './program/routes';
+import { isTruthyEnvValue } from "../infra/env";
+import { defaultRuntime } from "../runtime";
+import { VERSION } from "../version";
+import { getCommandPathWithRootOptions, hasFlag, hasHelpOrVersion } from "./argv";
+import { emitCliBanner } from "./banner";
+import { findRoutedCommand } from "./program/routes";
 
 async function prepareRoutedCommand(params: {
   argv: string[];
   commandPath: string[];
-  loadPlugins?: boolean;
+  loadPlugins?: boolean | ((argv: string[]) => boolean);
 }) {
+  const suppressDoctorStdout = hasFlag(params.argv, "--json");
   emitCliBanner(VERSION, { argv: params.argv });
-  await ensureConfigReady({ runtime: defaultRuntime, commandPath: params.commandPath });
-  if (params.loadPlugins) {
-    ensurePluginRegistryLoaded();
+  const { ensureConfigReady } = await import("./program/config-guard");
+  await ensureConfigReady({
+    runtime: defaultRuntime,
+    commandPath: params.commandPath,
+    ...(suppressDoctorStdout ? { suppressDoctorStdout: true } : {}),
+  });
+  const shouldLoadPlugins =
+    typeof params.loadPlugins === "function" ? params.loadPlugins(params.argv) : params.loadPlugins;
+  if (shouldLoadPlugins) {
+    const { ensurePluginRegistryLoaded } = await import("./plugin-registry");
+    ensurePluginRegistryLoaded({
+      scope:
+        params.commandPath[0] === "status" || params.commandPath[0] === "health"
+          ? "channels"
+          : "all",
+    });
   }
 }
 
@@ -27,7 +39,7 @@ export async function tryRouteCli(argv: string[]): Promise<boolean> {
     return false;
   }
 
-  const path = getCommandPath(argv, 2);
+  const path = getCommandPathWithRootOptions(argv, 2);
   if (!path[0]) {
     return false;
   }

@@ -3,41 +3,55 @@ import { confirm, isCancel } from "@clack/prompts";
 import {
   checkShellCompletionStatus,
   ensureCompletionCacheExists,
-} from '../../commands/doctor-completion';
-import { doctorCommand } from '../../commands/doctor';
-import { readConfigFileSnapshot, writeConfigFile } from '../../config/config';
-import { resolveGatewayService } from '../../daemon/service';
+} from "../../commands/doctor-completion";
+import { doctorCommand } from "../../commands/doctor";
+import {
+  readConfigFileSnapshot,
+  resolveGatewayPort,
+  writeConfigFile,
+} from "../../config/config";
+import { formatConfigIssueLines } from "../../config/issue-format";
+import { resolveGatewayService } from "../../daemon/service";
 import {
   channelToNpmTag,
   DEFAULT_GIT_CHANNEL,
   DEFAULT_PACKAGE_CHANNEL,
   normalizeUpdateChannel,
-} from '../../infra/update-channels';
+} from "../../infra/update-channels";
 import {
   compareSemverStrings,
   resolveNpmChannelTag,
   checkUpdateStatus,
-} from '../../infra/update-check';
+} from "../../infra/update-check";
 import {
+  canResolveRegistryVersionForPackageTarget,
+  createGlobalInstallEnv,
   cleanupGlobalRenameDirs,
   globalInstallArgs,
+  resolveGlobalInstallSpec,
   resolveGlobalPackageRoot,
-} from '../../infra/update-global';
-import { runGatewayUpdate, type UpdateRunResult } from '../../infra/update-runner';
-import { syncPluginsForUpdateChannel, updateNpmInstalledPlugins } from '../../plugins/update';
-import { runCommandWithTimeout } from '../../process/exec';
-import { defaultRuntime } from '../../runtime';
-import { stylePromptMessage } from '../../terminal/prompt-style';
-import { theme } from '../../terminal/theme';
-import { pathExists } from '../../utils';
-import { replaceCliName, resolveCliName } from '../cli-name';
-import { formatCliCommand } from '../command-format';
-import { installCompletion } from '../completion-cli';
-import { runDaemonInstall, runDaemonRestart } from '../daemon-cli';
-import { createUpdateProgress, printResult } from './progress';
-import { prepareRestartScript, runRestartScript } from './restart-helper';
+} from "../../infra/update-global";
+import { runGatewayUpdate, type UpdateRunResult } from "../../infra/update-runner";
+import { syncPluginsForUpdateChannel, updateNpmInstalledPlugins } from "../../plugins/update";
+import { runCommandWithTimeout } from "../../process/exec";
+import { defaultRuntime } from "../../runtime";
+import { stylePromptMessage } from "../../terminal/prompt-style";
+import { theme } from "../../terminal/theme";
+import { pathExists } from "../../utils";
+import { replaceCliName, resolveCliName } from "../cli-name";
+import { formatCliCommand } from "../command-format";
+import { installCompletion } from "../completion-cli";
+import { runDaemonInstall, runDaemonRestart } from "../daemon-cli";
+import {
+  renderRestartDiagnostics,
+  terminateStaleGatewayPids,
+  waitForGatewayHealthyRestart,
+} from "../daemon-cli/restart-health";
+import { createUpdateProgress, printResult } from "./progress";
+import { prepareRestartScript, runRestartScript } from "./restart-helper";
 import {
   DEFAULT_PACKAGE_NAME,
+  createGlobalCommandRunner,
   ensureGitCheckout,
   normalizeTag,
   parseTimeoutMsOrExit,
@@ -51,10 +65,18 @@ import {
   runUpdateStep,
   tryWriteCompletionCache,
   type UpdateCommandOptions,
-} from './shared';
-import { suppressDeprecations } from './suppress-deprecations';
+} from "./shared";
+import { suppressDeprecations } from "./suppress-deprecations";
 
 const CLI_NAME = resolveCliName();
+const SERVICE_REFRESH_TIMEOUT_MS = 60_000;
+const SERVICE_REFRESH_PATH_ENV_KEYS = [
+  "POWERDIRECTOR_HOME",
+  "POWERDIRECTOR_STATE_DIR",
+  "CLAWDBOT_STATE_DIR",
+  "POWERDIRECTOR_CONFIG_PATH",
+  "CLAWDBOT_CONFIG_PATH",
+] as const;
 
 const UPDATE_QUIPS = [
   "Leveled up! New skills unlocked. You're welcome.",
@@ -81,6 +103,146 @@ const UPDATE_QUIPS = [
 
 function pickUpdateQuip(): string {
   return UPDATE_QUIPS[Math.floor(Math.random() * UPDATE_QUIPS.length)] ?? "Update complete.";
+}
+
+function resolveGatewayInstallEntrypointCandidates(root?: string): string[] {
+  if (!root) {
+    return [];
+  }
+  return [
+    path.join(root, "dist", "entry.js"),
+    path.join(root, "dist", "entry.mjs"),
+    path.join(root, "dist", "index.js"),
+    path.join(root, "dist", "index.mjs"),
+  ];
+}
+
+function formatCommandFailure(stdout: string, stderr: string): string {
+  const detail = (stderr || stdout).trim();
+  if (!detail) {
+    return "command returned a non-zero exit code";
+  }
+  return detail.split("\n").slice(-3).join("\n");
+}
+
+function tryResolveInvocationCwd(): string | undefined {
+  try {
+    return process.cwd();
+  } catch {
+    return undefined;
+  }
+}
+
+function resolveServiceRefreshEnv(
+  env: NodeJS.ProcessEnv,
+  invocationCwd?: string,
+): NodeJS.ProcessEnv {
+  const resolvedEnv: NodeJS.ProcessEnv = { ...env };
+  for (const key of SERVICE_REFRESH_PATH_ENV_KEYS) {
+    const rawValue = resolvedEnv[key]?.trim();
+    if (!rawValue) {
+      continue;
+    }
+    if (rawValue.startsWith("~") || path.isAbsolute(rawValue) || path.win32.isAbsolute(rawValue)) {
+      resolvedEnv[key] = rawValue;
+      continue;
+    }
+    if (!invocationCwd) {
+      resolvedEnv[key] = rawValue;
+      continue;
+    }
+    resolvedEnv[key] = path.resolve(invocationCwd, rawValue);
+  }
+  return resolvedEnv;
+}
+
+type UpdateDryRunPreview = {
+  dryRun: true;
+  root: string;
+  installKind: "git" | "package" | "unknown";
+  mode: UpdateRunResult["mode"];
+  updateInstallKind: "git" | "package" | "unknown";
+  switchToGit: boolean;
+  switchToPackage: boolean;
+  restart: boolean;
+  requestedChannel: "stable" | "beta" | "dev" | null;
+  storedChannel: "stable" | "beta" | "dev" | null;
+  effectiveChannel: "stable" | "beta" | "dev";
+  tag: string;
+  currentVersion: string | null;
+  targetVersion: string | null;
+  downgradeRisk: boolean;
+  actions: string[];
+  notes: string[];
+};
+
+function printDryRunPreview(preview: UpdateDryRunPreview, jsonMode: boolean): void {
+  if (jsonMode) {
+    defaultRuntime.log(JSON.stringify(preview, null, 2));
+    return;
+  }
+
+  defaultRuntime.log(theme.heading("Update dry-run"));
+  defaultRuntime.log(theme.muted("No changes were applied."));
+  defaultRuntime.log("");
+  defaultRuntime.log(`  Root: ${theme.muted(preview.root)}`);
+  defaultRuntime.log(`  Install kind: ${theme.muted(preview.installKind)}`);
+  defaultRuntime.log(`  Mode: ${theme.muted(preview.mode)}`);
+  defaultRuntime.log(`  Channel: ${theme.muted(preview.effectiveChannel)}`);
+  defaultRuntime.log(`  Tag/spec: ${theme.muted(preview.tag)}`);
+  if (preview.currentVersion) {
+    defaultRuntime.log(`  Current version: ${theme.muted(preview.currentVersion)}`);
+  }
+  if (preview.targetVersion) {
+    defaultRuntime.log(`  Target version: ${theme.muted(preview.targetVersion)}`);
+  }
+  if (preview.downgradeRisk) {
+    defaultRuntime.log(theme.warn("  Downgrade confirmation would be required in a real run."));
+  }
+
+  defaultRuntime.log("");
+  defaultRuntime.log(theme.heading("Planned actions:"));
+  for (const action of preview.actions) {
+    defaultRuntime.log(`  - ${action}`);
+  }
+
+  if (preview.notes.length > 0) {
+    defaultRuntime.log("");
+    defaultRuntime.log(theme.heading("Notes:"));
+    for (const note of preview.notes) {
+      defaultRuntime.log(`  - ${theme.muted(note)}`);
+    }
+  }
+}
+
+async function refreshGatewayServiceEnv(params: {
+  result: UpdateRunResult;
+  jsonMode: boolean;
+  invocationCwd?: string;
+}): Promise<void> {
+  const args = ["gateway", "install", "--force"];
+  if (params.jsonMode) {
+    args.push("--json");
+  }
+
+  for (const candidate of resolveGatewayInstallEntrypointCandidates(params.result.root)) {
+    if (!(await pathExists(candidate))) {
+      continue;
+    }
+    const res = await runCommandWithTimeout([resolveNodeRunner(), candidate, ...args], {
+      cwd: params.result.root,
+      env: resolveServiceRefreshEnv(process.env, params.invocationCwd),
+      timeoutMs: SERVICE_REFRESH_TIMEOUT_MS,
+    });
+    if (res.code === 0) {
+      return;
+    }
+    throw new Error(
+      `updated install refresh failed (${candidate}): ${formatCommandFailure(res.stdout, res.stderr)}`,
+    );
+  }
+
+  await runDaemonInstall({ force: true, json: params.jsonMode || undefined });
 }
 
 async function tryInstallShellCompletion(opts: {
@@ -151,15 +313,18 @@ async function runPackageInstallUpdate(params: {
     installKind: params.installKind,
     timeoutMs: params.timeoutMs,
   });
-  const runCommand = async (argv: string[], options: { timeoutMs: number }) => {
-    const res = await runCommandWithTimeout(argv, options);
-    return { stdout: res.stdout, stderr: res.stderr, code: res.code };
-  };
+  const installEnv = await createGlobalInstallEnv();
+  const runCommand = createGlobalCommandRunner();
 
   const pkgRoot = await resolveGlobalPackageRoot(manager, runCommand, params.timeoutMs);
   const packageName =
     (pkgRoot ? await readPackageName(pkgRoot) : await readPackageName(params.root)) ??
     DEFAULT_PACKAGE_NAME;
+  const installSpec = resolveGlobalInstallSpec({
+    packageName,
+    tag: params.tag,
+    env: installEnv,
+  });
 
   const beforeVersion = pkgRoot ? await readPackageVersion(pkgRoot) : null;
   if (pkgRoot) {
@@ -171,7 +336,8 @@ async function runPackageInstallUpdate(params: {
 
   const updateStep = await runUpdateStep({
     name: "global update",
-    argv: globalInstallArgs(manager, `${packageName}@${params.tag}`),
+    argv: globalInstallArgs(manager, installSpec),
+    env: installEnv,
     timeoutMs: params.timeoutMs,
     progress: params.progress,
   });
@@ -265,6 +431,7 @@ async function runGitUpdate(params: {
       name: "global install",
       argv: globalInstallArgs(manager, updateRoot),
       cwd: updateRoot,
+      env: await createGlobalInstallEnv(),
       timeoutMs: effectiveTimeout,
       progress: params.progress,
     });
@@ -392,7 +559,9 @@ async function maybeRestartService(params: {
   result: UpdateRunResult;
   opts: UpdateCommandOptions;
   refreshServiceEnv: boolean;
+  gatewayPort: number;
   restartScriptPath?: string | null;
+  invocationCwd?: string;
 }): Promise<void> {
   if (params.shouldRestart) {
     if (!params.opts.json) {
@@ -403,12 +572,13 @@ async function maybeRestartService(params: {
     try {
       let restarted = false;
       let restartInitiated = false;
-      let serviceRefreshed = false;
       if (params.refreshServiceEnv) {
         try {
-          await runDaemonInstall({ force: true, json: params.opts.json });
-          serviceRefreshed = true;
-          restarted = true;
+          await refreshGatewayServiceEnv({
+            result: params.result,
+            jsonMode: Boolean(params.opts.json),
+            invocationCwd: params.invocationCwd,
+          });
         } catch (err) {
           if (!params.opts.json) {
             defaultRuntime.log(
@@ -419,13 +589,11 @@ async function maybeRestartService(params: {
           }
         }
       }
-      if (!serviceRefreshed && params.restartScriptPath) {
+      if (params.restartScriptPath) {
         await runRestartScript(params.restartScriptPath);
         restartInitiated = true;
       } else {
-        if (!serviceRefreshed) {
-          restarted = await runDaemonRestart();
-        }
+        restarted = await runDaemonRestart();
       }
 
       if (!params.opts.json && restarted) {
@@ -446,12 +614,40 @@ async function maybeRestartService(params: {
       }
 
       if (!params.opts.json && restartInitiated) {
-        defaultRuntime.log(theme.success("Daemon restart initiated."));
-        defaultRuntime.log(
-          theme.muted(
-            `Verify with \`${replaceCliName(formatCliCommand("powerdirector gateway status"), CLI_NAME)}\` once the gateway is back.`,
-          ),
-        );
+        const service = resolveGatewayService();
+        let health = await waitForGatewayHealthyRestart({
+          service,
+          port: params.gatewayPort,
+        });
+        if (!health.healthy && health.staleGatewayPids.length > 0) {
+          if (!params.opts.json) {
+            defaultRuntime.log(
+              theme.warn(
+                `Found stale gateway process(es) after restart: ${health.staleGatewayPids.join(", ")}. Cleaning up...`,
+              ),
+            );
+          }
+          await terminateStaleGatewayPids(health.staleGatewayPids);
+          await runDaemonRestart();
+          health = await waitForGatewayHealthyRestart({
+            service,
+            port: params.gatewayPort,
+          });
+        }
+
+        if (health.healthy) {
+          defaultRuntime.log(theme.success("Daemon restart completed."));
+        } else {
+          defaultRuntime.log(theme.warn("Gateway did not become healthy after restart."));
+          for (const line of renderRestartDiagnostics(health)) {
+            defaultRuntime.log(theme.muted(line));
+          }
+          defaultRuntime.log(
+            theme.muted(
+              `Run \`${replaceCliName(formatCliCommand("powerdirector gateway status --deep"), CLI_NAME)}\` for details.`,
+            ),
+          );
+        }
         defaultRuntime.log("");
       }
     } catch (err) {
@@ -487,6 +683,7 @@ async function maybeRestartService(params: {
 
 export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
   suppressDeprecations();
+  const invocationCwd = tryResolveInvocationCwd();
 
   const timeoutMs = parseTimeoutMsOrExit(opts.timeout);
   const shouldRestart = opts.restart !== false;
@@ -514,7 +711,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
     return;
   }
   if (opts.channel && !configSnapshot.valid) {
-    const issues = configSnapshot.issues.map((issue) => `- ${issue.path}: ${issue.message}`);
+    const issues = formatConfigIssueLines(configSnapshot.issues, "-");
     defaultRuntime.error(["Config is invalid; cannot set update channel.", ...issues].join("\n"));
     defaultRuntime.exit(1);
     return;
@@ -531,51 +728,134 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
 
   const explicitTag = normalizeTag(opts.tag);
   let tag = explicitTag ?? channelToNpmTag(channel);
+  let currentVersion: string | null = null;
+  let targetVersion: string | null = null;
+  let downgradeRisk = false;
+  let fallbackToLatest = false;
+  let packageInstallSpec: string | null = null;
 
   if (updateInstallKind !== "git") {
-    const currentVersion = switchToPackage ? null : await readPackageVersion(root);
-    let fallbackToLatest = false;
-    const targetVersion = explicitTag
-      ? await resolveTargetVersion(tag, timeoutMs)
-      : await resolveNpmChannelTag({ channel, timeoutMs }).then((resolved) => {
-          tag = resolved.tag;
-          fallbackToLatest = channel === "beta" && resolved.tag === "latest";
-          return resolved.version;
-        });
+    currentVersion = switchToPackage ? null : await readPackageVersion(root);
+    if (explicitTag) {
+      targetVersion = await resolveTargetVersion(tag, timeoutMs);
+    } else {
+      targetVersion = await resolveNpmChannelTag({ channel, timeoutMs }).then((resolved) => {
+        tag = resolved.tag;
+        fallbackToLatest = channel === "beta" && resolved.tag === "latest";
+        return resolved.version;
+      });
+    }
     const cmp =
       currentVersion && targetVersion ? compareSemverStrings(currentVersion, targetVersion) : null;
-    const needsConfirm =
+    downgradeRisk =
+      canResolveRegistryVersionForPackageTarget(tag) &&
       !fallbackToLatest &&
       currentVersion != null &&
       (targetVersion == null || (cmp != null && cmp > 0));
+    packageInstallSpec = resolveGlobalInstallSpec({
+      packageName: DEFAULT_PACKAGE_NAME,
+      tag,
+      env: process.env,
+    });
+  }
 
-    if (needsConfirm && !opts.yes) {
-      if (!process.stdin.isTTY || opts.json) {
-        defaultRuntime.error(
-          [
-            "Downgrade confirmation required.",
-            "Downgrading can break configuration. Re-run in a TTY to confirm.",
-          ].join("\n"),
-        );
-        defaultRuntime.exit(1);
-        return;
-      }
-
-      const targetLabel = targetVersion ?? `${tag} (unknown)`;
-      const message = `Downgrading from ${currentVersion} to ${targetLabel} can break configuration. Continue?`;
-      const ok = await confirm({
-        message: stylePromptMessage(message),
-        initialValue: false,
+  if (opts.dryRun) {
+    let mode: UpdateRunResult["mode"] = "unknown";
+    if (updateInstallKind === "git") {
+      mode = "git";
+    } else if (updateInstallKind === "package") {
+      mode = await resolveGlobalManager({
+        root,
+        installKind,
+        timeoutMs: timeoutMs ?? 20 * 60_000,
       });
-      if (isCancel(ok) || !ok) {
-        if (!opts.json) {
-          defaultRuntime.log(theme.muted("Update cancelled."));
-        }
-        defaultRuntime.exit(0);
-        return;
-      }
     }
-  } else if (opts.tag && !opts.json) {
+
+    const actions: string[] = [];
+    if (requestedChannel && requestedChannel !== storedChannel) {
+      actions.push(`Persist update.channel=${requestedChannel} in config`);
+    }
+    if (switchToGit) {
+      actions.push("Switch install mode from package to git checkout (dev channel)");
+    } else if (switchToPackage) {
+      actions.push(`Switch install mode from git to package manager (${mode})`);
+    } else if (updateInstallKind === "git") {
+      actions.push(`Run git update flow on channel ${channel} (fetch/rebase/build/doctor)`);
+    } else {
+      actions.push(`Run global package manager update with spec ${packageInstallSpec ?? tag}`);
+    }
+    actions.push("Run plugin update sync after core update");
+    actions.push("Refresh shell completion cache (if needed)");
+    actions.push(
+      shouldRestart
+        ? "Restart gateway service and run doctor checks"
+        : "Skip restart (because --no-restart is set)",
+    );
+
+    const notes: string[] = [];
+    if (opts.tag && updateInstallKind === "git") {
+      notes.push("--tag applies to npm installs only; git updates ignore it.");
+    }
+    if (fallbackToLatest) {
+      notes.push("Beta channel resolves to latest for this run (fallback).");
+    }
+    if (explicitTag && !canResolveRegistryVersionForPackageTarget(tag)) {
+      notes.push("Non-registry package specs skip npm version lookup and downgrade previews.");
+    }
+
+    printDryRunPreview(
+      {
+        dryRun: true,
+        root,
+        installKind,
+        mode,
+        updateInstallKind,
+        switchToGit,
+        switchToPackage,
+        restart: shouldRestart,
+        requestedChannel,
+        storedChannel,
+        effectiveChannel: channel,
+        tag: packageInstallSpec ?? tag,
+        currentVersion,
+        targetVersion,
+        downgradeRisk,
+        actions,
+        notes,
+      },
+      Boolean(opts.json),
+    );
+    return;
+  }
+
+  if (downgradeRisk && !opts.yes) {
+    if (!process.stdin.isTTY || opts.json) {
+      defaultRuntime.error(
+        [
+          "Downgrade confirmation required.",
+          "Downgrading can break configuration. Re-run in a TTY to confirm.",
+        ].join("\n"),
+      );
+      defaultRuntime.exit(1);
+      return;
+    }
+
+    const targetLabel = targetVersion ?? `${tag} (unknown)`;
+    const message = `Downgrading from ${currentVersion} to ${targetLabel} can break configuration. Continue?`;
+    const ok = await confirm({
+      message: stylePromptMessage(message),
+      initialValue: false,
+    });
+    if (isCancel(ok) || !ok) {
+      if (!opts.json) {
+        defaultRuntime.log(theme.muted("Update cancelled."));
+      }
+      defaultRuntime.exit(0);
+      return;
+    }
+  }
+
+  if (updateInstallKind === "git" && opts.tag && !opts.json) {
     defaultRuntime.log(
       theme.muted("Note: --tag applies to npm installs only; git updates ignore it."),
     );
@@ -606,11 +886,15 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
 
   let restartScriptPath: string | null = null;
   let refreshGatewayServiceEnv = false;
+  const gatewayPort = resolveGatewayPort(
+    configSnapshot.valid ? configSnapshot.config : undefined,
+    process.env,
+  );
   if (shouldRestart) {
     try {
       const loaded = await resolveGatewayService().isLoaded({ env: process.env });
       if (loaded) {
-        restartScriptPath = await prepareRestartScript(process.env);
+        restartScriptPath = await prepareRestartScript(process.env, gatewayPort);
         refreshGatewayServiceEnv = true;
       }
     } catch {
@@ -618,28 +902,29 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
     }
   }
 
-  const result = switchToPackage
-    ? await runPackageInstallUpdate({
-        root,
-        installKind,
-        tag,
-        timeoutMs: timeoutMs ?? 20 * 60_000,
-        startedAt,
-        progress,
-      })
-    : await runGitUpdate({
-        root,
-        switchToGit,
-        installKind,
-        timeoutMs,
-        startedAt,
-        progress,
-        channel,
-        tag,
-        showProgress,
-        opts,
-        stop,
-      });
+  const result =
+    updateInstallKind === "package"
+      ? await runPackageInstallUpdate({
+          root,
+          installKind,
+          tag,
+          timeoutMs: timeoutMs ?? 20 * 60_000,
+          startedAt,
+          progress,
+        })
+      : await runGitUpdate({
+          root,
+          switchToGit,
+          installKind,
+          timeoutMs,
+          startedAt,
+          progress,
+          channel,
+          tag,
+          showProgress,
+          opts,
+          stop,
+        });
 
   stop();
   printResult(result, { ...opts, hideSteps: showProgress });
@@ -691,7 +976,9 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
     result,
     opts,
     refreshServiceEnv: refreshGatewayServiceEnv,
+    gatewayPort,
     restartScriptPath,
+    invocationCwd,
   });
 
   if (!opts.json) {

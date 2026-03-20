@@ -1,8 +1,8 @@
-import * as ops from './service/ops';
-import { type CronServiceDeps, createCronServiceState } from './service/state';
-import type { CronJob, CronJobCreate, CronJobPatch } from './types';
+import * as ops from "./service/ops";
+import { type CronServiceDeps, createCronServiceState } from "./service/state";
+import type { CronJob, CronJobCreate, CronJobPatch } from "./types";
 
-export type { CronEvent, CronServiceDeps } from './service/state';
+export type { CronEvent, CronServiceDeps } from "./service/state";
 
 export class CronService {
   private readonly state;
@@ -26,6 +26,10 @@ export class CronService {
     return await ops.list(this.state, opts);
   }
 
+  async listPage(opts?: ops.CronListPageOptions) {
+    return await ops.listPage(this.state, opts);
+  }
+
   async add(input: CronJobCreate) {
     return await ops.add(this.state, input);
   }
@@ -40,6 +44,10 @@ export class CronService {
 
   async run(id: string, mode?: "due" | "force") {
     return await ops.run(this.state, id, mode);
+  }
+
+  async enqueueRun(id: string, mode?: "due" | "force") {
+    return await ops.enqueueRun(this.state, id, mode);
   }
 
   getJob(id: string): CronJob | undefined {

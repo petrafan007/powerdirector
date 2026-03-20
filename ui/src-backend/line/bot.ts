@@ -1,14 +1,15 @@
 import type { WebhookRequestBody } from "@line/bot-sdk";
 import type { Request, Response, NextFunction } from "express";
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
-import { logVerbose } from '../globals';
-import type { RuntimeEnv } from '../runtime';
-import { resolveLineAccount } from './accounts';
-import { handleLineWebhookEvents } from './bot-handlers';
-import type { LineInboundContext } from './bot-message-context';
-import type { ResolvedLineAccount } from './types';
-import { startLineWebhook } from './webhook';
+import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "../auto-reply/reply/history";
+import type { PowerDirectorConfig } from "../config/config";
+import { loadConfig } from "../config/config";
+import { logVerbose } from "../globals";
+import { createNonExitingRuntime, type RuntimeEnv } from "../runtime";
+import { resolveLineAccount } from "./accounts";
+import { createLineWebhookReplayCache, handleLineWebhookEvents } from "./bot-handlers";
+import type { LineInboundContext } from "./bot-message-context";
+import type { ResolvedLineAccount } from "./types";
+import { startLineWebhook } from "./webhook";
 
 export interface LineBotOptions {
   channelAccessToken: string;
@@ -26,13 +27,7 @@ export interface LineBot {
 }
 
 export function createLineBot(opts: LineBotOptions): LineBot {
-  const runtime: RuntimeEnv = opts.runtime ?? {
-    log: console.log,
-    error: console.error,
-    exit: (code: number): never => {
-      throw new Error(`exit ${code}`);
-    },
-  };
+  const runtime: RuntimeEnv = opts.runtime ?? createNonExitingRuntime();
 
   const cfg = opts.config ?? loadConfig();
   const account = resolveLineAccount({
@@ -47,6 +42,8 @@ export function createLineBot(opts: LineBotOptions): LineBot {
     (async () => {
       logVerbose("line: no message handler configured");
     });
+  const replayCache = createLineWebhookReplayCache();
+  const groupHistories = new Map<string, HistoryEntry[]>();
 
   const handleWebhook = async (body: WebhookRequestBody): Promise<void> => {
     if (!body.events || body.events.length === 0) {
@@ -59,6 +56,9 @@ export function createLineBot(opts: LineBotOptions): LineBot {
       runtime,
       mediaMaxBytes,
       processMessage,
+      replayCache,
+      groupHistories,
+      historyLimit: cfg.messages?.groupChat?.historyLimit ?? DEFAULT_GROUP_HISTORY_LIMIT,
     });
   };
 

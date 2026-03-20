@@ -1,22 +1,25 @@
 import { randomUUID } from "node:crypto";
 import type { WebSocket, WebSocketServer } from "ws";
-import { resolveCanvasHostUrl } from '../../infra/canvas-host-url';
-import { removeRemoteNodeInfo } from '../../infra/skills-remote';
-import { upsertPresence } from '../../infra/system-presence';
-import type { createSubsystemLogger } from '../../logging/subsystem';
-import { truncateUtf16Safe } from '../../utils';
-import { isWebchatClient } from '../../utils/message-channel';
-import type { AuthRateLimiter } from '../auth-rate-limit';
-import type { ResolvedGatewayAuth } from '../auth';
-import { isLoopbackAddress } from '../net';
-import { getHandshakeTimeoutMs } from '../server-constants';
-import type { GatewayRequestContext, GatewayRequestHandlers } from '../server-methods/types';
-import { formatError } from '../server-utils';
-import { logWs } from '../ws-log';
-import { getHealthVersion, incrementPresenceVersion } from './health-state';
-import { broadcastPresenceSnapshot } from './presence-events';
-import { attachGatewayWsMessageHandler } from './ws-connection/message-handler';
-import type { GatewayWsClient } from './ws-types';
+import { resolveCanvasHostUrl } from "../../infra/canvas-host-url";
+import { removeRemoteNodeInfo } from "../../infra/skills-remote";
+import { upsertPresence } from "../../infra/system-presence";
+import type { createSubsystemLogger } from "../../logging/subsystem";
+import { truncateUtf16Safe } from "../../utils";
+import { isWebchatClient } from "../../utils/message-channel";
+import type { AuthRateLimiter } from "../auth-rate-limit";
+import type { ResolvedGatewayAuth } from "../auth";
+import { isLoopbackAddress } from "../net";
+import { getHandshakeTimeoutMs } from "../server-constants";
+import type { GatewayRequestContext, GatewayRequestHandlers } from "../server-methods/types";
+import { formatError } from "../server-utils";
+import { logWs } from "../ws-log";
+import { getHealthVersion, incrementPresenceVersion } from "./health-state";
+import { broadcastPresenceSnapshot } from "./presence-events";
+import {
+  attachGatewayWsMessageHandler,
+  type WsOriginCheckMetrics,
+} from "./ws-connection/message-handler";
+import type { GatewayWsClient } from "./ws-types";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 
@@ -55,7 +58,7 @@ const sanitizeLogValue = (value: string | undefined): string | undefined => {
   return truncateUtf16Safe(cleaned, LOG_HEADER_MAX_LEN);
 };
 
-export function attachGatewayWsConnectionHandler(params: {
+export type GatewayWsSharedHandlerParams = {
   wss: WebSocketServer;
   clients: Set<GatewayWsClient>;
   port: number;
@@ -65,8 +68,13 @@ export function attachGatewayWsConnectionHandler(params: {
   resolvedAuth: ResolvedGatewayAuth;
   /** Optional rate limiter for auth brute-force protection. */
   rateLimiter?: AuthRateLimiter;
+  /** Browser-origin fallback limiter (loopback is never exempt). */
+  browserRateLimiter?: AuthRateLimiter;
   gatewayMethods: string[];
   events: string[];
+};
+
+export type AttachGatewayWsConnectionHandlerParams = GatewayWsSharedHandlerParams & {
   logGateway: SubsystemLogger;
   logHealth: SubsystemLogger;
   logWsControl: SubsystemLogger;
@@ -80,7 +88,9 @@ export function attachGatewayWsConnectionHandler(params: {
     },
   ) => void;
   buildRequestContext: () => GatewayRequestContext;
-}) {
+};
+
+export function attachGatewayWsConnectionHandler(params: AttachGatewayWsConnectionHandlerParams) {
   const {
     wss,
     clients,
@@ -90,6 +100,7 @@ export function attachGatewayWsConnectionHandler(params: {
     canvasHostServerPort,
     resolvedAuth,
     rateLimiter,
+    browserRateLimiter,
     gatewayMethods,
     events,
     logGateway,
@@ -99,6 +110,7 @@ export function attachGatewayWsConnectionHandler(params: {
     broadcast,
     buildRequestContext,
   } = params;
+  const originCheckMetrics: WsOriginCheckMetrics = { hostHeaderFallbackAccepted: 0 };
 
   wss.on("connection", (socket, upgradeReq) => {
     let client: GatewayWsClient | null = null;
@@ -230,8 +242,9 @@ export function attachGatewayWsConnectionHandler(params: {
         upsertPresence(client.presenceKey, { reason: "disconnect" });
         broadcastPresenceSnapshot({ broadcast, incrementPresenceVersion, getHealthVersion });
       }
+      const context = buildRequestContext();
+      context.unsubscribeAllSessionEvents(connId);
       if (client?.connect?.role === "node") {
-        const context = buildRequestContext();
         const nodeId = context.nodeRegistry.unregister(connId);
         if (nodeId) {
           removeRemoteNodeInfo(nodeId);
@@ -278,6 +291,7 @@ export function attachGatewayWsConnectionHandler(params: {
       connectNonce,
       resolvedAuth,
       rateLimiter,
+      browserRateLimiter,
       gatewayMethods,
       events,
       extraHandlers,
@@ -296,6 +310,7 @@ export function attachGatewayWsConnectionHandler(params: {
       },
       setCloseCause,
       setLastFrameMeta,
+      originCheckMetrics,
       logGateway,
       logHealth,
       logWsControl,

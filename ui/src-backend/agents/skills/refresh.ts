@@ -1,10 +1,10 @@
 import os from "node:os";
 import path from "node:path";
 import chokidar, { type FSWatcher } from "chokidar";
-import type { PowerDirectorConfig } from '../../config/config';
-import { createSubsystemLogger } from '../../logging/subsystem';
-import { CONFIG_DIR, resolveUserPath } from '../../utils';
-import { resolvePluginSkillDirs } from './plugin-skills';
+import type { PowerDirectorConfig } from "../../config/config";
+import { createSubsystemLogger } from "../../logging/subsystem";
+import { CONFIG_DIR, resolveUserPath } from "../../utils";
+import { resolvePluginSkillDirs } from "./plugin-skills";
 
 type SkillsChangeEvent = {
   workspaceDir?: string;

@@ -1,16 +1,17 @@
 import type { WebhookRequestBody } from "@line/bot-sdk";
-import { chunkMarkdownText } from '../auto-reply/chunk';
-import { dispatchReplyWithBufferedBlockDispatcher } from '../auto-reply/reply/provider-dispatcher';
-import { createReplyPrefixOptions } from '../channels/reply-prefix';
-import type { PowerDirectorConfig } from '../config/config';
-import { danger, logVerbose } from '../globals';
-import { normalizePluginHttpPath } from '../plugins/http-path';
-import { registerPluginHttpRoute } from '../plugins/http-registry';
-import type { RuntimeEnv } from '../runtime';
-import { deliverLineAutoReply } from './auto-reply-delivery';
-import { createLineBot } from './bot';
-import { processLineMessage } from './markdown-to-line';
-import { sendLineReplyChunks } from './reply-chunks';
+import { chunkMarkdownText } from "../auto-reply/chunk";
+import { dispatchReplyWithBufferedBlockDispatcher } from "../auto-reply/reply/provider-dispatcher";
+import type { PowerDirectorConfig } from "../config/config";
+import { danger, logVerbose } from "../globals";
+import { waitForAbortSignal } from "../infra/abort-signal";
+import { createChannelReplyPipeline } from "../plugin-sdk/channel-reply-pipeline";
+import { normalizePluginHttpPath } from "../plugins/http-path";
+import { registerPluginHttpRoute } from "../plugins/http-registry";
+import type { RuntimeEnv } from "../runtime";
+import { deliverLineAutoReply } from "./auto-reply-delivery";
+import { createLineBot } from "./bot";
+import { processLineMessage } from "./markdown-to-line";
+import { sendLineReplyChunks } from "./reply-chunks";
 import {
   replyMessageLine,
   showLoadingAnimation,
@@ -23,10 +24,10 @@ import {
   createFlexMessage,
   createImageMessage,
   createLocationMessage,
-} from './send';
-import { buildTemplateMessageFromPayload } from './template-messages';
-import type { LineChannelData, ResolvedLineAccount } from './types';
-import { createLineNodeWebhookHandler } from './webhook-node';
+} from "./send";
+import { buildTemplateMessageFromPayload } from "./template-messages";
+import type { LineChannelData, ResolvedLineAccount } from "./types";
+import { createLineNodeWebhookHandler } from "./webhook-node";
 
 export interface MonitorLineProviderOptions {
   channelAccessToken: string;
@@ -191,7 +192,7 @@ export async function monitorLineProvider(
       try {
         const textLimit = 5000; // LINE max message length
         let replyTokenUsed = false; // Track if we've used the one-time reply token
-        const { onModelSelected, ...prefixOptions } = createReplyPrefixOptions({
+        const { onModelSelected, ...replyPipeline } = createChannelReplyPipeline({
           cfg: config,
           agentId: route.agentId,
           channel: "line",
@@ -202,7 +203,7 @@ export async function monitorLineProvider(
           ctx: ctxPayload,
           cfg: config,
           dispatcherOptions: {
-            ...prefixOptions,
+            ...replyPipeline,
             deliver: async (payload, _info) => {
               const lineData = (payload.channelData?.line as LineChannelData | undefined) ?? {};
 
@@ -287,6 +288,8 @@ export async function monitorLineProvider(
   const normalizedPath = normalizePluginHttpPath(webhookPath, "/line/webhook") ?? "/line/webhook";
   const unregisterHttp = registerPluginHttpRoute({
     path: normalizedPath,
+    auth: "plugin",
+    replaceExisting: true,
     pluginId: "line",
     accountId: resolvedAccountId,
     log: (msg) => logVerbose(msg),
@@ -296,7 +299,12 @@ export async function monitorLineProvider(
   logVerbose(`line: registered webhook handler at ${normalizedPath}`);
 
   // Handle abort signal
+  let stopped = false;
   const stopHandler = () => {
+    if (stopped) {
+      return;
+    }
+    stopped = true;
     logVerbose(`line: stopping provider for account ${resolvedAccountId}`);
     unregisterHttp();
     recordChannelRuntimeState({
@@ -309,7 +317,12 @@ export async function monitorLineProvider(
     });
   };
 
-  abortSignal?.addEventListener("abort", stopHandler);
+  if (abortSignal?.aborted) {
+    stopHandler();
+  } else if (abortSignal) {
+    abortSignal.addEventListener("abort", stopHandler, { once: true });
+    await waitForAbortSignal(abortSignal);
+  }
 
   return {
     account: bot.account,

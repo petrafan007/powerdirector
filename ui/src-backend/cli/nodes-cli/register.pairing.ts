@@ -1,10 +1,11 @@
 import type { Command } from "commander";
-import { defaultRuntime } from '../../runtime';
-import { getNodesTheme, runNodesCommand } from './cli-utils';
-import { parsePairingList } from './format';
-import { renderPendingPairingRequestsTable } from './pairing-render';
-import { callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
-import type { NodesRpcOpts } from './types';
+import { defaultRuntime } from "../../runtime";
+import { getTerminalTableWidth } from "../../terminal/table";
+import { getNodesTheme, runNodesCommand } from "./cli-utils";
+import { parsePairingList } from "./format";
+import { renderPendingPairingRequestsTable } from "./pairing-render";
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc";
+import type { NodesRpcOpts } from "./types";
 
 export function registerNodesPairingCommands(nodes: Command) {
   nodesCallOpts(
@@ -25,7 +26,7 @@ export function registerNodesPairingCommands(nodes: Command) {
             return;
           }
           const { heading, warn, muted } = getNodesTheme();
-          const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+          const tableWidth = getTerminalTableWidth();
           const now = Date.now();
           const rendered = renderPendingPairingRequestsTable({
             pending,

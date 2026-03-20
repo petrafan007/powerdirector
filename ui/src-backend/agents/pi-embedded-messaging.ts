@@ -1,10 +1,11 @@
-import { getChannelPlugin, normalizeChannelId } from '../channels/plugins/index';
+import { getChannelPlugin, normalizeChannelId } from "../channels/plugins/index";
 
 export type MessagingToolSend = {
   tool: string;
   provider: string;
   accountId?: string;
   to?: string;
+  threadId?: string;
 };
 
 const CORE_MESSAGING_TOOLS = new Set(["sessions_send", "message"]);

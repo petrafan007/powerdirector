@@ -1,11 +1,11 @@
-import { loadConfig } from '../config/config';
-import { resolveMarkdownTableMode } from '../config/markdown-tables';
-import { convertMarkdownTables } from '../markdown/tables';
-import { mediaKindFromMime } from '../media/constants';
-import { resolveOutboundAttachmentFromUrl } from '../media/outbound-attachment';
-import { resolveIMessageAccount, type ResolvedIMessageAccount } from './accounts';
-import { createIMessageRpcClient, type IMessageRpcClient } from './client';
-import { formatIMessageChatTarget, type IMessageService, parseIMessageTarget } from './targets';
+import { loadConfig } from "../config/config";
+import { resolveMarkdownTableMode } from "../config/markdown-tables";
+import { convertMarkdownTables } from "../markdown/tables";
+import { kindFromMime } from "../media/mime";
+import { resolveOutboundAttachmentFromUrl } from "../media/outbound-attachment";
+import { resolveIMessageAccount, type ResolvedIMessageAccount } from "./accounts";
+import { createIMessageRpcClient, type IMessageRpcClient } from "./client";
+import { formatIMessageChatTarget, type IMessageService, parseIMessageTarget } from "./targets";
 
 export type IMessageSendOpts = {
   cliPath?: string;
@@ -129,7 +129,7 @@ export async function sendMessageIMessage(
     });
     filePath = resolved.path;
     if (!message.trim()) {
-      const kind = mediaKindFromMime(resolved.contentType ?? undefined);
+      const kind = kindFromMime(resolved.contentType ?? undefined);
       if (kind) {
         message = kind === "image" ? "<media:image>" : `<media:${kind}>`;
       }

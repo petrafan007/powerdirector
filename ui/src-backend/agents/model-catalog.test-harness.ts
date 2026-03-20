@@ -1,24 +1,27 @@
 import { afterEach, beforeEach, vi } from "vitest";
-import { __setModelCatalogImportForTest, resetModelCatalogCacheForTest } from './model-catalog';
+import { resetProviderRuntimeHookCacheForTest } from "../plugins/provider-runtime";
+import { __setModelCatalogImportForTest, resetModelCatalogCacheForTest } from "./model-catalog";
 
-export type PiSdkModule = typeof import('./pi-model-discovery');
+export type PiSdkModule = typeof import("./pi-model-discovery");
 
-vi.mock("./models-config.js", () => ({
+vi.mock("./models-config", () => ({
   ensurePowerDirectorModelsJson: vi.fn().mockResolvedValue({ agentDir: "/tmp", wrote: false }),
 }));
 
-vi.mock("./agent-paths.js", () => ({
+vi.mock("./agent-paths", () => ({
   resolvePowerDirectorAgentDir: () => "/tmp/powerdirector",
 }));
 
 export function installModelCatalogTestHooks() {
   beforeEach(() => {
     resetModelCatalogCacheForTest();
+    resetProviderRuntimeHookCacheForTest();
   });
 
   afterEach(() => {
     __setModelCatalogImportForTest();
     resetModelCatalogCacheForTest();
+    resetProviderRuntimeHookCacheForTest();
     vi.restoreAllMocks();
   });
 }
@@ -31,6 +34,7 @@ export function mockCatalogImportFailThenRecover() {
       throw new Error("boom");
     }
     return {
+      discoverAuthStorage: () => ({}),
       AuthStorage: class {},
       ModelRegistry: class {
         getAll() {

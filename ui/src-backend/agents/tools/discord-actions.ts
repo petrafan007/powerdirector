@@ -1,11 +1,11 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from '../../config/config';
-import { createDiscordActionGate } from '../../discord/accounts';
-import { readStringParam } from './common';
-import { handleDiscordGuildAction } from './discord-actions-guild';
-import { handleDiscordMessagingAction } from './discord-actions-messaging';
-import { handleDiscordModerationAction } from './discord-actions-moderation';
-import { handleDiscordPresenceAction } from './discord-actions-presence';
+import type { PowerDirectorConfig } from "../../config/config";
+import { createDiscordActionGate } from "../../discord/accounts";
+import { readStringParam } from "./common";
+import { handleDiscordGuildAction } from "./discord-actions-guild";
+import { handleDiscordMessagingAction } from "./discord-actions-messaging";
+import { handleDiscordModerationAction } from "./discord-actions-moderation";
+import { handleDiscordPresenceAction } from "./discord-actions-presence";
 
 const messagingActions = new Set([
   "react",
@@ -58,13 +58,16 @@ const presenceActions = new Set(["setPresence"]);
 export async function handleDiscordAction(
   params: Record<string, unknown>,
   cfg: PowerDirectorConfig,
+  options?: {
+    mediaLocalRoots?: readonly string[];
+  },
 ): Promise<AgentToolResult<unknown>> {
   const action = readStringParam(params, "action", { required: true });
   const accountId = readStringParam(params, "accountId");
   const isActionEnabled = createDiscordActionGate({ cfg, accountId });
 
   if (messagingActions.has(action)) {
-    return await handleDiscordMessagingAction(action, params, isActionEnabled);
+    return await handleDiscordMessagingAction(action, params, isActionEnabled, options, cfg);
   }
   if (guildActions.has(action)) {
     return await handleDiscordGuildAction(action, params, isActionEnabled);

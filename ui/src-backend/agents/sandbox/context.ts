@@ -1,21 +1,22 @@
 import fs from "node:fs/promises";
-import { DEFAULT_BROWSER_EVALUATE_ENABLED } from '../../browser/constants';
-import { ensureBrowserControlAuth, resolveBrowserControlAuth } from '../../browser/control-auth';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadConfig } from '../../config/config';
-import { defaultRuntime } from '../../runtime';
-import { resolveUserPath } from '../../utils';
-import { syncSkillsToWorkspace } from '../skills';
-import { DEFAULT_AGENT_WORKSPACE_DIR } from '../workspace';
-import { ensureSandboxBrowser } from './browser';
-import { resolveSandboxConfigForAgent } from './config';
-import { ensureSandboxContainer } from './docker';
-import { createSandboxFsBridge } from './fs-bridge';
-import { maybePruneSandboxes } from './prune';
-import { resolveSandboxRuntimeStatus } from './runtime-status';
-import { resolveSandboxScopeKey, resolveSandboxWorkspaceDir } from './shared';
-import type { SandboxContext, SandboxWorkspaceInfo } from './types';
-import { ensureSandboxWorkspace } from './workspace';
+import { DEFAULT_BROWSER_EVALUATE_ENABLED } from "../../browser/constants";
+import { ensureBrowserControlAuth, resolveBrowserControlAuth } from "../../browser/control-auth";
+import type { PowerDirectorConfig } from "../../config/config";
+import { loadConfig } from "../../config/config";
+import { defaultRuntime } from "../../runtime";
+import { resolveUserPath } from "../../utils";
+import { syncSkillsToWorkspace } from "../skills";
+import { DEFAULT_AGENT_WORKSPACE_DIR } from "../workspace";
+import { requireSandboxBackendFactory } from "./backend";
+import { ensureSandboxBrowser } from "./browser";
+import { resolveSandboxConfigForAgent } from "./config";
+import { createSandboxFsBridge } from "./fs-bridge";
+import { maybePruneSandboxes } from "./prune";
+import { updateRegistry } from "./registry";
+import { resolveSandboxRuntimeStatus } from "./runtime-status";
+import { resolveSandboxScopeKey, resolveSandboxWorkspaceDir } from "./shared";
+import type { SandboxContext, SandboxDockerConfig, SandboxWorkspaceInfo } from "./types";
+import { ensureSandboxWorkspace } from "./workspace";
 
 async function ensureSandboxWorkspaceLayout(params: {
   cfg: ReturnType<typeof resolveSandboxConfigForAgent>;
@@ -64,6 +65,29 @@ async function ensureSandboxWorkspaceLayout(params: {
   return { agentWorkspaceDir, scopeKey, sandboxWorkspaceDir, workspaceDir };
 }
 
+export async function resolveSandboxDockerUser(params: {
+  docker: SandboxDockerConfig;
+  workspaceDir: string;
+  stat?: (workspaceDir: string) => Promise<{ uid: number; gid: number }>;
+}): Promise<SandboxDockerConfig> {
+  const configuredUser = params.docker.user?.trim();
+  if (configuredUser) {
+    return params.docker;
+  }
+  const stat = params.stat ?? ((workspaceDir: string) => fs.stat(workspaceDir));
+  try {
+    const workspaceStat = await stat(params.workspaceDir);
+    const uid = Number.isInteger(workspaceStat.uid) ? workspaceStat.uid : null;
+    const gid = Number.isInteger(workspaceStat.gid) ? workspaceStat.gid : null;
+    if (uid === null || gid === null || uid < 0 || gid < 0) {
+      return params.docker;
+    }
+    return { ...params.docker, user: `${uid}:${gid}` };
+  } catch {
+    return params.docker;
+  }
+}
+
 function resolveSandboxSession(params: { config?: PowerDirectorConfig; sessionKey?: string }) {
   const rawSessionKey = params.sessionKey?.trim();
   if (!rawSessionKey) {
@@ -102,11 +126,29 @@ export async function resolveSandboxContext(params: {
     workspaceDir: params.workspaceDir,
   });
 
-  const containerName = await ensureSandboxContainer({
+  const docker = await resolveSandboxDockerUser({
+    docker: cfg.docker,
+    workspaceDir,
+  });
+  const resolvedCfg = docker === cfg.docker ? cfg : { ...cfg, docker };
+
+  const backendFactory = requireSandboxBackendFactory(resolvedCfg.backend);
+  const backend = await backendFactory({
     sessionKey: rawSessionKey,
+    scopeKey,
     workspaceDir,
     agentWorkspaceDir,
-    cfg,
+    cfg: resolvedCfg,
+  });
+  await updateRegistry({
+    containerName: backend.runtimeId,
+    backendId: backend.id,
+    runtimeLabel: backend.runtimeLabel,
+    sessionKey: scopeKey,
+    createdAtMs: Date.now(),
+    lastUsedAtMs: Date.now(),
+    image: backend.configLabel ?? resolvedCfg.docker.image,
+    configLabelKind: backend.configLabelKind ?? "Image",
   });
 
   const evaluateEnabled =
@@ -128,30 +170,44 @@ export async function resolveSandboxContext(params: {
         return browserAuth;
       })()
     : undefined;
-  const browser = await ensureSandboxBrowser({
-    scopeKey,
-    workspaceDir,
-    agentWorkspaceDir,
-    cfg,
-    evaluateEnabled,
-    bridgeAuth,
-  });
+  if (resolvedCfg.browser.enabled && backend.capabilities?.browser !== true) {
+    throw new Error(
+      `Sandbox backend "${resolvedCfg.backend}" does not support browser sandboxes yet.`,
+    );
+  }
+  const browser =
+    resolvedCfg.browser.enabled && backend.capabilities?.browser === true
+      ? await ensureSandboxBrowser({
+          scopeKey,
+          workspaceDir,
+          agentWorkspaceDir,
+          cfg: resolvedCfg,
+          evaluateEnabled,
+          bridgeAuth,
+        })
+      : null;
 
   const sandboxContext: SandboxContext = {
     enabled: true,
+    backendId: backend.id,
     sessionKey: rawSessionKey,
     workspaceDir,
     agentWorkspaceDir,
-    workspaceAccess: cfg.workspaceAccess,
-    containerName,
-    containerWorkdir: cfg.docker.workdir,
-    docker: cfg.docker,
-    tools: cfg.tools,
-    browserAllowHostControl: cfg.browser.allowHostControl,
+    workspaceAccess: resolvedCfg.workspaceAccess,
+    runtimeId: backend.runtimeId,
+    runtimeLabel: backend.runtimeLabel,
+    containerName: backend.runtimeId,
+    containerWorkdir: backend.workdir,
+    docker: resolvedCfg.docker,
+    tools: resolvedCfg.tools,
+    browserAllowHostControl: resolvedCfg.browser.allowHostControl,
     browser: browser ?? undefined,
+    backend,
   };
 
-  sandboxContext.fsBridge = createSandboxFsBridge({ sandbox: sandboxContext });
+  sandboxContext.fsBridge =
+    backend.createFsBridge?.({ sandbox: sandboxContext }) ??
+    createSandboxFsBridge({ sandbox: sandboxContext });
 
   return sandboxContext;
 }

@@ -1,15 +1,15 @@
 import os from "node:os";
 import path from "node:path";
-import { resolveCliName } from '../cli/cli-name';
-import { installCompletion } from '../cli/completion-cli';
-import type { ShellCompletionStatus } from '../commands/doctor-completion';
+import { resolveCliName } from "../cli/cli-name";
+import { installCompletion } from "../cli/completion-cli";
+import type { ShellCompletionStatus } from "../commands/doctor-completion";
 import {
   checkShellCompletionStatus,
   ensureCompletionCacheExists,
-} from '../commands/doctor-completion';
-import { pathExists } from '../utils';
-import type { WizardFlow } from './onboarding.types';
-import type { WizardPrompter } from './prompts';
+} from "../commands/doctor-completion";
+import { pathExists } from "../utils";
+import type { WizardFlow } from "./onboarding.types";
+import type { WizardPrompter } from "./prompts";
 
 type CompletionDeps = {
   resolveCliName: () => string;

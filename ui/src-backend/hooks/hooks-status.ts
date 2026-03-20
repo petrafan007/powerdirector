@@ -1,11 +1,11 @@
 import path from "node:path";
-import type { PowerDirectorConfig } from '../config/config';
-import { evaluateEntryMetadataRequirementsForCurrentPlatform } from '../shared/entry-status';
-import type { RequirementConfigCheck, Requirements } from '../shared/requirements';
-import { CONFIG_DIR } from '../utils';
-import { hasBinary, isConfigPathTruthy, resolveHookConfig } from './config';
-import type { HookEligibilityContext, HookEntry, HookInstallSpec } from './types';
-import { loadWorkspaceHookEntries } from './workspace';
+import type { PowerDirectorConfig } from "../config/config";
+import { evaluateEntryRequirementsForCurrentPlatform } from "../shared/entry-status";
+import type { RequirementConfigCheck, Requirements } from "../shared/requirements";
+import { CONFIG_DIR } from "../utils";
+import { hasBinary, isConfigPathTruthy, resolveHookConfig } from "./config";
+import type { HookEligibilityContext, HookEntry, HookInstallSpec } from "./types";
+import { loadWorkspaceHookEntries } from "./workspace";
 
 export type HookStatusConfigCheck = RequirementConfigCheck;
 
@@ -91,17 +91,15 @@ function buildHookStatus(
     Boolean(process.env[envName] || hookConfig?.env?.[envName]);
   const isConfigSatisfied = (pathStr: string) => isConfigPathTruthy(config, pathStr);
 
-  const requirementStatus = evaluateEntryMetadataRequirementsForCurrentPlatform({
-    always,
-    metadata: entry.metadata,
-    frontmatter: entry.frontmatter,
-    hasLocalBin: hasBinary,
-    remote: eligibility?.remote,
-    isEnvSatisfied,
-    isConfigSatisfied,
-  });
   const { emoji, homepage, required, missing, requirementsSatisfied, configChecks } =
-    requirementStatus;
+    evaluateEntryRequirementsForCurrentPlatform({
+      always,
+      entry,
+      hasLocalBin: hasBinary,
+      remote: eligibility?.remote,
+      isEnvSatisfied,
+      isConfigSatisfied,
+    });
 
   const eligible = !disabled && requirementsSatisfied;
 

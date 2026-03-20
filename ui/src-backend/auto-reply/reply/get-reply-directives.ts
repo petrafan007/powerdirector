@@ -1,25 +1,26 @@
-import type { ExecToolDefaults } from '../../agents/bash-tools';
-import type { ModelAliasIndex } from '../../agents/model-selection';
-import { resolveSandboxRuntimeStatus } from '../../agents/sandbox';
-import type { SkillCommandSpec } from '../../agents/skills';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import { listChatCommands, shouldHandleTextCommands } from '../commands-registry';
-import { listSkillCommandsForWorkspace } from '../skill-commands';
-import type { MsgContext, TemplateContext } from '../templating';
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../thinking';
-import type { GetReplyOptions, ReplyPayload } from '../types';
-import { resolveBlockStreamingChunking } from './block-streaming';
-import { buildCommandContext } from './commands';
-import { type InlineDirectives, parseInlineDirectives } from './directive-handling';
-import { applyInlineDirectiveOverrides } from './get-reply-directives-apply';
-import { clearExecInlineDirectives, clearInlineDirectives } from './get-reply-directives-utils';
-import { defaultGroupActivation, resolveGroupRequireMention } from './groups';
-import { CURRENT_MESSAGE_MARKER, stripMentions, stripStructuralPrefixes } from './mentions';
-import { createModelSelectionState, resolveContextTokens } from './model-selection';
-import { formatElevatedUnavailableMessage, resolveElevatedPermissions } from './reply-elevated';
-import { stripInlineStatus } from './reply-inline';
-import type { TypingController } from './typing';
+import type { ExecToolDefaults } from "../../agents/bash-tools";
+import { resolveFastModeState } from "../../agents/fast-mode";
+import type { ModelAliasIndex } from "../../agents/model-selection";
+import { resolveSandboxRuntimeStatus } from "../../agents/sandbox";
+import type { SkillCommandSpec } from "../../agents/skills";
+import type { PowerDirectorConfig } from "../../config/config";
+import type { SessionEntry } from "../../config/sessions";
+import { listChatCommands, shouldHandleTextCommands } from "../commands-registry";
+import { listSkillCommandsForWorkspace } from "../skill-commands";
+import type { MsgContext, TemplateContext } from "../templating";
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../thinking";
+import type { GetReplyOptions, ReplyPayload } from "../types";
+import { resolveBlockStreamingChunking } from "./block-streaming";
+import { buildCommandContext } from "./commands";
+import { type InlineDirectives, parseInlineDirectives } from "./directive-handling";
+import { applyInlineDirectiveOverrides } from "./get-reply-directives-apply";
+import { clearExecInlineDirectives, clearInlineDirectives } from "./get-reply-directives-utils";
+import { defaultGroupActivation, resolveGroupRequireMention } from "./groups";
+import { CURRENT_MESSAGE_MARKER, stripMentions, stripStructuralPrefixes } from "./mentions";
+import { createModelSelectionState, resolveContextTokens } from "./model-selection";
+import { formatElevatedUnavailableMessage, resolveElevatedPermissions } from "./reply-elevated";
+import { stripInlineStatus } from "./reply-inline";
+import type { TypingController } from "./typing";
 
 type AgentDefaults = NonNullable<PowerDirectorConfig["agents"]>["defaults"];
 type ExecOverrides = Pick<ExecToolDefaults, "host" | "security" | "ask" | "node">;
@@ -37,6 +38,7 @@ export type ReplyDirectiveContinuation = {
   elevatedFailures: Array<{ gate: string; key: string }>;
   defaultActivation: ReturnType<typeof defaultGroupActivation>;
   resolvedThinkLevel: ThinkLevel | undefined;
+  resolvedFastMode: boolean;
   resolvedVerboseLevel: VerboseLevel | undefined;
   resolvedReasoningLevel: ReasoningLevel;
   resolvedElevatedLevel: ElevatedLevel;
@@ -228,6 +230,7 @@ export async function resolveReplyDirectives(params: {
   const hasInlineDirective =
     parsedDirectives.hasThinkDirective ||
     parsedDirectives.hasVerboseDirective ||
+    parsedDirectives.hasFastDirective ||
     parsedDirectives.hasReasoningDirective ||
     parsedDirectives.hasElevatedDirective ||
     parsedDirectives.hasExecDirective ||
@@ -252,12 +255,15 @@ export async function resolveReplyDirectives(params: {
       }
     }
   }
-  let directives = commandAuthorized
+  // Use command.isAuthorizedSender (resolved authorization) instead of raw commandAuthorized
+  // to ensure inline directives work when commands.allowFrom grants access (e.g., LINE).
+  let directives = command.isAuthorizedSender
     ? parsedDirectives
     : {
         ...parsedDirectives,
         hasThinkDirective: false,
         hasVerboseDirective: false,
+        hasFastDirective: false,
         hasReasoningDirective: false,
         hasStatusDirective: false,
         hasModelDirective: false,
@@ -337,15 +343,21 @@ export async function resolveReplyDirectives(params: {
   });
   const defaultActivation = defaultGroupActivation(requireMention);
   const resolvedThinkLevel =
-    directives.thinkLevel ??
-    (sessionEntry?.thinkingLevel as ThinkLevel | undefined) ??
-    (agentCfg?.thinkingDefault as ThinkLevel | undefined);
+    directives.thinkLevel ?? (sessionEntry?.thinkingLevel as ThinkLevel | undefined);
+  const resolvedFastMode =
+    directives.fastMode ??
+    resolveFastModeState({
+      cfg,
+      provider,
+      model,
+      sessionEntry,
+    }).enabled;
 
   const resolvedVerboseLevel =
     directives.verboseLevel ??
     (sessionEntry?.verboseLevel as VerboseLevel | undefined) ??
     (agentCfg?.verboseDefault as VerboseLevel | undefined);
-  const resolvedReasoningLevel: ReasoningLevel =
+  let resolvedReasoningLevel: ReasoningLevel =
     directives.reasoningLevel ??
     (sessionEntry?.reasoningLevel as ReasoningLevel | undefined) ??
     "off";
@@ -373,6 +385,7 @@ export async function resolveReplyDirectives(params: {
 
   const modelState = await createModelSelectionState({
     cfg,
+    agentId,
     agentCfg,
     sessionEntry,
     sessionStore,
@@ -388,6 +401,22 @@ export async function resolveReplyDirectives(params: {
   });
   provider = modelState.provider;
   model = modelState.model;
+  const resolvedThinkLevelWithDefault =
+    resolvedThinkLevel ??
+    (await modelState.resolveDefaultThinkingLevel()) ??
+    (agentCfg?.thinkingDefault as ThinkLevel | undefined);
+
+  // When neither directive nor session set reasoning, default to model capability
+  // (e.g. OpenRouter with reasoning: true). Skip auto-enabling when thinking is
+  // active, including model-inferred defaults, or internal thinking blocks can
+  // be emitted as visible "Reasoning:" messages.
+  const reasoningExplicitlySet =
+    directives.reasoningLevel !== undefined ||
+    (sessionEntry?.reasoningLevel !== undefined && sessionEntry?.reasoningLevel !== null);
+  const thinkingActive = resolvedThinkLevelWithDefault !== "off";
+  if (!reasoningExplicitlySet && resolvedReasoningLevel === "off" && !thinkingActive) {
+    resolvedReasoningLevel = await modelState.resolveDefaultReasoningLevel();
+  }
 
   let contextTokens = resolveContextTokens({
     agentCfg,
@@ -461,7 +490,8 @@ export async function resolveReplyDirectives(params: {
       elevatedAllowed,
       elevatedFailures,
       defaultActivation,
-      resolvedThinkLevel,
+      resolvedThinkLevel: resolvedThinkLevelWithDefault,
+      resolvedFastMode,
       resolvedVerboseLevel,
       resolvedReasoningLevel,
       resolvedElevatedLevel,

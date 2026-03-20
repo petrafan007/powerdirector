@@ -1,12 +1,13 @@
 import path from "node:path";
 import { afterEach, beforeEach, expect, vi } from "vitest";
-import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
-import { loadModelCatalog } from '../agents/model-catalog';
-import { runEmbeddedPiAgent } from '../agents/pi-embedded';
-import { loadSessionStore } from '../config/sessions';
+import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home";
+import { loadModelCatalog } from "../agents/model-catalog";
+import { runEmbeddedPiAgent } from "../agents/pi-embedded";
+import { loadSessionStore } from "../config/sessions";
+import { runEmbeddedPiAgentMock } from "./reply.directive.directive-behavior.e2e-mocks";
 
-export { loadModelCatalog } from '../agents/model-catalog';
-export { runEmbeddedPiAgent } from '../agents/pi-embedded';
+export { loadModelCatalog } from "../agents/model-catalog";
+export { runEmbeddedPiAgent } from "../agents/pi-embedded";
 
 export const MAIN_SESSION_KEY = "agent:main:main";
 
@@ -134,7 +135,7 @@ export function assertElevatedOffStatusReply(text: string | undefined) {
 
 export function installDirectiveBehaviorE2EHooks() {
   beforeEach(() => {
-    vi.mocked(runEmbeddedPiAgent).mockReset();
+    runEmbeddedPiAgentMock.mockReset();
     vi.mocked(loadModelCatalog).mockResolvedValue(DEFAULT_TEST_MODEL_CATALOG);
   });
 

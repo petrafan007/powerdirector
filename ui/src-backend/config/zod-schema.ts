@@ -1,20 +1,25 @@
 import { z } from "zod";
-import { parseByteSize } from '../cli/parse-bytes';
-import { parseDurationMs } from '../cli/parse-duration';
-import { ToolsSchema } from './zod-schema.agent-runtime';
-import { AgentsSchema, AudioSchema, BindingsSchema, BroadcastSchema } from './zod-schema.agents';
-import { ApprovalsSchema } from './zod-schema.approvals';
-import { HexColorSchema, ModelsConfigSchema } from './zod-schema.core';
-import { HookMappingSchema, HooksGmailSchema, InternalHooksSchema } from './zod-schema.hooks';
-import { InstallRecordShape } from './zod-schema.installs';
-import { ChannelsSchema } from './zod-schema.providers';
-import { sensitive } from './zod-schema.sensitive';
+import { parseByteSize } from "../cli/parse-bytes";
+import { parseDurationMs } from "../cli/parse-duration";
+import { ToolsSchema } from "./zod-schema.agent-runtime";
+import { AgentsSchema, AudioSchema, BindingsSchema, BroadcastSchema } from "./zod-schema.agents";
+import { ApprovalsSchema } from "./zod-schema.approvals";
+import {
+  HexColorSchema,
+  ModelsConfigSchema,
+  SecretInputSchema,
+  SecretsConfigSchema,
+} from "./zod-schema.core";
+import { HookMappingSchema, HooksGmailSchema, InternalHooksSchema } from "./zod-schema.hooks";
+import { PluginInstallRecordShape } from "./zod-schema.installs";
+import { ChannelsSchema } from "./zod-schema.providers";
+import { sensitive } from "./zod-schema.sensitive";
 import {
   CommandsSchema,
   MessagesSchema,
   SessionSchema,
   SessionSendPolicySchema,
-} from './zod-schema.session';
+} from "./zod-schema.session";
 
 const BrowserSnapshotDefaultsSchema = z
   .object({
@@ -31,24 +36,6 @@ const NodeHostSchema = z
         allowProfiles: z.array(z.string()).optional(),
       })
       .strict()
-      .optional(),
-  })
-  .strict()
-  .optional();
-
-const TerminalSchema = z
-  .object({
-    shell: z.enum(["bash", "zsh"]).optional(),
-    autoTimeoutMinutes: z.number().int().positive().optional(),
-    port: z.number().int().positive().optional(),
-    bind: z
-      .union([
-        z.literal("auto"),
-        z.literal("lan"),
-        z.literal("loopback"),
-        z.literal("custom"),
-        z.literal("tailnet"),
-      ])
       .optional(),
   })
   .strict()
@@ -141,13 +128,127 @@ const HttpUrlSchema = z
     return protocol === "http:" || protocol === "https:";
   }, "Expected http:// or https:// URL");
 
+const ResponsesEndpointUrlFetchShape = {
+  allowUrl: z.boolean().optional(),
+  urlAllowlist: z.array(z.string()).optional(),
+  allowedMimes: z.array(z.string()).optional(),
+  maxBytes: z.number().int().positive().optional(),
+  maxRedirects: z.number().int().nonnegative().optional(),
+  timeoutMs: z.number().int().positive().optional(),
+};
+
+const SkillEntrySchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    apiKey: SecretInputSchema.optional().register(sensitive),
+    env: z.record(z.string(), z.string()).optional(),
+    config: z.record(z.string(), z.unknown()).optional(),
+  })
+  .strict();
+
+const PluginEntrySchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    hooks: z
+      .object({
+        allowPromptInjection: z.boolean().optional(),
+      })
+      .strict()
+      .optional(),
+    subagent: z
+      .object({
+        allowModelOverride: z.boolean().optional(),
+        allowedModels: z.array(z.string()).optional(),
+      })
+      .strict()
+      .optional(),
+    config: z.record(z.string(), z.unknown()).optional(),
+  })
+  .strict();
+
+const TalkProviderEntrySchema = z
+  .object({
+    voiceId: z.string().optional(),
+    voiceAliases: z.record(z.string(), z.string()).optional(),
+    modelId: z.string().optional(),
+    outputFormat: z.string().optional(),
+    apiKey: SecretInputSchema.optional().register(sensitive),
+  })
+  .catchall(z.unknown());
+
+const TalkSchema = z
+  .object({
+    provider: z.string().optional(),
+    providers: z.record(z.string(), TalkProviderEntrySchema).optional(),
+    voiceId: z.string().optional(),
+    voiceAliases: z.record(z.string(), z.string()).optional(),
+    modelId: z.string().optional(),
+    outputFormat: z.string().optional(),
+    apiKey: SecretInputSchema.optional().register(sensitive),
+    interruptOnSpeech: z.boolean().optional(),
+    silenceTimeoutMs: z.number().int().positive().optional(),
+  })
+  .strict()
+  .superRefine((talk, ctx) => {
+    const provider = talk.provider?.trim().toLowerCase();
+    const providers = talk.providers ? Object.keys(talk.providers) : [];
+
+    if (provider && providers.length > 0 && !(provider in talk.providers!)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["provider"],
+        message: `talk.provider must match a key in talk.providers (missing "${provider}")`,
+      });
+    }
+
+    if (!provider && providers.length > 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["provider"],
+        message: "talk.provider is required when talk.providers defines multiple providers",
+      });
+    }
+  });
+
+const McpServerSchema = z
+  .object({
+    command: z.string().optional(),
+    args: z.array(z.string()).optional(),
+    env: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
+    cwd: z.string().optional(),
+    workingDirectory: z.string().optional(),
+    url: HttpUrlSchema.optional(),
+  })
+  .catchall(z.unknown());
+
+const McpConfigSchema = z
+  .object({
+    servers: z.record(z.string(), McpServerSchema).optional(),
+  })
+  .strict()
+  .optional();
+
 export const PowerDirectorSchema = z
   .object({
     $schema: z.string().optional(),
     meta: z
       .object({
         lastTouchedVersion: z.string().optional(),
-        lastTouchedAt: z.string().optional(),
+        // Accept any string unchanged (backwards-compatible) and coerce numeric Unix
+        // timestamps to ISO strings (agent file edits may write Date.now()).
+        lastTouchedAt: z
+          .union([
+            z.string(),
+            z.number().transform((n, ctx) => {
+              const d = new Date(n);
+              if (Number.isNaN(d.getTime())) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid timestamp" });
+                return z.NEVER;
+              }
+              return d.toISOString();
+            }),
+          ])
+          .optional(),
       })
       .strict()
       .optional(),
@@ -178,6 +279,7 @@ export const PowerDirectorSchema = z
       .object({
         enabled: z.boolean().optional(),
         flags: z.array(z.string()).optional(),
+        stuckSessionWarnMs: z.number().int().positive().optional(),
         otel: z
           .object({
             enabled: z.boolean().optional(),
@@ -220,6 +322,19 @@ export const PowerDirectorSchema = z
       })
       .strict()
       .optional(),
+    cli: z
+      .object({
+        banner: z
+          .object({
+            taglineMode: z
+              .union([z.literal("random"), z.literal("default"), z.literal("off")])
+              .optional(),
+          })
+          .strict()
+          .optional(),
+      })
+      .strict()
+      .optional(),
     update: z
       .object({
         channel: z.union([z.literal("stable"), z.literal("beta"), z.literal("dev")]).optional(),
@@ -248,6 +363,7 @@ export const PowerDirectorSchema = z
         headless: z.boolean().optional(),
         noSandbox: z.boolean().optional(),
         attachOnly: z.boolean().optional(),
+        cdpPortRangeStart: z.number().int().min(1).max(65535).optional(),
         defaultProfile: z.string().optional(),
         snapshotDefaults: BrowserSnapshotDefaultsSchema,
         ssrfPolicy: z
@@ -268,21 +384,43 @@ export const PowerDirectorSchema = z
               .object({
                 cdpPort: z.number().int().min(1).max(65535).optional(),
                 cdpUrl: z.string().optional(),
-                driver: z.union([z.literal("clawd"), z.literal("extension")]).optional(),
+                userDataDir: z.string().optional(),
+                driver: z
+                  .union([z.literal("powerdirector"), z.literal("clawd"), z.literal("existing-session")])
+                  .optional(),
+                attachOnly: z.boolean().optional(),
                 color: HexColorSchema,
               })
               .strict()
-              .refine((value) => value.cdpPort || value.cdpUrl, {
-                message: "Profile must set cdpPort or cdpUrl",
+              .refine(
+                (value) => value.driver === "existing-session" || value.cdpPort || value.cdpUrl,
+                {
+                  message: "Profile must set cdpPort or cdpUrl",
+                },
+              )
+              .refine((value) => value.driver === "existing-session" || !value.userDataDir, {
+                message: 'Profile userDataDir is only supported with driver="existing-session"',
               }),
           )
           .optional(),
+        extraArgs: z.array(z.string()).optional(),
       })
       .strict()
       .optional(),
     ui: z
       .object({
         seamColor: HexColorSchema.optional(),
+        theme: z.string().optional(),
+        fontSize: z.number().optional(),
+        fontFamily: z.string().optional(),
+        sidebarWidth: z.number().optional(),
+        showTimestamps: z.boolean().optional(),
+        showToolCalls: z.boolean().optional(),
+        codeHighlighting: z.boolean().optional(),
+        markdownRendering: z.boolean().optional(),
+        maxSidebarChats: z.number().optional(),
+        chatTabs: z.boolean().optional(),
+        maxChatTabs: z.number().optional(),
         assistant: z
           .object({
             name: z.string().max(50).optional(),
@@ -290,21 +428,19 @@ export const PowerDirectorSchema = z
           })
           .strict()
           .optional(),
-        // PowerDirector UI runtime settings (kept for dashboard parity/compatibility).
-        theme: z.enum(["dark", "light", "system"]).optional(),
-        fontSize: z.number().int().min(10).max(24).optional(),
-        fontFamily: z.string().optional(),
-        sidebarWidth: z.number().int().min(180).max(600).optional(),
-        showTimestamps: z.boolean().optional(),
-        showToolCalls: z.boolean().optional(),
-        codeHighlighting: z.boolean().optional(),
-        markdownRendering: z.boolean().optional(),
-        maxSidebarChats: z.number().int().min(1).max(20).optional(),
-        chatTabs: z.boolean().optional(),
-        maxChatTabs: z.number().int().min(1).max(20).default(5),
       })
       .strict()
       .optional(),
+    terminal: z
+      .object({
+        shell: z.string().optional(),
+        bind: z.string().optional(),
+        autoTimeoutMinutes: z.number().optional(),
+        port: z.number().optional(),
+      })
+      .strict()
+      .optional(),
+    secrets: SecretsConfigSchema,
     auth: z
       .object({
         profiles: z
@@ -332,6 +468,49 @@ export const PowerDirectorSchema = z
       })
       .strict()
       .optional(),
+    acp: z
+      .object({
+        enabled: z.boolean().optional(),
+        dispatch: z
+          .object({
+            enabled: z.boolean().optional(),
+          })
+          .strict()
+          .optional(),
+        backend: z.string().optional(),
+        defaultAgent: z.string().optional(),
+        allowedAgents: z.array(z.string()).optional(),
+        maxConcurrentSessions: z.number().int().positive().optional(),
+        stream: z
+          .object({
+            coalesceIdleMs: z.number().int().nonnegative().optional(),
+            maxChunkChars: z.number().int().positive().optional(),
+            repeatSuppression: z.boolean().optional(),
+            deliveryMode: z.union([z.literal("live"), z.literal("final_only")]).optional(),
+            hiddenBoundarySeparator: z
+              .union([
+                z.literal("none"),
+                z.literal("space"),
+                z.literal("newline"),
+                z.literal("paragraph"),
+              ])
+              .optional(),
+            maxOutputChars: z.number().int().positive().optional(),
+            maxSessionUpdateChars: z.number().int().positive().optional(),
+            tagVisibility: z.record(z.string(), z.boolean()).optional(),
+          })
+          .strict()
+          .optional(),
+        runtime: z
+          .object({
+            ttlMinutes: z.number().int().positive().optional(),
+            installCommand: z.string().optional(),
+          })
+          .strict()
+          .optional(),
+      })
+      .strict()
+      .optional(),
     models: ModelsConfigSchema,
     nodeHost: NodeHostSchema,
     agents: AgentsSchema,
@@ -342,11 +521,26 @@ export const PowerDirectorSchema = z
     media: z
       .object({
         preserveFilenames: z.boolean().optional(),
+        ttlHours: z
+          .number()
+          .int()
+          .min(1)
+          .max(24 * 7)
+          .optional(),
+        imageGeneration: z
+          .object({
+            enabled: z.boolean().optional(),
+            provider: z.string().optional(),
+            model: z.string().optional(),
+            defaultSize: z.string().optional(),
+          })
+          .strict()
+          .optional(),
+        maxUploadSize: z.union([z.number(), z.string()]).optional(),
       })
       .strict()
       .optional(),
     messages: MessagesSchema,
-    terminal: TerminalSchema,
     commands: CommandsSchema,
     approvals: ApprovalsSchema,
     session: SessionSchema,
@@ -355,13 +549,43 @@ export const PowerDirectorSchema = z
         enabled: z.boolean().optional(),
         store: z.string().optional(),
         maxConcurrentRuns: z.number().int().positive().optional(),
+        retry: z
+          .object({
+            maxAttempts: z.number().int().min(0).max(10).optional(),
+            backoffMs: z.array(z.number().int().nonnegative()).min(1).max(10).optional(),
+            retryOn: z
+              .array(z.enum(["rate_limit", "overloaded", "network", "timeout", "server_error"]))
+              .min(1)
+              .optional(),
+          })
+          .strict()
+          .optional(),
         webhook: HttpUrlSchema.optional(),
-        webhookToken: z.string().optional().register(sensitive),
+        webhookToken: SecretInputSchema.optional().register(sensitive),
         sessionRetention: z.union([z.string(), z.literal(false)]).optional(),
         runLog: z
           .object({
             maxBytes: z.union([z.string(), z.number()]).optional(),
             keepLines: z.number().int().positive().optional(),
+          })
+          .strict()
+          .optional(),
+        failureAlert: z
+          .object({
+            enabled: z.boolean().optional(),
+            after: z.number().int().min(1).optional(),
+            cooldownMs: z.number().int().min(0).optional(),
+            mode: z.enum(["announce", "webhook"]).optional(),
+            accountId: z.string().optional(),
+          })
+          .strict()
+          .optional(),
+        failureDestination: z
+          .object({
+            channel: z.string().optional(),
+            to: z.string().optional(),
+            accountId: z.string().optional(),
+            mode: z.enum(["announce", "webhook"]).optional(),
           })
           .strict()
           .optional(),
@@ -433,6 +657,7 @@ export const PowerDirectorSchema = z
         wideArea: z
           .object({
             enabled: z.boolean().optional(),
+            domain: z.string().optional(),
           })
           .strict()
           .optional(),
@@ -454,17 +679,7 @@ export const PowerDirectorSchema = z
       })
       .strict()
       .optional(),
-    talk: z
-      .object({
-        voiceId: z.string().optional(),
-        voiceAliases: z.record(z.string(), z.string()).optional(),
-        modelId: z.string().optional(),
-        outputFormat: z.string().optional(),
-        apiKey: z.string().optional().register(sensitive),
-        interruptOnSpeech: z.boolean().optional(),
-      })
-      .strict()
-      .optional(),
+    talk: TalkSchema.optional(),
     gateway: z
       .object({
         port: z.number().int().positive().optional(),
@@ -501,8 +716,8 @@ export const PowerDirectorSchema = z
                 z.literal("trusted-proxy"),
               ])
               .optional(),
-            token: z.string().optional().register(sensitive),
-            password: z.string().optional().register(sensitive),
+            token: SecretInputSchema.optional().register(sensitive),
+            password: SecretInputSchema.optional().register(sensitive),
             allowTailscale: z.boolean().optional(),
             rateLimit: z
               .object({
@@ -534,6 +749,8 @@ export const PowerDirectorSchema = z
           .strict()
           .optional(),
         channelHealthCheckMinutes: z.number().int().min(0).optional(),
+        channelStaleEventThresholdMinutes: z.number().int().min(1).optional(),
+        channelMaxRestartsPerHour: z.number().int().min(1).optional(),
         tailscale: z
           .object({
             mode: z.union([z.literal("off"), z.literal("serve"), z.literal("funnel")]).optional(),
@@ -545,8 +762,8 @@ export const PowerDirectorSchema = z
           .object({
             url: z.string().optional(),
             transport: z.union([z.literal("ssh"), z.literal("direct")]).optional(),
-            token: z.string().optional().register(sensitive),
-            password: z.string().optional().register(sensitive),
+            token: SecretInputSchema.optional().register(sensitive),
+            password: SecretInputSchema.optional().register(sensitive),
             tlsFingerprint: z.string().optional(),
             sshTarget: z.string().optional(),
             sshIdentity: z.string().optional(),
@@ -564,6 +781,7 @@ export const PowerDirectorSchema = z
               ])
               .optional(),
             debounceMs: z.number().int().min(0).optional(),
+            deferralTimeoutMs: z.number().int().min(0).optional(),
           })
           .strict()
           .optional(),
@@ -583,6 +801,15 @@ export const PowerDirectorSchema = z
                 chatCompletions: z
                   .object({
                     enabled: z.boolean().optional(),
+                    maxBodyBytes: z.number().int().positive().optional(),
+                    maxImageParts: z.number().int().nonnegative().optional(),
+                    maxTotalImageBytes: z.number().int().positive().optional(),
+                    images: z
+                      .object({
+                        ...ResponsesEndpointUrlFetchShape,
+                      })
+                      .strict()
+                      .optional(),
                   })
                   .strict()
                   .optional(),
@@ -593,13 +820,8 @@ export const PowerDirectorSchema = z
                     maxUrlParts: z.number().int().nonnegative().optional(),
                     files: z
                       .object({
-                        allowUrl: z.boolean().optional(),
-                        urlAllowlist: z.array(z.string()).optional(),
-                        allowedMimes: z.array(z.string()).optional(),
-                        maxBytes: z.number().int().positive().optional(),
+                        ...ResponsesEndpointUrlFetchShape,
                         maxChars: z.number().int().positive().optional(),
-                        maxRedirects: z.number().int().nonnegative().optional(),
-                        timeoutMs: z.number().int().positive().optional(),
                         pdf: z
                           .object({
                             maxPages: z.number().int().positive().optional(),
@@ -613,12 +835,7 @@ export const PowerDirectorSchema = z
                       .optional(),
                     images: z
                       .object({
-                        allowUrl: z.boolean().optional(),
-                        urlAllowlist: z.array(z.string()).optional(),
-                        allowedMimes: z.array(z.string()).optional(),
-                        maxBytes: z.number().int().positive().optional(),
-                        maxRedirects: z.number().int().nonnegative().optional(),
-                        timeoutMs: z.number().int().positive().optional(),
+                        ...ResponsesEndpointUrlFetchShape,
                       })
                       .strict()
                       .optional(),
@@ -631,6 +848,23 @@ export const PowerDirectorSchema = z
             securityHeaders: z
               .object({
                 strictTransportSecurity: z.union([z.string(), z.literal(false)]).optional(),
+              })
+              .strict()
+              .optional(),
+          })
+          .strict()
+          .optional(),
+        push: z
+          .object({
+            apns: z
+              .object({
+                relay: z
+                  .object({
+                    baseUrl: z.string().optional(),
+                    timeoutMs: z.number().int().positive().optional(),
+                  })
+                  .strict()
+                  .optional(),
               })
               .strict()
               .optional(),
@@ -655,8 +889,24 @@ export const PowerDirectorSchema = z
           .optional(),
       })
       .strict()
+      .superRefine((gateway, ctx) => {
+        const effectiveHealthCheckMinutes = gateway.channelHealthCheckMinutes ?? 5;
+        if (
+          gateway.channelStaleEventThresholdMinutes != null &&
+          effectiveHealthCheckMinutes !== 0 &&
+          gateway.channelStaleEventThresholdMinutes < effectiveHealthCheckMinutes
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["channelStaleEventThresholdMinutes"],
+            message:
+              "channelStaleEventThresholdMinutes should be >= channelHealthCheckMinutes to avoid delayed stale detection",
+          });
+        }
+      })
       .optional(),
     memory: MemorySchema,
+    mcp: McpConfigSchema,
     skills: z
       .object({
         allowBundled: z.array(z.string()).optional(),
@@ -687,19 +937,7 @@ export const PowerDirectorSchema = z
           })
           .strict()
           .optional(),
-        entries: z
-          .record(
-            z.string(),
-            z
-              .object({
-                enabled: z.boolean().optional(),
-                apiKey: z.string().optional().register(sensitive),
-                env: z.record(z.string(), z.string()).optional(),
-                config: z.record(z.string(), z.unknown()).optional(),
-              })
-              .strict(),
-          )
-          .optional(),
+        entries: z.record(z.string(), SkillEntrySchema).optional(),
       })
       .strict()
       .optional(),
@@ -717,26 +955,17 @@ export const PowerDirectorSchema = z
         slots: z
           .object({
             memory: z.string().optional(),
+            contextEngine: z.string().optional(),
           })
           .strict()
           .optional(),
-        entries: z
-          .record(
-            z.string(),
-            z
-              .object({
-                enabled: z.boolean().optional(),
-                config: z.record(z.string(), z.unknown()).optional(),
-              })
-              .strict(),
-          )
-          .optional(),
+        entries: z.record(z.string(), PluginEntrySchema).optional(),
         installs: z
           .record(
             z.string(),
             z
               .object({
-                ...InstallRecordShape,
+                ...PluginInstallRecordShape,
               })
               .strict(),
           )
@@ -777,6 +1006,3 @@ export const PowerDirectorSchema = z
       }
     }
   });
-
-// Keep the legacy alias for backward compatibility.
-export const PowerDirectorSchema = PowerDirectorSchema;

@@ -1,13 +1,13 @@
-import { listChannelPlugins } from '../../channels/plugins/index';
+import { listChannelPlugins } from "../../channels/plugins/index";
 import {
   ErrorCodes,
   errorShape,
   formatValidationErrors,
   validateWebLoginStartParams,
   validateWebLoginWaitParams,
-} from '../protocol/index';
-import { formatForLog } from '../ws-log';
-import type { GatewayRequestHandlers, RespondFn } from './types';
+} from "../protocol/index";
+import { formatForLog } from "../ws-log";
+import type { GatewayRequestHandlers, RespondFn } from "./types";
 
 const WEB_LOGIN_METHODS = new Set(["web.login.start", "web.login.wait"]);
 

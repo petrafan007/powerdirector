@@ -4,33 +4,24 @@ import os from "node:os";
 import path from "node:path";
 import type { AgentTool } from "@mariozechner/pi-agent-core";
 import type { ImageContent } from "@mariozechner/pi-ai";
-import type { ThinkLevel } from '../../auto-reply/thinking';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { CliBackendConfig } from '../../config/types';
-import { buildTtsSystemPromptHint } from '../../tts/tts';
-import { isRecord } from '../../utils';
-import { buildModelAliasLines } from '../model-alias-lines';
-import { resolveDefaultModelForAgent } from '../model-selection';
-import type { EmbeddedContextFile } from '../pi-embedded-helpers';
-import { detectRuntimeShell } from '../shell-utils';
-import { buildSystemPromptParams } from '../system-prompt-params';
-import { buildAgentSystemPrompt } from '../system-prompt';
-export { buildCliSupervisorScopeKey, resolveCliNoOutputTimeoutMs } from './reliability';
+import { KeyedAsyncQueue } from "@/src-backend/plugin-sdk/keyed-async-queue";
+import type { ThinkLevel } from "../../auto-reply/thinking";
+import type { PowerDirectorConfig } from "../../config/config";
+import type { CliBackendConfig } from "../../config/types";
+import { buildTtsSystemPromptHint } from "../../tts/tts";
+import { isRecord } from "../../utils";
+import { buildModelAliasLines } from "../model-alias-lines";
+import { resolveDefaultModelForAgent } from "../model-selection";
+import { resolveOwnerDisplaySetting } from "../owner-display";
+import type { EmbeddedContextFile } from "../pi-embedded-helpers";
+import { detectRuntimeShell } from "../shell-utils";
+import { buildSystemPromptParams } from "../system-prompt-params";
+import { buildAgentSystemPrompt } from "../system-prompt";
+export { buildCliSupervisorScopeKey, resolveCliNoOutputTimeoutMs } from "./reliability";
 
-const CLI_RUN_QUEUE = new Map<string, Promise<unknown>>();
+const CLI_RUN_QUEUE = new KeyedAsyncQueue();
 export function enqueueCliRun<T>(key: string, task: () => Promise<T>): Promise<T> {
-  const prior = CLI_RUN_QUEUE.get(key) ?? Promise.resolve();
-  const chained = prior.catch(() => undefined).then(task);
-  // Keep queue continuity even when a run rejects, without emitting unhandled rejections.
-  const tracked = chained
-    .catch(() => undefined)
-    .finally(() => {
-      if (CLI_RUN_QUEUE.get(key) === tracked) {
-        CLI_RUN_QUEUE.delete(key);
-      }
-    });
-  CLI_RUN_QUEUE.set(key, tracked);
-  return chained;
+  return CLI_RUN_QUEUE.enqueue(key, task);
 }
 
 type CliUsage = {
@@ -81,14 +72,18 @@ export function buildSystemPrompt(params: {
     },
   });
   const ttsHint = params.config ? buildTtsSystemPromptHint(params.config) : undefined;
+  const ownerDisplay = resolveOwnerDisplaySetting(params.config);
   return buildAgentSystemPrompt({
     workspaceDir: params.workspaceDir,
     defaultThinkLevel: params.defaultThinkLevel,
     extraSystemPrompt: params.extraSystemPrompt,
     ownerNumbers: params.ownerNumbers,
+    ownerDisplay: ownerDisplay.ownerDisplay,
+    ownerDisplaySecret: ownerDisplay.ownerDisplaySecret,
     reasoningTagHint: false,
     heartbeatPrompt: params.heartbeatPrompt,
     docsPath: params.docsPath,
+    acpEnabled: params.config?.acp?.enabled !== false,
     runtimeInfo,
     toolNames: params.tools.map((tool) => tool.name),
     modelAliasLines: buildModelAliasLines(params.config),

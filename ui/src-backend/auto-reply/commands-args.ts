@@ -1,4 +1,4 @@
-import type { CommandArgValues } from './commands-registry.types';
+import type { CommandArgValues } from "./commands-registry.types";
 
 export type CommandArgsFormatter = (values: CommandArgValues) => string | undefined;
 
@@ -45,6 +45,32 @@ const formatConfigArgs: CommandArgsFormatter = (values) =>
   formatActionArgs(values, {
     formatKnownAction: (action, path) => {
       if (action === "show" || action === "get") {
+        return path ? `${action} ${path}` : action;
+      }
+      return undefined;
+    },
+  });
+
+const formatMcpArgs: CommandArgsFormatter = (values) =>
+  formatActionArgs(values, {
+    formatKnownAction: (action, path) => {
+      if (action === "show" || action === "get") {
+        return path ? `${action} ${path}` : action;
+      }
+      return undefined;
+    },
+  });
+
+const formatPluginsArgs: CommandArgsFormatter = (values) =>
+  formatActionArgs(values, {
+    formatKnownAction: (action, path) => {
+      if (action === "list") {
+        return "list";
+      }
+      if (action === "show" || action === "get") {
+        return path ? `${action} ${path}` : action;
+      }
+      if (action === "enable" || action === "disable") {
         return path ? `${action} ${path}` : action;
       }
       return undefined;
@@ -124,6 +150,8 @@ const formatExecArgs: CommandArgsFormatter = (values) => {
 
 export const COMMAND_ARG_FORMATTERS: Record<string, CommandArgsFormatter> = {
   config: formatConfigArgs,
+  mcp: formatMcpArgs,
+  plugins: formatPluginsArgs,
   debug: formatDebugArgs,
   queue: formatQueueArgs,
   exec: formatExecArgs,

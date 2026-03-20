@@ -1,9 +1,11 @@
 import type { Command } from "commander";
-import { callGateway } from '../../gateway/call';
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../../utils/message-channel';
-import { withProgress } from '../progress';
+import type { PowerDirectorConfig } from "../../config/config";
+import { callGateway } from "../../gateway/call";
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../../utils/message-channel";
+import { withProgress } from "../progress";
 
 export type GatewayRpcOpts = {
+  config?: PowerDirectorConfig;
   url?: string;
   token?: string;
   password?: string;
@@ -30,6 +32,7 @@ export const callGatewayCli = async (method: string, opts: GatewayRpcOpts, param
     },
     async () =>
       await callGateway({
+        config: opts.config,
         url: opts.url,
         token: opts.token,
         password: opts.password,

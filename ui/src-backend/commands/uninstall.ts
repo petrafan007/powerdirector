@@ -1,12 +1,13 @@
 import path from "node:path";
 import { cancel, confirm, isCancel, multiselect } from "@clack/prompts";
-import { isNixMode } from '../config/config';
-import { resolveGatewayService } from '../daemon/service';
-import type { RuntimeEnv } from '../runtime';
-import { stylePromptHint, stylePromptMessage, stylePromptTitle } from '../terminal/prompt-style';
-import { resolveHomeDir } from '../utils';
-import { resolveCleanupPlanFromDisk } from './cleanup-plan';
-import { removePath } from './cleanup-utils';
+import { formatCliCommand } from "../cli/command-format";
+import { isNixMode } from "../config/config";
+import { resolveGatewayService } from "../daemon/service";
+import type { RuntimeEnv } from "../runtime";
+import { stylePromptHint, stylePromptMessage, stylePromptTitle } from "../terminal/prompt-style";
+import { resolveHomeDir } from "../utils";
+import { resolveCleanupPlanFromDisk } from "./cleanup-plan";
+import { removePath, removeStateAndLinkedPaths, removeWorkspaceDirs } from "./cleanup-utils";
 
 type UninstallScope = "service" | "state" | "workspace" | "app";
 
@@ -92,6 +93,10 @@ async function removeMacApp(runtime: RuntimeEnv, dryRun?: boolean) {
   });
 }
 
+function logBackupRecommendation(runtime: RuntimeEnv) {
+  runtime.log(`Recommended first: ${formatCliCommand("powerdirector backup create")}`);
+}
+
 export async function uninstallCommand(runtime: RuntimeEnv, opts: UninstallOptions) {
   const { scopes, hadExplicit } = buildScopeSelection(opts);
   const interactive = !opts.nonInteractive;
@@ -155,6 +160,10 @@ export async function uninstallCommand(runtime: RuntimeEnv, opts: UninstallOptio
   const { stateDir, configPath, oauthDir, configInsideState, oauthInsideState, workspaceDirs } =
     resolveCleanupPlanFromDisk();
 
+  if (scopes.has("state") || scopes.has("workspace")) {
+    logBackupRecommendation(runtime);
+  }
+
   if (scopes.has("service")) {
     if (dryRun) {
       runtime.log("[dry-run] remove gateway service");
@@ -164,19 +173,15 @@ export async function uninstallCommand(runtime: RuntimeEnv, opts: UninstallOptio
   }
 
   if (scopes.has("state")) {
-    await removePath(stateDir, runtime, { dryRun, label: stateDir });
-    if (!configInsideState) {
-      await removePath(configPath, runtime, { dryRun, label: configPath });
-    }
-    if (!oauthInsideState) {
-      await removePath(oauthDir, runtime, { dryRun, label: oauthDir });
-    }
+    await removeStateAndLinkedPaths(
+      { stateDir, configPath, oauthDir, configInsideState, oauthInsideState },
+      runtime,
+      { dryRun },
+    );
   }
 
   if (scopes.has("workspace")) {
-    for (const workspace of workspaceDirs) {
-      await removePath(workspace, runtime, { dryRun, label: workspace });
-    }
+    await removeWorkspaceDirs(workspaceDirs, runtime, { dryRun });
   }
 
   if (scopes.has("app")) {

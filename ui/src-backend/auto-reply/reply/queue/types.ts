@@ -1,9 +1,10 @@
-import type { ExecToolDefaults } from '../../../agents/bash-tools';
-import type { SkillSnapshot } from '../../../agents/skills';
-import type { PowerDirectorConfig } from '../../../config/config';
-import type { SessionEntry } from '../../../config/sessions';
-import type { OriginatingChannelType } from '../../templating';
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../directives';
+import type { ExecToolDefaults } from "../../../agents/bash-tools";
+import type { SkillSnapshot } from "../../../agents/skills";
+import type { PowerDirectorConfig } from "../../../config/config";
+import type { SessionEntry } from "../../../config/sessions";
+import type { InputProvenance } from "../../../sessions/input-provenance";
+import type { OriginatingChannelType } from "../../templating";
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../directives";
 
 export type QueueMode = "steer" | "followup" | "collect" | "steer-backlog" | "interrupt" | "queue";
 
@@ -55,6 +56,7 @@ export type FollowupRun = {
     senderName?: string;
     senderUsername?: string;
     senderE164?: string;
+    senderIsOwner?: boolean;
     sessionFile: string;
     workspaceDir: string;
     config: PowerDirectorConfig;
@@ -76,6 +78,7 @@ export type FollowupRun = {
     timeoutMs: number;
     blockReplyBreak: "text_end" | "message_end";
     ownerNumbers?: string[];
+    inputProvenance?: InputProvenance;
     extraSystemPrompt?: string;
     enforceFinalTag?: boolean;
   };

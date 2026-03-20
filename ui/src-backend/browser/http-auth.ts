@@ -1,5 +1,5 @@
 import type { IncomingMessage } from "node:http";
-import { safeEqualSecret } from '../security/secret-equal';
+import { safeEqualSecret } from "../security/secret-equal";
 
 function firstHeaderValue(value: string | string[] | undefined): string {
   return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");

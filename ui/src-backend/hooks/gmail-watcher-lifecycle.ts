@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { isTruthyEnvValue } from '../infra/env';
-import { startGmailWatcher } from './gmail-watcher';
+import type { PowerDirectorConfig } from "../config/config";
+import { isTruthyEnvValue } from "../infra/env";
+import { startGmailWatcher } from "./gmail-watcher";
 
 export type GMailWatcherLog = {
   info: (msg: string) => void;

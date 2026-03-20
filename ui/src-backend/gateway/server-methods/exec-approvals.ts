@@ -6,7 +6,7 @@ import {
   saveExecApprovals,
   type ExecApprovalsFile,
   type ExecApprovalsSnapshot,
-} from '../../infra/exec-approvals';
+} from "../../infra/exec-approvals";
 import {
   ErrorCodes,
   errorShape,
@@ -14,15 +14,15 @@ import {
   validateExecApprovalsNodeGetParams,
   validateExecApprovalsNodeSetParams,
   validateExecApprovalsSetParams,
-} from '../protocol/index';
-import { resolveBaseHashParam } from './base-hash';
+} from "../protocol/index";
+import { resolveBaseHashParam } from "./base-hash";
 import {
   respondUnavailableOnNodeInvokeError,
   respondUnavailableOnThrow,
   safeParseJson,
-} from './nodes.helpers';
-import type { GatewayRequestHandlers, RespondFn } from './types';
-import { assertValidParams } from './validation';
+} from "./nodes.helpers";
+import type { GatewayRequestHandlers, RespondFn } from "./types";
+import { assertValidParams } from "./validation";
 
 function requireApprovalsBaseHash(
   params: unknown,

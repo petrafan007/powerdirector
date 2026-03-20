@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolvePowerDirectorPackageRootSync } from '../../infra/powerdirector-root';
+import { resolvePowerDirectorPackageRootSync } from "../../infra/powerdirector-root";
 
 function looksLikeSkillsDir(dir: string): boolean {
   try {

@@ -17,11 +17,11 @@ export type SlackSendTestClient = WebClient & {
 };
 
 export function installSlackBlockTestMocks() {
-  vi.mock("../config/config.js", () => ({
+  vi.mock("../config/config", () => ({
     loadConfig: () => ({}),
   }));
 
-  vi.mock("./accounts.js", () => ({
+  vi.mock("./accounts", () => ({
     resolveSlackAccount: () => ({
       accountId: "default",
       botToken: "xoxb-test",

@@ -5,8 +5,8 @@
  * This handler is called before built-in command handlers.
  */
 
-import { matchPluginCommand, executePluginCommand } from '../../plugins/commands';
-import type { CommandHandler, CommandHandlerResult } from './commands-types';
+import { matchPluginCommand, executePluginCommand } from "../../plugins/commands";
+import type { CommandHandler, CommandHandlerResult } from "./commands-types";
 
 /**
  * Handle plugin-registered commands.

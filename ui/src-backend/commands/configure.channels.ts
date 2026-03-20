@@ -1,12 +1,12 @@
-import { getChannelPlugin, listChannelPlugins } from '../channels/plugins/index';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import { CONFIG_PATH } from '../config/config';
-import type { RuntimeEnv } from '../runtime';
-import { note } from '../terminal/note';
-import { shortenHomePath } from '../utils';
-import { confirm, select } from './configure.shared';
-import { guardCancel } from './onboard-helpers';
+import { getChannelPlugin, listChannelPlugins } from "../channels/plugins/index";
+import { formatCliCommand } from "../cli/command-format";
+import type { PowerDirectorConfig } from "../config/config";
+import { CONFIG_PATH } from "../config/config";
+import type { RuntimeEnv } from "../runtime";
+import { note } from "../terminal/note";
+import { shortenHomePath } from "../utils";
+import { confirm, select } from "./configure.shared";
+import { guardCancel } from "./onboard-helpers";
 
 export async function removeChannelConfigWizard(
   cfg: PowerDirectorConfig,
@@ -24,7 +24,7 @@ export async function removeChannelConfigWizard(
     if (configured.length === 0) {
       note(
         [
-          "No channel config found in powerdirector.config.json.",
+          "No channel config found in powerdirector.json.",
           `Tip: \`${formatCliCommand("powerdirector channels status")}\` shows what is configured and enabled.`,
         ].join("\n"),
         "Remove channel",

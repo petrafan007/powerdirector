@@ -4,7 +4,7 @@ import {
   DEFAULT_GATEWAY_PORT,
   type HooksGmailTailscaleMode,
   resolveGatewayPort,
-} from '../config/config';
+} from "../config/config";
 
 export const DEFAULT_GMAIL_LABEL = "INBOX";
 export const DEFAULT_GMAIL_TOPIC = "gog-gmail-watch";

@@ -1,22 +1,20 @@
-import type { ChannelOutboundTargetMode } from '../../channels/plugins/types';
-import { DEFAULT_CHAT_CHANNEL } from '../../channels/registry';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import { normalizeAccountId } from '../../utils/account-id';
+import type { ChannelOutboundTargetMode } from "../../channels/plugins/types";
+import type { PowerDirectorConfig } from "../../config/config";
+import type { SessionEntry } from "../../config/sessions";
+import { normalizeAccountId } from "../../utils/account-id";
 import {
   INTERNAL_MESSAGE_CHANNEL,
   isDeliverableMessageChannel,
   isGatewayMessageChannel,
   normalizeMessageChannel,
-  type DeliverableMessageChannel,
   type GatewayMessageChannel,
-} from '../../utils/message-channel';
-import type { OutboundTargetResolution } from './targets';
+} from "../../utils/message-channel";
+import type { OutboundTargetResolution } from "./targets";
 import {
   resolveOutboundTarget,
   resolveSessionDeliveryTarget,
   type SessionDeliveryTarget,
-} from './targets';
+} from "./targets";
 
 export type AgentDeliveryPlan = {
   baseDelivery: SessionDeliveryTarget;
@@ -65,7 +63,16 @@ export function resolveAgentDeliveryPlan(params: {
     : undefined;
   const turnSourceChannel =
     normalizedTurnSource && isDeliverableMessageChannel(normalizedTurnSource)
-      ? (normalizedTurnSource as DeliverableMessageChannel)
+      ? normalizedTurnSource
+      : undefined;
+  const turnSourceTo =
+    typeof params.turnSourceTo === "string" && params.turnSourceTo.trim()
+      ? params.turnSourceTo.trim()
+      : undefined;
+  const turnSourceAccountId = normalizeAccountId(params.turnSourceAccountId);
+  const turnSourceThreadId =
+    params.turnSourceThreadId != null && params.turnSourceThreadId !== ""
+      ? params.turnSourceThreadId
       : undefined;
 
   const baseDelivery = resolveSessionDeliveryTarget({
@@ -74,9 +81,9 @@ export function resolveAgentDeliveryPlan(params: {
     explicitTo,
     explicitThreadId: params.explicitThreadId,
     turnSourceChannel,
-    turnSourceTo: params.turnSourceTo,
-    turnSourceAccountId: params.turnSourceAccountId,
-    turnSourceThreadId: params.turnSourceThreadId,
+    turnSourceTo,
+    turnSourceAccountId,
+    turnSourceThreadId,
   });
 
   const resolvedChannel = (() => {
@@ -87,7 +94,7 @@ export function resolveAgentDeliveryPlan(params: {
       if (baseDelivery.channel && baseDelivery.channel !== INTERNAL_MESSAGE_CHANNEL) {
         return baseDelivery.channel;
       }
-      return params.wantsDelivery ? DEFAULT_CHAT_CHANNEL : INTERNAL_MESSAGE_CHANNEL;
+      return INTERNAL_MESSAGE_CHANNEL;
     }
 
     if (isGatewayMessageChannel(requestedChannel)) {
@@ -97,7 +104,7 @@ export function resolveAgentDeliveryPlan(params: {
     if (baseDelivery.channel && baseDelivery.channel !== INTERNAL_MESSAGE_CHANNEL) {
       return baseDelivery.channel;
     }
-    return params.wantsDelivery ? DEFAULT_CHAT_CHANNEL : INTERNAL_MESSAGE_CHANNEL;
+    return INTERNAL_MESSAGE_CHANNEL;
   })();
 
   const deliveryTargetMode = explicitTo

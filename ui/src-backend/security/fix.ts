@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { createConfigIO } from '../config/config';
-import { collectIncludePathsRecursive } from '../config/includes-scan';
-import { resolveConfigPath, resolveOAuthDir, resolveStateDir } from '../config/paths';
-import { readChannelAllowFromStore } from '../pairing/pairing-store';
-import { runExec } from '../process/exec';
-import { normalizeAgentId } from '../routing/session-key';
-import { createIcaclsResetCommand, formatIcaclsResetCommand, type ExecFn } from './windows-acl';
+import { resolveDefaultAgentId } from "../agents/agent-scope";
+import type { PowerDirectorConfig } from "../config/config";
+import { createConfigIO } from "../config/config";
+import { collectIncludePathsRecursive } from "../config/includes-scan";
+import { resolveConfigPath, resolveOAuthDir, resolveStateDir } from "../config/paths";
+import { readChannelAllowFromStore } from "../pairing/pairing-store";
+import { runExec } from "../process/exec";
+import { DEFAULT_ACCOUNT_ID, normalizeAgentId } from "../routing/session-key";
+import { createIcaclsResetCommand, formatIcaclsResetCommand, type ExecFn } from "./windows-acl";
 
 export type SecurityFixChmodAction = {
   kind: "chmod";
@@ -412,7 +412,11 @@ export async function fixSecurityFootguns(opts?: {
     const fixed = applyConfigFixes({ cfg: snap.config, env });
     changes = fixed.changes;
 
-    const whatsappStoreAllowFrom = await readChannelAllowFromStore("whatsapp", env).catch(() => []);
+    const whatsappStoreAllowFrom = await readChannelAllowFromStore(
+      "whatsapp",
+      env,
+      DEFAULT_ACCOUNT_ID,
+    ).catch(() => []);
     if (whatsappStoreAllowFrom.length > 0) {
       setWhatsAppGroupAllowFromFromStore({
         cfg: fixed.cfg,

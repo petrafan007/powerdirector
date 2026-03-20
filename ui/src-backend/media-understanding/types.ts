@@ -90,6 +90,25 @@ export type ImageDescriptionRequest = {
   buffer: Buffer;
   fileName: string;
   mime?: string;
+  prompt?: string;
+  maxTokens?: number;
+  timeoutMs: number;
+  profile?: string;
+  preferredProfile?: string;
+  agentDir: string;
+  cfg: import("../config/config").PowerDirectorConfig;
+  model: string;
+  provider: string;
+};
+
+export type ImagesDescriptionInput = {
+  buffer: Buffer;
+  fileName: string;
+  mime?: string;
+};
+
+export type ImagesDescriptionRequest = {
+  images: ImagesDescriptionInput[];
   model: string;
   provider: string;
   prompt?: string;
@@ -98,10 +117,15 @@ export type ImageDescriptionRequest = {
   profile?: string;
   preferredProfile?: string;
   agentDir: string;
-  cfg: import('../config/config').PowerDirectorConfig;
+  cfg: import("../config/config").PowerDirectorConfig;
 };
 
 export type ImageDescriptionResult = {
+  text: string;
+  model?: string;
+};
+
+export type ImagesDescriptionResult = {
   text: string;
   model?: string;
 };
@@ -112,4 +136,5 @@ export type MediaUnderstandingProvider = {
   transcribeAudio?: (req: AudioTranscriptionRequest) => Promise<AudioTranscriptionResult>;
   describeVideo?: (req: VideoDescriptionRequest) => Promise<VideoDescriptionResult>;
   describeImage?: (req: ImageDescriptionRequest) => Promise<ImageDescriptionResult>;
+  describeImages?: (req: ImagesDescriptionRequest) => Promise<ImagesDescriptionResult>;
 };

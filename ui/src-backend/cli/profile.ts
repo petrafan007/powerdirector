@@ -1,7 +1,7 @@
 import os from "node:os";
 import path from "node:path";
-import { resolveRequiredHomeDir } from '../infra/home-dir';
-import { isValidProfileName } from './profile-utils';
+import { resolveRequiredHomeDir } from "../infra/home-dir";
+import { isValidProfileName } from "./profile-utils";
 
 export type CliProfileParseResult =
   | { ok: true; profile: string | null; argv: string[] }
@@ -118,7 +118,7 @@ export function applyCliProfileEnv(params: {
   }
 
   if (!env.POWERDIRECTOR_CONFIG_PATH?.trim()) {
-    env.POWERDIRECTOR_CONFIG_PATH = path.join(stateDir, "powerdirector.config.json");
+    env.POWERDIRECTOR_CONFIG_PATH = path.join(stateDir, "powerdirector.json");
   }
 
   if (profile === "dev" && !env.POWERDIRECTOR_GATEWAY_PORT?.trim()) {

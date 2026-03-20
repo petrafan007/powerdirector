@@ -1,10 +1,13 @@
+import { DEFAULT_PROVIDER } from "../../agents/defaults";
+import { buildAllowedModelSet } from "../../agents/model-selection";
+import { loadConfig } from "../../config/config";
 import {
   ErrorCodes,
   errorShape,
   formatValidationErrors,
   validateModelsListParams,
-} from '../protocol/index';
-import type { GatewayRequestHandlers } from './types';
+} from "../protocol/index";
+import type { GatewayRequestHandlers } from "./types";
 
 export const modelsHandlers: GatewayRequestHandlers = {
   "models.list": async ({ params, respond, context }) => {
@@ -20,7 +23,14 @@ export const modelsHandlers: GatewayRequestHandlers = {
       return;
     }
     try {
-      const models = await context.loadGatewayModelCatalog();
+      const catalog = await context.loadGatewayModelCatalog();
+      const cfg = loadConfig();
+      const { allowedCatalog } = buildAllowedModelSet({
+        cfg,
+        catalog,
+        defaultProvider: DEFAULT_PROVIDER,
+      });
+      const models = allowedCatalog.length > 0 ? allowedCatalog : catalog;
       respond(true, { models }, undefined);
     } catch (err) {
       respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, String(err)));

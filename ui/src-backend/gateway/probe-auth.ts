@@ -1,32 +1,84 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveGatewayCredentialsWithSecretInputs } from "./call";
+import {
+  type ExplicitGatewayAuth,
+  isGatewaySecretRefUnavailableError,
+  resolveGatewayProbeCredentialsFromConfig,
+} from "./credentials";
+
+function buildGatewayProbeCredentialPolicy(params: {
+  cfg: PowerDirectorConfig;
+  mode: "local" | "remote";
+  env?: NodeJS.ProcessEnv;
+  explicitAuth?: ExplicitGatewayAuth;
+}) {
+  return {
+    config: params.cfg,
+    cfg: params.cfg,
+    env: params.env,
+    explicitAuth: params.explicitAuth,
+    modeOverride: params.mode,
+    mode: params.mode,
+    includeLegacyEnv: false,
+    remoteTokenFallback: "remote-only" as const,
+  };
+}
 
 export function resolveGatewayProbeAuth(params: {
   cfg: PowerDirectorConfig;
   mode: "local" | "remote";
   env?: NodeJS.ProcessEnv;
 }): { token?: string; password?: string } {
-  const env = params.env ?? process.env;
-  const authToken = params.cfg.gateway?.auth?.token;
-  const authPassword = params.cfg.gateway?.auth?.password;
-  const remote = params.cfg.gateway?.remote;
+  const policy = buildGatewayProbeCredentialPolicy(params);
+  return resolveGatewayProbeCredentialsFromConfig(policy);
+}
 
-  const token =
-    params.mode === "remote"
-      ? typeof remote?.token === "string" && remote.token.trim()
-        ? remote.token.trim()
-        : undefined
-      : env.POWERDIRECTOR_GATEWAY_TOKEN?.trim() ||
-        (typeof authToken === "string" && authToken.trim() ? authToken.trim() : undefined);
+export async function resolveGatewayProbeAuthWithSecretInputs(params: {
+  cfg: PowerDirectorConfig;
+  mode: "local" | "remote";
+  env?: NodeJS.ProcessEnv;
+  explicitAuth?: ExplicitGatewayAuth;
+}): Promise<{ token?: string; password?: string }> {
+  const policy = buildGatewayProbeCredentialPolicy(params);
+  return await resolveGatewayCredentialsWithSecretInputs({
+    config: policy.config,
+    env: policy.env,
+    explicitAuth: policy.explicitAuth,
+    modeOverride: policy.modeOverride,
+    includeLegacyEnv: policy.includeLegacyEnv,
+    remoteTokenFallback: policy.remoteTokenFallback,
+  });
+}
 
-  const password =
-    env.POWERDIRECTOR_GATEWAY_PASSWORD?.trim() ||
-    (params.mode === "remote"
-      ? typeof remote?.password === "string" && remote.password.trim()
-        ? remote.password.trim()
-        : undefined
-      : typeof authPassword === "string" && authPassword.trim()
-        ? authPassword.trim()
-        : undefined);
+export function resolveGatewayProbeAuthSafe(params: {
+  cfg: PowerDirectorConfig;
+  mode: "local" | "remote";
+  env?: NodeJS.ProcessEnv;
+  explicitAuth?: ExplicitGatewayAuth;
+}): {
+  auth: { token?: string; password?: string };
+  warning?: string;
+} {
+  const explicitToken = params.explicitAuth?.token?.trim();
+  const explicitPassword = params.explicitAuth?.password?.trim();
+  if (explicitToken || explicitPassword) {
+    return {
+      auth: {
+        ...(explicitToken ? { token: explicitToken } : {}),
+        ...(explicitPassword ? { password: explicitPassword } : {}),
+      },
+    };
+  }
 
-  return { token, password };
+  try {
+    return { auth: resolveGatewayProbeAuth(params) };
+  } catch (error) {
+    if (!isGatewaySecretRefUnavailableError(error)) {
+      throw error;
+    }
+    return {
+      auth: {},
+      warning: `${error.path} SecretRef is unresolved in this command path; probing without configured auth credentials.`,
+    };
+  }
 }

@@ -1,6 +1,6 @@
-import { createDraftStreamLoop } from '../channels/draft-stream-loop';
-import { deleteSlackMessage, editSlackMessage } from './actions';
-import { sendMessageSlack } from './send';
+import { createDraftStreamLoop } from "../channels/draft-stream-loop";
+import { deleteSlackMessage, editSlackMessage } from "./actions";
+import { sendMessageSlack } from "./send";
 
 const SLACK_STREAM_MAX_CHARS = 4000;
 const DEFAULT_THROTTLE_MS = 1000;

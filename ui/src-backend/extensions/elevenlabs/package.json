@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/elevenlabs-speech",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector ElevenLabs speech plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

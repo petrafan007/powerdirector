@@ -1,34 +1,37 @@
 import type { ChannelType, Client, User } from "@buape/carbon";
-import type { HistoryEntry } from '../../auto-reply/reply/history';
-import type { ReplyToMode } from '../../config/config';
-import type { resolveAgentRoute } from '../../routing/resolve-route';
-import type { DiscordChannelConfigResolved, DiscordGuildEntryResolved } from './allow-list';
-import type { DiscordChannelInfo } from './message-utils';
-import type { DiscordSenderIdentity } from './sender-identity';
+import type { HistoryEntry } from "../../auto-reply/reply/history";
+import type { ReplyToMode } from "../../config/config";
+import type { SessionBindingRecord } from "../../infra/outbound/session-binding-service";
+import type { resolveAgentRoute } from "../../routing/resolve-route";
+import type { DiscordChannelConfigResolved, DiscordGuildEntryResolved } from "./allow-list";
+import type { DiscordChannelInfo } from "./message-utils";
+import type { DiscordThreadBindingLookup } from "./reply-delivery";
+import type { DiscordSenderIdentity } from "./sender-identity";
 
-export type { DiscordSenderIdentity } from './sender-identity';
-import type { DiscordThreadChannel } from './threading';
+export type { DiscordSenderIdentity } from "./sender-identity";
+import type { DiscordThreadChannel } from "./threading";
 
-export type LoadedConfig = ReturnType<typeof import('../../config/config').loadConfig>;
-export type RuntimeEnv = import('../../runtime').RuntimeEnv;
+export type LoadedConfig = ReturnType<typeof import("../../config/config").loadConfig>;
+export type RuntimeEnv = import("../../runtime").RuntimeEnv;
 
-export type DiscordMessageEvent = import('./listeners').DiscordMessageEvent;
+export type DiscordMessageEvent = import("./listeners").DiscordMessageEvent;
 
 export type DiscordMessagePreflightContext = {
   cfg: LoadedConfig;
   discordConfig: NonNullable<
-    import('../../config/config').PowerDirectorConfig["channels"]
+    import("../../config/config").PowerDirectorConfig["channels"]
   >["discord"];
   accountId: string;
   token: string;
   runtime: RuntimeEnv;
   botUserId?: string;
+  abortSignal?: AbortSignal;
   guildHistories: Map<string, HistoryEntry[]>;
   historyLimit: number;
   mediaMaxBytes: number;
   textLimit: number;
   replyToMode: ReplyToMode;
-  ackReactionScope: "all" | "direct" | "group-all" | "group-mentions";
+  ackReactionScope: "all" | "direct" | "group-all" | "group-mentions" | "off" | "none";
   groupPolicy: "open" | "disabled" | "allowlist";
 
   data: DiscordMessageEvent;
@@ -51,6 +54,9 @@ export type DiscordMessagePreflightContext = {
   wasMentioned: boolean;
 
   route: ReturnType<typeof resolveAgentRoute>;
+  threadBinding?: SessionBindingRecord;
+  boundSessionKey?: string;
+  boundAgentId?: string;
 
   guildInfo: DiscordGuildEntryResolved | null;
   guildSlug: string;
@@ -79,6 +85,8 @@ export type DiscordMessagePreflightContext = {
   canDetectMention: boolean;
 
   historyEntry?: HistoryEntry;
+  threadBindings: DiscordThreadBindingLookup;
+  discordRestFetch?: typeof fetch;
 };
 
 export type DiscordMessagePreflightParams = {
@@ -88,6 +96,7 @@ export type DiscordMessagePreflightParams = {
   token: string;
   runtime: RuntimeEnv;
   botUserId?: string;
+  abortSignal?: AbortSignal;
   guildHistories: Map<string, HistoryEntry[]>;
   historyLimit: number;
   mediaMaxBytes: number;
@@ -100,6 +109,8 @@ export type DiscordMessagePreflightParams = {
   guildEntries?: Record<string, DiscordGuildEntryResolved>;
   ackReactionScope: DiscordMessagePreflightContext["ackReactionScope"];
   groupPolicy: DiscordMessagePreflightContext["groupPolicy"];
+  threadBindings: DiscordThreadBindingLookup;
+  discordRestFetch?: typeof fetch;
   data: DiscordMessageEvent;
   client: Client;
 };

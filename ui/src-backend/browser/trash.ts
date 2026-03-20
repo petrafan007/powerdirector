@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { runExec } from '../process/exec';
+import { generateSecureToken } from "../infra/secure-random";
+import { runExec } from "../process/exec";
 
 export async function movePathToTrash(targetPath: string): Promise<string> {
   try {
@@ -13,7 +14,7 @@ export async function movePathToTrash(targetPath: string): Promise<string> {
     const base = path.basename(targetPath);
     let dest = path.join(trashDir, `${base}-${Date.now()}`);
     if (fs.existsSync(dest)) {
-      dest = path.join(trashDir, `${base}-${Date.now()}-${Math.random()}`);
+      dest = path.join(trashDir, `${base}-${Date.now()}-${generateSecureToken(6)}`);
     }
     fs.renameSync(targetPath, dest);
     return dest;

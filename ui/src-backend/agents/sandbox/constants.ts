@@ -1,6 +1,6 @@
 import path from "node:path";
-import { CHANNEL_IDS } from '../../channels/registry';
-import { STATE_DIR } from '../../config/config';
+import { CHANNEL_IDS } from "../../channels/ids";
+import { STATE_DIR } from "../../config/paths";
 
 export const DEFAULT_SANDBOX_WORKSPACE_ROOT = path.join(STATE_DIR, "sandboxes");
 
@@ -22,6 +22,7 @@ export const DEFAULT_TOOL_ALLOW = [
   "sessions_history",
   "sessions_send",
   "sessions_spawn",
+  "sessions_yield",
   "subagents",
   "session_status",
 ] as const;
@@ -38,8 +39,10 @@ export const DEFAULT_TOOL_DENY = [
 
 export const DEFAULT_SANDBOX_BROWSER_IMAGE = "powerdirector-sandbox-browser:bookworm-slim";
 export const DEFAULT_SANDBOX_COMMON_IMAGE = "powerdirector-sandbox-common:bookworm-slim";
+export const SANDBOX_BROWSER_SECURITY_HASH_EPOCH = "2026-02-28-no-sandbox-env";
 
 export const DEFAULT_SANDBOX_BROWSER_PREFIX = "powerdirector-sbx-browser-";
+export const DEFAULT_SANDBOX_BROWSER_NETWORK = "powerdirector-sandbox-browser";
 export const DEFAULT_SANDBOX_BROWSER_CDP_PORT = 9222;
 export const DEFAULT_SANDBOX_BROWSER_VNC_PORT = 5900;
 export const DEFAULT_SANDBOX_BROWSER_NOVNC_PORT = 6080;

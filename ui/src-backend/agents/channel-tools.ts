@@ -1,13 +1,13 @@
-import { getChannelDock } from '../channels/dock';
-import { getChannelPlugin, listChannelPlugins } from '../channels/plugins/index';
-import type {
-  ChannelAgentTool,
-  ChannelMessageActionName,
-  ChannelPlugin,
-} from '../channels/plugins/types';
-import { normalizeAnyChannelId } from '../channels/registry';
-import type { PowerDirectorConfig } from '../config/config';
-import { defaultRuntime } from '../runtime';
+import { getChannelPlugin, listChannelPlugins } from "../channels/plugins/index";
+import {
+  createMessageActionDiscoveryContext,
+  resolveMessageActionDiscoveryForPlugin,
+  resolveMessageActionDiscoveryChannelId,
+  __testing as messageActionTesting,
+} from "../channels/plugins/message-action-discovery";
+import type { ChannelAgentTool, ChannelMessageActionName } from "../channels/plugins/types";
+import { normalizeAnyChannelId } from "../channels/registry";
+import type { PowerDirectorConfig } from "../config/config";
 
 /**
  * Get the list of supported message actions for a specific channel.
@@ -16,16 +16,29 @@ import { defaultRuntime } from '../runtime';
 export function listChannelSupportedActions(params: {
   cfg?: PowerDirectorConfig;
   channel?: string;
+  currentChannelId?: string | null;
+  currentThreadTs?: string | null;
+  currentMessageId?: string | number | null;
+  accountId?: string | null;
+  sessionKey?: string | null;
+  sessionId?: string | null;
+  agentId?: string | null;
+  requesterSenderId?: string | null;
 }): ChannelMessageActionName[] {
-  if (!params.channel) {
+  const channelId = resolveMessageActionDiscoveryChannelId(params.channel);
+  if (!channelId) {
     return [];
   }
-  const plugin = getChannelPlugin(params.channel as Parameters<typeof getChannelPlugin>[0]);
-  if (!plugin?.actions?.listActions) {
+  const plugin = getChannelPlugin(channelId as Parameters<typeof getChannelPlugin>[0]);
+  if (!plugin?.actions) {
     return [];
   }
-  const cfg = params.cfg ?? ({} as PowerDirectorConfig);
-  return runPluginListActions(plugin, cfg);
+  return resolveMessageActionDiscoveryForPlugin({
+    pluginId: plugin.id,
+    actions: plugin.actions,
+    context: createMessageActionDiscoveryContext(params),
+    includeActions: true,
+  }).actions;
 }
 
 /**
@@ -33,14 +46,26 @@ export function listChannelSupportedActions(params: {
  */
 export function listAllChannelSupportedActions(params: {
   cfg?: PowerDirectorConfig;
+  currentChannelId?: string | null;
+  currentThreadTs?: string | null;
+  currentMessageId?: string | number | null;
+  accountId?: string | null;
+  sessionKey?: string | null;
+  sessionId?: string | null;
+  agentId?: string | null;
+  requesterSenderId?: string | null;
 }): ChannelMessageActionName[] {
   const actions = new Set<ChannelMessageActionName>();
   for (const plugin of listChannelPlugins()) {
-    if (!plugin.actions?.listActions) {
-      continue;
-    }
-    const cfg = params.cfg ?? ({} as PowerDirectorConfig);
-    const channelActions = runPluginListActions(plugin, cfg);
+    const channelActions = resolveMessageActionDiscoveryForPlugin({
+      pluginId: plugin.id,
+      actions: plugin.actions,
+      context: createMessageActionDiscoveryContext({
+        ...params,
+        currentChannelProvider: plugin.id,
+      }),
+      includeActions: true,
+    }).actions;
     for (const action of channelActions) {
       actions.add(action);
     }
@@ -73,8 +98,7 @@ export function resolveChannelMessageToolHints(params: {
   if (!channelId) {
     return [];
   }
-  const dock = getChannelDock(channelId);
-  const resolve = dock?.agentPrompt?.messageToolHints;
+  const resolve = getChannelPlugin(channelId)?.agentPrompt?.messageToolHints;
   if (!resolve) {
     return [];
   }
@@ -84,38 +108,8 @@ export function resolveChannelMessageToolHints(params: {
     .filter(Boolean);
 }
 
-const loggedListActionErrors = new Set<string>();
-
-function runPluginListActions(
-  plugin: ChannelPlugin,
-  cfg: PowerDirectorConfig,
-): ChannelMessageActionName[] {
-  if (!plugin.actions?.listActions) {
-    return [];
-  }
-  try {
-    const listed = plugin.actions.listActions({ cfg });
-    return Array.isArray(listed) ? listed : [];
-  } catch (err) {
-    logListActionsError(plugin.id, err);
-    return [];
-  }
-}
-
-function logListActionsError(pluginId: string, err: unknown) {
-  const message = err instanceof Error ? err.message : String(err);
-  const key = `${pluginId}:${message}`;
-  if (loggedListActionErrors.has(key)) {
-    return;
-  }
-  loggedListActionErrors.add(key);
-  const stack = err instanceof Error && err.stack ? err.stack : null;
-  const details = stack ?? message;
-  defaultRuntime.error?.(`[channel-tools] ${pluginId}.actions.listActions failed: ${details}`);
-}
-
 export const __testing = {
   resetLoggedListActionErrors() {
-    loggedListActionErrors.clear();
+    messageActionTesting.resetLoggedMessageActionErrors();
   },
 };

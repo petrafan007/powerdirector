@@ -2,7 +2,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, vi } from "vitest";
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import type { MockFn } from "../test-utils/vitest-mock-fn";
+import type { LegacyStateDetection } from "./doctor-state-migrations";
 
 let originalIsTTY: boolean | undefined;
 let originalStateDir: string | undefined;
@@ -41,7 +42,7 @@ function createCommandWithTimeoutResult() {
 
 function createLegacyConfigSnapshot() {
   return {
-    path: "/tmp/powerdirector.config.json",
+    path: "/tmp/powerdirector.json",
     exists: false,
     raw: null,
     parsed: {},
@@ -113,7 +114,7 @@ export const autoMigrateLegacyStateDir = vi.fn().mockResolvedValue({
 function createLegacyStateMigrationDetectionResult(params?: {
   hasLegacySessions?: boolean;
   preview?: string[];
-}) {
+}): LegacyStateDetection {
   return {
     targetAgentId: "main",
     targetMainKey: "main",
@@ -139,9 +140,8 @@ function createLegacyStateMigrationDetectionResult(params?: {
       hasLegacy: false,
     },
     pairingAllowFrom: {
-      legacyTelegramPath: "/tmp/oauth/telegram-allowFrom.json",
-      targetTelegramPath: "/tmp/oauth/telegram-default-allowFrom.json",
       hasLegacyTelegram: false,
+      copyPlans: [],
     },
     preview: params?.preview ?? [],
   };
@@ -157,7 +157,7 @@ export const runLegacyStateMigrations = vi.fn().mockResolvedValue({
 }) as unknown as MockFn;
 
 const DEFAULT_CONFIG_SNAPSHOT = {
-  path: "/tmp/powerdirector.config.json",
+  path: "/tmp/powerdirector.json",
   exists: true,
   raw: "{}",
   parsed: {},
@@ -175,19 +175,19 @@ vi.mock("@clack/prompts", () => ({
   select,
 }));
 
-vi.mock("../agents/skills-status.js", () => ({
+vi.mock("../agents/skills-status", () => ({
   buildWorkspaceSkillStatus: () => ({ skills: [] }),
 }));
 
-vi.mock("../plugins/loader.js", () => ({
+vi.mock("../plugins/loader", () => ({
   loadPowerDirectorPlugins: () => ({ plugins: [], diagnostics: [] }),
 }));
 
-vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+vi.mock("../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
-    CONFIG_PATH: "/tmp/powerdirector.config.json",
+    CONFIG_PATH: "/tmp/powerdirector.json",
     createConfigIO,
     readConfigFileSnapshot,
     writeConfigFile,
@@ -195,50 +195,50 @@ vi.mock("../config/config.js", async (importOriginal) => {
   };
 });
 
-vi.mock("../daemon/legacy.js", () => ({
+vi.mock("../daemon/legacy", () => ({
   findLegacyGatewayServices,
   uninstallLegacyGatewayServices,
 }));
 
-vi.mock("../daemon/inspect.js", () => ({
+vi.mock("../daemon/inspect", () => ({
   findExtraGatewayServices,
   renderGatewayServiceCleanupHints,
 }));
 
-vi.mock("../daemon/program-args.js", () => ({
+vi.mock("../daemon/program-args", () => ({
   resolveGatewayProgramArguments,
 }));
 
-vi.mock("../gateway/call.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../gateway/call')>();
+vi.mock("../gateway/call", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../gateway/call")>();
   return {
     ...actual,
     callGateway,
   };
 });
 
-vi.mock("../process/exec.js", () => ({
+vi.mock("../process/exec", () => ({
   runExec,
   runCommandWithTimeout,
 }));
 
-vi.mock("../infra/powerdirector-root.js", () => ({
+vi.mock("../infra/powerdirector-root", () => ({
   resolvePowerDirectorPackageRoot,
 }));
 
-vi.mock("../infra/update-runner.js", () => ({
+vi.mock("../infra/update-runner", () => ({
   runGatewayUpdate,
 }));
 
-vi.mock("../agents/auth-profiles.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../agents/auth-profiles')>();
+vi.mock("../agents/auth-profiles", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../agents/auth-profiles")>();
   return {
     ...actual,
     ensureAuthProfileStore,
   };
 });
 
-vi.mock("../daemon/service.js", () => ({
+vi.mock("../daemon/service", () => ({
   resolveGatewayService: () => ({
     label: "LaunchAgent",
     loadedText: "loaded",
@@ -253,16 +253,16 @@ vi.mock("../daemon/service.js", () => ({
   }),
 }));
 
-vi.mock("../pairing/pairing-store.js", () => ({
+vi.mock("../pairing/pairing-store", () => ({
   readChannelAllowFromStore: vi.fn().mockResolvedValue([]),
   upsertChannelPairingRequest: vi.fn().mockResolvedValue({ code: "000000", created: false }),
 }));
 
-vi.mock("../telegram/token.js", () => ({
+vi.mock("@/src-backend/extensions/telegram/api", () => ({
   resolveTelegramToken: vi.fn(() => ({ token: "", source: "none" })),
 }));
 
-vi.mock("../runtime.js", () => ({
+vi.mock("../runtime", () => ({
   defaultRuntime: {
     log: () => {},
     error: () => {},
@@ -272,8 +272,8 @@ vi.mock("../runtime.js", () => ({
   },
 }));
 
-vi.mock("../utils.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../utils')>();
+vi.mock("../utils", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../utils")>();
   return {
     ...actual,
     resolveUserPath: (value: string) => value,
@@ -281,11 +281,11 @@ vi.mock("../utils.js", async (importOriginal) => {
   };
 });
 
-vi.mock("./health.js", () => ({
+vi.mock("./health", () => ({
   healthCommand: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("./onboard-helpers.js", () => ({
+vi.mock("./onboard-helpers", () => ({
   applyWizardMetadata: (cfg: Record<string, unknown>) => cfg,
   DEFAULT_WORKSPACE: "/tmp",
   guardCancel: (value: unknown) => value,
@@ -293,7 +293,7 @@ vi.mock("./onboard-helpers.js", () => ({
   randomToken: vi.fn(() => "test-gateway-token"),
 }));
 
-vi.mock("./doctor-state-migrations.js", () => ({
+vi.mock("./doctor-state-migrations", () => ({
   autoMigrateLegacyStateDir,
   detectLegacyStateMigrations,
   runLegacyStateMigrations,
@@ -334,7 +334,7 @@ export async function arrangeLegacyStateMigrationTest(): Promise<{
 }> {
   mockDoctorConfigSnapshot();
 
-  const { doctorCommand } = await import('./doctor');
+  const { doctorCommand } = await import("./doctor");
   const runtime = createDoctorRuntime();
 
   detectLegacyStateMigrations.mockClear();

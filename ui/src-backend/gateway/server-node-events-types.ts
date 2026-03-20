@@ -1,9 +1,9 @@
-import type { ModelCatalogEntry } from '../agents/model-catalog';
-import type { CliDeps } from '../cli/deps';
-import type { HealthSummary } from '../commands/health';
-import type { ChatAbortControllerEntry } from './chat-abort';
-import type { ChatRunEntry } from './server-chat';
-import type { DedupeEntry } from './server-shared';
+import type { ModelCatalogEntry } from "../agents/model-catalog";
+import type { CliDeps } from "../cli/deps";
+import type { HealthSummary } from "../commands/health";
+import type { ChatAbortControllerEntry } from "./chat-abort";
+import type { ChatRunEntry } from "./server-chat";
+import type { DedupeEntry } from "./server-shared";
 
 export type NodeEventContext = {
   deps: CliDeps;

@@ -1,14 +1,14 @@
-import { normalizeGroupActivation } from '../../../auto-reply/group-activation';
-import type { loadConfig } from '../../../config/config';
+import { normalizeGroupActivation } from "../../../auto-reply/group-activation";
+import type { loadConfig } from "../../../config/config";
 import {
   resolveChannelGroupPolicy,
   resolveChannelGroupRequireMention,
-} from '../../../config/group-policy';
+} from "../../../config/group-policy";
 import {
   loadSessionStore,
   resolveGroupSessionKey,
   resolveStorePath,
-} from '../../../config/sessions';
+} from "../../../config/sessions";
 
 export function resolveGroupPolicyFor(cfg: ReturnType<typeof loadConfig>, conversationId: string) {
   const groupId = resolveGroupSessionKey({
@@ -16,10 +16,17 @@ export function resolveGroupPolicyFor(cfg: ReturnType<typeof loadConfig>, conver
     ChatType: "group",
     Provider: "whatsapp",
   })?.id;
+  const whatsappCfg = cfg.channels?.whatsapp as
+    | { groupAllowFrom?: string[]; allowFrom?: string[] }
+    | undefined;
+  const hasGroupAllowFrom = Boolean(
+    whatsappCfg?.groupAllowFrom?.length || whatsappCfg?.allowFrom?.length,
+  );
   return resolveChannelGroupPolicy({
     cfg,
     channel: "whatsapp",
     groupId: groupId ?? conversationId,
+    hasGroupAllowFrom,
   });
 }
 

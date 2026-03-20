@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/sglang-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector SGLang provider plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

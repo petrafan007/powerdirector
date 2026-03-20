@@ -148,39 +148,39 @@ export function resetSlackTestState(config: Record<string, unknown> = defaultSla
   getSlackHandlers()?.clear();
 }
 
-vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+vi.mock("../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
     loadConfig: () => slackTestState.config,
   };
 });
 
-vi.mock("../auto-reply/reply.js", () => ({
+vi.mock("../auto-reply/reply", () => ({
   getReplyFromConfig: (...args: unknown[]) => slackTestState.replyMock(...args),
 }));
 
-vi.mock("./resolve-channels.js", () => ({
+vi.mock("./resolve-channels", () => ({
   resolveSlackChannelAllowlist: async ({ entries }: { entries: string[] }) =>
     entries.map((input) => ({ input, resolved: false })),
 }));
 
-vi.mock("./resolve-users.js", () => ({
+vi.mock("./resolve-users", () => ({
   resolveSlackUserAllowlist: async ({ entries }: { entries: string[] }) =>
     entries.map((input) => ({ input, resolved: false })),
 }));
 
-vi.mock("./send.js", () => ({
+vi.mock("./send", () => ({
   sendMessageSlack: (...args: unknown[]) => slackTestState.sendMock(...args),
 }));
 
-vi.mock("../pairing/pairing-store.js", () => ({
+vi.mock("../pairing/pairing-store", () => ({
   readChannelAllowFromStore: (...args: unknown[]) => slackTestState.readAllowFromStoreMock(...args),
   upsertChannelPairingRequest: (...args: unknown[]) =>
     slackTestState.upsertPairingRequestMock(...args),
 }));
 
-vi.mock("../config/sessions.js", () => ({
+vi.mock("../config/sessions", () => ({
   resolveStorePath: vi.fn(() => "/tmp/powerdirector-sessions.json"),
   updateLastRoute: (...args: unknown[]) => slackTestState.updateLastRouteMock(...args),
   resolveSessionKey: vi.fn(),

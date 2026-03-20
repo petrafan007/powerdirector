@@ -1,14 +1,14 @@
 import type { Command } from "commander";
 import { formatTimeAgo } from "../../infra/format-time/format-relative.ts";
-import { defaultRuntime } from '../../runtime';
-import { renderTable } from '../../terminal/table';
-import { shortenHomeInString } from '../../utils';
-import { parseDurationMs } from '../parse-duration';
-import { getNodesTheme, runNodesCommand } from './cli-utils';
-import { formatPermissions, parseNodeList, parsePairingList } from './format';
-import { renderPendingPairingRequestsTable } from './pairing-render';
-import { callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
-import type { NodesRpcOpts } from './types';
+import { defaultRuntime } from "../../runtime";
+import { getTerminalTableWidth, renderTable } from "../../terminal/table";
+import { shortenHomeInString } from "../../utils";
+import { parseDurationMs } from "../parse-duration";
+import { getNodesTheme, runNodesCommand } from "./cli-utils";
+import { formatPermissions, parseNodeList, parsePairingList } from "./format";
+import { renderPendingPairingRequestsTable } from "./pairing-render";
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc";
+import type { NodesRpcOpts } from "./types";
 
 function formatVersionLabel(raw: string) {
   const trimmed = raw.trim();
@@ -112,7 +112,7 @@ export function registerNodesStatusCommands(nodes: Command) {
           const obj: Record<string, unknown> =
             typeof result === "object" && result !== null ? result : {};
           const { ok, warn, muted } = getNodesTheme();
-          const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+          const tableWidth = getTerminalTableWidth();
           const now = Date.now();
           const nodes = parseNodeList(result);
           const lastConnectedById =
@@ -256,7 +256,7 @@ export function registerNodesStatusCommands(nodes: Command) {
           const status = `${paired ? ok("paired") : warn("unpaired")} · ${
             connected ? ok("connected") : muted("disconnected")
           }`;
-          const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+          const tableWidth = getTerminalTableWidth();
           const rows = [
             { Field: "ID", Value: nodeId },
             displayName ? { Field: "Name", Value: displayName } : null,
@@ -307,7 +307,7 @@ export function registerNodesStatusCommands(nodes: Command) {
           const result = await callGatewayCli("node.pair.list", opts, {});
           const { pending, paired } = parsePairingList(result);
           const { heading, muted, warn } = getNodesTheme();
-          const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+          const tableWidth = getTerminalTableWidth();
           const now = Date.now();
           const hasFilters = connectedOnly || sinceMs !== undefined;
           const pendingRows = hasFilters ? [] : pending;

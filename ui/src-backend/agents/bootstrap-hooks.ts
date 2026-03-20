@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentBootstrapHookContext } from '../hooks/internal-hooks';
-import { createInternalHookEvent, triggerInternalHook } from '../hooks/internal-hooks';
-import { resolveAgentIdFromSessionKey } from '../routing/session-key';
-import type { WorkspaceBootstrapFile } from './workspace';
+import type { PowerDirectorConfig } from "../config/config";
+import type { AgentBootstrapHookContext } from "../hooks/internal-hooks";
+import { createInternalHookEvent, triggerInternalHook } from "../hooks/internal-hooks";
+import { resolveAgentIdFromSessionKey } from "../routing/session-key";
+import type { WorkspaceBootstrapFile } from "./workspace";
 
 export async function applyBootstrapHookOverrides(params: {
   files: WorkspaceBootstrapFile[];

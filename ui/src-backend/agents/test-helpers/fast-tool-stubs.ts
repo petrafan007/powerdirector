@@ -15,16 +15,16 @@ export const stubTool = (name: string): StubTool => ({
   execute: vi.fn() as unknown as (...args: unknown[]) => unknown,
 });
 
-vi.mock("../tools/image-tool.js", () => ({
+vi.mock("../tools/image-tool", () => ({
   createImageTool: () => stubTool("image"),
 }));
 
-vi.mock("../tools/web-tools.js", () => ({
+vi.mock("../tools/web-tools", () => ({
   createWebSearchTool: () => null,
   createWebFetchTool: () => null,
 }));
 
-vi.mock("../../plugins/tools.js", () => ({
+vi.mock("../../plugins/tools", () => ({
   resolvePluginTools: () => [],
   getPluginToolMeta: () => undefined,
 }));

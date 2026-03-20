@@ -1,9 +1,9 @@
 import type { Command } from "commander";
-import { randomIdempotencyKey } from '../../gateway/call';
-import { defaultRuntime } from '../../runtime';
-import { getNodesTheme, runNodesCommand } from './cli-utils';
-import { callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
-import type { NodesRpcOpts } from './types';
+import { randomIdempotencyKey } from "../../gateway/call";
+import { defaultRuntime } from "../../runtime";
+import { getNodesTheme, runNodesCommand } from "./cli-utils";
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc";
+import type { NodesRpcOpts } from "./types";
 
 export function registerNodesNotifyCommand(nodes: Command) {
   nodesCallOpts(

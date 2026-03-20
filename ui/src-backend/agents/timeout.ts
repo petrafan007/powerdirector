@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from '../config/config';
+import type { PowerDirectorConfig } from "../config/config";
 
 const DEFAULT_AGENT_TIMEOUT_SECONDS = 600;
 const MAX_SAFE_TIMEOUT_MS = 2_147_000_000;

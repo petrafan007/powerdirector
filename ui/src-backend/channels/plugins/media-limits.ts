@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { normalizeAccountId } from '../../routing/session-key';
+import type { PowerDirectorConfig } from "../../config/config";
+import { normalizeAccountId } from "../../routing/session-key";
 
 const MB = 1024 * 1024;
 

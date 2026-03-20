@@ -1,5 +1,5 @@
-import type { MsgContext } from '../auto-reply/templating';
-import { normalizeChatType } from './chat-type';
+import type { MsgContext } from "../auto-reply/templating";
+import { normalizeChatType } from "./chat-type";
 
 function extractConversationId(from?: string): string | undefined {
   const trimmed = from?.trim();

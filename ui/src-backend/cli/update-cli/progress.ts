@@ -4,14 +4,13 @@ import type {
   UpdateRunResult,
   UpdateStepInfo,
   UpdateStepProgress,
-} from '../../infra/update-runner';
-import { defaultRuntime } from '../../runtime';
-import { theme } from '../../terminal/theme';
-import type { UpdateCommandOptions } from './shared';
+} from "../../infra/update-runner";
+import { defaultRuntime } from "../../runtime";
+import { theme } from "../../terminal/theme";
+import type { UpdateCommandOptions } from "./shared";
 
 const STEP_LABELS: Record<string, string> = {
   "clean check": "Working directory is clean",
-  "backup runtime files": "Backing up personal runtime files",
   "upstream check": "Upstream branch exists",
   "git fetch": "Fetching latest changes",
   "git rebase": "Rebasing onto target commit",
@@ -29,11 +28,44 @@ const STEP_LABELS: Record<string, string> = {
   "powerdirector doctor": "Running doctor checks",
   "git rev-parse HEAD (after)": "Verifying update",
   "global update": "Updating via package manager",
+  "global update (omit optional)": "Retrying update without optional deps",
   "global install": "Installing global package",
 };
 
 function getStepLabel(step: UpdateStepInfo): string {
   return STEP_LABELS[step.name] ?? step.name;
+}
+
+export function inferUpdateFailureHints(result: UpdateRunResult): string[] {
+  if (result.status !== "error" || result.mode !== "npm") {
+    return [];
+  }
+  const failedStep = [...result.steps].toReversed().find((step) => step.exitCode !== 0);
+  if (!failedStep) {
+    return [];
+  }
+
+  const stderr = (failedStep.stderrTail ?? "").toLowerCase();
+  const hints: string[] = [];
+
+  if (failedStep.name.startsWith("global update") && stderr.includes("eacces")) {
+    hints.push(
+      "Detected permission failure (EACCES). Re-run with a writable global prefix or sudo (for system-managed Node installs).",
+    );
+    hints.push("Example: npm config set prefix ~/.local && npm i -g powerdirector@latest");
+  }
+
+  if (
+    failedStep.name.startsWith("global update") &&
+    (stderr.includes("node-gyp") || stderr.includes("prebuild"))
+  ) {
+    hints.push(
+      "Detected native optional dependency build failure. The updater retries with --omit=optional automatically.",
+    );
+    hints.push("If it still fails: npm i -g powerdirector@latest --omit=optional");
+  }
+
+  return hints;
 }
 
 export type ProgressController = {
@@ -132,9 +164,6 @@ export function printResult(result: UpdateRunResult, opts: PrintResultOptions): 
     const after = result.after.version ?? result.after.sha?.slice(0, 8) ?? "";
     defaultRuntime.log(`  After: ${theme.muted(after)}`);
   }
-  if (result.backup?.backupDir) {
-    defaultRuntime.log(`  Backup: ${theme.muted(result.backup.backupDir)}`);
-  }
 
   if (!opts.hideSteps && result.steps.length > 0) {
     defaultRuntime.log("");
@@ -152,6 +181,15 @@ export function printResult(result: UpdateRunResult, opts: PrintResultOptions): 
           }
         }
       }
+    }
+  }
+
+  const hints = inferUpdateFailureHints(result);
+  if (hints.length > 0) {
+    defaultRuntime.log("");
+    defaultRuntime.log(theme.heading("Recovery hints:"));
+    for (const hint of hints) {
+      defaultRuntime.log(`  - ${theme.warn(hint)}`);
     }
   }
 

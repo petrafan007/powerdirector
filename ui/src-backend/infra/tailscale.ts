@@ -1,11 +1,11 @@
 import { existsSync } from "node:fs";
-import { formatCliCommand } from '../cli/command-format';
-import { promptYesNo } from '../cli/prompt';
-import { danger, info, logVerbose, shouldLogVerbose, warn } from '../globals';
-import { runExec } from '../process/exec';
-import { defaultRuntime, type RuntimeEnv } from '../runtime';
-import { colorize, isRich, theme } from '../terminal/theme';
-import { ensureBinary } from './binaries';
+import { formatCliCommand } from "../cli/command-format";
+import { promptYesNo } from "../cli/prompt";
+import { danger, info, logVerbose, shouldLogVerbose, warn } from "../globals";
+import { runExec } from "../process/exec";
+import { defaultRuntime, type RuntimeEnv } from "../runtime";
+import { colorize, isRich, theme } from "../terminal/theme";
+import { ensureBinary } from "./binaries";
 
 function parsePossiblyNoisyJsonObject(stdout: string): Record<string, unknown> {
   const trimmed = stdout.trim();

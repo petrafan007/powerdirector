@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { MessageCliHelpers } from './helpers';
+import type { MessageCliHelpers } from "./helpers";
 
 export function registerMessageReadEditDeleteCommands(
   message: Command,

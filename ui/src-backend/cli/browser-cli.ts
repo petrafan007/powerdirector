@@ -1,20 +1,19 @@
 import type { Command } from "commander";
-import { danger } from '../globals';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { registerBrowserActionInputCommands } from './browser-cli-actions-input';
-import { registerBrowserActionObserveCommands } from './browser-cli-actions-observe';
-import { registerBrowserDebugCommands } from './browser-cli-debug';
-import { browserActionExamples, browserCoreExamples } from './browser-cli-examples';
-import { registerBrowserExtensionCommands } from './browser-cli-extension';
-import { registerBrowserInspectCommands } from './browser-cli-inspect';
-import { registerBrowserManageCommands } from './browser-cli-manage';
-import type { BrowserParentOpts } from './browser-cli-shared';
-import { registerBrowserStateCommands } from './browser-cli-state';
-import { formatCliCommand } from './command-format';
-import { addGatewayClientOptions } from './gateway-rpc';
-import { formatHelpExamples } from './help-format';
+import { danger } from "../globals";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { registerBrowserActionInputCommands } from "./browser-cli-actions-input";
+import { registerBrowserActionObserveCommands } from "./browser-cli-actions-observe";
+import { registerBrowserDebugCommands } from "./browser-cli-debug";
+import { browserActionExamples, browserCoreExamples } from "./browser-cli-examples";
+import { registerBrowserInspectCommands } from "./browser-cli-inspect";
+import { registerBrowserManageCommands } from "./browser-cli-manage";
+import type { BrowserParentOpts } from "./browser-cli-shared";
+import { registerBrowserStateCommands } from "./browser-cli-state";
+import { formatCliCommand } from "./command-format";
+import { addGatewayClientOptions } from "./gateway-rpc";
+import { formatHelpExamples } from "./help-format";
 
 export function registerBrowserCli(program: Command) {
   const browser = program
@@ -46,7 +45,6 @@ export function registerBrowserCli(program: Command) {
   const parentOpts = (cmd: Command) => cmd.parent?.opts?.() as BrowserParentOpts;
 
   registerBrowserManageCommands(browser, parentOpts);
-  registerBrowserExtensionCommands(browser, parentOpts);
   registerBrowserInspectCommands(browser, parentOpts);
   registerBrowserActionInputCommands(browser, parentOpts);
   registerBrowserActionObserveCommands(browser, parentOpts);

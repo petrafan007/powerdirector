@@ -33,15 +33,15 @@ export function setupAccessControlTestHarness(): void {
   });
 }
 
-vi.mock("../../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../config/config')>();
+vi.mock("../../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../config/config")>();
   return {
     ...actual,
     loadConfig: () => config,
   };
 });
 
-vi.mock("../../pairing/pairing-store.js", () => ({
+vi.mock("../../pairing/pairing-store", () => ({
   readChannelAllowFromStore: (...args: unknown[]) => readAllowFromStoreMock(...args),
   upsertChannelPairingRequest: (...args: unknown[]) => upsertPairingRequestMock(...args),
 }));

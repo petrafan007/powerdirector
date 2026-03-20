@@ -1,16 +1,16 @@
-import type { ModelCatalogEntry } from '../../agents/model-catalog';
-import type { createDefaultDeps } from '../../cli/deps';
-import type { HealthSummary } from '../../commands/health';
-import type { CronService } from '../../cron/service';
-import type { createSubsystemLogger } from '../../logging/subsystem';
-import type { WizardSession } from '../../wizard/session';
-import type { ChatAbortControllerEntry } from '../chat-abort';
-import type { ExecApprovalManager } from '../exec-approval-manager';
-import type { NodeRegistry } from '../node-registry';
-import type { ConnectParams, ErrorShape, RequestFrame } from '../protocol/index';
-import type { GatewayBroadcastFn, GatewayBroadcastToConnIdsFn } from '../server-broadcast';
-import type { ChannelRuntimeSnapshot } from '../server-channels';
-import type { DedupeEntry } from '../server-shared';
+import type { ModelCatalogEntry } from "../../agents/model-catalog";
+import type { createDefaultDeps } from "../../cli/deps";
+import type { HealthSummary } from "../../commands/health";
+import type { CronService } from "../../cron/service";
+import type { createSubsystemLogger } from "../../logging/subsystem";
+import type { WizardSession } from "../../wizard/session";
+import type { ChatAbortControllerEntry } from "../chat-abort";
+import type { ExecApprovalManager } from "../exec-approval-manager";
+import type { NodeRegistry } from "../node-registry";
+import type { ConnectParams, ErrorShape, RequestFrame } from "../protocol/index";
+import type { GatewayBroadcastFn, GatewayBroadcastToConnIdsFn } from "../server-broadcast";
+import type { ChannelRuntimeSnapshot } from "../server-channels";
+import type { DedupeEntry } from "../server-shared";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 
@@ -18,6 +18,13 @@ export type GatewayClient = {
   connect: ConnectParams;
   connId?: string;
   clientIp?: string;
+  canvasHostUrl?: string;
+  canvasCapability?: string;
+  canvasCapabilityExpiresAtMs?: number;
+  /** Internal-only auth context that cannot be supplied through gateway RPC payloads. */
+  internal?: {
+    allowModelOverride?: boolean;
+  };
 };
 
 export type RespondFn = (
@@ -47,6 +54,7 @@ export type GatewayRequestContext = {
   nodeUnsubscribe: (nodeId: string, sessionKey: string) => void;
   nodeUnsubscribeAll: (nodeId: string) => void;
   hasConnectedMobileNode: () => boolean;
+  hasExecApprovalClients?: () => boolean;
   nodeRegistry: NodeRegistry;
   agentRunSeq: Map<string, number>;
   chatAbortControllers: Map<string, ChatAbortControllerEntry>;
@@ -59,6 +67,12 @@ export type GatewayRequestContext = {
     clientRunId: string,
     sessionKey?: string,
   ) => { sessionKey: string; clientRunId: string } | undefined;
+  subscribeSessionEvents: (connId: string) => void;
+  unsubscribeSessionEvents: (connId: string) => void;
+  subscribeSessionMessageEvents: (connId: string, sessionKey: string) => void;
+  unsubscribeSessionMessageEvents: (connId: string, sessionKey: string) => void;
+  unsubscribeAllSessionEvents: (connId: string) => void;
+  getSessionEventSubscriberConnIds: () => ReadonlySet<string>;
   registerToolEventRecipient: (runId: string, connId: string) => void;
   dedupe: Map<string, DedupeEntry>;
   wizardSessions: Map<string, WizardSession>;
@@ -66,22 +80,22 @@ export type GatewayRequestContext = {
   purgeWizardSession: (id: string) => void;
   getRuntimeSnapshot: () => ChannelRuntimeSnapshot;
   startChannel: (
-    channel: import('../../channels/plugins/types').ChannelId,
+    channel: import("../../channels/plugins/types").ChannelId,
     accountId?: string,
   ) => Promise<void>;
   stopChannel: (
-    channel: import('../../channels/plugins/types').ChannelId,
+    channel: import("../../channels/plugins/types").ChannelId,
     accountId?: string,
   ) => Promise<void>;
   markChannelLoggedOut: (
-    channelId: import('../../channels/plugins/types').ChannelId,
+    channelId: import("../../channels/plugins/types").ChannelId,
     cleared: boolean,
     accountId?: string,
   ) => void;
   wizardRunner: (
-    opts: import('../../commands/onboard-types').OnboardOptions,
-    runtime: import('../../runtime').RuntimeEnv,
-    prompter: import('../../wizard/prompts').WizardPrompter,
+    opts: import("../../commands/onboard-types").OnboardOptions,
+    runtime: import("../../runtime").RuntimeEnv,
+    prompter: import("../../wizard/prompts").WizardPrompter,
   ) => Promise<void>;
   broadcastVoiceWakeChanged: (triggers: string[]) => void;
 };

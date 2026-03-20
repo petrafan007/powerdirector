@@ -230,7 +230,7 @@ describe("Agent tool intent repair", () => {
 
     const responses = [
       "I will read the log file first. I'll use `run_shell_command` with `cat` because the file is outside the workspace.",
-      '```json\n{"tool":"shell","args":{"cmd":"cat /tmp/openclaw/openclaw-2026-03-09.log"}}\n```',
+      '```json\n{"tool":"shell","args":{"cmd":"cat /tmp/powerdirector/powerdirector-2026-03-09.log"}}\n```',
       "The log tail is ready.",
     ];
     const executeStream = vi.fn(async () => ({
@@ -251,12 +251,12 @@ describe("Agent tool intent repair", () => {
       { maxTurns: 6 },
     );
 
-    await expect(agent.runStep(sessionId, "Inspect the OpenClaw log.")).resolves.toBe("The log tail is ready.");
+    await expect(agent.runStep(sessionId, "Inspect the PowerDirector log.")).resolves.toBe("The log tail is ready.");
 
     const saved = sessionManager.getSession(sessionId)?.messages ?? [];
     expect(executeStream).toHaveBeenCalledTimes(3);
     expect(shellExecute).toHaveBeenCalledWith(
-      { cmd: "cat /tmp/openclaw/openclaw-2026-03-09.log" },
+      { cmd: "cat /tmp/powerdirector/powerdirector-2026-03-09.log" },
       expect.objectContaining({ sessionId }),
     );
     expect(

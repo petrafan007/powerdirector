@@ -1,12 +1,15 @@
 import type { Command } from "commander";
-import { formatDocsLink } from '../../terminal/links';
-import { isRich, theme } from '../../terminal/theme';
-import { escapeRegExp } from '../../utils';
-import { formatCliBannerLine, hasEmittedCliBanner } from '../banner';
-import { replaceCliName, resolveCliName } from '../cli-name';
-import { getCoreCliCommandsWithSubcommands } from './command-registry';
-import type { ProgramContext } from './context';
-import { getSubCliCommandsWithSubcommands } from './register.subclis';
+import { resolveCommitHash } from "../../infra/git-commit";
+import { formatDocsLink } from "../../terminal/links";
+import { isRich, theme } from "../../terminal/theme";
+import { escapeRegExp } from "../../utils";
+import { hasFlag, hasRootVersionAlias } from "../argv";
+import { formatCliBannerLine, hasEmittedCliBanner } from "../banner";
+import { replaceCliName, resolveCliName } from "../cli-name";
+import { CLI_LOG_LEVEL_VALUES, parseCliLogLevelOption } from "../log-level-option";
+import type { ProgramContext } from "./context";
+import { getCoreCliCommandsWithSubcommands } from "./core-command-descriptors";
+import { getSubCliCommandsWithSubcommands } from "./subcli-descriptors";
 
 const CLI_NAME = resolveCliName();
 const CLI_NAME_PATTERN = escapeRegExp(CLI_NAME);
@@ -53,6 +56,11 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     .option(
       "--profile <name>",
       "Use a named profile (isolates POWERDIRECTOR_STATE_DIR/POWERDIRECTOR_CONFIG_PATH under ~/.powerdirector-<name>)",
+    )
+    .option(
+      "--log-level <level>",
+      `Global log level override for file + console (${CLI_LOG_LEVEL_VALUES})`,
+      parseCliLogLevelOption,
     );
 
   program.option("--no-color", "Disable ANSI colors", false);
@@ -98,11 +106,14 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
   });
 
   if (
-    process.argv.includes("-V") ||
-    process.argv.includes("--version") ||
-    process.argv.includes("-v")
+    hasFlag(process.argv, "-V") ||
+    hasFlag(process.argv, "--version") ||
+    hasRootVersionAlias(process.argv)
   ) {
-    console.log(ctx.programVersion);
+    const commit = resolveCommitHash({ moduleUrl: import.meta.url });
+    console.log(
+      commit ? `PowerDirector ${ctx.programVersion} (${commit})` : `PowerDirector ${ctx.programVersion}`,
+    );
     process.exit(0);
   }
 

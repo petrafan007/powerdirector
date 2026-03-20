@@ -1,5 +1,5 @@
-import type { ChannelDirectoryEntryKind, ChannelId } from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
+import type { ChannelDirectoryEntryKind, ChannelId } from "../../channels/plugins/types";
+import type { PowerDirectorConfig } from "../../config/config";
 
 type CacheEntry<T> = {
   value: T;

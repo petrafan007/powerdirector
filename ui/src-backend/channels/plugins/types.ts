@@ -1,14 +1,22 @@
-import type { ChannelMessageActionName as ChannelMessageActionNameFromList } from './message-action-names';
+import type { ChannelMessageActionName as ChannelMessageActionNameFromList } from "./message-action-names";
 
-export { CHANNEL_MESSAGE_ACTION_NAMES } from './message-action-names';
+export { CHANNEL_MESSAGE_ACTION_NAMES } from "./message-action-names";
+export { CHANNEL_MESSAGE_CAPABILITIES } from "./message-capabilities";
 
 export type ChannelMessageActionName = ChannelMessageActionNameFromList;
+export type { ChannelMessageCapability } from "./message-capabilities";
 
 export type {
   ChannelAuthAdapter,
   ChannelCommandAdapter,
+  ChannelCapabilitiesDiagnostics,
+  ChannelCapabilitiesDisplayLine,
+  ChannelCapabilitiesDisplayTone,
   ChannelConfigAdapter,
   ChannelDirectoryAdapter,
+  ChannelExecApprovalAdapter,
+  ChannelExecApprovalForwardTarget,
+  ChannelExecApprovalInitiatingSurfaceState,
   ChannelResolveKind,
   ChannelResolveResult,
   ChannelResolverAdapter,
@@ -17,17 +25,22 @@ export type {
   ChannelGatewayContext,
   ChannelGroupAdapter,
   ChannelHeartbeatAdapter,
+  ChannelLifecycleAdapter,
   ChannelLoginWithQrStartResult,
   ChannelLoginWithQrWaitResult,
   ChannelLogoutContext,
   ChannelLogoutResult,
   ChannelOutboundAdapter,
   ChannelOutboundContext,
+  ChannelAllowlistAdapter,
+  ChannelConfiguredBindingConversationRef,
+  ChannelConfiguredBindingMatch,
+  ChannelConfiguredBindingProvider,
   ChannelPairingAdapter,
   ChannelSecurityAdapter,
   ChannelSetupAdapter,
   ChannelStatusAdapter,
-} from './types.adapters';
+} from "./types.adapters";
 export type {
   ChannelAccountSnapshot,
   ChannelAccountState,
@@ -43,9 +56,12 @@ export type {
   ChannelLogSink,
   ChannelMentionAdapter,
   ChannelMessageActionAdapter,
+  ChannelMessageActionDiscoveryContext,
   ChannelMessageActionContext,
   ChannelMessagingAdapter,
+  ChannelMessageToolDiscovery,
   ChannelMeta,
+  ChannelMessageToolSchemaContribution,
   ChannelOutboundTargetMode,
   ChannelPollContext,
   ChannelPollResult,
@@ -54,12 +70,13 @@ export type {
   ChannelSetupInput,
   ChannelStatusIssue,
   ChannelStreamingAdapter,
+  ChannelStructuredComponents,
   ChannelThreadingAdapter,
   ChannelThreadingContext,
   ChannelThreadingToolContext,
   ChannelToolSend,
   BaseProbeResult,
   BaseTokenResolution,
-} from './types.core';
+} from "./types.core";
 
-export type { ChannelPlugin } from './types.plugin';
+export type { ChannelPlugin } from "./types.plugin";

@@ -1,15 +1,35 @@
-import { listChannelPlugins } from '../../channels/plugins/index';
-import type { ChannelChoice } from '../onboard-types';
-import type { ChannelOnboardingAdapter } from './types';
+import { listChannelPlugins } from "../../channels/plugins/index";
+import { discordOnboardingAdapter } from "../../channels/plugins/onboarding/discord";
+import { imessageOnboardingAdapter } from "../../channels/plugins/onboarding/imessage";
+import { signalOnboardingAdapter } from "../../channels/plugins/onboarding/signal";
+import { slackOnboardingAdapter } from "../../channels/plugins/onboarding/slack";
+import { telegramOnboardingAdapter } from "../../channels/plugins/onboarding/telegram";
+import { whatsappOnboardingAdapter } from "../../channels/plugins/onboarding/whatsapp";
+import type { ChannelChoice } from "../onboard-types";
+import type { ChannelOnboardingAdapter } from "./types";
 
-const CHANNEL_ONBOARDING_ADAPTERS = () =>
-  new Map<ChannelChoice, ChannelOnboardingAdapter>(
-    listChannelPlugins()
-      .map((plugin) => (plugin.onboarding ? ([plugin.id, plugin.onboarding] as const) : null))
-      .filter((entry): entry is readonly [ChannelChoice, ChannelOnboardingAdapter] =>
-        Boolean(entry),
-      ),
+const BUILTIN_ONBOARDING_ADAPTERS: ChannelOnboardingAdapter[] = [
+  telegramOnboardingAdapter,
+  whatsappOnboardingAdapter,
+  discordOnboardingAdapter,
+  slackOnboardingAdapter,
+  signalOnboardingAdapter,
+  imessageOnboardingAdapter,
+];
+
+const CHANNEL_ONBOARDING_ADAPTERS = () => {
+  const fromRegistry = listChannelPlugins()
+    .map((plugin) => (plugin.onboarding ? ([plugin.id, plugin.onboarding] as const) : null))
+    .filter((entry): entry is readonly [ChannelChoice, ChannelOnboardingAdapter] => Boolean(entry));
+
+  // Fall back to built-in adapters to keep onboarding working even when the plugin registry
+  // fails to populate (see #25545).
+  const fromBuiltins = BUILTIN_ONBOARDING_ADAPTERS.map(
+    (adapter) => [adapter.channel, adapter] as const,
   );
+
+  return new Map<ChannelChoice, ChannelOnboardingAdapter>([...fromBuiltins, ...fromRegistry]);
+};
 
 export function getChannelOnboardingAdapter(
   channel: ChannelChoice,

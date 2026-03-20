@@ -1,5 +1,5 @@
-import { listChannelPlugins } from '../channels/plugins/index';
-import type { ChannelAccountSnapshot, ChannelStatusIssue } from '../channels/plugins/types';
+import { listChannelPlugins } from "../channels/plugins/index";
+import type { ChannelAccountSnapshot, ChannelStatusIssue } from "../channels/plugins/types";
 
 export function collectChannelStatusIssues(payload: Record<string, unknown>): ChannelStatusIssue[] {
   const issues: ChannelStatusIssue[] = [];

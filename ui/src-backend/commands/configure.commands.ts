@@ -1,8 +1,8 @@
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import type { WizardSection } from './configure.shared';
-import { CONFIGURE_WIZARD_SECTIONS, parseConfigureWizardSections } from './configure.shared';
-import { runConfigureWizard } from './configure.wizard';
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import type { WizardSection } from "./configure.shared";
+import { CONFIGURE_WIZARD_SECTIONS, parseConfigureWizardSections } from "./configure.shared";
+import { runConfigureWizard } from "./configure.wizard";
 
 export async function configureCommand(runtime: RuntimeEnv = defaultRuntime) {
   await runConfigureWizard({ command: "configure" }, runtime);

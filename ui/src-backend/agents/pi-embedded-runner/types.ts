@@ -1,5 +1,5 @@
-import type { SessionSystemPromptReport } from '../../config/sessions/types';
-import type { MessagingToolSend } from '../pi-embedded-messaging';
+import type { SessionSystemPromptReport } from "../../config/sessions/types";
+import type { MessagingToolSend } from "../pi-embedded-messaging";
 
 export type EmbeddedPiAgentMeta = {
   sessionId: string;
@@ -36,7 +36,12 @@ export type EmbeddedPiRunMeta = {
   aborted?: boolean;
   systemPromptReport?: SessionSystemPromptReport;
   error?: {
-    kind: "context_overflow" | "compaction_failure" | "role_ordering" | "image_size";
+    kind:
+      | "context_overflow"
+      | "compaction_failure"
+      | "role_ordering"
+      | "image_size"
+      | "retry_limit";
     message: string;
   };
   /** Stop reason for the agent run (e.g., "completed", "tool_calls"). */

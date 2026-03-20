@@ -1,38 +1,40 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createPowerDirectorTools } from '../agents/powerdirector-tools';
+import { createPowerDirectorTools } from "../agents/powerdirector-tools";
+import { runBeforeToolCallHook } from "../agents/pi-tools.before-tool-call";
+import { resolveToolLoopDetectionConfig } from "../agents/pi-tools";
 import {
   resolveEffectiveToolPolicy,
   resolveGroupToolPolicy,
   resolveSubagentToolPolicy,
-} from '../agents/pi-tools.policy';
+} from "../agents/pi-tools.policy";
 import {
   applyToolPolicyPipeline,
   buildDefaultToolPolicyPipelineSteps,
-} from '../agents/tool-policy-pipeline';
+} from "../agents/tool-policy-pipeline";
 import {
   collectExplicitAllowlist,
   mergeAlsoAllowPolicy,
   resolveToolProfilePolicy,
-} from '../agents/tool-policy';
-import { ToolInputError } from '../agents/tools/common';
-import { loadConfig } from '../config/config';
-import { resolveMainSessionKey } from '../config/sessions';
-import { logWarn } from '../logger';
-import { isTestDefaultMemorySlotDisabled } from '../plugins/config-state';
-import { getPluginToolMeta } from '../plugins/tools';
-import { isSubagentSessionKey } from '../routing/session-key';
-import { DEFAULT_GATEWAY_HTTP_TOOL_DENY } from '../security/dangerous-tools';
-import { normalizeMessageChannel } from '../utils/message-channel';
-import type { AuthRateLimiter } from './auth-rate-limit';
-import { authorizeGatewayConnect, type ResolvedGatewayAuth } from './auth';
+} from "../agents/tool-policy";
+import { ToolInputError } from "../agents/tools/common";
+import { loadConfig } from "../config/config";
+import { resolveMainSessionKey } from "../config/sessions";
+import { logWarn } from "../logger";
+import { isTestDefaultMemorySlotDisabled } from "../plugins/config-state";
+import { getPluginToolMeta } from "../plugins/tools";
+import { isSubagentSessionKey } from "../routing/session-key";
+import { DEFAULT_GATEWAY_HTTP_TOOL_DENY } from "../security/dangerous-tools";
+import { normalizeMessageChannel } from "../utils/message-channel";
+import type { AuthRateLimiter } from "./auth-rate-limit";
+import { authorizeHttpGatewayConnect, type ResolvedGatewayAuth } from "./auth";
 import {
   readJsonBodyOrError,
   sendGatewayAuthFailure,
   sendInvalidRequest,
   sendJson,
   sendMethodNotAllowed,
-} from './http-common';
-import { getBearerToken, getHeader } from './http-utils';
+} from "./http-common";
+import { getBearerToken, getHeader } from "./http-utils";
 
 const DEFAULT_BODY_BYTES = 2 * 1024 * 1024;
 const MEMORY_TOOL_NAMES = new Set(["memory_search", "memory_get"]);
@@ -112,16 +114,23 @@ function getErrorMessage(err: unknown): string {
   return String(err);
 }
 
-function isToolInputError(err: unknown): boolean {
+function resolveToolInputErrorStatus(err: unknown): number | null {
   if (err instanceof ToolInputError) {
-    return true;
+    const status = (err as { status?: unknown }).status;
+    return typeof status === "number" ? status : 400;
   }
-  return (
-    typeof err === "object" &&
-    err !== null &&
-    "name" in err &&
-    (err as { name?: unknown }).name === "ToolInputError"
-  );
+  if (typeof err !== "object" || err === null || !("name" in err)) {
+    return null;
+  }
+  const name = (err as { name?: unknown }).name;
+  if (name !== "ToolInputError" && name !== "ToolAuthorizationError") {
+    return null;
+  }
+  const status = (err as { status?: unknown }).status;
+  if (typeof status === "number") {
+    return status;
+  }
+  return name === "ToolAuthorizationError" ? 403 : 400;
 }
 
 export async function handleToolsInvokeHttpRequest(
@@ -131,6 +140,7 @@ export async function handleToolsInvokeHttpRequest(
     auth: ResolvedGatewayAuth;
     maxBodyBytes?: number;
     trustedProxies?: string[];
+    allowRealIpFallback?: boolean;
     rateLimiter?: AuthRateLimiter;
   },
 ): Promise<boolean> {
@@ -146,11 +156,12 @@ export async function handleToolsInvokeHttpRequest(
 
   const cfg = loadConfig();
   const token = getBearerToken(req);
-  const authResult = await authorizeGatewayConnect({
+  const authResult = await authorizeHttpGatewayConnect({
     auth: opts.auth,
     connectAuth: token ? { token, password: token } : null,
     req,
     trustedProxies: opts.trustedProxies ?? cfg.gateway?.trustedProxies,
+    allowRealIpFallback: opts.allowRealIpFallback ?? cfg.gateway?.allowRealIpFallback,
     rateLimiter: opts.rateLimiter,
   });
   if (!authResult.ok) {
@@ -204,6 +215,8 @@ export async function handleToolsInvokeHttpRequest(
     getHeader(req, "x-powerdirector-message-channel") ?? "",
   );
   const accountId = getHeader(req, "x-powerdirector-account-id")?.trim() || undefined;
+  const agentTo = getHeader(req, "x-powerdirector-message-to")?.trim() || undefined;
+  const agentThreadId = getHeader(req, "x-powerdirector-thread-id")?.trim() || undefined;
 
   const {
     agentId,
@@ -239,6 +252,11 @@ export async function handleToolsInvokeHttpRequest(
     agentSessionKey: sessionKey,
     agentChannel: messageChannel ?? undefined,
     agentAccountId: accountId,
+    agentTo,
+    agentThreadId,
+    allowGatewaySubagentBinding: true,
+    // HTTP callers consume tool output directly; preserve raw media invoke payloads.
+    allowMediaInvokeCommands: true,
     config: cfg,
     pluginToolAllowlist: collectExplicitAllowlist([
       profilePolicy,
@@ -296,18 +314,37 @@ export async function handleToolsInvokeHttpRequest(
   }
 
   try {
+    const toolCallId = `http-${Date.now()}`;
     const toolArgs = mergeActionIntoArgsIfSupported({
       // oxlint-disable-next-line typescript/no-explicit-any
       toolSchema: (tool as any).parameters,
       action,
       args,
     });
+    const hookResult = await runBeforeToolCallHook({
+      toolName,
+      params: toolArgs,
+      toolCallId,
+      ctx: {
+        agentId,
+        sessionKey,
+        loopDetection: resolveToolLoopDetectionConfig({ cfg, agentId }),
+      },
+    });
+    if (hookResult.blocked) {
+      sendJson(res, 403, {
+        ok: false,
+        error: { type: "tool_call_blocked", message: hookResult.reason },
+      });
+      return true;
+    }
     // oxlint-disable-next-line typescript/no-explicit-any
-    const result = await (tool as any).execute?.(`http-${Date.now()}`, toolArgs);
+    const result = await (tool as any).execute?.(toolCallId, hookResult.params);
     sendJson(res, 200, { ok: true, result });
   } catch (err) {
-    if (isToolInputError(err)) {
-      sendJson(res, 400, {
+    const inputStatus = resolveToolInputErrorStatus(err);
+    if (inputStatus !== null) {
+      sendJson(res, inputStatus, {
         ok: false,
         error: { type: "tool_error", message: getErrorMessage(err) || "invalid tool arguments" },
       });

@@ -1,67 +1,106 @@
-import {
-  codingTools,
-  createEditTool,
-  createReadTool,
-  createWriteTool,
-  readTool,
-} from "@mariozechner/pi-coding-agent";
-import type { PowerDirectorConfig } from '../config/config';
-import type { ToolLoopDetectionConfig } from '../config/types.tools';
-import { logWarn } from '../logger';
-import { getPluginToolMeta } from '../plugins/tools';
-import { isSubagentSessionKey } from '../routing/session-key';
-import { resolveGatewayMessageChannel } from '../utils/message-channel';
-import { resolveAgentConfig } from './agent-scope';
-import { createApplyPatchTool } from './apply-patch';
+import { codingTools, createReadTool, readTool } from "@mariozechner/pi-coding-agent";
+import type { PowerDirectorConfig } from "../config/config";
+import type { ModelCompatConfig } from "../config/types.models";
+import type { ToolLoopDetectionConfig } from "../config/types.tools";
+import { resolveMergedSafeBinProfileFixtures } from "../infra/exec-safe-bin-runtime-policy";
+import { logWarn } from "../logger";
+import { getPluginToolMeta } from "../plugins/tools";
+import { isSubagentSessionKey } from "../routing/session-key";
+import { resolveGatewayMessageChannel } from "../utils/message-channel";
+import { resolveAgentConfig } from "./agent-scope";
+import { createApplyPatchTool } from "./apply-patch";
 import {
   createExecTool,
   createProcessTool,
   type ExecToolDefaults,
   type ProcessToolDefaults,
-} from './bash-tools';
-import { listChannelAgentTools } from './channel-tools';
-import { resolveImageSanitizationLimits } from './image-sanitization';
-import type { ModelAuthMode } from './model-auth';
-import { createPowerDirectorTools } from './powerdirector-tools';
-import { wrapToolWithAbortSignal } from './pi-tools.abort';
-import { wrapToolWithBeforeToolCallHook } from './pi-tools.before-tool-call';
+} from "./bash-tools";
+import { listChannelAgentTools } from "./channel-tools";
+import { resolveImageSanitizationLimits } from "./image-sanitization";
+import type { ModelAuthMode } from "./model-auth";
+import { hasNativeWebSearchTool } from "./model-compat";
+import { createPowerDirectorTools } from "./powerdirector-tools";
+import { wrapToolWithAbortSignal } from "./pi-tools.abort";
+import { wrapToolWithBeforeToolCallHook } from "./pi-tools.before-tool-call";
 import {
   isToolAllowedByPolicies,
   resolveEffectiveToolPolicy,
   resolveGroupToolPolicy,
-  resolveSubagentToolPolicy,
-} from './pi-tools.policy';
+  resolveSubagentToolPolicyForSession,
+} from "./pi-tools.policy";
 import {
   assertRequiredParams,
-  CLAUDE_PARAM_GROUPS,
+  createHostWorkspaceEditTool,
+  createHostWorkspaceWriteTool,
   createPowerDirectorReadTool,
   createSandboxedEditTool,
   createSandboxedReadTool,
   createSandboxedWriteTool,
   normalizeToolParams,
   patchToolSchemaForClaudeCompatibility,
+  wrapToolMemoryFlushAppendOnlyWrite,
   wrapToolWorkspaceRootGuard,
+  wrapToolWorkspaceRootGuardWithOptions,
   wrapToolParamNormalization,
-} from './pi-tools.read';
-import { cleanToolSchemaForGemini, normalizeToolParameters } from './pi-tools.schema';
-import type { AnyAgentTool } from './pi-tools.types';
-import type { SandboxContext } from './sandbox';
-import { getSubagentDepthFromSessionStore } from './subagent-depth';
+} from "./pi-tools.read";
+import { cleanToolSchemaForGemini, normalizeToolParameters } from "./pi-tools.schema";
+import type { AnyAgentTool } from "./pi-tools.types";
+import type { SandboxContext } from "./sandbox";
+import { createToolFsPolicy, resolveToolFsConfig } from "./tool-fs-policy";
 import {
   applyToolPolicyPipeline,
   buildDefaultToolPolicyPipelineSteps,
-} from './tool-policy-pipeline';
+} from "./tool-policy-pipeline";
 import {
   applyOwnerOnlyToolPolicy,
   collectExplicitAllowlist,
   mergeAlsoAllowPolicy,
   resolveToolProfilePolicy,
-} from './tool-policy';
-import { resolveWorkspaceRoot } from './workspace-dir';
+} from "./tool-policy";
+import { resolveWorkspaceRoot } from "./workspace-dir";
 
 function isOpenAIProvider(provider?: string) {
   const normalized = provider?.trim().toLowerCase();
   return normalized === "openai" || normalized === "openai-codex";
+}
+
+const TOOL_DENY_BY_MESSAGE_PROVIDER: Readonly<Record<string, readonly string[]>> = {
+  voice: ["tts"],
+};
+const TOOL_DENY_FOR_XAI_PROVIDERS = new Set(["web_search"]);
+const MEMORY_FLUSH_ALLOWED_TOOL_NAMES = new Set(["read", "write"]);
+
+function normalizeMessageProvider(messageProvider?: string): string | undefined {
+  const normalized = messageProvider?.trim().toLowerCase();
+  return normalized && normalized.length > 0 ? normalized : undefined;
+}
+
+function applyMessageProviderToolPolicy(
+  tools: AnyAgentTool[],
+  messageProvider?: string,
+): AnyAgentTool[] {
+  const normalizedProvider = normalizeMessageProvider(messageProvider);
+  if (!normalizedProvider) {
+    return tools;
+  }
+  const deniedTools = TOOL_DENY_BY_MESSAGE_PROVIDER[normalizedProvider];
+  if (!deniedTools || deniedTools.length === 0) {
+    return tools;
+  }
+  const deniedSet = new Set(deniedTools);
+  return tools.filter((tool) => !deniedSet.has(tool.name));
+}
+
+function applyModelProviderToolPolicy(
+  tools: AnyAgentTool[],
+  params?: { modelCompat?: ModelCompatConfig },
+): AnyAgentTool[] {
+  if (!hasNativeWebSearchTool(params?.modelCompat)) {
+    return tools;
+  }
+  // Models with a native web_search tool cannot receive PowerDirector's
+  // web_search at the same time or the request will collide.
+  return tools.filter((tool) => !TOOL_DENY_FOR_XAI_PROVIDERS.has(tool.name));
 }
 
 function isApplyPatchAllowedForModel(params: {
@@ -104,6 +143,11 @@ function resolveExecConfig(params: { cfg?: PowerDirectorConfig; agentId?: string
     node: agentExec?.node ?? globalExec?.node,
     pathPrepend: agentExec?.pathPrepend ?? globalExec?.pathPrepend,
     safeBins: agentExec?.safeBins ?? globalExec?.safeBins,
+    safeBinTrustedDirs: agentExec?.safeBinTrustedDirs ?? globalExec?.safeBinTrustedDirs,
+    safeBinProfiles: resolveMergedSafeBinProfileFixtures({
+      global: globalExec,
+      local: agentExec,
+    }),
     backgroundMs: agentExec?.backgroundMs ?? globalExec?.backgroundMs,
     timeoutSec: agentExec?.timeoutSec ?? globalExec?.timeoutSec,
     approvalRunningNoticeMs:
@@ -113,16 +157,6 @@ function resolveExecConfig(params: { cfg?: PowerDirectorConfig; agentId?: string
     notifyOnExitEmptySuccess:
       agentExec?.notifyOnExitEmptySuccess ?? globalExec?.notifyOnExitEmptySuccess,
     applyPatch: agentExec?.applyPatch ?? globalExec?.applyPatch,
-  };
-}
-
-function resolveFsConfig(params: { cfg?: PowerDirectorConfig; agentId?: string }) {
-  const cfg = params.cfg;
-  const globalFs = cfg?.tools?.fs;
-  const agentFs =
-    cfg && params.agentId ? resolveAgentConfig(cfg, params.agentId)?.tools?.fs : undefined;
-  return {
-    workspaceOnly: agentFs?.workspaceOnly ?? globalFs?.workspaceOnly,
   };
 }
 
@@ -159,9 +193,11 @@ export const __testing = {
   patchToolSchemaForClaudeCompatibility,
   wrapToolParamNormalization,
   assertRequiredParams,
+  applyModelProviderToolPolicy,
 } as const;
 
 export function createPowerDirectorCodingTools(options?: {
+  agentId?: string;
   exec?: ExecToolDefaults & ProcessToolDefaults;
   messageProvider?: string;
   agentAccountId?: string;
@@ -169,8 +205,23 @@ export function createPowerDirectorCodingTools(options?: {
   messageThreadId?: string | number;
   sandbox?: SandboxContext | null;
   sessionKey?: string;
+  /** Ephemeral session UUID — regenerated on /new and /reset. */
+  sessionId?: string;
+  /** Stable run identifier for this agent invocation. */
+  runId?: string;
+  /** What initiated this run (for trigger-specific tool restrictions). */
+  trigger?: string;
+  /** Relative workspace path that memory-triggered writes may append to. */
+  memoryFlushWritePath?: string;
   agentDir?: string;
   workspaceDir?: string;
+  /**
+   * Workspace directory that spawned subagents should inherit.
+   * When sandboxing uses a copied workspace (`ro` or `none`), workspaceDir is the
+   * sandbox copy but subagents should inherit the real agent workspace instead.
+   * Defaults to workspaceDir when not set.
+   */
+  spawnWorkspaceDir?: string;
   config?: PowerDirectorConfig;
   abortSignal?: AbortSignal;
   /**
@@ -182,6 +233,8 @@ export function createPowerDirectorCodingTools(options?: {
   modelId?: string;
   /** Model context window in tokens (used to scale read-tool output budget). */
   modelContextWindowTokens?: number;
+  /** Resolved runtime model compatibility hints. */
+  modelCompat?: ModelCompatConfig;
   /**
    * Auth mode for the current provider. We only need this for Anthropic OAuth
    * tool-name blocking quirks.
@@ -191,6 +244,8 @@ export function createPowerDirectorCodingTools(options?: {
   currentChannelId?: string;
   /** Current thread timestamp for auto-threading (Slack). */
   currentThreadTs?: string;
+  /** Current inbound message id for action fallbacks (e.g. Telegram react). */
+  currentMessageId?: string | number;
   /** Group id for channel-level tool policy resolution. */
   groupId?: string | null;
   /** Group channel label (e.g. #general) for channel-level tool policy resolution. */
@@ -207,6 +262,8 @@ export function createPowerDirectorCodingTools(options?: {
   replyToMode?: "off" | "first" | "all";
   /** Mutable ref to track if a reply was sent (for "first" mode). */
   hasRepliedRef?: { value: boolean };
+  /** Allow plugin tools for this run to late-bind the gateway subagent. */
+  allowGatewaySubagentBinding?: boolean;
   /** If true, the model has native vision capability */
   modelHasVision?: boolean;
   /** Require explicit message targets (no implicit last-route sends). */
@@ -215,9 +272,16 @@ export function createPowerDirectorCodingTools(options?: {
   disableMessageTool?: boolean;
   /** Whether the sender is an owner (required for owner-only tools). */
   senderIsOwner?: boolean;
+  /** Callback invoked when sessions_yield tool is called. */
+  onYield?: (message: string) => Promise<void> | void;
 }): AnyAgentTool[] {
   const execToolName = "exec";
   const sandbox = options?.sandbox?.enabled ? options.sandbox : undefined;
+  const isMemoryFlushRun = options?.trigger === "memory";
+  if (isMemoryFlushRun && !options?.memoryFlushWritePath) {
+    throw new Error("memoryFlushWritePath required for memory-triggered tool runs");
+  }
+  const memoryFlushWritePath = isMemoryFlushRun ? options.memoryFlushWritePath : undefined;
   const {
     agentId,
     globalPolicy,
@@ -231,6 +295,7 @@ export function createPowerDirectorCodingTools(options?: {
   } = resolveEffectiveToolPolicy({
     config: options?.config,
     sessionKey: options?.sessionKey,
+    agentId: options?.agentId,
     modelProvider: options?.modelProvider,
     modelId: options?.modelId,
   });
@@ -262,10 +327,7 @@ export function createPowerDirectorCodingTools(options?: {
     options?.exec?.scopeKey ?? options?.sessionKey ?? (agentId ? `agent:${agentId}` : undefined);
   const subagentPolicy =
     isSubagentSessionKey(options?.sessionKey) && options?.sessionKey
-      ? resolveSubagentToolPolicy(
-          options.config,
-          getSubagentDepthFromSessionStore(options.sessionKey, { cfg: options.config }),
-        )
+      ? resolveSubagentToolPolicyForSession(options.config, options.sessionKey)
       : undefined;
   const allowBackground = isToolAllowedByPolicies("process", [
     profilePolicyWithAlsoAllow,
@@ -279,12 +341,15 @@ export function createPowerDirectorCodingTools(options?: {
     subagentPolicy,
   ]);
   const execConfig = resolveExecConfig({ cfg: options?.config, agentId });
-  const fsConfig = resolveFsConfig({ cfg: options?.config, agentId });
+  const fsConfig = resolveToolFsConfig({ cfg: options?.config, agentId });
+  const fsPolicy = createToolFsPolicy({
+    workspaceOnly: isMemoryFlushRun || fsConfig.workspaceOnly,
+  });
   const sandboxRoot = sandbox?.workspaceDir;
   const sandboxFsBridge = sandbox?.fsBridge;
   const allowWorkspaceWrites = sandbox?.workspaceAccess !== "ro";
   const workspaceRoot = resolveWorkspaceRoot(options?.workspaceDir);
-  const workspaceOnly = fsConfig.workspaceOnly === true;
+  const workspaceOnly = fsPolicy.workspaceOnly;
   const applyPatchConfig = execConfig.applyPatch;
   // Secure by default: apply_patch is workspace-contained unless explicitly disabled.
   // (tools.fs.workspaceOnly is a separate umbrella flag for read/write/edit/apply_patch.)
@@ -312,7 +377,13 @@ export function createPowerDirectorCodingTools(options?: {
           modelContextWindowTokens: options?.modelContextWindowTokens,
           imageSanitization,
         });
-        return [workspaceOnly ? wrapToolWorkspaceRootGuard(sandboxed, sandboxRoot) : sandboxed];
+        return [
+          workspaceOnly
+            ? wrapToolWorkspaceRootGuardWithOptions(sandboxed, sandboxRoot, {
+                containerWorkdir: sandbox.containerWorkdir,
+              })
+            : sandboxed,
+        ];
       }
       const freshReadTool = createReadTool(workspaceRoot);
       const wrapped = createPowerDirectorReadTool(freshReadTool, {
@@ -328,22 +399,14 @@ export function createPowerDirectorCodingTools(options?: {
       if (sandboxRoot) {
         return [];
       }
-      // Wrap with param normalization for Claude Code compatibility
-      const wrapped = wrapToolParamNormalization(
-        createWriteTool(workspaceRoot),
-        CLAUDE_PARAM_GROUPS.write,
-      );
+      const wrapped = createHostWorkspaceWriteTool(workspaceRoot, { workspaceOnly });
       return [workspaceOnly ? wrapToolWorkspaceRootGuard(wrapped, workspaceRoot) : wrapped];
     }
     if (tool.name === "edit") {
       if (sandboxRoot) {
         return [];
       }
-      // Wrap with param normalization for Claude Code compatibility
-      const wrapped = wrapToolParamNormalization(
-        createEditTool(workspaceRoot),
-        CLAUDE_PARAM_GROUPS.edit,
-      );
+      const wrapped = createHostWorkspaceEditTool(workspaceRoot, { workspaceOnly });
       return [workspaceOnly ? wrapToolWorkspaceRootGuard(wrapped, workspaceRoot) : wrapped];
     }
     return [tool];
@@ -357,12 +420,17 @@ export function createPowerDirectorCodingTools(options?: {
     node: options?.exec?.node ?? execConfig.node,
     pathPrepend: options?.exec?.pathPrepend ?? execConfig.pathPrepend,
     safeBins: options?.exec?.safeBins ?? execConfig.safeBins,
+    safeBinTrustedDirs: options?.exec?.safeBinTrustedDirs ?? execConfig.safeBinTrustedDirs,
+    safeBinProfiles: options?.exec?.safeBinProfiles ?? execConfig.safeBinProfiles,
     agentId,
     cwd: workspaceRoot,
     allowBackground,
     scopeKey,
     sessionKey: options?.sessionKey,
     messageProvider: options?.messageProvider,
+    currentChannelId: options?.currentChannelId,
+    currentThreadTs: options?.currentThreadTs,
+    accountId: options?.agentAccountId,
     backgroundMs: options?.exec?.backgroundMs ?? execConfig.backgroundMs,
     timeoutSec: options?.exec?.timeoutSec ?? execConfig.timeoutSec,
     approvalRunningNoticeMs:
@@ -375,7 +443,9 @@ export function createPowerDirectorCodingTools(options?: {
           containerName: sandbox.containerName,
           workspaceDir: sandbox.workspaceDir,
           containerWorkdir: sandbox.containerWorkdir,
-          env: sandbox.docker.env,
+          env: sandbox.backend?.env ?? sandbox.docker.env,
+          buildExecSpec: sandbox.backend?.buildExecSpec.bind(sandbox.backend),
+          finalizeExec: sandbox.backend?.finalizeExec?.bind(sandbox.backend),
         }
       : undefined,
   });
@@ -400,15 +470,21 @@ export function createPowerDirectorCodingTools(options?: {
       ? allowWorkspaceWrites
         ? [
             workspaceOnly
-              ? wrapToolWorkspaceRootGuard(
+              ? wrapToolWorkspaceRootGuardWithOptions(
                   createSandboxedEditTool({ root: sandboxRoot, bridge: sandboxFsBridge! }),
                   sandboxRoot,
+                  {
+                    containerWorkdir: sandbox.containerWorkdir,
+                  },
                 )
               : createSandboxedEditTool({ root: sandboxRoot, bridge: sandboxFsBridge! }),
             workspaceOnly
-              ? wrapToolWorkspaceRootGuard(
+              ? wrapToolWorkspaceRootGuardWithOptions(
                   createSandboxedWriteTool({ root: sandboxRoot, bridge: sandboxFsBridge! }),
                   sandboxRoot,
+                  {
+                    containerWorkdir: sandbox.containerWorkdir,
+                  },
                 )
               : createSandboxedWriteTool({ root: sandboxRoot, bridge: sandboxFsBridge! }),
           ]
@@ -433,7 +509,11 @@ export function createPowerDirectorCodingTools(options?: {
       agentDir: options?.agentDir,
       sandboxRoot,
       sandboxFsBridge,
+      fsPolicy,
       workspaceDir: workspaceRoot,
+      spawnWorkspaceDir: options?.spawnWorkspaceDir
+        ? resolveWorkspaceRoot(options.spawnWorkspaceDir)
+        : undefined,
       sandboxed: !!sandbox,
       config: options?.config,
       pluginToolAllowlist: collectExplicitAllowlist([
@@ -449,6 +529,7 @@ export function createPowerDirectorCodingTools(options?: {
       ]),
       currentChannelId: options?.currentChannelId,
       currentThreadTs: options?.currentThreadTs,
+      currentMessageId: options?.currentMessageId,
       replyToMode: options?.replyToMode,
       hasRepliedRef: options?.hasRepliedRef,
       modelHasVision: options?.modelHasVision,
@@ -457,11 +538,43 @@ export function createPowerDirectorCodingTools(options?: {
       requesterAgentIdOverride: agentId,
       requesterSenderId: options?.senderId,
       senderIsOwner: options?.senderIsOwner,
+      sessionId: options?.sessionId,
+      onYield: options?.onYield,
+      allowGatewaySubagentBinding: options?.allowGatewaySubagentBinding,
     }),
   ];
+  const toolsForMemoryFlush =
+    isMemoryFlushRun && memoryFlushWritePath
+      ? tools.flatMap((tool) => {
+          if (!MEMORY_FLUSH_ALLOWED_TOOL_NAMES.has(tool.name)) {
+            return [];
+          }
+          if (tool.name === "write") {
+            return [
+              wrapToolMemoryFlushAppendOnlyWrite(tool, {
+                root: sandboxRoot ?? workspaceRoot,
+                relativePath: memoryFlushWritePath,
+                containerWorkdir: sandbox?.containerWorkdir,
+                sandbox:
+                  sandboxRoot && sandboxFsBridge
+                    ? { root: sandboxRoot, bridge: sandboxFsBridge }
+                    : undefined,
+              }),
+            ];
+          }
+          return [tool];
+        })
+      : tools;
+  const toolsForMessageProvider = applyMessageProviderToolPolicy(
+    toolsForMemoryFlush,
+    options?.messageProvider,
+  );
+  const toolsForModelProvider = applyModelProviderToolPolicy(toolsForMessageProvider, {
+    modelCompat: options?.modelCompat,
+  });
   // Security: treat unknown/undefined as unauthorized (opt-in, not opt-out)
   const senderIsOwner = options?.senderIsOwner === true;
-  const toolsByAuthorization = applyOwnerOnlyToolPolicy(tools, senderIsOwner);
+  const toolsByAuthorization = applyOwnerOnlyToolPolicy(toolsForModelProvider, senderIsOwner);
   const subagentFiltered = applyToolPolicyPipeline({
     tools: toolsByAuthorization,
     toolMeta: (tool) => getPluginToolMeta(tool),
@@ -487,12 +600,18 @@ export function createPowerDirectorCodingTools(options?: {
   // Without this, some providers (notably OpenAI) will reject root-level union schemas.
   // Provider-specific cleaning: Gemini needs constraint keywords stripped, but Anthropic expects them.
   const normalized = subagentFiltered.map((tool) =>
-    normalizeToolParameters(tool, { modelProvider: options?.modelProvider }),
+    normalizeToolParameters(tool, {
+      modelProvider: options?.modelProvider,
+      modelId: options?.modelId,
+      modelCompat: options?.modelCompat,
+    }),
   );
   const withHooks = normalized.map((tool) =>
     wrapToolWithBeforeToolCallHook(tool, {
       agentId,
       sessionKey: options?.sessionKey,
+      sessionId: options?.sessionId,
+      runId: options?.runId,
       loopDetection: resolveToolLoopDetectionConfig({ cfg: options?.config, agentId }),
     }),
   );

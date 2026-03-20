@@ -2,52 +2,56 @@ import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveApiKeyForProvider } from '../agents/model-auth';
+import { hasAvailableAuthForProvider } from "../agents/model-auth";
 import {
   findModelInCatalog,
   loadModelCatalog,
   modelSupportsVision,
-} from '../agents/model-catalog';
-import type { MsgContext } from '../auto-reply/templating';
-import type { PowerDirectorConfig } from '../config/config';
+} from "../agents/model-catalog";
+import type { MsgContext } from "../auto-reply/templating";
+import type { PowerDirectorConfig } from "../config/config";
+import {
+  resolveAgentModelFallbackValues,
+  resolveAgentModelPrimaryValue,
+} from "../config/model-input";
 import type {
   MediaUnderstandingConfig,
   MediaUnderstandingModelConfig,
-} from '../config/types.tools';
-import { logVerbose, shouldLogVerbose } from '../globals';
+} from "../config/types.tools";
+import { logVerbose, shouldLogVerbose } from "../globals";
 import {
   mergeInboundPathRoots,
   resolveIMessageAttachmentRoots,
-} from '../media/inbound-path-policy';
-import { getDefaultMediaLocalRoots } from '../media/local-roots';
-import { runExec } from '../process/exec';
+} from "../media/inbound-path-policy";
+import { getDefaultMediaLocalRoots } from "../media/local-roots";
+import { runExec } from "../process/exec";
 import {
   MediaAttachmentCache,
   type MediaAttachmentCacheOptions,
   normalizeAttachments,
   selectAttachments,
-} from './attachments';
+} from "./attachments";
 import {
   AUTO_AUDIO_KEY_PROVIDERS,
   AUTO_IMAGE_KEY_PROVIDERS,
   AUTO_VIDEO_KEY_PROVIDERS,
   DEFAULT_IMAGE_MODELS,
-} from './defaults';
-import { isMediaUnderstandingSkipError } from './errors';
-import { fileExists } from './fs';
-import { extractGeminiResponse } from './output-extract';
+} from "./defaults";
+import { isMediaUnderstandingSkipError } from "./errors";
+import { fileExists } from "./fs";
+import { extractGeminiResponse } from "./output-extract";
 import {
   buildMediaUnderstandingRegistry,
   getMediaUnderstandingProvider,
   normalizeMediaProviderId,
-} from './providers/index';
-import { resolveModelEntries, resolveScopeDecision } from './resolve';
+} from "./providers/index";
+import { resolveModelEntries, resolveScopeDecision } from "./resolve";
 import {
   buildModelDecision,
   formatDecisionSummary,
   runCliEntry,
   runProviderEntry,
-} from './runner.entries';
+} from "./runner.entries";
 import type {
   MediaAttachment,
   MediaUnderstandingCapability,
@@ -55,7 +59,7 @@ import type {
   MediaUnderstandingModelDecision,
   MediaUnderstandingOutput,
   MediaUnderstandingProvider,
-} from './types';
+} from "./types";
 
 export type ActiveMediaModel = {
   provider: string;
@@ -71,8 +75,9 @@ export type RunCapabilityResult = {
 
 export function buildProviderRegistry(
   overrides?: Record<string, MediaUnderstandingProvider>,
+  cfg?: PowerDirectorConfig,
 ): ProviderRegistry {
-  return buildMediaUnderstandingRegistry(overrides);
+  return buildMediaUnderstandingRegistry(overrides, cfg);
 }
 
 export function normalizeMediaAttachments(ctx: MsgContext): MediaAttachment[] {
@@ -358,12 +363,16 @@ async function resolveKeyEntry(params: {
     if (capability === "video" && !provider.describeVideo) {
       return null;
     }
-    try {
-      await resolveApiKeyForProvider({ provider: providerId, cfg, agentDir });
-      return { type: "provider" as const, provider: providerId, model };
-    } catch {
+    if (
+      !(await hasAvailableAuthForProvider({
+        provider: providerId,
+        cfg,
+        agentDir,
+      }))
+    ) {
       return null;
     }
+    return { type: "provider" as const, provider: providerId, model };
   };
 
   if (capability === "image") {
@@ -418,27 +427,18 @@ async function resolveKeyEntry(params: {
 }
 
 function resolveImageModelFromAgentDefaults(cfg: PowerDirectorConfig): MediaUnderstandingModelConfig[] {
-  const imageModel = cfg.agents?.defaults?.imageModel as
-    | { primary?: string; fallbacks?: string[] }
-    | string
-    | undefined;
-  if (!imageModel) {
-    return [];
-  }
   const refs: string[] = [];
-  if (typeof imageModel === "string") {
-    if (imageModel.trim()) {
-      refs.push(imageModel.trim());
+  const primary = resolveAgentModelPrimaryValue(cfg.agents?.defaults?.imageModel);
+  if (primary?.trim()) {
+    refs.push(primary.trim());
+  }
+  for (const fb of resolveAgentModelFallbackValues(cfg.agents?.defaults?.imageModel)) {
+    if (fb?.trim()) {
+      refs.push(fb.trim());
     }
-  } else {
-    if (imageModel.primary?.trim()) {
-      refs.push(imageModel.primary.trim());
-    }
-    for (const fb of imageModel.fallbacks ?? []) {
-      if (fb?.trim()) {
-        refs.push(fb.trim());
-      }
-    }
+  }
+  if (refs.length === 0) {
+    return [];
   }
   const entries: MediaUnderstandingModelConfig[] = [];
   for (const ref of refs) {
@@ -558,13 +558,12 @@ async function resolveActiveModelEntry(params: {
   if (params.capability === "video" && !provider.describeVideo) {
     return null;
   }
-  try {
-    await resolveApiKeyForProvider({
-      provider: providerId,
-      cfg: params.cfg,
-      agentDir: params.agentDir,
-    });
-  } catch {
+  const hasAuth = await hasAvailableAuthForProvider({
+    provider: providerId,
+    cfg: params.cfg,
+    agentDir: params.agentDir,
+  });
+  if (!hasAuth) {
     return null;
   }
   return {

@@ -3,34 +3,38 @@ import {
   resolveAgentWorkspaceDir,
   resolveSessionAgentId,
   resolveAgentSkillsFilter,
-} from '../../agents/agent-scope';
-import { resolveModelRefFromString } from '../../agents/model-selection';
-import { resolveAgentTimeoutMs } from '../../agents/timeout';
-import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from '../../agents/workspace';
-import { type PowerDirectorConfig, loadConfig } from '../../config/config';
-import { applyLinkUnderstanding } from '../../link-understanding/apply';
-import { applyMediaUnderstanding } from '../../media-understanding/apply';
-import { defaultRuntime } from '../../runtime';
-import { resolveCommandAuthorization } from '../command-auth';
-import type { MsgContext } from '../templating';
-import { SILENT_REPLY_TOKEN } from '../tokens';
-import type { GetReplyOptions, ReplyPayload } from '../types';
-import { resolveDefaultModel } from './directive-handling';
-import { resolveReplyDirectives } from './get-reply-directives';
-import { handleInlineActions } from './get-reply-inline-actions';
-import { runPreparedReply } from './get-reply-run';
-import { finalizeInboundContext } from './inbound-context';
-import { applyResetModelOverride } from './session-reset-model';
-import { initSessionState } from './session';
-import { stageSandboxMedia } from './stage-sandbox-media';
-import { createTypingController } from './typing';
+} from "../../agents/agent-scope";
+import { resolveModelRefFromString } from "../../agents/model-selection";
+import { resolveAgentTimeoutMs } from "../../agents/timeout";
+import { DEFAULT_AGENT_WORKSPACE_DIR, ensureAgentWorkspace } from "../../agents/workspace";
+import { resolveChannelModelOverride } from "../../channels/model-overrides";
+import { type PowerDirectorConfig, loadConfig } from "../../config/config";
+import { applyLinkUnderstanding } from "../../link-understanding/apply";
+import { applyMediaUnderstanding } from "../../media-understanding/apply";
+import { defaultRuntime } from "../../runtime";
+import { normalizeStringEntries } from "../../shared/string-normalization";
+import { resolveCommandAuthorization } from "../command-auth";
+import type { MsgContext } from "../templating";
+import { SILENT_REPLY_TOKEN } from "../tokens";
+import type { GetReplyOptions, ReplyPayload } from "../types";
+import { emitResetCommandHooks, type ResetCommandAction } from "./commands-core";
+import { resolveDefaultModel } from "./directive-handling";
+import { resolveReplyDirectives } from "./get-reply-directives";
+import { handleInlineActions } from "./get-reply-inline-actions";
+import { runPreparedReply } from "./get-reply-run";
+import { finalizeInboundContext } from "./inbound-context";
+import { emitPreAgentMessageHooks } from "./message-preprocess-hooks";
+import { applyResetModelOverride } from "./session-reset-model";
+import { initSessionState } from "./session";
+import { stageSandboxMedia } from "./stage-sandbox-media";
+import { createTypingController } from "./typing";
 
 function mergeSkillFilters(channelFilter?: string[], agentFilter?: string[]): string[] | undefined {
   const normalize = (list?: string[]) => {
     if (!Array.isArray(list)) {
       return undefined;
     }
-    return list.map((entry) => String(entry).trim()).filter(Boolean);
+    return normalizeStringEntries(list);
   };
   const channel = normalize(channelFilter);
   const agent = normalize(agentFilter);
@@ -133,6 +137,11 @@ export async function getReplyFromConfig(
       cfg,
     });
   }
+  emitPreAgentMessageHooks({
+    ctx: finalized,
+    cfg,
+    isFastTestEnv,
+  });
 
   const commandAuthorized = finalized.CommandAuthorized;
   resolveCommandAuthorization({
@@ -166,6 +175,7 @@ export async function getReplyFromConfig(
 
   await applyResetModelOverride({
     cfg,
+    agentId,
     resetTriggered,
     bodyStripped,
     sessionCtx,
@@ -178,6 +188,36 @@ export async function getReplyFromConfig(
     defaultModel,
     aliasIndex,
   });
+
+  const channelModelOverride = resolveChannelModelOverride({
+    cfg,
+    channel:
+      groupResolution?.channel ??
+      sessionEntry.channel ??
+      sessionEntry.origin?.provider ??
+      (typeof finalized.OriginatingChannel === "string"
+        ? finalized.OriginatingChannel
+        : undefined) ??
+      finalized.Provider,
+    groupId: groupResolution?.id ?? sessionEntry.groupId,
+    groupChannel: sessionEntry.groupChannel ?? sessionCtx.GroupChannel ?? finalized.GroupChannel,
+    groupSubject: sessionEntry.subject ?? sessionCtx.GroupSubject ?? finalized.GroupSubject,
+    parentSessionKey: sessionCtx.ParentSessionKey,
+  });
+  const hasSessionModelOverride = Boolean(
+    sessionEntry.modelOverride?.trim() || sessionEntry.providerOverride?.trim(),
+  );
+  if (!hasResolvedHeartbeatModelOverride && !hasSessionModelOverride && channelModelOverride) {
+    const resolved = resolveModelRefFromString({
+      raw: channelModelOverride.model,
+      defaultProvider,
+      aliasIndex,
+    });
+    if (resolved) {
+      provider = resolved.ref.provider;
+      model = resolved.ref.model;
+    }
+  }
 
   const directiveResult = await resolveReplyDirectives({
     ctx: finalized,
@@ -241,6 +281,27 @@ export async function getReplyFromConfig(
   provider = resolvedProvider;
   model = resolvedModel;
 
+  const maybeEmitMissingResetHooks = async () => {
+    if (!resetTriggered || !command.isAuthorizedSender || command.resetHookTriggered) {
+      return;
+    }
+    const resetMatch = command.commandBodyNormalized.match(/^\/(new|reset)(?:\s|$)/);
+    if (!resetMatch) {
+      return;
+    }
+    const action: ResetCommandAction = resetMatch[1] === "reset" ? "reset" : "new";
+    await emitResetCommandHooks({
+      action,
+      ctx,
+      cfg,
+      command,
+      sessionKey,
+      sessionEntry,
+      previousSessionEntry,
+      workspaceDir,
+    });
+  };
+
   const inlineActionResult = await handleInlineActions({
     ctx,
     sessionCtx,
@@ -271,6 +332,8 @@ export async function getReplyFromConfig(
     resolvedVerboseLevel,
     resolvedReasoningLevel,
     resolvedElevatedLevel,
+    blockReplyChunking,
+    resolvedBlockStreamingBreak,
     resolveDefaultThinkingLevel: modelState.resolveDefaultThinkingLevel,
     provider,
     model,
@@ -280,8 +343,10 @@ export async function getReplyFromConfig(
     skillFilter: mergedSkillFilter,
   });
   if (inlineActionResult.kind === "reply") {
+    await maybeEmitMissingResetHooks();
     return inlineActionResult.reply;
   }
+  await maybeEmitMissingResetHooks();
   directives = inlineActionResult.directives;
   abortedLastRun = inlineActionResult.abortedLastRun ?? abortedLastRun;
 

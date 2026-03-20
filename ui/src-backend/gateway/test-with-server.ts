@@ -1,6 +1,6 @@
 import { afterAll, beforeAll } from "vitest";
-import { startServerWithClient } from './test-helpers';
-import { connectOk } from './test-helpers';
+import { startServerWithClient } from "./test-helpers";
+import { connectOk } from "./test-helpers";
 
 type StartServerWithClient = typeof startServerWithClient;
 export type GatewayWs = Awaited<ReturnType<StartServerWithClient>>["ws"];

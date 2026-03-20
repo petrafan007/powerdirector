@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { safeEqualSecret } from '../security/secret-equal';
+import { safeEqualSecret } from "../security/secret-equal";
 
 export const PAIRING_TOKEN_BYTES = 32;
 
@@ -8,5 +8,8 @@ export function generatePairingToken(): string {
 }
 
 export function verifyPairingToken(provided: string, expected: string): boolean {
+  if (provided.trim().length === 0 || expected.trim().length === 0) {
+    return false;
+  }
   return safeEqualSecret(provided, expected);
 }

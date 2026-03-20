@@ -1,35 +1,36 @@
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveGatewayPort } from '../config/config';
+import { formatCliCommand } from "../cli/command-format";
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveGatewayPort } from "../config/config";
 import {
   resolveGatewayLaunchAgentLabel,
   resolveNodeLaunchAgentLabel,
-} from '../daemon/constants';
-import { readLastGatewayErrorLine } from '../daemon/diagnostics';
+} from "../daemon/constants";
+import { readLastGatewayErrorLine } from "../daemon/diagnostics";
 import {
   isLaunchAgentListed,
   isLaunchAgentLoaded,
   launchAgentPlistExists,
   repairLaunchAgentBootstrap,
-} from '../daemon/launchd';
-import { resolveGatewayService } from '../daemon/service';
-import { renderSystemdUnavailableHints } from '../daemon/systemd-hints';
-import { isSystemdUserServiceAvailable } from '../daemon/systemd';
-import { formatPortDiagnostics, inspectPortUsage } from '../infra/ports';
-import { isWSL } from '../infra/wsl';
-import type { RuntimeEnv } from '../runtime';
-import { note } from '../terminal/note';
-import { sleep } from '../utils';
-import { buildGatewayInstallPlan, gatewayInstallErrorHint } from './daemon-install-helpers';
+} from "../daemon/launchd";
+import { describeGatewayServiceRestart, resolveGatewayService } from "../daemon/service";
+import { renderSystemdUnavailableHints } from "../daemon/systemd-hints";
+import { isSystemdUserServiceAvailable } from "../daemon/systemd";
+import { formatPortDiagnostics, inspectPortUsage } from "../infra/ports";
+import { isWSL } from "../infra/wsl";
+import type { RuntimeEnv } from "../runtime";
+import { note } from "../terminal/note";
+import { sleep } from "../utils";
+import { buildGatewayInstallPlan, gatewayInstallErrorHint } from "./daemon-install-helpers";
 import {
   DEFAULT_GATEWAY_DAEMON_RUNTIME,
   GATEWAY_DAEMON_RUNTIME_OPTIONS,
   type GatewayDaemonRuntime,
-} from './daemon-runtime';
-import { buildGatewayRuntimeHints, formatGatewayRuntimeSummary } from './doctor-format';
-import type { DoctorOptions, DoctorPrompter } from './doctor-prompter';
-import { formatHealthCheckFailure } from './health-format';
-import { healthCommand } from './health';
+} from "./daemon-runtime";
+import { buildGatewayRuntimeHints, formatGatewayRuntimeSummary } from "./doctor-format";
+import type { DoctorOptions, DoctorPrompter } from "./doctor-prompter";
+import { resolveGatewayInstallToken } from "./gateway-install-token";
+import { formatHealthCheckFailure } from "./health-format";
+import { healthCommand } from "./health";
 
 async function maybeRepairLaunchAgentBootstrap(params: {
   env: Record<string, string | undefined>;
@@ -171,11 +172,28 @@ export async function maybeRepairGatewayDaemon(params: {
           },
           DEFAULT_GATEWAY_DAEMON_RUNTIME,
         );
+        const tokenResolution = await resolveGatewayInstallToken({
+          config: params.cfg,
+          env: process.env,
+        });
+        for (const warning of tokenResolution.warnings) {
+          note(warning, "Gateway");
+        }
+        if (tokenResolution.unavailableReason) {
+          note(
+            [
+              "Gateway service install aborted.",
+              tokenResolution.unavailableReason,
+              "Fix gateway auth config/token input and rerun doctor.",
+            ].join("\n"),
+            "Gateway",
+          );
+          return;
+        }
         const port = resolveGatewayPort(params.cfg, process.env);
         const { programArguments, workingDirectory, environment } = await buildGatewayInstallPlan({
           env: process.env,
           port,
-          token: params.cfg.gateway?.auth?.token ?? process.env.POWERDIRECTOR_GATEWAY_TOKEN,
           runtime: daemonRuntime,
           warn: (message, title) => note(message, title),
           config: params.cfg,
@@ -217,11 +235,16 @@ export async function maybeRepairGatewayDaemon(params: {
       initialValue: true,
     });
     if (start) {
-      await service.restart({
+      const restartResult = await service.restart({
         env: process.env,
         stdout: process.stdout,
       });
-      await sleep(1500);
+      const restartStatus = describeGatewayServiceRestart("Gateway", restartResult);
+      if (!restartStatus.scheduled) {
+        await sleep(1500);
+      } else {
+        note(restartStatus.message, "Gateway");
+      }
     }
   }
 
@@ -239,10 +262,15 @@ export async function maybeRepairGatewayDaemon(params: {
       initialValue: true,
     });
     if (restart) {
-      await service.restart({
+      const restartResult = await service.restart({
         env: process.env,
         stdout: process.stdout,
       });
+      const restartStatus = describeGatewayServiceRestart("Gateway", restartResult);
+      if (restartStatus.scheduled) {
+        note(restartStatus.message, "Gateway");
+        return;
+      }
       await sleep(1500);
       try {
         await healthCommand({ json: false, timeoutMs: 10_000 }, params.runtime);

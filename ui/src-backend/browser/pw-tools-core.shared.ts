@@ -1,4 +1,4 @@
-import { parseRoleRef } from './pw-role-snapshot';
+import { parseRoleRef } from "./pw-role-snapshot";
 
 let nextUploadArmId = 0;
 let nextDialogArmId = 0;
@@ -27,6 +27,21 @@ export function requireRef(value: unknown): string {
     throw new Error("ref is required");
   }
   return ref;
+}
+
+export function requireRefOrSelector(
+  ref: string | undefined,
+  selector: string | undefined,
+): { ref?: string; selector?: string } {
+  const trimmedRef = typeof ref === "string" ? ref.trim() : "";
+  const trimmedSelector = typeof selector === "string" ? selector.trim() : "";
+  if (!trimmedRef && !trimmedSelector) {
+    throw new Error("ref or selector is required");
+  }
+  return {
+    ref: trimmedRef || undefined,
+    selector: trimmedSelector || undefined,
+  };
 }
 
 export function normalizeTimeoutMs(timeoutMs: number | undefined, fallback: number) {

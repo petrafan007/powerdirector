@@ -1,15 +1,15 @@
-import { resolveAgentModelFallbacksOverride } from '../../agents/agent-scope';
-import type { NormalizedUsage } from '../../agents/usage';
-import { getChannelDock } from '../../channels/dock';
-import type { ChannelId, ChannelThreadingToolContext } from '../../channels/plugins/types';
-import { normalizeAnyChannelId, normalizeChannelId } from '../../channels/registry';
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveAgentIdFromSessionKey } from '../../config/sessions';
-import { isReasoningTagProvider } from '../../utils/provider-utils';
-import { estimateUsageCost, formatTokenCount, formatUsd } from '../../utils/usage-format';
-import type { TemplateContext } from '../templating';
-import type { ReplyPayload } from '../types';
-import type { FollowupRun } from './queue';
+import { resolveRunModelFallbacksOverride } from "../../agents/agent-scope";
+import type { NormalizedUsage } from "../../agents/usage";
+import { getChannelPlugin } from "../../channels/plugins/index";
+import type { ChannelId, ChannelThreadingToolContext } from "../../channels/plugins/types";
+import { normalizeAnyChannelId, normalizeChannelId } from "../../channels/registry";
+import type { PowerDirectorConfig } from "../../config/config";
+import { isReasoningTagProvider } from "../../utils/provider-utils";
+import { estimateUsageCost, formatTokenCount, formatUsd } from "../../utils/usage-format";
+import type { TemplateContext } from "../templating";
+import type { ReplyPayload } from "../types";
+import { resolveOriginMessageProvider, resolveOriginMessageTo } from "./origin-routing";
+import type { FollowupRun } from "./queue";
 
 const BUN_FETCH_SOCKET_ERROR_RE = /socket connection was closed unexpectedly/i;
 
@@ -22,41 +22,58 @@ export function buildThreadingToolContext(params: {
   hasRepliedRef: { value: boolean } | undefined;
 }): ChannelThreadingToolContext {
   const { sessionCtx, config, hasRepliedRef } = params;
+  const currentMessageId = sessionCtx.MessageSidFull ?? sessionCtx.MessageSid;
+  const originProvider = resolveOriginMessageProvider({
+    originatingChannel: sessionCtx.OriginatingChannel,
+    provider: sessionCtx.Provider,
+  });
+  const originTo = resolveOriginMessageTo({
+    originatingTo: sessionCtx.OriginatingTo,
+    to: sessionCtx.To,
+  });
   if (!config) {
-    return {};
+    return {
+      currentMessageId,
+    };
   }
-  const rawProvider = sessionCtx.Provider?.trim().toLowerCase();
+  const rawProvider = originProvider?.trim().toLowerCase();
   if (!rawProvider) {
-    return {};
+    return {
+      currentMessageId,
+    };
   }
   const provider = normalizeChannelId(rawProvider) ?? normalizeAnyChannelId(rawProvider);
   // Fallback for unrecognized/plugin channels (e.g., BlueBubbles before plugin registry init)
-  const dock = provider ? getChannelDock(provider) : undefined;
-  if (!dock?.threading?.buildToolContext) {
+  const threading = provider ? getChannelPlugin(provider)?.threading : undefined;
+  if (!threading?.buildToolContext) {
     return {
-      currentChannelId: sessionCtx.To?.trim() || undefined,
+      currentChannelId: originTo?.trim() || undefined,
       currentChannelProvider: provider ?? (rawProvider as ChannelId),
+      currentMessageId,
       hasRepliedRef,
     };
   }
   const context =
-    dock.threading.buildToolContext({
+    threading.buildToolContext({
       cfg: config,
       accountId: sessionCtx.AccountId,
       context: {
-        Channel: sessionCtx.Provider,
+        Channel: originProvider,
         From: sessionCtx.From,
-        To: sessionCtx.To,
+        To: originTo,
         ChatType: sessionCtx.ChatType,
+        CurrentMessageId: currentMessageId,
         ReplyToId: sessionCtx.ReplyToId,
         ThreadLabel: sessionCtx.ThreadLabel,
         MessageThreadId: sessionCtx.MessageThreadId,
+        NativeChannelId: sessionCtx.NativeChannelId,
       },
       hasRepliedRef,
     }) ?? {};
   return {
     ...context,
-    currentChannelProvider: provider!, // guaranteed non-null since dock exists
+    currentChannelProvider: provider!, // guaranteed non-null since threading exists
+    currentMessageId: context.currentMessageId ?? currentMessageId,
   };
 }
 
@@ -143,10 +160,11 @@ export function resolveModelFallbackOptions(run: FollowupRun["run"]) {
     provider: run.provider,
     model: run.model,
     agentDir: run.agentDir,
-    fallbacksOverride: resolveAgentModelFallbacksOverride(
-      run.config,
-      resolveAgentIdFromSessionKey(run.sessionKey),
-    ),
+    fallbacksOverride: resolveRunModelFallbacksOverride({
+      cfg: run.config,
+      agentId: run.agentId,
+      sessionKey: run.sessionKey,
+    }),
   };
 }
 
@@ -156,6 +174,7 @@ export function buildEmbeddedRunBaseParams(params: {
   model: string;
   runId: string;
   authProfile: ReturnType<typeof resolveProviderScopedAuthProfile>;
+  allowTransientCooldownProbe?: boolean;
 }) {
   return {
     sessionFile: params.run.sessionFile,
@@ -164,6 +183,8 @@ export function buildEmbeddedRunBaseParams(params: {
     config: params.run.config,
     skillsSnapshot: params.run.skillsSnapshot,
     ownerNumbers: params.run.ownerNumbers,
+    inputProvenance: params.run.inputProvenance,
+    senderIsOwner: params.run.senderIsOwner,
     enforceFinalTag: resolveEnforceFinalTag(params.run, params.provider),
     provider: params.provider,
     model: params.model,
@@ -175,6 +196,7 @@ export function buildEmbeddedRunBaseParams(params: {
     bashElevated: params.run.bashElevated,
     timeoutMs: params.run.timeoutMs,
     runId: params.runId,
+    allowTransientCooldownProbe: params.allowTransientCooldownProbe,
   };
 }
 
@@ -187,9 +209,15 @@ export function buildEmbeddedContextFromTemplate(params: {
     sessionId: params.run.sessionId,
     sessionKey: params.run.sessionKey,
     agentId: params.run.agentId,
-    messageProvider: params.sessionCtx.Provider?.trim().toLowerCase() || undefined,
+    messageProvider: resolveOriginMessageProvider({
+      originatingChannel: params.sessionCtx.OriginatingChannel,
+      provider: params.sessionCtx.Provider,
+    }),
     agentAccountId: params.sessionCtx.AccountId,
-    messageTo: params.sessionCtx.OriginatingTo ?? params.sessionCtx.To,
+    messageTo: resolveOriginMessageTo({
+      originatingTo: params.sessionCtx.OriginatingTo,
+      to: params.sessionCtx.To,
+    }),
     messageThreadId: params.sessionCtx.MessageThreadId ?? undefined,
     // Provider threading context for tool auto-injection
     ...buildThreadingToolContext({
@@ -232,6 +260,31 @@ export function buildEmbeddedRunContexts(params: {
       hasRepliedRef: params.hasRepliedRef,
     }),
     senderContext: buildTemplateSenderContext(params.sessionCtx),
+  };
+}
+
+export function buildEmbeddedRunExecutionParams(params: {
+  run: FollowupRun["run"];
+  sessionCtx: TemplateContext;
+  hasRepliedRef: { value: boolean } | undefined;
+  provider: string;
+  model: string;
+  runId: string;
+  allowTransientCooldownProbe?: boolean;
+}) {
+  const { authProfile, embeddedContext, senderContext } = buildEmbeddedRunContexts(params);
+  const runBaseParams = buildEmbeddedRunBaseParams({
+    run: params.run,
+    provider: params.provider,
+    model: params.model,
+    runId: params.runId,
+    authProfile,
+    allowTransientCooldownProbe: params.allowTransientCooldownProbe,
+  });
+  return {
+    embeddedContext,
+    senderContext,
+    runBaseParams,
   };
 }
 

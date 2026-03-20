@@ -1,14 +1,14 @@
-import { resolveAgentDir, resolveAgentWorkspaceDir } from '../agents/agent-scope';
-import { writeConfigFile } from '../config/config';
-import { logConfigUpdated } from '../config/logging';
-import { resolveSessionTranscriptsDirForAgent } from '../config/sessions';
-import { DEFAULT_AGENT_ID, normalizeAgentId } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { createClackPrompter } from '../wizard/clack-prompter';
-import { createQuietRuntime, requireValidConfig } from './agents.command-shared';
-import { findAgentEntryIndex, listAgentEntries, pruneAgentConfig } from './agents.config';
-import { moveToTrash } from './onboard-helpers';
+import { resolveAgentDir, resolveAgentWorkspaceDir } from "../agents/agent-scope";
+import { writeConfigFile } from "../config/config";
+import { logConfigUpdated } from "../config/logging";
+import { resolveSessionTranscriptsDirForAgent } from "../config/sessions";
+import { DEFAULT_AGENT_ID, normalizeAgentId } from "../routing/session-key";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { createClackPrompter } from "../wizard/clack-prompter";
+import { createQuietRuntime, requireValidConfig } from "./agents.command-shared";
+import { findAgentEntryIndex, listAgentEntries, pruneAgentConfig } from "./agents.config";
+import { moveToTrash } from "./onboard-helpers";
 
 type AgentsDeleteOptions = {
   id: string;

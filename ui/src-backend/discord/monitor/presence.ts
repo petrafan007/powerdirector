@@ -1,5 +1,5 @@
 import type { Activity, UpdatePresenceData } from "@buape/carbon/gateway";
-import type { DiscordAccountConfig } from '../../config/config';
+import type { DiscordAccountConfig } from "../../config/config";
 
 const DEFAULT_CUSTOM_ACTIVITY_TYPE = 4;
 const CUSTOM_STATUS_NAME = "Custom Status";
@@ -21,7 +21,7 @@ export function resolveDiscordPresenceUpdate(
   const hasStatus = Boolean(status);
 
   if (!hasActivity && !hasStatus) {
-    return null;
+    return { since: null, activities: [], status: "online", afk: false };
   }
 
   const activities: Activity[] = [];

@@ -1,7 +1,8 @@
-import { listAgentIds } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { resolveMemoryBackendConfig } from '../memory/backend-config';
-import { getMemorySearchManager } from '../memory/index';
+import { listAgentIds } from "../agents/agent-scope";
+import { resolveMemorySearchConfig } from "../agents/memory-search";
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveMemoryBackendConfig } from "../memory/backend-config";
+import { getMemorySearchManager } from "../memory/index";
 
 export async function startGatewayMemoryBackend(params: {
   cfg: PowerDirectorConfig;
@@ -9,6 +10,9 @@ export async function startGatewayMemoryBackend(params: {
 }): Promise<void> {
   const agentIds = listAgentIds(params.cfg);
   for (const agentId of agentIds) {
+    if (!resolveMemorySearchConfig(params.cfg, agentId)) {
+      continue;
+    }
     const resolved = resolveMemoryBackendConfig({ cfg: params.cfg, agentId });
     if (resolved.backend !== "qmd" || !resolved.qmd) {
       continue;

@@ -1,7 +1,7 @@
 import path from "node:path";
-import { resolveStateDir } from '../config/paths';
+import { resolveStateDir } from "../config/paths";
 
-export { createAsyncLock, readJsonFile, writeJsonAtomic } from './json-files';
+export { createAsyncLock, readJsonFile, writeJsonAtomic } from "./json-files";
 
 export function resolvePairingPaths(baseDir: string | undefined, subdir: string) {
   const root = baseDir ?? resolveStateDir();

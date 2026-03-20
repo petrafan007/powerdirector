@@ -1,31 +1,37 @@
-import { getActiveEmbeddedRunCount } from '../agents/pi-embedded-runner/runs';
-import { getTotalPendingReplies } from '../auto-reply/reply/dispatcher-registry';
-import type { CliDeps } from '../cli/deps';
-import { resolveAgentMaxConcurrent, resolveSubagentMaxConcurrent } from '../config/agent-limits';
-import { isRestartEnabled } from '../config/commands';
-import type { loadConfig } from '../config/config';
-import { startGmailWatcherWithLogs } from '../hooks/gmail-watcher-lifecycle';
-import { stopGmailWatcher } from '../hooks/gmail-watcher';
-import { isTruthyEnvValue } from '../infra/env';
-import type { HeartbeatRunner } from '../infra/heartbeat-runner';
-import { resetDirectoryCache } from '../infra/outbound/target-resolver';
+import { getActiveEmbeddedRunCount } from "../agents/pi-embedded-runner/runs";
+import { getTotalPendingReplies } from "../auto-reply/reply/dispatcher-registry";
+import type { CliDeps } from "../cli/deps";
+import { resolveAgentMaxConcurrent, resolveSubagentMaxConcurrent } from "../config/agent-limits";
+import { isRestartEnabled } from "../config/commands";
+import type { loadConfig } from "../config/config";
+import { startGmailWatcherWithLogs } from "../hooks/gmail-watcher-lifecycle";
+import { stopGmailWatcher } from "../hooks/gmail-watcher";
+import { isTruthyEnvValue } from "../infra/env";
+import type { HeartbeatRunner } from "../infra/heartbeat-runner";
+import { resetDirectoryCache } from "../infra/outbound/target-resolver";
 import {
   deferGatewayRestartUntilIdle,
   emitGatewayRestart,
   setGatewaySigusr1RestartPolicy,
-} from '../infra/restart';
-import { setCommandLaneConcurrency, getTotalQueueSize } from '../process/command-queue';
-import { CommandLane } from '../process/lanes';
-import type { ChannelKind, GatewayReloadPlan } from './config-reload';
-import { resolveHooksConfig } from './hooks';
-import { startBrowserControlServerIfEnabled } from './server-browser';
-import { buildGatewayCronService, type GatewayCronState } from './server-cron';
+} from "../infra/restart";
+import { setCommandLaneConcurrency, getTotalQueueSize } from "../process/command-queue";
+import { CommandLane } from "../process/lanes";
+import type { ChannelHealthMonitor } from "./channel-health-monitor";
+import type { ChannelKind } from "./config-reload-plan";
+import type { GatewayReloadPlan } from "./config-reload";
+import { resolveHooksConfig } from "./hooks";
+import { startBrowserControlServerIfEnabled } from "./server-browser";
+import { buildGatewayCronService, type GatewayCronState } from "./server-cron";
+import type { HookClientIpConfig } from "./server-http";
+import { resolveHookClientIpConfig } from "./server/hooks";
 
 type GatewayHotReloadState = {
   hooksConfig: ReturnType<typeof resolveHooksConfig>;
+  hookClientIpConfig: HookClientIpConfig;
   heartbeatRunner: HeartbeatRunner;
   cronState: GatewayCronState;
   browserControl: Awaited<ReturnType<typeof startBrowserControlServerIfEnabled>> | null;
+  channelHealthMonitor: ChannelHealthMonitor | null;
 };
 
 export function createGatewayReloadHandlers(params: {
@@ -44,6 +50,11 @@ export function createGatewayReloadHandlers(params: {
   logChannels: { info: (msg: string) => void; error: (msg: string) => void };
   logCron: { error: (msg: string) => void };
   logReload: { info: (msg: string) => void; warn: (msg: string) => void };
+  createHealthMonitor: (opts: {
+    checkIntervalMs: number;
+    staleEventThresholdMs?: number;
+    maxRestartsPerHour?: number;
+  }) => ChannelHealthMonitor;
 }) {
   const applyHotReload = async (
     plan: GatewayReloadPlan,
@@ -60,6 +71,7 @@ export function createGatewayReloadHandlers(params: {
         params.logHooks.warn(`hooks config reload failed: ${String(err)}`);
       }
     }
+    nextState.hookClientIpConfig = resolveHookClientIpConfig(nextConfig);
 
     if (plan.restartHeartbeat) {
       nextState.heartbeatRunner.updateConfig(nextConfig);
@@ -88,6 +100,22 @@ export function createGatewayReloadHandlers(params: {
       } catch (err) {
         params.logBrowser.error(`server failed to start: ${String(err)}`);
       }
+    }
+
+    if (plan.restartHealthMonitor) {
+      state.channelHealthMonitor?.stop();
+      const minutes = nextConfig.gateway?.channelHealthCheckMinutes;
+      const staleMinutes = nextConfig.gateway?.channelStaleEventThresholdMinutes;
+      nextState.channelHealthMonitor =
+        minutes === 0
+          ? null
+          : params.createHealthMonitor({
+              checkIntervalMs: (minutes ?? 5) * 60_000,
+              ...(staleMinutes != null && { staleEventThresholdMs: staleMinutes * 60_000 }),
+              ...(nextConfig.gateway?.channelMaxRestartsPerHour != null && {
+                maxRestartsPerHour: nextConfig.gateway.channelMaxRestartsPerHour,
+              }),
+            });
     }
 
     if (plan.restartGmailWatcher) {
@@ -191,6 +219,7 @@ export function createGatewayReloadHandlers(params: {
 
       deferGatewayRestartUntilIdle({
         getPendingCount: () => getActiveCounts().totalActive,
+        maxWaitMs: nextConfig.gateway?.reload?.deferralTimeoutMs,
         hooks: {
           onReady: () => {
             restartPending = false;

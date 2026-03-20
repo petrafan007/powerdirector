@@ -8,31 +8,39 @@ const mocks = vi.hoisted(() => ({
   finalizeInboundContextMock: vi.fn(),
   resolveConversationLabelMock: vi.fn(),
   createReplyPrefixOptionsMock: vi.fn(),
+  recordSessionMetaFromInboundMock: vi.fn(),
+  resolveStorePathMock: vi.fn(),
 }));
 
-vi.mock("../../auto-reply/reply/provider-dispatcher.js", () => ({
+vi.mock("../../auto-reply/reply/provider-dispatcher", () => ({
   dispatchReplyWithDispatcher: (...args: unknown[]) => mocks.dispatchMock(...args),
 }));
 
-vi.mock("../../pairing/pairing-store.js", () => ({
+vi.mock("../../pairing/pairing-store", () => ({
   readChannelAllowFromStore: (...args: unknown[]) => mocks.readAllowFromStoreMock(...args),
   upsertChannelPairingRequest: (...args: unknown[]) => mocks.upsertPairingRequestMock(...args),
 }));
 
-vi.mock("../../routing/resolve-route.js", () => ({
+vi.mock("../../routing/resolve-route", () => ({
   resolveAgentRoute: (...args: unknown[]) => mocks.resolveAgentRouteMock(...args),
 }));
 
-vi.mock("../../auto-reply/reply/inbound-context.js", () => ({
+vi.mock("../../auto-reply/reply/inbound-context", () => ({
   finalizeInboundContext: (...args: unknown[]) => mocks.finalizeInboundContextMock(...args),
 }));
 
-vi.mock("../../channels/conversation-label.js", () => ({
+vi.mock("../../channels/conversation-label", () => ({
   resolveConversationLabel: (...args: unknown[]) => mocks.resolveConversationLabelMock(...args),
 }));
 
-vi.mock("../../channels/reply-prefix.js", () => ({
+vi.mock("../../channels/reply-prefix", () => ({
   createReplyPrefixOptions: (...args: unknown[]) => mocks.createReplyPrefixOptionsMock(...args),
+}));
+
+vi.mock("../../config/sessions", () => ({
+  recordSessionMetaFromInbound: (...args: unknown[]) =>
+    mocks.recordSessionMetaFromInboundMock(...args),
+  resolveStorePath: (...args: unknown[]) => mocks.resolveStorePathMock(...args),
 }));
 
 type SlashHarnessMocks = {
@@ -43,6 +51,8 @@ type SlashHarnessMocks = {
   finalizeInboundContextMock: ReturnType<typeof vi.fn>;
   resolveConversationLabelMock: ReturnType<typeof vi.fn>;
   createReplyPrefixOptionsMock: ReturnType<typeof vi.fn>;
+  recordSessionMetaFromInboundMock: ReturnType<typeof vi.fn>;
+  resolveStorePathMock: ReturnType<typeof vi.fn>;
 };
 
 export function getSlackSlashMocks(): SlashHarnessMocks {
@@ -61,4 +71,6 @@ export function resetSlackSlashMocks() {
   mocks.finalizeInboundContextMock.mockReset().mockImplementation((ctx: unknown) => ctx);
   mocks.resolveConversationLabelMock.mockReset().mockReturnValue(undefined);
   mocks.createReplyPrefixOptionsMock.mockReset().mockReturnValue({ onModelSelected: () => {} });
+  mocks.recordSessionMetaFromInboundMock.mockReset().mockResolvedValue(undefined);
+  mocks.resolveStorePathMock.mockReset().mockReturnValue("/tmp/powerdirector-sessions.json");
 }

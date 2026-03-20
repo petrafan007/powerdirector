@@ -7,7 +7,7 @@ import type {
   StickerMessage,
   LocationMessage,
 } from "@line/bot-sdk";
-import type { BaseProbeResult } from '../channels/plugins/types';
+import type { BaseProbeResult } from "../channels/plugins/types";
 
 export type LineTokenSource = "config" | "env" | "file" | "none";
 
@@ -32,6 +32,8 @@ interface LineAccountBaseConfig {
 export interface LineConfig extends LineAccountBaseConfig {
   /** Per-account overrides keyed by account id. */
   accounts?: Record<string, LineAccountConfig>;
+  /** Optional default account id when multiple accounts are configured. */
+  defaultAccount?: string;
 }
 
 export interface LineAccountConfig extends LineAccountBaseConfig {}

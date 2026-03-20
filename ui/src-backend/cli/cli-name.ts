@@ -2,14 +2,10 @@ import path from "node:path";
 
 export const DEFAULT_CLI_NAME = "powerdirector";
 
-const KNOWN_CLI_NAMES = new Set([DEFAULT_CLI_NAME, "pdir"]);
-const CLI_PREFIX_RE = /^(?:((?:pnpm|npm|bunx|npx)\s+))?(powerdirector|pdir)\b/;
+const KNOWN_CLI_NAMES = new Set([DEFAULT_CLI_NAME]);
+const CLI_PREFIX_RE = /^(?:((?:pnpm|npm|bunx|npx)\s+))?(powerdirector)\b/;
 
 export function resolveCliName(argv: string[] = process.argv): string {
-  const envCliName = process.env.POWERDIRECTOR_CLI_NAME?.trim();
-  if (envCliName && KNOWN_CLI_NAMES.has(envCliName)) {
-    return envCliName;
-  }
   const argv1 = argv[1];
   if (!argv1) {
     return DEFAULT_CLI_NAME;

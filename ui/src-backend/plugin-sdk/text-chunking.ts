@@ -1,5 +1,6 @@
-import { chunkTextByBreakResolver } from '../shared/text-chunking';
+import { chunkTextByBreakResolver } from "../shared/text-chunking";
 
+/** Chunk outbound text while preferring newline boundaries over spaces. */
 export function chunkTextForOutbound(text: string, limit: number): string[] {
   return chunkTextByBreakResolver(text, limit, (window) => {
     const lastNewline = window.lastIndexOf("\n");

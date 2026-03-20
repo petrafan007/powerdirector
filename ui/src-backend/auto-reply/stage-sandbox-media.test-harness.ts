@@ -1,7 +1,7 @@
 import { join } from "node:path";
-import { withTempHome as withTempHomeBase } from '../../test/helpers/temp-home';
-import type { PowerDirectorConfig } from '../config/config';
-import type { MsgContext, TemplateContext } from './templating';
+import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home";
+import type { PowerDirectorConfig } from "../config/config";
+import type { MsgContext, TemplateContext } from "./templating";
 
 export async function withSandboxMediaTempHome<T>(
   prefix: string,

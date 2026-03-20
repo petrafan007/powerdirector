@@ -1,7 +1,8 @@
-import { createAccountListHelpers } from '../channels/plugins/account-helpers';
-import type { PowerDirectorConfig } from '../config/config';
-import type { IMessageAccountConfig } from '../config/types';
-import { normalizeAccountId } from '../routing/session-key';
+import { createAccountListHelpers } from "../channels/plugins/account-helpers";
+import type { PowerDirectorConfig } from "../config/config";
+import type { IMessageAccountConfig } from "../config/types";
+import { resolveAccountEntry } from "../routing/account-lookup";
+import { normalizeAccountId } from "../routing/session-key";
 
 export type ResolvedIMessageAccount = {
   accountId: string;
@@ -19,11 +20,7 @@ function resolveAccountConfig(
   cfg: PowerDirectorConfig,
   accountId: string,
 ): IMessageAccountConfig | undefined {
-  const accounts = cfg.channels?.imessage?.accounts;
-  if (!accounts || typeof accounts !== "object") {
-    return undefined;
-  }
-  return accounts[accountId] as IMessageAccountConfig | undefined;
+  return resolveAccountEntry(cfg.channels?.imessage?.accounts, accountId);
 }
 
 function mergeIMessageAccountConfig(cfg: PowerDirectorConfig, accountId: string): IMessageAccountConfig {

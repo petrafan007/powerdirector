@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { formatCliCommand } from '../cli/command-format';
-import { resolveStateDir } from '../config/paths';
+import { formatCliCommand } from "../cli/command-format";
+import { resolveStateDir } from "../config/paths";
 
 export type RestartSentinelLog = {
   stdoutTail?: string | null;
@@ -118,7 +118,7 @@ export function formatRestartSentinelMessage(payload: RestartSentinelPayload): s
     lines.push(message);
   }
   const reason = payload.stats?.reason?.trim();
-  if (reason) {
+  if (reason && reason !== message) {
     lines.push(`Reason: ${reason}`);
   }
   if (payload.doctorHint?.trim()) {

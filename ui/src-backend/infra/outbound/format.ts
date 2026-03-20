@@ -1,7 +1,7 @@
-import { getChannelPlugin } from '../../channels/plugins/index';
-import type { ChannelId } from '../../channels/plugins/types';
-import { getChatChannelMeta, normalizeChatChannelId } from '../../channels/registry';
-import type { OutboundDeliveryResult } from './deliver';
+import { getChannelPlugin } from "../../channels/plugins/index";
+import type { ChannelId } from "../../channels/plugins/types";
+import { getChatChannelMeta, normalizeChatChannelId } from "../../channels/registry";
+import type { OutboundDeliveryResult } from "./deliver";
 
 export type OutboundDeliveryJson = {
   channel: string;

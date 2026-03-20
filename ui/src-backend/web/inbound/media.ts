@@ -1,7 +1,7 @@
 import type { proto, WAMessage } from "@whiskeysockets/baileys";
 import { downloadMediaMessage, normalizeMessageContent } from "@whiskeysockets/baileys";
-import { logVerbose } from '../../globals';
-import type { createWaSocket } from '../session';
+import { logVerbose } from "../../globals";
+import type { createWaSocket } from "../session";
 
 function unwrapMessage(message: proto.IMessage | undefined): proto.IMessage | undefined {
   const normalized = normalizeMessageContent(message);

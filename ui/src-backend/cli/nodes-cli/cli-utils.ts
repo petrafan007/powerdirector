@@ -1,7 +1,7 @@
-import { defaultRuntime } from '../../runtime';
-import { isRich, theme } from '../../terminal/theme';
-import { runCommandWithRuntime } from '../cli-utils';
-import { unauthorizedHintForMessage } from './rpc';
+import { defaultRuntime } from "../../runtime";
+import { isRich, theme } from "../../terminal/theme";
+import { runCommandWithRuntime } from "../cli-utils";
+import { unauthorizedHintForMessage } from "./rpc";
 
 export function getNodesTheme() {
   const rich = isRich();

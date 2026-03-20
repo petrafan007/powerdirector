@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from './config';
-import type { WhatsAppConfig } from './types';
+import type { PowerDirectorConfig } from "./config";
+import type { WhatsAppConfig } from "./types";
 
 export type MergeSectionOptions<T> = {
   unsetOnUndefined?: Array<keyof T>;

@@ -1,7 +1,8 @@
 import type { Server } from "node:http";
-import type { RunningChrome } from './chrome';
-import type { BrowserTab } from './client';
-import type { ResolvedBrowserConfig, ResolvedBrowserProfile } from './config';
+import type { RunningChrome } from "./chrome";
+import type { BrowserTransport } from "./client";
+import type { BrowserTab } from "./client";
+import type { ResolvedBrowserConfig, ResolvedBrowserProfile } from "./config";
 
 export type { BrowserTab };
 
@@ -13,6 +14,10 @@ export type ProfileRuntimeState = {
   running: RunningChrome | null;
   /** Sticky tab selection when callers omit targetId (keeps snapshot+act consistent). */
   lastTargetId?: string | null;
+  reconcile?: {
+    previousProfile: ResolvedBrowserProfile;
+    reason: string;
+  } | null;
 };
 
 export type BrowserServerState = {
@@ -49,13 +54,17 @@ export type ProfileContext = {
 
 export type ProfileStatus = {
   name: string;
-  cdpPort: number;
-  cdpUrl: string;
+  transport: BrowserTransport;
+  cdpPort: number | null;
+  cdpUrl: string | null;
   color: string;
+  driver: ResolvedBrowserProfile["driver"];
   running: boolean;
   tabCount: number;
   isDefault: boolean;
   isRemote: boolean;
+  missingFromConfig?: boolean;
+  reconcileReason?: string | null;
 };
 
 export type ContextOptions = {

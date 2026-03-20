@@ -1,10 +1,10 @@
-import type { ChannelAccountSnapshot, ChannelStatusIssue } from '../types';
+import type { ChannelAccountSnapshot, ChannelStatusIssue } from "../types";
 import {
   appendMatchMetadata,
   asString,
   isRecord,
   resolveEnabledConfiguredAccountId,
-} from './shared';
+} from "./shared";
 
 type TelegramAccountStatus = {
   accountId?: unknown;

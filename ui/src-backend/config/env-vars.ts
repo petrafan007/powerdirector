@@ -1,6 +1,16 @@
-import type { PowerDirectorConfig } from './types';
+import {
+  isDangerousHostEnvOverrideVarName,
+  isDangerousHostEnvVarName,
+  normalizeEnvVarKey,
+} from "../infra/host-env-security";
+import { containsEnvVarReference } from "./env-substitution";
+import type { PowerDirectorConfig } from "./types";
 
-export function collectConfigEnvVars(cfg?: PowerDirectorConfig): Record<string, string> {
+function isBlockedConfigEnvVar(key: string): boolean {
+  return isDangerousHostEnvVarName(key) || isDangerousHostEnvOverrideVarName(key);
+}
+
+function collectConfigEnvVarsByTarget(cfg?: PowerDirectorConfig): Record<string, string> {
   const envConfig = cfg?.env;
   if (!envConfig) {
     return {};
@@ -9,19 +19,33 @@ export function collectConfigEnvVars(cfg?: PowerDirectorConfig): Record<string, 
   const entries: Record<string, string> = {};
 
   if (envConfig.vars) {
-    for (const [key, value] of Object.entries(envConfig.vars)) {
+    for (const [rawKey, value] of Object.entries(envConfig.vars)) {
       if (!value) {
+        continue;
+      }
+      const key = normalizeEnvVarKey(rawKey, { portable: true });
+      if (!key) {
+        continue;
+      }
+      if (isBlockedConfigEnvVar(key)) {
         continue;
       }
       entries[key] = value;
     }
   }
 
-  for (const [key, value] of Object.entries(envConfig)) {
-    if (key === "shellEnv" || key === "vars") {
+  for (const [rawKey, value] of Object.entries(envConfig)) {
+    if (rawKey === "shellEnv" || rawKey === "vars") {
       continue;
     }
     if (typeof value !== "string" || !value.trim()) {
+      continue;
+    }
+    const key = normalizeEnvVarKey(rawKey, { portable: true });
+    if (!key) {
+      continue;
+    }
+    if (isBlockedConfigEnvVar(key)) {
       continue;
     }
     entries[key] = value;
@@ -30,13 +54,42 @@ export function collectConfigEnvVars(cfg?: PowerDirectorConfig): Record<string, 
   return entries;
 }
 
+export function collectConfigRuntimeEnvVars(cfg?: PowerDirectorConfig): Record<string, string> {
+  return collectConfigEnvVarsByTarget(cfg);
+}
+
+export function collectConfigServiceEnvVars(cfg?: PowerDirectorConfig): Record<string, string> {
+  return collectConfigEnvVarsByTarget(cfg);
+}
+
+/** @deprecated Use `collectConfigRuntimeEnvVars` or `collectConfigServiceEnvVars`. */
+export function collectConfigEnvVars(cfg?: PowerDirectorConfig): Record<string, string> {
+  return collectConfigRuntimeEnvVars(cfg);
+}
+
+export function createConfigRuntimeEnv(
+  cfg: PowerDirectorConfig,
+  baseEnv: NodeJS.ProcessEnv = process.env,
+): NodeJS.ProcessEnv {
+  const env = { ...baseEnv };
+  applyConfigEnvVars(cfg, env);
+  return env;
+}
+
 export function applyConfigEnvVars(
   cfg: PowerDirectorConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): void {
-  const entries = collectConfigEnvVars(cfg);
+  const entries = collectConfigRuntimeEnvVars(cfg);
   for (const [key, value] of Object.entries(entries)) {
     if (env[key]?.trim()) {
+      continue;
+    }
+    // Skip values containing unresolved ${VAR} references — applyConfigEnvVars runs
+    // before env substitution, so these would pollute process.env with literal placeholders
+    // (e.g. process.env.POWERDIRECTOR_GATEWAY_TOKEN = "${VAULT_TOKEN}") which downstream auth
+    // resolution would accept as valid credentials.
+    if (containsEnvVarReference(value)) {
       continue;
     }
     env[key] = value;

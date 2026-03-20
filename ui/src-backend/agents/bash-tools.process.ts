@@ -1,9 +1,9 @@
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import { Type } from "@sinclair/typebox";
 import { formatDurationCompact } from "../infra/format-time/format-duration.ts";
-import { getDiagnosticSessionState } from '../logging/diagnostic-session-state';
-import { killProcessTree } from '../process/kill-tree';
-import { getProcessSupervisor } from '../process/supervisor/index';
+import { getDiagnosticSessionState } from "../logging/diagnostic-session-state";
+import { killProcessTree } from "../process/kill-tree";
+import { getProcessSupervisor } from "../process/supervisor/index";
 import {
   type ProcessSession,
   deleteSession,
@@ -14,10 +14,10 @@ import {
   listRunningSessions,
   markExited,
   setJobTtlMs,
-} from './bash-process-registry';
-import { deriveSessionName, pad, sliceLogLines, truncateMiddle } from './bash-tools.shared';
-import { recordCommandPoll, resetCommandPollCount } from './command-poll-backoff';
-import { encodeKeySequence, encodePaste } from './pty-keys';
+} from "./bash-process-registry";
+import { deriveSessionName, pad, sliceLogLines, truncateMiddle } from "./bash-tools.shared";
+import { recordCommandPoll, resetCommandPollCount } from "./command-poll-backoff";
+import { encodeKeySequence, encodePaste } from "./pty-keys";
 
 export type ProcessToolDefaults = {
   cleanupMs?: number;
@@ -278,6 +278,18 @@ export function createProcessTool(
         });
       };
 
+      const runningSessionResult = (
+        session: ProcessSession,
+        text: string,
+      ): AgentToolResult<unknown> => ({
+        content: [{ type: "text", text }],
+        details: {
+          status: "running",
+          sessionId: params.sessionId,
+          name: deriveSessionName(session.command),
+        },
+      });
+
       switch (params.action) {
         case "poll": {
           if (!scopedSession) {
@@ -319,7 +331,7 @@ export function createProcessTool(
             const deadline = Date.now() + pollWaitMs;
             while (!scopedSession.exited && Date.now() < deadline) {
               await new Promise((resolve) =>
-                setTimeout(resolve, Math.min(250, deadline - Date.now())),
+                setTimeout(resolve, Math.max(0, Math.min(250, deadline - Date.now()))),
               );
             }
           }
@@ -452,21 +464,12 @@ export function createProcessTool(
           if (params.eof) {
             resolved.stdin.end();
           }
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Wrote ${(params.data ?? "").length} bytes to session ${params.sessionId}${
-                  params.eof ? " (stdin closed)" : ""
-                }.`,
-              },
-            ],
-            details: {
-              status: "running",
-              sessionId: params.sessionId,
-              name: deriveSessionName(resolved.session.command),
-            },
-          };
+          return runningSessionResult(
+            resolved.session,
+            `Wrote ${(params.data ?? "").length} bytes to session ${params.sessionId}${
+              params.eof ? " (stdin closed)" : ""
+            }.`,
+          );
         }
 
         case "send-keys": {
@@ -491,21 +494,11 @@ export function createProcessTool(
             };
           }
           await writeToStdin(resolved.stdin, data);
-          return {
-            content: [
-              {
-                type: "text",
-                text:
-                  `Sent ${data.length} bytes to session ${params.sessionId}.` +
-                  (warnings.length ? `\nWarnings:\n- ${warnings.join("\n- ")}` : ""),
-              },
-            ],
-            details: {
-              status: "running",
-              sessionId: params.sessionId,
-              name: deriveSessionName(resolved.session.command),
-            },
-          };
+          return runningSessionResult(
+            resolved.session,
+            `Sent ${data.length} bytes to session ${params.sessionId}.` +
+              (warnings.length ? `\nWarnings:\n- ${warnings.join("\n- ")}` : ""),
+          );
         }
 
         case "submit": {
@@ -514,19 +507,10 @@ export function createProcessTool(
             return resolved.result;
           }
           await writeToStdin(resolved.stdin, "\r");
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Submitted session ${params.sessionId} (sent CR).`,
-              },
-            ],
-            details: {
-              status: "running",
-              sessionId: params.sessionId,
-              name: deriveSessionName(resolved.session.command),
-            },
-          };
+          return runningSessionResult(
+            resolved.session,
+            `Submitted session ${params.sessionId} (sent CR).`,
+          );
         }
 
         case "paste": {
@@ -547,19 +531,10 @@ export function createProcessTool(
             };
           }
           await writeToStdin(resolved.stdin, payload);
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Pasted ${params.text?.length ?? 0} chars to session ${params.sessionId}.`,
-              },
-            ],
-            details: {
-              status: "running",
-              sessionId: params.sessionId,
-              name: deriveSessionName(resolved.session.command),
-            },
-          };
+          return runningSessionResult(
+            resolved.session,
+            `Pasted ${params.text?.length ?? 0} chars to session ${params.sessionId}.`,
+          );
         }
 
         case "kill": {

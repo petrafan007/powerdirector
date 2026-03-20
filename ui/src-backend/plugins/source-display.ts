@@ -1,13 +1,9 @@
 import path from "node:path";
-import { resolveConfigDir, shortenHomeInString } from '../utils';
-import { resolveBundledPluginsDir } from './bundled-dir';
-import type { PluginRecord } from './registry';
-
-export type PluginSourceRoots = {
-  stock?: string;
-  global?: string;
-  workspace?: string;
-};
+import { shortenHomeInString } from "../utils";
+import type { PluginRecord } from "./registry";
+import type { PluginSourceRoots } from "./roots";
+export { resolvePluginSourceRoots } from "./roots";
+export type { PluginSourceRoots } from "./roots";
 
 function tryRelative(root: string, filePath: string): string | null {
   const rel = path.relative(root, filePath);
@@ -25,15 +21,6 @@ function tryRelative(root: string, filePath: string): string | null {
   }
   // Normalize to forward slashes for display (path.relative uses backslashes on Windows)
   return rel.replaceAll("\\", "/");
-}
-
-export function resolvePluginSourceRoots(params: { workspaceDir?: string }): PluginSourceRoots {
-  const stock = resolveBundledPluginsDir();
-  const global = path.join(resolveConfigDir(), "extensions");
-  const workspace = params.workspaceDir
-    ? path.join(params.workspaceDir, ".powerdirector", "extensions")
-    : undefined;
-  return { stock, global, workspace };
 }
 
 export function formatPluginSourceForTable(

@@ -3,23 +3,23 @@ import {
   compactEmbeddedPiSession,
   isEmbeddedPiRunActive,
   waitForEmbeddedPiRunEnd,
-} from '../../agents/pi-embedded';
-import type { PowerDirectorConfig } from '../../config/config';
+} from "../../agents/pi-embedded";
+import type { PowerDirectorConfig } from "../../config/config";
 import {
   resolveFreshSessionTotalTokens,
   resolveSessionFilePath,
   resolveSessionFilePathOptions,
-} from '../../config/sessions';
-import { logVerbose } from '../../globals';
-import { enqueueSystemEvent } from '../../infra/system-events';
-import { formatContextUsageShort, formatTokenCount } from '../status';
-import type { CommandHandler } from './commands-types';
-import { stripMentions, stripStructuralPrefixes } from './mentions';
-import { incrementCompactionCount } from './session-updates';
+} from "../../config/sessions";
+import { logVerbose } from "../../globals";
+import { enqueueSystemEvent } from "../../infra/system-events";
+import { formatContextUsageShort, formatTokenCount } from "../status";
+import type { CommandHandler } from "./commands-types";
+import { stripMentions, stripStructuralPrefixes } from "./mentions";
+import { incrementCompactionCount } from "./session-updates";
 
 function extractCompactInstructions(params: {
   rawBody?: string;
-  ctx: import('../templating').MsgContext;
+  ctx: import("../templating").MsgContext;
   cfg: PowerDirectorConfig;
   agentId?: string;
   isGroup: boolean;
@@ -78,6 +78,7 @@ export const handleCompactCommand: CommandHandler = async (params) => {
   const result = await compactEmbeddedPiSession({
     sessionId,
     sessionKey: params.sessionKey,
+    allowGatewaySubagentBinding: true,
     messageChannel: params.command.channel,
     groupId: params.sessionEntry.groupId,
     groupChannel: params.sessionEntry.groupChannel,
@@ -92,6 +93,7 @@ export const handleCompactCommand: CommandHandler = async (params) => {
       }),
     ),
     workspaceDir: params.workspaceDir,
+    agentDir: params.agentDir,
     config: params.cfg,
     skillsSnapshot: params.sessionEntry.skillsSnapshot,
     provider: params.provider,

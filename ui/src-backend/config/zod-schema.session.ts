@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { parseByteSize } from '../cli/parse-bytes';
-import { parseDurationMs } from '../cli/parse-duration';
-import { ElevatedAllowFromSchema } from './zod-schema.agent-runtime';
-import { createAllowDenyChannelRulesSchema } from './zod-schema.allowdeny';
+import { parseByteSize } from "../cli/parse-bytes";
+import { parseDurationMs } from "../cli/parse-duration";
+import { ElevatedAllowFromSchema } from "./zod-schema.agent-runtime";
+import { createAllowDenyChannelRulesSchema } from "./zod-schema.allowdeny";
 import {
   GroupChatSchema,
   InboundDebounceSchema,
@@ -10,8 +10,8 @@ import {
   QueueSchema,
   TypingModeSchema,
   TtsConfigSchema,
-} from './zod-schema.core';
-import { sensitive } from './zod-schema.sensitive';
+} from "./zod-schema.core";
+import { sensitive } from "./zod-schema.sensitive";
 
 const SessionResetConfigSchema = z
   .object({
@@ -52,6 +52,7 @@ export const SessionSchema = z
     store: z.string().optional(),
     typingIntervalSeconds: z.number().int().positive().optional(),
     typingMode: TypingModeSchema.optional(),
+    parentForkMaxTokens: z.number().int().nonnegative().optional(),
     mainKey: z.string().optional(),
     sendPolicy: SessionSendPolicySchema.optional(),
     agentToAgent: z
@@ -63,7 +64,8 @@ export const SessionSchema = z
     threadBindings: z
       .object({
         enabled: z.boolean().optional(),
-        ttlHours: z.number().nonnegative().optional(),
+        idleHours: z.number().nonnegative().optional(),
+        maxAgeHours: z.number().nonnegative().optional(),
       })
       .strict()
       .optional(),
@@ -150,7 +152,9 @@ export const MessagesSchema = z
     queue: QueueSchema,
     inbound: InboundDebounceSchema,
     ackReaction: z.string().optional(),
-    ackReactionScope: z.enum(["group-mentions", "group-all", "direct", "all"]).optional(),
+    ackReactionScope: z
+      .enum(["group-mentions", "group-all", "direct", "all", "off", "none"])
+      .optional(),
     removeAckAfterReply: z.boolean().optional(),
     statusReactions: z
       .object({
@@ -165,6 +169,7 @@ export const MessagesSchema = z
             error: z.string().optional(),
             stallSoft: z.string().optional(),
             stallHard: z.string().optional(),
+            compacting: z.string().optional(),
           })
           .strict()
           .optional(),
@@ -195,6 +200,8 @@ export const CommandsSchema = z
     bash: z.boolean().optional(),
     bashForegroundMs: z.number().int().min(0).max(30_000).optional(),
     config: z.boolean().optional(),
+    mcp: z.boolean().optional(),
+    plugins: z.boolean().optional(),
     debug: z.boolean().optional(),
     restart: z.boolean().optional().default(true),
     useAccessGroups: z.boolean().optional(),

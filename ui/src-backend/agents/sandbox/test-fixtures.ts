@@ -1,4 +1,4 @@
-import type { SandboxContext } from './types';
+import type { SandboxContext } from "./types";
 
 export function createSandboxTestContext(params?: {
   overrides?: Partial<SandboxContext>;
@@ -28,10 +28,13 @@ export function createSandboxTestContext(params?: {
 
   return {
     enabled: true,
+    backendId: "docker",
     sessionKey: "sandbox:test",
     workspaceDir: "/tmp/workspace",
     agentWorkspaceDir: "/tmp/workspace",
     workspaceAccess: "rw",
+    runtimeId: "powerdirector-sbx-test",
+    runtimeLabel: "powerdirector-sbx-test",
     containerName: "powerdirector-sbx-test",
     containerWorkdir: "/workspace",
     tools: { allow: ["*"], deny: [] },

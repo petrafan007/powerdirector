@@ -1,57 +1,62 @@
 import path from "node:path";
-import { resolvePowerDirectorAgentDir } from '../../agents/agent-paths';
+import { resolvePowerDirectorAgentDir } from "../../agents/agent-paths";
 import {
   resolveAgentDir,
+  resolveAgentExplicitModelPrimary,
   resolveAgentModelFallbacksOverride,
-  resolveAgentModelPrimary,
-} from '../../agents/agent-scope';
+} from "../../agents/agent-scope";
 import {
   buildAuthHealthSummary,
   DEFAULT_OAUTH_WARN_MS,
   formatRemainingShort,
-} from '../../agents/auth-health';
+} from "../../agents/auth-health";
 import {
   ensureAuthProfileStore,
   resolveAuthStorePathForDisplay,
   resolveProfileUnusableUntilForDisplay,
-} from '../../agents/auth-profiles';
-import { resolveEnvApiKey } from '../../agents/model-auth';
+} from "../../agents/auth-profiles";
+import { resolveEnvApiKey } from "../../agents/model-auth";
 import {
   buildModelAliasIndex,
   parseModelRef,
   resolveConfiguredModelRef,
   resolveDefaultModelForAgent,
   resolveModelRefFromString,
-} from '../../agents/model-selection';
-import { formatCliCommand } from '../../cli/command-format';
-import { withProgressTotals } from '../../cli/progress';
-import { CONFIG_PATH, loadConfig } from '../../config/config';
+} from "../../agents/model-selection";
+import { withProgressTotals } from "../../cli/progress";
+import { createConfigIO } from "../../config/config";
+import {
+  resolveAgentModelFallbackValues,
+  resolveAgentModelPrimaryValue,
+} from "../../config/model-input";
 import {
   formatUsageWindowSummary,
   loadProviderUsageSummary,
   resolveUsageProviderId,
   type UsageProviderId,
-} from '../../infra/provider-usage';
-import { getShellEnvAppliedKeys, shouldEnableShellEnvFallback } from '../../infra/shell-env';
-import type { RuntimeEnv } from '../../runtime';
-import { renderTable } from '../../terminal/table';
-import { colorize, theme } from '../../terminal/theme';
-import { shortenHomePath } from '../../utils';
-import { resolveProviderAuthOverview } from './list.auth-overview';
-import { isRich } from './list.format';
+} from "../../infra/provider-usage";
+import { getShellEnvAppliedKeys, shouldEnableShellEnvFallback } from "../../infra/shell-env";
+import type { RuntimeEnv } from "../../runtime";
+import { getTerminalTableWidth, renderTable } from "../../terminal/table";
+import { colorize, theme } from "../../terminal/theme";
+import { shortenHomePath } from "../../utils";
+import { buildProviderAuthRecoveryHint } from "../provider-auth-guidance";
+import { resolveProviderAuthOverview } from "./list.auth-overview";
+import { isRich } from "./list.format";
 import {
   describeProbeSummary,
   formatProbeLatency,
   runAuthProbes,
   sortProbeResults,
   type AuthProbeSummary,
-} from './list.probe';
+} from "./list.probe";
+import { loadModelsConfig } from "./load-config";
 import {
   DEFAULT_MODEL,
   DEFAULT_PROVIDER,
   ensureFlagCompatibility,
   resolveKnownAgentId,
-} from './shared';
+} from "./shared";
 
 export async function modelsStatusCommand(
   opts: {
@@ -72,10 +77,11 @@ export async function modelsStatusCommand(
   if (opts.plain && opts.probe) {
     throw new Error("--probe cannot be used with --plain output.");
   }
-  const cfg = loadConfig();
+  const configPath = createConfigIO().configPath;
+  const cfg = await loadModelsConfig({ commandName: "models status", runtime });
   const agentId = resolveKnownAgentId({ cfg, rawAgentId: opts.agent });
   const agentDir = agentId ? resolveAgentDir(cfg, agentId) : resolvePowerDirectorAgentDir();
-  const agentModelPrimary = agentId ? resolveAgentModelPrimary(cfg, agentId) : undefined;
+  const agentModelPrimary = agentId ? resolveAgentExplicitModelPrimary(cfg, agentId) : undefined;
   const agentFallbacksOverride = agentId
     ? resolveAgentModelFallbacksOverride(cfg, agentId)
     : undefined;
@@ -87,24 +93,14 @@ export async function modelsStatusCommand(
         defaultModel: DEFAULT_MODEL,
       });
 
-  const modelConfig = cfg.agents?.defaults?.model as
-    | { primary?: string; fallbacks?: string[] }
-    | string
-    | undefined;
-  const imageConfig = cfg.agents?.defaults?.imageModel as
-    | { primary?: string; fallbacks?: string[] }
-    | string
-    | undefined;
-  const rawDefaultsModel =
-    typeof modelConfig === "string" ? modelConfig.trim() : (modelConfig?.primary?.trim() ?? "");
+  const rawDefaultsModel = resolveAgentModelPrimaryValue(cfg.agents?.defaults?.model) ?? "";
   const rawModel = agentModelPrimary ?? rawDefaultsModel;
   const resolvedLabel = `${resolved.provider}/${resolved.model}`;
   const defaultLabel = rawModel || resolvedLabel;
-  const defaultsFallbacks = typeof modelConfig === "object" ? (modelConfig?.fallbacks ?? []) : [];
+  const defaultsFallbacks = resolveAgentModelFallbackValues(cfg.agents?.defaults?.model);
   const fallbacks = agentFallbacksOverride ?? defaultsFallbacks;
-  const imageModel =
-    typeof imageConfig === "string" ? imageConfig.trim() : (imageConfig?.primary?.trim() ?? "");
-  const imageFallbacks = typeof imageConfig === "object" ? (imageConfig?.fallbacks ?? []) : [];
+  const imageModel = resolveAgentModelPrimaryValue(cfg.agents?.defaults?.imageModel) ?? "";
+  const imageFallbacks = resolveAgentModelFallbackValues(cfg.agents?.defaults?.imageModel);
   const aliases = Object.entries(cfg.agents?.defaults?.models ?? {}).reduce<Record<string, string>>(
     (acc, [key, entry]) => {
       const alias = typeof entry?.alias === "string" ? entry.alias.trim() : undefined;
@@ -331,7 +327,7 @@ export async function modelsStatusCommand(
     runtime.log(
       JSON.stringify(
         {
-          configPath: CONFIG_PATH,
+          configPath,
           ...(agentId ? { agentId } : {}),
           agentDir,
           defaultModel: defaultLabel,
@@ -394,7 +390,7 @@ export async function modelsStatusCommand(
     rawModel && rawModel !== resolvedLabel ? `${resolvedLabel} (from ${rawModel})` : resolvedLabel;
 
   runtime.log(
-    `${label("Config")}${colorize(rich, theme.muted, ":")} ${colorize(rich, theme.info, shortenHomePath(CONFIG_PATH))}`,
+    `${label("Config")}${colorize(rich, theme.muted, ":")} ${colorize(rich, theme.info, shortenHomePath(configPath))}`,
   );
   runtime.log(
     `${label("Agent dir")}${colorize(rich, theme.muted, ":")} ${colorize(
@@ -540,10 +536,11 @@ export async function modelsStatusCommand(
     runtime.log("");
     runtime.log(colorize(rich, theme.heading, "Missing auth"));
     for (const provider of missingProvidersInUse) {
-      const hint =
-        provider === "anthropic"
-          ? `Run \`claude setup-token\`, then \`${formatCliCommand("powerdirector models auth setup-token")}\` or \`${formatCliCommand("powerdirector configure")}\`.`
-          : `Run \`${formatCliCommand("powerdirector configure")}\` or set an API key env var.`;
+      const hint = buildProviderAuthRecoveryHint({
+        provider,
+        config: cfg,
+        includeEnvVar: true,
+      });
       runtime.log(`- ${theme.heading(provider)} ${hint}`);
     }
   }
@@ -635,7 +632,7 @@ export async function modelsStatusCommand(
     if (probeSummary.results.length === 0) {
       runtime.log(colorize(rich, theme.muted, "- none"));
     } else {
-      const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+      const tableWidth = getTerminalTableWidth();
       const sorted = sortProbeResults(probeSummary.results);
       const statusColor = (status: string) => {
         if (status === "ok") {

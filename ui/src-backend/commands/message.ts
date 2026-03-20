@@ -1,22 +1,45 @@
 import {
   CHANNEL_MESSAGE_ACTION_NAMES,
   type ChannelMessageActionName,
-} from '../channels/plugins/types';
-import { createOutboundSendDeps, type CliDeps } from '../cli/outbound-send-deps';
-import { withProgress } from '../cli/progress';
-import { loadConfig } from '../config/config';
-import type { OutboundSendDeps } from '../infra/outbound/deliver';
-import { runMessageAction } from '../infra/outbound/message-action-runner';
-import type { RuntimeEnv } from '../runtime';
-import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from '../utils/message-channel';
-import { buildMessageCliJson, formatMessageCliText } from './message-format';
+} from "../channels/plugins/types";
+import { resolveCommandSecretRefsViaGateway } from "../cli/command-secret-gateway";
+import { getScopedChannelsCommandSecretTargets } from "../cli/command-secret-targets";
+import { resolveMessageSecretScope } from "../cli/message-secret-scope";
+import { createOutboundSendDeps, type CliDeps } from "../cli/outbound-send-deps";
+import { withProgress } from "../cli/progress";
+import { loadConfig } from "../config/config";
+import type { OutboundSendDeps } from "../infra/outbound/deliver";
+import { runMessageAction } from "../infra/outbound/message-action-runner";
+import type { RuntimeEnv } from "../runtime";
+import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel";
+import { buildMessageCliJson, formatMessageCliText } from "./message-format";
 
 export async function messageCommand(
   opts: Record<string, unknown>,
   deps: CliDeps,
   runtime: RuntimeEnv,
 ) {
-  const cfg = loadConfig();
+  const loadedRaw = loadConfig();
+  const scope = resolveMessageSecretScope({
+    channel: opts.channel,
+    target: opts.target,
+    targets: opts.targets,
+    accountId: opts.accountId,
+  });
+  const scopedTargets = getScopedChannelsCommandSecretTargets({
+    config: loadedRaw,
+    channel: scope.channel,
+    accountId: scope.accountId,
+  });
+  const { resolvedConfig: cfg, diagnostics } = await resolveCommandSecretRefsViaGateway({
+    config: loadedRaw,
+    commandName: "message",
+    targetIds: scopedTargets.targetIds,
+    ...(scopedTargets.allowedPaths ? { allowedPaths: scopedTargets.allowedPaths } : {}),
+  });
+  for (const entry of diagnostics) {
+    runtime.log(`[secrets] ${entry}`);
+  }
   const rawAction = typeof opts.action === "string" ? opts.action.trim() : "";
   const actionInput = rawAction || "send";
   const actionMatch = (CHANNEL_MESSAGE_ACTION_NAMES as readonly string[]).find(

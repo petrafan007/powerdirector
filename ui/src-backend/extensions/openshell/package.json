@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/openshell-sandbox",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector OpenShell sandbox backend",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

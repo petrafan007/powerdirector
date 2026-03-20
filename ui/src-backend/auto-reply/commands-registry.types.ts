@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from '../config/types';
+import type { PowerDirectorConfig } from "../config/types";
 
 export type CommandScope = "text" | "native" | "both";
 
@@ -31,6 +31,7 @@ export type CommandArgDefinition = {
   type: CommandArgType;
   required?: boolean;
   choices?: CommandArgChoice[] | CommandArgChoicesProvider;
+  preferAutocomplete?: boolean;
   captureRemaining?: boolean;
 };
 

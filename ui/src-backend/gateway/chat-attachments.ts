@@ -1,5 +1,5 @@
-import { estimateBase64DecodedBytes } from '../media/base64';
-import { sniffMimeFromBase64 } from '../media/sniff-mime-from-base64';
+import { estimateBase64DecodedBytes } from "../media/base64";
+import { sniffMimeFromBase64 } from "../media/sniff-mime-from-base64";
 
 export type ChatAttachment = {
   type?: string;

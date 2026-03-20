@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { DisconnectReason } from "@whiskeysockets/baileys";
-import { loadConfig } from '../config/config';
-import { danger, info, success } from '../globals';
-import { logInfo } from '../logger';
-import { defaultRuntime, type RuntimeEnv } from '../runtime';
-import { resolveWhatsAppAccount } from './accounts';
-import { renderQrPngBase64 } from './qr-image';
+import { loadConfig } from "../config/config";
+import { danger, info, success } from "../globals";
+import { logInfo } from "../logger";
+import { defaultRuntime, type RuntimeEnv } from "../runtime";
+import { resolveWhatsAppAccount } from "./accounts";
+import { renderQrPngBase64 } from "./qr-image";
 import {
   createWaSocket,
   formatError,
@@ -14,7 +14,7 @@ import {
   readWebSelfId,
   waitForWaConnection,
   webAuthExists,
-} from './session';
+} from "./session";
 
 type WaSocket = Awaited<ReturnType<typeof createWaSocket>>;
 

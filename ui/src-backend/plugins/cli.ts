@@ -1,14 +1,18 @@
 import type { Command } from "commander";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { loadPowerDirectorPlugins } from './loader';
-import type { PluginLogger } from './types';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope";
+import type { PowerDirectorConfig } from "../config/config";
+import { loadConfig } from "../config/config";
+import { createSubsystemLogger } from "../logging/subsystem";
+import { loadPowerDirectorPlugins } from "./loader";
+import type { PluginLogger } from "./types";
 
 const log = createSubsystemLogger("plugins");
 
-export function registerPluginCliCommands(program: Command, cfg?: PowerDirectorConfig) {
+export function registerPluginCliCommands(
+  program: Command,
+  cfg?: PowerDirectorConfig,
+  env?: NodeJS.ProcessEnv,
+) {
   const config = cfg ?? loadConfig();
   const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
   const logger: PluginLogger = {
@@ -20,6 +24,7 @@ export function registerPluginCliCommands(program: Command, cfg?: PowerDirectorC
   const registry = loadPowerDirectorPlugins({
     config,
     workspaceDir,
+    env,
     logger,
   });
 

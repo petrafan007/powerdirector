@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveBrewPathDirs } from './brew';
-import { isTruthyEnvValue } from './env';
+import { resolveBrewPathDirs } from "./brew";
+import { isTruthyEnvValue } from "./env";
 
 type EnsurePowerDirectorPathOpts = {
   execPath?: string;

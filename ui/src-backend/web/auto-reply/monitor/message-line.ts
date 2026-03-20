@@ -1,7 +1,7 @@
-import { resolveMessagePrefix } from '../../../agents/identity';
-import { formatInboundEnvelope, type EnvelopeFormatOptions } from '../../../auto-reply/envelope';
-import type { loadConfig } from '../../../config/config';
-import type { WebInboundMsg } from '../types';
+import { resolveMessagePrefix } from "../../../agents/identity";
+import { formatInboundEnvelope, type EnvelopeFormatOptions } from "../../../auto-reply/envelope";
+import type { loadConfig } from "../../../config/config";
+import type { WebInboundMsg } from "../types";
 
 export function formatReplyContext(msg: WebInboundMsg) {
   if (!msg.replyToBody) {
@@ -43,5 +43,6 @@ export function buildInboundLine(params: {
     },
     previousTimestamp,
     envelope,
+    fromMe: msg.fromMe,
   });
 }

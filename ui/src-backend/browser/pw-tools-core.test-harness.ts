@@ -22,7 +22,9 @@ const sessionMocks = vi.hoisted(() => ({
     return currentPage;
   }),
   ensurePageState: vi.fn(() => pageState),
+  forceDisconnectPlaywrightForTarget: vi.fn(async () => {}),
   restoreRoleRefsForTarget: vi.fn(() => {}),
+  storeRoleRefsForTarget: vi.fn(() => {}),
   refLocator: vi.fn(() => {
     if (!currentRefLocator) {
       throw new Error("missing locator");
@@ -32,7 +34,7 @@ const sessionMocks = vi.hoisted(() => ({
   rememberRoleRefsForTarget: vi.fn(() => {}),
 }));
 
-vi.mock("./pw-session.js", () => sessionMocks);
+vi.mock("./pw-session", () => sessionMocks);
 
 export function getPwToolsCoreSessionMocks() {
   return sessionMocks;

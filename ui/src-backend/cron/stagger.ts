@@ -1,4 +1,4 @@
-import type { CronSchedule } from './types';
+import type { CronSchedule } from "./types";
 
 export const DEFAULT_TOP_OF_HOUR_STAGGER_MS = 5 * 60 * 1000;
 
@@ -41,5 +41,7 @@ export function resolveCronStaggerMs(schedule: Extract<CronSchedule, { kind: "cr
   if (explicit !== undefined) {
     return explicit;
   }
-  return resolveDefaultCronStaggerMs(schedule.expr) ?? 0;
+  const expr = (schedule as { expr?: unknown }).expr;
+  const cronExpr = typeof expr === "string" ? expr : "";
+  return resolveDefaultCronStaggerMs(cronExpr) ?? 0;
 }

@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { STATE_DIR } from '../config/paths';
-import { createSubsystemLogger } from '../logging/subsystem';
-import type { PluginRegistry } from './registry';
-import type { PowerDirectorPluginServiceContext, PluginLogger } from './types';
+import type { PowerDirectorConfig } from "../config/config";
+import { STATE_DIR } from "../config/paths";
+import { createSubsystemLogger } from "../logging/subsystem";
+import type { PluginRegistry } from "./registry";
+import type { PowerDirectorPluginServiceContext, PluginLogger } from "./types";
 
 const log = createSubsystemLogger("plugins");
 
@@ -54,7 +54,11 @@ export async function startPluginServices(params: {
         stop: service.stop ? () => service.stop?.(serviceContext) : undefined,
       });
     } catch (err) {
-      log.error(`plugin service failed (${service.id}): ${String(err)}`);
+      const error = err as Error;
+      const stack = error?.stack?.trim();
+      log.error(
+        `plugin service failed (${service.id}, plugin=${entry.pluginId}, root=${entry.rootDir ?? "unknown"}): ${error?.message ?? String(err)}${stack ? `\n${stack}` : ""}`,
+      );
     }
   }
 

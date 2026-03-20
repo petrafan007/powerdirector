@@ -2,14 +2,14 @@ import type {
   ChannelId,
   ChannelMessageActionName,
   ChannelThreadingToolContext,
-} from '../../channels/plugins/types';
-import type { PowerDirectorConfig } from '../../config/config';
+} from "../../channels/plugins/types";
+import type { PowerDirectorConfig } from "../../config/config";
 import {
   getChannelMessageAdapter,
   type CrossContextComponentsBuilder,
-} from './channel-adapters';
-import { normalizeTargetForProvider } from './target-normalization';
-import { formatTargetDisplay, lookupDirectoryDisplay } from './target-resolver';
+} from "./channel-adapters";
+import { normalizeTargetForProvider } from "./target-normalization";
+import { formatTargetDisplay, lookupDirectoryDisplay } from "./target-resolver";
 
 export type CrossContextDecoration = {
   prefix: string;
@@ -66,7 +66,7 @@ function resolveContextGuardTarget(
 }
 
 function normalizeTarget(channel: ChannelId, raw: string): string | undefined {
-  return normalizeTargetForProvider(channel, raw) ?? raw.trim().toLowerCase();
+  return normalizeTargetForProvider(channel, raw) ?? raw.trim();
 }
 
 function isCrossContextTarget(params: {

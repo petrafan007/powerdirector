@@ -1,18 +1,17 @@
 import type { Server } from "node:http";
 import express from "express";
-import { loadConfig } from '../config/config';
-import { createSubsystemLogger } from '../logging/subsystem';
-import { resolveBrowserConfig } from './config';
-import { ensureBrowserControlAuth, resolveBrowserControlAuth } from './control-auth';
-import { isPwAiLoaded } from './pw-ai-state';
-import { registerBrowserRoutes } from './routes/index';
-import type { BrowserRouteRegistrar } from './routes/types';
-import { type BrowserServerState, createBrowserRouteContext } from './server-context';
-import { ensureExtensionRelayForProfiles, stopKnownBrowserProfiles } from './server-lifecycle';
+import { loadConfig } from "../config/config";
+import { createSubsystemLogger } from "../logging/subsystem";
+import { resolveBrowserConfig } from "./config";
+import { ensureBrowserControlAuth, resolveBrowserControlAuth } from "./control-auth";
+import { registerBrowserRoutes } from "./routes/index";
+import type { BrowserRouteRegistrar } from "./routes/types";
+import { createBrowserRuntimeState, stopBrowserRuntime } from "./runtime-lifecycle";
+import { type BrowserServerState, createBrowserRouteContext } from "./server-context";
 import {
   installBrowserAuthMiddleware,
   installBrowserCommonMiddleware,
-} from './server-middleware';
+} from "./server-middleware";
 
 let state: BrowserServerState | null = null;
 const log = createSubsystemLogger("browser");
@@ -30,6 +29,7 @@ export async function startBrowserControlServerFromConfig(): Promise<BrowserServ
   }
 
   let browserAuth = resolveBrowserControlAuth(cfg);
+  let browserAuthBootstrapFailed = false;
   try {
     const ensured = await ensureBrowserControlAuth({ cfg });
     browserAuth = ensured.auth;
@@ -38,6 +38,16 @@ export async function startBrowserControlServerFromConfig(): Promise<BrowserServ
     }
   } catch (err) {
     logServer.warn(`failed to auto-configure browser auth: ${String(err)}`);
+    browserAuthBootstrapFailed = true;
+  }
+
+  // Fail closed: if auth bootstrap failed and no explicit auth is available,
+  // do not start the browser control HTTP server.
+  if (browserAuthBootstrapFailed && !browserAuth.token && !browserAuth.password) {
+    logServer.error(
+      "browser control startup aborted: authentication bootstrap failed and no fallback auth is configured.",
+    );
+    return null;
   }
 
   const app = express();
@@ -63,14 +73,9 @@ export async function startBrowserControlServerFromConfig(): Promise<BrowserServ
     return null;
   }
 
-  state = {
+  state = await createBrowserRuntimeState({
     server,
     port,
-    resolved,
-    profiles: new Map(),
-  };
-
-  await ensureExtensionRelayForProfiles({
     resolved,
     onWarn: (message) => logServer.warn(message),
   });
@@ -82,29 +87,13 @@ export async function startBrowserControlServerFromConfig(): Promise<BrowserServ
 
 export async function stopBrowserControlServer(): Promise<void> {
   const current = state;
-  if (!current) {
-    return;
-  }
-
-  await stopKnownBrowserProfiles({
+  await stopBrowserRuntime({
+    current,
     getState: () => state,
+    clearState: () => {
+      state = null;
+    },
+    closeServer: true,
     onWarn: (message) => logServer.warn(message),
   });
-
-  if (current.server) {
-    await new Promise<void>((resolve) => {
-      current.server?.close(() => resolve());
-    });
-  }
-  state = null;
-
-  // Optional: avoid importing heavy Playwright bridge when this process never used it.
-  if (isPwAiLoaded()) {
-    try {
-      const mod = await import('./pw-ai');
-      await mod.closePlaywrightBrowserConnection();
-    } catch {
-      // ignore
-    }
-  }
 }

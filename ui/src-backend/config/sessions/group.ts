@@ -1,7 +1,7 @@
-import type { MsgContext } from '../../auto-reply/templating';
-import { normalizeHyphenSlug } from '../../shared/string-normalization';
-import { listDeliverableMessageChannels } from '../../utils/message-channel';
-import type { GroupKeyResolution } from './types';
+import type { MsgContext } from "../../auto-reply/templating";
+import { normalizeHyphenSlug } from "../../shared/string-normalization";
+import { listDeliverableMessageChannels } from "../../utils/message-channel";
+import type { GroupKeyResolution } from "./types";
 
 const getGroupSurfaces = () => new Set<string>([...listDeliverableMessageChannels(), "webchat"]);
 

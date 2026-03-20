@@ -1,5 +1,5 @@
-export type { DirectoryConfigParams } from './plugins/directory-config';
-export type { ChannelDirectoryEntry } from './plugins/types';
+export type { DirectoryConfigParams } from "./plugins/directory-types";
+export type { ChannelDirectoryEntry } from "./plugins/types";
 
 export type MessagingTargetKind = "user" | "channel";
 
@@ -82,6 +82,52 @@ export function parseTargetPrefixes(params: {
     }
   }
   return undefined;
+}
+
+export function parseAtUserTarget(params: {
+  raw: string;
+  pattern: RegExp;
+  errorMessage: string;
+}): MessagingTarget | undefined {
+  if (!params.raw.startsWith("@")) {
+    return undefined;
+  }
+  const candidate = params.raw.slice(1).trim();
+  const id = ensureTargetId({
+    candidate,
+    pattern: params.pattern,
+    errorMessage: params.errorMessage,
+  });
+  return buildMessagingTarget("user", id, params.raw);
+}
+
+export function parseMentionPrefixOrAtUserTarget(params: {
+  raw: string;
+  mentionPattern: RegExp;
+  prefixes: Array<{ prefix: string; kind: MessagingTargetKind }>;
+  atUserPattern: RegExp;
+  atUserErrorMessage: string;
+}): MessagingTarget | undefined {
+  const mentionTarget = parseTargetMention({
+    raw: params.raw,
+    mentionPattern: params.mentionPattern,
+    kind: "user",
+  });
+  if (mentionTarget) {
+    return mentionTarget;
+  }
+  const prefixedTarget = parseTargetPrefixes({
+    raw: params.raw,
+    prefixes: params.prefixes,
+  });
+  if (prefixedTarget) {
+    return prefixedTarget;
+  }
+  return parseAtUserTarget({
+    raw: params.raw,
+    pattern: params.atUserPattern,
+    errorMessage: params.atUserErrorMessage,
+  });
 }
 
 export function requireTargetKind(params: {

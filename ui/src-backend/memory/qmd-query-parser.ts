@@ -1,10 +1,11 @@
-import { createSubsystemLogger } from '../logging/subsystem';
+import { createSubsystemLogger } from "../logging/subsystem";
 
 const log = createSubsystemLogger("memory");
 
 export type QmdQueryResult = {
   docid?: string;
   score?: number;
+  collection?: string;
   file?: string;
   snippet?: string;
   body?: string;

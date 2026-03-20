@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { getMemorySearchManager, type MemoryIndexManager } from './index';
+import type { PowerDirectorConfig } from "../config/config";
+import { getMemorySearchManager, type MemoryIndexManager } from "./index";
 
 export async function createMemoryManagerOrThrow(
   cfg: PowerDirectorConfig,

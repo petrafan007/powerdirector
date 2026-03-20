@@ -2,7 +2,7 @@ import {
   isHeartbeatActionWakeReason,
   normalizeHeartbeatWakeReason,
   resolveHeartbeatReasonKind,
-} from './heartbeat-reason';
+} from "./heartbeat-reason";
 
 export type HeartbeatRunResult =
   | { status: "ran"; durationMs: number }
@@ -14,6 +14,16 @@ export type HeartbeatWakeHandler = (opts: {
   agentId?: string;
   sessionKey?: string;
 }) => Promise<HeartbeatRunResult>;
+
+let heartbeatsEnabled = true;
+
+export function setHeartbeatsEnabled(enabled: boolean) {
+  heartbeatsEnabled = enabled;
+}
+
+export function areHeartbeatsEnabled(): boolean {
+  return heartbeatsEnabled;
+}
 
 type WakeTimerKind = "normal" | "retry";
 type PendingWakeReason = {

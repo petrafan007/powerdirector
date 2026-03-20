@@ -1,26 +1,28 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
+import { listTelegramAccountIds } from "@/src-backend/plugin-sdk/telegram";
+import { resolveDefaultAgentId } from "../agents/agent-scope";
+import type { PowerDirectorConfig } from "../config/config";
 import {
   resolveLegacyStateDirs,
   resolveNewStateDir,
   resolveOAuthDir,
   resolveStateDir,
-} from '../config/paths';
-import type { SessionEntry } from '../config/sessions';
-import { saveSessionStore } from '../config/sessions';
-import { canonicalizeMainSessionAlias } from '../config/sessions/main-session';
-import type { SessionScope } from '../config/sessions/types';
-import { createSubsystemLogger } from '../logging/subsystem';
+} from "../config/paths";
+import type { SessionEntry } from "../config/sessions";
+import { saveSessionStore } from "../config/sessions";
+import { canonicalizeMainSessionAlias } from "../config/sessions/main-session";
+import type { SessionScope } from "../config/sessions/types";
+import { createSubsystemLogger } from "../logging/subsystem";
+import { resolveChannelAllowFromPath } from "../pairing/pairing-store";
 import {
   buildAgentMainSessionKey,
   DEFAULT_ACCOUNT_ID,
   DEFAULT_MAIN_KEY,
   normalizeAgentId,
-} from '../routing/session-key';
-import { isWithinDir } from './path-safety';
+} from "../routing/session-key";
+import { isWithinDir } from "./path-safety";
 import {
   ensureDir,
   existsDir,
@@ -29,7 +31,7 @@ import {
   readSessionStoreJson5,
   type SessionEntryLike,
   safeReadDir,
-} from './state-migrations.fs';
+} from "./state-migrations.fs";
 
 export type LegacyStateDetection = {
   targetAgentId: string;
@@ -56,11 +58,16 @@ export type LegacyStateDetection = {
     hasLegacy: boolean;
   };
   pairingAllowFrom: {
-    legacyTelegramPath: string;
-    targetTelegramPath: string;
     hasLegacyTelegram: boolean;
+    copyPlans: FileCopyPlan[];
   };
   preview: string[];
+};
+
+type FileCopyPlan = {
+  label: string;
+  sourcePath: string;
+  targetPath: string;
 };
 
 type MigrationLogger = {
@@ -95,6 +102,30 @@ function isLegacyGroupKey(key: string): boolean {
     return true;
   }
   return false;
+}
+
+function buildFileCopyPreview(plan: FileCopyPlan): string {
+  return `- ${plan.label}: ${plan.sourcePath} → ${plan.targetPath}`;
+}
+
+async function runFileCopyPlans(
+  plans: FileCopyPlan[],
+): Promise<{ changes: string[]; warnings: string[] }> {
+  const changes: string[] = [];
+  const warnings: string[] = [];
+  for (const plan of plans) {
+    if (fileExists(plan.targetPath)) {
+      continue;
+    }
+    try {
+      ensureDir(path.dirname(plan.targetPath));
+      fs.copyFileSync(plan.sourcePath, plan.targetPath);
+      changes.push(`Copied ${plan.label} → ${plan.targetPath}`);
+    } catch (err) {
+      warnings.push(`Failed migrating ${plan.label} (${plan.sourcePath}): ${String(err)}`);
+    }
+  }
+  return { changes, warnings };
 }
 
 function canonicalizeSessionKeyForAgent(params: {
@@ -617,13 +648,25 @@ export async function detectLegacyStateMigrations(params: {
   const hasLegacyWhatsAppAuth =
     fileExists(path.join(oauthDir, "creds.json")) &&
     !fileExists(path.join(targetWhatsAppAuthDir, "creds.json"));
-  const legacyTelegramAllowFromPath = path.join(oauthDir, "telegram-allowFrom.json");
-  const targetTelegramAllowFromPath = path.join(
-    oauthDir,
-    `telegram-${DEFAULT_ACCOUNT_ID}-allowFrom.json`,
-  );
-  const hasLegacyTelegramAllowFrom =
-    fileExists(legacyTelegramAllowFromPath) && !fileExists(targetTelegramAllowFromPath);
+  const legacyTelegramAllowFromPath = resolveChannelAllowFromPath("telegram", env);
+  const telegramPairingAllowFromPlans = fileExists(legacyTelegramAllowFromPath)
+    ? Array.from(
+        new Set(
+          listTelegramAccountIds(params.cfg).map((accountId) =>
+            resolveChannelAllowFromPath("telegram", env, accountId),
+          ),
+        ),
+      )
+        .filter((targetPath) => !fileExists(targetPath))
+        .map(
+          (targetPath): FileCopyPlan => ({
+            label: "Telegram pairing allowFrom",
+            sourcePath: legacyTelegramAllowFromPath,
+            targetPath,
+          }),
+        )
+    : [];
+  const hasLegacyTelegramAllowFrom = telegramPairingAllowFromPlans.length > 0;
 
   const preview: string[] = [];
   if (hasLegacySessions) {
@@ -639,9 +682,7 @@ export async function detectLegacyStateMigrations(params: {
     preview.push(`- WhatsApp auth: ${oauthDir} → ${targetWhatsAppAuthDir} (keep oauth.json)`);
   }
   if (hasLegacyTelegramAllowFrom) {
-    preview.push(
-      `- Telegram pairing allowFrom: ${legacyTelegramAllowFromPath} → ${targetTelegramAllowFromPath}`,
-    );
+    preview.push(...telegramPairingAllowFromPlans.map(buildFileCopyPreview));
   }
 
   return {
@@ -669,9 +710,8 @@ export async function detectLegacyStateMigrations(params: {
       hasLegacy: hasLegacyWhatsAppAuth,
     },
     pairingAllowFrom: {
-      legacyTelegramPath: legacyTelegramAllowFromPath,
-      targetTelegramPath: targetTelegramAllowFromPath,
       hasLegacyTelegram: hasLegacyTelegramAllowFrom,
+      copyPlans: telegramPairingAllowFromPlans,
     },
     preview,
   };
@@ -897,18 +937,7 @@ async function migrateLegacyTelegramPairingAllowFrom(
   if (!detected.pairingAllowFrom.hasLegacyTelegram) {
     return { changes, warnings };
   }
-
-  const legacyPath = detected.pairingAllowFrom.legacyTelegramPath;
-  const targetPath = detected.pairingAllowFrom.targetTelegramPath;
-  try {
-    ensureDir(path.dirname(targetPath));
-    fs.copyFileSync(legacyPath, targetPath);
-    changes.push(`Copied Telegram pairing allowFrom → ${targetPath}`);
-  } catch (err) {
-    warnings.push(`Failed migrating Telegram pairing allowFrom (${legacyPath}): ${String(err)}`);
-  }
-
-  return { changes, warnings };
+  return await runFileCopyPlans(detected.pairingAllowFrom.copyPlans);
 }
 
 export async function runLegacyStateMigrations(params: {

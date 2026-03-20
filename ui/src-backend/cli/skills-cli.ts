@@ -1,17 +1,38 @@
 import type { Command } from "commander";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import { loadConfig } from '../config/config';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { formatSkillInfo, formatSkillsCheck, formatSkillsList } from './skills-cli.format';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope";
+import { loadConfig } from "../config/config";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { formatSkillInfo, formatSkillsCheck, formatSkillsList } from "./skills-cli.format";
 
 export type {
   SkillInfoOptions,
   SkillsCheckOptions,
   SkillsListOptions,
-} from './skills-cli.format';
-export { formatSkillInfo, formatSkillsCheck, formatSkillsList } from './skills-cli.format';
+} from "./skills-cli.format";
+export { formatSkillInfo, formatSkillsCheck, formatSkillsList } from "./skills-cli.format";
+
+type SkillStatusReport = Awaited<
+  ReturnType<(typeof import("../agents/skills-status"))["buildWorkspaceSkillStatus"]>
+>;
+
+async function loadSkillsStatusReport(): Promise<SkillStatusReport> {
+  const config = loadConfig();
+  const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
+  const { buildWorkspaceSkillStatus } = await import("../agents/skills-status");
+  return buildWorkspaceSkillStatus(workspaceDir, { config });
+}
+
+async function runSkillsAction(render: (report: SkillStatusReport) => string): Promise<void> {
+  try {
+    const report = await loadSkillsStatusReport();
+    defaultRuntime.log(render(report));
+  } catch (err) {
+    defaultRuntime.error(String(err));
+    defaultRuntime.exit(1);
+  }
+}
 
 /**
  * Register the skills CLI commands
@@ -33,16 +54,7 @@ export function registerSkillsCli(program: Command) {
     .option("--eligible", "Show only eligible (ready to use) skills", false)
     .option("-v, --verbose", "Show more details including missing requirements", false)
     .action(async (opts) => {
-      try {
-        const config = loadConfig();
-        const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
-        const { buildWorkspaceSkillStatus } = await import('../agents/skills-status');
-        const report = buildWorkspaceSkillStatus(workspaceDir, { config });
-        defaultRuntime.log(formatSkillsList(report, opts));
-      } catch (err) {
-        defaultRuntime.error(String(err));
-        defaultRuntime.exit(1);
-      }
+      await runSkillsAction((report) => formatSkillsList(report, opts));
     });
 
   skills
@@ -51,16 +63,7 @@ export function registerSkillsCli(program: Command) {
     .argument("<name>", "Skill name")
     .option("--json", "Output as JSON", false)
     .action(async (name, opts) => {
-      try {
-        const config = loadConfig();
-        const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
-        const { buildWorkspaceSkillStatus } = await import('../agents/skills-status');
-        const report = buildWorkspaceSkillStatus(workspaceDir, { config });
-        defaultRuntime.log(formatSkillInfo(report, name, opts));
-      } catch (err) {
-        defaultRuntime.error(String(err));
-        defaultRuntime.exit(1);
-      }
+      await runSkillsAction((report) => formatSkillInfo(report, name, opts));
     });
 
   skills
@@ -68,29 +71,11 @@ export function registerSkillsCli(program: Command) {
     .description("Check which skills are ready vs missing requirements")
     .option("--json", "Output as JSON", false)
     .action(async (opts) => {
-      try {
-        const config = loadConfig();
-        const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
-        const { buildWorkspaceSkillStatus } = await import('../agents/skills-status');
-        const report = buildWorkspaceSkillStatus(workspaceDir, { config });
-        defaultRuntime.log(formatSkillsCheck(report, opts));
-      } catch (err) {
-        defaultRuntime.error(String(err));
-        defaultRuntime.exit(1);
-      }
+      await runSkillsAction((report) => formatSkillsCheck(report, opts));
     });
 
   // Default action (no subcommand) - show list
   skills.action(async () => {
-    try {
-      const config = loadConfig();
-      const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
-      const { buildWorkspaceSkillStatus } = await import('../agents/skills-status');
-      const report = buildWorkspaceSkillStatus(workspaceDir, { config });
-      defaultRuntime.log(formatSkillsList(report, {}));
-    } catch (err) {
-      defaultRuntime.error(String(err));
-      defaultRuntime.exit(1);
-    }
+    await runSkillsAction((report) => formatSkillsList(report, {}));
   });
 }

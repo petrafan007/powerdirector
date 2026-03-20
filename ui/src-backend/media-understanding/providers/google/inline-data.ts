@@ -1,6 +1,6 @@
-import { normalizeGoogleModelId } from '../../../agents/models-config.providers';
-import { parseGeminiAuth } from '../../../infra/gemini-auth';
-import { assertOkOrThrowHttpError, fetchWithTimeoutGuarded, normalizeBaseUrl } from '../shared';
+import { normalizeGoogleModelId } from "../../../agents/models-config.providers";
+import { parseGeminiAuth } from "../../../infra/gemini-auth";
+import { assertOkOrThrowHttpError, normalizeBaseUrl, postJsonRequest } from "../shared";
 
 export async function generateGeminiInlineDataText(params: {
   buffer: Buffer;
@@ -61,17 +61,14 @@ export async function generateGeminiInlineDataText(params: {
     ],
   };
 
-  const { response: res, release } = await fetchWithTimeoutGuarded(
+  const { response: res, release } = await postJsonRequest({
     url,
-    {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body),
-    },
-    params.timeoutMs,
+    headers,
+    body,
+    timeoutMs: params.timeoutMs,
     fetchFn,
-    allowPrivate ? { ssrfPolicy: { allowPrivateNetwork: true } } : undefined,
-  );
+    allowPrivateNetwork: allowPrivate,
+  });
 
   try {
     await assertOkOrThrowHttpError(res, params.httpErrorLabel);

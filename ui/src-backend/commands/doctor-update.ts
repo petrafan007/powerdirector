@@ -1,10 +1,10 @@
-import { formatCliCommand } from '../cli/command-format';
-import { isTruthyEnvValue } from '../infra/env';
-import { runGatewayUpdate } from '../infra/update-runner';
-import { runCommandWithTimeout } from '../process/exec';
-import type { RuntimeEnv } from '../runtime';
-import { note } from '../terminal/note';
-import type { DoctorOptions } from './doctor-prompter';
+import { formatCliCommand } from "../cli/command-format";
+import { isTruthyEnvValue } from "../infra/env";
+import { runGatewayUpdate } from "../infra/update-runner";
+import { runCommandWithTimeout } from "../process/exec";
+import type { RuntimeEnv } from "../runtime";
+import { note } from "../terminal/note";
+import type { DoctorOptions } from "./doctor-prompter";
 
 async function detectPowerDirectorGitCheckout(root: string): Promise<"git" | "not-git" | "unknown"> {
   const res = await runCommandWithTimeout(["git", "-C", root, "rev-parse", "--show-toplevel"], {

@@ -1,7 +1,7 @@
-import type { MsgContext } from '../../../auto-reply/templating';
-import type { loadConfig } from '../../../config/config';
-import { resolveStorePath, updateLastRoute } from '../../../config/sessions';
-import { formatError } from '../../session';
+import type { MsgContext } from "../../../auto-reply/templating";
+import type { loadConfig } from "../../../config/config";
+import { resolveStorePath, updateLastRoute } from "../../../config/sessions";
+import { formatError } from "../../session";
 
 export function trackBackgroundTask(
   backgroundTasks: Set<Promise<unknown>>,

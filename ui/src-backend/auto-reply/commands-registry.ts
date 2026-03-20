@@ -1,9 +1,10 @@
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
-import { resolveConfiguredModelRef } from '../agents/model-selection';
-import type { SkillCommandSpec } from '../agents/skills';
-import type { PowerDirectorConfig } from '../config/types';
-import { escapeRegExp } from '../utils';
-import { getChatCommands, getNativeCommandSurfaces } from './commands-registry.data';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults";
+import { resolveConfiguredModelRef } from "../agents/model-selection";
+import type { SkillCommandSpec } from "../agents/skills";
+import { isCommandFlagEnabled } from "../config/commands";
+import type { PowerDirectorConfig } from "../config/types";
+import { escapeRegExp } from "../utils";
+import { getChatCommands, getNativeCommandSurfaces } from "./commands-registry.data";
 import type {
   ChatCommandDefinition,
   CommandArgChoiceContext,
@@ -15,7 +16,7 @@ import type {
   CommandNormalizeOptions,
   NativeCommandSpec,
   ShouldHandleTextCommandsParams,
-} from './commands-registry.types';
+} from "./commands-registry.types";
 
 export type {
   ChatCommandDefinition,
@@ -29,7 +30,7 @@ export type {
   CommandScope,
   NativeCommandSpec,
   ShouldHandleTextCommandsParams,
-} from './commands-registry.types';
+} from "./commands-registry.types";
 
 type TextAliasSpec = {
   key: string;
@@ -96,13 +97,19 @@ export function listChatCommands(params?: {
 
 export function isCommandEnabled(cfg: PowerDirectorConfig, commandKey: string): boolean {
   if (commandKey === "config") {
-    return cfg.commands?.config === true;
+    return isCommandFlagEnabled(cfg, "config");
+  }
+  if (commandKey === "mcp") {
+    return isCommandFlagEnabled(cfg, "mcp");
+  }
+  if (commandKey === "plugins") {
+    return isCommandFlagEnabled(cfg, "plugins");
   }
   if (commandKey === "debug") {
-    return cfg.commands?.debug === true;
+    return isCommandFlagEnabled(cfg, "debug");
   }
   if (commandKey === "bash") {
-    return cfg.commands?.bash === true;
+    return isCommandFlagEnabled(cfg, "bash");
   }
   return true;
 }
@@ -121,6 +128,11 @@ export function listChatCommandsForConfig(
 const NATIVE_NAME_OVERRIDES: Record<string, Record<string, string>> = {
   discord: {
     tts: "voice",
+  },
+  slack: {
+    // Slack reserves /status — registering it returns "invalid name"
+    // and invalidates the entire slash_commands manifest array.
+    status: "agentstatus",
   },
 };
 

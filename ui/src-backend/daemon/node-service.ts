@@ -5,9 +5,9 @@ import {
   resolveNodeLaunchAgentLabel,
   resolveNodeSystemdServiceName,
   resolveNodeWindowsTaskName,
-} from './constants';
-import type { GatewayService, GatewayServiceInstallArgs } from './service';
-import { resolveGatewayService } from './service';
+} from "./constants";
+import type { GatewayService, GatewayServiceInstallArgs } from "./service";
+import { resolveGatewayService } from "./service";
 
 function withNodeServiceEnv(
   env: Record<string, string | undefined>,

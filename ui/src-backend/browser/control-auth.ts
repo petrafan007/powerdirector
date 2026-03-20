@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { loadConfig } from '../config/config';
-import { resolveGatewayAuth } from '../gateway/auth';
-import { ensureGatewayStartupAuth } from '../gateway/startup-auth';
+import type { PowerDirectorConfig } from "../config/config";
+import { loadConfig } from "../config/config";
+import { resolveGatewayAuth } from "../gateway/auth";
+import { ensureGatewayStartupAuth } from "../gateway/startup-auth";
 
 export type BrowserControlAuth = {
   token?: string;
@@ -87,7 +87,10 @@ export async function ensureBrowserControlAuth(params: {
     env,
     persist: true,
   });
-  const ensuredAuth = resolveBrowserControlAuth(ensured.cfg, env);
+  const ensuredAuth = {
+    token: ensured.auth.token,
+    password: ensured.auth.password,
+  };
   return {
     auth: ensuredAuth,
     generatedToken: ensured.generatedToken,

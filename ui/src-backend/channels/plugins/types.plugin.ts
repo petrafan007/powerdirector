@@ -1,21 +1,24 @@
-// @ts-nocheck
-import type { ChannelOnboardingAdapter } from './onboarding-types';
+import type { ChannelSetupWizard } from "./setup-wizard";
 import type {
   ChannelAuthAdapter,
   ChannelCommandAdapter,
   ChannelConfigAdapter,
   ChannelDirectoryAdapter,
+  ChannelExecApprovalAdapter,
   ChannelResolverAdapter,
   ChannelElevatedAdapter,
   ChannelGatewayAdapter,
   ChannelGroupAdapter,
   ChannelHeartbeatAdapter,
+  ChannelLifecycleAdapter,
   ChannelOutboundAdapter,
   ChannelPairingAdapter,
   ChannelSecurityAdapter,
   ChannelSetupAdapter,
   ChannelStatusAdapter,
-} from './types.adapters';
+  ChannelAllowlistAdapter,
+  ChannelConfiguredBindingProvider,
+} from "./types.adapters";
 import type {
   ChannelAgentTool,
   ChannelAgentToolFactory,
@@ -28,12 +31,13 @@ import type {
   ChannelMeta,
   ChannelStreamingAdapter,
   ChannelThreadingAdapter,
-} from './types.core';
+} from "./types.core";
 
 // Channel docking: implement this contract in src/channels/plugins/<id>.ts.
 export type ChannelConfigUiHint = {
   label?: string;
   help?: string;
+  tags?: string[];
   advanced?: boolean;
   sensitive?: boolean;
   placeholder?: string;
@@ -56,8 +60,7 @@ export type ChannelPlugin<ResolvedAccount = any, Probe = unknown, Audit = unknow
     };
   };
   reload?: { configPrefixes: string[]; noopPrefixes?: string[] };
-  // CLI onboarding wizard hooks for this channel.
-  onboarding?: ChannelOnboardingAdapter;
+  setupWizard?: ChannelSetupWizard;
   config: ChannelConfigAdapter<ResolvedAccount>;
   configSchema?: ChannelConfigSchema;
   setup?: ChannelSetupAdapter;
@@ -72,6 +75,10 @@ export type ChannelPlugin<ResolvedAccount = any, Probe = unknown, Audit = unknow
   auth?: ChannelAuthAdapter;
   elevated?: ChannelElevatedAdapter;
   commands?: ChannelCommandAdapter;
+  lifecycle?: ChannelLifecycleAdapter;
+  execApprovals?: ChannelExecApprovalAdapter;
+  allowlist?: ChannelAllowlistAdapter;
+  bindings?: ChannelConfiguredBindingProvider;
   streaming?: ChannelStreamingAdapter;
   threading?: ChannelThreadingAdapter;
   messaging?: ChannelMessagingAdapter;

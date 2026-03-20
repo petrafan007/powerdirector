@@ -20,10 +20,3 @@ declare module "node-llama-cpp" {
   export function getLlama(params: { logLevel: LlamaLogLevel }): Promise<Llama>;
   export function resolveModelFile(modelPath: string, cacheDir?: string): Promise<string>;
 }
-
-declare module "node:sqlite" {
-  export type DatabaseSync = any;
-  export const DatabaseSync: {
-    new (path?: string, options?: Record<string, unknown>): DatabaseSync;
-  };
-}

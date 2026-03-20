@@ -1,10 +1,10 @@
-import { buildUsageHttpErrorSnapshot, fetchJson } from './provider-usage.fetch.shared';
-import { clampPercent, PROVIDER_LABELS } from './provider-usage.shared';
+import { buildUsageHttpErrorSnapshot, fetchJson } from "./provider-usage.fetch.shared";
+import { clampPercent, PROVIDER_LABELS } from "./provider-usage.shared";
 import type {
   ProviderUsageSnapshot,
   UsageProviderId,
   UsageWindow,
-} from './provider-usage.types';
+} from "./provider-usage.types";
 
 type GeminiUsageResponse = {
   buckets?: Array<{ modelId?: string; remainingFraction?: number }>;

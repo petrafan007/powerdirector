@@ -1,0 +1,22 @@
+import type { ReplyPayload } from "../../auto-reply/types";
+import type { PowerDirectorConfig } from "../../config/config";
+import { getChannelPlugin, normalizeChannelId } from "./registry";
+
+export function shouldSuppressLocalExecApprovalPrompt(params: {
+  channel?: string | null;
+  cfg: PowerDirectorConfig;
+  accountId?: string | null;
+  payload: ReplyPayload;
+}): boolean {
+  const channel = params.channel ? normalizeChannelId(params.channel) : null;
+  if (!channel) {
+    return false;
+  }
+  return (
+    getChannelPlugin(channel)?.execApprovals?.shouldSuppressLocalPrompt?.({
+      cfg: params.cfg,
+      accountId: params.accountId,
+      payload: params.payload,
+    }) ?? false
+  );
+}

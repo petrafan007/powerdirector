@@ -1,7 +1,7 @@
-import { createActionGate } from '../agents/tools/common';
-import type { ChannelMessageActionName, ChannelToolSend } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
-import { listEnabledSlackAccounts } from './accounts';
+import { createActionGate } from "../agents/tools/common";
+import type { ChannelMessageActionName, ChannelToolSend } from "../channels/plugins/types";
+import type { PowerDirectorConfig } from "../config/config";
+import { listEnabledSlackAccounts } from "./accounts";
 
 export function listSlackMessageActions(cfg: PowerDirectorConfig): ChannelMessageActionName[] {
   const accounts = listEnabledSlackAccounts(cfg).filter(
@@ -32,6 +32,7 @@ export function listSlackMessageActions(cfg: PowerDirectorConfig): ChannelMessag
     actions.add("read");
     actions.add("edit");
     actions.add("delete");
+    actions.add("download-file");
   }
   if (isActionEnabled("pins")) {
     actions.add("pin");

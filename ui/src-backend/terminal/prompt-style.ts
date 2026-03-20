@@ -1,4 +1,4 @@
-import { isRich, theme } from './theme';
+import { isRich, theme } from "./theme";
 
 export const stylePromptMessage = (message: string): string =>
   isRich() ? theme.accent(message) : message;

@@ -1,5 +1,5 @@
 import type { WebSocket } from "ws";
-import type { ConnectParams } from '../protocol/index';
+import type { ConnectParams } from "../protocol/index";
 
 export type GatewayWsClient = {
   socket: WebSocket;
@@ -7,6 +7,7 @@ export type GatewayWsClient = {
   connId: string;
   presenceKey?: string;
   clientIp?: string;
+  canvasHostUrl?: string;
   canvasCapability?: string;
   canvasCapabilityExpiresAtMs?: number;
 };

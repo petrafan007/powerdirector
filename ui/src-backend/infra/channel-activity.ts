@@ -1,4 +1,4 @@
-import type { ChannelId } from '../channels/plugins/types';
+import type { ChannelId } from "../channels/plugins/types";
 export type ChannelDirection = "inbound" | "outbound";
 
 type ActivityEntry = {

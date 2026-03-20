@@ -1,19 +1,19 @@
 import type { AgentTool } from "@mariozechner/pi-agent-core";
-import { resolveSessionAgentIds } from '../../agents/agent-scope';
-import { resolveBootstrapContextForRun } from '../../agents/bootstrap-files';
-import { resolveDefaultModelForAgent } from '../../agents/model-selection';
-import type { EmbeddedContextFile } from '../../agents/pi-embedded-helpers';
-import { createPowerDirectorCodingTools } from '../../agents/pi-tools';
-import { resolveSandboxRuntimeStatus } from '../../agents/sandbox';
-import { buildWorkspaceSkillSnapshot } from '../../agents/skills';
-import { getSkillsSnapshotVersion } from '../../agents/skills/refresh';
-import { buildSystemPromptParams } from '../../agents/system-prompt-params';
-import { buildAgentSystemPrompt } from '../../agents/system-prompt';
-import { buildToolSummaryMap } from '../../agents/tool-summaries';
-import type { WorkspaceBootstrapFile } from '../../agents/workspace';
-import { getRemoteSkillEligibility } from '../../infra/skills-remote';
-import { buildTtsSystemPromptHint } from '../../tts/tts';
-import type { HandleCommandsParams } from './commands-types';
+import { resolveSessionAgentIds } from "../../agents/agent-scope";
+import { resolveBootstrapContextForRun } from "../../agents/bootstrap-files";
+import { resolveDefaultModelForAgent } from "../../agents/model-selection";
+import type { EmbeddedContextFile } from "../../agents/pi-embedded-helpers";
+import { createPowerDirectorCodingTools } from "../../agents/pi-tools";
+import { resolveSandboxRuntimeStatus } from "../../agents/sandbox";
+import { buildWorkspaceSkillSnapshot } from "../../agents/skills";
+import { getSkillsSnapshotVersion } from "../../agents/skills/refresh";
+import { buildSystemPromptParams } from "../../agents/system-prompt-params";
+import { buildAgentSystemPrompt } from "../../agents/system-prompt";
+import { buildToolSummaryMap } from "../../agents/tool-summaries";
+import type { WorkspaceBootstrapFile } from "../../agents/workspace";
+import { getRemoteSkillEligibility } from "../../infra/skills-remote";
+import { buildTtsSystemPromptHint } from "../../tts/tts";
+import type { HandleCommandsParams } from "./commands-types";
 
 export type CommandsSystemPromptBundle = {
   systemPrompt: string;
@@ -54,8 +54,10 @@ export async function resolveCommandsSystemPromptBundle(
     try {
       return createPowerDirectorCodingTools({
         config: params.cfg,
+        agentId: params.agentId,
         workspaceDir,
         sessionKey: params.sessionKey,
+        allowGatewaySubagentBinding: true,
         messageProvider: params.command.channel,
         groupId: params.sessionEntry?.groupId ?? undefined,
         groupChannel: params.sessionEntry?.groupChannel ?? undefined,
@@ -74,6 +76,7 @@ export async function resolveCommandsSystemPromptBundle(
   const { sessionAgentId } = resolveSessionAgentIds({
     sessionKey: params.sessionKey,
     config: params.cfg,
+    agentId: params.agentId,
   });
   const defaultModelRef = resolveDefaultModelForAgent({
     cfg: params.cfg,
@@ -124,6 +127,7 @@ export async function resolveCommandsSystemPromptBundle(
     skillsPrompt,
     heartbeatPrompt: undefined,
     ttsHint,
+    acpEnabled: params.cfg?.acp?.enabled !== false,
     runtimeInfo,
     sandboxInfo,
     memoryCitationsMode: params.cfg?.memory?.citations,

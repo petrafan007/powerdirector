@@ -1,4 +1,4 @@
-import { normalizeInboundTextNewlines } from './inbound-text';
+import { normalizeInboundTextNewlines } from "./inbound-text";
 
 export function appendUntrustedContext(base: string, untrusted?: string[]): string {
   if (!Array.isArray(untrusted) || untrusted.length === 0) {

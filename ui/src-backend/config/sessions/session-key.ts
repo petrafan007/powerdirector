@@ -1,12 +1,13 @@
-import type { MsgContext } from '../../auto-reply/templating';
+import type { MsgContext } from "../../auto-reply/templating";
 import {
   buildAgentMainSessionKey,
   DEFAULT_AGENT_ID,
   normalizeMainKey,
-} from '../../routing/session-key';
-import { normalizeE164 } from '../../utils';
-import { resolveGroupSessionKey } from './group';
-import type { SessionScope } from './types';
+} from "../../routing/session-key";
+import { normalizeE164 } from "../../utils";
+import { normalizeExplicitSessionKey } from "./explicit-session-key-normalization";
+import { resolveGroupSessionKey } from "./group";
+import type { SessionScope } from "./types";
 
 // Decide which session bucket to use (per-sender vs global).
 export function deriveSessionKey(scope: SessionScope, ctx: MsgContext) {
@@ -28,7 +29,7 @@ export function deriveSessionKey(scope: SessionScope, ctx: MsgContext) {
 export function resolveSessionKey(scope: SessionScope, ctx: MsgContext, mainKey?: string) {
   const explicit = ctx.SessionKey?.trim();
   if (explicit) {
-    return explicit.toLowerCase();
+    return normalizeExplicitSessionKey(explicit, ctx);
   }
   const raw = deriveSessionKey(scope, ctx);
   if (scope === "global") {

@@ -1,11 +1,11 @@
-import { installSkill } from '../agents/skills-install';
-import { buildWorkspaceSkillStatus } from '../agents/skills-status';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import type { RuntimeEnv } from '../runtime';
-import { normalizeSecretInput } from '../utils/normalize-secret-input';
-import type { WizardPrompter } from '../wizard/prompts';
-import { detectBinary, resolveNodeManagerOptions } from './onboard-helpers';
+import { installSkill } from "../agents/skills-install";
+import { buildWorkspaceSkillStatus } from "../agents/skills-status";
+import { formatCliCommand } from "../cli/command-format";
+import type { PowerDirectorConfig } from "../config/config";
+import type { RuntimeEnv } from "../runtime";
+import { normalizeSecretInput } from "../utils/normalize-secret-input";
+import type { WizardPrompter } from "../wizard/prompts";
+import { detectBinary, resolveNodeManagerOptions } from "./onboard-helpers";
 
 function summarizeInstallFailure(message: string): string | undefined {
   const cleaned = message.replace(/^Install failed(?:\s*\([^)]*\))?\s*:?\s*/i, "").trim();

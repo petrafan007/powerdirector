@@ -1,19 +1,19 @@
-import { loadConfig } from '../../config/config';
-import { logConfigUpdated } from '../../config/logging';
-import type { RuntimeEnv } from '../../runtime';
+import { logConfigUpdated } from "../../config/logging";
+import type { RuntimeEnv } from "../../runtime";
+import { loadModelsConfig } from "./load-config";
 import {
   ensureFlagCompatibility,
   normalizeAlias,
   resolveModelTarget,
   updateConfig,
-} from './shared';
+} from "./shared";
 
 export async function modelsAliasesListCommand(
   opts: { json?: boolean; plain?: boolean },
   runtime: RuntimeEnv,
 ) {
   ensureFlagCompatibility(opts);
-  const cfg = loadConfig();
+  const cfg = await loadModelsConfig({ commandName: "models aliases list", runtime });
   const models = cfg.agents?.defaults?.models ?? {};
   const aliases = Object.entries(models).reduce<Record<string, string>>(
     (acc, [modelKey, entry]) => {
@@ -53,7 +53,8 @@ export async function modelsAliasesAddCommand(
   runtime: RuntimeEnv,
 ) {
   const alias = normalizeAlias(aliasRaw);
-  const resolved = resolveModelTarget({ raw: modelRaw, cfg: loadConfig() });
+  const cfg = await loadModelsConfig({ commandName: "models aliases add", runtime });
+  const resolved = resolveModelTarget({ raw: modelRaw, cfg });
   const _updated = await updateConfig((cfg) => {
     const modelKey = `${resolved.provider}/${resolved.model}`;
     const nextModels = { ...cfg.agents?.defaults?.models };

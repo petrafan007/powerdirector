@@ -1,17 +1,17 @@
 import type { Command } from "commander";
-import { loadNodeHostConfig } from '../../node-host/config';
-import { runNodeHost } from '../../node-host/runner';
-import { formatDocsLink } from '../../terminal/links';
-import { theme } from '../../terminal/theme';
-import { parsePort } from '../daemon-cli/shared';
-import { formatHelpExamples } from '../help-format';
+import { loadNodeHostConfig } from "../../node-host/config";
+import { runNodeHost } from "../../node-host/runner";
+import { formatDocsLink } from "../../terminal/links";
+import { theme } from "../../terminal/theme";
+import { parsePort } from "../daemon-cli/shared";
+import { formatHelpExamples } from "../help-format";
 import {
   runNodeDaemonInstall,
   runNodeDaemonRestart,
   runNodeDaemonStatus,
   runNodeDaemonStop,
   runNodeDaemonUninstall,
-} from './daemon';
+} from "./daemon";
 
 function parsePortWithFallback(value: unknown, fallback: number): number {
   const parsed = parsePort(value);

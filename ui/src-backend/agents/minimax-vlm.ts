@@ -1,10 +1,18 @@
-import { isRecord } from '../utils';
-import { normalizeSecretInput } from '../utils/normalize-secret-input';
+import { isRecord } from "../utils";
+import { normalizeSecretInput } from "../utils/normalize-secret-input";
 
 type MinimaxBaseResp = {
   status_code?: number;
   status_msg?: string;
 };
+
+export function isMinimaxVlmProvider(provider: string): boolean {
+  return provider === "minimax" || provider === "minimax-portal";
+}
+
+export function isMinimaxVlmModel(provider: string, modelId: string): boolean {
+  return isMinimaxVlmProvider(provider) && modelId.trim() === "MiniMax-VL-01";
+}
 
 function coerceApiHost(params: {
   apiHost?: string;

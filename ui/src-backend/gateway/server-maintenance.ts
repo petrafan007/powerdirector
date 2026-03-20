@@ -1,15 +1,16 @@
-import type { HealthSummary } from '../commands/health';
-import { abortChatRunById, type ChatAbortControllerEntry } from './chat-abort';
-import type { ChatRunEntry } from './server-chat';
+import type { HealthSummary } from "../commands/health";
+import { cleanOldMedia } from "../media/store";
+import { abortChatRunById, type ChatAbortControllerEntry } from "./chat-abort";
+import type { ChatRunEntry } from "./server-chat";
 import {
   DEDUPE_MAX,
   DEDUPE_TTL_MS,
   HEALTH_REFRESH_INTERVAL_MS,
   TICK_INTERVAL_MS,
-} from './server-constants';
-import type { DedupeEntry } from './server-shared';
-import { formatError } from './server-utils';
-import { setBroadcastHealthUpdate } from './server/health-state';
+} from "./server-constants";
+import type { DedupeEntry } from "./server-shared";
+import { formatError } from "./server-utils";
+import { setBroadcastHealthUpdate } from "./server/health-state";
 
 export function startGatewayMaintenanceTimers(params: {
   broadcast: (
@@ -37,10 +38,12 @@ export function startGatewayMaintenanceTimers(params: {
   ) => ChatRunEntry | undefined;
   agentRunSeq: Map<string, number>;
   nodeSendToSession: (sessionKey: string, event: string, payload: unknown) => void;
+  mediaCleanupTtlMs?: number;
 }): {
   tickInterval: ReturnType<typeof setInterval>;
   healthInterval: ReturnType<typeof setInterval>;
   dedupeCleanup: ReturnType<typeof setInterval>;
+  mediaCleanup: ReturnType<typeof setInterval> | null;
 } {
   setBroadcastHealthUpdate((snap: HealthSummary) => {
     params.broadcast("health", snap, {
@@ -129,5 +132,33 @@ export function startGatewayMaintenanceTimers(params: {
     }
   }, 60_000);
 
-  return { tickInterval, healthInterval, dedupeCleanup };
+  if (typeof params.mediaCleanupTtlMs !== "number") {
+    return { tickInterval, healthInterval, dedupeCleanup, mediaCleanup: null };
+  }
+
+  let mediaCleanupInFlight: Promise<void> | null = null;
+  const runMediaCleanup = () => {
+    if (mediaCleanupInFlight) {
+      return mediaCleanupInFlight;
+    }
+    mediaCleanupInFlight = cleanOldMedia(params.mediaCleanupTtlMs, {
+      recursive: true,
+      pruneEmptyDirs: true,
+    })
+      .catch((err) => {
+        params.logHealth.error(`media cleanup failed: ${formatError(err)}`);
+      })
+      .finally(() => {
+        mediaCleanupInFlight = null;
+      });
+    return mediaCleanupInFlight;
+  };
+
+  const mediaCleanup = setInterval(() => {
+    void runMediaCleanup();
+  }, 60 * 60_000);
+
+  void runMediaCleanup();
+
+  return { tickInterval, healthInterval, dedupeCleanup, mediaCleanup };
 }

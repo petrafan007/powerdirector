@@ -1,16 +1,16 @@
 import type { Command } from "commander";
-import { onboardCommand } from '../../commands/onboard';
-import { setupCommand } from '../../commands/setup';
-import { defaultRuntime } from '../../runtime';
-import { formatDocsLink } from '../../terminal/links';
-import { theme } from '../../terminal/theme';
-import { runCommandWithRuntime } from '../cli-utils';
-import { hasExplicitOptions } from '../command-options';
+import { setupWizardCommand } from "../../commands/onboard";
+import { setupCommand } from "../../commands/setup";
+import { defaultRuntime } from "../../runtime";
+import { formatDocsLink } from "../../terminal/links";
+import { theme } from "../../terminal/theme";
+import { runCommandWithRuntime } from "../cli-utils";
+import { hasExplicitOptions } from "../command-options";
 
 export function registerSetupCommand(program: Command) {
   program
     .command("setup")
-    .description("Initialize powerdirector.config.json and the agent workspace")
+    .description("Initialize ~/.powerdirector/powerdirector.json and the agent workspace")
     .addHelpText(
       "after",
       () =>
@@ -20,9 +20,9 @@ export function registerSetupCommand(program: Command) {
       "--workspace <dir>",
       "Agent workspace directory (default: ~/.powerdirector/workspace; stored as agents.defaults.workspace)",
     )
-    .option("--wizard", "Run the interactive onboarding wizard", false)
-    .option("--non-interactive", "Run the wizard without prompts", false)
-    .option("--mode <mode>", "Wizard mode: local|remote")
+    .option("--wizard", "Run interactive onboarding", false)
+    .option("--non-interactive", "Run onboarding without prompts", false)
+    .option("--mode <mode>", "Onboard mode: local|remote")
     .option("--remote-url <url>", "Remote Gateway WebSocket URL")
     .option("--remote-token <token>", "Remote Gateway token (optional)")
     .action(async (opts, command) => {
@@ -35,7 +35,7 @@ export function registerSetupCommand(program: Command) {
           "remoteToken",
         ]);
         if (opts.wizard || hasWizardFlags) {
-          await onboardCommand(
+          await setupWizardCommand(
             {
               workspace: opts.workspace as string | undefined,
               nonInteractive: Boolean(opts.nonInteractive),

@@ -1,16 +1,16 @@
 import crypto from "node:crypto";
-import fs from "node:fs/promises";
 import path from "node:path";
-import type { BrowserRouteContext } from '../server-context';
+import type { BrowserRouteContext } from "../server-context";
 import {
   readBody,
   resolveTargetIdFromBody,
   resolveTargetIdFromQuery,
   withPlaywrightRouteContext,
-} from './agent.shared';
-import { DEFAULT_TRACE_DIR, resolvePathWithinRoot } from './path-output';
-import type { BrowserRouteRegistrar } from './types';
-import { toBoolean, toStringOrEmpty } from './utils';
+} from "./agent.shared";
+import { resolveWritableOutputPathOrRespond } from "./output-paths";
+import { DEFAULT_TRACE_DIR } from "./path-output";
+import type { BrowserRouteRegistrar } from "./types";
+import { toBoolean, toStringOrEmpty } from "./utils";
 
 export function registerBrowserAgentDebugRoutes(
   app: BrowserRouteRegistrar,
@@ -120,19 +120,17 @@ export function registerBrowserAgentDebugRoutes(
       feature: "trace stop",
       run: async ({ cdpUrl, tab, pw }) => {
         const id = crypto.randomUUID();
-        const dir = DEFAULT_TRACE_DIR;
-        await fs.mkdir(dir, { recursive: true });
-        const tracePathResult = resolvePathWithinRoot({
-          rootDir: dir,
+        const tracePath = await resolveWritableOutputPathOrRespond({
+          res,
+          rootDir: DEFAULT_TRACE_DIR,
           requestedPath: out,
           scopeLabel: "trace directory",
           defaultFileName: `browser-trace-${id}.zip`,
+          ensureRootDir: true,
         });
-        if (!tracePathResult.ok) {
-          res.status(400).json({ error: tracePathResult.error });
+        if (!tracePath) {
           return;
         }
-        const tracePath = tracePathResult.path;
         await pw.traceStopViaPlaywright({
           cdpUrl,
           targetId: tab.targetId,

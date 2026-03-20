@@ -6,12 +6,13 @@ import { SessionManager } from "@mariozechner/pi-coding-agent";
 import {
   resolveDefaultSessionStorePath,
   resolveSessionFilePath,
-} from '../../config/sessions/paths';
-import { loadSessionStore } from '../../config/sessions/store';
-import type { SessionEntry } from '../../config/sessions/types';
-import type { ReplyPayload } from '../types';
-import { resolveCommandsSystemPromptBundle } from './commands-system-prompt';
-import type { HandleCommandsParams } from './commands-types';
+  resolveSessionFilePathOptions,
+} from "../../config/sessions/paths";
+import { loadSessionStore } from "../../config/sessions/store";
+import type { SessionEntry } from "../../config/sessions/types";
+import type { ReplyPayload } from "../types";
+import { resolveCommandsSystemPromptBundle } from "./commands-system-prompt";
+import type { HandleCommandsParams } from "./commands-types";
 
 // Export HTML templates are bundled with this module
 const EXPORT_HTML_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "export-html");
@@ -126,10 +127,11 @@ export async function buildExportSessionReply(params: HandleCommandsParams): Pro
 
   let sessionFile: string;
   try {
-    sessionFile = resolveSessionFilePath(entry.sessionId, entry, {
-      agentId: params.agentId,
-      sessionsDir: path.dirname(storePath),
-    });
+    sessionFile = resolveSessionFilePath(
+      entry.sessionId,
+      entry,
+      resolveSessionFilePathOptions({ agentId: params.agentId, storePath }),
+    );
   } catch (err) {
     return {
       text: `❌ Failed to resolve session file: ${err instanceof Error ? err.message : String(err)}`,

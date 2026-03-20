@@ -1,4 +1,4 @@
-import type { loadConfig } from '../../config/config';
+import type { loadConfig } from "../../config/config";
 import {
   evaluateSessionFreshness,
   loadSessionStore,
@@ -8,8 +8,8 @@ import {
   resolveSessionResetType,
   resolveSessionKey,
   resolveStorePath,
-} from '../../config/sessions';
-import { normalizeMainKey } from '../../routing/session-key';
+} from "../../config/sessions";
+import { normalizeMainKey } from "../../routing/session-key";
 
 export function getSessionSnapshot(
   cfg: ReturnType<typeof loadConfig>,

@@ -2,41 +2,46 @@ import {
   resolveAgentDir,
   resolveDefaultAgentId,
   resolveSessionAgentId,
-} from '../../agents/agent-scope';
-import { resolveModelAuthLabel } from '../../agents/model-auth-label';
-import { listSubagentRunsForRequester } from '../../agents/subagent-registry';
+} from "../../agents/agent-scope";
+import { resolveFastModeState } from "../../agents/fast-mode";
+import { resolveModelAuthLabel } from "../../agents/model-auth-label";
+import { listSubagentRunsForRequester } from "../../agents/subagent-registry";
 import {
   resolveInternalSessionKey,
   resolveMainSessionAlias,
-} from '../../agents/tools/sessions-helpers';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry, SessionScope } from '../../config/sessions';
-import { logVerbose } from '../../globals';
+} from "../../agents/tools/sessions-helpers";
+import type { PowerDirectorConfig } from "../../config/config";
+import { toAgentModelListLike } from "../../config/model-input";
+import type { SessionEntry, SessionScope } from "../../config/sessions";
+import { logVerbose } from "../../globals";
 import {
   formatUsageWindowSummary,
   loadProviderUsageSummary,
   resolveUsageProviderId,
-} from '../../infra/provider-usage';
-import type { MediaUnderstandingDecision } from '../../media-understanding/types';
-import { normalizeGroupActivation } from '../group-activation';
-import { buildStatusMessage } from '../status';
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../thinking';
-import type { ReplyPayload } from '../types';
-import type { CommandContext } from './commands-types';
-import { getFollowupQueueDepth, resolveQueueSettings } from './queue';
-import { resolveSubagentLabel } from './subagents-utils';
+} from "../../infra/provider-usage";
+import type { MediaUnderstandingDecision } from "../../media-understanding/types";
+import { normalizeGroupActivation } from "../group-activation";
+import { resolveSelectedAndActiveModel } from "../model-runtime";
+import { buildStatusMessage } from "../status";
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../thinking";
+import type { ReplyPayload } from "../types";
+import type { CommandContext } from "./commands-types";
+import { getFollowupQueueDepth, resolveQueueSettings } from "./queue";
+import { resolveSubagentLabel } from "./subagents-utils";
 
 export async function buildStatusReply(params: {
   cfg: PowerDirectorConfig;
   command: CommandContext;
   sessionEntry?: SessionEntry;
   sessionKey: string;
+  parentSessionKey?: string;
   sessionScope?: SessionScope;
   storePath?: string;
   provider: string;
   model: string;
   contextTokens: number;
   resolvedThinkLevel?: ThinkLevel;
+  resolvedFastMode?: boolean;
   resolvedVerboseLevel: VerboseLevel;
   resolvedReasoningLevel: ReasoningLevel;
   resolvedElevatedLevel?: ElevatedLevel;
@@ -50,12 +55,14 @@ export async function buildStatusReply(params: {
     command,
     sessionEntry,
     sessionKey,
+    parentSessionKey,
     sessionScope,
     storePath,
     provider,
     model,
     contextTokens,
     resolvedThinkLevel,
+    resolvedFastMode,
     resolvedVerboseLevel,
     resolvedReasoningLevel,
     resolvedElevatedLevel,
@@ -136,13 +143,40 @@ export async function buildStatusReply(params: {
   const groupActivation = isGroup
     ? (normalizeGroupActivation(sessionEntry?.groupActivation) ?? defaultGroupActivation())
     : undefined;
+  const modelRefs = resolveSelectedAndActiveModel({
+    selectedProvider: provider,
+    selectedModel: model,
+    sessionEntry,
+  });
+  const selectedModelAuth = resolveModelAuthLabel({
+    provider,
+    cfg,
+    sessionEntry,
+    agentDir: statusAgentDir,
+  });
+  const activeModelAuth = modelRefs.activeDiffers
+    ? resolveModelAuthLabel({
+        provider: modelRefs.active.provider,
+        cfg,
+        sessionEntry,
+        agentDir: statusAgentDir,
+      })
+    : selectedModelAuth;
   const agentDefaults = cfg.agents?.defaults ?? {};
+  const effectiveFastMode =
+    resolvedFastMode ??
+    resolveFastModeState({
+      cfg,
+      provider,
+      model,
+      sessionEntry,
+    }).enabled;
   const statusText = buildStatusMessage({
     config: cfg,
     agent: {
       ...agentDefaults,
       model: {
-        ...agentDefaults.model,
+        ...toAgentModelListLike(agentDefaults.model),
         primary: `${provider}/${model}`,
       },
       contextTokens,
@@ -153,19 +187,17 @@ export async function buildStatusReply(params: {
     agentId: statusAgentId,
     sessionEntry,
     sessionKey,
+    parentSessionKey,
     sessionScope,
     sessionStorePath: storePath,
     groupActivation,
     resolvedThink: resolvedThinkLevel ?? (await resolveDefaultThinkingLevel()),
+    resolvedFast: effectiveFastMode,
     resolvedVerbose: resolvedVerboseLevel,
     resolvedReasoning: resolvedReasoningLevel,
     resolvedElevated: resolvedElevatedLevel,
-    modelAuth: resolveModelAuthLabel({
-      provider,
-      cfg,
-      sessionEntry,
-      agentDir: statusAgentDir,
-    }),
+    modelAuth: selectedModelAuth,
+    activeModelAuth,
     usageLine: usageLine ?? undefined,
     queue: {
       mode: queueSettings.mode,

@@ -1,10 +1,10 @@
 import type { DatabaseSync } from "node:sqlite";
-import { createSubsystemLogger } from '../logging/subsystem';
-import { buildFileEntry, listMemoryFiles, type MemoryFileEntry } from './internal';
-import { indexFileEntryIfChanged } from './sync-index';
-import type { SyncProgressState } from './sync-progress';
-import { bumpSyncProgressTotal } from './sync-progress';
-import { deleteStaleIndexedPaths } from './sync-stale';
+import { createSubsystemLogger } from "../logging/subsystem";
+import { buildFileEntry, listMemoryFiles, type MemoryFileEntry } from "./internal";
+import { indexFileEntryIfChanged } from "./sync-index";
+import type { SyncProgressState } from "./sync-progress";
+import { bumpSyncProgressTotal } from "./sync-progress";
+import { deleteStaleIndexedPaths } from "./sync-stale";
 
 const log = createSubsystemLogger("memory");
 

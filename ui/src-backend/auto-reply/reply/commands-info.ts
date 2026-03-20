@@ -1,14 +1,14 @@
-import { logVerbose } from '../../globals';
-import { listSkillCommandsForAgents } from '../skill-commands';
+import { logVerbose } from "../../globals";
+import { listSkillCommandsForAgents } from "../skill-commands";
 import {
   buildCommandsMessage,
   buildCommandsMessagePaginated,
   buildHelpMessage,
-} from '../status';
-import { buildContextReply } from './commands-context-report';
-import { buildExportSessionReply } from './commands-export-session';
-import { buildStatusReply } from './commands-status';
-import type { CommandHandler } from './commands-types';
+} from "../status";
+import { buildContextReply } from "./commands-context-report";
+import { buildExportSessionReply } from "./commands-export-session";
+import { buildStatusReply } from "./commands-status";
+import type { CommandHandler } from "./commands-types";
 
 export const handleHelpCommand: CommandHandler = async (params, allowTextCommands) => {
   if (!allowTextCommands) {
@@ -136,6 +136,7 @@ export const handleStatusCommand: CommandHandler = async (params, allowTextComma
     command: params.command,
     sessionEntry: params.sessionEntry,
     sessionKey: params.sessionKey,
+    parentSessionKey: params.ctx.ParentSessionKey,
     sessionScope: params.sessionScope,
     provider: params.provider,
     model: params.model,

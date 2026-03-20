@@ -1,16 +1,30 @@
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { loadDotEnv } from '../infra/dotenv';
-import { normalizeEnv } from '../infra/env';
-import { formatUncaughtError } from '../infra/errors';
-import { isMainModule } from '../infra/is-main';
-import { ensurePowerDirectorCliOnPath } from '../infra/path-env';
-import { assertSupportedRuntime } from '../infra/runtime-guard';
-import { installUnhandledRejectionHandler } from '../infra/unhandled-rejections';
-import { enableConsoleCapture } from '../logging';
-import { getCommandPath, getPrimaryCommand, hasHelpOrVersion } from './argv';
-import { tryRouteCli } from './route';
-import { normalizeWindowsArgv } from './windows-argv';
+import { normalizeEnv } from "../infra/env";
+import { formatUncaughtError } from "../infra/errors";
+import { isMainModule } from "../infra/is-main";
+import { ensurePowerDirectorCliOnPath } from "../infra/path-env";
+import { assertSupportedRuntime } from "../infra/runtime-guard";
+import { enableConsoleCapture } from "../logging";
+import {
+  getCommandPathWithRootOptions,
+  getPrimaryCommand,
+  hasHelpOrVersion,
+  isRootHelpInvocation,
+} from "./argv";
+import { loadCliDotEnv } from "./dotenv";
+import { applyCliProfileEnv, parseCliProfileArgs } from "./profile";
+import { tryRouteCli } from "./route";
+import { normalizeWindowsArgv } from "./windows-argv";
+
+async function closeCliMemoryManagers(): Promise<void> {
+  try {
+    const { closeAllMemorySearchManagers } = await import("../memory/search-manager");
+    await closeAllMemorySearchManagers();
+  } catch {
+    // Best-effort teardown for short-lived CLI processes.
+  }
+}
 
 export function rewriteUpdateFlagArgv(argv: string[]): string[] {
   const index = argv.indexOf("--update");
@@ -45,7 +59,7 @@ export function shouldEnsureCliPath(argv: string[]): boolean {
   if (hasHelpOrVersion(argv)) {
     return false;
   }
-  const [primary, secondary] = getCommandPath(argv, 2);
+  const [primary, secondary] = getCommandPathWithRootOptions(argv, 2);
   if (!primary) {
     return true;
   }
@@ -61,9 +75,22 @@ export function shouldEnsureCliPath(argv: string[]): boolean {
   return true;
 }
 
+export function shouldUseRootHelpFastPath(argv: string[]): boolean {
+  return isRootHelpInvocation(argv);
+}
+
 export async function runCli(argv: string[] = process.argv) {
-  const normalizedArgv = normalizeWindowsArgv(argv);
-  loadDotEnv({ quiet: true });
+  let normalizedArgv = normalizeWindowsArgv(argv);
+  const parsedProfile = parseCliProfileArgs(normalizedArgv);
+  if (!parsedProfile.ok) {
+    throw new Error(parsedProfile.error);
+  }
+  if (parsedProfile.profile) {
+    applyCliProfileEnv({ profile: parsedProfile.profile });
+  }
+  normalizedArgv = parsedProfile.argv;
+
+  loadCliDotEnv({ quiet: true });
   normalizeEnv();
   if (shouldEnsureCliPath(normalizedArgv)) {
     ensurePowerDirectorCliOnPath();
@@ -72,55 +99,70 @@ export async function runCli(argv: string[] = process.argv) {
   // Enforce the minimum supported runtime before doing any work.
   assertSupportedRuntime();
 
-  if (await tryRouteCli(normalizedArgv)) {
-    return;
-  }
-
-  // Capture all console output into structured logs while keeping stdout/stderr behavior.
-  enableConsoleCapture();
-
-  const { buildProgram } = await import('./program');
-  const program = buildProgram();
-
-  // Global error handlers to prevent silent crashes from unhandled rejections/exceptions.
-  // These log the error and exit gracefully instead of crashing without trace.
-  installUnhandledRejectionHandler();
-
-  process.on("uncaughtException", (error) => {
-    console.error("[powerdirector] Uncaught exception:", formatUncaughtError(error));
-    process.exit(1);
-  });
-
-  const parseArgv = rewriteUpdateFlagArgv(normalizedArgv);
-  // Register the primary command (builtin or subcli) so help and command parsing
-  // are correct even with lazy command registration.
-  const primary = getPrimaryCommand(parseArgv);
-  if (primary) {
-    const { getProgramContext } = await import('./program/program-context');
-    const ctx = getProgramContext(program);
-    if (ctx) {
-      const { registerCoreCliByName } = await import('./program/command-registry');
-      await registerCoreCliByName(program, ctx, primary, parseArgv);
+  try {
+    if (shouldUseRootHelpFastPath(normalizedArgv)) {
+      const { outputRootHelp } = await import("./program/root-help");
+      outputRootHelp();
+      return;
     }
-    const { registerSubCliByName } = await import('./program/register.subclis');
-    await registerSubCliByName(program, primary);
-  }
 
-  const hasBuiltinPrimary =
-    primary !== null && program.commands.some((command) => command.name() === primary);
-  const shouldSkipPluginRegistration = shouldSkipPluginCommandRegistration({
-    argv: parseArgv,
-    primary,
-    hasBuiltinPrimary,
-  });
-  if (!shouldSkipPluginRegistration) {
-    // Register plugin CLI commands before parsing
-    const { registerPluginCliCommands } = await import('../plugins/cli');
-    const { loadConfig } = await import('../config/config');
-    registerPluginCliCommands(program, loadConfig());
-  }
+    if (await tryRouteCli(normalizedArgv)) {
+      return;
+    }
 
-  await program.parseAsync(parseArgv);
+    // Capture all console output into structured logs while keeping stdout/stderr behavior.
+    enableConsoleCapture();
+
+    const { buildProgram } = await import("./program");
+    const program = buildProgram();
+    const { installUnhandledRejectionHandler } = await import("../infra/unhandled-rejections");
+
+    // Global error handlers to prevent silent crashes from unhandled rejections/exceptions.
+    // These log the error and exit gracefully instead of crashing without trace.
+    installUnhandledRejectionHandler();
+
+    process.on("uncaughtException", (error) => {
+      console.error("[powerdirector] Uncaught exception:", formatUncaughtError(error));
+      process.exit(1);
+    });
+
+    const parseArgv = rewriteUpdateFlagArgv(normalizedArgv);
+    // Register the primary command (builtin or subcli) so help and command parsing
+    // are correct even with lazy command registration.
+    const primary = getPrimaryCommand(parseArgv);
+    if (primary) {
+      const { getProgramContext } = await import("./program/program-context");
+      const ctx = getProgramContext(program);
+      if (ctx) {
+        const { registerCoreCliByName } = await import("./program/command-registry");
+        await registerCoreCliByName(program, ctx, primary, parseArgv);
+      }
+      const { registerSubCliByName } = await import("./program/register.subclis");
+      await registerSubCliByName(program, primary);
+    }
+
+    const hasBuiltinPrimary =
+      primary !== null && program.commands.some((command) => command.name() === primary);
+    const shouldSkipPluginRegistration = shouldSkipPluginCommandRegistration({
+      argv: parseArgv,
+      primary,
+      hasBuiltinPrimary,
+    });
+    if (!shouldSkipPluginRegistration) {
+      // Register plugin CLI commands before parsing
+      const { registerPluginCliCommands } = await import("../plugins/cli");
+      const { loadValidatedConfigForPluginRegistration } =
+        await import("./program/register.subclis");
+      const config = await loadValidatedConfigForPluginRegistration();
+      if (config) {
+        registerPluginCliCommands(program, config);
+      }
+    }
+
+    await program.parseAsync(parseArgv);
+  } finally {
+    await closeCliMemoryManagers();
+  }
 }
 
 export function isCliMainModule(): boolean {

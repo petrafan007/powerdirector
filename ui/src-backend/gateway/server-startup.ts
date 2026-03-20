@@ -1,31 +1,33 @@
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
-import { loadModelCatalog } from '../agents/model-catalog';
+import { getAcpSessionManager } from "../acp/control-plane/manager";
+import { ACP_SESSION_IDENTITY_RENDERER_VERSION } from "../acp/runtime/session-identifiers";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults";
+import { loadModelCatalog } from "../agents/model-catalog";
 import {
   getModelRefStatus,
   resolveConfiguredModelRef,
   resolveHooksGmailModel,
-} from '../agents/model-selection';
-import { resolveAgentSessionDirs } from '../agents/session-dirs';
-import { cleanStaleLockFiles } from '../agents/session-write-lock';
-import type { CliDeps } from '../cli/deps';
-import type { loadConfig } from '../config/config';
-import { resolveStateDir } from '../config/paths';
-import { startGmailWatcherWithLogs } from '../hooks/gmail-watcher-lifecycle';
+} from "../agents/model-selection";
+import { resolveAgentSessionDirs } from "../agents/session-dirs";
+import { cleanStaleLockFiles } from "../agents/session-write-lock";
+import type { CliDeps } from "../cli/deps";
+import type { loadConfig } from "../config/config";
+import { resolveStateDir } from "../config/paths";
+import { startGmailWatcherWithLogs } from "../hooks/gmail-watcher-lifecycle";
 import {
   clearInternalHooks,
   createInternalHookEvent,
   triggerInternalHook,
-} from '../hooks/internal-hooks';
-import { loadInternalHooks } from '../hooks/loader';
-import { isTruthyEnvValue } from '../infra/env';
-import type { loadPowerDirectorPlugins } from '../plugins/loader';
-import { type PluginServicesHandle, startPluginServices } from '../plugins/services';
-import { startBrowserControlServerIfEnabled } from './server-browser';
+} from "../hooks/internal-hooks";
+import { loadInternalHooks } from "../hooks/loader";
+import { isTruthyEnvValue } from "../infra/env";
+import type { loadPowerDirectorPlugins } from "../plugins/loader";
+import { type PluginServicesHandle, startPluginServices } from "../plugins/services";
+import { startBrowserControlServerIfEnabled } from "./server-browser";
 import {
   scheduleRestartSentinelWake,
   shouldWakeFromRestartSentinel,
-} from './server-restart-sentinel';
-import { startGatewayMemoryBackend } from './server-startup-memory';
+} from "./server-restart-sentinel";
+import { startGatewayMemoryBackend } from "./server-startup-memory";
 
 const SESSION_LOCK_STALE_MS = 30 * 60 * 1000;
 
@@ -157,6 +159,22 @@ export async function startGatewaySidecars(params: {
     });
   } catch (err) {
     params.log.warn(`plugin services failed to start: ${String(err)}`);
+  }
+
+  if (params.cfg.acp?.enabled) {
+    void getAcpSessionManager()
+      .reconcilePendingSessionIdentities({ cfg: params.cfg })
+      .then((result) => {
+        if (result.checked === 0) {
+          return;
+        }
+        params.log.warn(
+          `acp startup identity reconcile (renderer=${ACP_SESSION_IDENTITY_RENDERER_VERSION}): checked=${result.checked} resolved=${result.resolved} failed=${result.failed}`,
+        );
+      })
+      .catch((err) => {
+        params.log.warn(`acp startup identity reconcile failed: ${String(err)}`);
+      });
   }
 
   void startGatewayMemoryBackend({ cfg: params.cfg, log: params.log }).catch((err) => {

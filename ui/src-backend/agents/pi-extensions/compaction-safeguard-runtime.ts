@@ -1,8 +1,22 @@
-import { createSessionManagerRuntimeRegistry } from './session-manager-runtime-registry';
+import type { Api, Model } from "@mariozechner/pi-ai";
+import type { AgentCompactionIdentifierPolicy } from "../../config/types.agent-defaults";
+import { createSessionManagerRuntimeRegistry } from "./session-manager-runtime-registry";
 
 export type CompactionSafeguardRuntimeValue = {
   maxHistoryShare?: number;
   contextWindowTokens?: number;
+  identifierPolicy?: AgentCompactionIdentifierPolicy;
+  identifierInstructions?: string;
+  customInstructions?: string;
+  /**
+   * Model to use for compaction summarization.
+   * Passed through runtime because `ctx.model` is undefined in the compact.ts workflow
+   * (extensionRunner.initialize() is never called in that path).
+   */
+  model?: Model<Api>;
+  recentTurnsPreserve?: number;
+  qualityGuardEnabled?: boolean;
+  qualityGuardMaxRetries?: number;
 };
 
 const registry = createSessionManagerRuntimeRegistry<CompactionSafeguardRuntimeValue>();

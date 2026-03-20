@@ -5,15 +5,15 @@
  * history persisted on disk.
  */
 
-export { default } from './context-pruning/extension';
+export { default } from "./context-pruning/extension";
 
-export { pruneContextMessages } from './context-pruning/pruner';
+export { pruneContextMessages } from "./context-pruning/pruner";
 export type {
   ContextPruningConfig,
   ContextPruningToolMatch,
   EffectiveContextPruningSettings,
-} from './context-pruning/settings';
+} from "./context-pruning/settings";
 export {
   computeEffectiveSettings,
   DEFAULT_CONTEXT_PRUNING_SETTINGS,
-} from './context-pruning/settings';
+} from "./context-pruning/settings";

@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { MsgContext } from '../templating';
-import type { HandleCommandsParams } from './commands-types';
-import { buildCommandContext } from './commands';
-import { parseInlineDirectives } from './directive-handling';
+import type { PowerDirectorConfig } from "../../config/config";
+import type { MsgContext } from "../templating";
+import type { HandleCommandsParams } from "./commands-types";
+import { buildCommandContext } from "./commands";
+import { parseInlineDirectives } from "./directive-handling";
 
 export function buildCommandTestParams(
   commandBody: string,
@@ -26,7 +26,7 @@ export function buildCommandTestParams(
     ctx,
     cfg,
     isGroup: false,
-    triggerBodyNormalized: commandBody.trim().toLowerCase(),
+    triggerBodyNormalized: commandBody.trim(),
     commandAuthorized: true,
   });
 

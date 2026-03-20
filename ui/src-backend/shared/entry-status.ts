@@ -1,11 +1,11 @@
-import { resolveEmojiAndHomepage } from './entry-metadata';
+import { resolveEmojiAndHomepage } from "./entry-metadata";
 import {
   evaluateRequirementsFromMetadataWithRemote,
   type RequirementConfigCheck,
   type RequirementRemote,
   type Requirements,
   type RequirementsMetadata,
-} from './requirements';
+} from "./requirements";
 
 export type EntryMetadataRequirementsParams = Parameters<
   typeof evaluateEntryMetadataRequirements
@@ -62,5 +62,32 @@ export function evaluateEntryMetadataRequirementsForCurrentPlatform(
   return evaluateEntryMetadataRequirements({
     ...params,
     localPlatform: process.platform,
+  });
+}
+
+export function evaluateEntryRequirementsForCurrentPlatform(params: {
+  always: boolean;
+  entry: {
+    metadata?: (RequirementsMetadata & { emoji?: string; homepage?: string }) | null;
+    frontmatter?: {
+      emoji?: string;
+      homepage?: string;
+      website?: string;
+      url?: string;
+    } | null;
+  };
+  hasLocalBin: (bin: string) => boolean;
+  remote?: RequirementRemote;
+  isEnvSatisfied: (envName: string) => boolean;
+  isConfigSatisfied: (pathStr: string) => boolean;
+}): ReturnType<typeof evaluateEntryMetadataRequirements> {
+  return evaluateEntryMetadataRequirementsForCurrentPlatform({
+    always: params.always,
+    metadata: params.entry.metadata,
+    frontmatter: params.entry.frontmatter,
+    hasLocalBin: params.hasLocalBin,
+    remote: params.remote,
+    isEnvSatisfied: params.isEnvSatisfied,
+    isConfigSatisfied: params.isConfigSatisfied,
   });
 }

@@ -1,12 +1,14 @@
 import util from "node:util";
-import type { PowerDirectorConfig } from '../config/types';
-import { isVerbose } from '../globals';
-import { stripAnsi } from '../terminal/ansi';
-import { readLoggingConfig } from './config';
-import { type LogLevel, normalizeLogLevel } from './levels';
-import { getLogger, type LoggerSettings } from './logger';
-import { loggingState } from './state';
-import { formatLocalIsoWithOffset } from './timestamps';
+import type { PowerDirectorConfig } from "../config/types";
+import { isVerbose } from "../globals";
+import { stripAnsi } from "../terminal/ansi";
+import { readLoggingConfig } from "./config";
+import { resolveEnvLogLevelOverride } from "./env-log-level";
+import { type LogLevel, normalizeLogLevel } from "./levels";
+import { getLogger, type LoggerSettings } from "./logger";
+import { resolveNodeRequireFromMeta } from "./node-require";
+import { loggingState } from "./state";
+import { formatLocalIsoWithOffset } from "./timestamps";
 
 export type ConsoleStyle = "pretty" | "compact" | "json";
 type ConsoleSettings = {
@@ -15,32 +17,11 @@ type ConsoleSettings = {
 };
 export type ConsoleLoggerSettings = ConsoleSettings;
 
-function resolveNodeRequire(): ((id: string) => NodeJS.Require) | null {
-  const getBuiltinModule = (
-    process as NodeJS.Process & {
-      getBuiltinModule?: (id: string) => unknown;
-    }
-  ).getBuiltinModule;
-  if (typeof getBuiltinModule !== "function") {
-    return null;
-  }
-  try {
-    const moduleNamespace = getBuiltinModule("module") as {
-      createRequire?: (id: string) => NodeJS.Require;
-    };
-    return typeof moduleNamespace.createRequire === "function"
-      ? moduleNamespace.createRequire
-      : null;
-  } catch {
-    return null;
-  }
-}
-
-const requireConfig = resolveNodeRequire()?.(import.meta.url) ?? null;
+const requireConfig = resolveNodeRequireFromMeta(import.meta.url);
 type ConsoleConfigLoader = () => PowerDirectorConfig["logging"] | undefined;
 const loadConfigFallbackDefault: ConsoleConfigLoader = () => {
   try {
-    const loaded = requireConfig?.("../config/config.js") as
+    const loaded = requireConfig?.("../config/config") as
       | {
           loadConfig?: () => PowerDirectorConfig;
         }
@@ -77,6 +58,19 @@ function normalizeConsoleStyle(style?: string): ConsoleStyle {
 }
 
 function resolveConsoleSettings(): ConsoleSettings {
+  const envLevel = resolveEnvLogLevelOverride();
+  // Test runs default to silent console logging unless explicitly overridden.
+  // Skip config-file and full config fallback reads in this fast path.
+  if (
+    process.env.VITEST === "true" &&
+    process.env.POWERDIRECTOR_TEST_CONSOLE !== "1" &&
+    !isVerbose() &&
+    !envLevel &&
+    !loggingState.overrideSettings
+  ) {
+    return { level: "silent", style: normalizeConsoleStyle(undefined) };
+  }
+
   let cfg: PowerDirectorConfig["logging"] | undefined =
     (loggingState.overrideSettings as LoggerSettings | null) ?? readLoggingConfig();
   if (!cfg) {
@@ -91,7 +85,7 @@ function resolveConsoleSettings(): ConsoleSettings {
       }
     }
   }
-  const level = normalizeConsoleLevel(cfg?.consoleLevel);
+  const level = envLevel ?? normalizeConsoleLevel(cfg?.consoleLevel);
   const style = normalizeConsoleStyle(cfg?.consoleStyle);
   return { level, style };
 }
@@ -151,6 +145,12 @@ const SUPPRESSED_CONSOLE_PREFIXES = [
   "Session already open",
 ] as const;
 
+const SUPPRESSED_DISCORD_EVENTQUEUE_LISTENERS = [
+  "DiscordMessageListener",
+  "DiscordReactionListener",
+  "DiscordReactionRemoveListener",
+] as const;
+
 function shouldSuppressConsoleMessage(message: string): boolean {
   if (isVerbose()) {
     return false;
@@ -160,7 +160,7 @@ function shouldSuppressConsoleMessage(message: string): boolean {
   }
   if (
     message.startsWith("[EventQueue] Slow listener detected") &&
-    message.includes("DiscordMessageListener")
+    SUPPRESSED_DISCORD_EVENTQUEUE_LISTENERS.some((listener) => message.includes(listener))
   ) {
     return true;
   }

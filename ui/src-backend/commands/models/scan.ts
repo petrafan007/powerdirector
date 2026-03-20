@@ -1,17 +1,18 @@
 import { cancel, multiselect as clackMultiselect, isCancel } from "@clack/prompts";
-import { resolveApiKeyForProvider } from '../../agents/model-auth';
-import { type ModelScanResult, scanOpenRouterModels } from '../../agents/model-scan';
-import { withProgressTotals } from '../../cli/progress';
-import { loadConfig } from '../../config/config';
-import { logConfigUpdated } from '../../config/logging';
-import type { RuntimeEnv } from '../../runtime';
+import { resolveApiKeyForProvider } from "../../agents/model-auth";
+import { type ModelScanResult, scanOpenRouterModels } from "../../agents/model-scan";
+import { withProgressTotals } from "../../cli/progress";
+import { logConfigUpdated } from "../../config/logging";
+import { toAgentModelListLike } from "../../config/model-input";
+import type { RuntimeEnv } from "../../runtime";
 import {
   stylePromptHint,
   stylePromptMessage,
   stylePromptTitle,
-} from '../../terminal/prompt-style';
-import { pad, truncate } from './list.format';
-import { formatMs, formatTokenK, updateConfig } from './shared';
+} from "../../terminal/prompt-style";
+import { pad, truncate } from "./list.format";
+import { loadModelsConfig } from "./load-config";
+import { formatMs, formatTokenK, updateConfig } from "./shared";
 
 const MODEL_PAD = 42;
 const CTX_PAD = 8;
@@ -166,7 +167,7 @@ export async function modelsScanCommand(
     throw new Error("--concurrency must be > 0");
   }
 
-  const cfg = loadConfig();
+  const cfg = await loadModelsConfig({ commandName: "models scan", runtime });
   const probe = opts.probe ?? true;
   let storedKey: string | undefined;
   if (probe) {
@@ -297,9 +298,7 @@ export async function modelsScanCommand(
         nextModels[entry] = {};
       }
     }
-    const existingImageModel = cfg.agents?.defaults?.imageModel as
-      | { primary?: string; fallbacks?: string[] }
-      | undefined;
+    const existingImageModel = toAgentModelListLike(cfg.agents?.defaults?.imageModel);
     const nextImageModel =
       selectedImages.length > 0
         ? {
@@ -308,9 +307,7 @@ export async function modelsScanCommand(
             ...(opts.setImage ? { primary: selectedImages[0] } : {}),
           }
         : cfg.agents?.defaults?.imageModel;
-    const existingModel = cfg.agents?.defaults?.model as
-      | { primary?: string; fallbacks?: string[] }
-      | undefined;
+    const existingModel = toAgentModelListLike(cfg.agents?.defaults?.model);
     const defaults = {
       ...cfg.agents?.defaults,
       model: {

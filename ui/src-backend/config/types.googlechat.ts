@@ -3,8 +3,10 @@ import type {
   DmPolicy,
   GroupPolicy,
   ReplyToMode,
-} from './types.base';
-import type { DmConfig } from './types.messages';
+} from "./types.base";
+import type { ChannelHealthMonitorConfig } from "./types.channels";
+import type { DmConfig } from "./types.messages";
+import type { SecretRef } from "./types.secrets";
 
 export type GoogleChatDmConfig = {
   /** If false, ignore all incoming Google Chat DMs. Default: true. */
@@ -43,6 +45,11 @@ export type GoogleChatAccountConfig = {
   enabled?: boolean;
   /** Allow bot-authored messages to trigger replies (default: false). */
   allowBots?: boolean;
+  /**
+   * Break-glass override: allow mutable principal matching (raw email entries) in allowlists.
+   * Default behavior is ID-only matching.
+   */
+  dangerouslyAllowNameMatching?: boolean;
   /** Default mention requirement for space messages (default: true). */
   requireMention?: boolean;
   /**
@@ -54,16 +61,22 @@ export type GoogleChatAccountConfig = {
   groupPolicy?: GroupPolicy;
   /** Optional allowlist for space senders (user ids or emails). */
   groupAllowFrom?: Array<string | number>;
+  /** Default delivery target for CLI --deliver when no explicit --reply-to is provided. */
+  defaultTo?: string;
   /** Per-space configuration keyed by space id or name. */
   groups?: Record<string, GoogleChatGroupConfig>;
-  /** Service account JSON (inline string or object). */
-  serviceAccount?: string | Record<string, unknown>;
+  /** Service account JSON (inline string, object, or secret reference). */
+  serviceAccount?: string | Record<string, unknown> | SecretRef;
+  /** Explicit secret reference for service account JSON. */
+  serviceAccountRef?: SecretRef;
   /** Service account JSON file path. */
   serviceAccountFile?: string;
   /** Webhook audience type (app-url or project-number). */
   audienceType?: "app-url" | "project-number";
   /** Audience value (app URL or project number). */
   audience?: string;
+  /** Exact add-on principal to accept when app-url delivery uses add-on tokens. */
+  appPrincipal?: string;
   /** Google Chat webhook path (default: /googlechat). */
   webhookPath?: string;
   /** Google Chat webhook URL (used to derive the path). */
@@ -89,6 +102,8 @@ export type GoogleChatAccountConfig = {
   /** Per-action tool gating (default: true for all). */
   actions?: GoogleChatActionConfig;
   dm?: GoogleChatDmConfig;
+  /** Channel health monitor overrides for this channel/account. */
+  healthMonitor?: ChannelHealthMonitorConfig;
   /**
    * Typing indicator mode (default: "message").
    * - "none": No indicator

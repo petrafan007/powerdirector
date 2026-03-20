@@ -1,26 +1,33 @@
-import { resolveChannelConfigWrites } from '../../channels/plugins/config-writes';
-import { normalizeChannelId } from '../../channels/registry';
+import { resolveConfigWriteTargetFromPath } from "../../channels/plugins/config-writes";
+import { normalizeChannelId } from "../../channels/registry";
 import {
   getConfigValueAtPath,
   parseConfigPath,
   setConfigValueAtPath,
   unsetConfigValueAtPath,
-} from '../../config/config-paths';
+} from "../../config/config-paths";
 import {
   readConfigFileSnapshot,
   validateConfigObjectWithPlugins,
   writeConfigFile,
-} from '../../config/config';
+} from "../../config/config";
 import {
   getConfigOverrides,
   resetConfigOverrides,
   setConfigOverride,
   unsetConfigOverride,
-} from '../../config/runtime-overrides';
-import { logVerbose } from '../../globals';
-import type { CommandHandler } from './commands-types';
-import { parseConfigCommand } from './config-commands';
-import { parseDebugCommand } from './debug-commands';
+} from "../../config/runtime-overrides";
+import { isInternalMessageChannel } from "../../utils/message-channel";
+import {
+  rejectNonOwnerCommand,
+  rejectUnauthorizedCommand,
+  requireCommandFlagEnabled,
+  requireGatewayClientScopeForInternalChannel,
+} from "./command-gates";
+import type { CommandHandler } from "./commands-types";
+import { parseConfigCommand } from "./config-commands";
+import { resolveConfigWriteDeniedText } from "./config-write-authorization";
+import { parseDebugCommand } from "./debug-commands";
 
 export const handleConfigCommand: CommandHandler = async (params, allowTextCommands) => {
   if (!allowTextCommands) {
@@ -30,19 +37,22 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
   if (!configCommand) {
     return null;
   }
-  if (!params.command.isAuthorizedSender) {
-    logVerbose(
-      `Ignoring /config from unauthorized sender: ${params.command.senderId || "<unknown>"}`,
-    );
-    return { shouldContinue: false };
+  const unauthorized = rejectUnauthorizedCommand(params, "/config");
+  if (unauthorized) {
+    return unauthorized;
   }
-  if (params.cfg.commands?.config !== true) {
-    return {
-      shouldContinue: false,
-      reply: {
-        text: "⚠️ /config is disabled. Set commands.config=true to enable.",
-      },
-    };
+  const allowInternalReadOnlyShow =
+    configCommand.action === "show" && isInternalMessageChannel(params.command.channel);
+  const nonOwner = allowInternalReadOnlyShow ? null : rejectNonOwnerCommand(params, "/config");
+  if (nonOwner) {
+    return nonOwner;
+  }
+  const disabled = requireCommandFlagEnabled(params.cfg, {
+    label: "/config",
+    configKey: "config",
+  });
+  if (disabled) {
+    return disabled;
   }
   if (configCommand.action === "error") {
     return {
@@ -51,22 +61,38 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     };
   }
 
+  let parsedWritePath: string[] | undefined;
   if (configCommand.action === "set" || configCommand.action === "unset") {
+    const missingAdminScope = requireGatewayClientScopeForInternalChannel(params, {
+      label: "/config write",
+      allowedScopes: ["operator.admin"],
+      missingText: "❌ /config set|unset requires operator.admin for gateway clients.",
+    });
+    if (missingAdminScope) {
+      return missingAdminScope;
+    }
+    const parsedPath = parseConfigPath(configCommand.path);
+    if (!parsedPath.ok || !parsedPath.path) {
+      return {
+        shouldContinue: false,
+        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
+      };
+    }
+    parsedWritePath = parsedPath.path;
     const channelId = params.command.channelId ?? normalizeChannelId(params.command.channel);
-    const allowWrites = resolveChannelConfigWrites({
+    const deniedText = resolveConfigWriteDeniedText({
       cfg: params.cfg,
+      channel: params.command.channel,
       channelId,
       accountId: params.ctx.AccountId,
+      gatewayClientScopes: params.ctx.GatewayClientScopes,
+      target: resolveConfigWriteTargetFromPath(parsedWritePath),
     });
-    if (!allowWrites) {
-      const channelLabel = channelId ?? "this channel";
-      const hint = channelId
-        ? `channels.${channelId}.configWrites=true`
-        : "channels.<channel>.configWrites=true";
+    if (deniedText) {
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config writes are disabled for ${channelLabel}. Set ${hint} to enable.`,
+          text: deniedText,
         },
       };
     }
@@ -110,14 +136,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
   }
 
   if (configCommand.action === "unset") {
-    const parsedPath = parseConfigPath(configCommand.path);
-    if (!parsedPath.ok || !parsedPath.path) {
-      return {
-        shouldContinue: false,
-        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
-      };
-    }
-    const removed = unsetConfigValueAtPath(parsedBase, parsedPath.path);
+    const removed = unsetConfigValueAtPath(parsedBase, parsedWritePath ?? []);
     if (!removed) {
       return {
         shouldContinue: false,
@@ -142,14 +161,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
   }
 
   if (configCommand.action === "set") {
-    const parsedPath = parseConfigPath(configCommand.path);
-    if (!parsedPath.ok || !parsedPath.path) {
-      return {
-        shouldContinue: false,
-        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
-      };
-    }
-    setConfigValueAtPath(parsedBase, parsedPath.path, configCommand.value);
+    setConfigValueAtPath(parsedBase, parsedWritePath ?? [], configCommand.value);
     const validated = validateConfigObjectWithPlugins(parsedBase);
     if (!validated.ok) {
       const issue = validated.issues[0];
@@ -184,19 +196,20 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
   if (!debugCommand) {
     return null;
   }
-  if (!params.command.isAuthorizedSender) {
-    logVerbose(
-      `Ignoring /debug from unauthorized sender: ${params.command.senderId || "<unknown>"}`,
-    );
-    return { shouldContinue: false };
+  const unauthorized = rejectUnauthorizedCommand(params, "/debug");
+  if (unauthorized) {
+    return unauthorized;
   }
-  if (params.cfg.commands?.debug !== true) {
-    return {
-      shouldContinue: false,
-      reply: {
-        text: "⚠️ /debug is disabled. Set commands.debug=true to enable.",
-      },
-    };
+  const nonOwner = rejectNonOwnerCommand(params, "/debug");
+  if (nonOwner) {
+    return nonOwner;
+  }
+  const disabled = requireCommandFlagEnabled(params.cfg, {
+    label: "/debug",
+    configKey: "debug",
+  });
+  if (disabled) {
+    return disabled;
   }
   if (debugCommand.action === "error") {
     return {

@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { ensureUrbitChannelOpen, pokeUrbitChannel, scryUrbitPath } from './channel-ops';
-import { getUrbitContext, normalizeUrbitCookie } from './context';
-import { urbitFetch } from './fetch';
+import { ensureUrbitChannelOpen, pokeUrbitChannel, scryUrbitPath } from "./channel-ops";
+import { getUrbitContext, normalizeUrbitCookie } from "./context";
+import { urbitFetch } from "./fetch";
 
 export type UrbitChannelClientOptions = {
   ship?: string;

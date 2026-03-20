@@ -1,9 +1,9 @@
 import type { Command } from "commander";
-import { docsSearchCommand } from '../commands/docs';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { runCommandWithRuntime } from './cli-utils';
+import { docsSearchCommand } from "../commands/docs";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { runCommandWithRuntime } from "./cli-utils";
 
 export function registerDocsCli(program: Command) {
   program

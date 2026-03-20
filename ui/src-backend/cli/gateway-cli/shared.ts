@@ -2,11 +2,11 @@ import {
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
-} from '../../daemon/constants';
-import { resolveGatewayService } from '../../daemon/service';
-import { defaultRuntime } from '../../runtime';
-import { formatCliCommand } from '../command-format';
-import { parsePort } from '../shared/parse-port';
+} from "../../daemon/constants";
+import { resolveGatewayService } from "../../daemon/service";
+import { defaultRuntime } from "../../runtime";
+import { formatCliCommand } from "../command-format";
+import { parsePort } from "../shared/parse-port";
 
 export { parsePort };
 

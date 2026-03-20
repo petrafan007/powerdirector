@@ -1,11 +1,13 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import type { Api, AssistantMessage, Model } from "@mariozechner/pi-ai";
-import type { ThinkLevel } from '../../../auto-reply/thinking';
-import type { SessionSystemPromptReport } from '../../../config/sessions/types';
-import type { MessagingToolSend } from '../../pi-embedded-messaging';
-import type { AuthStorage, ModelRegistry } from '../../pi-model-discovery';
-import type { NormalizedUsage } from '../../usage';
-import type { RunEmbeddedPiAgentParams } from './params';
+import type { AuthStorage, ModelRegistry } from "@mariozechner/pi-coding-agent";
+import type { ThinkLevel } from "../../../auto-reply/thinking";
+import type { SessionSystemPromptReport } from "../../../config/sessions/types";
+import type { ContextEngine } from "../../../context-engine/types";
+import type { PluginHookBeforeAgentStartResult } from "../../../plugins/types";
+import type { MessagingToolSend } from "../../pi-embedded-messaging";
+import type { NormalizedUsage } from "../../usage";
+import type { RunEmbeddedPiAgentParams } from "./params";
 
 type EmbeddedRunAttemptBase = Omit<
   RunEmbeddedPiAgentParams,
@@ -13,12 +15,21 @@ type EmbeddedRunAttemptBase = Omit<
 >;
 
 export type EmbeddedRunAttemptParams = EmbeddedRunAttemptBase & {
+  /** Pluggable context engine for ingest/assemble/compact lifecycle. */
+  contextEngine?: ContextEngine;
+  /** Resolved model context window in tokens for assemble/compact budgeting. */
+  contextTokenBudget?: number;
+  /** Auth profile resolved for this attempt's provider/model call. */
+  authProfileId?: string;
+  /** Source for the resolved auth profile (user-locked or automatic). */
+  authProfileIdSource?: "auto" | "user";
   provider: string;
   modelId: string;
   model: Model<Api>;
   authStorage: AuthStorage;
   modelRegistry: ModelRegistry;
   thinkLevel: ThinkLevel;
+  legacyBeforeAgentStartResult?: PluginHookBeforeAgentStartResult;
 };
 
 export type EmbeddedRunAttemptResult = {
@@ -28,6 +39,8 @@ export type EmbeddedRunAttemptResult = {
   timedOutDuringCompaction: boolean;
   promptError: unknown;
   sessionIdUsed: string;
+  bootstrapPromptWarningSignaturesSeen?: string[];
+  bootstrapPromptWarningSignature?: string;
   systemPromptReport?: SessionSystemPromptReport;
   messagesSnapshot: AgentMessage[];
   assistantTexts: string[];
@@ -41,6 +54,7 @@ export type EmbeddedRunAttemptResult = {
     actionFingerprint?: string;
   };
   didSendViaMessagingTool: boolean;
+  didSendDeterministicApprovalPrompt?: boolean;
   messagingToolSentTexts: string[];
   messagingToolSentMediaUrls: string[];
   messagingToolSentTargets: MessagingToolSend[];
@@ -50,4 +64,6 @@ export type EmbeddedRunAttemptResult = {
   compactionCount?: number;
   /** Client tool call detected (OpenResponses hosted tools). */
   clientToolCall?: { name: string; params: Record<string, unknown> };
+  /** True when sessions_yield tool was called during this attempt. */
+  yieldDetected?: boolean;
 };

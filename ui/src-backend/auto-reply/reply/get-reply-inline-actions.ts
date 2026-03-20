@@ -1,30 +1,44 @@
-import { collectTextContentBlocks } from '../../agents/content-blocks';
-import { createPowerDirectorTools } from '../../agents/powerdirector-tools';
-import type { SkillCommandSpec } from '../../agents/skills';
-import { applyOwnerOnlyToolPolicy } from '../../agents/tool-policy';
-import { getChannelDock } from '../../channels/dock';
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import { logVerbose } from '../../globals';
-import { resolveGatewayMessageChannel } from '../../utils/message-channel';
+import { collectTextContentBlocks } from "../../agents/content-blocks";
+import { createPowerDirectorTools } from "../../agents/powerdirector-tools";
+import type { BlockReplyChunking } from "../../agents/pi-embedded-block-chunker";
+import type { SkillCommandSpec } from "../../agents/skills";
+import { applyOwnerOnlyToolPolicy } from "../../agents/tool-policy";
+import { getChannelPlugin } from "../../channels/plugins/index";
+import type { PowerDirectorConfig } from "../../config/config";
+import type { SessionEntry } from "../../config/sessions";
+import { logVerbose } from "../../globals";
+import { generateSecureToken } from "../../infra/secure-random";
+import { resolveGatewayMessageChannel } from "../../utils/message-channel";
 import {
   listReservedChatSlashCommandNames,
   listSkillCommandsForWorkspace,
   resolveSkillCommandInvocation,
-} from '../skill-commands';
-import type { MsgContext, TemplateContext } from '../templating';
-import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from '../thinking';
-import type { GetReplyOptions, ReplyPayload } from '../types';
-import { getAbortMemory } from './abort';
-import { buildStatusReply, handleCommands } from './commands';
-import type { InlineDirectives } from './directive-handling';
-import { isDirectiveOnly } from './directive-handling';
-import type { createModelSelectionState } from './model-selection';
-import { extractInlineSimpleCommand } from './reply-inline';
-import type { TypingController } from './typing';
+} from "../skill-commands";
+import type { MsgContext, TemplateContext } from "../templating";
+import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "../thinking";
+import type { GetReplyOptions, ReplyPayload } from "../types";
+import {
+  clearAbortCutoffInSession,
+  readAbortCutoffFromSessionEntry,
+  resolveAbortCutoffFromContext,
+  shouldSkipMessageByAbortCutoff,
+} from "./abort-cutoff";
+import { getAbortMemory, isAbortRequestText } from "./abort";
+import { buildStatusReply, handleCommands } from "./commands";
+import type { InlineDirectives } from "./directive-handling";
+import { isDirectiveOnly } from "./directive-handling";
+import type { createModelSelectionState } from "./model-selection";
+import { extractInlineSimpleCommand } from "./reply-inline";
+import type { TypingController } from "./typing";
 
-const builtinSlashCommands = (() => {
-  return listReservedChatSlashCommandNames([
+let builtinSlashCommands: Set<string> | null = null;
+
+function getBuiltinSlashCommands(): Set<string> {
+  if (builtinSlashCommands) {
+    return builtinSlashCommands;
+  }
+  builtinSlashCommands = listReservedChatSlashCommandNames([
+    "btw",
     "think",
     "verbose",
     "reasoning",
@@ -34,7 +48,8 @@ const builtinSlashCommands = (() => {
     "status",
     "queue",
   ]);
-})();
+  return builtinSlashCommands;
+}
 
 function resolveSlashCommandName(commandBodyNormalized: string): string | null {
   const trimmed = commandBodyNormalized.trim();
@@ -100,6 +115,8 @@ export async function handleInlineActions(params: {
   resolvedVerboseLevel: VerboseLevel | undefined;
   resolvedReasoningLevel: ReasoningLevel;
   resolvedElevatedLevel: ElevatedLevel;
+  blockReplyChunking?: BlockReplyChunking;
+  resolvedBlockStreamingBreak?: "text_end" | "message_end";
   resolveDefaultThinkingLevel: Awaited<
     ReturnType<typeof createModelSelectionState>
   >["resolveDefaultThinkingLevel"];
@@ -139,6 +156,8 @@ export async function handleInlineActions(params: {
     resolvedVerboseLevel,
     resolvedReasoningLevel,
     resolvedElevatedLevel,
+    blockReplyChunking,
+    resolvedBlockStreamingBreak,
     resolveDefaultThinkingLevel,
     provider,
     model,
@@ -156,7 +175,7 @@ export async function handleInlineActions(params: {
     allowTextCommands &&
     slashCommandName !== null &&
     // `/skill …` needs the full skill command list.
-    (slashCommandName === "skill" || !builtinSlashCommands.has(slashCommandName));
+    (slashCommandName === "skill" || !getBuiltinSlashCommands().has(slashCommandName));
   const skillCommands =
     shouldLoadSkillCommands && params.skillCommands
       ? params.skillCommands
@@ -201,6 +220,7 @@ export async function handleInlineActions(params: {
         agentDir,
         workspaceDir,
         config: cfg,
+        allowGatewaySubagentBinding: true,
       });
       const authorizedTools = applyOwnerOnlyToolPolicy(tools, command.senderIsOwner);
 
@@ -210,7 +230,7 @@ export async function handleInlineActions(params: {
         return { kind: "reply", reply: { text: `❌ Tool not available: ${dispatch.toolName}` } };
       }
 
-      const toolCallId = `cmd_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+      const toolCallId = `cmd_${generateSecureToken(8)}`;
       try {
         const result = await tool.execute(toolCallId, {
           command: rawArgs,
@@ -251,6 +271,32 @@ export async function handleInlineActions(params: {
     await opts.onBlockReply(reply);
   };
 
+  const isStopLikeInbound = isAbortRequestText(command.rawBodyNormalized);
+  if (!isStopLikeInbound && sessionEntry) {
+    const cutoff = readAbortCutoffFromSessionEntry(sessionEntry);
+    const incoming = resolveAbortCutoffFromContext(ctx);
+    const shouldSkip = cutoff
+      ? shouldSkipMessageByAbortCutoff({
+          cutoffMessageSid: cutoff.messageSid,
+          cutoffTimestamp: cutoff.timestamp,
+          messageSid: incoming?.messageSid,
+          timestamp: incoming?.timestamp,
+        })
+      : false;
+    if (shouldSkip) {
+      typing.cleanup();
+      return { kind: "reply", reply: undefined };
+    }
+    if (cutoff) {
+      await clearAbortCutoffInSession({
+        sessionEntry,
+        sessionStore,
+        sessionKey,
+        storePath,
+      });
+    }
+  }
+
   const inlineCommand =
     allowTextCommands && command.isAuthorizedSender
       ? extractInlineSimpleCommand(cleanedBody)
@@ -277,6 +323,7 @@ export async function handleInlineActions(params: {
       command,
       sessionEntry,
       sessionKey,
+      parentSessionKey: ctx.ParentSessionKey,
       sessionScope,
       provider,
       model,
@@ -296,10 +343,14 @@ export async function handleInlineActions(params: {
 
   const runCommands = (commandInput: typeof command) =>
     handleCommands({
-      ctx,
+      // Pass sessionCtx so command handlers can mutate stripped body for same-turn continuation.
+      ctx: sessionCtx,
+      // Keep original finalized context in sync when command handlers need outer-dispatch side effects.
+      rootCtx: ctx,
       cfg,
       command: commandInput,
       agentId,
+      agentDir,
       directives,
       elevated: {
         enabled: elevatedEnabled,
@@ -313,17 +364,21 @@ export async function handleInlineActions(params: {
       storePath,
       sessionScope,
       workspaceDir,
+      opts,
       defaultGroupActivation: defaultActivation,
       resolvedThinkLevel,
       resolvedVerboseLevel: resolvedVerboseLevel ?? "off",
       resolvedReasoningLevel,
       resolvedElevatedLevel,
+      blockReplyChunking,
+      resolvedBlockStreamingBreak,
       resolveDefaultThinkingLevel,
       provider,
       model,
       contextTokens,
       isGroup,
       skillCommands,
+      typing,
     });
 
   if (inlineCommand) {
@@ -348,7 +403,7 @@ export async function handleInlineActions(params: {
 
   const isEmptyConfig = Object.keys(cfg).length === 0;
   const skipWhenConfigEmpty = command.channelId
-    ? Boolean(getChannelDock(command.channelId)?.commands?.skipWhenConfigEmpty)
+    ? Boolean(getChannelPlugin(command.channelId)?.commands?.skipWhenConfigEmpty)
     : false;
   if (
     skipWhenConfigEmpty &&

@@ -1,5 +1,5 @@
-import { createSubsystemLogger } from '../logging/subsystem';
-import { parseBooleanValue } from '../utils/boolean';
+import { createSubsystemLogger } from "../logging/subsystem";
+import { parseBooleanValue } from "../utils/boolean";
 
 const log = createSubsystemLogger("env");
 const loggedEnv = new Set<string>();

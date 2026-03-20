@@ -1,9 +1,10 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import { buildWorkspaceSkillStatus } from '../agents/skills-status';
-import type { PowerDirectorConfig } from '../config/config';
-import { loadPowerDirectorPlugins } from '../plugins/loader';
-import { note } from '../terminal/note';
-import { detectLegacyWorkspaceDirs, formatLegacyWorkspaceWarning } from './doctor-workspace';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope";
+import { buildWorkspaceSkillStatus } from "../agents/skills-status";
+import type { PowerDirectorConfig } from "../config/config";
+import { loadPowerDirectorPlugins } from "../plugins/loader";
+import { buildPluginCompatibilityWarnings } from "../plugins/status";
+import { note } from "../terminal/note";
+import { detectLegacyWorkspaceDirs, formatLegacyWorkspaceWarning } from "./doctor-workspace";
 
 export function noteWorkspaceStatus(cfg: PowerDirectorConfig) {
   const workspaceDir = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));
@@ -52,7 +53,26 @@ export function noteWorkspaceStatus(cfg: PowerDirectorConfig) {
         : null,
     ].filter((line): line is string => Boolean(line));
 
+    const bundlePlugins = loaded.filter(
+      (p) => p.format === "bundle" && (p.bundleCapabilities?.length ?? 0) > 0,
+    );
+    if (bundlePlugins.length > 0) {
+      const allCaps = new Set(bundlePlugins.flatMap((p) => p.bundleCapabilities ?? []));
+      lines.push(`Bundle plugins: ${bundlePlugins.length} (${[...allCaps].toSorted().join(", ")})`);
+    }
+
     note(lines.join("\n"), "Plugins");
+  }
+  const compatibilityWarnings = buildPluginCompatibilityWarnings({
+    config: cfg,
+    workspaceDir,
+    report: {
+      workspaceDir,
+      ...pluginRegistry,
+    },
+  });
+  if (compatibilityWarnings.length > 0) {
+    note(compatibilityWarnings.map((line) => `- ${line}`).join("\n"), "Plugin compatibility");
   }
   if (pluginRegistry.diagnostics.length > 0) {
     const lines = pluginRegistry.diagnostics.map((diag) => {

@@ -1,5 +1,5 @@
 import type { AgentMessage } from "@mariozechner/pi-agent-core";
-import type { PowerDirectorConfig } from '../../config/config';
+import type { PowerDirectorConfig } from "../../config/config";
 
 const THREAD_SUFFIX_REGEX = /^(.*)(?::(?:thread|topic):\d+)$/i;
 

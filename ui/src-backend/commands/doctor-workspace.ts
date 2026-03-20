@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { DEFAULT_AGENTS_FILENAME } from '../agents/workspace';
-import { shortenHomePath } from '../utils';
+import { DEFAULT_AGENTS_FILENAME } from "../agents/workspace";
+import { shortenHomePath } from "../utils";
 
 export const MEMORY_SYSTEM_PROMPT = [
   "Memory system not found in workspace.",

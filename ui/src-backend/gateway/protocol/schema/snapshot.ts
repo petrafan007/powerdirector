@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import { NonEmptyString } from './primitives';
+import { NonEmptyString } from "./primitives";
 
 export const PresenceEntrySchema = Type.Object(
   {

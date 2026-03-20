@@ -2,16 +2,16 @@ import type { Command } from "commander";
 import {
   CONFIGURE_WIZARD_SECTIONS,
   configureCommandFromSectionsArg,
-} from '../../commands/configure';
-import { defaultRuntime } from '../../runtime';
-import { formatDocsLink } from '../../terminal/links';
-import { theme } from '../../terminal/theme';
-import { runCommandWithRuntime } from '../cli-utils';
+} from "../../commands/configure";
+import { defaultRuntime } from "../../runtime";
+import { formatDocsLink } from "../../terminal/links";
+import { theme } from "../../terminal/theme";
+import { runCommandWithRuntime } from "../cli-utils";
 
 export function registerConfigureCommand(program: Command) {
   program
     .command("configure")
-    .description("Interactive setup wizard for credentials, channels, gateway, and agent defaults")
+    .description("Interactive configuration for credentials, channels, gateway, and agent defaults")
     .addHelpText(
       "after",
       () =>

@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { AuthProfileStore } from './auth-profiles';
+import type { PowerDirectorConfig } from "../config/config";
+import type { AuthProfileStore } from "./auth-profiles";
 
 export const ANTHROPIC_STORE: AuthProfileStore = {
   version: 1,

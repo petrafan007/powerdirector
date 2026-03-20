@@ -1,16 +1,29 @@
-import { chunkMarkdownTextWithMode, type ChunkMode } from '../../auto-reply/chunk';
-import type { ReplyPayload } from '../../auto-reply/types';
-import type { MarkdownTableMode } from '../../config/types.base';
-import { logVerbose, shouldLogVerbose } from '../../globals';
-import { convertMarkdownTables } from '../../markdown/tables';
-import { markdownToWhatsApp } from '../../markdown/whatsapp';
-import { sleep } from '../../utils';
-import { loadWebMedia } from '../media';
-import { newConnectionId } from '../reconnect';
-import { formatError } from '../session';
-import { whatsappOutboundLog } from './loggers';
-import type { WebInboundMsg } from './types';
-import { elide } from './util';
+import { chunkMarkdownTextWithMode, type ChunkMode } from "../../auto-reply/chunk";
+import type { ReplyPayload } from "../../auto-reply/types";
+import type { MarkdownTableMode } from "../../config/types.base";
+import { logVerbose, shouldLogVerbose } from "../../globals";
+import { convertMarkdownTables } from "../../markdown/tables";
+import { markdownToWhatsApp } from "../../markdown/whatsapp";
+import { sleep } from "../../utils";
+import { loadWebMedia } from "../media";
+import { newConnectionId } from "../reconnect";
+import { formatError } from "../session";
+import { whatsappOutboundLog } from "./loggers";
+import type { WebInboundMsg } from "./types";
+import { elide } from "./util";
+
+const REASONING_PREFIX = "reasoning:";
+
+function shouldSuppressReasoningReply(payload: ReplyPayload): boolean {
+  if (payload.isReasoning === true) {
+    return true;
+  }
+  const text = payload.text;
+  if (typeof text !== "string") {
+    return false;
+  }
+  return text.trimStart().toLowerCase().startsWith(REASONING_PREFIX);
+}
 
 export async function deliverWebReply(params: {
   replyResult: ReplyPayload;
@@ -29,6 +42,10 @@ export async function deliverWebReply(params: {
 }) {
   const { replyResult, msg, maxMediaBytes, textLimit, replyLogger, connectionId, skipLog } = params;
   const replyStarted = Date.now();
+  if (shouldSuppressReasoningReply(replyResult)) {
+    whatsappOutboundLog.debug(`Suppressed reasoning payload to ${msg.from}`);
+    return;
+  }
   const tableMode = params.tableMode ?? "code";
   const chunkMode = params.chunkMode ?? "length";
   const convertedText = markdownToWhatsApp(
@@ -50,7 +67,7 @@ export async function deliverWebReply(params: {
         lastErr = err;
         const errText = formatError(err);
         const isLast = attempt === maxAttempts;
-        const shouldRetry = /closed|reset|timed\\s*out|disconnect/i.test(errText);
+        const shouldRetry = /closed|reset|timed\s*out|disconnect/i.test(errText);
         if (!shouldRetry || isLast) {
           throw err;
         }

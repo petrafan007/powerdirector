@@ -1,11 +1,13 @@
 import fs from "node:fs";
-import os from "node:os";
+import { tmpdir as getOsTmpDir } from "node:os";
 import path from "node:path";
 
 export const POSIX_POWERDIRECTOR_TMP_DIR = "/tmp/powerdirector";
+const TMP_DIR_ACCESS_MODE = fs.constants.W_OK | fs.constants.X_OK;
 
 type ResolvePreferredPowerDirectorTmpDirOptions = {
   accessSync?: (path: string, mode?: number) => void;
+  chmodSync?: (path: string, mode: number) => void;
   lstatSync?: (path: string) => {
     isDirectory(): boolean;
     isSymbolicLink(): boolean;
@@ -15,6 +17,7 @@ type ResolvePreferredPowerDirectorTmpDirOptions = {
   mkdirSync?: (path: string, opts: { recursive: boolean; mode?: number }) => void;
   getuid?: () => number | undefined;
   tmpdir?: () => string;
+  warn?: (message: string) => void;
 };
 
 type MaybeNodeError = { code?: string };
@@ -32,8 +35,10 @@ export function resolvePreferredPowerDirectorTmpDir(
   options: ResolvePreferredPowerDirectorTmpDirOptions = {},
 ): string {
   const accessSync = options.accessSync ?? fs.accessSync;
+  const chmodSync = options.chmodSync ?? fs.chmodSync;
   const lstatSync = options.lstatSync ?? fs.lstatSync;
   const mkdirSync = options.mkdirSync ?? fs.mkdirSync;
+  const warn = options.warn ?? ((message: string) => console.warn(message));
   const getuid =
     options.getuid ??
     (() => {
@@ -43,7 +48,7 @@ export function resolvePreferredPowerDirectorTmpDir(
         return undefined;
       }
     });
-  const tmpdir = options.tmpdir ?? os.tmpdir;
+  const tmpdir = typeof options.tmpdir === "function" ? options.tmpdir : getOsTmpDir;
   const uid = getuid();
 
   const isSecureDirForUser = (st: { mode?: number; uid?: number }): boolean => {
@@ -66,39 +71,99 @@ export function resolvePreferredPowerDirectorTmpDir(
     return path.join(base, suffix);
   };
 
-  try {
-    const preferred = lstatSync(POSIX_POWERDIRECTOR_TMP_DIR);
-    if (!preferred.isDirectory() || preferred.isSymbolicLink()) {
-      return fallback();
+  const isTrustedTmpDir = (st: {
+    isDirectory(): boolean;
+    isSymbolicLink(): boolean;
+    mode?: number;
+    uid?: number;
+  }): boolean => {
+    return st.isDirectory() && !st.isSymbolicLink() && isSecureDirForUser(st);
+  };
+
+  const resolveDirState = (candidatePath: string): "available" | "missing" | "invalid" => {
+    try {
+      const candidate = lstatSync(candidatePath);
+      if (!isTrustedTmpDir(candidate)) {
+        return "invalid";
+      }
+      accessSync(candidatePath, TMP_DIR_ACCESS_MODE);
+      return "available";
+    } catch (err) {
+      if (isNodeErrorWithCode(err, "ENOENT")) {
+        return "missing";
+      }
+      return "invalid";
     }
-    accessSync(POSIX_POWERDIRECTOR_TMP_DIR, fs.constants.W_OK | fs.constants.X_OK);
-    if (!isSecureDirForUser(preferred)) {
-      return fallback();
+  };
+
+  const tryRepairWritableBits = (candidatePath: string): boolean => {
+    try {
+      const st = lstatSync(candidatePath);
+      if (!st.isDirectory() || st.isSymbolicLink()) {
+        return false;
+      }
+      if (uid !== undefined && typeof st.uid === "number" && st.uid !== uid) {
+        return false;
+      }
+      if (typeof st.mode !== "number" || (st.mode & 0o022) === 0) {
+        return false;
+      }
+      chmodSync(candidatePath, 0o700);
+      warn(`[powerdirector] tightened permissions on temp dir: ${candidatePath}`);
+      return resolveDirState(candidatePath) === "available";
+    } catch {
+      return false;
     }
+  };
+
+  const ensureTrustedFallbackDir = (): string => {
+    const fallbackPath = fallback();
+    const state = resolveDirState(fallbackPath);
+    if (state === "available") {
+      return fallbackPath;
+    }
+    if (state === "invalid") {
+      if (tryRepairWritableBits(fallbackPath)) {
+        return fallbackPath;
+      }
+      throw new Error(`Unsafe fallback PowerDirector temp dir: ${fallbackPath}`);
+    }
+    try {
+      mkdirSync(fallbackPath, { recursive: true, mode: 0o700 });
+      chmodSync(fallbackPath, 0o700);
+    } catch {
+      throw new Error(`Unable to create fallback PowerDirector temp dir: ${fallbackPath}`);
+    }
+    if (resolveDirState(fallbackPath) !== "available" && !tryRepairWritableBits(fallbackPath)) {
+      throw new Error(`Unsafe fallback PowerDirector temp dir: ${fallbackPath}`);
+    }
+    return fallbackPath;
+  };
+
+  const existingPreferredState = resolveDirState(POSIX_POWERDIRECTOR_TMP_DIR);
+  if (existingPreferredState === "available") {
     return POSIX_POWERDIRECTOR_TMP_DIR;
-  } catch (err) {
-    if (!isNodeErrorWithCode(err, "ENOENT")) {
-      return fallback();
+  }
+  if (existingPreferredState === "invalid") {
+    if (tryRepairWritableBits(POSIX_POWERDIRECTOR_TMP_DIR)) {
+      return POSIX_POWERDIRECTOR_TMP_DIR;
     }
+    return ensureTrustedFallbackDir();
   }
 
   try {
-    accessSync("/tmp", fs.constants.W_OK | fs.constants.X_OK);
+    accessSync("/tmp", TMP_DIR_ACCESS_MODE);
     // Create with a safe default; subsequent callers expect it exists.
     mkdirSync(POSIX_POWERDIRECTOR_TMP_DIR, { recursive: true, mode: 0o700 });
-    try {
-      const preferred = lstatSync(POSIX_POWERDIRECTOR_TMP_DIR);
-      if (!preferred.isDirectory() || preferred.isSymbolicLink()) {
-        return fallback();
-      }
-      if (!isSecureDirForUser(preferred)) {
-        return fallback();
-      }
-    } catch {
-      return fallback();
+    chmodSync(POSIX_POWERDIRECTOR_TMP_DIR, 0o700);
+    if (
+      resolveDirState(POSIX_POWERDIRECTOR_TMP_DIR) !== "available" &&
+      !tryRepairWritableBits(POSIX_POWERDIRECTOR_TMP_DIR)
+    ) {
+      return ensureTrustedFallbackDir();
     }
     return POSIX_POWERDIRECTOR_TMP_DIR;
   } catch {
-    return fallback();
+    return ensureTrustedFallbackDir();
   }
 }

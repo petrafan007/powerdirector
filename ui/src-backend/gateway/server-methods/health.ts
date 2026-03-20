@@ -1,9 +1,9 @@
-import { getStatusSummary } from '../../commands/status';
-import { ErrorCodes, errorShape } from '../protocol/index';
-import { HEALTH_REFRESH_INTERVAL_MS } from '../server-constants';
-import { formatError } from '../server-utils';
-import { formatForLog } from '../ws-log';
-import type { GatewayRequestHandlers } from './types';
+import { getStatusSummary } from "../../commands/status";
+import { ErrorCodes, errorShape } from "../protocol/index";
+import { HEALTH_REFRESH_INTERVAL_MS } from "../server-constants";
+import { formatError } from "../server-utils";
+import { formatForLog } from "../ws-log";
+import type { GatewayRequestHandlers } from "./types";
 
 const ADMIN_SCOPE = "operator.admin";
 

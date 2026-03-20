@@ -8,7 +8,7 @@ import {
   PollParamsSchema,
   SendParamsSchema,
   WakeParamsSchema,
-} from './agent';
+} from "./agent";
 import {
   AgentSummarySchema,
   AgentsCreateParamsSchema,
@@ -34,7 +34,12 @@ import {
   SkillsInstallParamsSchema,
   SkillsStatusParamsSchema,
   SkillsUpdateParamsSchema,
-} from './agents-models-skills';
+  ToolCatalogEntrySchema,
+  ToolCatalogGroupSchema,
+  ToolCatalogProfileSchema,
+  ToolsCatalogParamsSchema,
+  ToolsCatalogResultSchema,
+} from "./agents-models-skills";
 import {
   ChannelsLogoutParamsSchema,
   TalkConfigParamsSchema,
@@ -44,16 +49,18 @@ import {
   TalkModeParamsSchema,
   WebLoginStartParamsSchema,
   WebLoginWaitParamsSchema,
-} from './channels';
+} from "./channels";
 import {
   ConfigApplyParamsSchema,
   ConfigGetParamsSchema,
   ConfigPatchParamsSchema,
+  ConfigSchemaLookupParamsSchema,
+  ConfigSchemaLookupResultSchema,
   ConfigSchemaParamsSchema,
   ConfigSchemaResponseSchema,
   ConfigSetParamsSchema,
   UpdateRunParamsSchema,
-} from './config';
+} from "./config";
 import {
   CronAddParamsSchema,
   CronJobSchema,
@@ -64,7 +71,7 @@ import {
   CronRunsParamsSchema,
   CronStatusParamsSchema,
   CronUpdateParamsSchema,
-} from './cron';
+} from "./cron";
 import {
   DevicePairApproveParamsSchema,
   DevicePairListParamsSchema,
@@ -74,7 +81,7 @@ import {
   DevicePairResolvedEventSchema,
   DeviceTokenRevokeParamsSchema,
   DeviceTokenRotateParamsSchema,
-} from './devices';
+} from "./devices";
 import {
   ExecApprovalsGetParamsSchema,
   ExecApprovalsNodeGetParamsSchema,
@@ -83,7 +90,7 @@ import {
   ExecApprovalsSnapshotSchema,
   ExecApprovalRequestParamsSchema,
   ExecApprovalResolveParamsSchema,
-} from './exec-approvals';
+} from "./exec-approvals";
 import {
   ConnectParamsSchema,
   ErrorShapeSchema,
@@ -94,7 +101,7 @@ import {
   ResponseFrameSchema,
   ShutdownEventSchema,
   TickEventSchema,
-} from './frames';
+} from "./frames";
 import {
   ChatAbortParamsSchema,
   ChatEventSchema,
@@ -103,33 +110,49 @@ import {
   ChatSendParamsSchema,
   LogsTailParamsSchema,
   LogsTailResultSchema,
-} from './logs-chat';
+} from "./logs-chat";
 import {
   NodeDescribeParamsSchema,
   NodeEventParamsSchema,
+  NodePendingDrainParamsSchema,
+  NodePendingDrainResultSchema,
+  NodePendingEnqueueParamsSchema,
+  NodePendingEnqueueResultSchema,
   NodeInvokeParamsSchema,
   NodeInvokeResultParamsSchema,
   NodeInvokeRequestEventSchema,
   NodeListParamsSchema,
+  NodePendingAckParamsSchema,
   NodePairApproveParamsSchema,
   NodePairListParamsSchema,
   NodePairRejectParamsSchema,
   NodePairRequestParamsSchema,
   NodePairVerifyParamsSchema,
   NodeRenameParamsSchema,
-} from './nodes';
-import { PushTestParamsSchema, PushTestResultSchema } from './push';
+} from "./nodes";
+import { PushTestParamsSchema, PushTestResultSchema } from "./push";
 import {
+  SecretsReloadParamsSchema,
+  SecretsResolveAssignmentSchema,
+  SecretsResolveParamsSchema,
+  SecretsResolveResultSchema,
+} from "./secrets";
+import {
+  SessionsAbortParamsSchema,
   SessionsCompactParamsSchema,
+  SessionsCreateParamsSchema,
   SessionsDeleteParamsSchema,
   SessionsListParamsSchema,
+  SessionsMessagesSubscribeParamsSchema,
+  SessionsMessagesUnsubscribeParamsSchema,
   SessionsPatchParamsSchema,
   SessionsPreviewParamsSchema,
   SessionsResetParamsSchema,
   SessionsResolveParamsSchema,
+  SessionsSendParamsSchema,
   SessionsUsageParamsSchema,
-} from './sessions';
-import { PresenceEntrySchema, SnapshotSchema, StateVersionSchema } from './snapshot';
+} from "./sessions";
+import { PresenceEntrySchema, SnapshotSchema, StateVersionSchema } from "./snapshot";
 import {
   WizardCancelParamsSchema,
   WizardNextParamsSchema,
@@ -139,9 +162,9 @@ import {
   WizardStatusParamsSchema,
   WizardStatusResultSchema,
   WizardStepSchema,
-} from './wizard';
+} from "./wizard";
 
-export const ProtocolSchemas: Record<string, TSchema> = {
+export const ProtocolSchemas = {
   ConnectParams: ConnectParamsSchema,
   HelloOk: HelloOkSchema,
   RequestFrame: RequestFrameSchema,
@@ -167,16 +190,30 @@ export const ProtocolSchemas: Record<string, TSchema> = {
   NodePairVerifyParams: NodePairVerifyParamsSchema,
   NodeRenameParams: NodeRenameParamsSchema,
   NodeListParams: NodeListParamsSchema,
+  NodePendingAckParams: NodePendingAckParamsSchema,
   NodeDescribeParams: NodeDescribeParamsSchema,
   NodeInvokeParams: NodeInvokeParamsSchema,
   NodeInvokeResultParams: NodeInvokeResultParamsSchema,
   NodeEventParams: NodeEventParamsSchema,
+  NodePendingDrainParams: NodePendingDrainParamsSchema,
+  NodePendingDrainResult: NodePendingDrainResultSchema,
+  NodePendingEnqueueParams: NodePendingEnqueueParamsSchema,
+  NodePendingEnqueueResult: NodePendingEnqueueResultSchema,
   NodeInvokeRequestEvent: NodeInvokeRequestEventSchema,
   PushTestParams: PushTestParamsSchema,
   PushTestResult: PushTestResultSchema,
+  SecretsReloadParams: SecretsReloadParamsSchema,
+  SecretsResolveParams: SecretsResolveParamsSchema,
+  SecretsResolveAssignment: SecretsResolveAssignmentSchema,
+  SecretsResolveResult: SecretsResolveResultSchema,
   SessionsListParams: SessionsListParamsSchema,
   SessionsPreviewParams: SessionsPreviewParamsSchema,
   SessionsResolveParams: SessionsResolveParamsSchema,
+  SessionsCreateParams: SessionsCreateParamsSchema,
+  SessionsSendParams: SessionsSendParamsSchema,
+  SessionsMessagesSubscribeParams: SessionsMessagesSubscribeParamsSchema,
+  SessionsMessagesUnsubscribeParams: SessionsMessagesUnsubscribeParamsSchema,
+  SessionsAbortParams: SessionsAbortParamsSchema,
   SessionsPatchParams: SessionsPatchParamsSchema,
   SessionsResetParams: SessionsResetParamsSchema,
   SessionsDeleteParams: SessionsDeleteParamsSchema,
@@ -187,7 +224,9 @@ export const ProtocolSchemas: Record<string, TSchema> = {
   ConfigApplyParams: ConfigApplyParamsSchema,
   ConfigPatchParams: ConfigPatchParamsSchema,
   ConfigSchemaParams: ConfigSchemaParamsSchema,
+  ConfigSchemaLookupParams: ConfigSchemaLookupParamsSchema,
   ConfigSchemaResponse: ConfigSchemaResponseSchema,
+  ConfigSchemaLookupResult: ConfigSchemaLookupResultSchema,
   WizardStartParams: WizardStartParamsSchema,
   WizardNextParams: WizardNextParamsSchema,
   WizardCancelParams: WizardCancelParamsSchema,
@@ -224,6 +263,11 @@ export const ProtocolSchemas: Record<string, TSchema> = {
   ModelsListParams: ModelsListParamsSchema,
   ModelsListResult: ModelsListResultSchema,
   SkillsStatusParams: SkillsStatusParamsSchema,
+  ToolsCatalogParams: ToolsCatalogParamsSchema,
+  ToolCatalogProfile: ToolCatalogProfileSchema,
+  ToolCatalogEntry: ToolCatalogEntrySchema,
+  ToolCatalogGroup: ToolCatalogGroupSchema,
+  ToolsCatalogResult: ToolsCatalogResultSchema,
   SkillsBinsParams: SkillsBinsParamsSchema,
   SkillsBinsResult: SkillsBinsResultSchema,
   SkillsInstallParams: SkillsInstallParamsSchema,
@@ -262,6 +306,6 @@ export const ProtocolSchemas: Record<string, TSchema> = {
   UpdateRunParams: UpdateRunParamsSchema,
   TickEvent: TickEventSchema,
   ShutdownEvent: ShutdownEventSchema,
-};
+} satisfies Record<string, TSchema>;
 
 export const PROTOCOL_VERSION = 3 as const;

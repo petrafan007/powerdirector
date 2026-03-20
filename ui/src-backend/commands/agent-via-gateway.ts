@@ -1,19 +1,19 @@
-import { listAgentIds } from '../agents/agent-scope';
-import { DEFAULT_CHAT_CHANNEL } from '../channels/registry';
-import { formatCliCommand } from '../cli/command-format';
-import type { CliDeps } from '../cli/deps';
-import { withProgress } from '../cli/progress';
-import { loadConfig } from '../config/config';
-import { callGateway, randomIdempotencyKey } from '../gateway/call';
-import { normalizeAgentId } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
+import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { listAgentIds } from "../agents/agent-scope";
+import { formatCliCommand } from "../cli/command-format";
+import type { CliDeps } from "../cli/deps";
+import { withProgress } from "../cli/progress";
+import { loadConfig } from "../config/config";
+import { callGateway, randomIdempotencyKey } from "../gateway/call";
+import { normalizeAgentId } from "../routing/session-key";
+import type { RuntimeEnv } from "../runtime";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
   normalizeMessageChannel,
-} from '../utils/message-channel';
-import { agentCommand } from './agent';
-import { resolveSessionKeyForRequest } from './agent/session';
+} from "../utils/message-channel";
+import { agentCommand } from "./agent";
+import { resolveSessionKeyForRequest } from "./agent/session";
 
 type AgentGatewayResult = {
   payloads?: Array<{
@@ -70,16 +70,16 @@ function formatPayloadForLog(payload: {
   mediaUrls?: string[];
   mediaUrl?: string | null;
 }) {
+  const parts = resolveSendableOutboundReplyParts({
+    text: payload.text,
+    mediaUrls: payload.mediaUrls,
+    mediaUrl: typeof payload.mediaUrl === "string" ? payload.mediaUrl : undefined,
+  });
   const lines: string[] = [];
-  if (payload.text) {
-    lines.push(payload.text.trimEnd());
+  if (parts.text) {
+    lines.push(parts.text.trimEnd());
   }
-  const mediaUrl =
-    typeof payload.mediaUrl === "string" && payload.mediaUrl.trim()
-      ? payload.mediaUrl.trim()
-      : undefined;
-  const media = payload.mediaUrls ?? (mediaUrl ? [mediaUrl] : []);
-  for (const url of media) {
+  for (const url of parts.mediaUrls) {
     lines.push(`MEDIA:${url}`);
   }
   return lines.join("\n").trimEnd();
@@ -118,7 +118,7 @@ export async function agentViaGatewayCommand(opts: AgentCliOpts, runtime: Runtim
     sessionId: opts.sessionId,
   }).sessionKey;
 
-  const channel = normalizeMessageChannel(opts.channel) ?? DEFAULT_CHAT_CHANNEL;
+  const channel = normalizeMessageChannel(opts.channel);
   const idempotencyKey = opts.runId?.trim() || randomIdempotencyKey();
 
   const response = await withProgress(
@@ -142,6 +142,7 @@ export async function agentViaGatewayCommand(opts: AgentCliOpts, runtime: Runtim
           channel,
           replyChannel: opts.replyChannel,
           replyAccountId: opts.replyAccount,
+          bestEffortDeliver: opts.bestEffortDeliver,
           timeout: timeoutSeconds,
           lane: opts.lane,
           extraSystemPrompt: opts.extraSystemPrompt,

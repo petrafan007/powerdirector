@@ -1,91 +1,10 @@
-import {
-  buildCloudflareAiGatewayModelDefinition,
-  resolveCloudflareAiGatewayBaseUrl,
-} from '../agents/cloudflare-ai-gateway';
-import type { PowerDirectorConfig } from '../config/config';
-import {
-  applyAgentDefaultModelPrimary,
-  applyProviderConfigWithDefaultModel,
-} from './onboard-auth.config-shared';
-import {
+export {
+  applyCloudflareAiGatewayConfig,
+  applyCloudflareAiGatewayProviderConfig,
   CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF,
+} from "@/src-backend/extensions/cloudflare-ai-gateway/onboard";
+export {
+  applyVercelAiGatewayConfig,
+  applyVercelAiGatewayProviderConfig,
   VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF,
-} from './onboard-auth.credentials';
-
-export function applyVercelAiGatewayProviderConfig(cfg: PowerDirectorConfig): PowerDirectorConfig {
-  const models = { ...cfg.agents?.defaults?.models };
-  models[VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF] = {
-    ...models[VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF],
-    alias: models[VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF]?.alias ?? "Vercel AI Gateway",
-  };
-
-  return {
-    ...cfg,
-    agents: {
-      ...cfg.agents,
-      defaults: {
-        ...cfg.agents?.defaults,
-        models,
-      },
-    },
-  };
-}
-
-export function applyCloudflareAiGatewayProviderConfig(
-  cfg: PowerDirectorConfig,
-  params?: { accountId?: string; gatewayId?: string },
-): PowerDirectorConfig {
-  const models = { ...cfg.agents?.defaults?.models };
-  models[CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF] = {
-    ...models[CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF],
-    alias: models[CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF]?.alias ?? "Cloudflare AI Gateway",
-  };
-
-  const defaultModel = buildCloudflareAiGatewayModelDefinition();
-  const existingProvider = cfg.models?.providers?.["cloudflare-ai-gateway"] as
-    | { baseUrl?: unknown }
-    | undefined;
-  const baseUrl =
-    params?.accountId && params?.gatewayId
-      ? resolveCloudflareAiGatewayBaseUrl({
-          accountId: params.accountId,
-          gatewayId: params.gatewayId,
-        })
-      : typeof existingProvider?.baseUrl === "string"
-        ? existingProvider.baseUrl
-        : undefined;
-
-  if (!baseUrl) {
-    return {
-      ...cfg,
-      agents: {
-        ...cfg.agents,
-        defaults: {
-          ...cfg.agents?.defaults,
-          models,
-        },
-      },
-    };
-  }
-
-  return applyProviderConfigWithDefaultModel(cfg, {
-    agentModels: models,
-    providerId: "cloudflare-ai-gateway",
-    api: "anthropic-messages",
-    baseUrl,
-    defaultModel,
-  });
-}
-
-export function applyVercelAiGatewayConfig(cfg: PowerDirectorConfig): PowerDirectorConfig {
-  const next = applyVercelAiGatewayProviderConfig(cfg);
-  return applyAgentDefaultModelPrimary(next, VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF);
-}
-
-export function applyCloudflareAiGatewayConfig(
-  cfg: PowerDirectorConfig,
-  params?: { accountId?: string; gatewayId?: string },
-): PowerDirectorConfig {
-  const next = applyCloudflareAiGatewayProviderConfig(cfg, params);
-  return applyAgentDefaultModelPrimary(next, CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF);
-}
+} from "@/src-backend/extensions/vercel-ai-gateway/onboard";

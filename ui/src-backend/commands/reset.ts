@@ -1,12 +1,17 @@
 import { cancel, confirm, isCancel } from "@clack/prompts";
-import { formatCliCommand } from '../cli/command-format';
-import { isNixMode } from '../config/config';
-import { resolveGatewayService } from '../daemon/service';
-import type { RuntimeEnv } from '../runtime';
-import { selectStyled } from '../terminal/prompt-select-styled';
-import { stylePromptMessage, stylePromptTitle } from '../terminal/prompt-style';
-import { resolveCleanupPlanFromDisk } from './cleanup-plan';
-import { listAgentSessionDirs, removePath } from './cleanup-utils';
+import { formatCliCommand } from "../cli/command-format";
+import { isNixMode } from "../config/config";
+import { resolveGatewayService } from "../daemon/service";
+import type { RuntimeEnv } from "../runtime";
+import { selectStyled } from "../terminal/prompt-select-styled";
+import { stylePromptMessage, stylePromptTitle } from "../terminal/prompt-style";
+import { resolveCleanupPlanFromDisk } from "./cleanup-plan";
+import {
+  listAgentSessionDirs,
+  removePath,
+  removeStateAndLinkedPaths,
+  removeWorkspaceDirs,
+} from "./cleanup-utils";
 
 export type ResetScope = "config" | "config+creds+sessions" | "full";
 
@@ -39,6 +44,10 @@ async function stopGatewayIfRunning(runtime: RuntimeEnv) {
   }
 }
 
+function logBackupRecommendation(runtime: RuntimeEnv) {
+  runtime.log(`Recommended first: ${formatCliCommand("powerdirector backup create")}`);
+}
+
 export async function resetCommand(runtime: RuntimeEnv, opts: ResetOptions) {
   const interactive = !opts.nonInteractive;
   if (!interactive && !opts.yes) {
@@ -60,7 +69,7 @@ export async function resetCommand(runtime: RuntimeEnv, opts: ResetOptions) {
         {
           value: "config",
           label: "Config only",
-          hint: "powerdirector.config.json",
+          hint: "powerdirector.json",
         },
         {
           value: "config+creds+sessions",
@@ -105,6 +114,7 @@ export async function resetCommand(runtime: RuntimeEnv, opts: ResetOptions) {
     resolveCleanupPlanFromDisk();
 
   if (scope !== "config") {
+    logBackupRecommendation(runtime);
     if (dryRun) {
       runtime.log("[dry-run] stop gateway service");
     } else {
@@ -129,16 +139,12 @@ export async function resetCommand(runtime: RuntimeEnv, opts: ResetOptions) {
   }
 
   if (scope === "full") {
-    await removePath(stateDir, runtime, { dryRun, label: stateDir });
-    if (!configInsideState) {
-      await removePath(configPath, runtime, { dryRun, label: configPath });
-    }
-    if (!oauthInsideState) {
-      await removePath(oauthDir, runtime, { dryRun, label: oauthDir });
-    }
-    for (const workspace of workspaceDirs) {
-      await removePath(workspace, runtime, { dryRun, label: workspace });
-    }
+    await removeStateAndLinkedPaths(
+      { stateDir, configPath, oauthDir, configInsideState, oauthInsideState },
+      runtime,
+      { dryRun },
+    );
+    await removeWorkspaceDirs(workspaceDirs, runtime, { dryRun });
     runtime.log(`Next: ${formatCliCommand("powerdirector onboard --install-daemon")}`);
     return;
   }

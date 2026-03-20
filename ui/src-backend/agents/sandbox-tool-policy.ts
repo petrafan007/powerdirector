@@ -1,4 +1,4 @@
-import type { SandboxToolPolicy } from './sandbox/types';
+import type { SandboxToolPolicy } from "./sandbox/types";
 
 type SandboxToolPolicyConfig = {
   allow?: string[];

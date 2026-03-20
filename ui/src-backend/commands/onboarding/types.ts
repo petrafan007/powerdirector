@@ -1,1 +1,1 @@
-export * from '../../channels/plugins/onboarding-types';
+export * from "../../channels/plugins/onboarding-types";

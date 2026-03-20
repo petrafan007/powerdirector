@@ -1,33 +1,32 @@
-import { buildModelAliasIndex, resolveModelRefFromString } from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
-import { loadConfig } from '../../config/config';
-import { logConfigUpdated } from '../../config/logging';
-import type { RuntimeEnv } from '../../runtime';
+import { buildModelAliasIndex, resolveModelRefFromString } from "../../agents/model-selection";
+import type { PowerDirectorConfig } from "../../config/config";
+import { logConfigUpdated } from "../../config/logging";
+import { resolveAgentModelFallbackValues, toAgentModelListLike } from "../../config/model-input";
+import type { AgentModelEntryConfig } from "../../config/types.agent-defaults";
+import type { RuntimeEnv } from "../../runtime";
+import { loadModelsConfig } from "./load-config";
 import {
   DEFAULT_PROVIDER,
   ensureFlagCompatibility,
   mergePrimaryFallbackConfig,
-  type PrimaryFallbackConfig,
   modelKey,
   resolveModelTarget,
   resolveModelKeysFromEntries,
+  upsertCanonicalModelConfigEntry,
   updateConfig,
-} from './shared';
+} from "./shared";
 
 type DefaultsFallbackKey = "model" | "imageModel";
 
 function getFallbacks(cfg: PowerDirectorConfig, key: DefaultsFallbackKey): string[] {
-  const entry = cfg.agents?.defaults?.[key] as unknown as PrimaryFallbackConfig | undefined;
-  return entry?.fallbacks ?? [];
+  return resolveAgentModelFallbackValues(cfg.agents?.defaults?.[key]);
 }
 
 function patchDefaultsFallbacks(
   cfg: PowerDirectorConfig,
   params: { key: DefaultsFallbackKey; fallbacks: string[]; models?: Record<string, unknown> },
 ): PowerDirectorConfig {
-  const existing = cfg.agents?.defaults?.[params.key] as unknown as
-    | PrimaryFallbackConfig
-    | undefined;
+  const existing = toAgentModelListLike(cfg.agents?.defaults?.[params.key]);
   return {
     ...cfg,
     agents: {
@@ -47,7 +46,7 @@ export async function listFallbacksCommand(
   runtime: RuntimeEnv,
 ) {
   ensureFlagCompatibility(opts);
-  const cfg = loadConfig();
+  const cfg = await loadModelsConfig({ commandName: `models ${params.key} list`, runtime });
   const fallbacks = getFallbacks(cfg, params.key);
 
   if (opts.json) {
@@ -82,11 +81,10 @@ export async function addFallbackCommand(
 ) {
   const updated = await updateConfig((cfg) => {
     const resolved = resolveModelTarget({ raw: modelRaw, cfg });
-    const targetKey = modelKey(resolved.provider, resolved.model);
-    const nextModels = { ...cfg.agents?.defaults?.models } as Record<string, unknown>;
-    if (!nextModels[targetKey]) {
-      nextModels[targetKey] = {};
-    }
+    const nextModels = {
+      ...cfg.agents?.defaults?.models,
+    } as Record<string, AgentModelEntryConfig>;
+    const targetKey = upsertCanonicalModelConfigEntry(nextModels, resolved);
     const existing = getFallbacks(cfg, params.key);
     const existingKeys = resolveModelKeysFromEntries({ cfg, entries: existing });
     if (existingKeys.includes(targetKey)) {

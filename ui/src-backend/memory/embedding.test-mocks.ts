@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import "./test-runtime-mocks.js";
+import "./test-runtime-mocks";
 
 // Avoid exporting vitest mock types (TS2742 under pnpm + d.ts emit).
 // oxlint-disable-next-line typescript/no-explicit-any
@@ -25,7 +25,7 @@ export function resetEmbeddingMocks(): void {
   hoisted.embedQuery.mockImplementation(async () => [0, 1, 0]);
 }
 
-vi.mock("./embeddings.js", () => ({
+vi.mock("./embeddings", () => ({
   createEmbeddingProvider: async () => ({
     requestedProvider: "openai",
     provider: {

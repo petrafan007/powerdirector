@@ -1,6 +1,6 @@
-import type { ResolvedMemorySearchConfig } from '../agents/memory-search';
-import { fingerprintHeaderNames } from './headers-fingerprint';
-import { hashText } from './internal';
+import type { ResolvedMemorySearchConfig } from "../agents/memory-search";
+import { fingerprintHeaderNames } from "./headers-fingerprint";
+import { hashText } from "./internal";
 
 export function computeMemoryManagerCacheKey(params: {
   agentId: string;

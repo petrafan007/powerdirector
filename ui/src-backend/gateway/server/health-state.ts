@@ -1,12 +1,12 @@
-import { resolveDefaultAgentId } from '../../agents/agent-scope';
-import { getHealthSnapshot, type HealthSummary } from '../../commands/health';
-import { CONFIG_PATH, STATE_DIR, loadConfig } from '../../config/config';
-import { resolveMainSessionKey } from '../../config/sessions';
-import { listSystemPresence } from '../../infra/system-presence';
-import { getUpdateAvailable } from '../../infra/update-startup';
-import { normalizeMainKey } from '../../routing/session-key';
-import { resolveGatewayAuth } from '../auth';
-import type { Snapshot } from '../protocol/index';
+import { resolveDefaultAgentId } from "../../agents/agent-scope";
+import { getHealthSnapshot, type HealthSummary } from "../../commands/health";
+import { STATE_DIR, createConfigIO, loadConfig } from "../../config/config";
+import { resolveMainSessionKey } from "../../config/sessions";
+import { listSystemPresence } from "../../infra/system-presence";
+import { getUpdateAvailable } from "../../infra/update-startup";
+import { normalizeMainKey } from "../../routing/session-key";
+import { resolveGatewayAuth } from "../auth";
+import type { Snapshot } from "../protocol/index";
 
 let presenceVersion = 1;
 let healthVersion = 1;
@@ -16,6 +16,7 @@ let broadcastHealthUpdate: ((snap: HealthSummary) => void) | null = null;
 
 export function buildGatewaySnapshot(): Snapshot {
   const cfg = loadConfig();
+  const configPath = createConfigIO().configPath;
   const defaultAgentId = resolveDefaultAgentId(cfg);
   const mainKey = normalizeMainKey(cfg.session?.mainKey);
   const mainSessionKey = resolveMainSessionKey(cfg);
@@ -32,7 +33,7 @@ export function buildGatewaySnapshot(): Snapshot {
     stateVersion: { presence: presenceVersion, health: healthVersion },
     uptimeMs,
     // Surface resolved paths so UIs can display the true config location.
-    configPath: CONFIG_PATH,
+    configPath,
     stateDir: STATE_DIR,
     sessionDefaults: {
       defaultAgentId,

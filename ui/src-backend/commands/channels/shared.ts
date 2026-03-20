@@ -1,15 +1,39 @@
-import { type ChannelId, getChannelPlugin } from '../../channels/plugins/index';
-import type { PowerDirectorConfig } from '../../config/config';
-import { DEFAULT_ACCOUNT_ID } from '../../routing/session-key';
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { requireValidConfigSnapshot } from '../config-validation';
+import { type ChannelId, getChannelPlugin } from "../../channels/plugins/index";
+import {
+  type CommandSecretResolutionMode,
+  resolveCommandSecretRefsViaGateway,
+} from "../../cli/command-secret-gateway";
+import { getChannelsCommandSecretTargetIds } from "../../cli/command-secret-targets";
+import type { PowerDirectorConfig } from "../../config/config";
+import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key";
+import { defaultRuntime, type RuntimeEnv } from "../../runtime";
+import { requireValidConfigSnapshot } from "../config-validation";
 
 export type ChatChannel = ChannelId;
 
+export { requireValidConfigSnapshot };
+
 export async function requireValidConfig(
   runtime: RuntimeEnv = defaultRuntime,
+  secretResolution?: {
+    commandName?: string;
+    mode?: CommandSecretResolutionMode;
+  },
 ): Promise<PowerDirectorConfig | null> {
-  return await requireValidConfigSnapshot(runtime);
+  const cfg = await requireValidConfigSnapshot(runtime);
+  if (!cfg) {
+    return null;
+  }
+  const { resolvedConfig, diagnostics } = await resolveCommandSecretRefsViaGateway({
+    config: cfg,
+    commandName: secretResolution?.commandName ?? "channels",
+    targetIds: getChannelsCommandSecretTargetIds(),
+    mode: secretResolution?.mode,
+  });
+  for (const entry of diagnostics) {
+    runtime.log(`[secrets] ${entry}`);
+  }
+  return resolvedConfig;
 }
 
 export function formatAccountLabel(params: { accountId: string; name?: string }) {

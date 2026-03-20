@@ -1,4 +1,4 @@
-import type { InlineDirectives } from './directive-handling';
+import type { InlineDirectives } from "./directive-handling";
 
 const CLEARED_EXEC_FIELDS = {
   hasExecDirective: false,
@@ -26,6 +26,9 @@ export function clearInlineDirectives(cleaned: string): InlineDirectives {
     hasVerboseDirective: false,
     verboseLevel: undefined,
     rawVerboseLevel: undefined,
+    hasFastDirective: false,
+    fastMode: undefined,
+    rawFastMode: undefined,
     hasReasoningDirective: false,
     reasoningLevel: undefined,
     rawReasoningLevel: undefined,

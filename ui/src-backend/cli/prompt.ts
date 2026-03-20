@@ -1,6 +1,6 @@
 import { stdin as input, stdout as output } from "node:process";
 import readline from "node:readline/promises";
-import { isVerbose, isYes } from '../globals';
+import { isVerbose, isYes } from "../globals";
 
 export async function promptYesNo(question: string, defaultYes = false): Promise<boolean> {
   // Simple Y/N prompt honoring global --yes and verbosity flags.

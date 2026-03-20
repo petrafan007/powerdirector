@@ -1,5 +1,7 @@
-import type { PowerDirectorConfig } from '../config/config';
-import { ensurePluginAllowlisted } from '../config/plugins-allowlist';
+import { normalizeChatChannelId } from "../channels/registry";
+import type { PowerDirectorConfig } from "../config/config";
+import { ensurePluginAllowlisted } from "../config/plugins-allowlist";
+import { setPluginEnabledInConfig } from "./toggle-config";
 
 export type PluginEnableResult = {
   config: PowerDirectorConfig;
@@ -8,27 +10,15 @@ export type PluginEnableResult = {
 };
 
 export function enablePluginInConfig(cfg: PowerDirectorConfig, pluginId: string): PluginEnableResult {
+  const builtInChannelId = normalizeChatChannelId(pluginId);
+  const resolvedId = builtInChannelId ?? pluginId;
   if (cfg.plugins?.enabled === false) {
     return { config: cfg, enabled: false, reason: "plugins disabled" };
   }
-  if (cfg.plugins?.deny?.includes(pluginId)) {
+  if (cfg.plugins?.deny?.includes(pluginId) || cfg.plugins?.deny?.includes(resolvedId)) {
     return { config: cfg, enabled: false, reason: "blocked by denylist" };
   }
-
-  const entries = {
-    ...cfg.plugins?.entries,
-    [pluginId]: {
-      ...(cfg.plugins?.entries?.[pluginId] as Record<string, unknown> | undefined),
-      enabled: true,
-    },
-  };
-  let next: PowerDirectorConfig = {
-    ...cfg,
-    plugins: {
-      ...cfg.plugins,
-      entries,
-    },
-  };
-  next = ensurePluginAllowlisted(next, pluginId);
+  let next = setPluginEnabledInConfig(cfg, resolvedId, true);
+  next = ensurePluginAllowlisted(next, resolvedId);
   return { config: next, enabled: true };
 }

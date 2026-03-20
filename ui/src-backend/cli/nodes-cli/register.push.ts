@@ -1,8 +1,8 @@
 import type { Command } from "commander";
-import { defaultRuntime } from '../../runtime';
-import { getNodesTheme, runNodesCommand } from './cli-utils';
-import { callGatewayCli, nodesCallOpts, resolveNodeId } from './rpc';
-import type { NodesRpcOpts } from './types';
+import { defaultRuntime } from "../../runtime";
+import { getNodesTheme, runNodesCommand } from "./cli-utils";
+import { callGatewayCli, nodesCallOpts, resolveNodeId } from "./rpc";
+import type { NodesRpcOpts } from "./types";
 
 type NodesPushOpts = NodesRpcOpts & {
   node?: string;

@@ -1,9 +1,14 @@
-export { CLAUDE_CLI_PROFILE_ID, CODEX_CLI_PROFILE_ID } from './auth-profiles/constants';
-export { resolveAuthProfileDisplayLabel } from './auth-profiles/display';
-export { formatAuthDoctorHint } from './auth-profiles/doctor';
-export { resolveApiKeyForProfile } from './auth-profiles/oauth';
-export { resolveAuthProfileOrder } from './auth-profiles/order';
-export { resolveAuthStorePathForDisplay } from './auth-profiles/paths';
+export { CLAUDE_CLI_PROFILE_ID, CODEX_CLI_PROFILE_ID } from "./auth-profiles/constants";
+export type {
+  AuthCredentialReasonCode,
+  TokenExpiryState,
+} from "./auth-profiles/credential-state";
+export type { AuthProfileEligibilityReasonCode } from "./auth-profiles/order";
+export { resolveAuthProfileDisplayLabel } from "./auth-profiles/display";
+export { formatAuthDoctorHint } from "./auth-profiles/doctor";
+export { resolveApiKeyForProfile } from "./auth-profiles/oauth";
+export { resolveAuthProfileEligibility, resolveAuthProfileOrder } from "./auth-profiles/order";
+export { resolveAuthStorePathForDisplay } from "./auth-profiles/paths";
 export {
   dedupeProfileIds,
   listProfilesForProvider,
@@ -11,16 +16,20 @@ export {
   setAuthProfileOrder,
   upsertAuthProfile,
   upsertAuthProfileWithLock,
-} from './auth-profiles/profiles';
+} from "./auth-profiles/profiles";
 export {
   repairOAuthProfileIdMismatch,
   suggestOAuthProfileIdForLegacyDefault,
-} from './auth-profiles/repair';
+} from "./auth-profiles/repair";
 export {
+  clearRuntimeAuthProfileStoreSnapshots,
   ensureAuthProfileStore,
+  loadAuthProfileStoreForSecretsRuntime,
+  loadAuthProfileStoreForRuntime,
+  replaceRuntimeAuthProfileStoreSnapshots,
   loadAuthProfileStore,
   saveAuthProfileStore,
-} from './auth-profiles/store';
+} from "./auth-profiles/store";
 export type {
   ApiKeyCredential,
   AuthProfileCredential,
@@ -30,7 +39,7 @@ export type {
   OAuthCredential,
   ProfileUsageStats,
   TokenCredential,
-} from './auth-profiles/types';
+} from "./auth-profiles/types";
 export {
   calculateAuthProfileCooldownMs,
   clearAuthProfileCooldown,
@@ -40,5 +49,6 @@ export {
   markAuthProfileCooldown,
   markAuthProfileFailure,
   markAuthProfileUsed,
+  resolveProfilesUnavailableReason,
   resolveProfileUnusableUntilForDisplay,
-} from './auth-profiles/usage';
+} from "./auth-profiles/usage";

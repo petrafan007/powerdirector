@@ -1,5 +1,5 @@
-import { normalizeAccountId } from './account-id';
-import { normalizeMessageChannel } from './message-channel';
+import { normalizeAccountId } from "./account-id";
+import { normalizeMessageChannel } from "./message-channel";
 
 export type DeliveryContext = {
   channel?: string;
@@ -121,11 +121,23 @@ export function mergeDeliveryContext(
   if (!normalizedPrimary && !normalizedFallback) {
     return undefined;
   }
+  const channelsConflict =
+    normalizedPrimary?.channel &&
+    normalizedFallback?.channel &&
+    normalizedPrimary.channel !== normalizedFallback.channel;
   return normalizeDeliveryContext({
     channel: normalizedPrimary?.channel ?? normalizedFallback?.channel,
-    to: normalizedPrimary?.to ?? normalizedFallback?.to,
-    accountId: normalizedPrimary?.accountId ?? normalizedFallback?.accountId,
-    threadId: normalizedPrimary?.threadId ?? normalizedFallback?.threadId,
+    // Keep route fields paired to their channel; avoid crossing fields between
+    // unrelated channels during session context merges.
+    to: channelsConflict
+      ? normalizedPrimary?.to
+      : (normalizedPrimary?.to ?? normalizedFallback?.to),
+    accountId: channelsConflict
+      ? normalizedPrimary?.accountId
+      : (normalizedPrimary?.accountId ?? normalizedFallback?.accountId),
+    threadId: channelsConflict
+      ? normalizedPrimary?.threadId
+      : (normalizedPrimary?.threadId ?? normalizedFallback?.threadId),
   });
 }
 

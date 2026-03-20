@@ -11,13 +11,13 @@ import {
   spinner,
   text,
 } from "@clack/prompts";
-import { createCliProgress } from '../cli/progress';
-import { stripAnsi } from '../terminal/ansi';
-import { note as emitNote } from '../terminal/note';
-import { stylePromptHint, stylePromptMessage, stylePromptTitle } from '../terminal/prompt-style';
-import { theme } from '../terminal/theme';
-import type { WizardProgress, WizardPrompter } from './prompts';
-import { WizardCancelledError } from './prompts';
+import { createCliProgress } from "../cli/progress";
+import { stripAnsi } from "../terminal/ansi";
+import { note as emitNote } from "../terminal/note";
+import { stylePromptHint, stylePromptMessage, stylePromptTitle } from "../terminal/prompt-style";
+import { theme } from "../terminal/theme";
+import type { WizardProgress, WizardPrompter } from "./prompts";
+import { WizardCancelledError } from "./prompts";
 
 function guardCancel<T>(value: T | symbol): T {
   if (isCancel(value)) {

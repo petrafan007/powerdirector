@@ -4,30 +4,30 @@ import {
   resolveAgentDir,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from '../agents/agent-scope';
-import { ensureAuthProfileStore } from '../agents/auth-profiles';
-import { resolveAuthStorePath } from '../agents/auth-profiles/paths';
-import { writeConfigFile } from '../config/config';
-import { logConfigUpdated } from '../config/logging';
-import { DEFAULT_AGENT_ID, normalizeAgentId } from '../routing/session-key';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { resolveUserPath, shortenHomePath } from '../utils';
-import { createClackPrompter } from '../wizard/clack-prompter';
-import { WizardCancelledError } from '../wizard/prompts';
+} from "../agents/agent-scope";
+import { ensureAuthProfileStore } from "../agents/auth-profiles";
+import { resolveAuthStorePath } from "../agents/auth-profiles/paths";
+import { writeConfigFile } from "../config/config";
+import { logConfigUpdated } from "../config/logging";
+import { DEFAULT_AGENT_ID, normalizeAgentId } from "../routing/session-key";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { resolveUserPath, shortenHomePath } from "../utils";
+import { createClackPrompter } from "../wizard/clack-prompter";
+import { WizardCancelledError } from "../wizard/prompts";
 import {
   applyAgentBindings,
   buildChannelBindings,
   describeBinding,
   parseBindingSpecs,
-} from './agents.bindings';
-import { createQuietRuntime, requireValidConfig } from './agents.command-shared';
-import { applyAgentConfig, findAgentEntryIndex, listAgentEntries } from './agents.config';
-import { promptAuthChoiceGrouped } from './auth-choice-prompt';
-import { applyAuthChoice, warnIfModelConfigLooksOff } from './auth-choice';
-import { setupChannels } from './onboard-channels';
-import { ensureWorkspaceAndSessions } from './onboard-helpers';
-import type { ChannelChoice } from './onboard-types';
+} from "./agents.bindings";
+import { createQuietRuntime, requireValidConfig } from "./agents.command-shared";
+import { applyAgentConfig, findAgentEntryIndex, listAgentEntries } from "./agents.config";
+import { promptAuthChoiceGrouped } from "./auth-choice-prompt";
+import { applyAuthChoice, warnIfModelConfigLooksOff } from "./auth-choice";
+import { setupChannels } from "./onboard-channels";
+import { ensureWorkspaceAndSessions } from "./onboard-helpers";
+import type { ChannelChoice } from "./onboard-types";
 
 type AgentsAddOptions = {
   name?: string;
@@ -125,7 +125,7 @@ export async function agentsAddCommand(
     const bindingResult =
       bindingParse.bindings.length > 0
         ? applyAgentBindings(nextConfig, bindingParse.bindings)
-        : { config: nextConfig, added: [], skipped: [], conflicts: [] };
+        : { config: nextConfig, added: [], updated: [], skipped: [], conflicts: [] };
 
     await writeConfigFile(bindingResult.config);
     if (!opts.json) {
@@ -145,6 +145,7 @@ export async function agentsAddCommand(
       model,
       bindings: {
         added: bindingResult.added.map(describeBinding),
+        updated: bindingResult.updated.map(describeBinding),
         skipped: bindingResult.skipped.map(describeBinding),
         conflicts: bindingResult.conflicts.map(
           (conflict) => `${describeBinding(conflict.binding)} (agent=${conflict.existingAgentId})`,
@@ -265,6 +266,7 @@ export async function agentsAddCommand(
         prompter,
         store: authStore,
         includeSkip: true,
+        config: nextConfig,
       });
 
       const authResult = await applyAuthChoice({

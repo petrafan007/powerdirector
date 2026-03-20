@@ -55,6 +55,12 @@ const nextConfig: NextConfig = {
     "@mariozechner/pi-agent-core",
     "node-llama-cpp",
     "@napi-rs/canvas",
+    "protobufjs",
+    "@tloncorp/api",
+    "authenticate-pam",
+    "esbuild",
+    "sqlite-vec",
+    "tar"
   ],
   typescript: {
     // UI build imports backend runtime modules from ../src; backend typechecking is enforced via root `npm run build`.
@@ -94,6 +100,7 @@ const nextConfig: NextConfig = {
         playwright: "commonjs playwright",
         electron: "commonjs electron",
         sharp: "commonjs sharp",
+        "node-llama-cpp": "commonjs node-llama-cpp",
       };
       if (Array.isArray(config.externals)) {
         config.externals.push(externalPackages);

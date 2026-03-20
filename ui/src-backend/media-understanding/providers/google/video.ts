@@ -1,5 +1,5 @@
-import type { VideoDescriptionRequest, VideoDescriptionResult } from '../../types';
-import { generateGeminiInlineDataText } from './inline-data';
+import type { VideoDescriptionRequest, VideoDescriptionResult } from "../../types";
+import { generateGeminiInlineDataText } from "./inline-data";
 
 export const DEFAULT_GOOGLE_VIDEO_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
 const DEFAULT_GOOGLE_VIDEO_MODEL = "gemini-3-flash-preview";

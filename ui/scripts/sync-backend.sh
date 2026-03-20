@@ -16,7 +16,7 @@ rm -rf "$TARGET_DIR"
 mkdir -p "$TARGET_DIR"
 
 # Sync src/ but exclude tests and large binaries to save memory during build
-rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" --exclude="**/media/**" "$BACKEND_SRC/" "$TARGET_DIR/"
+rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" "$BACKEND_SRC/" "$TARGET_DIR/"
 
 # Selective sync for apps/ - only Resources needed for tool-display.json
 echo "Syncing required app resources..."
@@ -30,23 +30,16 @@ mkdir -p "$TARGET_DIR/extensions"
 rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/node_modules/**" "$EXTENSIONS_SRC/" "$TARGET_DIR/extensions/"
 
 # Sanitize imports in the copied files
-# Preserves quotes by using a capturing group for the content and keeping the delimiters
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from '\(\.\/[^'\"]*\)\.js'/from '\1'/g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from \"\(\.\/[^'\"]*\)\.js\"/from \"\1\"/g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from '\(\.\.\/[^'\"]*\)\.js'/from '\1'/g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/from \"\(\.\.\/[^'\"]*\)\.js\"/from \"\1\"/g" {} +
+# 1. Truly quote-safe .js extension removal for relative and absolute project imports
+# Matches any string starting with ./ or ../ or powerdirector/ that ends in .js inside quotes
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])((\.\/|\.\.\/|powerdirector\/)[^'\"]+)\.js\1/\1\2\1/g" {} +
 
-# Fix relative imports to apps/ and extensions/ using Next.js path aliases
+# 2. Correct mapping for relative apps/ and extensions/ to Next.js path aliases
 # Map any number of ../../../apps/ to @/src-backend/apps/
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\(['\"]\)\(\.\.\/\)\+apps\//\1@\/src-backend\/apps\//g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\(['\"]\)\(\.\.\/\)\+extensions\//\1@\/src-backend\/extensions\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])\.\.\/(\.\.\/)*apps\//\1@\/src-backend\/apps\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])\.\.\/(\.\.\/)*extensions\//\1@\/src-backend\/extensions\//g" {} +
 
-# Fix absolute powerdirector/ imports
-# Map 'powerdirector/foo' or "powerdirector/foo" to '@/src-backend/foo' while preserving quotes
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/\(['\"]\)\powerdirector\//\1@\/src-backend\//g" {} +
-
-# Matches: import('./foo.js') or import("./foo.js") etc.
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import('\(\.\/[^'\"]*\)\.js')/import('\1')/g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i "s/import(\"\(\.\/[^'\"]*\)\.js\")/import(\"\1\")/g" {} +
+# 3. Correct mapping for absolute powerdirector/ imports to alias
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\//\1@\/src-backend\//g" {} +
 
 echo "Backend sync and import sanitization complete."

@@ -1,4 +1,4 @@
-import type { FindExtraGatewayServicesOptions } from '../../daemon/inspect';
+import type { FindExtraGatewayServicesOptions } from "../../daemon/inspect";
 
 export type GatewayRpcOpts = {
   url?: string;
@@ -11,6 +11,7 @@ export type GatewayRpcOpts = {
 export type DaemonStatusOptions = {
   rpc: GatewayRpcOpts;
   probe: boolean;
+  requireRpc: boolean;
   json: boolean;
 } & FindExtraGatewayServicesOptions;
 

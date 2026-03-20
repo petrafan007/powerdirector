@@ -1,8 +1,8 @@
-import { loadVoiceWakeConfig, setVoiceWakeTriggers } from '../../infra/voicewake';
-import { ErrorCodes, errorShape } from '../protocol/index';
-import { normalizeVoiceWakeTriggers } from '../server-utils';
-import { formatForLog } from '../ws-log';
-import type { GatewayRequestHandlers } from './types';
+import { loadVoiceWakeConfig, setVoiceWakeTriggers } from "../../infra/voicewake";
+import { ErrorCodes, errorShape } from "../protocol/index";
+import { normalizeVoiceWakeTriggers } from "../server-utils";
+import { formatForLog } from "../ws-log";
+import type { GatewayRequestHandlers } from "./types";
 
 export const voicewakeHandlers: GatewayRequestHandlers = {
   "voicewake.get": async ({ respond }) => {

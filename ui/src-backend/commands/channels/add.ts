@@ -1,21 +1,21 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../../agents/agent-scope';
-import { listChannelPluginCatalogEntries } from '../../channels/plugins/catalog';
-import { getChannelPlugin, normalizeChannelId } from '../../channels/plugins/index';
-import type { ChannelId, ChannelSetupInput } from '../../channels/plugins/types';
-import { writeConfigFile, type PowerDirectorConfig } from '../../config/config';
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from '../../routing/session-key';
-import { defaultRuntime, type RuntimeEnv } from '../../runtime';
-import { resolveTelegramAccount } from '../../telegram/accounts';
-import { deleteTelegramUpdateOffset } from '../../telegram/update-offset-store';
-import { createClackPrompter } from '../../wizard/clack-prompter';
-import { setupChannels } from '../onboard-channels';
-import type { ChannelChoice } from '../onboard-types';
+import { resolveDefaultAgentId } from "../../agents/agent-scope";
+import { parseOptionalDelimitedEntries } from "../../channels/plugins/helpers";
+import { getChannelPlugin, normalizeChannelId } from "../../channels/plugins/index";
+import { moveSingleAccountChannelSectionToDefaultAccount } from "../../channels/plugins/setup-helpers";
+import type { ChannelSetupPlugin } from "../../channels/plugins/setup-wizard-types";
+import type { ChannelSetupInput } from "../../channels/plugins/types";
+import { writeConfigFile } from "../../config/config";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../routing/session-key";
+import { defaultRuntime, type RuntimeEnv } from "../../runtime";
+import { createClackPrompter } from "../../wizard/clack-prompter";
+import { applyAgentBindings, describeBinding } from "../agents.bindings";
 import {
-  ensureOnboardingPluginInstalled,
-  reloadOnboardingPluginRegistry,
-} from '../onboarding/plugin-install';
-import { applyAccountName, applyChannelAccountConfig } from './add-mutators';
-import { channelLabel, requireValidConfig, shouldUseWizard } from './shared';
+  resolveCatalogChannelEntry,
+  resolveInstallableChannelPlugin,
+} from "../channel-setup/channel-plugin-resolution";
+import type { ChannelChoice } from "../onboard-types";
+import { applyAccountName, applyChannelAccountConfig } from "./add-mutators";
+import { channelLabel, requireValidConfig, shouldUseWizard } from "./shared";
 
 export type ChannelsAddOptions = {
   channel?: string;
@@ -24,32 +24,6 @@ export type ChannelsAddOptions = {
   groupChannels?: string;
   dmAllowlist?: string;
 } & Omit<ChannelSetupInput, "groupChannels" | "dmAllowlist" | "initialSyncLimit">;
-
-function parseList(value: string | undefined): string[] | undefined {
-  if (!value?.trim()) {
-    return undefined;
-  }
-  const parsed = value
-    .split(/[\n,;]+/g)
-    .map((entry) => entry.trim())
-    .filter(Boolean);
-  return parsed.length > 0 ? parsed : undefined;
-}
-
-function resolveCatalogChannelEntry(raw: string, cfg: PowerDirectorConfig | null) {
-  const trimmed = raw.trim().toLowerCase();
-  if (!trimmed) {
-    return undefined;
-  }
-  const workspaceDir = cfg ? resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg)) : undefined;
-  return listChannelPluginCatalogEntries({ workspaceDir }).find((entry) => {
-    if (entry.id.toLowerCase() === trimmed) {
-      return true;
-    }
-    return (entry.meta.aliases ?? []).some((alias) => alias.trim().toLowerCase() === trimmed);
-  });
-}
-
 export async function channelsAddCommand(
   opts: ChannelsAddOptions,
   runtime: RuntimeEnv = defaultRuntime,
@@ -63,9 +37,14 @@ export async function channelsAddCommand(
 
   const useWizard = shouldUseWizard(params);
   if (useWizard) {
+    const [{ buildAgentSummaries }, { setupChannels }] = await Promise.all([
+      import("../agents.config"),
+      import("../onboard-channels"),
+    ]);
     const prompter = createClackPrompter();
     let selection: ChannelChoice[] = [];
     const accountIds: Partial<Record<ChannelChoice, string>> = {};
+    const resolvedPlugins = new Map<ChannelChoice, ChannelSetupPlugin>();
     await prompter.intro("Channel setup");
     let nextConfig = await setupChannels(cfg, runtime, prompter, {
       allowDisable: false,
@@ -76,6 +55,9 @@ export async function channelsAddCommand(
       },
       onAccountId: (channel, accountId) => {
         accountIds[channel] = accountId;
+      },
+      onResolvedPlugin: (channel, plugin) => {
+        resolvedPlugins.set(channel, plugin);
       },
     });
     if (selection.length === 0) {
@@ -90,7 +72,7 @@ export async function channelsAddCommand(
     if (wantsNames) {
       for (const channel of selection) {
         const accountId = accountIds[channel] ?? DEFAULT_ACCOUNT_ID;
-        const plugin = getChannelPlugin(channel);
+        const plugin = resolvedPlugins.get(channel) ?? getChannelPlugin(channel);
         const account = plugin?.config.resolveAccount(nextConfig, accountId) as
           | { name?: string }
           | undefined;
@@ -106,7 +88,70 @@ export async function channelsAddCommand(
             channel,
             accountId,
             name,
+            plugin,
           });
+        }
+      }
+    }
+
+    const bindTargets = selection
+      .map((channel) => ({
+        channel,
+        accountId: accountIds[channel]?.trim(),
+      }))
+      .filter(
+        (
+          value,
+        ): value is {
+          channel: ChannelChoice;
+          accountId: string;
+        } => Boolean(value.accountId),
+      );
+    if (bindTargets.length > 0) {
+      const bindNow = await prompter.confirm({
+        message: "Bind configured channel accounts to agents now?",
+        initialValue: true,
+      });
+      if (bindNow) {
+        const agentSummaries = buildAgentSummaries(nextConfig);
+        const defaultAgentId = resolveDefaultAgentId(nextConfig);
+        for (const target of bindTargets) {
+          const targetAgentId = await prompter.select({
+            message: `Route ${target.channel} account "${target.accountId}" to agent`,
+            options: agentSummaries.map((agent) => ({
+              value: agent.id,
+              label: agent.isDefault ? `${agent.id} (default)` : agent.id,
+            })),
+            initialValue: defaultAgentId,
+          });
+          const bindingResult = applyAgentBindings(nextConfig, [
+            {
+              agentId: targetAgentId,
+              match: { channel: target.channel, accountId: target.accountId },
+            },
+          ]);
+          nextConfig = bindingResult.config;
+          if (bindingResult.added.length > 0 || bindingResult.updated.length > 0) {
+            await prompter.note(
+              [
+                ...bindingResult.added.map((binding) => `Added: ${describeBinding(binding)}`),
+                ...bindingResult.updated.map((binding) => `Updated: ${describeBinding(binding)}`),
+              ].join("\n"),
+              "Routing bindings",
+            );
+          }
+          if (bindingResult.conflicts.length > 0) {
+            await prompter.note(
+              [
+                "Skipped bindings already claimed by another agent:",
+                ...bindingResult.conflicts.map(
+                  (conflict) =>
+                    `- ${describeBinding(conflict.binding)} (agent=${conflict.existingAgentId})`,
+                ),
+              ].join("\n"),
+              "Routing bindings",
+            );
+          }
         }
       }
     }
@@ -119,24 +164,17 @@ export async function channelsAddCommand(
   const rawChannel = String(opts.channel ?? "");
   let channel = normalizeChannelId(rawChannel);
   let catalogEntry = channel ? undefined : resolveCatalogChannelEntry(rawChannel, nextConfig);
-
-  if (!channel && catalogEntry) {
-    const prompter = createClackPrompter();
-    const workspaceDir = resolveAgentWorkspaceDir(nextConfig, resolveDefaultAgentId(nextConfig));
-    const result = await ensureOnboardingPluginInstalled({
-      cfg: nextConfig,
-      entry: catalogEntry,
-      prompter,
-      runtime,
-      workspaceDir,
-    });
-    nextConfig = result.cfg;
-    if (!result.installed) {
-      return;
-    }
-    reloadOnboardingPluginRegistry({ cfg: nextConfig, runtime, workspaceDir });
-    channel = normalizeChannelId(catalogEntry.id) ?? (catalogEntry.id as ChannelId);
-  }
+  const resolvedPluginState = await resolveInstallableChannelPlugin({
+    cfg: nextConfig,
+    runtime,
+    rawChannel,
+    allowInstall: true,
+    prompter: createClackPrompter(),
+    supports: (plugin) => Boolean(plugin.setup?.applyAccountConfig),
+  });
+  nextConfig = resolvedPluginState.cfg;
+  channel = resolvedPluginState.channelId ?? channel;
+  catalogEntry = resolvedPluginState.catalogEntry ?? catalogEntry;
 
   if (!channel) {
     const hint = catalogEntry
@@ -147,15 +185,12 @@ export async function channelsAddCommand(
     return;
   }
 
-  const plugin = getChannelPlugin(channel);
+  const plugin = resolvedPluginState.plugin ?? (channel ? getChannelPlugin(channel) : undefined);
   if (!plugin?.setup?.applyAccountConfig) {
     runtime.error(`Channel ${channel} does not support add.`);
     runtime.exit(1);
     return;
   }
-  const accountId =
-    plugin.setup.resolveAccountId?.({ cfg: nextConfig, accountId: opts.account }) ??
-    normalizeAccountId(opts.account);
   const useEnv = opts.useEnv === true;
   const initialSyncLimit =
     typeof opts.initialSyncLimit === "number"
@@ -163,12 +198,13 @@ export async function channelsAddCommand(
       : typeof opts.initialSyncLimit === "string" && opts.initialSyncLimit.trim()
         ? Number.parseInt(opts.initialSyncLimit, 10)
         : undefined;
-  const groupChannels = parseList(opts.groupChannels);
-  const dmAllowlist = parseList(opts.dmAllowlist);
+  const groupChannels = parseOptionalDelimitedEntries(opts.groupChannels);
+  const dmAllowlist = parseOptionalDelimitedEntries(opts.dmAllowlist);
 
   const input: ChannelSetupInput = {
     name: opts.name,
     token: opts.token,
+    privateKey: opts.privateKey,
     tokenFile: opts.tokenFile,
     botToken: opts.botToken,
     appToken: opts.appToken,
@@ -194,11 +230,18 @@ export async function channelsAddCommand(
     useEnv,
     ship: opts.ship,
     url: opts.url,
+    relayUrls: opts.relayUrls,
     code: opts.code,
     groupChannels,
     dmAllowlist,
     autoDiscoverChannels: opts.autoDiscoverChannels,
   };
+  const accountId =
+    plugin.setup.resolveAccountId?.({
+      cfg: nextConfig,
+      accountId: opts.account,
+      input,
+    }) ?? normalizeAccountId(opts.account);
 
   const validationError = plugin.setup.validateInput?.({
     cfg: nextConfig,
@@ -211,25 +254,28 @@ export async function channelsAddCommand(
     return;
   }
 
-  const previousTelegramToken =
-    channel === "telegram"
-      ? resolveTelegramAccount({ cfg: nextConfig, accountId }).token.trim()
-      : "";
+  const prevConfig = nextConfig;
+
+  if (accountId !== DEFAULT_ACCOUNT_ID) {
+    nextConfig = moveSingleAccountChannelSectionToDefaultAccount({
+      cfg: nextConfig,
+      channelKey: channel,
+    });
+  }
 
   nextConfig = applyChannelAccountConfig({
     cfg: nextConfig,
     channel,
     accountId,
     input,
+    plugin,
   });
-
-  if (channel === "telegram") {
-    const nextTelegramToken = resolveTelegramAccount({ cfg: nextConfig, accountId }).token.trim();
-    if (previousTelegramToken !== nextTelegramToken) {
-      // Clear stale polling offsets after Telegram token rotation.
-      await deleteTelegramUpdateOffset({ accountId });
-    }
-  }
+  await plugin.lifecycle?.onAccountConfigChanged?.({
+    prevCfg: prevConfig,
+    nextCfg: nextConfig,
+    accountId,
+    runtime,
+  });
 
   await writeConfigFile(nextConfig);
   runtime.log(`Added ${channelLabel(channel)} account "${accountId}".`);

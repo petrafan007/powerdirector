@@ -1,7 +1,7 @@
-import { resolveChannelDefaultAccountId } from '../channels/plugins/helpers';
-import { listChannelPlugins } from '../channels/plugins/index';
-import type { ChannelAccountSnapshot, ChannelPlugin } from '../channels/plugins/types';
-import type { PowerDirectorConfig } from '../config/config';
+import { listChannelPlugins } from "../channels/plugins/index";
+import type { ChannelAccountSnapshot, ChannelPlugin } from "../channels/plugins/types";
+import type { PowerDirectorConfig } from "../config/config";
+import { resolveDefaultChannelAccountContext } from "./channel-account-context";
 
 export type LinkChannelContext = {
   linked: boolean;
@@ -15,17 +15,11 @@ export async function resolveLinkChannelContext(
   cfg: PowerDirectorConfig,
 ): Promise<LinkChannelContext | null> {
   for (const plugin of listChannelPlugins()) {
-    const accountIds = plugin.config.listAccountIds(cfg);
-    const defaultAccountId = resolveChannelDefaultAccountId({
-      plugin,
-      cfg,
-      accountIds,
-    });
-    const account = plugin.config.resolveAccount(cfg, defaultAccountId);
-    const enabled = plugin.config.isEnabled ? plugin.config.isEnabled(account, cfg) : true;
-    const configured = plugin.config.isConfigured
-      ? await plugin.config.isConfigured(account, cfg)
-      : true;
+    const { defaultAccountId, account, enabled, configured } =
+      await resolveDefaultChannelAccountContext(plugin, cfg, {
+        mode: "read_only",
+        commandName: "status",
+      });
     const snapshot = plugin.config.describeAccount
       ? plugin.config.describeAccount(account, cfg)
       : ({

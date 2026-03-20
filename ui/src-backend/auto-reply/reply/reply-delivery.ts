@@ -1,11 +1,12 @@
-import { logVerbose } from '../../globals';
-import { SILENT_REPLY_TOKEN } from '../tokens';
-import type { BlockReplyContext, ReplyPayload } from '../types';
-import type { BlockReplyPipeline } from './block-reply-pipeline';
-import { createBlockReplyPayloadKey } from './block-reply-pipeline';
-import { parseReplyDirectives } from './reply-directives';
-import { applyReplyTagsToPayload, isRenderablePayload } from './reply-payloads';
-import type { TypingSignaler } from './typing-mode';
+import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { logVerbose } from "../../globals";
+import { SILENT_REPLY_TOKEN } from "../tokens";
+import type { BlockReplyContext, ReplyPayload } from "../types";
+import type { BlockReplyPipeline } from "./block-reply-pipeline";
+import { createBlockReplyContentKey } from "./block-reply-pipeline";
+import { parseReplyDirectives } from "./reply-directives";
+import { applyReplyTagsToPayload, isRenderablePayload } from "./reply-payloads";
+import type { TypingSignaler } from "./typing-mode";
 
 export type ReplyDirectiveParseMode = "always" | "auto" | "never";
 
@@ -57,14 +58,12 @@ export function normalizeReplyPayloadDirectives(params: {
   };
 }
 
-const hasRenderableMedia = (payload: ReplyPayload): boolean =>
-  Boolean(payload.mediaUrl) || (payload.mediaUrls?.length ?? 0) > 0;
-
 export function createBlockReplyDeliveryHandler(params: {
   onBlockReply: (payload: ReplyPayload, context?: BlockReplyContext) => Promise<void> | void;
   currentMessageId?: string;
   normalizeStreamingText: (payload: ReplyPayload) => { text?: string; skip: boolean };
   applyReplyToMode: (payload: ReplyPayload) => ReplyPayload;
+  normalizeMediaPaths?: (payload: ReplyPayload) => Promise<ReplyPayload>;
   typingSignals: TypingSignaler;
   blockStreamingEnabled: boolean;
   blockReplyPipeline: BlockReplyPipeline | null;
@@ -72,7 +71,7 @@ export function createBlockReplyDeliveryHandler(params: {
 }): (payload: ReplyPayload) => Promise<void> {
   return async (payload) => {
     const { text, skip } = params.normalizeStreamingText(payload);
-    if (skip && !hasRenderableMedia(payload)) {
+    if (skip && !resolveSendableOutboundReplyParts(payload).hasMedia) {
       return;
     }
 
@@ -101,8 +100,11 @@ export function createBlockReplyDeliveryHandler(params: {
       parseMode: "auto",
     });
 
-    const blockPayload = params.applyReplyToMode(normalized.payload);
-    const blockHasMedia = hasRenderableMedia(blockPayload);
+    const mediaNormalizedPayload = params.normalizeMediaPaths
+      ? await params.normalizeMediaPaths(normalized.payload)
+      : normalized.payload;
+    const blockPayload = params.applyReplyToMode(mediaNormalizedPayload);
+    const blockHasMedia = resolveSendableOutboundReplyParts(blockPayload).hasMedia;
 
     // Skip empty payloads unless they have audioAsVoice flag (need to track it).
     if (!blockPayload.text && !blockHasMedia && !blockPayload.audioAsVoice) {
@@ -124,7 +126,7 @@ export function createBlockReplyDeliveryHandler(params: {
     } else if (params.blockStreamingEnabled) {
       // Send directly when flushing before tool execution (no pipeline but streaming enabled).
       // Track sent key to avoid duplicate in final payloads.
-      params.directlySentBlockKeys.add(createBlockReplyPayloadKey(blockPayload));
+      params.directlySentBlockKeys.add(createBlockReplyContentKey(blockPayload));
       await params.onBlockReply(blockPayload);
     }
     // When streaming is disabled entirely, blocks are accumulated in final text instead.

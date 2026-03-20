@@ -1,5 +1,5 @@
-import { jidToE164, normalizeE164 } from '../../../utils';
-import type { WebInboundMsg } from '../types';
+import { jidToE164, normalizeE164 } from "../../../utils";
+import type { WebInboundMsg } from "../types";
 
 export function resolvePeerId(msg: WebInboundMsg) {
   if (msg.chatType === "group") {

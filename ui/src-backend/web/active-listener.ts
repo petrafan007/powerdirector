@@ -1,6 +1,6 @@
-import { formatCliCommand } from '../cli/command-format';
-import type { PollInput } from '../polls';
-import { DEFAULT_ACCOUNT_ID } from '../routing/session-key';
+import { formatCliCommand } from "../cli/command-format";
+import type { PollInput } from "../polls";
+import { DEFAULT_ACCOUNT_ID } from "../routing/session-key";
 
 export type ActiveWebSendOptions = {
   gifPlayback?: boolean;

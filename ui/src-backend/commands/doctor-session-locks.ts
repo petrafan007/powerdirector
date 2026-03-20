@@ -1,8 +1,8 @@
-import { resolveAgentSessionDirs } from '../agents/session-dirs';
-import { cleanStaleLockFiles, type SessionLockInspection } from '../agents/session-write-lock';
-import { resolveStateDir } from '../config/paths';
-import { note } from '../terminal/note';
-import { shortenHomePath } from '../utils';
+import { resolveAgentSessionDirs } from "../agents/session-dirs";
+import { cleanStaleLockFiles, type SessionLockInspection } from "../agents/session-write-lock";
+import { resolveStateDir } from "../config/paths";
+import { note } from "../terminal/note";
+import { shortenHomePath } from "../utils";
 
 const DEFAULT_STALE_MS = 30 * 60 * 1000;
 

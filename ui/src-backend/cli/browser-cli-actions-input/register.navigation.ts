@@ -1,9 +1,9 @@
 import type { Command } from "commander";
-import { danger } from '../../globals';
-import { defaultRuntime } from '../../runtime';
-import { runBrowserResizeWithOutput } from '../browser-cli-resize';
-import { callBrowserRequest, type BrowserParentOpts } from '../browser-cli-shared';
-import { requireRef, resolveBrowserActionContext } from './shared';
+import { danger } from "../../globals";
+import { defaultRuntime } from "../../runtime";
+import { runBrowserResizeWithOutput } from "../browser-cli-resize";
+import { callBrowserRequest, type BrowserParentOpts } from "../browser-cli-shared";
+import { requireRef, resolveBrowserActionContext } from "./shared";
 
 export function registerBrowserNavigationCommands(
   browser: Command,

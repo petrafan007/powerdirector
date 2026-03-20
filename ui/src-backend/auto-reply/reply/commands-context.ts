@@ -1,9 +1,9 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveCommandAuthorization } from '../command-auth';
-import { normalizeCommandBody } from '../commands-registry';
-import type { MsgContext } from '../templating';
-import type { CommandContext } from './commands-types';
-import { stripMentions } from './mentions';
+import type { PowerDirectorConfig } from "../../config/config";
+import { resolveCommandAuthorization } from "../command-auth";
+import { normalizeCommandBody } from "../commands-registry";
+import type { MsgContext } from "../templating";
+import type { CommandContext } from "./commands-types";
+import { stripMentions } from "./mentions";
 
 export function buildCommandContext(params: {
   ctx: MsgContext;
@@ -26,6 +26,7 @@ export function buildCommandContext(params: {
   const rawBodyNormalized = triggerBodyNormalized;
   const commandBodyNormalized = normalizeCommandBody(
     isGroup ? stripMentions(rawBodyNormalized, ctx, cfg, agentId) : rawBodyNormalized,
+    { botUsername: ctx.BotUsername },
   );
 
   return {

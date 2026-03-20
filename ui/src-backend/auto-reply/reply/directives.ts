@@ -1,7 +1,8 @@
-import { escapeRegExp } from '../../utils';
-import type { NoticeLevel, ReasoningLevel } from '../thinking';
+import { escapeRegExp } from "../../utils";
+import type { NoticeLevel, ReasoningLevel } from "../thinking";
 import {
   type ElevatedLevel,
+  normalizeFastMode,
   normalizeElevatedLevel,
   normalizeNoticeLevel,
   normalizeReasoningLevel,
@@ -9,7 +10,7 @@ import {
   normalizeVerboseLevel,
   type ThinkLevel,
   type VerboseLevel,
-} from '../thinking';
+} from "../thinking";
 
 type ExtractedLevel<T> = {
   cleaned: string;
@@ -124,6 +125,24 @@ export function extractVerboseDirective(body?: string): {
   };
 }
 
+export function extractFastDirective(body?: string): {
+  cleaned: string;
+  fastMode?: boolean;
+  rawLevel?: string;
+  hasDirective: boolean;
+} {
+  if (!body) {
+    return { cleaned: "", hasDirective: false };
+  }
+  const extracted = extractLevelDirective(body, ["fast"], normalizeFastMode);
+  return {
+    cleaned: extracted.cleaned,
+    fastMode: extracted.level,
+    rawLevel: extracted.rawLevel,
+    hasDirective: extracted.hasDirective,
+  };
+}
+
 export function extractNoticeDirective(body?: string): {
   cleaned: string;
   noticeLevel?: NoticeLevel;
@@ -189,4 +208,4 @@ export function extractStatusDirective(body?: string): {
 }
 
 export type { ElevatedLevel, NoticeLevel, ReasoningLevel, ThinkLevel, VerboseLevel };
-export { extractExecDirective } from './exec/directive';
+export { extractExecDirective } from "./exec/directive";

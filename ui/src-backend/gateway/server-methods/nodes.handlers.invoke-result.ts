@@ -1,6 +1,6 @@
-import { ErrorCodes, errorShape, validateNodeInvokeResultParams } from '../protocol/index';
-import { respondInvalidParams } from './nodes.helpers';
-import type { GatewayRequestHandler } from './types';
+import { ErrorCodes, errorShape, validateNodeInvokeResultParams } from "../protocol/index";
+import { respondInvalidParams } from "./nodes.helpers";
+import type { GatewayRequestHandler } from "./types";
 
 function normalizeNodeInvokeResultParams(params: unknown): unknown {
   if (!params || typeof params !== "object") {

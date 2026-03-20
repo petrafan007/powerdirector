@@ -1,7 +1,8 @@
 import { beforeEach, vi } from "vitest";
-import { resetInboundDedupe } from '../auto-reply/reply/inbound-dedupe';
-import { resetSystemEventsForTest } from '../infra/system-events';
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe";
+import { resetSystemEventsForTest } from "../infra/system-events";
+import type { MockFn } from "../test-utils/vitest-mock-fn";
+import type { SignalDaemonExitEvent, SignalDaemonHandle } from "./daemon";
 
 type SignalToolResultTestMocks = {
   waitForTransportReadyMock: MockFn;
@@ -13,6 +14,7 @@ type SignalToolResultTestMocks = {
   streamMock: MockFn;
   signalCheckMock: MockFn;
   signalRpcRequestMock: MockFn;
+  spawnSignalDaemonMock: MockFn;
 };
 
 const waitForTransportReadyMock = vi.hoisted(() => vi.fn()) as unknown as MockFn;
@@ -24,6 +26,7 @@ const upsertPairingRequestMock = vi.hoisted(() => vi.fn()) as unknown as MockFn;
 const streamMock = vi.hoisted(() => vi.fn()) as unknown as MockFn;
 const signalCheckMock = vi.hoisted(() => vi.fn()) as unknown as MockFn;
 const signalRpcRequestMock = vi.hoisted(() => vi.fn()) as unknown as MockFn;
+const spawnSignalDaemonMock = vi.hoisted(() => vi.fn()) as unknown as MockFn;
 
 export function getSignalToolResultTestMocks(): SignalToolResultTestMocks {
   return {
@@ -36,6 +39,7 @@ export function getSignalToolResultTestMocks(): SignalToolResultTestMocks {
     streamMock,
     signalCheckMock,
     signalRpcRequestMock,
+    spawnSignalDaemonMock,
   };
 }
 
@@ -47,47 +51,68 @@ export function setSignalToolResultTestConfig(next: Record<string, unknown>) {
 
 export const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
-vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+export function createMockSignalDaemonHandle(
+  overrides: {
+    stop?: MockFn;
+    exited?: Promise<SignalDaemonExitEvent>;
+    isExited?: () => boolean;
+  } = {},
+): SignalDaemonHandle {
+  const stop = overrides.stop ?? (vi.fn() as unknown as MockFn);
+  const exited = overrides.exited ?? new Promise<SignalDaemonExitEvent>(() => {});
+  const isExited = overrides.isExited ?? (() => false);
+  return {
+    stop: stop as unknown as () => void,
+    exited,
+    isExited,
+  };
+}
+
+vi.mock("../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
     loadConfig: () => config,
   };
 });
 
-vi.mock("../auto-reply/reply.js", () => ({
+vi.mock("../auto-reply/reply", () => ({
   getReplyFromConfig: (...args: unknown[]) => replyMock(...args),
 }));
 
-vi.mock("./send.js", () => ({
+vi.mock("./send", () => ({
   sendMessageSignal: (...args: unknown[]) => sendMock(...args),
   sendTypingSignal: vi.fn().mockResolvedValue(true),
   sendReadReceiptSignal: vi.fn().mockResolvedValue(true),
 }));
 
-vi.mock("../pairing/pairing-store.js", () => ({
+vi.mock("../pairing/pairing-store", () => ({
   readChannelAllowFromStore: (...args: unknown[]) => readAllowFromStoreMock(...args),
   upsertChannelPairingRequest: (...args: unknown[]) => upsertPairingRequestMock(...args),
 }));
 
-vi.mock("../config/sessions.js", () => ({
+vi.mock("../config/sessions", () => ({
   resolveStorePath: vi.fn(() => "/tmp/powerdirector-sessions.json"),
   updateLastRoute: (...args: unknown[]) => updateLastRouteMock(...args),
   readSessionUpdatedAt: vi.fn(() => undefined),
   recordSessionMetaFromInbound: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("./client.js", () => ({
+vi.mock("./client", () => ({
   streamSignalEvents: (...args: unknown[]) => streamMock(...args),
   signalCheck: (...args: unknown[]) => signalCheckMock(...args),
   signalRpcRequest: (...args: unknown[]) => signalRpcRequestMock(...args),
 }));
 
-vi.mock("./daemon.js", () => ({
-  spawnSignalDaemon: vi.fn(() => ({ stop: vi.fn() })),
-}));
+vi.mock("./daemon", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./daemon")>();
+  return {
+    ...actual,
+    spawnSignalDaemon: (...args: unknown[]) => spawnSignalDaemonMock(...args),
+  };
+});
 
-vi.mock("../infra/transport-ready.js", () => ({
+vi.mock("../infra/transport-ready", () => ({
   waitForTransportReady: (...args: unknown[]) => waitForTransportReadyMock(...args),
 }));
 
@@ -107,6 +132,7 @@ export function installSignalToolResultTestHooks() {
     streamMock.mockReset();
     signalCheckMock.mockReset().mockResolvedValue({});
     signalRpcRequestMock.mockReset().mockResolvedValue({});
+    spawnSignalDaemonMock.mockReset().mockReturnValue(createMockSignalDaemonHandle());
     readAllowFromStoreMock.mockReset().mockResolvedValue([]);
     upsertPairingRequestMock.mockReset().mockResolvedValue({ code: "PAIRCODE", created: true });
     waitForTransportReadyMock.mockReset().mockResolvedValue(undefined);

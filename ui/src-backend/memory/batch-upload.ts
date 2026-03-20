@@ -2,8 +2,9 @@ import {
   buildBatchHeaders,
   normalizeBatchBaseUrl,
   type BatchHttpClientConfig,
-} from './batch-utils';
-import { hashText } from './internal';
+} from "./batch-utils";
+import { hashText } from "./internal";
+import { withRemoteHttpResponse } from "./remote-http";
 
 export async function uploadBatchJsonlFile(params: {
   client: BatchHttpClientConfig;
@@ -20,16 +21,22 @@ export async function uploadBatchJsonlFile(params: {
     `memory-embeddings.${hashText(String(Date.now()))}.jsonl`,
   );
 
-  const fileRes = await fetch(`${baseUrl}/files`, {
-    method: "POST",
-    headers: buildBatchHeaders(params.client, { json: false }),
-    body: form,
+  const filePayload = await withRemoteHttpResponse({
+    url: `${baseUrl}/files`,
+    ssrfPolicy: params.client.ssrfPolicy,
+    init: {
+      method: "POST",
+      headers: buildBatchHeaders(params.client, { json: false }),
+      body: form,
+    },
+    onResponse: async (fileRes) => {
+      if (!fileRes.ok) {
+        const text = await fileRes.text();
+        throw new Error(`${params.errorPrefix}: ${fileRes.status} ${text}`);
+      }
+      return (await fileRes.json()) as { id?: string };
+    },
   });
-  if (!fileRes.ok) {
-    const text = await fileRes.text();
-    throw new Error(`${params.errorPrefix}: ${fileRes.status} ${text}`);
-  }
-  const filePayload = (await fileRes.json()) as { id?: string };
   if (!filePayload.id) {
     throw new Error(`${params.errorPrefix}: missing file id`);
   }

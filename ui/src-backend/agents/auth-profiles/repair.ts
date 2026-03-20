@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { AuthProfileConfig } from '../../config/types';
-import { findNormalizedProviderKey, normalizeProviderId } from '../model-selection';
-import { dedupeProfileIds, listProfilesForProvider } from './profiles';
-import type { AuthProfileIdRepairResult, AuthProfileStore } from './types';
+import type { PowerDirectorConfig } from "../../config/config";
+import type { AuthProfileConfig } from "../../config/types";
+import { findNormalizedProviderKey, normalizeProviderId } from "../model-selection";
+import { dedupeProfileIds, listProfilesForProvider } from "./profiles";
+import type { AuthProfileIdRepairResult, AuthProfileStore } from "./types";
 
 function getProfileSuffix(profileId: string): string {
   const idx = profileId.indexOf(":");

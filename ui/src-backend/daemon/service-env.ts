@@ -1,18 +1,19 @@
 import os from "node:os";
 import path from "node:path";
-import { VERSION } from '../version';
+import { VERSION } from "../version";
 import {
   GATEWAY_SERVICE_KIND,
   GATEWAY_SERVICE_MARKER,
   resolveGatewayLaunchAgentLabel,
   resolveGatewaySystemdServiceName,
+  resolveGatewayWindowsTaskName,
   NODE_SERVICE_KIND,
   NODE_SERVICE_MARKER,
   NODE_WINDOWS_TASK_SCRIPT_NAME,
   resolveNodeLaunchAgentLabel,
   resolveNodeSystemdServiceName,
   resolveNodeWindowsTaskName,
-} from './constants';
+} from "./constants";
 
 export type MinimalServicePathOptions = {
   platform?: NodeJS.Platform;
@@ -24,6 +25,45 @@ export type MinimalServicePathOptions = {
 type BuildServicePathOptions = MinimalServicePathOptions & {
   env?: Record<string, string | undefined>;
 };
+
+type SharedServiceEnvironmentFields = {
+  stateDir: string | undefined;
+  configPath: string | undefined;
+  tmpDir: string;
+  minimalPath: string | undefined;
+  proxyEnv: Record<string, string | undefined>;
+  nodeCaCerts: string | undefined;
+  nodeUseSystemCa: string | undefined;
+};
+
+const SERVICE_PROXY_ENV_KEYS = [
+  "HTTP_PROXY",
+  "HTTPS_PROXY",
+  "NO_PROXY",
+  "ALL_PROXY",
+  "http_proxy",
+  "https_proxy",
+  "no_proxy",
+  "all_proxy",
+] as const;
+
+function readServiceProxyEnvironment(
+  env: Record<string, string | undefined>,
+): Record<string, string | undefined> {
+  const out: Record<string, string | undefined> = {};
+  for (const key of SERVICE_PROXY_ENV_KEYS) {
+    const value = env[key];
+    if (typeof value !== "string") {
+      continue;
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      continue;
+    }
+    out[key] = trimmed;
+  }
+  return out;
+}
 
 function addNonEmptyDir(dirs: string[], dir: string | undefined): void {
   if (dir) {
@@ -45,6 +85,17 @@ function addCommonUserBinDirs(dirs: string[], home: string): void {
   dirs.push(`${home}/.volta/bin`);
   dirs.push(`${home}/.asdf/shims`);
   dirs.push(`${home}/.bun/bin`);
+}
+
+function addCommonEnvConfiguredBinDirs(
+  dirs: string[],
+  env: Record<string, string | undefined> | undefined,
+): void {
+  addNonEmptyDir(dirs, env?.PNPM_HOME);
+  addNonEmptyDir(dirs, appendSubdir(env?.NPM_CONFIG_PREFIX, "bin"));
+  addNonEmptyDir(dirs, appendSubdir(env?.BUN_INSTALL, "bin"));
+  addNonEmptyDir(dirs, appendSubdir(env?.VOLTA_HOME, "bin"));
+  addNonEmptyDir(dirs, appendSubdir(env?.ASDF_DATA_DIR, "shims"));
 }
 
 function resolveSystemPathDirs(platform: NodeJS.Platform): string[] {
@@ -78,11 +129,7 @@ export function resolveDarwinUserBinDirs(
   // Env-configured bin roots (override defaults when present).
   // Note: FNM_DIR on macOS defaults to ~/Library/Application Support/fnm
   // Note: PNPM_HOME on macOS defaults to ~/Library/pnpm
-  addNonEmptyDir(dirs, env?.PNPM_HOME);
-  addNonEmptyDir(dirs, appendSubdir(env?.NPM_CONFIG_PREFIX, "bin"));
-  addNonEmptyDir(dirs, appendSubdir(env?.BUN_INSTALL, "bin"));
-  addNonEmptyDir(dirs, appendSubdir(env?.VOLTA_HOME, "bin"));
-  addNonEmptyDir(dirs, appendSubdir(env?.ASDF_DATA_DIR, "shims"));
+  addCommonEnvConfiguredBinDirs(dirs, env);
   // nvm: no stable default path, relies on env or user's shell config
   // User must set NVM_DIR and source nvm.sh for it to work
   addNonEmptyDir(dirs, env?.NVM_DIR);
@@ -120,11 +167,7 @@ export function resolveLinuxUserBinDirs(
   const dirs: string[] = [];
 
   // Env-configured bin roots (override defaults when present).
-  addNonEmptyDir(dirs, env?.PNPM_HOME);
-  addNonEmptyDir(dirs, appendSubdir(env?.NPM_CONFIG_PREFIX, "bin"));
-  addNonEmptyDir(dirs, appendSubdir(env?.BUN_INSTALL, "bin"));
-  addNonEmptyDir(dirs, appendSubdir(env?.VOLTA_HOME, "bin"));
-  addNonEmptyDir(dirs, appendSubdir(env?.ASDF_DATA_DIR, "shims"));
+  addCommonEnvConfiguredBinDirs(dirs, env);
   addNonEmptyDir(dirs, appendSubdir(env?.NVM_DIR, "current/bin"));
   addNonEmptyDir(dirs, appendSubdir(env?.FNM_DIR, "current/bin"));
 
@@ -202,30 +245,24 @@ export function buildMinimalServicePath(options: BuildServicePathOptions = {}): 
 export function buildServiceEnvironment(params: {
   env: Record<string, string | undefined>;
   port: number;
-  token?: string;
   launchdLabel?: string;
+  platform?: NodeJS.Platform;
+  extraPathDirs?: string[];
 }): Record<string, string | undefined> {
-  const { env, port, token, launchdLabel } = params;
+  const { env, port, launchdLabel, extraPathDirs } = params;
+  const platform = params.platform ?? process.platform;
+  const sharedEnv = resolveSharedServiceEnvironmentFields(env, platform, extraPathDirs);
   const profile = env.POWERDIRECTOR_PROFILE;
   const resolvedLaunchdLabel =
-    launchdLabel ||
-    (process.platform === "darwin" ? resolveGatewayLaunchAgentLabel(profile) : undefined);
+    launchdLabel || (platform === "darwin" ? resolveGatewayLaunchAgentLabel(profile) : undefined);
   const systemdUnit = `${resolveGatewaySystemdServiceName(profile)}.service`;
-  const stateDir = env.POWERDIRECTOR_STATE_DIR;
-  const configPath = env.POWERDIRECTOR_CONFIG_PATH;
-  // Keep a usable temp directory for supervised services even when the host env omits TMPDIR.
-  const tmpDir = env.TMPDIR?.trim() || os.tmpdir();
   return {
-    HOME: env.HOME,
-    TMPDIR: tmpDir,
-    PATH: buildMinimalServicePath({ env }),
+    ...buildCommonServiceEnvironment(env, sharedEnv),
     POWERDIRECTOR_PROFILE: profile,
-    POWERDIRECTOR_STATE_DIR: stateDir,
-    POWERDIRECTOR_CONFIG_PATH: configPath,
     POWERDIRECTOR_GATEWAY_PORT: String(port),
-    POWERDIRECTOR_GATEWAY_TOKEN: token,
     POWERDIRECTOR_LAUNCHD_LABEL: resolvedLaunchdLabel,
     POWERDIRECTOR_SYSTEMD_UNIT: systemdUnit,
+    POWERDIRECTOR_WINDOWS_TASK_NAME: resolveGatewayWindowsTaskName(profile),
     POWERDIRECTOR_SERVICE_MARKER: GATEWAY_SERVICE_MARKER,
     POWERDIRECTOR_SERVICE_KIND: GATEWAY_SERVICE_KIND,
     POWERDIRECTOR_SERVICE_VERSION: VERSION,
@@ -234,17 +271,17 @@ export function buildServiceEnvironment(params: {
 
 export function buildNodeServiceEnvironment(params: {
   env: Record<string, string | undefined>;
+  platform?: NodeJS.Platform;
+  extraPathDirs?: string[];
 }): Record<string, string | undefined> {
-  const { env } = params;
-  const stateDir = env.POWERDIRECTOR_STATE_DIR;
-  const configPath = env.POWERDIRECTOR_CONFIG_PATH;
-  const tmpDir = env.TMPDIR?.trim() || os.tmpdir();
+  const { env, extraPathDirs } = params;
+  const platform = params.platform ?? process.platform;
+  const sharedEnv = resolveSharedServiceEnvironmentFields(env, platform, extraPathDirs);
+  const gatewayToken =
+    env.POWERDIRECTOR_GATEWAY_TOKEN?.trim() || env.CLAWDBOT_GATEWAY_TOKEN?.trim() || undefined;
   return {
-    HOME: env.HOME,
-    TMPDIR: tmpDir,
-    PATH: buildMinimalServicePath({ env }),
-    POWERDIRECTOR_STATE_DIR: stateDir,
-    POWERDIRECTOR_CONFIG_PATH: configPath,
+    ...buildCommonServiceEnvironment(env, sharedEnv),
+    POWERDIRECTOR_GATEWAY_TOKEN: gatewayToken,
     POWERDIRECTOR_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
     POWERDIRECTOR_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
     POWERDIRECTOR_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
@@ -253,5 +290,56 @@ export function buildNodeServiceEnvironment(params: {
     POWERDIRECTOR_SERVICE_MARKER: NODE_SERVICE_MARKER,
     POWERDIRECTOR_SERVICE_KIND: NODE_SERVICE_KIND,
     POWERDIRECTOR_SERVICE_VERSION: VERSION,
+  };
+}
+
+function buildCommonServiceEnvironment(
+  env: Record<string, string | undefined>,
+  sharedEnv: SharedServiceEnvironmentFields,
+): Record<string, string | undefined> {
+  const serviceEnv: Record<string, string | undefined> = {
+    HOME: env.HOME,
+    TMPDIR: sharedEnv.tmpDir,
+    ...sharedEnv.proxyEnv,
+    NODE_EXTRA_CA_CERTS: sharedEnv.nodeCaCerts,
+    NODE_USE_SYSTEM_CA: sharedEnv.nodeUseSystemCa,
+    POWERDIRECTOR_STATE_DIR: sharedEnv.stateDir,
+    POWERDIRECTOR_CONFIG_PATH: sharedEnv.configPath,
+  };
+  if (sharedEnv.minimalPath) {
+    serviceEnv.PATH = sharedEnv.minimalPath;
+  }
+  return serviceEnv;
+}
+
+function resolveSharedServiceEnvironmentFields(
+  env: Record<string, string | undefined>,
+  platform: NodeJS.Platform,
+  extraPathDirs: string[] | undefined,
+): SharedServiceEnvironmentFields {
+  const stateDir = env.POWERDIRECTOR_STATE_DIR;
+  const configPath = env.POWERDIRECTOR_CONFIG_PATH;
+  // Keep a usable temp directory for supervised services even when the host env omits TMPDIR.
+  const tmpDir = env.TMPDIR?.trim() || os.tmpdir();
+  const proxyEnv = readServiceProxyEnvironment(env);
+  // On macOS, launchd services don't inherit the shell environment, so Node's undici/fetch
+  // cannot locate the system CA bundle. Default to /etc/ssl/cert.pem so TLS verification
+  // works correctly when running as a LaunchAgent without extra user configuration.
+  const nodeCaCerts =
+    env.NODE_EXTRA_CA_CERTS ?? (platform === "darwin" ? "/etc/ssl/cert.pem" : undefined);
+  const nodeUseSystemCa = env.NODE_USE_SYSTEM_CA ?? (platform === "darwin" ? "1" : undefined);
+  return {
+    stateDir,
+    configPath,
+    tmpDir,
+    // On Windows, Scheduled Tasks should inherit the current task PATH instead of
+    // freezing the install-time snapshot into gateway.cmd/node-host.cmd.
+    minimalPath:
+      platform === "win32"
+        ? undefined
+        : buildMinimalServicePath({ env, platform, extraDirs: extraPathDirs }),
+    proxyEnv,
+    nodeCaCerts,
+    nodeUseSystemCa,
   };
 }

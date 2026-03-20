@@ -1,0 +1,12 @@
+{
+  "name": "@powerdirector/byteplus-provider",
+  "version": "2026.3.14",
+  "private": true,
+  "description": "PowerDirector BytePlus provider plugin",
+  "type": "module",
+  "powerdirector": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

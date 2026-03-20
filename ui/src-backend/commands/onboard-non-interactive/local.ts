@@ -1,28 +1,73 @@
-import { formatCliCommand } from '../../cli/command-format';
-import type { PowerDirectorConfig } from '../../config/config';
-import { resolveGatewayPort, writeConfigFile } from '../../config/config';
-import { logConfigUpdated } from '../../config/logging';
-import type { RuntimeEnv } from '../../runtime';
-import { DEFAULT_GATEWAY_DAEMON_RUNTIME } from '../daemon-runtime';
-import { healthCommand } from '../health';
-import { applyOnboardingLocalWorkspaceConfig } from '../onboard-config';
+import { formatCliCommand } from "../../cli/command-format";
+import type { PowerDirectorConfig } from "../../config/config";
+import { resolveGatewayPort, writeConfigFile } from "../../config/config";
+import { logConfigUpdated } from "../../config/logging";
+import type { RuntimeEnv } from "../../runtime";
+import { DEFAULT_GATEWAY_DAEMON_RUNTIME } from "../daemon-runtime";
+import { applyLocalSetupWorkspaceConfig } from "../onboard-config";
 import {
   applyWizardMetadata,
   DEFAULT_WORKSPACE,
   ensureWorkspaceAndSessions,
   resolveControlUiLinks,
   waitForGatewayReachable,
-} from '../onboard-helpers';
-import type { OnboardOptions } from '../onboard-types';
-import { inferAuthChoiceFromFlags } from './local/auth-choice-inference';
-import { applyNonInteractiveAuthChoice } from './local/auth-choice';
-import { installGatewayDaemonNonInteractive } from './local/daemon-install';
-import { applyNonInteractiveGatewayConfig } from './local/gateway-config';
-import { logNonInteractiveOnboardingJson } from './local/output';
-import { applyNonInteractiveSkillsConfig } from './local/skills-config';
-import { resolveNonInteractiveWorkspaceDir } from './local/workspace';
+} from "../onboard-helpers";
+import type { OnboardOptions } from "../onboard-types";
+import { inferAuthChoiceFromFlags } from "./local/auth-choice-inference";
+import { applyNonInteractiveGatewayConfig } from "./local/gateway-config";
+import {
+  type GatewayHealthFailureDiagnostics,
+  logNonInteractiveOnboardingFailure,
+  logNonInteractiveOnboardingJson,
+} from "./local/output";
+import { applyNonInteractiveSkillsConfig } from "./local/skills-config";
+import { resolveNonInteractiveWorkspaceDir } from "./local/workspace";
 
-export async function runNonInteractiveOnboardingLocal(params: {
+const INSTALL_DAEMON_HEALTH_DEADLINE_MS = 45_000;
+const ATTACH_EXISTING_GATEWAY_HEALTH_DEADLINE_MS = 15_000;
+
+async function collectGatewayHealthFailureDiagnostics(): Promise<
+  GatewayHealthFailureDiagnostics | undefined
+> {
+  const diagnostics: GatewayHealthFailureDiagnostics = {};
+
+  try {
+    const { resolveGatewayService } = await import("../../daemon/service");
+    const service = resolveGatewayService();
+    const env = process.env as Record<string, string | undefined>;
+    const [loaded, runtime] = await Promise.all([
+      service.isLoaded({ env }).catch(() => false),
+      service.readRuntime(env).catch(() => undefined),
+    ]);
+    diagnostics.service = {
+      label: service.label,
+      loaded,
+      loadedText: service.loadedText,
+      runtimeStatus: runtime?.status,
+      state: runtime?.state,
+      pid: runtime?.pid,
+      lastExitStatus: runtime?.lastExitStatus,
+      lastExitReason: runtime?.lastExitReason,
+    };
+  } catch (err) {
+    diagnostics.inspectError = `service diagnostics failed: ${String(err)}`;
+  }
+
+  try {
+    const { readLastGatewayErrorLine } = await import("../../daemon/diagnostics");
+    diagnostics.lastGatewayError = (await readLastGatewayErrorLine(process.env)) ?? undefined;
+  } catch (err) {
+    diagnostics.inspectError = diagnostics.inspectError
+      ? `${diagnostics.inspectError}; log diagnostics failed: ${String(err)}`
+      : `log diagnostics failed: ${String(err)}`;
+  }
+
+  return diagnostics.service || diagnostics.lastGatewayError || diagnostics.inspectError
+    ? diagnostics
+    : undefined;
+}
+
+export async function runNonInteractiveLocalSetup(params: {
   opts: OnboardOptions;
   runtime: RuntimeEnv;
   baseConfig: PowerDirectorConfig;
@@ -36,13 +81,13 @@ export async function runNonInteractiveOnboardingLocal(params: {
     defaultWorkspaceDir: DEFAULT_WORKSPACE,
   });
 
-  let nextConfig: PowerDirectorConfig = applyOnboardingLocalWorkspaceConfig(baseConfig, workspaceDir);
+  let nextConfig: PowerDirectorConfig = applyLocalSetupWorkspaceConfig(baseConfig, workspaceDir);
 
   const inferredAuthChoice = inferAuthChoiceFromFlags(opts);
   if (!opts.authChoice && inferredAuthChoice.matches.length > 1) {
     runtime.error(
       [
-        "Multiple API key flags were provided for non-interactive onboarding.",
+        "Multiple API key flags were provided for non-interactive setup.",
         "Use a single provider flag or pass --auth-choice explicitly.",
         `Flags: ${inferredAuthChoice.matches.map((match) => match.label).join(", ")}`,
       ].join("\n"),
@@ -51,17 +96,20 @@ export async function runNonInteractiveOnboardingLocal(params: {
     return;
   }
   const authChoice = opts.authChoice ?? inferredAuthChoice.choice ?? "skip";
-  const nextConfigAfterAuth = await applyNonInteractiveAuthChoice({
-    nextConfig,
-    authChoice,
-    opts,
-    runtime,
-    baseConfig,
-  });
-  if (!nextConfigAfterAuth) {
-    return;
+  if (authChoice !== "skip") {
+    const { applyNonInteractiveAuthChoice } = await import("./local/auth-choice");
+    const nextConfigAfterAuth = await applyNonInteractiveAuthChoice({
+      nextConfig,
+      authChoice,
+      opts,
+      runtime,
+      baseConfig,
+    });
+    if (!nextConfigAfterAuth) {
+      return;
+    }
+    nextConfig = nextConfigAfterAuth;
   }
-  nextConfig = nextConfigAfterAuth;
 
   const gatewayBasePort = resolveGatewayPort(baseConfig);
   const gatewayResult = applyNonInteractiveGatewayConfig({
@@ -85,27 +133,109 @@ export async function runNonInteractiveOnboardingLocal(params: {
     skipBootstrap: Boolean(nextConfig.agents?.defaults?.skipBootstrap),
   });
 
-  await installGatewayDaemonNonInteractive({
-    nextConfig,
-    opts,
-    runtime,
-    port: gatewayResult.port,
-    gatewayToken: gatewayResult.gatewayToken,
-  });
-
   const daemonRuntimeRaw = opts.daemonRuntime ?? DEFAULT_GATEWAY_DAEMON_RUNTIME;
+  let daemonInstallStatus:
+    | {
+        requested: boolean;
+        installed: boolean;
+        skippedReason?: "systemd-user-unavailable";
+      }
+    | undefined;
+  if (opts.installDaemon) {
+    const { installGatewayDaemonNonInteractive } = await import("./local/daemon-install");
+    const daemonInstall = await installGatewayDaemonNonInteractive({
+      nextConfig,
+      opts,
+      runtime,
+      port: gatewayResult.port,
+    });
+    daemonInstallStatus = daemonInstall.installed
+      ? {
+          requested: true,
+          installed: true,
+        }
+      : {
+          requested: true,
+          installed: false,
+          skippedReason: daemonInstall.skippedReason,
+        };
+    if (!daemonInstall.installed && !opts.skipHealth) {
+      logNonInteractiveOnboardingFailure({
+        opts,
+        runtime,
+        mode,
+        phase: "daemon-install",
+        message:
+          daemonInstall.skippedReason === "systemd-user-unavailable"
+            ? "Gateway service install is unavailable because systemd user services are not reachable in this Linux session."
+            : "Gateway service install did not complete successfully.",
+        installDaemon: true,
+        daemonInstall: {
+          requested: true,
+          installed: false,
+          skippedReason: daemonInstall.skippedReason,
+        },
+        daemonRuntime: daemonRuntimeRaw,
+        hints:
+          daemonInstall.skippedReason === "systemd-user-unavailable"
+            ? [
+                "Fix: rerun without `--install-daemon` for one-shot setup, or enable a working user-systemd session and retry.",
+                "If your auth profile uses env-backed refs, keep those env vars set in the shell that runs `powerdirector gateway run` or `powerdirector agent --local`.",
+              ]
+            : [`Run \`${formatCliCommand("powerdirector gateway status --deep")}\` for more detail.`],
+      });
+      runtime.exit(1);
+      return;
+    }
+  }
+
   if (!opts.skipHealth) {
+    const { healthCommand } = await import("../health");
     const links = resolveControlUiLinks({
       bind: gatewayResult.bind as "auto" | "lan" | "loopback" | "custom" | "tailnet",
       port: gatewayResult.port,
       customBindHost: nextConfig.gateway?.customBindHost,
       basePath: undefined,
     });
-    await waitForGatewayReachable({
+    const probe = await waitForGatewayReachable({
       url: links.wsUrl,
       token: gatewayResult.gatewayToken,
-      deadlineMs: 15_000,
+      deadlineMs: opts.installDaemon
+        ? INSTALL_DAEMON_HEALTH_DEADLINE_MS
+        : ATTACH_EXISTING_GATEWAY_HEALTH_DEADLINE_MS,
     });
+    if (!probe.ok) {
+      const diagnostics = opts.installDaemon
+        ? await collectGatewayHealthFailureDiagnostics()
+        : undefined;
+      logNonInteractiveOnboardingFailure({
+        opts,
+        runtime,
+        mode,
+        phase: "gateway-health",
+        message: `Gateway did not become reachable at ${links.wsUrl}.`,
+        detail: probe.detail,
+        gateway: {
+          wsUrl: links.wsUrl,
+          httpUrl: links.httpUrl,
+        },
+        installDaemon: Boolean(opts.installDaemon),
+        daemonInstall: daemonInstallStatus,
+        daemonRuntime: opts.installDaemon ? daemonRuntimeRaw : undefined,
+        diagnostics,
+        hints: !opts.installDaemon
+          ? [
+              "Non-interactive local setup only waits for an already-running gateway unless you pass --install-daemon.",
+              `Fix: start \`${formatCliCommand("powerdirector gateway run")}\`, re-run with \`--install-daemon\`, or use \`--skip-health\`.`,
+              process.platform === "win32"
+                ? "Native Windows managed gateway install tries Scheduled Tasks first and falls back to a per-user Startup-folder login item when task creation is denied."
+                : undefined,
+            ].filter((value): value is string => Boolean(value))
+          : [`Run \`${formatCliCommand("powerdirector gateway status --deep")}\` for more detail.`],
+      });
+      runtime.exit(1);
+      return;
+    }
     await healthCommand({ json: false, timeoutMs: 10_000 }, runtime);
   }
 
@@ -122,6 +252,7 @@ export async function runNonInteractiveOnboardingLocal(params: {
       tailscaleMode: gatewayResult.tailscaleMode,
     },
     installDaemon: Boolean(opts.installDaemon),
+    daemonInstall: daemonInstallStatus,
     daemonRuntime: opts.installDaemon ? daemonRuntimeRaw : undefined,
     skipSkills: Boolean(opts.skipSkills),
     skipHealth: Boolean(opts.skipHealth),

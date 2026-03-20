@@ -1,4 +1,4 @@
-import type { NpmIntegrityDrift, NpmSpecResolution } from './install-source-utils';
+import type { NpmIntegrityDrift, NpmSpecResolution } from "./install-source-utils";
 
 export type NpmIntegrityDriftPayload = {
   spec: string;

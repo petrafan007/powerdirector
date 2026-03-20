@@ -1,4 +1,4 @@
-import { isPlainObject } from '../infra/plain-object';
+import { isPlainObject } from "../infra/plain-object";
 
 /**
  * Preserves `${VAR}` environment variable references during config write-back.

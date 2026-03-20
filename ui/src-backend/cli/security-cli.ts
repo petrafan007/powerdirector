@@ -1,18 +1,22 @@
 import type { Command } from "commander";
-import { loadConfig } from '../config/config';
-import { defaultRuntime } from '../runtime';
-import { runSecurityAudit } from '../security/audit';
-import { fixSecurityFootguns } from '../security/fix';
-import { formatDocsLink } from '../terminal/links';
-import { isRich, theme } from '../terminal/theme';
-import { shortenHomeInString, shortenHomePath } from '../utils';
-import { formatCliCommand } from './command-format';
-import { formatHelpExamples } from './help-format';
+import { loadConfig } from "../config/config";
+import { defaultRuntime } from "../runtime";
+import { runSecurityAudit } from "../security/audit";
+import { fixSecurityFootguns } from "../security/fix";
+import { formatDocsLink } from "../terminal/links";
+import { isRich, theme } from "../terminal/theme";
+import { shortenHomeInString, shortenHomePath } from "../utils";
+import { formatCliCommand } from "./command-format";
+import { resolveCommandSecretRefsViaGateway } from "./command-secret-gateway";
+import { getSecurityAuditCommandSecretTargetIds } from "./command-secret-targets";
+import { formatHelpExamples } from "./help-format";
 
 type SecurityAuditOptions = {
   json?: boolean;
   deep?: boolean;
   fix?: boolean;
+  token?: string;
+  password?: string;
 };
 
 function formatSummary(summary: { critical: number; warn: number; info: number }): string {
@@ -37,6 +41,11 @@ export function registerSecurityCli(program: Command) {
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
           ["powerdirector security audit", "Run a local security audit."],
           ["powerdirector security audit --deep", "Include best-effort live Gateway probe checks."],
+          ["powerdirector security audit --deep --token <token>", "Use explicit token for deep probe."],
+          [
+            "powerdirector security audit --deep --password <password>",
+            "Use explicit password for deep probe.",
+          ],
           ["powerdirector security audit --fix", "Apply safe remediations and file-permission fixes."],
           ["powerdirector security audit --json", "Output machine-readable JSON."],
         ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/security", "docs.powerdirector.ai/cli/security")}\n`,
@@ -46,22 +55,45 @@ export function registerSecurityCli(program: Command) {
     .command("audit")
     .description("Audit config + local state for common security foot-guns")
     .option("--deep", "Attempt live Gateway probe (best-effort)", false)
+    .option("--token <token>", "Use explicit gateway token for deep probe auth")
+    .option("--password <password>", "Use explicit gateway password for deep probe auth")
     .option("--fix", "Apply safe fixes (tighten defaults + chmod state/config)", false)
     .option("--json", "Print JSON", false)
     .action(async (opts: SecurityAuditOptions) => {
       const fixResult = opts.fix ? await fixSecurityFootguns().catch((_err) => null) : null;
 
-      const cfg = loadConfig();
+      const sourceConfig = loadConfig();
+      const { resolvedConfig: cfg, diagnostics: secretDiagnostics } =
+        await resolveCommandSecretRefsViaGateway({
+          config: sourceConfig,
+          commandName: "security audit",
+          targetIds: getSecurityAuditCommandSecretTargetIds(),
+          mode: "read_only_status",
+        });
       const report = await runSecurityAudit({
         config: cfg,
+        sourceConfig,
         deep: Boolean(opts.deep),
         includeFilesystem: true,
         includeChannelSecurity: true,
+        deepProbeAuth:
+          opts.token?.trim() || opts.password?.trim()
+            ? {
+                ...(opts.token?.trim() ? { token: opts.token } : {}),
+                ...(opts.password?.trim() ? { password: opts.password } : {}),
+              }
+            : undefined,
       });
 
       if (opts.json) {
         defaultRuntime.log(
-          JSON.stringify(fixResult ? { fix: fixResult, report } : report, null, 2),
+          JSON.stringify(
+            fixResult
+              ? { fix: fixResult, report, secretDiagnostics }
+              : { ...report, secretDiagnostics },
+            null,
+            2,
+          ),
         );
         return;
       }
@@ -74,6 +106,9 @@ export function registerSecurityCli(program: Command) {
       lines.push(heading("PowerDirector security audit"));
       lines.push(muted(`Summary: ${formatSummary(report.summary)}`));
       lines.push(muted(`Run deeper: ${formatCliCommand("powerdirector security audit --deep")}`));
+      for (const diagnostic of secretDiagnostics) {
+        lines.push(muted(`[secrets] ${diagnostic}`));
+      }
 
       if (opts.fix) {
         lines.push(muted(`Fix: ${formatCliCommand("powerdirector security audit --fix")}`));

@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import path from "node:path";
-import { resolveCliName } from '../cli/cli-name';
+import { resolveCliName } from "../cli/cli-name";
 import {
   completionCacheExists,
   installCompletion,
@@ -8,11 +8,11 @@ import {
   resolveCompletionCachePath,
   resolveShellFromEnv,
   usesSlowDynamicCompletion,
-} from '../cli/completion-cli';
-import { resolvePowerDirectorPackageRoot } from '../infra/powerdirector-root';
-import type { RuntimeEnv } from '../runtime';
-import { note } from '../terminal/note';
-import type { DoctorPrompter } from './doctor-prompter';
+} from "../cli/completion-cli";
+import { resolvePowerDirectorPackageRoot } from "../infra/powerdirector-root";
+import type { RuntimeEnv } from "../runtime";
+import { note } from "../terminal/note";
+import type { DoctorPrompter } from "./doctor-prompter";
 
 type CompletionShell = "zsh" | "bash" | "fish" | "powershell";
 
@@ -163,7 +163,7 @@ export async function doctorShellCompletion(
 }
 
 /**
- * Ensure completion cache exists. Used during onboarding/update to fix
+ * Ensure completion cache exists. Used during setup/update to fix
  * cases where profile has completion but no cache.
  * This is a silent fix - no prompts.
  */

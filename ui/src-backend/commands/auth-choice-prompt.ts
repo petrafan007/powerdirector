@@ -1,7 +1,8 @@
-import type { AuthProfileStore } from '../agents/auth-profiles';
-import type { WizardPrompter } from '../wizard/prompts';
-import { buildAuthChoiceGroups } from './auth-choice-options';
-import type { AuthChoice } from './onboard-types';
+import type { AuthProfileStore } from "../agents/auth-profiles";
+import type { PowerDirectorConfig } from "../config/config";
+import type { WizardPrompter } from "../wizard/prompts";
+import { buildAuthChoiceGroups } from "./auth-choice-options";
+import type { AuthChoice } from "./onboard-types";
 
 const BACK_VALUE = "__back";
 
@@ -9,6 +10,9 @@ export async function promptAuthChoiceGrouped(params: {
   prompter: WizardPrompter;
   store: AuthProfileStore;
   includeSkip: boolean;
+  config?: PowerDirectorConfig;
+  workspaceDir?: string;
+  env?: NodeJS.ProcessEnv;
 }): Promise<AuthChoice> {
   const { groups, skipOption } = buildAuthChoiceGroups(params);
   const availableGroups = groups.filter((group) => group.options.length > 0);
@@ -55,6 +59,6 @@ export async function promptAuthChoiceGrouped(params: {
       continue;
     }
 
-    return methodSelection as AuthChoice;
+    return methodSelection;
   }
 }

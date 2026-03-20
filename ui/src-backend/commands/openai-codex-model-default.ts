@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentModelListConfig } from '../config/types';
+import type { PowerDirectorConfig } from "../config/config";
+import type { AgentModelListConfig } from "../config/types";
 
-export const OPENAI_CODEX_DEFAULT_MODEL = "openai-codex/gpt-5.3-codex";
+export const OPENAI_CODEX_DEFAULT_MODEL = "openai-codex/gpt-5.4";
 
 function shouldSetOpenAICodexModel(model?: string): boolean {
   const trimmed = model?.trim();

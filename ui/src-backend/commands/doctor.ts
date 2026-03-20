@@ -1,61 +1,68 @@
 import fs from "node:fs";
 import { intro as clackIntro, outro as clackOutro } from "@clack/prompts";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '../agents/defaults';
-import { loadModelCatalog } from '../agents/model-catalog';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults";
+import { loadModelCatalog } from "../agents/model-catalog";
 import {
   getModelRefStatus,
   resolveConfiguredModelRef,
   resolveHooksGmailModel,
-} from '../agents/model-selection';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import { CONFIG_PATH, readConfigFileSnapshot, writeConfigFile } from '../config/config';
-import { logConfigUpdated } from '../config/logging';
-import { resolveGatewayService } from '../daemon/service';
-import { resolveGatewayAuth } from '../gateway/auth';
-import { buildGatewayConnectionDetails } from '../gateway/call';
-import { resolvePowerDirectorPackageRoot } from '../infra/powerdirector-root';
-import type { RuntimeEnv } from '../runtime';
-import { defaultRuntime } from '../runtime';
-import { note } from '../terminal/note';
-import { stylePromptTitle } from '../terminal/prompt-style';
-import { shortenHomePath } from '../utils';
+} from "../agents/model-selection";
+import { formatCliCommand } from "../cli/command-format";
+import type { PowerDirectorConfig } from "../config/config";
+import { CONFIG_PATH, readConfigFileSnapshot, writeConfigFile } from "../config/config";
+import { logConfigUpdated } from "../config/logging";
+import { resolveSecretInputRef } from "../config/types.secrets";
+import { resolveGatewayService } from "../daemon/service";
+import { hasAmbiguousGatewayAuthModeConfig } from "../gateway/auth-mode-policy";
+import { resolveGatewayAuth } from "../gateway/auth";
+import { buildGatewayConnectionDetails } from "../gateway/call";
+import { resolvePowerDirectorPackageRoot } from "../infra/powerdirector-root";
+import type { RuntimeEnv } from "../runtime";
+import { defaultRuntime } from "../runtime";
+import { note } from "../terminal/note";
+import { stylePromptTitle } from "../terminal/prompt-style";
+import { shortenHomePath } from "../utils";
 import {
   maybeRemoveDeprecatedCliAuthProfiles,
   maybeRepairAnthropicOAuthProfileId,
   noteAuthProfileHealth,
-} from './doctor-auth';
-import { doctorShellCompletion } from './doctor-completion';
-import { loadAndMaybeMigrateDoctorConfig } from './doctor-config-flow';
-import { maybeRepairGatewayDaemon } from './doctor-gateway-daemon-flow';
-import { checkGatewayHealth } from './doctor-gateway-health';
+} from "./doctor-auth";
+import { noteBootstrapFileSize } from "./doctor-bootstrap-size";
+import { noteChromeMcpBrowserReadiness } from "./doctor-browser";
+import { doctorShellCompletion } from "./doctor-completion";
+import { loadAndMaybeMigrateDoctorConfig } from "./doctor-config-flow";
+import { maybeRepairLegacyCronStore } from "./doctor-cron";
+import { maybeRepairGatewayDaemon } from "./doctor-gateway-daemon-flow";
+import { checkGatewayHealth, probeGatewayMemoryStatus } from "./doctor-gateway-health";
 import {
   maybeRepairGatewayServiceConfig,
   maybeScanExtraGatewayServices,
-} from './doctor-gateway-services';
-import { noteSourceInstallIssues } from './doctor-install';
-import { noteMemorySearchHealth } from './doctor-memory-search';
+} from "./doctor-gateway-services";
+import { noteSourceInstallIssues } from "./doctor-install";
+import { noteMemorySearchHealth } from "./doctor-memory-search";
 import {
   noteMacLaunchAgentOverrides,
   noteMacLaunchctlGatewayEnvOverrides,
   noteDeprecatedLegacyEnvVars,
-} from './doctor-platform-notes';
-import { createDoctorPrompter, type DoctorOptions } from './doctor-prompter';
-import { maybeRepairSandboxImages, noteSandboxScopeWarnings } from './doctor-sandbox';
-import { noteSecurityWarnings } from './doctor-security';
-import { noteSessionLockHealth } from './doctor-session-locks';
-import { noteStateIntegrity, noteWorkspaceBackupTip } from './doctor-state-integrity';
+  noteStartupOptimizationHints,
+} from "./doctor-platform-notes";
+import { createDoctorPrompter, type DoctorOptions } from "./doctor-prompter";
+import { maybeRepairSandboxImages, noteSandboxScopeWarnings } from "./doctor-sandbox";
+import { noteSecurityWarnings } from "./doctor-security";
+import { noteSessionLockHealth } from "./doctor-session-locks";
+import { noteStateIntegrity, noteWorkspaceBackupTip } from "./doctor-state-integrity";
 import {
   detectLegacyStateMigrations,
   runLegacyStateMigrations,
-} from './doctor-state-migrations';
-import { maybeRepairUiProtocolFreshness } from './doctor-ui';
-import { maybeOfferUpdateBeforeDoctor } from './doctor-update';
-import { noteWorkspaceStatus } from './doctor-workspace-status';
-import { MEMORY_SYSTEM_PROMPT, shouldSuggestMemorySystem } from './doctor-workspace';
-import { applyWizardMetadata, printWizardHeader, randomToken } from './onboard-helpers';
-import { ensureSystemdUserLingerInteractive } from './systemd-linger';
+} from "./doctor-state-migrations";
+import { maybeRepairUiProtocolFreshness } from "./doctor-ui";
+import { maybeOfferUpdateBeforeDoctor } from "./doctor-update";
+import { noteWorkspaceStatus } from "./doctor-workspace-status";
+import { MEMORY_SYSTEM_PROMPT, shouldSuggestMemorySystem } from "./doctor-workspace";
+import { noteOpenAIOAuthTlsPrerequisites } from "./oauth-tls-preflight";
+import { applyWizardMetadata, printWizardHeader, randomToken } from "./onboard-helpers";
+import { ensureSystemdUserLingerInteractive } from "./systemd-linger";
 
 const intro = (message: string) => clackIntro(stylePromptTitle(message) ?? message);
 const outro = (message: string) => clackOutro(stylePromptTitle(message) ?? message);
@@ -92,6 +99,7 @@ export async function doctorCommand(
   await maybeRepairUiProtocolFreshness(runtime, prompter);
   noteSourceInstallIssues(root);
   noteDeprecatedLegacyEnvVars();
+  noteStartupOptimizationHints();
 
   const configResult = await loadAndMaybeMigrateDoctorConfig({
     options,
@@ -113,6 +121,17 @@ export async function doctorCommand(
     }
     note(lines.join("\n"), "Gateway");
   }
+  if (resolveMode(cfg) === "local" && hasAmbiguousGatewayAuthModeConfig(cfg)) {
+    note(
+      [
+        "gateway.auth.token and gateway.auth.password are both configured while gateway.auth.mode is unset.",
+        "Set an explicit mode to avoid ambiguous auth selection and startup/runtime failures.",
+        `Set token mode: ${formatCliCommand("powerdirector config set gateway.auth.mode token")}`,
+        `Set password mode: ${formatCliCommand("powerdirector config set gateway.auth.mode password")}`,
+      ].join("\n"),
+      "Gateway auth",
+    );
+  }
 
   cfg = await maybeRepairAnthropicOAuthProfileId(cfg, prompter);
   cfg = await maybeRemoveDeprecatedCliAuthProfiles(cfg, prompter);
@@ -126,39 +145,54 @@ export async function doctorCommand(
     note(gatewayDetails.remoteFallbackNote, "Gateway");
   }
   if (resolveMode(cfg) === "local" && sourceConfigValid) {
+    const gatewayTokenRef = resolveSecretInputRef({
+      value: cfg.gateway?.auth?.token,
+      defaults: cfg.secrets?.defaults,
+    }).ref;
     const auth = resolveGatewayAuth({
       authConfig: cfg.gateway?.auth,
       tailscaleMode: cfg.gateway?.tailscale?.mode ?? "off",
     });
     const needsToken = auth.mode !== "password" && (auth.mode !== "token" || !auth.token);
     if (needsToken) {
-      note(
-        "Gateway auth is off or missing a token. Token auth is now the recommended default (including loopback).",
-        "Gateway auth",
-      );
-      const shouldSetToken =
-        options.generateGatewayToken === true
-          ? true
-          : options.nonInteractive === true
-            ? false
-            : await prompter.confirmRepair({
-                message: "Generate and configure a gateway token now?",
-                initialValue: true,
-              });
-      if (shouldSetToken) {
-        const nextToken = randomToken();
-        cfg = {
-          ...cfg,
-          gateway: {
-            ...cfg.gateway,
-            auth: {
-              ...cfg.gateway?.auth,
-              mode: "token",
-              token: nextToken,
+      if (gatewayTokenRef) {
+        note(
+          [
+            "Gateway token is managed via SecretRef and is currently unavailable.",
+            "Doctor will not overwrite gateway.auth.token with a plaintext value.",
+            "Resolve/rotate the external secret source, then rerun doctor.",
+          ].join("\n"),
+          "Gateway auth",
+        );
+      } else {
+        note(
+          "Gateway auth is off or missing a token. Token auth is now the recommended default (including loopback).",
+          "Gateway auth",
+        );
+        const shouldSetToken =
+          options.generateGatewayToken === true
+            ? true
+            : options.nonInteractive === true
+              ? false
+              : await prompter.confirmRepair({
+                  message: "Generate and configure a gateway token now?",
+                  initialValue: true,
+                });
+        if (shouldSetToken) {
+          const nextToken = randomToken();
+          cfg = {
+            ...cfg,
+            gateway: {
+              ...cfg.gateway,
+              auth: {
+                ...cfg.gateway?.auth,
+                mode: "token",
+                token: nextToken,
+              },
             },
-          },
-        };
-        note("Gateway token configured.", "Gateway auth");
+          };
+          note("Gateway token configured.", "Gateway auth");
+        }
       }
     }
   }
@@ -188,6 +222,11 @@ export async function doctorCommand(
 
   await noteStateIntegrity(cfg, prompter, configResult.path ?? CONFIG_PATH);
   await noteSessionLockHealth({ shouldRepair: prompter.shouldRepair });
+  await maybeRepairLegacyCronStore({
+    cfg,
+    options,
+    prompter,
+  });
 
   cfg = await maybeRepairSandboxImages(cfg, runtime, prompter);
   noteSandboxScopeWarnings(cfg);
@@ -198,6 +237,11 @@ export async function doctorCommand(
   await noteMacLaunchctlGatewayEnvOverrides(cfg);
 
   await noteSecurityWarnings(cfg);
+  await noteChromeMcpBrowserReadiness(cfg);
+  await noteOpenAIOAuthTlsPrerequisites({
+    cfg,
+    deep: options.deep === true,
+  });
 
   if (cfg.hooks?.gmail?.model?.trim()) {
     const hooksModelRef = resolveHooksGmailModel({
@@ -264,7 +308,7 @@ export async function doctorCommand(
   }
 
   noteWorkspaceStatus(cfg);
-  await noteMemorySearchHealth(cfg);
+  await noteBootstrapFileSize(cfg);
 
   // Check and fix shell completion
   await doctorShellCompletion(runtime, prompter, {
@@ -276,6 +320,13 @@ export async function doctorCommand(
     cfg,
     timeoutMs: options.nonInteractive === true ? 3000 : 10_000,
   });
+  const gatewayMemoryProbe = healthOk
+    ? await probeGatewayMemoryStatus({
+        cfg,
+        timeoutMs: options.nonInteractive === true ? 3000 : 10_000,
+      })
+    : { checked: false, ready: false };
+  await noteMemorySearchHealth(cfg, { gatewayMemoryProbe });
   await maybeRepairGatewayDaemon({
     cfg,
     runtime,
@@ -295,7 +346,7 @@ export async function doctorCommand(
     if (fs.existsSync(backupPath)) {
       runtime.log(`Backup: ${shortenHomePath(backupPath)}`);
     }
-  } else {
+  } else if (!prompter.shouldRepair) {
     runtime.log(`Run "${formatCliCommand("powerdirector doctor --fix")}" to apply changes.`);
   }
 

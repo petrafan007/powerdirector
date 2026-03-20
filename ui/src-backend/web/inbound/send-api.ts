@@ -1,7 +1,7 @@
 import type { AnyMessageContent, WAPresence } from "@whiskeysockets/baileys";
-import { recordChannelActivity } from '../../infra/channel-activity';
-import { toWhatsappJid } from '../../utils';
-import type { ActiveWebSendOptions } from '../active-listener';
+import { recordChannelActivity } from "../../infra/channel-activity";
+import { toWhatsappJid } from "../../utils";
+import type { ActiveWebSendOptions } from "../active-listener";
 
 function recordWhatsAppOutbound(accountId: string) {
   recordChannelActivity({

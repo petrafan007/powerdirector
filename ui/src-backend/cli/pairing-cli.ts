@@ -1,18 +1,18 @@
 import type { Command } from "commander";
-import { normalizeChannelId } from '../channels/plugins/index';
-import { listPairingChannels, notifyPairingApproved } from '../channels/plugins/pairing';
-import { loadConfig } from '../config/config';
-import { resolvePairingIdLabel } from '../pairing/pairing-labels';
+import { normalizeChannelId } from "../channels/plugins/index";
+import { listPairingChannels, notifyPairingApproved } from "../channels/plugins/pairing";
+import { loadConfig } from "../config/config";
+import { resolvePairingIdLabel } from "../pairing/pairing-labels";
 import {
   approveChannelPairingCode,
   listChannelPairingRequests,
   type PairingChannel,
-} from '../pairing/pairing-store';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { renderTable } from '../terminal/table';
-import { theme } from '../terminal/theme';
-import { formatCliCommand } from './command-format';
+} from "../pairing/pairing-store";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { getTerminalTableWidth, renderTable } from "../terminal/table";
+import { theme } from "../terminal/theme";
+import { formatCliCommand } from "./command-format";
 
 /** Parse channel, allowing extension channels not in core registry. */
 function parseChannel(raw: unknown, channels: PairingChannel[]): PairingChannel {
@@ -68,7 +68,7 @@ export function registerPairingCli(program: Command) {
     .argument("[channel]", `Channel (${channels.join(", ")})`)
     .option("--json", "Print JSON", false)
     .action(async (channelArg, opts) => {
-      const channelRaw = opts.channel ?? channelArg;
+      const channelRaw = opts.channel ?? channelArg ?? (channels.length === 1 ? channels[0] : "");
       if (!channelRaw) {
         throw new Error(
           `Channel required. Use --channel <channel> or pass it as the first argument (expected one of: ${channels.join(", ")})`,
@@ -88,7 +88,7 @@ export function registerPairingCli(program: Command) {
         return;
       }
       const idLabel = resolvePairingIdLabel(channel);
-      const tableWidth = Math.max(60, (process.stdout.columns ?? 120) - 1);
+      const tableWidth = getTerminalTableWidth();
       defaultRuntime.log(
         `${theme.heading("Pairing requests")} ${theme.muted(`(${requests.length})`)}`,
       );
@@ -120,9 +120,20 @@ export function registerPairingCli(program: Command) {
     .argument("[code]", "Pairing code (when channel is passed as the 1st arg)")
     .option("--notify", "Notify the requester on the same channel", false)
     .action(async (codeOrChannel, code, opts) => {
-      const channelRaw = opts.channel ?? codeOrChannel;
-      const resolvedCode = opts.channel ? codeOrChannel : code;
-      if (!opts.channel && !code) {
+      const defaultChannel = channels.length === 1 ? channels[0] : "";
+      const usingExplicitChannel = Boolean(opts.channel);
+      const hasPositionalCode = code != null;
+      const channelRaw = usingExplicitChannel
+        ? opts.channel
+        : hasPositionalCode
+          ? codeOrChannel
+          : defaultChannel;
+      const resolvedCode = usingExplicitChannel
+        ? codeOrChannel
+        : hasPositionalCode
+          ? code
+          : codeOrChannel;
+      if (!channelRaw || !resolvedCode) {
         throw new Error(
           `Usage: ${formatCliCommand("powerdirector pairing approve <channel> <code>")} (or: ${formatCliCommand("powerdirector pairing approve --channel <channel> <code>")})`,
         );

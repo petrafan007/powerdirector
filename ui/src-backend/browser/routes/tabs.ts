@@ -1,6 +1,7 @@
-import type { BrowserRouteContext, ProfileContext } from '../server-context';
-import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from './types';
-import { getProfileContext, jsonError, toNumber, toStringOrEmpty } from './utils';
+import { BrowserProfileUnavailableError, BrowserTabNotFoundError } from "../errors";
+import type { BrowserRouteContext, ProfileContext } from "../server-context";
+import type { BrowserRequest, BrowserResponse, BrowserRouteRegistrar } from "./types";
+import { getProfileContext, jsonError, toNumber, toStringOrEmpty } from "./utils";
 
 function resolveTabsProfileContext(
   req: BrowserRequest,
@@ -50,7 +51,11 @@ async function withTabsProfileRoute(params: {
 
 async function ensureBrowserRunning(profileCtx: ProfileContext, res: BrowserResponse) {
   if (!(await profileCtx.isReachable(300))) {
-    jsonError(res, 409, "browser not running");
+    jsonError(
+      res,
+      new BrowserProfileUnavailableError("browser not running").status,
+      "browser not running",
+    );
     return false;
   }
   return true;
@@ -191,7 +196,7 @@ export function registerBrowserTabRoutes(app: BrowserRouteRegistrar, ctx: Browse
           const tabs = await profileCtx.listTabs();
           const target = resolveIndexedTab(tabs, index);
           if (!target) {
-            return jsonError(res, 404, "tab not found");
+            throw new BrowserTabNotFoundError();
           }
           await profileCtx.closeTab(target.targetId);
           return res.json({ ok: true, targetId: target.targetId });
@@ -204,7 +209,7 @@ export function registerBrowserTabRoutes(app: BrowserRouteRegistrar, ctx: Browse
           const tabs = await profileCtx.listTabs();
           const target = tabs[index];
           if (!target) {
-            return jsonError(res, 404, "tab not found");
+            throw new BrowserTabNotFoundError();
           }
           await profileCtx.focusTab(target.targetId);
           return res.json({ ok: true, targetId: target.targetId });

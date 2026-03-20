@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from '../config/config';
-import type { RuntimeEnv } from '../runtime';
-import { requireValidConfigSnapshot } from './config-validation';
+import type { PowerDirectorConfig } from "../config/config";
+import type { RuntimeEnv } from "../runtime";
+import { requireValidConfigSnapshot } from "./config-validation";
 
 export function createQuietRuntime(runtime: RuntimeEnv): RuntimeEnv {
   return { ...runtime, log: () => {} };

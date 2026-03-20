@@ -7,13 +7,30 @@ import {
   ModelsConfigSchema,
 } from './zod-schema.core';
 
+/**
+ * Robustly unwrap Zod types to find the underlying schema that can be extended.
+ * This handles ZodOptional, ZodNullable, ZodEffects (refinements), and ZodPipeline (transforms).
+ */
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
-  while (current && typeof current.unwrap === 'function') {
-    current = current.unwrap();
+  // Keep unwrapping as long as we don't have an .extend method (which means it's a raw ZodObject)
+  while (current && typeof current.extend !== 'function') {
+    if (current._def?.innerType) {
+      current = current._def.innerType;
+    } else if (current._def?.schema) {
+      current = current._def.schema;
+    } else if (current._def?.in) {
+      current = current._def.in;
+    } else if (typeof current.unwrap === 'function') {
+      current = current.unwrap();
+    } else {
+      break;
+    }
   }
   return current;
 }
+
+const rootBaseSchema = unwrapSchema(BasePowerDirectorSchema) as z.AnyZodObject;
 
 const terminalSchema = z
   .object({
@@ -33,10 +50,10 @@ const terminalSchema = z
   .strict()
   .optional();
 
-const updateBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.update) as z.AnyZodObject;
+const updateBaseSchema = unwrapSchema(rootBaseSchema.shape.update) as z.AnyZodObject;
 export const updateSchema = updateBaseSchema.strict().optional();
 
-const authBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.auth) as z.AnyZodObject;
+const authBaseSchema = unwrapSchema(rootBaseSchema.shape.auth) as z.AnyZodObject;
 export const authSchema = authBaseSchema
   .safeExtend({
     profiles: z
@@ -60,7 +77,7 @@ export const authSchema = authBaseSchema
   .strict()
   .optional();
 
-const agentsBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.agents) as z.AnyZodObject;
+const agentsBaseSchema = unwrapSchema(rootBaseSchema.shape.agents) as z.AnyZodObject;
 const agentDefaultsBaseSchema = unwrapSchema((agentsBaseSchema as any).shape.defaults) as z.AnyZodObject;
 const imageGenModelCompatSchema = z
   .object({
@@ -83,7 +100,7 @@ export const agentsSchema = agentsBaseSchema
   .strict()
   .optional();
 
-const uiBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.ui) as z.AnyZodObject;
+const uiBaseSchema = unwrapSchema(rootBaseSchema.shape.ui) as z.AnyZodObject;
 export const uiSchema = uiBaseSchema
   .safeExtend({
     theme: z.enum(['dark', 'light', 'system']).optional(),
@@ -101,13 +118,13 @@ export const uiSchema = uiBaseSchema
   .strict()
   .optional();
 
-export const modelEntrySchema = ModelDefinitionSchema.safeExtend({
+export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZodObject).safeExtend({
   alias: z.string().optional(),
   rateLimit: z.number().optional(),
   timeoutOverride: z.number().optional(),
 }).strict();
 
-export const modelProviderSchema = ModelProviderSchema.safeExtend({
+export const modelProviderSchema = (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).safeExtend({
   baseUrl: z.string().min(1).optional(),
   models: z.array(modelEntrySchema).optional(),
 }).strict();
@@ -120,7 +137,7 @@ export const modelsSchema = modelsBaseSchema
   .strict()
   .optional();
 
-const mediaBaseSchema = unwrapSchema((BasePowerDirectorSchema as any).shape.media) as z.AnyZodObject;
+const mediaBaseSchema = unwrapSchema(rootBaseSchema.shape.media) as z.AnyZodObject;
 export const mediaSchema = mediaBaseSchema
   .safeExtend({
     imageGeneration: z
@@ -139,7 +156,7 @@ export const mediaSchema = mediaBaseSchema
   .strict()
   .optional();
 
-export const configSchema = (BasePowerDirectorSchema as z.AnyZodObject)
+export const configSchema = rootBaseSchema
   .safeExtend({
     update: updateSchema,
     auth: authSchema,

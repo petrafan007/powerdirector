@@ -1,5 +1,5 @@
-import type { MsgContext } from '../auto-reply/templating';
-import { normalizeChatType } from './chat-type';
+import type { MsgContext } from "../auto-reply/templating";
+import { normalizeChatType } from "./chat-type";
 
 export function validateSenderIdentity(ctx: MsgContext): string[] {
   const issues: string[] = [];

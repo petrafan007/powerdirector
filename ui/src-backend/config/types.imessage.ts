@@ -3,10 +3,13 @@ import type {
   DmPolicy,
   GroupPolicy,
   MarkdownConfig,
-} from './types.base';
-import type { ChannelHeartbeatVisibilityConfig } from './types.channels';
-import type { DmConfig } from './types.messages';
-import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from './types.tools';
+} from "./types.base";
+import type {
+  ChannelHealthMonitorConfig,
+  ChannelHeartbeatVisibilityConfig,
+} from "./types.channels";
+import type { DmConfig } from "./types.messages";
+import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from "./types.tools";
 
 export type IMessageAccountConfig = {
   /** Optional display name for this account (used in CLI/UI lists). */
@@ -33,6 +36,8 @@ export type IMessageAccountConfig = {
   dmPolicy?: DmPolicy;
   /** Optional allowlist for inbound handles or chat_id targets. */
   allowFrom?: Array<string | number>;
+  /** Default delivery target for CLI --deliver when no explicit --reply-to is provided. */
+  defaultTo?: string;
   /** Optional allowlist for group senders or chat_id targets. */
   groupAllowFrom?: Array<string | number>;
   /**
@@ -75,6 +80,8 @@ export type IMessageAccountConfig = {
   >;
   /** Heartbeat visibility settings for this channel. */
   heartbeat?: ChannelHeartbeatVisibilityConfig;
+  /** Channel health monitor overrides for this channel/account. */
+  healthMonitor?: ChannelHealthMonitorConfig;
   /** Outbound response prefix override for this channel/account. */
   responsePrefix?: string;
 };
@@ -82,4 +89,6 @@ export type IMessageAccountConfig = {
 export type IMessageConfig = {
   /** Optional per-account iMessage configuration (multi-account). */
   accounts?: Record<string, IMessageAccountConfig>;
+  /** Optional default account id when multiple accounts are configured. */
+  defaultAccount?: string;
 } & IMessageAccountConfig;

@@ -1,9 +1,10 @@
-import { resolveSessionAgentId } from '../agents/agent-scope';
-import type { PowerDirectorConfig } from '../config/config';
-import type { SessionEntry, SessionMaintenanceWarning } from '../config/sessions';
-import { isDeliverableMessageChannel, normalizeMessageChannel } from '../utils/message-channel';
-import { resolveSessionDeliveryTarget } from './outbound/targets';
-import { enqueueSystemEvent } from './system-events';
+import type { PowerDirectorConfig } from "../config/config";
+import type { SessionEntry, SessionMaintenanceWarning } from "../config/sessions";
+import { createSubsystemLogger } from "../logging/subsystem";
+import { isDeliverableMessageChannel, normalizeMessageChannel } from "../utils/message-channel";
+import { buildOutboundSessionContext } from "./outbound/session-context";
+import { resolveSessionDeliveryTarget } from "./outbound/targets";
+import { enqueueSystemEvent } from "./system-events";
 
 type WarningParams = {
   cfg: PowerDirectorConfig;
@@ -13,6 +14,13 @@ type WarningParams = {
 };
 
 const warnedContexts = new Map<string, string>();
+const log = createSubsystemLogger("session-maintenance-warning");
+let deliverRuntimePromise: Promise<typeof import("./outbound/deliver-runtime")> | null = null;
+
+function loadDeliverRuntime() {
+  deliverRuntimePromise ??= import("./outbound/deliver-runtime");
+  return deliverRuntimePromise;
+}
 
 function shouldSendWarning(): boolean {
   return !process.env.VITEST && process.env.NODE_ENV !== "test";
@@ -93,7 +101,11 @@ export async function deliverSessionMaintenanceWarning(params: WarningParams): P
   }
 
   try {
-    const { deliverOutboundPayloads } = await import('./outbound/deliver');
+    const { deliverOutboundPayloads } = await loadDeliverRuntime();
+    const outboundSession = buildOutboundSessionContext({
+      cfg: params.cfg,
+      sessionKey: params.sessionKey,
+    });
     await deliverOutboundPayloads({
       cfg: params.cfg,
       channel,
@@ -101,10 +113,10 @@ export async function deliverSessionMaintenanceWarning(params: WarningParams): P
       accountId: target.accountId,
       threadId: target.threadId,
       payloads: [{ text }],
-      agentId: resolveSessionAgentId({ sessionKey: params.sessionKey, config: params.cfg }),
+      session: outboundSession,
     });
   } catch (err) {
-    console.warn(`Failed to deliver session maintenance warning: ${String(err)}`);
+    log.warn(`Failed to deliver session maintenance warning: ${String(err)}`);
     enqueueSystemEvent(text, { sessionKey: params.sessionKey });
   }
 }

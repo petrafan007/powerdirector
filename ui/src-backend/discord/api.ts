@@ -1,5 +1,5 @@
-import { resolveFetch } from '../infra/fetch';
-import { resolveRetryConfig, retryAsync, type RetryConfig } from '../infra/retry';
+import { resolveFetch } from "../infra/fetch";
+import { resolveRetryConfig, retryAsync, type RetryConfig } from "../infra/retry";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";
 const DISCORD_API_RETRY_DEFAULTS = {

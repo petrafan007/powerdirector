@@ -1,9 +1,9 @@
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '../agents/agent-scope';
-import { formatCliCommand } from '../cli/command-format';
-import type { PowerDirectorConfig } from '../config/config';
-import { buildWorkspaceHookStatus } from '../hooks/hooks-status';
-import type { RuntimeEnv } from '../runtime';
-import type { WizardPrompter } from '../wizard/prompts';
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope";
+import { formatCliCommand } from "../cli/command-format";
+import type { PowerDirectorConfig } from "../config/config";
+import { buildWorkspaceHookStatus } from "../hooks/hooks-status";
+import type { RuntimeEnv } from "../runtime";
+import type { WizardPrompter } from "../wizard/prompts";
 
 export async function setupInternalHooks(
   cfg: PowerDirectorConfig,
@@ -13,7 +13,7 @@ export async function setupInternalHooks(
   await prompter.note(
     [
       "Hooks let you automate actions when agent commands are issued.",
-      "Example: Save session context to memory when you issue /new.",
+      "Example: Save session context to memory when you issue /new or /reset.",
       "",
       "Learn more: https://docs.powerdirector.ai/automation/hooks",
     ].join("\n"),
@@ -24,7 +24,7 @@ export async function setupInternalHooks(
   const workspaceDir = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));
   const report = buildWorkspaceHookStatus(workspaceDir, { config: cfg });
 
-  // Show every eligible hook so users can opt in during onboarding.
+  // Show every eligible hook so users can opt in during setup.
   const eligibleHooks = report.hooks.filter((h) => h.eligible);
 
   if (eligibleHooks.length === 0) {

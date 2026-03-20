@@ -1,8 +1,9 @@
-import { resolveDefaultAgentId } from '../agents/agent-scope';
-import { normalizeChatChannelId } from '../channels/registry';
-import type { PowerDirectorConfig } from '../config/config';
-import type { AgentBinding } from '../config/types.agents';
-import { normalizeAccountId, normalizeAgentId } from './session-key';
+import { resolveDefaultAgentId } from "../agents/agent-scope";
+import { normalizeChatChannelId } from "../channels/registry";
+import { listRouteBindings } from "../config/bindings";
+import type { PowerDirectorConfig } from "../config/config";
+import type { AgentRouteBinding } from "../config/types.agents";
+import { normalizeAccountId, normalizeAgentId } from "./session-key";
 
 function normalizeBindingChannelId(raw?: string | null): string | null {
   const normalized = normalizeChatChannelId(raw);
@@ -13,11 +14,11 @@ function normalizeBindingChannelId(raw?: string | null): string | null {
   return fallback || null;
 }
 
-export function listBindings(cfg: PowerDirectorConfig): AgentBinding[] {
-  return Array.isArray(cfg.bindings) ? cfg.bindings : [];
+export function listBindings(cfg: PowerDirectorConfig): AgentRouteBinding[] {
+  return listRouteBindings(cfg);
 }
 
-function resolveNormalizedBindingMatch(binding: AgentBinding): {
+function resolveNormalizedBindingMatch(binding: AgentRouteBinding): {
   agentId: string;
   accountId: string;
   channelId: string;

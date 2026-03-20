@@ -4,9 +4,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import tls from "node:tls";
 import { promisify } from "node:util";
-import type { GatewayTlsConfig } from '../../config/types.gateway';
-import { CONFIG_DIR, ensureDir, resolveUserPath, shortenHomeInString } from '../../utils';
-import { normalizeFingerprint } from './fingerprint';
+import type { GatewayTlsConfig } from "../../config/types.gateway";
+import { CONFIG_DIR, ensureDir, resolveUserPath, shortenHomeInString } from "../../utils";
+import { normalizeFingerprint } from "./fingerprint";
 
 const execFileAsync = promisify(execFile);
 

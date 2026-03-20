@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { MockFn } from '../test-utils/vitest-mock-fn';
+import type { MockFn } from "../test-utils/vitest-mock-fn";
 
 export const configMocks: {
   readConfigFileSnapshot: MockFn;
@@ -15,8 +15,8 @@ export const offsetMocks: {
   deleteTelegramUpdateOffset: vi.fn().mockResolvedValue(undefined) as unknown as MockFn,
 };
 
-vi.mock("../config/config.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../config/config')>();
+vi.mock("../config/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/config")>();
   return {
     ...actual,
     readConfigFileSnapshot: configMocks.readConfigFileSnapshot,
@@ -24,8 +24,9 @@ vi.mock("../config/config.js", async (importOriginal) => {
   };
 });
 
-vi.mock("../telegram/update-offset-store.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../telegram/update-offset-store')>();
+vi.mock("@/src-backend/extensions/telegram/src/update-offset-store", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("@/src-backend/extensions/telegram/src/update-offset-store")>();
   return {
     ...actual,
     deleteTelegramUpdateOffset: offsetMocks.deleteTelegramUpdateOffset,

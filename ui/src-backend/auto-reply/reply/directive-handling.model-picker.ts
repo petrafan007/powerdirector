@@ -1,5 +1,5 @@
-import { type ModelRef, normalizeProviderId } from '../../agents/model-selection';
-import type { PowerDirectorConfig } from '../../config/config';
+import { type ModelRef, normalizeProviderId } from "../../agents/model-selection";
+import type { PowerDirectorConfig } from "../../config/config";
 
 export type ModelPickerCatalogEntry = {
   provider: string;
@@ -19,6 +19,7 @@ const MODEL_PICK_PROVIDER_PREFERENCE = [
   "zai",
   "openrouter",
   "opencode",
+  "opencode-go",
   "github-copilot",
   "groq",
   "cerebras",

@@ -7,17 +7,22 @@ import {
   ModelsConfigSchema,
 } from './zod-schema.core.js';
 
+/**
+ * Robustly unwrap Zod types to find the underlying schema that can be extended.
+ * This handles ZodOptional, ZodNullable, ZodEffects (refinements), and ZodPipeline (transforms).
+ */
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
+  // Keep unwrapping as long as we don't have an .extend method (which means it's a raw ZodObject)
   while (current && typeof current.extend !== 'function') {
-    if (typeof current.unwrap === 'function') {
-      current = current.unwrap();
-    } else if (typeof current.innerType === 'function') {
-      current = current.innerType();
+    if (current._def?.innerType) {
+      current = current._def.innerType;
     } else if (current._def?.schema) {
       current = current._def.schema;
     } else if (current._def?.in) {
       current = current._def.in;
+    } else if (typeof current.unwrap === 'function') {
+      current = current.unwrap();
     } else {
       break;
     }

@@ -1,9 +1,9 @@
 import type { Command } from "commander";
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { runTui } from '../tui/tui';
-import { parseTimeoutMs } from './parse-timeout';
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { runTui } from "../tui/tui";
+import { parseTimeoutMs } from "./parse-timeout";
 
 export function registerTuiCli(program: Command) {
   program

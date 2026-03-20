@@ -1,11 +1,12 @@
 import type { Command } from "commander";
-import { runAcpClientInteractive } from '../acp/client';
-import { readSecretFromFile } from '../acp/secret-file';
-import { serveAcpGateway } from '../acp/server';
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { inheritOptionFromParent } from './command-options';
+import { runAcpClientInteractive } from "../acp/client";
+import { readSecretFromFile } from "../acp/secret-file";
+import { serveAcpGateway } from "../acp/server";
+import { normalizeAcpProvenanceMode } from "../acp/types";
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { inheritOptionFromParent } from "./command-options";
 
 function resolveSecretOption(params: {
   direct?: string;
@@ -45,7 +46,8 @@ export function registerAcpCli(program: Command) {
     .option("--require-existing", "Fail if the session key/label does not exist", false)
     .option("--reset-session", "Reset the session key before first use", false)
     .option("--no-prefix-cwd", "Do not prefix prompts with the working directory", false)
-    .option("--verbose, -v", "Verbose logging to stderr", false)
+    .option("--provenance <mode>", "ACP provenance mode: off, meta, or meta+receipt")
+    .option("-v, --verbose", "Verbose logging to stderr", false)
     .addHelpText(
       "after",
       () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/acp", "docs.powerdirector.ai/cli/acp")}\n`,
@@ -72,6 +74,10 @@ export function registerAcpCli(program: Command) {
         if (opts.password) {
           warnSecretCliFlag("--password");
         }
+        const provenanceMode = normalizeAcpProvenanceMode(opts.provenance as string | undefined);
+        if (opts.provenance && !provenanceMode) {
+          throw new Error("Invalid --provenance value. Use off, meta, or meta+receipt.");
+        }
         await serveAcpGateway({
           gatewayUrl: opts.url as string | undefined,
           gatewayToken,
@@ -81,6 +87,7 @@ export function registerAcpCli(program: Command) {
           requireExistingSession: Boolean(opts.requireExisting),
           resetSession: Boolean(opts.resetSession),
           prefixCwd: !opts.noPrefixCwd,
+          provenanceMode,
           verbose: Boolean(opts.verbose),
         });
       } catch (err) {
@@ -96,7 +103,7 @@ export function registerAcpCli(program: Command) {
     .option("--server <command>", "ACP server command (default: powerdirector)")
     .option("--server-args <args...>", "Extra arguments for the ACP server")
     .option("--server-verbose", "Enable verbose logging on the ACP server", false)
-    .option("--verbose, -v", "Verbose client logging", false)
+    .option("-v, --verbose", "Verbose client logging", false)
     .action(async (opts, command) => {
       const inheritedVerbose = inheritOptionFromParent<boolean>(command, "verbose");
       try {

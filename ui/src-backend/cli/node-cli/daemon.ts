@@ -1,38 +1,38 @@
-import { buildNodeInstallPlan } from '../../commands/node-daemon-install-helpers';
+import { buildNodeInstallPlan } from "../../commands/node-daemon-install-helpers";
 import {
   DEFAULT_NODE_DAEMON_RUNTIME,
   isNodeDaemonRuntime,
-} from '../../commands/node-daemon-runtime';
-import { resolveIsNixMode } from '../../config/paths';
+} from "../../commands/node-daemon-runtime";
 import {
   resolveNodeLaunchAgentLabel,
   resolveNodeSystemdServiceName,
   resolveNodeWindowsTaskName,
-} from '../../daemon/constants';
-import { resolveGatewayLogPaths } from '../../daemon/launchd';
-import { resolveNodeService } from '../../daemon/node-service';
-import type { GatewayServiceRuntime } from '../../daemon/service-runtime';
-import { loadNodeHostConfig } from '../../node-host/config';
-import { defaultRuntime } from '../../runtime';
-import { colorize } from '../../terminal/theme';
-import { formatCliCommand } from '../command-format';
+} from "../../daemon/constants";
+import { resolveNodeService } from "../../daemon/node-service";
+import {
+  buildPlatformRuntimeLogHints,
+  buildPlatformServiceStartHints,
+} from "../../daemon/runtime-hints";
+import type { GatewayServiceRuntime } from "../../daemon/service-runtime";
+import { loadNodeHostConfig } from "../../node-host/config";
+import { defaultRuntime } from "../../runtime";
+import { colorize } from "../../terminal/theme";
+import { formatCliCommand } from "../command-format";
 import {
   runServiceRestart,
   runServiceStart,
   runServiceStop,
   runServiceUninstall,
-} from '../daemon-cli/lifecycle-core';
-import {
-  buildDaemonServiceSnapshot,
-  createDaemonActionContext,
-  installDaemonServiceAndEmit,
-} from '../daemon-cli/response';
+} from "../daemon-cli/lifecycle-core";
+import { buildDaemonServiceSnapshot, installDaemonServiceAndEmit } from "../daemon-cli/response";
 import {
   createCliStatusTextStyles,
+  createDaemonInstallActionContext,
+  failIfNixDaemonInstallMode,
   formatRuntimeStatus,
   parsePort,
   resolveRuntimeStatusColor,
-} from '../daemon-cli/shared';
+} from "../daemon-cli/shared";
 
 type NodeDaemonInstallOptions = {
   host?: string;
@@ -55,39 +55,21 @@ type NodeDaemonStatusOptions = {
 };
 
 function renderNodeServiceStartHints(): string[] {
-  const base = [formatCliCommand("powerdirector node install"), formatCliCommand("powerdirector node start")];
-  switch (process.platform) {
-    case "darwin":
-      return [
-        ...base,
-        `launchctl bootstrap gui/$UID ~/Library/LaunchAgents/${resolveNodeLaunchAgentLabel()}.plist`,
-      ];
-    case "linux":
-      return [...base, `systemctl --user start ${resolveNodeSystemdServiceName()}.service`];
-    case "win32":
-      return [...base, `schtasks /Run /TN "${resolveNodeWindowsTaskName()}"`];
-    default:
-      return base;
-  }
+  return buildPlatformServiceStartHints({
+    installCommand: formatCliCommand("powerdirector node install"),
+    startCommand: formatCliCommand("powerdirector node start"),
+    launchAgentPlistPath: `~/Library/LaunchAgents/${resolveNodeLaunchAgentLabel()}.plist`,
+    systemdServiceName: resolveNodeSystemdServiceName(),
+    windowsTaskName: resolveNodeWindowsTaskName(),
+  });
 }
 
 function buildNodeRuntimeHints(env: NodeJS.ProcessEnv = process.env): string[] {
-  if (process.platform === "darwin") {
-    const logs = resolveGatewayLogPaths(env);
-    return [
-      `Launchd stdout (if installed): ${logs.stdoutPath}`,
-      `Launchd stderr (if installed): ${logs.stderrPath}`,
-    ];
-  }
-  if (process.platform === "linux") {
-    const unit = resolveNodeSystemdServiceName();
-    return [`Logs: journalctl --user -u ${unit}.service -n 200 --no-pager`];
-  }
-  if (process.platform === "win32") {
-    const task = resolveNodeWindowsTaskName();
-    return [`Logs: schtasks /Query /TN "${task}" /V /FO LIST`];
-  }
-  return [];
+  return buildPlatformRuntimeLogHints({
+    env,
+    systemdServiceName: resolveNodeSystemdServiceName(),
+    windowsTaskName: resolveNodeWindowsTaskName(),
+  });
 }
 
 function resolveNodeDefaults(
@@ -104,11 +86,8 @@ function resolveNodeDefaults(
 }
 
 export async function runNodeDaemonInstall(opts: NodeDaemonInstallOptions) {
-  const json = Boolean(opts.json);
-  const { stdout, warnings, emit, fail } = createDaemonActionContext({ action: "install", json });
-
-  if (resolveIsNixMode(process.env)) {
-    fail("Nix mode detected; service install is disabled.");
+  const { json, stdout, warnings, emit, fail } = createDaemonInstallActionContext(opts.json);
+  if (failIfNixDaemonInstallMode(fail)) {
     return;
   }
 

@@ -1,9 +1,9 @@
-import type { PowerDirectorConfig } from '../../config/config';
-import type { SessionEntry } from '../../config/sessions';
-import type { ReplyPayload } from '../types';
-import type { InlineDirectives } from './directive-handling.parse';
-import { withOptions } from './directive-handling.shared';
-import { resolveQueueSettings } from './queue';
+import type { PowerDirectorConfig } from "../../config/config";
+import type { SessionEntry } from "../../config/sessions";
+import type { ReplyPayload } from "../types";
+import type { InlineDirectives } from "./directive-handling.parse";
+import { withOptions } from "./directive-handling.shared";
+import { resolveQueueSettings } from "./queue";
 
 export function maybeHandleQueueDirective(params: {
   directives: InlineDirectives;

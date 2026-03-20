@@ -1,17 +1,17 @@
 import type { Command } from "commander";
-import { defaultRuntime } from '../runtime';
-import { formatDocsLink } from '../terminal/links';
-import { theme } from '../terminal/theme';
-import { inheritOptionFromParent } from './command-options';
-import { formatHelpExamples } from './help-format';
+import { defaultRuntime } from "../runtime";
+import { formatDocsLink } from "../terminal/links";
+import { theme } from "../terminal/theme";
+import { inheritOptionFromParent } from "./command-options";
+import { formatHelpExamples } from "./help-format";
 import {
   type UpdateCommandOptions,
   type UpdateStatusOptions,
   type UpdateWizardOptions,
-} from './update-cli/shared';
-import { updateStatusCommand } from './update-cli/status';
-import { updateCommand } from './update-cli/update-command';
-import { updateWizardCommand } from './update-cli/wizard';
+} from "./update-cli/shared";
+import { updateStatusCommand } from "./update-cli/status";
+import { updateCommand } from "./update-cli/update-command";
+import { updateWizardCommand } from "./update-cli/wizard";
 
 export { updateCommand, updateStatusCommand, updateWizardCommand };
 export type { UpdateCommandOptions, UpdateStatusOptions, UpdateWizardOptions };
@@ -37,8 +37,12 @@ export function registerUpdateCli(program: Command) {
     .description("Update PowerDirector and inspect update channel status")
     .option("--json", "Output result as JSON", false)
     .option("--no-restart", "Skip restarting the gateway service after a successful update")
+    .option("--dry-run", "Preview update actions without making changes", false)
     .option("--channel <stable|beta|dev>", "Persist update channel (git + npm)")
-    .option("--tag <dist-tag|version>", "Override npm dist-tag or version for this update")
+    .option(
+      "--tag <dist-tag|version|spec>",
+      "Override the package target for this update (dist-tag, version, or package spec)",
+    )
     .option("--timeout <seconds>", "Timeout for each update step in seconds (default: 1200)")
     .option("--yes", "Skip confirmation prompts (non-interactive)", false)
     .addHelpText("after", () => {
@@ -47,6 +51,8 @@ export function registerUpdateCli(program: Command) {
         ["powerdirector update --channel beta", "Switch to beta channel (git + npm)"],
         ["powerdirector update --channel dev", "Switch to dev channel (git + npm)"],
         ["powerdirector update --tag beta", "One-off update to a dist-tag or version"],
+        ["powerdirector update --tag main", "One-off package install from GitHub main"],
+        ["powerdirector update --dry-run", "Preview actions without changing anything"],
         ["powerdirector update --no-restart", "Update without restarting the service"],
         ["powerdirector update --json", "Output result as JSON"],
         ["powerdirector update --yes", "Non-interactive (accept downgrade prompts)"],
@@ -64,11 +70,12 @@ ${theme.heading("What this does:")}
 ${theme.heading("Switch channels:")}
   - Use --channel stable|beta|dev to persist the update channel in config
   - Run powerdirector update status to see the active channel and source
-  - Use --tag <dist-tag|version> for a one-off npm update without persisting
+  - Use --tag <dist-tag|version|spec> for a one-off package update without persisting
 
 ${theme.heading("Non-interactive:")}
   - Use --yes to accept downgrade prompts
   - Combine with --channel/--tag/--restart/--json/--timeout as needed
+  - Use --dry-run to preview actions without writing config/installing/restarting
 
 ${theme.heading("Examples:")}
 ${fmtExamples}
@@ -86,6 +93,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.powerdirector.ai/c
         await updateCommand({
           json: Boolean(opts.json),
           restart: Boolean(opts.restart),
+          dryRun: Boolean(opts.dryRun),
           channel: opts.channel as string | undefined,
           tag: opts.tag as string | undefined,
           timeout: opts.timeout as string | undefined,

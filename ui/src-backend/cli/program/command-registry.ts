@@ -1,8 +1,16 @@
 import type { Command } from "commander";
-import { getPrimaryCommand, hasHelpOrVersion } from '../argv';
-import { reparseProgramFromActionArgs } from './action-reparse';
-import type { ProgramContext } from './context';
-import { registerSubCliCommands } from './register.subclis';
+import { getPrimaryCommand, hasHelpOrVersion } from "../argv";
+import { reparseProgramFromActionArgs } from "./action-reparse";
+import { removeCommandByName } from "./command-tree";
+import type { ProgramContext } from "./context";
+import {
+  type CoreCliCommandDescriptor,
+  getCoreCliCommandDescriptors,
+  getCoreCliCommandsWithSubcommands,
+} from "./core-command-descriptors";
+import { registerSubCliCommands } from "./register.subclis";
+
+export { getCoreCliCommandDescriptors, getCoreCliCommandsWithSubcommands };
 
 type CommandRegisterParams = {
   program: Command;
@@ -13,12 +21,6 @@ type CommandRegisterParams = {
 export type CommandRegistration = {
   id: string;
   register: (params: CommandRegisterParams) => void;
-};
-
-type CoreCliCommandDescriptor = {
-  name: string;
-  description: string;
-  hasSubcommands: boolean;
 };
 
 type CoreCliEntry = {
@@ -46,7 +48,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.setup');
+      const mod = await import("./register.setup");
       mod.registerSetupCommand(program);
     },
   },
@@ -54,12 +56,12 @@ const coreEntries: CoreCliEntry[] = [
     commands: [
       {
         name: "onboard",
-        description: "Interactive onboarding wizard for gateway, workspace, and skills",
+        description: "Interactive onboarding for gateway, workspace, and skills",
         hasSubcommands: false,
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.onboard');
+      const mod = await import("./register.onboard");
       mod.registerOnboardCommand(program);
     },
   },
@@ -68,12 +70,12 @@ const coreEntries: CoreCliEntry[] = [
       {
         name: "configure",
         description:
-          "Interactive setup wizard for credentials, channels, gateway, and agent defaults",
+          "Interactive configuration for credentials, channels, gateway, and agent defaults",
         hasSubcommands: false,
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.configure');
+      const mod = await import("./register.configure");
       mod.registerConfigureCommand(program);
     },
   },
@@ -82,13 +84,26 @@ const coreEntries: CoreCliEntry[] = [
       {
         name: "config",
         description:
-          "Non-interactive config helpers (get/set/unset). Default: starts setup wizard.",
+          "Non-interactive config helpers (get/set/unset/file/validate). Default: starts guided setup.",
         hasSubcommands: true,
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('../config-cli');
+      const mod = await import("../config-cli");
       mod.registerConfigCli(program);
+    },
+  },
+  {
+    commands: [
+      {
+        name: "backup",
+        description: "Create and verify local backup archives for PowerDirector state",
+        hasSubcommands: true,
+      },
+    ],
+    register: async ({ program }) => {
+      const mod = await import("./register.backup");
+      mod.registerBackupCommand(program);
     },
   },
   {
@@ -115,7 +130,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.maintenance');
+      const mod = await import("./register.maintenance");
       mod.registerMaintenanceCommands(program);
     },
   },
@@ -128,7 +143,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program, ctx }) => {
-      const mod = await import('./register.message');
+      const mod = await import("./register.message");
       mod.registerMessageCommands(program, ctx);
     },
   },
@@ -141,8 +156,21 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('../memory-cli');
+      const mod = await import("../memory-cli");
       mod.registerMemoryCli(program);
+    },
+  },
+  {
+    commands: [
+      {
+        name: "mcp",
+        description: "Manage embedded Pi MCP servers",
+        hasSubcommands: true,
+      },
+    ],
+    register: async ({ program }) => {
+      const mod = await import("../mcp-cli");
+      mod.registerMcpCli(program);
     },
   },
   {
@@ -159,7 +187,7 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program, ctx }) => {
-      const mod = await import('./register.agent');
+      const mod = await import("./register.agent");
       mod.registerAgentCommands(program, {
         agentChannelOptions: ctx.agentChannelOptions,
       });
@@ -180,11 +208,11 @@ const coreEntries: CoreCliEntry[] = [
       {
         name: "sessions",
         description: "List stored conversation sessions",
-        hasSubcommands: false,
+        hasSubcommands: true,
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('./register.status-health-sessions');
+      const mod = await import("./register.status-health-sessions");
       mod.registerStatusHealthSessionsCommands(program);
     },
   },
@@ -197,54 +225,21 @@ const coreEntries: CoreCliEntry[] = [
       },
     ],
     register: async ({ program }) => {
-      const mod = await import('../browser-cli');
+      const mod = await import("../browser-cli");
       mod.registerBrowserCli(program);
     },
   },
 ];
 
-function collectCoreCliCommandNames(predicate?: (command: CoreCliCommandDescriptor) => boolean) {
-  const seen = new Set<string>();
-  const names: string[] = [];
-  for (const entry of coreEntries) {
-    for (const command of entry.commands) {
-      if (predicate && !predicate(command)) {
-        continue;
-      }
-      if (seen.has(command.name)) {
-        continue;
-      }
-      seen.add(command.name);
-      names.push(command.name);
-    }
-  }
-  return names;
-}
-
 export function getCoreCliCommandNames(): string[] {
-  return collectCoreCliCommandNames();
-}
-
-export function getCoreCliCommandsWithSubcommands(): string[] {
-  return collectCoreCliCommandNames((command) => command.hasSubcommands);
-}
-
-function removeCommand(program: Command, command: Command) {
-  const commands = program.commands as Command[];
-  const index = commands.indexOf(command);
-  if (index >= 0) {
-    commands.splice(index, 1);
-  }
+  return getCoreCliCommandDescriptors().map((command) => command.name);
 }
 
 function removeEntryCommands(program: Command, entry: CoreCliEntry) {
   // Some registrars install multiple top-level commands (e.g. status/health/sessions).
   // Remove placeholders/old registrations for all names in the entry before re-registering.
   for (const cmd of entry.commands) {
-    const existing = program.commands.find((c) => c.name() === cmd.name);
-    if (existing) {
-      removeCommand(program, existing);
-    }
+    removeCommandByName(program, cmd.name);
   }
 }
 

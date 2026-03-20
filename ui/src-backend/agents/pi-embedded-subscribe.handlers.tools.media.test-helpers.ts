@@ -3,9 +3,9 @@ import type { Mock } from "vitest";
 import {
   handleToolExecutionEnd,
   handleToolExecutionStart,
-} from './pi-embedded-subscribe.handlers.tools';
-import type { EmbeddedPiSubscribeContext } from './pi-embedded-subscribe.handlers.types';
-import type { SubscribeEmbeddedPiSessionParams } from './pi-embedded-subscribe.types';
+} from "./pi-embedded-subscribe.handlers.tools";
+import type { EmbeddedPiSubscribeContext } from "./pi-embedded-subscribe.handlers.types";
+import type { SubscribeEmbeddedPiSessionParams } from "./pi-embedded-subscribe.types";
 
 /**
  * Narrowed params type that omits the `session` class instance (never accessed

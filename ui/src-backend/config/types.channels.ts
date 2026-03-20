@@ -1,13 +1,13 @@
-import type { GroupPolicy } from './types.base';
-import type { DiscordConfig } from './types.discord';
-import type { GoogleChatConfig } from './types.googlechat';
-import type { IMessageConfig } from './types.imessage';
-import type { IrcConfig } from './types.irc';
-import type { MSTeamsConfig } from './types.msteams';
-import type { SignalConfig } from './types.signal';
-import type { SlackConfig } from './types.slack';
-import type { TelegramConfig } from './types.telegram';
-import type { WhatsAppConfig } from './types.whatsapp';
+import type { GroupPolicy } from "./types.base";
+import type { DiscordConfig } from "./types.discord";
+import type { GoogleChatConfig } from "./types.googlechat";
+import type { IMessageConfig } from "./types.imessage";
+import type { IrcConfig } from "./types.irc";
+import type { MSTeamsConfig } from "./types.msteams";
+import type { SignalConfig } from "./types.signal";
+import type { SlackConfig } from "./types.slack";
+import type { TelegramConfig } from "./types.telegram";
+import type { WhatsAppConfig } from "./types.whatsapp";
 
 export type ChannelHeartbeatVisibilityConfig = {
   /** Show HEARTBEAT_OK acknowledgments in chat (default: false). */
@@ -18,11 +18,21 @@ export type ChannelHeartbeatVisibilityConfig = {
   useIndicator?: boolean;
 };
 
+export type ChannelHealthMonitorConfig = {
+  /**
+   * Enable channel-health-monitor restarts for this channel or account.
+   * Inherits the global gateway setting when omitted.
+   */
+  enabled?: boolean;
+};
+
 export type ChannelDefaultsConfig = {
   groupPolicy?: GroupPolicy;
   /** Default heartbeat visibility for all channels. */
   heartbeat?: ChannelHeartbeatVisibilityConfig;
 };
+
+export type ChannelModelByChannelConfig = Record<string, Record<string, string>>;
 
 /**
  * Base type for extension channel config sections.
@@ -31,14 +41,21 @@ export type ChannelDefaultsConfig = {
 export type ExtensionChannelConfig = {
   enabled?: boolean;
   allowFrom?: string | string[];
+  /** Default delivery target for CLI --deliver when no explicit --reply-to is provided. */
+  defaultTo?: string;
+  /** Optional default account id when multiple accounts are configured. */
+  defaultAccount?: string;
   dmPolicy?: string;
   groupPolicy?: GroupPolicy;
+  healthMonitor?: ChannelHealthMonitorConfig;
   accounts?: Record<string, unknown>;
   [key: string]: unknown;
 };
 
 export type ChannelsConfig = {
   defaults?: ChannelDefaultsConfig;
+  /** Map provider -> channel id -> model override. */
+  modelByChannel?: ChannelModelByChannelConfig;
   whatsapp?: WhatsAppConfig;
   telegram?: TelegramConfig;
   discord?: DiscordConfig;

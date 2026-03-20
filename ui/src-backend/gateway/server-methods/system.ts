@@ -1,32 +1,27 @@
-import { resolveMainSessionKeyFromConfig } from '../../config/sessions';
-import { getLastHeartbeatEvent } from '../../infra/heartbeat-events';
-import { setHeartbeatsEnabled } from '../../infra/heartbeat-runner';
-import { scheduleGatewaySigusr1Restart } from '../../infra/restart';
-import { enqueueSystemEvent, isSystemEventContextChanged } from '../../infra/system-events';
-import { listSystemPresence, updateSystemPresence } from '../../infra/system-presence';
-import { formatControlPlaneActor, resolveControlPlaneActor } from '../control-plane-audit';
-import { ErrorCodes, errorShape } from '../protocol/index';
-import { broadcastPresenceSnapshot } from '../server/presence-events';
-import { parseRestartRequestParams } from './restart-request';
-import type { GatewayRequestHandlers } from './types';
+import { resolveMainSessionKeyFromConfig } from "../../config/sessions";
+import {
+  loadOrCreateDeviceIdentity,
+  publicKeyRawBase64UrlFromPem,
+} from "../../infra/device-identity";
+import { getLastHeartbeatEvent } from "../../infra/heartbeat-events";
+import { setHeartbeatsEnabled } from "../../infra/heartbeat-runner";
+import { enqueueSystemEvent, isSystemEventContextChanged } from "../../infra/system-events";
+import { listSystemPresence, updateSystemPresence } from "../../infra/system-presence";
+import { ErrorCodes, errorShape } from "../protocol/index";
+import { broadcastPresenceSnapshot } from "../server/presence-events";
+import type { GatewayRequestHandlers } from "./types";
 
 export const systemHandlers: GatewayRequestHandlers = {
-  "system.restart": ({ params, respond, client, context }) => {
-    const actor = resolveControlPlaneActor(client);
-    const { note, restartDelayMs } = parseRestartRequestParams(params);
-    const restart = scheduleGatewaySigusr1Restart({
-      delayMs: restartDelayMs ?? 1000,
-      reason: "system.restart",
-      audit: {
-        actor: actor.actor,
-        deviceId: actor.deviceId,
-        clientIp: actor.clientIp,
+  "gateway.identity.get": ({ respond }) => {
+    const identity = loadOrCreateDeviceIdentity();
+    respond(
+      true,
+      {
+        deviceId: identity.deviceId,
+        publicKey: publicKeyRawBase64UrlFromPem(identity.publicKeyPem),
       },
-    });
-    context.logGateway.info(
-      `system.restart requested ${formatControlPlaneActor(actor)} reason=${note ?? "unspecified"}`,
+      undefined,
     );
-    respond(true, { ok: true, restart }, undefined);
   },
   "last-heartbeat": ({ respond }) => {
     respond(true, getLastHeartbeatEvent(), undefined);

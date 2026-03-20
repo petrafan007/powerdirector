@@ -1,10 +1,10 @@
 import { intro, note, outro, spinner } from "@clack/prompts";
-import { ensureAuthProfileStore, upsertAuthProfile } from '../agents/auth-profiles';
-import { updateConfig } from '../commands/models/shared';
-import { applyAuthProfileConfig } from '../commands/onboard-auth';
-import { logConfigUpdated } from '../config/logging';
-import type { RuntimeEnv } from '../runtime';
-import { stylePromptTitle } from '../terminal/prompt-style';
+import { ensureAuthProfileStore, upsertAuthProfile } from "../agents/auth-profiles";
+import { updateConfig } from "../commands/models/shared";
+import { logConfigUpdated } from "../config/logging";
+import { applyAuthProfileConfig } from "../plugins/provider-auth-helpers";
+import type { RuntimeEnv } from "../runtime";
+import { stylePromptTitle } from "../terminal/prompt-style";
 
 const CLIENT_ID = "Iv1.b507a08c87ecfe98";
 const DEVICE_CODE_URL = "https://github.com/login/device/code";
