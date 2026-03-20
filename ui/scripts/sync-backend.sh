@@ -16,7 +16,10 @@ rm -rf "$TARGET_DIR"
 mkdir -p "$TARGET_DIR"
 
 # Sync src/ but exclude tests and large binaries to save memory during build
-rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" --exclude="**/media/**" "$BACKEND_SRC/" "$TARGET_DIR/"
+# NOTE: We MUST include src/media/ as it contains essential .ts files for the build.
+# We only exclude the 'media' root directory if it's a large blob storage dir, 
+# but src/media is part of the codebase.
+rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/*.live.test.ts" --exclude="**/*.e2e.test.ts" "$BACKEND_SRC/" "$TARGET_DIR/"
 
 # Selective sync for apps/ - only Resources needed for tool-display.json
 echo "Syncing required app resources..."
@@ -31,19 +34,14 @@ rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/nod
 
 # Sanitize imports in the copied files
 # 1. Truly quote-safe .js extension removal for relative and absolute project imports
-# Matches any string starting with ./ or ../ or powerdirector/ that ends in .js inside quotes
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])((\.\/|\.\.\/|powerdirector\/)[^'\"]+)\.js\1/\1\2\1/g" {} +
 
 # 2. Correct mapping for relative apps/ and extensions/ to Next.js path aliases
-# Map any number of ../../../apps/ to @/src-backend/apps/
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])\.\.\/(\.\.\/)*apps\//\1@\/src-backend\/apps\//g" {} +
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])\.\.\/(\.\.\/)*extensions\//\1@\/src-backend\/extensions\//g" {} +
 
 # 3. Correct mapping for absolute powerdirector/ imports to alias
-# Specifically handle plugin-sdk by mapping to the actual files in src-backend/plugin-sdk/
-# This bypasses root-alias.cjs which webpack struggles with.
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\/plugin-sdk\/([^'\"]+)\1/\1@\/src-backend\/plugin-sdk\/\2\1/g" {} +
-# Also handle remaining generic powerdirector/ imports
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\//\1@\/src-backend\//g" {} +
 
 echo "Backend sync and import sanitization complete."
