@@ -124,18 +124,21 @@ export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZod
   timeoutOverride: z.number().optional(),
 }).strict();
 
-export const modelProviderSchema = (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).safeExtend({
-  baseUrl: z.string().min(1).optional(),
-  models: z.array(modelEntrySchema).optional(),
-})
-  .strict()
-  .transform((val: any) => {
-    if (val.baseURL && !val.baseUrl) {
-      val.baseUrl = val.baseURL;
-    }
-    delete val.baseURL;
-    return val;
-  });
+export const modelProviderSchema = z
+  .preprocess(
+    (val: any) => {
+      if (val && typeof val === 'object' && val.baseURL) {
+        if (!val.baseUrl) val.baseUrl = val.baseURL;
+        delete val.baseURL;
+      }
+      return val;
+    },
+    (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).safeExtend({
+      baseUrl: z.string().min(1).optional(),
+      models: z.array(modelEntrySchema).optional(),
+    }),
+  )
+  .strict();
 
 const modelsBaseSchema = unwrapSchema(ModelsConfigSchema) as z.AnyZodObject;
 export const modelsSchema = modelsBaseSchema
