@@ -127,7 +127,15 @@ export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZod
 export const modelProviderSchema = (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).safeExtend({
   baseUrl: z.string().min(1).optional(),
   models: z.array(modelEntrySchema).optional(),
-}).strict();
+})
+  .strict()
+  .transform((val: any) => {
+    if (val.baseURL && !val.baseUrl) {
+      val.baseUrl = val.baseURL;
+    }
+    delete val.baseURL;
+    return val;
+  });
 
 const modelsBaseSchema = unwrapSchema(ModelsConfigSchema) as z.AnyZodObject;
 export const modelsSchema = modelsBaseSchema
