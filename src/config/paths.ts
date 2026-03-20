@@ -23,7 +23,7 @@ const CONFIG_FILENAME = "powerdirector.config.json";
 const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function resolveDefaultHomeDir(): string {
-  return resolveRequiredHomeDir(process.env, os.homedir);
+  return resolveRequiredHomeDir(process.env, () => os.homedir());
 }
 
 /** Build a homedir thunk that respects POWERDIRECTOR_HOME for the given env. */
