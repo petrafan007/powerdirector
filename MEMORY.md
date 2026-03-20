@@ -1,25 +1,26 @@
-- 2026-03-14T23:14:28.146Z: Hello, identify yourself.
-- 2026-03-14T23:15:31.122Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Hello, identify yourself.
-- 2026-03-14T23:16:01.386Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: What time is it?
-- 2026-03-14T23:16:36.851Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Use NANO BANANA to generate an image of a red cybernetic lobster.
-- 2026-03-14T23:17:07.239Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Hello, identify yourself.
-- 2026-03-14T23:17:37.473Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: What time is it?
-- 2026-03-14T23:18:12.913Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Use NANO BANANA to generate an image of a red cybernetic lobster.
-- 2026-03-14T23:19:13.665Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Hello, identify yourself.
-- 2026-03-14T23:19:43.938Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: What time is it?
-- 2026-03-14T23:20:19.474Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Use NANO BANANA to generate an image of a red cybernetic lobster.
-- 2026-03-14T23:20:50.029Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Hello, identify yourself.
-- 2026-03-14T23:21:20.307Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: What time is it?
-- 2026-03-14T23:21:55.801Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Use NANO BANANA to generate an image of a red cybernetic lobster.
-- 2026-03-14T23:23:02.000Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Hello, identify yourself.
-- 2026-03-14T23:29:41.661Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Hello, identify yourself.
-- 2026-03-14T23:30:01.900Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: What is the current date and time?
-- 2026-03-14T23:30:29.459Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Use NANO BANANA to generate an image of a cybernetic lobster.
-- 2026-03-14T23:31:33.026Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Hello, identify yourself.
-- 2026-03-14T23:31:48.246Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Tell a short joke
-- 2026-03-14T23:32:03.393Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: What is the current date and time?
-- 2026-03-14T23:32:18.604Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: List the files in the current directory
-- 2026-03-14T23:32:41.108Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Use NANO BANANA to generate an image of a cybernetic lobster.
-- 2026-03-14T23:33:01.546Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Search the web for an image of a fennec fox and display it.
-- 2026-03-14T23:35:19.540Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Use NANO BANANA to generate an image of a cybernetic lobster.
-- 2026-03-14T23:35:44.939Z [session 390790b8-c3a9-42e2-b86a-64c5cdfb508f]: Search the web for an image of a fennec fox and display it.
+# PowerDirector Project Memory
+
+## Technical State (2026-03-20)
+- **Current Version:** 1.2.0-beta.3
+- **Primary Source:** /home/jcavallarojr/powerdirector-source
+- **Test Environment:** /home/jcavallarojr/powerdirector-newusertest (Port 4007)
+- **Branding:** 100% PowerDirector (rebranded from OpenClaw)
+
+## Major Milestones
+### Wave 2 Release (Complete)
+- **Secrets Management:** Implemented External Secrets CLI and SecretRef normalization. Required refs now fail-closed at startup.
+- **Validation & Reliability:** Added `config validate` CLI. Hardened model fallbacks, cron staggering, and Bedrock error classification.
+- **Backup System:** Added comprehensive local backup/verify CLI.
+- **UI Production Build:** Successfully migrated to Next.js production build architecture.
+- **Backend Sync:** Perfected `ui/scripts/sync-backend.sh` with quote-safe regexes and exhaustive path mapping for `apps/` and `extensions/`.
+
+## Critical Build Context
+- **Next.js UI:** Embedded gateway mode. Build requires `NODE_OPTIONS="--max-old-space-size=8192"` due to backend source volume.
+- **Zod Schema:** Root schema must be unwrapped using `unwrapSchema` (handling ZodEffects/ZodPipeline) before extension to avoid `.shape` or `.extend` errors.
+- **Plugin-SDK:** Absolute imports `powerdirector/plugin-sdk/*` must be mapped to `@/src-backend/plugin-sdk/*` during UI sync for proper resolution.
+- **Native Modules:** `better-sqlite3`, `node-pty`, `sharp`, `node-llama-cpp`, and `@napi-rs/canvas` must be in `serverExternalPackages` in `ui/next.config.ts`.
+
+## Environment Setup
+- **Ports:** 4007 (Integrated UI + Gateway), 4008 (Terminal WebSocket).
+- **Config:** Use `POWERDIRECTOR_CONFIG_PATH` to point to local configuration.
+- **Home:** Default state dir is `~/.powerdirector`.
