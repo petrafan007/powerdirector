@@ -21,18 +21,21 @@ test('PowerDirector UI Validation', async ({ page }) => {
     
     // 3. Wait for agent response
     console.log('Waiting for response...');
-    // Increase timeout for agent response
-    await expect(page.locator('text=System Agent').last()).toBeVisible({ timeout: 60000 });
-    console.log('Agent responded');
+    // We expect "Thinking..." or "Majeston" (as confirmed by CLI test)
+    const thinking = page.locator('text=Thinking...');
+    const majeston = page.locator('text=Majeston');
+    
+    // Use Promise.race style check or just wait for Majeston which is the final state
+    await expect(majeston.last()).toBeVisible({ timeout: 60000 });
+    console.log('Agent Majeston responded');
     
     await page.screenshot({ path: 'tests/chat_response.png' });
     console.log('Chat screenshot taken');
 
     // 4. Navigate to Terminal
     console.log('Navigating to /terminal');
-    // Using the button title as seen in the HTML from curl
     await page.click('button[title="Terminal"]');
-    await page.waitForTimeout(5000); // Wait for PTY to init
+    await page.waitForTimeout(5000); 
     await page.screenshot({ path: 'tests/terminal_page.png' });
     console.log('Terminal screenshot taken');
 
