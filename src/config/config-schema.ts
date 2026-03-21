@@ -18,8 +18,21 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
       return current;
     }
     
-    if (typeof current.innerType === 'function') {
-      current = current.innerType();
+    // ZodOptional, ZodNullable, ZodDefault, ZodCatch
+    if (current._def?.innerType) {
+      current = current._def.innerType;
+      continue;
+    }
+
+    // ZodEffects (preprocess, refine, transform)
+    if (current._def?.schema) {
+      current = current._def.schema;
+      continue;
+    }
+
+    // ZodPipeline
+    if (current._def?.in) {
+      current = current._def.in;
       continue;
     }
 
@@ -28,24 +41,17 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
       continue;
     }
 
-    const def = current._def;
-    if (!def) {
-      if (current.schema) {
-        current = current.schema;
-        continue;
-      }
-      break;
+    // Direct property access for some environments
+    if (current.schema) {
+      current = current.schema;
+      continue;
+    }
+    if (current.innerType) {
+      current = current.innerType;
+      continue;
     }
 
-    if (def.schema) {
-      current = def.schema;
-    } else if (def.innerType) {
-      current = def.innerType;
-    } else if (def.in) {
-      current = def.in;
-    } else {
-      break;
-    }
+    break;
   }
   return current;
 }
