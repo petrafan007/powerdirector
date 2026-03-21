@@ -1,5 +1,5 @@
-import type { ChannelPlugin } from "@/src-backend/plugin-sdk/core";
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import type { ChannelPlugin } from "powerdirector/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { telegramPlugin } from "./src/channel";
 import { setTelegramRuntime } from "./src/runtime";
 

@@ -1,1 +1,1 @@
-export * from "@/src-backend/extensions/discord/api";
+export * from "powerdirector/extensions/discord/api";

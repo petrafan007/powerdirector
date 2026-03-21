@@ -5,7 +5,7 @@ import { homedir } from "node:os";
 import * as path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { fetchWithSsrFGuard } from "@/src-backend/plugin-sdk/infra-runtime";
+import { fetchWithSsrFGuard } from "powerdirector/plugin-sdk/infra-runtime";
 import { getDefaultSsrFPolicy } from "../urbit/context";
 
 // Default to PowerDirector workspace media directory

@@ -1,27 +1,27 @@
-import { resolveDefaultAgentId } from "@/src-backend/plugin-sdk/agent-runtime";
+import { resolveDefaultAgentId } from "powerdirector/plugin-sdk/agent-runtime";
 import {
   resolveThreadBindingIdleTimeoutMsForChannel,
   resolveThreadBindingMaxAgeMsForChannel,
   resolveThreadBindingSpawnPolicy,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import {
   isNativeCommandsExplicitlyDisabled,
   resolveNativeCommandsEnabled,
   resolveNativeSkillsEnabled,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import type { PowerDirectorConfig, ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig, ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveChannelGroupPolicy,
   resolveChannelGroupRequireMention,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { loadSessionStore, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
-import { formatUncaughtError } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
-import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "@/src-backend/plugin-sdk/reply-runtime";
-import { danger, logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { getChildLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { createNonExitingRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { loadSessionStore, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
+import { formatUncaughtError } from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
+import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "powerdirector/plugin-sdk/reply-runtime";
+import { danger, logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { getChildLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { createNonExitingRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { resolveTelegramAccount } from "./accounts";
 import { defaultTelegramBotDeps, type TelegramBotDeps } from "./bot-deps";
 import { registerTelegramHandlers } from "./bot-handlers";

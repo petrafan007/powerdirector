@@ -1,5 +1,5 @@
-import { normalizeChatType } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { MsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
+import { normalizeChatType } from "powerdirector/plugin-sdk/channel-runtime";
+import type { MsgContext } from "powerdirector/plugin-sdk/reply-runtime";
 
 export function normalizeExplicitDiscordSessionKey(
   sessionKey: string,

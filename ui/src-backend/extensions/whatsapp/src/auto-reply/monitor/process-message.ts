@@ -1,35 +1,35 @@
-import { resolveIdentityNamePrefix } from "@/src-backend/plugin-sdk/agent-runtime";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { toLocationContext } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveInboundSessionEnvelopeContext } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { recordSessionMetaFromInbound } from "@/src-backend/plugin-sdk/config-runtime";
-import { getAgentScopedMediaLocalRoots } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
-import { resolveChunkMode, resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
-import { shouldComputeCommandAuthorized } from "@/src-backend/plugin-sdk/reply-runtime";
-import { formatInboundEnvelope } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { getReplyFromConfig } from "@/src-backend/plugin-sdk/reply-runtime";
+import { resolveIdentityNamePrefix } from "powerdirector/plugin-sdk/agent-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { toLocationContext } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveInboundSessionEnvelopeContext } from "powerdirector/plugin-sdk/channel-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { recordSessionMetaFromInbound } from "powerdirector/plugin-sdk/config-runtime";
+import { getAgentScopedMediaLocalRoots } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
+import { resolveChunkMode, resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
+import { shouldComputeCommandAuthorized } from "powerdirector/plugin-sdk/reply-runtime";
+import { formatInboundEnvelope } from "powerdirector/plugin-sdk/reply-runtime";
+import type { getReplyFromConfig } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildHistoryContextFromEntries,
   type HistoryEntry,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { dispatchReplyWithBufferedBlockDispatcher } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { dispatchReplyWithBufferedBlockDispatcher } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   resolveInboundLastRouteSessionKey,
   type resolveAgentRoute,
-} from "@/src-backend/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import type { getChildLogger } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import type { getChildLogger } from "powerdirector/plugin-sdk/runtime-env";
 import {
   readStoreAllowFromForDmPolicy,
   resolvePinnedMainDmOwnerFromAllowlist,
   resolveDmGroupAccessWithCommandGate,
-} from "@/src-backend/plugin-sdk/security-runtime";
-import { jidToE164, normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
+import { jidToE164, normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveWhatsAppAccount } from "../../accounts";
 import { newConnectionId } from "../../reconnect";
 import { formatError } from "../../session";

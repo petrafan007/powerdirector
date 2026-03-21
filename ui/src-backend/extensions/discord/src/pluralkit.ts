@@ -1,4 +1,4 @@
-import { resolveFetch } from "@/src-backend/plugin-sdk/infra-runtime";
+import { resolveFetch } from "powerdirector/plugin-sdk/infra-runtime";
 
 const PLURALKIT_API_BASE = "https://api.pluralkit.me/v2";
 

@@ -1,20 +1,20 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resetInboundDedupe } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { MsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { GetReplyOptions, ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { MockFn } from "@/src-backend/plugin-sdk/testing";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resetInboundDedupe } from "powerdirector/plugin-sdk/reply-runtime";
+import type { MsgContext } from "powerdirector/plugin-sdk/reply-runtime";
+import type { GetReplyOptions, ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import type { MockFn } from "powerdirector/plugin-sdk/testing";
 import { beforeEach, vi } from "vitest";
 import type { TelegramBotDeps } from "./bot-deps";
 
 type AnyMock = ReturnType<typeof vi.fn>;
 type AnyAsyncMock = ReturnType<typeof vi.fn>;
-type LoadConfigFn = typeof import("@/src-backend/plugin-sdk/config-runtime").loadConfig;
-type ResolveStorePathFn = typeof import("@/src-backend/plugin-sdk/config-runtime").resolveStorePath;
+type LoadConfigFn = typeof import("powerdirector/plugin-sdk/config-runtime").loadConfig;
+type ResolveStorePathFn = typeof import("powerdirector/plugin-sdk/config-runtime").resolveStorePath;
 type TelegramBotRuntimeForTest = NonNullable<
   Parameters<typeof import("./bot").setTelegramBotRuntimeForTest>[0]
 >;
 type DispatchReplyWithBufferedBlockDispatcherFn =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").dispatchReplyWithBufferedBlockDispatcher;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").dispatchReplyWithBufferedBlockDispatcher;
 type DispatchReplyWithBufferedBlockDispatcherResult = Awaited<
   ReturnType<DispatchReplyWithBufferedBlockDispatcherFn>
 >;
@@ -38,7 +38,7 @@ export function getLoadWebMediaMock(): AnyMock {
   return loadWebMedia;
 }
 
-vi.doMock("@/src-backend/plugin-sdk/web-media", () => ({
+vi.doMock("powerdirector/plugin-sdk/web-media", () => ({
   loadWebMedia,
 }));
 
@@ -57,8 +57,8 @@ const { loadConfig, resolveStorePathMock } = vi.hoisted(
 export function getLoadConfigMock(): AnyMock {
   return loadConfig;
 }
-vi.doMock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     loadConfig,
@@ -87,8 +87,8 @@ export function getUpsertChannelPairingRequestMock(): AnyAsyncMock {
   return upsertChannelPairingRequest;
 }
 
-vi.doMock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/conversation-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/conversation-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/conversation-runtime")>();
   return {
     ...actual,
     readChannelAllowFromStore,
@@ -138,8 +138,8 @@ export const replySpy = replySpyHoisted.replySpy;
 export const dispatchReplyWithBufferedBlockDispatcher =
   dispatchReplyHoisted.dispatchReplyWithBufferedBlockDispatcher;
 
-vi.doMock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/reply-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/reply-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/reply-runtime")>();
   return {
     ...actual,
     listSkillCommandsForAgents: skillCommandListHoisted.listSkillCommandsForAgents,
@@ -156,8 +156,8 @@ const systemEventsHoisted = vi.hoisted(() => ({
 export const enqueueSystemEventSpy: MockFn<TelegramBotDeps["enqueueSystemEvent"]> =
   systemEventsHoisted.enqueueSystemEventSpy;
 
-vi.doMock("@/src-backend/plugin-sdk/infra-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/infra-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/infra-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/infra-runtime")>();
   return {
     ...actual,
     enqueueSystemEvent: systemEventsHoisted.enqueueSystemEventSpy,

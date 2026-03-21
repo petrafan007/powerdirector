@@ -1,11 +1,11 @@
 import os from "node:os";
 import path from "node:path";
-import { normalizeAccountId as normalizeSharedAccountId } from "@/src-backend/plugin-sdk/account-id";
-import { normalizeProviderId } from "@/src-backend/plugin-sdk/agent-runtime";
-import { withFileLock } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveRequiredHomeDir } from "@/src-backend/plugin-sdk/infra-runtime";
-import { readJsonFileWithFallback, writeJsonFileAtomically } from "@/src-backend/plugin-sdk/json-store";
-import { resolveStateDir } from "@/src-backend/plugin-sdk/state-paths";
+import { normalizeAccountId as normalizeSharedAccountId } from "powerdirector/plugin-sdk/account-id";
+import { normalizeProviderId } from "powerdirector/plugin-sdk/agent-runtime";
+import { withFileLock } from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveRequiredHomeDir } from "powerdirector/plugin-sdk/infra-runtime";
+import { readJsonFileWithFallback, writeJsonFileAtomically } from "powerdirector/plugin-sdk/json-store";
+import { resolveStateDir } from "powerdirector/plugin-sdk/state-paths";
 
 const MODEL_PICKER_PREFERENCES_LOCK_OPTIONS = {
   retries: {

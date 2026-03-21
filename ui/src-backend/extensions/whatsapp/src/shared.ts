@@ -1,10 +1,10 @@
 import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createAllowlistProviderRouteAllowlistWarningCollector } from "@/src-backend/plugin-sdk/channel-policy";
-import { createChannelPluginBase } from "@/src-backend/plugin-sdk/core";
-import { createDelegatedSetupWizardProxy } from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createAllowlistProviderRouteAllowlistWarningCollector } from "powerdirector/plugin-sdk/channel-policy";
+import { createChannelPluginBase } from "powerdirector/plugin-sdk/core";
+import { createDelegatedSetupWizardProxy } from "powerdirector/plugin-sdk/setup";
 import {
   buildChannelConfigSchema,
   formatWhatsAppConfigAllowFromEntries,
@@ -15,7 +15,7 @@ import {
   resolveWhatsAppGroupToolPolicy,
   WhatsAppConfigSchema,
   type ChannelPlugin,
-} from "@/src-backend/plugin-sdk/whatsapp-core";
+} from "powerdirector/plugin-sdk/whatsapp-core";
 import {
   listWhatsAppAccountIds,
   resolveDefaultWhatsAppAccountId,

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { listTelegramAccountIds } from "@/src-backend/plugin-sdk/telegram";
+import { listTelegramAccountIds } from "powerdirector/plugin-sdk/telegram";
 import { resolveDefaultAgentId } from "../agents/agent-scope";
 import type { PowerDirectorConfig } from "../config/config";
 import {

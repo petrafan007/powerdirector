@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/bluebubbles";
+export * from "powerdirector/plugin-sdk/bluebubbles";

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { telegramPlugin } from "@/src-backend/extensions/telegram/index";
-import { whatsappPlugin } from "@/src-backend/extensions/whatsapp/index";
+import { telegramPlugin } from "powerdirector/extensions/telegram/index";
+import { whatsappPlugin } from "powerdirector/extensions/whatsapp/index";
 import { setActivePluginRegistry } from "../../plugins/runtime";
 import { createTestRegistry } from "../../test-utils/channel-plugins";
 import { resolveOutboundTarget } from "./targets";

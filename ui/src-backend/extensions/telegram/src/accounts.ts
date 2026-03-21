@@ -8,14 +8,14 @@ import {
   resolveAccountEntry,
   resolveAccountWithDefaultFallback,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/account-resolution";
-import { isTruthyEnvValue } from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/account-resolution";
+import { isTruthyEnvValue } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   listBoundAccountIds,
   resolveDefaultAgentBoundAccountId,
-} from "@/src-backend/plugin-sdk/routing";
-import { formatSetExplicitDefaultInstruction } from "@/src-backend/plugin-sdk/routing";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/routing";
+import { formatSetExplicitDefaultInstruction } from "powerdirector/plugin-sdk/routing";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
 import type { TelegramAccountConfig, TelegramActionConfig } from "../runtime-api";
 import { resolveTelegramToken } from "./token";
 

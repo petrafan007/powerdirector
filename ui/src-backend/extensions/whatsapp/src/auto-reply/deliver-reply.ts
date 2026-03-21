@@ -1,14 +1,14 @@
-import type { MarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import type { MarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveOutboundMediaUrls,
   sendMediaWithLeadingCaption,
-} from "@/src-backend/plugin-sdk/reply-payload";
-import { chunkMarkdownTextWithMode, type ChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { convertMarkdownTables } from "@/src-backend/plugin-sdk/text-runtime";
-import { markdownToWhatsApp } from "@/src-backend/plugin-sdk/text-runtime";
-import { sleep } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-payload";
+import { chunkMarkdownTextWithMode, type ChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { convertMarkdownTables } from "powerdirector/plugin-sdk/text-runtime";
+import { markdownToWhatsApp } from "powerdirector/plugin-sdk/text-runtime";
+import { sleep } from "powerdirector/plugin-sdk/text-runtime";
 import { loadWebMedia } from "../media";
 import { newConnectionId } from "../reconnect";
 import { formatError } from "../session";

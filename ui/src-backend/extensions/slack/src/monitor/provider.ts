@@ -6,25 +6,25 @@ import {
   mergeAllowlist,
   patchAllowlistUsersInConfigEntries,
   summarizeMapping,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isDangerousNameMatchingEnabled } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isDangerousNameMatchingEnabled } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveOpenProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import type { SessionScope } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeResolvedSecretInputString } from "@/src-backend/plugin-sdk/config-runtime";
-import { createConnectedChannelStatusPatch } from "@/src-backend/plugin-sdk/gateway-runtime";
-import { computeBackoff, sleepWithAbort } from "@/src-backend/plugin-sdk/infra-runtime";
-import { installRequestBodyLimitGuard } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
-import { DEFAULT_GROUP_HISTORY_LIMIT } from "@/src-backend/plugin-sdk/reply-runtime";
-import { normalizeMainKey } from "@/src-backend/plugin-sdk/routing";
-import { warn } from "@/src-backend/plugin-sdk/runtime-env";
-import { createNonExitingRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { normalizeStringEntries } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import type { SessionScope } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeResolvedSecretInputString } from "powerdirector/plugin-sdk/config-runtime";
+import { createConnectedChannelStatusPatch } from "powerdirector/plugin-sdk/gateway-runtime";
+import { computeBackoff, sleepWithAbort } from "powerdirector/plugin-sdk/infra-runtime";
+import { installRequestBodyLimitGuard } from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
+import { DEFAULT_GROUP_HISTORY_LIMIT } from "powerdirector/plugin-sdk/reply-runtime";
+import { normalizeMainKey } from "powerdirector/plugin-sdk/routing";
+import { warn } from "powerdirector/plugin-sdk/runtime-env";
+import { createNonExitingRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { normalizeStringEntries } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveSlackAccount } from "../accounts";
 import { resolveSlackWebClientOptions } from "../client";
 import { normalizeSlackWebhookPath, registerSlackHttpHandler } from "../http/index";

@@ -1,5 +1,5 @@
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
-import { createAccountListHelpers } from "@/src-backend/plugin-sdk/account-resolution";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-resolution";
 import { hasConfiguredSecretInput } from "../secret-input";
 import type { CoreConfig, MatrixConfig } from "../types";
 import { resolveMatrixConfigForAccount } from "./client";

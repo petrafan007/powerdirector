@@ -2,7 +2,7 @@ import {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   normalizeOptionalAccountId,
-} from "@/src-backend/plugin-sdk/account-id";
+} from "powerdirector/plugin-sdk/account-id";
 import type { PowerDirectorConfig } from "../api";
 import type { NostrProfile } from "./config-schema";
 import { DEFAULT_RELAYS } from "./default-relays";

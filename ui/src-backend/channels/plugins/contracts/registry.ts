@@ -2,9 +2,9 @@ import { expect, vi } from "vitest";
 import {
   __testing as discordThreadBindingTesting,
   createThreadBindingManager as createDiscordThreadBindingManager,
-} from "@/src-backend/extensions/discord/runtime-api";
-import { createFeishuThreadBindingManager } from "@/src-backend/extensions/feishu/api";
-import { createTelegramThreadBindingManager } from "@/src-backend/extensions/telegram/runtime-api";
+} from "powerdirector/extensions/discord/runtime-api";
+import { createFeishuThreadBindingManager } from "powerdirector/extensions/feishu/api";
+import { createTelegramThreadBindingManager } from "powerdirector/extensions/telegram/runtime-api";
 import type { PowerDirectorConfig } from "../../../config/config";
 import {
   getSessionBindingService,

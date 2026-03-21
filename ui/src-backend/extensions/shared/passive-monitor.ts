@@ -1,4 +1,4 @@
-import { runPassiveAccountLifecycle } from "@/src-backend/plugin-sdk/channel-runtime";
+import { runPassiveAccountLifecycle } from "powerdirector/plugin-sdk/channel-runtime";
 
 type StoppableMonitor = {
   stop: () => void;

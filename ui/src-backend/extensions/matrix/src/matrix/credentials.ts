@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
-import { resolveStateDir } from "@/src-backend/plugin-sdk/state-paths";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
+import { resolveStateDir } from "powerdirector/plugin-sdk/state-paths";
 import { tryGetMatrixRuntime } from "../runtime";
 
 export type MatrixStoredCredentials = {

@@ -62,7 +62,7 @@ export {
   listIrcAccountIds,
   resolveDefaultIrcAccountId,
   resolveIrcAccount,
-} from "@/src-backend/extensions/irc/api";
+} from "powerdirector/extensions/irc/api";
 export {
   readStoreAllowFromForDmPolicy,
   resolveEffectiveAllowFromLists,
@@ -71,7 +71,7 @@ export { formatDocsLink } from "../terminal/links";
 export type { WizardPrompter } from "../wizard/prompts";
 export { createChannelPairingController } from "./channel-pairing";
 export { dispatchInboundReplyWithBase } from "./inbound-reply-dispatch";
-export { ircSetupAdapter, ircSetupWizard } from "@/src-backend/extensions/irc/api";
+export { ircSetupAdapter, ircSetupWizard } from "powerdirector/extensions/irc/api";
 export type { OutboundReplyPayload } from "./reply-payload";
 export {
   createNormalizedOutboundDeliverer,

@@ -1,4 +1,4 @@
-import type { ModelDefinitionConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelDefinitionConfig } from "powerdirector/plugin-sdk/provider-models";
 
 export const ZAI_CODING_GLOBAL_BASE_URL = "https://api.z.ai/api/coding/paas/v4";
 export const ZAI_CODING_CN_BASE_URL = "https://open.bigmodel.cn/api/coding/paas/v4";

@@ -3,8 +3,8 @@ import {
   buildChannelKeyCandidates,
   resolveChannelEntryMatchWithFallback,
   type ChannelMatchSource,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { SlackReactionNotificationMode } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { SlackReactionNotificationMode } from "powerdirector/plugin-sdk/config-runtime";
 import type { SlackMessageEvent } from "../types";
 import { allowListMatches, normalizeAllowListLower, normalizeSlackSlug } from "./allow-list";
 

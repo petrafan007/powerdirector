@@ -1,6 +1,6 @@
-import { shouldAckReactionForWhatsApp } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { shouldAckReactionForWhatsApp } from "powerdirector/plugin-sdk/channel-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { sendReactionWhatsApp } from "../../send";
 import { formatError } from "../../session";
 import type { WebInboundMsg } from "../types";

@@ -3,8 +3,8 @@ import {
   normalizeAccountId,
   resolveAccountEntry,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/account-resolution";
-import type { SignalAccountConfig } from "@/src-backend/plugin-sdk/signal-core";
+} from "powerdirector/plugin-sdk/account-resolution";
+import type { SignalAccountConfig } from "powerdirector/plugin-sdk/signal-core";
 
 export type ResolvedSignalAccount = {
   accountId: string;

@@ -6,7 +6,7 @@ import {
   isNumericTelegramUserId,
   listTelegramAccountIds,
   normalizeTelegramAllowFromEntry,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 import { normalizeChatChannelId } from "../channels/registry";
 import { formatCliCommand } from "../cli/command-format";
 import { resolveCommandSecretRefsViaGateway } from "../cli/command-secret-gateway";

@@ -5,7 +5,7 @@ import {
   GroupPolicySchema,
   MarkdownConfigSchema,
   ToolPolicySchema,
-} from "@/src-backend/plugin-sdk/channel-config-schema";
+} from "powerdirector/plugin-sdk/channel-config-schema";
 import { z } from "zod";
 import { buildSecretInputSchema, hasConfiguredSecretInput } from "./secret-input";
 

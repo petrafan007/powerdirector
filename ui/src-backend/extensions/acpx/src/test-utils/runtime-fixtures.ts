@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredPowerDirectorTmpDir } from "@/src-backend/plugin-sdk/infra-runtime";
+import { resolvePreferredPowerDirectorTmpDir } from "powerdirector/plugin-sdk/infra-runtime";
 import type { ResolvedAcpxPluginConfig } from "../config";
 import { ACPX_PINNED_VERSION } from "../config";
 import { AcpxRuntime } from "../runtime";

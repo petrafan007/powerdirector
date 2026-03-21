@@ -19,7 +19,7 @@ import {
   withTrustedWebSearchEndpoint,
   wrapWebContent,
   writeCachedSearchPayload,
-} from "@/src-backend/plugin-sdk/provider-web-search";
+} from "powerdirector/plugin-sdk/provider-web-search";
 
 const XAI_API_ENDPOINT = "https://api.x.ai/v1/responses";
 const DEFAULT_GROK_MODEL = "grok-4-1-fast";

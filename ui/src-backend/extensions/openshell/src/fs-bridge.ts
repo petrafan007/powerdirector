@@ -5,7 +5,7 @@ import type {
   SandboxFsBridge,
   SandboxFsStat,
   SandboxResolvedPath,
-} from "@/src-backend/plugin-sdk/sandbox";
+} from "powerdirector/plugin-sdk/sandbox";
 import type { OpenShellSandboxBackend } from "./backend";
 import { movePathWithCopyFallback } from "./mirror";
 

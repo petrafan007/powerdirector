@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/device-pair";
+export * from "powerdirector/plugin-sdk/device-pair";

@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 import { createServer } from "node:http";
-import { isWSL2Sync } from "@/src-backend/plugin-sdk/infra-runtime";
+import { isWSL2Sync } from "powerdirector/plugin-sdk/infra-runtime";
 import { resolveOAuthClientConfig } from "./oauth.credentials";
 import { AUTH_URL, REDIRECT_URI, SCOPES } from "./oauth.shared";
 

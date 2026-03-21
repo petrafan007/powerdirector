@@ -1,13 +1,13 @@
-import { ensureAuthProfileStore, listProfilesForProvider } from "@/src-backend/plugin-sdk/agent-runtime";
+import { ensureAuthProfileStore, listProfilesForProvider } from "powerdirector/plugin-sdk/agent-runtime";
 import {
   definePluginEntry,
   type ProviderAuthContext,
   type ProviderResolveDynamicModelContext,
   type ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/core";
-import { coerceSecretRef } from "@/src-backend/plugin-sdk/provider-auth";
-import { githubCopilotLoginCommand } from "@/src-backend/plugin-sdk/provider-auth-login";
-import { normalizeModelCompat } from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/core";
+import { coerceSecretRef } from "powerdirector/plugin-sdk/provider-auth";
+import { githubCopilotLoginCommand } from "powerdirector/plugin-sdk/provider-auth-login";
+import { normalizeModelCompat } from "powerdirector/plugin-sdk/provider-models";
 import { DEFAULT_COPILOT_API_BASE_URL, resolveCopilotApiToken } from "./token";
 import { fetchCopilotUsage } from "./usage";
 

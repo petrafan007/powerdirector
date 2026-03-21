@@ -1,7 +1,7 @@
 import { type RunOptions, run } from "@grammyjs/runner";
-import { computeBackoff, sleepWithAbort } from "@/src-backend/plugin-sdk/infra-runtime";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import { formatDurationPrecise } from "@/src-backend/plugin-sdk/infra-runtime";
+import { computeBackoff, sleepWithAbort } from "powerdirector/plugin-sdk/infra-runtime";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import { formatDurationPrecise } from "powerdirector/plugin-sdk/infra-runtime";
 import { withTelegramApiErrorLogging } from "./api-logging";
 import { createTelegramBot } from "./bot";
 import { type TelegramTransport } from "./fetch";

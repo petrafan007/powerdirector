@@ -1,4 +1,4 @@
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import type { PowerDirectorConfig } from "../../config/config";
 import { loadConfig } from "../../config/config";
 import { callGatewayLeastPrivilege, randomIdempotencyKey } from "../../gateway/call";

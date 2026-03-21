@@ -3,4 +3,4 @@ export {
   hasConfiguredSecretInput,
   normalizeResolvedSecretInputString,
   normalizeSecretInputString,
-} from "@/src-backend/plugin-sdk/secret-input";
+} from "powerdirector/plugin-sdk/secret-input";

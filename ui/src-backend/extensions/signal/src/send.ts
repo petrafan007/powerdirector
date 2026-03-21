@@ -1,7 +1,7 @@
-import { loadConfig, type PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { kindFromMime } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveOutboundAttachmentFromUrl } from "@/src-backend/plugin-sdk/media-runtime";
+import { loadConfig, type PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { kindFromMime } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveOutboundAttachmentFromUrl } from "powerdirector/plugin-sdk/media-runtime";
 import { resolveSignalAccount } from "./accounts";
 import { signalRpcRequest } from "./client";
 import { markdownToSignalText, type SignalTextStyleRange } from "./format";

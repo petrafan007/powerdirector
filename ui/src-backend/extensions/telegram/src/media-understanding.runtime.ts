@@ -1,11 +1,11 @@
 import {
   describeImageWithModel as describeImageWithModelImpl,
   transcribeFirstAudio as transcribeFirstAudioImpl,
-} from "@/src-backend/plugin-sdk/media-runtime";
+} from "powerdirector/plugin-sdk/media-runtime";
 
 type DescribeImageWithModel =
-  typeof import("@/src-backend/plugin-sdk/media-runtime").describeImageWithModel;
-type TranscribeFirstAudio = typeof import("@/src-backend/plugin-sdk/media-runtime").transcribeFirstAudio;
+  typeof import("powerdirector/plugin-sdk/media-runtime").describeImageWithModel;
+type TranscribeFirstAudio = typeof import("powerdirector/plugin-sdk/media-runtime").transcribeFirstAudio;
 
 export async function describeImageWithModel(
   ...args: Parameters<DescribeImageWithModel>

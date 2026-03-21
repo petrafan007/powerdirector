@@ -2,7 +2,7 @@ import {
   describeImageWithModel,
   describeImagesWithModel,
   type MediaUnderstandingProvider,
-} from "@/src-backend/plugin-sdk/media-understanding";
+} from "powerdirector/plugin-sdk/media-understanding";
 
 export const anthropicMediaUnderstandingProvider: MediaUnderstandingProvider = {
   id: "anthropic",

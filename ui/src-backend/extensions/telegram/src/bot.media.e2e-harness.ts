@@ -1,8 +1,8 @@
 import path from "node:path";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { MediaFetchError } from "@/src-backend/plugin-sdk/media-runtime";
-import { resetInboundDedupe } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { GetReplyOptions, MsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { MediaFetchError } from "powerdirector/plugin-sdk/media-runtime";
+import { resetInboundDedupe } from "powerdirector/plugin-sdk/reply-runtime";
+import type { GetReplyOptions, MsgContext } from "powerdirector/plugin-sdk/reply-runtime";
 import { beforeEach, vi, type Mock } from "vitest";
 import type { TelegramBotDeps } from "./bot-deps";
 
@@ -10,9 +10,9 @@ type TelegramBotRuntimeForTest = NonNullable<
   Parameters<typeof import("./bot").setTelegramBotRuntimeForTest>[0]
 >;
 type DispatchReplyWithBufferedBlockDispatcherFn =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").dispatchReplyWithBufferedBlockDispatcher;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").dispatchReplyWithBufferedBlockDispatcher;
 type DispatchReplyHarnessParams = Parameters<DispatchReplyWithBufferedBlockDispatcherFn>[0];
-type FetchRemoteMediaFn = typeof import("@/src-backend/plugin-sdk/media-runtime").fetchRemoteMedia;
+type FetchRemoteMediaFn = typeof import("powerdirector/plugin-sdk/media-runtime").fetchRemoteMedia;
 
 export const useSpy: Mock = vi.fn();
 export const middlewareUseSpy: Mock = vi.fn();
@@ -177,8 +177,8 @@ vi.doMock("undici", async (importOriginal) => {
   };
 });
 
-vi.doMock("@/src-backend/plugin-sdk/media-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/media-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/media-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/media-runtime")>();
   const mockModule = Object.create(null) as Record<string, unknown>;
   Object.defineProperties(mockModule, Object.getOwnPropertyDescriptors(actual));
   Object.defineProperty(mockModule, "fetchRemoteMedia", {
@@ -196,8 +196,8 @@ vi.doMock("@/src-backend/plugin-sdk/media-runtime", async (importOriginal) => {
   return mockModule;
 });
 
-vi.doMock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     loadConfig: telegramBotDepsForTest.loadConfig,
@@ -205,8 +205,8 @@ vi.doMock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
   };
 });
 
-vi.doMock("@/src-backend/plugin-sdk/agent-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/agent-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/agent-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/agent-runtime")>();
   return {
     ...actual,
     findModelInCatalog: vi.fn(() => undefined),
@@ -219,8 +219,8 @@ vi.doMock("@/src-backend/plugin-sdk/agent-runtime", async (importOriginal) => {
   };
 });
 
-vi.doMock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/conversation-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/conversation-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/conversation-runtime")>();
   return {
     ...actual,
     readChannelAllowFromStore: telegramBotDepsForTest.readChannelAllowFromStore,
@@ -231,8 +231,8 @@ vi.doMock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal
   };
 });
 
-vi.doMock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/reply-runtime")>();
+vi.doMock("powerdirector/plugin-sdk/reply-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/reply-runtime")>();
   return {
     ...actual,
     getReplyFromConfig: mediaHarnessReplySpy,

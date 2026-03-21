@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/voice-call";
+export * from "powerdirector/plugin-sdk/voice-call";

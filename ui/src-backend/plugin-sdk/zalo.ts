@@ -61,8 +61,8 @@ export { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key";
 export type { RuntimeEnv } from "../runtime";
 export type { WizardPrompter } from "../wizard/prompts";
 export { formatAllowFromLowercase, isNormalizedSenderAllowed } from "./allow-from";
-export { zaloSetupAdapter } from "@/src-backend/extensions/zalo/api";
-export { zaloSetupWizard } from "@/src-backend/extensions/zalo/api";
+export { zaloSetupAdapter } from "powerdirector/extensions/zalo/api";
+export { zaloSetupWizard } from "powerdirector/extensions/zalo/api";
 export {
   resolveDirectDmAuthorizationOutcome,
   resolveSenderCommandAuthorizationWithRuntime,

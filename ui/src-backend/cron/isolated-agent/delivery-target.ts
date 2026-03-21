@@ -1,4 +1,4 @@
-import { resolveWhatsAppAccount } from "@/src-backend/plugin-sdk/whatsapp";
+import { resolveWhatsAppAccount } from "powerdirector/plugin-sdk/whatsapp";
 import type { ChannelId } from "../../channels/plugins/types";
 import type { PowerDirectorConfig } from "../../config/config";
 import {

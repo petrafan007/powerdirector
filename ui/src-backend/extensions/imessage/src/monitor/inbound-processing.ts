@@ -1,31 +1,31 @@
-import { resolveDualTextControlCommandGate } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logInboundDrop } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveDualTextControlCommandGate } from "powerdirector/plugin-sdk/channel-runtime";
+import { logInboundDrop } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveChannelGroupPolicy,
   resolveChannelGroupRequireMention,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { hasControlCommand } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { hasControlCommand } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   formatInboundEnvelope,
   formatInboundFromLabel,
   resolveEnvelopeFormatOptions,
   type EnvelopeFormatOptions,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildPendingHistoryContextFromMap,
   recordPendingHistoryEntryIfEnabled,
   type HistoryEntry,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildMentionRegexes, matchesMentionPatterns } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { buildMentionRegexes, matchesMentionPatterns } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
 import {
   DM_GROUP_ACCESS_REASON,
   resolveDmGroupAccessWithLists,
-} from "@/src-backend/plugin-sdk/security-runtime";
-import { sanitizeTerminalText } from "@/src-backend/plugin-sdk/text-runtime";
-import { truncateUtf16Safe } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
+import { sanitizeTerminalText } from "powerdirector/plugin-sdk/text-runtime";
+import { truncateUtf16Safe } from "powerdirector/plugin-sdk/text-runtime";
 import {
   formatIMessageChatTarget,
   isAllowedIMessageSender,

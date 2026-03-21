@@ -1,41 +1,41 @@
 import type { Message, ReactionTypeEmoji } from "@grammyjs/types";
-import { resolveAgentDir, resolveDefaultAgentId } from "@/src-backend/plugin-sdk/agent-runtime";
-import { resolveDefaultModelForAgent } from "@/src-backend/plugin-sdk/agent-runtime";
-import { shouldDebounceTextInbound } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveChannelConfigWrites } from "@/src-backend/plugin-sdk/channel-runtime";
-import { writeConfigFile } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveAgentDir, resolveDefaultAgentId } from "powerdirector/plugin-sdk/agent-runtime";
+import { resolveDefaultModelForAgent } from "powerdirector/plugin-sdk/agent-runtime";
+import { shouldDebounceTextInbound } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveChannelConfigWrites } from "powerdirector/plugin-sdk/channel-runtime";
+import { writeConfigFile } from "powerdirector/plugin-sdk/config-runtime";
 import {
   loadSessionStore,
   resolveSessionStoreEntry,
   updateSessionStore,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import type { DmPolicy } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import type { DmPolicy } from "powerdirector/plugin-sdk/config-runtime";
 import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { applyModelOverrideToSessionEntry } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { applyModelOverrideToSessionEntry } from "powerdirector/plugin-sdk/config-runtime";
 import {
   buildPluginBindingResolvedText,
   parsePluginBindingApprovalCustomId,
   resolvePluginConversationBindingApproval,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { dispatchPluginInteractiveHandler } from "@/src-backend/plugin-sdk/plugin-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { dispatchPluginInteractiveHandler } from "powerdirector/plugin-sdk/plugin-runtime";
 import {
   createInboundDebouncer,
   resolveInboundDebounceMs,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildCommandsPaginationKeyboard } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { buildCommandsPaginationKeyboard } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildModelsProviderData,
   formatModelsAvailableHeader,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveStoredModelOverride } from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildCommandsMessagePaginated } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { resolveThreadSessionKeys } from "@/src-backend/plugin-sdk/routing";
-import { danger, logVerbose, warn } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveStoredModelOverride } from "powerdirector/plugin-sdk/reply-runtime";
+import { buildCommandsMessagePaginated } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { resolveThreadSessionKeys } from "powerdirector/plugin-sdk/routing";
+import { danger, logVerbose, warn } from "powerdirector/plugin-sdk/runtime-env";
 import { withTelegramApiErrorLogging } from "./api-logging";
 import {
   isSenderAllowed,

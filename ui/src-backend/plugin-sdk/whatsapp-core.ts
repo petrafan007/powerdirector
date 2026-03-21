@@ -13,7 +13,7 @@ export {
 export {
   resolveWhatsAppGroupRequireMention,
   resolveWhatsAppGroupToolPolicy,
-} from "@/src-backend/extensions/whatsapp/api";
+} from "powerdirector/extensions/whatsapp/api";
 export { resolveWhatsAppGroupIntroHint } from "../channels/plugins/whatsapp-shared";
 export {
   ToolAuthorizationError,

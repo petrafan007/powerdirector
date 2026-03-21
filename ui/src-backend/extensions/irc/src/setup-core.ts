@@ -1,13 +1,13 @@
-import type { ChannelSetupAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelSetupInput } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { DmPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+import type { ChannelSetupAdapter } from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelSetupInput } from "powerdirector/plugin-sdk/channel-runtime";
+import type { DmPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 import {
   applyAccountNameToChannelSection,
   createTopLevelChannelAllowFromSetter,
   createTopLevelChannelDmPolicySetter,
   patchScopedAccountConfig,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import type { CoreConfig, IrcAccountConfig, IrcNickServConfig } from "./types";
 
 const channel = "irc" as const;

@@ -1,6 +1,6 @@
-import { readSessionUpdatedAt } from "@/src-backend/plugin-sdk/config-runtime";
-import { formatInboundEnvelope } from "@/src-backend/plugin-sdk/reply-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { readSessionUpdatedAt } from "powerdirector/plugin-sdk/config-runtime";
+import { formatInboundEnvelope } from "powerdirector/plugin-sdk/reply-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import type { ResolvedSlackAccount } from "../../accounts";
 import type { SlackMessageEvent } from "../../types";
 import type { SlackMonitorContext } from "../context";
@@ -30,7 +30,7 @@ export async function resolveSlackThreadContextData(params: {
   storePath: string;
   sessionKey: string;
   envelopeOptions: ReturnType<
-    typeof import("@/src-backend/plugin-sdk/reply-runtime").resolveEnvelopeFormatOptions
+    typeof import("powerdirector/plugin-sdk/reply-runtime").resolveEnvelopeFormatOptions
   >;
   effectiveDirectMedia: SlackMediaResult[] | null;
 }): Promise<SlackThreadContextData> {

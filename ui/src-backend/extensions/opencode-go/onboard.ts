@@ -1,9 +1,9 @@
-import { OPENCODE_GO_DEFAULT_MODEL_REF } from "@/src-backend/plugin-sdk/provider-models";
+import { OPENCODE_GO_DEFAULT_MODEL_REF } from "powerdirector/plugin-sdk/provider-models";
 import {
   applyAgentDefaultModelPrimary,
   withAgentModelAliases,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/provider-onboard";
+} from "powerdirector/plugin-sdk/provider-onboard";
 
 export { OPENCODE_GO_DEFAULT_MODEL_REF };
 

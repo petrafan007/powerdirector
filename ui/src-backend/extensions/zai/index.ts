@@ -5,7 +5,7 @@ import {
   type ProviderAuthMethodNonInteractiveContext,
   type ProviderResolveDynamicModelContext,
   type ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 import {
   applyAuthProfileConfig,
   buildApiKeyCredential,
@@ -15,10 +15,10 @@ import {
   type SecretInput,
   upsertAuthProfile,
   validateApiKeyInput,
-} from "@/src-backend/plugin-sdk/provider-auth-api-key";
-import { DEFAULT_CONTEXT_TOKENS, normalizeModelCompat } from "@/src-backend/plugin-sdk/provider-models";
-import { createZaiToolStreamWrapper } from "@/src-backend/plugin-sdk/provider-stream";
-import { fetchZaiUsage, resolveLegacyPiAgentAccessToken } from "@/src-backend/plugin-sdk/provider-usage";
+} from "powerdirector/plugin-sdk/provider-auth-api-key";
+import { DEFAULT_CONTEXT_TOKENS, normalizeModelCompat } from "powerdirector/plugin-sdk/provider-models";
+import { createZaiToolStreamWrapper } from "powerdirector/plugin-sdk/provider-stream";
+import { fetchZaiUsage, resolveLegacyPiAgentAccessToken } from "powerdirector/plugin-sdk/provider-usage";
 import { detectZaiEndpoint, type ZaiEndpointId } from "./detect";
 import { zaiMediaUnderstandingProvider } from "./media-understanding-provider";
 import { applyZaiConfig, applyZaiProviderConfig, ZAI_DEFAULT_MODEL_REF } from "./onboard";

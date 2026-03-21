@@ -1,12 +1,12 @@
 import type { Bot } from "grammy";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import type {
   DmPolicy,
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import type { HistoryEntry } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import type { HistoryEntry } from "powerdirector/plugin-sdk/reply-runtime";
 import type { StickerMetadata, TelegramContext } from "./bot/types";
 
 export type TelegramMediaRef = {

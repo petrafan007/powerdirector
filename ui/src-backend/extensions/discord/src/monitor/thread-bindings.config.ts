@@ -2,9 +2,9 @@ import {
   resolveThreadBindingIdleTimeoutMs,
   resolveThreadBindingMaxAgeMs,
   resolveThreadBindingsEnabled,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 
 export {
   resolveThreadBindingIdleTimeoutMs,

@@ -1,8 +1,8 @@
 import type {
   ChannelThreadingContext,
   ChannelThreadingToolContext,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import { resolveSlackAccount, resolveSlackReplyToMode } from "./accounts";
 
 export function buildSlackThreadingToolContext(params: {

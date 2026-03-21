@@ -1,5 +1,5 @@
 import { Routes } from "discord-api-types/v10";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   buildReactionIdentifier,
   createDiscordClient,

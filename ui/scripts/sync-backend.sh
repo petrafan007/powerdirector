@@ -37,11 +37,7 @@ rsync -av --exclude="**/__tests__/**" --exclude="**/*.test.ts" --exclude="**/nod
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])((\.\/|\.\.\/|powerdirector\/)[^'\"]+)\.js\1/\1\2\1/g" {} +
 
 # 2. Correct mapping for relative apps/ and extensions/ to Next.js path aliases
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])\.\.\/(\.\.\/)*apps\//\1@\/src-backend\/apps\//g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])\.\.\/(\.\.\/)*extensions\//\1@\/src-backend\/extensions\//g" {} +
-
-# 3. Correct mapping for absolute powerdirector/ imports to alias
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\/plugin-sdk\/([^'\"]+)\1/\1@\/src-backend\/plugin-sdk\/\2\1/g" {} +
-find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\//\1@\/src-backend\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])(\.\.\/)+apps\//\1powerdirector\/apps\//g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])(\.\.\/)+extensions\//\1powerdirector\/extensions\//g" {} +
 
 echo "Backend sync and import sanitization complete."

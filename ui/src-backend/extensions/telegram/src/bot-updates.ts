@@ -1,5 +1,5 @@
 import type { Message } from "@grammyjs/types";
-import { createDedupeCache } from "@/src-backend/plugin-sdk/infra-runtime";
+import { createDedupeCache } from "powerdirector/plugin-sdk/infra-runtime";
 import type { TelegramContext } from "./bot/types";
 
 const MEDIA_GROUP_TIMEOUT_MS = 500;

@@ -1,4 +1,4 @@
-import { isAllowedParsedChatSender } from "@/src-backend/plugin-sdk/allow-from";
+import { isAllowedParsedChatSender } from "powerdirector/plugin-sdk/allow-from";
 
 export type ServicePrefix<TService extends string> = { prefix: string; service: TService };
 

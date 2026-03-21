@@ -1,4 +1,4 @@
-import { hasOutboundReplyContent } from "@/src-backend/plugin-sdk/reply-payload";
+import { hasOutboundReplyContent } from "powerdirector/plugin-sdk/reply-payload";
 import type { ReplyPayload } from "./types";
 
 export function resolveHeartbeatReplyPayload(

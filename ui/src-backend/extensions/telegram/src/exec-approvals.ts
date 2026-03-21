@@ -1,7 +1,7 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { TelegramExecApprovalConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { getExecApprovalReplyMetadata } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { TelegramExecApprovalConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { getExecApprovalReplyMetadata } from "powerdirector/plugin-sdk/infra-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
 import { resolveTelegramAccount } from "./accounts";
 import { resolveTelegramTargetChatType } from "./targets";
 

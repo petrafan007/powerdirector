@@ -3,7 +3,7 @@ import {
   type ModelProviderConfig,
   TOGETHER_BASE_URL,
   TOGETHER_MODEL_CATALOG,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 
 export function buildTogetherProvider(): ModelProviderConfig {
   return {

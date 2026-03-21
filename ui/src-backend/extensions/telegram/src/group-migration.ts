@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { TelegramGroupConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { TelegramGroupConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 
 type TelegramGroups = Record<string, TelegramGroupConfig>;
 

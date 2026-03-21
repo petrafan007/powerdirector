@@ -3,4 +3,4 @@ export {
   resolveSlackChannelId,
   type SlackTarget,
   type SlackTargetKind,
-} from "@/src-backend/extensions/slack/api";
+} from "powerdirector/extensions/slack/api";

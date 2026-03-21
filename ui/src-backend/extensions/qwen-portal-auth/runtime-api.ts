@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/qwen-portal-auth";
+export * from "powerdirector/plugin-sdk/qwen-portal-auth";

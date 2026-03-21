@@ -1,11 +1,11 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/tlon";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/tlon";
 import {
   formatDocsLink,
   resolveAccountIdForConfigure,
   DEFAULT_ACCOUNT_ID,
   type ChannelOnboardingAdapter,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/tlon";
+} from "powerdirector/plugin-sdk/tlon";
 import { buildTlonAccountFields } from "./account-fields";
 import type { TlonResolvedAccount } from "./types";
 import { listTlonAccountIds, resolveTlonAccount } from "./types";

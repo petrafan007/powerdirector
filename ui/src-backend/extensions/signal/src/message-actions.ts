@@ -5,7 +5,7 @@ import {
   resolveReactionMessageId,
   type ChannelMessageActionAdapter,
   type ChannelMessageActionName,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import { listEnabledSignalAccounts, resolveSignalAccount } from "./accounts";
 import { resolveSignalReactionLevel } from "./reaction-level";
 import { removeReactionSignal, sendReactionSignal } from "./send-reactions";

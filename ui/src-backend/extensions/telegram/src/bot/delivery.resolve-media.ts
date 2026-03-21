@@ -1,9 +1,9 @@
 import { GrammyError } from "grammy";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import { retryAsync } from "@/src-backend/plugin-sdk/infra-runtime";
-import { fetchRemoteMedia } from "@/src-backend/plugin-sdk/media-runtime";
-import { saveMediaBuffer } from "@/src-backend/plugin-sdk/media-runtime";
-import { logVerbose, warn } from "@/src-backend/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import { retryAsync } from "powerdirector/plugin-sdk/infra-runtime";
+import { fetchRemoteMedia } from "powerdirector/plugin-sdk/media-runtime";
+import { saveMediaBuffer } from "powerdirector/plugin-sdk/media-runtime";
+import { logVerbose, warn } from "powerdirector/plugin-sdk/runtime-env";
 import { shouldRetryTelegramTransportFallback, type TelegramTransport } from "../fetch";
 import { cacheSticker, getCachedSticker } from "../sticker-cache";
 import { resolveTelegramMediaPlaceholder } from "./helpers";

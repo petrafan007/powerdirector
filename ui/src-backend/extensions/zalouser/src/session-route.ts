@@ -1,7 +1,7 @@
 import {
   buildChannelOutboundSessionRoute,
   type ChannelOutboundSessionRouteParams,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 
 function stripZalouserTargetPrefix(raw: string): string {
   return raw

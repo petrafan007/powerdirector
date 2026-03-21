@@ -1,7 +1,7 @@
-import { matrixPlugin } from "@/src-backend/extensions/matrix/index";
-import { msteamsPlugin } from "@/src-backend/extensions/msteams/index";
-import { nostrPlugin } from "@/src-backend/extensions/nostr/index";
-import { tlonPlugin } from "@/src-backend/extensions/tlon/index";
+import { matrixPlugin } from "powerdirector/extensions/matrix/index";
+import { msteamsPlugin } from "powerdirector/extensions/msteams/index";
+import { nostrPlugin } from "powerdirector/extensions/nostr/index";
+import { tlonPlugin } from "powerdirector/extensions/tlon/index";
 import { bundledChannelPlugins } from "../channels/plugins/bundled";
 import { setActivePluginRegistry } from "../plugins/runtime";
 import { createTestRegistry } from "../test-utils/channel-plugins";

@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/open-prose";
+export * from "powerdirector/plugin-sdk/open-prose";

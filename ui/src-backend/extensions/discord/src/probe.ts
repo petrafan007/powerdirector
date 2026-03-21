@@ -1,6 +1,6 @@
-import type { BaseProbeResult } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveFetch } from "@/src-backend/plugin-sdk/infra-runtime";
-import { fetchWithTimeout } from "@/src-backend/plugin-sdk/text-runtime";
+import type { BaseProbeResult } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveFetch } from "powerdirector/plugin-sdk/infra-runtime";
+import { fetchWithTimeout } from "powerdirector/plugin-sdk/text-runtime";
 import { normalizeDiscordToken } from "./token";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";

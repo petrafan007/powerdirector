@@ -1,4 +1,4 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
 import type { AnyAgentTool, PowerDirectorPluginApi, PowerDirectorPluginToolFactory } from "./runtime-api";
 import { createLobsterTool } from "./src/lobster-tool";
 

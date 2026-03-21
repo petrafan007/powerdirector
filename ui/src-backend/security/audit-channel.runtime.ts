@@ -1,7 +1,7 @@
 import {
   isNumericTelegramUserId,
   normalizeTelegramAllowFromEntry,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 import { readChannelAllowFromStore } from "../pairing/pairing-store";
 import {
   isDiscordMutableAllowEntry,

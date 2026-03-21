@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Readable } from "stream";
-import { mediaKindFromMime } from "@/src-backend/plugin-sdk/media-runtime";
+import { mediaKindFromMime } from "powerdirector/plugin-sdk/media-runtime";
 import { withTempDownloadPath, type ClawdbotConfig } from "../runtime-api";
 import { resolveFeishuAccount } from "./accounts";
 import { createFeishuClient } from "./client";

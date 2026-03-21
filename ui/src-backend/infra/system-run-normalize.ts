@@ -1,4 +1,4 @@
-import { mapAllowFromEntries } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { mapAllowFromEntries } from "powerdirector/plugin-sdk/channel-config-helpers";
 
 export function normalizeNonEmptyString(value: unknown): string | null {
   if (typeof value !== "string") {

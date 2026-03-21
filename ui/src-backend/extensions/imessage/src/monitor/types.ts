@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 
 export type IMessageAttachment = {
   original_path?: string | null;

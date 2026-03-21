@@ -1,4 +1,4 @@
-import type { ModelDefinitionConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelDefinitionConfig } from "powerdirector/plugin-sdk/provider-models";
 
 export const XAI_BASE_URL = "https://api.x.ai/v1";
 export const XAI_DEFAULT_MODEL_ID = "grok-4";

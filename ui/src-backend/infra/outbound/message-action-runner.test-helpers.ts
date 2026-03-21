@@ -1,5 +1,5 @@
-import { slackPlugin, setSlackRuntime } from "@/src-backend/extensions/slack/index";
-import { telegramPlugin, setTelegramRuntime } from "@/src-backend/extensions/telegram/index";
+import { slackPlugin, setSlackRuntime } from "powerdirector/extensions/slack/index";
+import { telegramPlugin, setTelegramRuntime } from "powerdirector/extensions/telegram/index";
 import type { PowerDirectorConfig } from "../../config/config";
 import { setActivePluginRegistry } from "../../plugins/runtime";
 import { createPluginRuntime } from "../../plugins/runtime/index";

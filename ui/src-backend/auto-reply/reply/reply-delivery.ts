@@ -1,4 +1,4 @@
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import { logVerbose } from "../../globals";
 import { SILENT_REPLY_TOKEN } from "../tokens";
 import type { BlockReplyContext, ReplyPayload } from "../types";

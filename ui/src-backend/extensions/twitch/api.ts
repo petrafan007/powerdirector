@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/twitch";
+export * from "powerdirector/plugin-sdk/twitch";

@@ -2,23 +2,23 @@ import type {
   ProviderAuthContext,
   ProviderResolveDynamicModelContext,
   ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/plugin-entry";
-import { buildOauthProviderAuthResult } from "@/src-backend/plugin-sdk/provider-auth";
+} from "powerdirector/plugin-sdk/plugin-entry";
+import { buildOauthProviderAuthResult } from "powerdirector/plugin-sdk/provider-auth";
 import {
   CODEX_CLI_PROFILE_ID,
   ensureAuthProfileStore,
   listProfilesForProvider,
   type OAuthCredential,
-} from "@/src-backend/plugin-sdk/provider-auth";
-import { loginOpenAICodexOAuth } from "@/src-backend/plugin-sdk/provider-auth-login";
+} from "powerdirector/plugin-sdk/provider-auth";
+import { loginOpenAICodexOAuth } from "powerdirector/plugin-sdk/provider-auth-login";
 import {
   DEFAULT_CONTEXT_TOKENS,
   normalizeModelCompat,
   normalizeProviderId,
   type ProviderPlugin,
-} from "@/src-backend/plugin-sdk/provider-models";
-import { createOpenAIAttributionHeadersWrapper } from "@/src-backend/plugin-sdk/provider-stream";
-import { fetchCodexUsage } from "@/src-backend/plugin-sdk/provider-usage";
+} from "powerdirector/plugin-sdk/provider-models";
+import { createOpenAIAttributionHeadersWrapper } from "powerdirector/plugin-sdk/provider-stream";
+import { fetchCodexUsage } from "powerdirector/plugin-sdk/provider-usage";
 import { buildOpenAICodexProvider } from "./openai-codex-catalog";
 import {
   cloneFirstTemplateModel,

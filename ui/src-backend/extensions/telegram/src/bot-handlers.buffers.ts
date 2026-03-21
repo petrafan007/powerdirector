@@ -1,11 +1,11 @@
 import type { Message } from "@grammyjs/types";
-import { shouldDebounceTextInbound } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { shouldDebounceTextInbound } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   createInboundDebouncer,
   resolveInboundDebounceMs,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { danger, logVerbose, warn } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { danger, logVerbose, warn } from "powerdirector/plugin-sdk/runtime-env";
 import {
   hasInboundMedia,
   isRecoverableMediaGroupError,

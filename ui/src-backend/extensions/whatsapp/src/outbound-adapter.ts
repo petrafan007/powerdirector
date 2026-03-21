@@ -1,13 +1,13 @@
-import { sendTextMediaPayload } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelOutboundAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOutboundSendDep } from "@/src-backend/plugin-sdk/channel-runtime";
+import { sendTextMediaPayload } from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelOutboundAdapter } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   createAttachedChannelResultAdapter,
   createEmptyChannelResult,
-} from "@/src-backend/plugin-sdk/channel-send-result";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
-import { chunkText } from "@/src-backend/plugin-sdk/reply-runtime";
-import { shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/channel-send-result";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
+import { chunkText } from "powerdirector/plugin-sdk/reply-runtime";
+import { shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { resolveWhatsAppOutboundTarget } from "./runtime-api";
 import { sendMessageWhatsApp, sendPollWhatsApp } from "./send";
 

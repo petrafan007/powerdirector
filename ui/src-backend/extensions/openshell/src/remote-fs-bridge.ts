@@ -3,7 +3,7 @@ import {
   type RemoteShellSandboxHandle,
   type SandboxContext,
   type SandboxFsBridge,
-} from "@/src-backend/plugin-sdk/sandbox";
+} from "powerdirector/plugin-sdk/sandbox";
 
 export function createOpenShellRemoteFsBridge(params: {
   sandbox: SandboxContext;

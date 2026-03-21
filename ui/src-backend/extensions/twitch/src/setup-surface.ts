@@ -9,7 +9,7 @@ import {
   type ChannelSetupWizard,
   type PowerDirectorConfig,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import { DEFAULT_ACCOUNT_ID, getAccountConfig } from "./config";
 import type { TwitchAccountConfig, TwitchRole } from "./types";
 import { isAccountConfigured } from "./utils/twitch";

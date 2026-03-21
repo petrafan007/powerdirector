@@ -6,7 +6,7 @@ import {
   type ChannelSetupAdapter,
   type DmPolicy,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import { applyBlueBubblesConnectionConfig } from "./config-apply";
 
 const channel = "bluebubbles" as const;

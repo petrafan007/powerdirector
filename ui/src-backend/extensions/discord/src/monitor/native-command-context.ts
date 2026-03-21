@@ -1,5 +1,5 @@
-import type { CommandArgs } from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
+import type { CommandArgs } from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
 import { type DiscordChannelConfigResolved, type DiscordGuildEntryResolved } from "./allow-list";
 import { buildDiscordInboundAccessContext } from "./inbound-context";
 

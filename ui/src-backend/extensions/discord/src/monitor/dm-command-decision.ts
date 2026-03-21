@@ -1,5 +1,5 @@
-import { createChannelPairingChallengeIssuer } from "@/src-backend/plugin-sdk/channel-pairing";
-import { upsertChannelPairingRequest } from "@/src-backend/plugin-sdk/conversation-runtime";
+import { createChannelPairingChallengeIssuer } from "powerdirector/plugin-sdk/channel-pairing";
+import { upsertChannelPairingRequest } from "powerdirector/plugin-sdk/conversation-runtime";
 import type { DiscordDmCommandAccess } from "./dm-command-auth";
 
 export async function handleDiscordDmCommandDecision(params: {

@@ -3,7 +3,7 @@ import {
   type ModelProviderConfig,
   SYNTHETIC_BASE_URL,
   SYNTHETIC_MODEL_CATALOG,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 
 export function buildSyntheticProvider(): ModelProviderConfig {
   return {

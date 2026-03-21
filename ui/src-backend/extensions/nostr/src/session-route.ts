@@ -2,7 +2,7 @@ import {
   buildChannelOutboundSessionRoute,
   stripChannelTargetPrefix,
   type ChannelOutboundSessionRouteParams,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 
 export function resolveNostrOutboundSessionRoute(params: ChannelOutboundSessionRouteParams) {
   const target = stripChannelTargetPrefix(params.target, "nostr");

@@ -1,4 +1,4 @@
-import type { MockFn } from "@/src-backend/plugin-sdk/testing";
+import type { MockFn } from "powerdirector/plugin-sdk/testing";
 import { vi } from "vitest";
 
 export const sendMock: MockFn = vi.fn();
@@ -56,8 +56,8 @@ vi.mock("./send", () => ({
   uploadStickerDiscord: vi.fn(),
 }));
 
-vi.mock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/reply-runtime")>();
+vi.mock("powerdirector/plugin-sdk/reply-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/reply-runtime")>();
   return {
     ...actual,
     dispatchInboundMessage: (...args: unknown[]) => dispatchMock(...args),
@@ -77,24 +77,24 @@ function createPairingStoreMocks() {
   };
 }
 
-vi.mock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/conversation-runtime")>();
+vi.mock("powerdirector/plugin-sdk/conversation-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/conversation-runtime")>();
   return {
     ...actual,
     ...createPairingStoreMocks(),
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/channel-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/channel-runtime")>();
+vi.mock("powerdirector/plugin-sdk/channel-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/channel-runtime")>();
   return {
     ...actual,
     recordInboundSession: (...args: unknown[]) => recordInboundSessionMock(...args),
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.mock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     readSessionUpdatedAt: vi.fn(() => undefined),

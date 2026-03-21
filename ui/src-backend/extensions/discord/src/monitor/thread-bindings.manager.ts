@@ -1,14 +1,14 @@
 import { Routes } from "discord-api-types/v10";
-import { resolveThreadBindingConversationIdFromBindingId } from "@/src-backend/plugin-sdk/channel-runtime";
-import { getRuntimeConfigSnapshot, type PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveThreadBindingConversationIdFromBindingId } from "powerdirector/plugin-sdk/channel-runtime";
+import { getRuntimeConfigSnapshot, type PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   registerSessionBindingAdapter,
   unregisterSessionBindingAdapter,
   type BindingTargetKind,
   type SessionBindingRecord,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { normalizeAccountId, resolveAgentIdFromSessionKey } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { normalizeAccountId, resolveAgentIdFromSessionKey } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { createDiscordRestClient } from "../client";
 import {
   createThreadForBinding,

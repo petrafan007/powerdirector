@@ -20,4 +20,4 @@ export { createFixedWindowRateLimiter } from "./webhook-memory-guards";
 export {
   synologyChatSetupAdapter,
   synologyChatSetupWizard,
-} from "@/src-backend/extensions/synology-chat/setup-api";
+} from "powerdirector/extensions/synology-chat/setup-api";

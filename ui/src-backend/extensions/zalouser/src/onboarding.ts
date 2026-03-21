@@ -3,7 +3,7 @@ import type {
   ChannelOnboardingDmPolicy,
   PowerDirectorConfig,
   WizardPrompter,
-} from "@/src-backend/plugin-sdk/zalouser";
+} from "powerdirector/plugin-sdk/zalouser";
 import {
   DEFAULT_ACCOUNT_ID,
   formatResolvedUnresolvedNote,
@@ -12,7 +12,7 @@ import {
   promptChannelAccessConfig,
   resolveAccountIdForConfigure,
   setTopLevelChannelDmPolicyWithAllowFrom,
-} from "@/src-backend/plugin-sdk/zalouser";
+} from "powerdirector/plugin-sdk/zalouser";
 import {
   listZalouserAccountIds,
   resolveDefaultZalouserAccountId,

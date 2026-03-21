@@ -1,10 +1,10 @@
 import { ChannelType, type Client } from "@buape/carbon";
 import { Routes } from "discord-api-types/v10";
-import type { ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { createReplyReferencePlanner } from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildAgentSessionKey } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { truncateUtf16Safe } from "@/src-backend/plugin-sdk/text-runtime";
+import type { ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
+import { createReplyReferencePlanner } from "powerdirector/plugin-sdk/reply-runtime";
+import { buildAgentSessionKey } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { truncateUtf16Safe } from "powerdirector/plugin-sdk/text-runtime";
 import type { DiscordChannelConfigResolved } from "./allow-list";
 import type { DiscordMessageEvent } from "./listeners";
 import {

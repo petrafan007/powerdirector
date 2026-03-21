@@ -1,4 +1,4 @@
-import { discordMessageActions } from "@/src-backend/plugin-sdk/discord";
+import { discordMessageActions } from "powerdirector/plugin-sdk/discord";
 import {
   getThreadBindingManager,
   resolveThreadBindingIdleTimeoutMs,
@@ -8,7 +8,7 @@ import {
   setThreadBindingIdleTimeoutBySessionKey,
   setThreadBindingMaxAgeBySessionKey,
   unbindThreadBindingsBySessionKey,
-} from "@/src-backend/plugin-sdk/discord";
+} from "powerdirector/plugin-sdk/discord";
 import {
   createLazyRuntimeMethodBinder,
   createLazyRuntimeSurface,

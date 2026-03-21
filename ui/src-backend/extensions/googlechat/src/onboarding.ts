@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig, DmPolicy } from "@/src-backend/plugin-sdk/googlechat";
+import type { PowerDirectorConfig, DmPolicy } from "powerdirector/plugin-sdk/googlechat";
 import {
   addWildcardAllowFrom,
   formatDocsLink,
@@ -10,7 +10,7 @@ import {
   type WizardPrompter,
   DEFAULT_ACCOUNT_ID,
   migrateBaseNameToDefaultAccount,
-} from "@/src-backend/plugin-sdk/googlechat";
+} from "powerdirector/plugin-sdk/googlechat";
 import {
   listGoogleChatAccountIds,
   resolveDefaultGoogleChatAccountId,

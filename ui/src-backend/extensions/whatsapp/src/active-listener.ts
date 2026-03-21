@@ -1,6 +1,6 @@
-import { formatCliCommand } from "@/src-backend/plugin-sdk/cli-runtime";
-import type { PollInput } from "@/src-backend/plugin-sdk/media-runtime";
-import { DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/routing";
+import { formatCliCommand } from "powerdirector/plugin-sdk/cli-runtime";
+import type { PollInput } from "powerdirector/plugin-sdk/media-runtime";
+import { DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/routing";
 
 export type ActiveWebSendOptions = {
   gifPlayback?: boolean;

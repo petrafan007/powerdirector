@@ -1,7 +1,7 @@
 export type { PowerDirectorConfig } from "../config/config";
 export type { SlackAccountConfig } from "../config/types.slack";
-export type { InspectedSlackAccount } from "@/src-backend/extensions/slack/api";
-export type { ResolvedSlackAccount } from "@/src-backend/extensions/slack/api";
+export type { InspectedSlackAccount } from "powerdirector/extensions/slack/api";
+export type { ResolvedSlackAccount } from "powerdirector/extensions/slack/api";
 export type {
   ChannelMessageActionContext,
   ChannelPlugin,
@@ -35,7 +35,7 @@ export {
 export {
   listSlackDirectoryGroupsFromConfig,
   listSlackDirectoryPeersFromConfig,
-} from "@/src-backend/extensions/slack/api";
+} from "powerdirector/extensions/slack/api";
 export {
   resolveDefaultGroupPolicy,
   resolveOpenProviderRuntimeGroupPolicy,
@@ -43,7 +43,7 @@ export {
 export {
   resolveSlackGroupRequireMention,
   resolveSlackGroupToolPolicy,
-} from "@/src-backend/extensions/slack/api";
+} from "powerdirector/extensions/slack/api";
 export { SlackConfigSchema } from "../config/zod-schema.providers-core";
 export { buildComputedAccountStatusSnapshot } from "./status-helpers";
 
@@ -52,14 +52,14 @@ export {
   listSlackAccountIds,
   resolveDefaultSlackAccountId,
   resolveSlackReplyToMode,
-} from "@/src-backend/extensions/slack/api";
-export { isSlackInteractiveRepliesEnabled } from "@/src-backend/extensions/slack/api";
-export { inspectSlackAccount } from "@/src-backend/extensions/slack/api";
+} from "powerdirector/extensions/slack/api";
+export { isSlackInteractiveRepliesEnabled } from "powerdirector/extensions/slack/api";
+export { inspectSlackAccount } from "powerdirector/extensions/slack/api";
 export { parseSlackTarget, resolveSlackChannelId } from "./slack-targets";
-export { extractSlackToolSend, listSlackMessageActions } from "@/src-backend/extensions/slack/api";
-export { buildSlackThreadingToolContext } from "@/src-backend/extensions/slack/api";
-export { parseSlackBlocksInput } from "@/src-backend/extensions/slack/api";
-export { handleSlackHttpRequest } from "@/src-backend/extensions/slack/api";
+export { extractSlackToolSend, listSlackMessageActions } from "powerdirector/extensions/slack/api";
+export { buildSlackThreadingToolContext } from "powerdirector/extensions/slack/api";
+export { parseSlackBlocksInput } from "powerdirector/extensions/slack/api";
+export { handleSlackHttpRequest } from "powerdirector/extensions/slack/api";
 export {
   handleSlackAction,
   listSlackDirectoryGroupsLive,
@@ -69,7 +69,7 @@ export {
   resolveSlackChannelAllowlist,
   resolveSlackUserAllowlist,
   sendMessageSlack,
-} from "@/src-backend/extensions/slack/runtime-api";
+} from "powerdirector/extensions/slack/runtime-api";
 export {
   deleteSlackMessage,
   downloadSlackFile,
@@ -85,6 +85,6 @@ export {
   removeSlackReaction,
   sendSlackMessage,
   unpinSlackMessage,
-} from "@/src-backend/extensions/slack/api";
-export { recordSlackThreadParticipation } from "@/src-backend/extensions/slack/api";
-export type { SlackActionContext } from "@/src-backend/extensions/slack/runtime-api";
+} from "powerdirector/extensions/slack/api";
+export { recordSlackThreadParticipation } from "powerdirector/extensions/slack/api";
+export type { SlackActionContext } from "powerdirector/extensions/slack/runtime-api";

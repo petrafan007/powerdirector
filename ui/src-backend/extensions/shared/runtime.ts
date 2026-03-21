@@ -1,4 +1,4 @@
-import { createLoggerBackedRuntime } from "@/src-backend/plugin-sdk/runtime";
+import { createLoggerBackedRuntime } from "powerdirector/plugin-sdk/runtime";
 
 export function resolveLoggerBackedRuntime<TRuntime>(
   runtime: TRuntime | undefined,

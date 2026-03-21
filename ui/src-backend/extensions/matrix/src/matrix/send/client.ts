@@ -1,5 +1,5 @@
 import type { MatrixClient } from "@vector-im/matrix-bot-sdk";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
 import { getMatrixRuntime } from "../../runtime";
 import type { CoreConfig } from "../../types";
 import { getActiveMatrixClient, getAnyActiveMatrixClient } from "../active-client";

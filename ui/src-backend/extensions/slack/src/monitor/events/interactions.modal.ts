@@ -1,4 +1,4 @@
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
 import { parseSlackModalPrivateMetadata } from "../../modal-metadata";
 import { authorizeSlackSystemEventSender } from "../auth";
 import type { SlackMonitorContext } from "../context";

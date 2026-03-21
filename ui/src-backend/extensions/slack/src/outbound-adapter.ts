@@ -2,19 +2,19 @@ import {
   resolvePayloadMediaUrls,
   sendPayloadMediaSequenceAndFinalize,
   sendTextMediaPayload,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelOutboundAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOutboundSendDep } from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelOutboundAdapter } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   attachChannelToResult,
   createAttachedChannelResultAdapter,
-} from "@/src-backend/plugin-sdk/channel-send-result";
-import type { OutboundIdentity } from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/channel-send-result";
+import type { OutboundIdentity } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   resolveInteractiveTextFallback,
   type InteractiveReply,
-} from "@/src-backend/plugin-sdk/interactive-runtime";
-import { getGlobalHookRunner } from "@/src-backend/plugin-sdk/plugin-runtime";
+} from "powerdirector/plugin-sdk/interactive-runtime";
+import { getGlobalHookRunner } from "powerdirector/plugin-sdk/plugin-runtime";
 import { parseSlackBlocksInput } from "./blocks-input";
 import { buildSlackInteractiveBlocks, type SlackBlock } from "./blocks-render";
 import { sendMessageSlack, type SlackSendIdentity } from "./send";

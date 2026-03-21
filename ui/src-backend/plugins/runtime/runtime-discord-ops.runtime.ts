@@ -1,12 +1,12 @@
-import { auditDiscordChannelPermissions as auditDiscordChannelPermissionsImpl } from "@/src-backend/plugin-sdk/discord";
+import { auditDiscordChannelPermissions as auditDiscordChannelPermissionsImpl } from "powerdirector/plugin-sdk/discord";
 import {
   listDiscordDirectoryGroupsLive as listDiscordDirectoryGroupsLiveImpl,
   listDiscordDirectoryPeersLive as listDiscordDirectoryPeersLiveImpl,
-} from "@/src-backend/plugin-sdk/discord";
-import { monitorDiscordProvider as monitorDiscordProviderImpl } from "@/src-backend/plugin-sdk/discord";
-import { probeDiscord as probeDiscordImpl } from "@/src-backend/plugin-sdk/discord";
-import { resolveDiscordChannelAllowlist as resolveDiscordChannelAllowlistImpl } from "@/src-backend/plugin-sdk/discord";
-import { resolveDiscordUserAllowlist as resolveDiscordUserAllowlistImpl } from "@/src-backend/plugin-sdk/discord";
+} from "powerdirector/plugin-sdk/discord";
+import { monitorDiscordProvider as monitorDiscordProviderImpl } from "powerdirector/plugin-sdk/discord";
+import { probeDiscord as probeDiscordImpl } from "powerdirector/plugin-sdk/discord";
+import { resolveDiscordChannelAllowlist as resolveDiscordChannelAllowlistImpl } from "powerdirector/plugin-sdk/discord";
+import { resolveDiscordUserAllowlist as resolveDiscordUserAllowlistImpl } from "powerdirector/plugin-sdk/discord";
 import {
   createThreadDiscord as createThreadDiscordImpl,
   deleteMessageDiscord as deleteMessageDiscordImpl,
@@ -18,7 +18,7 @@ import {
   sendPollDiscord as sendPollDiscordImpl,
   sendTypingDiscord as sendTypingDiscordImpl,
   unpinMessageDiscord as unpinMessageDiscordImpl,
-} from "@/src-backend/plugin-sdk/discord";
+} from "powerdirector/plugin-sdk/discord";
 import type { PluginRuntimeChannel } from "./types-channel";
 
 type RuntimeDiscordOps = Pick<

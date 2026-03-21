@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/copilot-proxy";
+export * from "powerdirector/plugin-sdk/copilot-proxy";

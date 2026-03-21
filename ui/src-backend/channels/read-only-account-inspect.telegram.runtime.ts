@@ -1,8 +1,8 @@
-import { inspectTelegramAccount as inspectTelegramAccountImpl } from "@/src-backend/plugin-sdk/telegram";
+import { inspectTelegramAccount as inspectTelegramAccountImpl } from "powerdirector/plugin-sdk/telegram";
 
-export type { InspectedTelegramAccount } from "@/src-backend/plugin-sdk/telegram";
+export type { InspectedTelegramAccount } from "powerdirector/plugin-sdk/telegram";
 
-type InspectTelegramAccount = typeof import("@/src-backend/plugin-sdk/telegram").inspectTelegramAccount;
+type InspectTelegramAccount = typeof import("powerdirector/plugin-sdk/telegram").inspectTelegramAccount;
 
 export function inspectTelegramAccount(
   ...args: Parameters<InspectTelegramAccount>

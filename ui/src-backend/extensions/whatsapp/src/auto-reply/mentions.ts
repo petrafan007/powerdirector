@@ -1,6 +1,6 @@
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { buildMentionRegexes, normalizeMentionText } from "@/src-backend/plugin-sdk/reply-runtime";
-import { isSelfChatMode, jidToE164, normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { buildMentionRegexes, normalizeMentionText } from "powerdirector/plugin-sdk/reply-runtime";
+import { isSelfChatMode, jidToE164, normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import type { WebInboundMsg } from "./types";
 
 export type MentionConfig = {

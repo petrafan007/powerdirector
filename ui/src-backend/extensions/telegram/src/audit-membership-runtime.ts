@@ -1,5 +1,5 @@
-import { isRecord } from "@/src-backend/plugin-sdk/text-runtime";
-import { fetchWithTimeout } from "@/src-backend/plugin-sdk/text-runtime";
+import { isRecord } from "powerdirector/plugin-sdk/text-runtime";
+import { fetchWithTimeout } from "powerdirector/plugin-sdk/text-runtime";
 import type {
   AuditTelegramGroupMembershipParams,
   TelegramGroupMembershipAudit,

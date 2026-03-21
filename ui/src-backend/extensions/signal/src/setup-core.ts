@@ -11,14 +11,14 @@ import {
   setSetupChannelEnabled,
   type PowerDirectorConfig,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import type {
   ChannelSetupAdapter,
   ChannelSetupDmPolicy,
   ChannelSetupWizard,
   ChannelSetupWizardTextInput,
-} from "@/src-backend/plugin-sdk/setup";
-import { formatCliCommand, formatDocsLink } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import { formatCliCommand, formatDocsLink } from "powerdirector/plugin-sdk/setup-tools";
 import {
   listSignalAccountIds,
   resolveDefaultSignalAccountId,

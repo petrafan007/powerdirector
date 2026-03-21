@@ -1,4 +1,4 @@
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
 import type { ClawdbotConfig } from "../runtime-api";
 import { normalizeResolvedSecretInputString, normalizeSecretInputString } from "./secret-input";
 import type {

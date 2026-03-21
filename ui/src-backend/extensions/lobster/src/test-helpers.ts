@@ -1,6 +1,6 @@
 type PathEnvKey = "PATH" | "Path" | "PATHEXT" | "Pathext";
 
-export { createWindowsCmdShimFixture } from "@/src-backend/plugin-sdk/testing";
+export { createWindowsCmdShimFixture } from "powerdirector/plugin-sdk/testing";
 
 const PATH_ENV_KEYS = ["PATH", "Path", "PATHEXT", "Pathext"] as const;
 

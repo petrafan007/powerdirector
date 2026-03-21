@@ -1,5 +1,5 @@
 import type { AssistantMessage } from "@mariozechner/pi-ai";
-import { hasOutboundReplyContent } from "@/src-backend/plugin-sdk/reply-payload";
+import { hasOutboundReplyContent } from "powerdirector/plugin-sdk/reply-payload";
 import { parseReplyDirectives } from "../../../auto-reply/reply/reply-directives";
 import type { ReasoningLevel, VerboseLevel } from "../../../auto-reply/thinking";
 import { isSilentReplyText, SILENT_REPLY_TOKEN } from "../../../auto-reply/tokens";

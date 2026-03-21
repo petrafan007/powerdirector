@@ -1,7 +1,7 @@
 import {
   isTelegramExecApprovalApprover,
   isTelegramExecApprovalClientEnabled,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 import { callGateway } from "../../gateway/call";
 import { logVerbose } from "../../globals";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../../utils/message-channel";

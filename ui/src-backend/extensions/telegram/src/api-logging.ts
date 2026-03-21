@@ -1,7 +1,7 @@
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 
 export type TelegramApiLogger = (message: string) => void;
 

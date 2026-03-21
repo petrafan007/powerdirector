@@ -1,4 +1,4 @@
-import type { ModelProviderConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelProviderConfig } from "powerdirector/plugin-sdk/provider-models";
 
 export const KIMI_BASE_URL = "https://api.kimi.com/coding/";
 const KIMI_CODING_USER_AGENT = "claude-code/0.1.0";

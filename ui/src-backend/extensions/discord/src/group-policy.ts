@@ -2,9 +2,9 @@ import {
   resolveToolsBySender,
   type GroupToolPolicyBySenderConfig,
   type GroupToolPolicyConfig,
-} from "@/src-backend/plugin-sdk/channel-policy";
-import { type ChannelGroupContext } from "@/src-backend/plugin-sdk/channel-runtime";
-import { normalizeAtHashSlug } from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/channel-policy";
+import { type ChannelGroupContext } from "powerdirector/plugin-sdk/channel-runtime";
+import { normalizeAtHashSlug } from "powerdirector/plugin-sdk/core";
 import type { DiscordConfig } from "./runtime-api";
 
 function normalizeDiscordSlug(value?: string | null) {

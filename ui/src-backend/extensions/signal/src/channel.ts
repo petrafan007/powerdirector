@@ -1,16 +1,16 @@
-import { buildDmGroupAccountAllowlistAdapter } from "@/src-backend/plugin-sdk/allowlist-config-edit";
+import { buildDmGroupAccountAllowlistAdapter } from "powerdirector/plugin-sdk/allowlist-config-edit";
 import {
   attachChannelToResult,
   createAttachedChannelResultAdapter,
   createPairingPrefixStripper,
   createTextPairingAdapter,
   resolveOutboundSendDep,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { attachChannelToResults } from "@/src-backend/plugin-sdk/channel-send-result";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { buildOutboundBaseSessionKey } from "@/src-backend/plugin-sdk/core";
-import { resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
-import { type RoutePeer } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { attachChannelToResults } from "powerdirector/plugin-sdk/channel-send-result";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { buildOutboundBaseSessionKey } from "powerdirector/plugin-sdk/core";
+import { resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
+import { type RoutePeer } from "powerdirector/plugin-sdk/routing";
 import { resolveSignalAccount, type ResolvedSignalAccount } from "./accounts";
 import { markdownToSignalTextChunks } from "./format";
 import {

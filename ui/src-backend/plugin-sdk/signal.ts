@@ -1,7 +1,7 @@
 export type { ChannelMessageActionAdapter } from "../channels/plugins/types";
 export type { PowerDirectorConfig } from "../config/config";
 export type { SignalAccountConfig } from "../config/types";
-export type { ResolvedSignalAccount } from "@/src-backend/extensions/signal/api";
+export type { ResolvedSignalAccount } from "powerdirector/extensions/signal/api";
 export type {
   ChannelMessageActionContext,
   ChannelPlugin,
@@ -51,10 +51,10 @@ export {
   listEnabledSignalAccounts,
   listSignalAccountIds,
   resolveDefaultSignalAccountId,
-} from "@/src-backend/extensions/signal/api";
-export { monitorSignalProvider } from "@/src-backend/extensions/signal/api";
-export { probeSignal } from "@/src-backend/extensions/signal/api";
-export { resolveSignalReactionLevel } from "@/src-backend/extensions/signal/api";
-export { removeReactionSignal, sendReactionSignal } from "@/src-backend/extensions/signal/api";
-export { sendMessageSignal } from "@/src-backend/extensions/signal/api";
-export { signalMessageActions } from "@/src-backend/extensions/signal/api";
+} from "powerdirector/extensions/signal/api";
+export { monitorSignalProvider } from "powerdirector/extensions/signal/api";
+export { probeSignal } from "powerdirector/extensions/signal/api";
+export { resolveSignalReactionLevel } from "powerdirector/extensions/signal/api";
+export { removeReactionSignal, sendReactionSignal } from "powerdirector/extensions/signal/api";
+export { sendMessageSignal } from "powerdirector/extensions/signal/api";
+export { signalMessageActions } from "powerdirector/extensions/signal/api";

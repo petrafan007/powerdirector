@@ -1,9 +1,9 @@
 import type { Message } from "@grammyjs/types";
 import type { Bot } from "grammy";
-import { createChannelPairingChallengeIssuer } from "@/src-backend/plugin-sdk/channel-pairing";
-import type { DmPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import { upsertChannelPairingRequest } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { createChannelPairingChallengeIssuer } from "powerdirector/plugin-sdk/channel-pairing";
+import type { DmPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import { upsertChannelPairingRequest } from "powerdirector/plugin-sdk/conversation-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { withTelegramApiErrorLogging } from "./api-logging";
 import { resolveSenderAllowMatch, type NormalizedAllowFrom } from "./bot-access";
 

@@ -1,9 +1,9 @@
 import { DisconnectReason } from "@whiskeysockets/baileys";
-import { formatCliCommand } from "@/src-backend/plugin-sdk/cli-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { danger, info, success } from "@/src-backend/plugin-sdk/runtime-env";
-import { defaultRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { logInfo } from "@/src-backend/plugin-sdk/text-runtime";
+import { formatCliCommand } from "powerdirector/plugin-sdk/cli-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { danger, info, success } from "powerdirector/plugin-sdk/runtime-env";
+import { defaultRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { logInfo } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveWhatsAppAccount } from "./accounts";
 import {
   createWaSocket,

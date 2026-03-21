@@ -8,7 +8,7 @@ const shouldWarnCompatImport =
 
 if (shouldWarnCompatImport) {
   process.emitWarning(
-    "@/src-backend/plugin-sdk/compat is deprecated for new plugins. Migrate to focused powerdirector/plugin-sdk/<subpath> imports.",
+    "powerdirector/plugin-sdk/compat is deprecated for new plugins. Migrate to focused powerdirector/plugin-sdk/<subpath> imports.",
     {
       code: "POWERDIRECTOR_PLUGIN_SDK_COMPAT_DEPRECATED",
       detail:
@@ -46,5 +46,5 @@ export { mapAllowlistResolutionInputs } from "./allowlist-resolution";
 export {
   resolveBlueBubblesGroupRequireMention,
   resolveBlueBubblesGroupToolPolicy,
-} from "@/src-backend/extensions/bluebubbles/runtime-api";
+} from "powerdirector/extensions/bluebubbles/runtime-api";
 export { collectBlueBubblesStatusIssues } from "../channels/plugins/status-issues/bluebubbles";

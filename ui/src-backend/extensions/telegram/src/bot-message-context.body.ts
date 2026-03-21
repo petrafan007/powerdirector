@@ -2,26 +2,26 @@ import {
   findModelInCatalog,
   loadModelCatalog,
   modelSupportsVision,
-} from "@/src-backend/plugin-sdk/agent-runtime";
-import { resolveDefaultModelForAgent } from "@/src-backend/plugin-sdk/agent-runtime";
-import { resolveControlCommandGate } from "@/src-backend/plugin-sdk/channel-runtime";
-import { formatLocationText, type NormalizedLocation } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logInboundDrop } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveMentionGatingWithBypass } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
+import { resolveDefaultModelForAgent } from "powerdirector/plugin-sdk/agent-runtime";
+import { resolveControlCommandGate } from "powerdirector/plugin-sdk/channel-runtime";
+import { formatLocationText, type NormalizedLocation } from "powerdirector/plugin-sdk/channel-runtime";
+import { logInboundDrop } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveMentionGatingWithBypass } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { hasControlCommand } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { hasControlCommand } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   recordPendingHistoryEntryIfEnabled,
   type HistoryEntry,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildMentionRegexes, matchesMentionWithExplicit } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { MsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { buildMentionRegexes, matchesMentionWithExplicit } from "powerdirector/plugin-sdk/reply-runtime";
+import type { MsgContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import type { NormalizedAllowFrom } from "./bot-access";
 import { isSenderAllowed } from "./bot-access";
 import type {

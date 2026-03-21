@@ -20,7 +20,7 @@ import {
   withTrustedWebSearchEndpoint,
   wrapWebContent,
   writeCachedSearchPayload,
-} from "@/src-backend/plugin-sdk/provider-web-search";
+} from "powerdirector/plugin-sdk/provider-web-search";
 
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";

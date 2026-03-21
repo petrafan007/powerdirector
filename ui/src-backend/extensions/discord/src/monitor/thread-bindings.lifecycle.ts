@@ -1,6 +1,6 @@
-import { readAcpSessionEntry, type AcpSessionStoreEntry } from "@/src-backend/plugin-sdk/acp-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+import { readAcpSessionEntry, type AcpSessionStoreEntry } from "powerdirector/plugin-sdk/acp-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 import { parseDiscordTarget } from "../targets";
 import { resolveChannelIdForBinding } from "./thread-bindings.discord-api";
 import { getThreadBindingManager } from "./thread-bindings.manager";

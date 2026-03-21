@@ -1,4 +1,4 @@
-import { resolveOutboundSendDep } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep } from "powerdirector/plugin-sdk/channel-runtime";
 import { PAIRING_APPROVED_MESSAGE, resolveChannelMediaMaxBytes } from "../runtime-api";
 import type { ResolvedIMessageAccount } from "./accounts";
 import { monitorIMessageProvider } from "./monitor";

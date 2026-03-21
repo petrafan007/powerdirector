@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import type { ResolvedZaloAccount } from "./accounts";
 import {
   ZaloApiError,

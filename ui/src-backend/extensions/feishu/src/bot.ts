@@ -1,10 +1,10 @@
 import {
   ensureConfiguredBindingRouteReady,
   resolveConfiguredBindingRoute,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { getSessionBindingService } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { deriveLastRoutePolicy } from "@/src-backend/plugin-sdk/routing";
-import { resolveAgentIdFromSessionKey } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { getSessionBindingService } from "powerdirector/plugin-sdk/conversation-runtime";
+import { deriveLastRoutePolicy } from "powerdirector/plugin-sdk/routing";
+import { resolveAgentIdFromSessionKey } from "powerdirector/plugin-sdk/routing";
 import type { ClawdbotConfig, RuntimeEnv } from "../runtime-api";
 import {
   buildAgentMediaPayload,

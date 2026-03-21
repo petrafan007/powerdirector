@@ -1,7 +1,7 @@
-import type { BaseTokenResolution } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeResolvedSecretInputString } from "@/src-backend/plugin-sdk/config-runtime";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+import type { BaseTokenResolution } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeResolvedSecretInputString } from "powerdirector/plugin-sdk/config-runtime";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 
 export type DiscordTokenSource = "env" | "config" | "none";
 

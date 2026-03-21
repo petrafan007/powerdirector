@@ -1,11 +1,11 @@
-import { buildGoogleImageGenerationProvider } from "@/src-backend/plugin-sdk/image-generation";
-import { definePluginEntry } from "@/src-backend/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
+import { buildGoogleImageGenerationProvider } from "powerdirector/plugin-sdk/image-generation";
+import { definePluginEntry } from "powerdirector/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
 import {
   GOOGLE_GEMINI_DEFAULT_MODEL,
   applyGoogleGeminiModelDefault,
-} from "@/src-backend/plugin-sdk/provider-models";
-import { createGoogleThinkingPayloadWrapper } from "@/src-backend/plugin-sdk/provider-stream";
+} from "powerdirector/plugin-sdk/provider-models";
+import { createGoogleThinkingPayloadWrapper } from "powerdirector/plugin-sdk/provider-stream";
 import { registerGoogleGeminiCliProvider } from "./gemini-cli-provider";
 import { googleMediaUnderstandingProvider } from "./media-understanding-provider";
 import { isModernGoogleModel, resolveGoogle31ForwardCompatModel } from "./provider-models";

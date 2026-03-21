@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { PowerDirectorPluginConfigSchema } from "@/src-backend/plugin-sdk/core";
+import type { PowerDirectorPluginConfigSchema } from "powerdirector/plugin-sdk/core";
 
 export type OpenShellPluginConfig = {
   mode?: string;

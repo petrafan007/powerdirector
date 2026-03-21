@@ -1,12 +1,12 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
 import {
   buildOauthProviderAuthResult,
   createProviderApiKeyAuthMethod,
   resolveOAuthApiKeyMarker,
   type ProviderAuthContext,
   type ProviderAuthResult,
-} from "@/src-backend/plugin-sdk/provider-auth";
-import { loginChutes } from "@/src-backend/plugin-sdk/provider-auth-login";
+} from "powerdirector/plugin-sdk/provider-auth";
+import { loginChutes } from "powerdirector/plugin-sdk/provider-auth-login";
 import {
   CHUTES_DEFAULT_MODEL_REF,
   applyChutesApiKeyConfig,

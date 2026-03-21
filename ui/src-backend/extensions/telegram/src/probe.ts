@@ -1,5 +1,5 @@
-import type { BaseProbeResult } from "@/src-backend/plugin-sdk/channel-runtime";
-import { fetchWithTimeout } from "@/src-backend/plugin-sdk/text-runtime";
+import type { BaseProbeResult } from "powerdirector/plugin-sdk/channel-runtime";
+import { fetchWithTimeout } from "powerdirector/plugin-sdk/text-runtime";
 import type { TelegramNetworkConfig } from "../runtime-api";
 import { resolveTelegramFetch } from "./fetch";
 import { makeProxyFetch } from "./proxy";

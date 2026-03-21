@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/zai";
+export * from "powerdirector/plugin-sdk/zai";

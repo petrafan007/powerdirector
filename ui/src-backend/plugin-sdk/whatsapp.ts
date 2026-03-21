@@ -1,8 +1,8 @@
 export type { ChannelMessageActionName } from "../channels/plugins/types";
 export type { PowerDirectorConfig } from "../config/config";
 export type { DmPolicy, GroupPolicy, WhatsAppAccountConfig } from "../config/types";
-export type { WebChannelStatus, WebMonitorTuning } from "@/src-backend/extensions/whatsapp/api";
-export type { WebInboundMessage, WebListenerCloseReason } from "@/src-backend/extensions/whatsapp/api";
+export type { WebChannelStatus, WebMonitorTuning } from "powerdirector/extensions/whatsapp/api";
+export type { WebInboundMessage, WebListenerCloseReason } from "powerdirector/extensions/whatsapp/api";
 export type {
   ChannelMessageActionContext,
   ChannelPlugin,
@@ -33,7 +33,7 @@ export { normalizeWhatsAppAllowFromEntries } from "../channels/plugins/normalize
 export {
   listWhatsAppDirectoryGroupsFromConfig,
   listWhatsAppDirectoryPeersFromConfig,
-} from "@/src-backend/extensions/whatsapp/api";
+} from "powerdirector/extensions/whatsapp/api";
 export {
   collectAllowlistProviderGroupPolicyWarnings,
   collectOpenGroupPolicyRouteAllowlistWarnings,
@@ -49,7 +49,7 @@ export {
 export {
   resolveWhatsAppGroupRequireMention,
   resolveWhatsAppGroupToolPolicy,
-} from "@/src-backend/extensions/whatsapp/api";
+} from "powerdirector/extensions/whatsapp/api";
 export {
   createWhatsAppOutboundBase,
   resolveWhatsAppGroupIntroHint,
@@ -66,7 +66,7 @@ export {
   hasAnyWhatsAppAuth,
   listEnabledWhatsAppAccounts,
   resolveWhatsAppAccount,
-} from "@/src-backend/extensions/whatsapp/api";
+} from "powerdirector/extensions/whatsapp/api";
 export {
   HEARTBEAT_PROMPT,
   HEARTBEAT_TOKEN,
@@ -96,7 +96,7 @@ export {
   startWebLoginWithQr,
   waitForWebLogin,
 } from "../plugins/runtime/runtime-whatsapp-boundary";
-export { DEFAULT_WEB_MEDIA_BYTES } from "@/src-backend/extensions/whatsapp/api";
+export { DEFAULT_WEB_MEDIA_BYTES } from "powerdirector/extensions/whatsapp/api";
 export {
   getDefaultLocalRoots,
   loadWebMedia,

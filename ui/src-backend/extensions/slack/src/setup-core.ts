@@ -10,14 +10,14 @@ import {
   parseMentionOrPrefixedId,
   patchChannelConfigForAccount,
   setSetupChannelEnabled,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import {
   type ChannelSetupAdapter,
   type ChannelSetupDmPolicy,
   type ChannelSetupWizard,
   type ChannelSetupWizardAllowFromEntry,
-} from "@/src-backend/plugin-sdk/setup";
-import { formatDocsLink } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import { formatDocsLink } from "powerdirector/plugin-sdk/setup-tools";
 import { inspectSlackAccount } from "./account-inspect";
 import { listSlackAccountIds, resolveSlackAccount, type ResolvedSlackAccount } from "./accounts";
 import {

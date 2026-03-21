@@ -1,5 +1,5 @@
-import type { BaseProbeResult } from "@/src-backend/plugin-sdk/channel-runtime";
-import { withTimeout } from "@/src-backend/plugin-sdk/text-runtime";
+import type { BaseProbeResult } from "powerdirector/plugin-sdk/channel-runtime";
+import { withTimeout } from "powerdirector/plugin-sdk/text-runtime";
 import { createSlackWebClient } from "./client";
 
 export type SlackProbe = BaseProbeResult & {

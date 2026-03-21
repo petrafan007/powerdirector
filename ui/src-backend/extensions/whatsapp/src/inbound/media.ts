@@ -1,6 +1,6 @@
 import type { proto, WAMessage } from "@whiskeysockets/baileys";
 import { downloadMediaMessage, normalizeMessageContent } from "@whiskeysockets/baileys";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import type { createWaSocket } from "../session";
 
 function unwrapMessage(message: proto.IMessage | undefined): proto.IMessage | undefined {

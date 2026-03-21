@@ -1,6 +1,6 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
-import { ensureModelAllowlistEntry } from "@/src-backend/plugin-sdk/provider-onboard";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
+import { ensureModelAllowlistEntry } from "powerdirector/plugin-sdk/provider-onboard";
 import { buildDoubaoCodingProvider, buildDoubaoProvider } from "./provider-catalog";
 
 const PROVIDER_ID = "volcengine";

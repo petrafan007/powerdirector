@@ -1,5 +1,5 @@
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
 import type { TelegramInlineButtons } from "./button-types";
 import type { TelegramDraftStream } from "./draft-stream";
 import {

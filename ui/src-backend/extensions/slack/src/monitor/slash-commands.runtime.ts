@@ -4,17 +4,17 @@ import {
   listNativeCommandSpecsForConfig as listNativeCommandSpecsForConfigImpl,
   parseCommandArgs as parseCommandArgsImpl,
   resolveCommandArgMenu as resolveCommandArgMenuImpl,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 
 type BuildCommandTextFromArgs =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").buildCommandTextFromArgs;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").buildCommandTextFromArgs;
 type FindCommandByNativeName =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").findCommandByNativeName;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").findCommandByNativeName;
 type ListNativeCommandSpecsForConfig =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").listNativeCommandSpecsForConfig;
-type ParseCommandArgs = typeof import("@/src-backend/plugin-sdk/reply-runtime").parseCommandArgs;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").listNativeCommandSpecsForConfig;
+type ParseCommandArgs = typeof import("powerdirector/plugin-sdk/reply-runtime").parseCommandArgs;
 type ResolveCommandArgMenu =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").resolveCommandArgMenu;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").resolveCommandArgMenu;
 
 export function buildCommandTextFromArgs(
   ...args: Parameters<BuildCommandTextFromArgs>

@@ -7,8 +7,8 @@ import {
   setChannelDmPolicyWithAllowFrom,
   setSetupChannelEnabled,
   splitSetupEntries,
-} from "@/src-backend/plugin-sdk/setup";
-import type { ChannelSetupDmPolicy, ChannelSetupWizard } from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
+import type { ChannelSetupDmPolicy, ChannelSetupWizard } from "powerdirector/plugin-sdk/setup";
 import { inspectTelegramAccount } from "./account-inspect";
 import { listTelegramAccountIds, resolveTelegramAccount } from "./accounts";
 import {

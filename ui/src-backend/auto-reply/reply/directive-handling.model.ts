@@ -1,4 +1,4 @@
-import { buildBrowseProvidersButton } from "@/src-backend/plugin-sdk/telegram";
+import { buildBrowseProvidersButton } from "powerdirector/plugin-sdk/telegram";
 import {
   ensureAuthProfileStore,
   resolveAuthStorePathForDisplay,

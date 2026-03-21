@@ -4,7 +4,7 @@ import {
   buildChutesModelDefinition,
   discoverChutesModels,
   type ModelProviderConfig,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 
 /**
  * Build the Chutes provider with dynamic model discovery.

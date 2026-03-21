@@ -1,13 +1,13 @@
-import { resolveAccountWithDefaultFallback } from "@/src-backend/plugin-sdk/account-resolution";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveAccountWithDefaultFallback } from "powerdirector/plugin-sdk/account-resolution";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   coerceSecretRef,
   hasConfiguredSecretInput,
   normalizeSecretInputString,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { tryReadSecretFileSync } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveDefaultSecretProviderAlias } from "@/src-backend/plugin-sdk/provider-auth";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { tryReadSecretFileSync } from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveDefaultSecretProviderAlias } from "powerdirector/plugin-sdk/provider-auth";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 import type { TelegramAccountConfig } from "../runtime-api";
 import {
   mergeTelegramAccountConfig,

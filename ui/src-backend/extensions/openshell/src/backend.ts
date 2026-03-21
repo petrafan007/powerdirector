@@ -11,13 +11,13 @@ import type {
   SandboxBackendHandle,
   SandboxBackendManager,
   SshSandboxSession,
-} from "@/src-backend/plugin-sdk/sandbox";
+} from "powerdirector/plugin-sdk/sandbox";
 import {
   createRemoteShellSandboxFsBridge,
   disposeSshSandboxSession,
   resolvePreferredPowerDirectorTmpDir,
   runSshSandboxCommand,
-} from "@/src-backend/plugin-sdk/sandbox";
+} from "powerdirector/plugin-sdk/sandbox";
 import {
   buildExecRemoteCommand,
   buildRemoteCommand,

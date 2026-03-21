@@ -1,13 +1,13 @@
 import type { Chat, Message, MessageOrigin, User } from "@grammyjs/types";
-import { formatLocationText, type NormalizedLocation } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveTelegramPreviewStreamMode } from "@/src-backend/plugin-sdk/config-runtime";
+import { formatLocationText, type NormalizedLocation } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveTelegramPreviewStreamMode } from "powerdirector/plugin-sdk/config-runtime";
 import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { readChannelAllowFromStore } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { readChannelAllowFromStore } from "powerdirector/plugin-sdk/conversation-runtime";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 import { firstDefined, normalizeAllowFrom, type NormalizedAllowFrom } from "../bot-access";
 import type { TelegramStreamMode } from "./types";
 

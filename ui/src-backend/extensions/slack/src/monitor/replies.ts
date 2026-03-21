@@ -1,14 +1,14 @@
-import type { MarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import type { MarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
-import type { ChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import { chunkMarkdownTextWithMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import { createReplyReferencePlanner } from "@/src-backend/plugin-sdk/reply-runtime";
-import { isSilentReplyText, SILENT_REPLY_TOKEN } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/reply-payload";
+import type { ChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import { chunkMarkdownTextWithMode } from "powerdirector/plugin-sdk/reply-runtime";
+import { createReplyReferencePlanner } from "powerdirector/plugin-sdk/reply-runtime";
+import { isSilentReplyText, SILENT_REPLY_TOKEN } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { parseSlackBlocksInput } from "../blocks-input";
 import { markdownToSlackMrkdwnChunks } from "../format";
 import { sendMessageSlack, type SlackSendIdentity } from "../send";

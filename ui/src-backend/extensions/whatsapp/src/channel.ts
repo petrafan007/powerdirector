@@ -1,4 +1,4 @@
-import { buildDmGroupAccountAllowlistAdapter } from "@/src-backend/plugin-sdk/allowlist-config-edit";
+import { buildDmGroupAccountAllowlistAdapter } from "powerdirector/plugin-sdk/allowlist-config-edit";
 // WhatsApp-specific imports from local extension code (moved from src/web/ and src/channels/plugins/)
 import { resolveWhatsAppAccount, type ResolvedWhatsAppAccount } from "./accounts";
 import type { WebChannelStatus } from "./auto-reply/types";

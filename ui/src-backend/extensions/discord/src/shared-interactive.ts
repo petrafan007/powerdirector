@@ -1,8 +1,8 @@
-import { reduceInteractiveReply } from "@/src-backend/plugin-sdk/interactive-runtime";
+import { reduceInteractiveReply } from "powerdirector/plugin-sdk/interactive-runtime";
 import type {
   InteractiveButtonStyle,
   InteractiveReply,
-} from "@/src-backend/plugin-sdk/interactive-runtime";
+} from "powerdirector/plugin-sdk/interactive-runtime";
 import type { DiscordComponentButtonStyle, DiscordComponentMessageSpec } from "./components";
 
 function resolveDiscordInteractiveButtonStyle(

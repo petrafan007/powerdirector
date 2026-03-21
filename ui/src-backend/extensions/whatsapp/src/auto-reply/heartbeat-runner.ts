@@ -1,29 +1,29 @@
-import { appendCronStyleCurrentTimeLine } from "@/src-backend/plugin-sdk/agent-runtime";
-import { resolveWhatsAppHeartbeatRecipients } from "@/src-backend/plugin-sdk/channel-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { appendCronStyleCurrentTimeLine } from "powerdirector/plugin-sdk/agent-runtime";
+import { resolveWhatsAppHeartbeatRecipients } from "powerdirector/plugin-sdk/channel-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   loadSessionStore,
   resolveSessionKey,
   resolveStorePath,
   updateSessionStore,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { emitHeartbeatEvent, resolveIndicatorType } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveHeartbeatVisibility } from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { emitHeartbeatEvent, resolveIndicatorType } from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveHeartbeatVisibility } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   hasOutboundReplyContent,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
-import { resolveHeartbeatReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-payload";
+import { resolveHeartbeatReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   DEFAULT_HEARTBEAT_ACK_MAX_CHARS,
   resolveHeartbeatPrompt,
   stripHeartbeatToken,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { getReplyFromConfig } from "@/src-backend/plugin-sdk/reply-runtime";
-import { HEARTBEAT_TOKEN } from "@/src-backend/plugin-sdk/reply-runtime";
-import { normalizeMainKey } from "@/src-backend/plugin-sdk/routing";
-import { getChildLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { redactIdentifier } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { getReplyFromConfig } from "powerdirector/plugin-sdk/reply-runtime";
+import { HEARTBEAT_TOKEN } from "powerdirector/plugin-sdk/reply-runtime";
+import { normalizeMainKey } from "powerdirector/plugin-sdk/routing";
+import { getChildLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { redactIdentifier } from "powerdirector/plugin-sdk/text-runtime";
 import { newConnectionId } from "../reconnect";
 import { sendMessageWhatsApp } from "../send";
 import { formatError } from "../session";

@@ -1,4 +1,4 @@
-import { resolveOutboundMediaUrls } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveOutboundMediaUrls } from "powerdirector/plugin-sdk/reply-payload";
 import { chunkText } from "../../../auto-reply/chunk";
 import type { PowerDirectorConfig } from "../../../config/config";
 import type { OutboundSendDeps } from "../../../infra/outbound/deliver";

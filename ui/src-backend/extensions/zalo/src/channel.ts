@@ -2,20 +2,20 @@ import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
   mapAllowFromEntries,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   buildOpenGroupPolicyRestrictSendersWarning,
   buildOpenGroupPolicyWarning,
   createOpenProviderGroupPolicyWarningCollector,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import {
   createChannelDirectoryAdapter,
   createEmptyChannelResult,
   createRawChannelSendResultAdapter,
   createStaticReplyToModeResolver,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { listResolvedDirectoryUserEntriesFromAllowFrom } from "@/src-backend/plugin-sdk/directory-runtime";
-import { createLazyRuntimeModule } from "@/src-backend/plugin-sdk/lazy-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { listResolvedDirectoryUserEntriesFromAllowFrom } from "powerdirector/plugin-sdk/directory-runtime";
+import { createLazyRuntimeModule } from "powerdirector/plugin-sdk/lazy-runtime";
 import {
   listZaloAccountIds,
   resolveDefaultZaloAccountId,

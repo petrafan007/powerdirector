@@ -1,7 +1,7 @@
 import {
   coerceStatusIssueAccountId,
   readStatusIssueFields,
-} from "@/src-backend/plugin-sdk/extension-shared";
+} from "powerdirector/plugin-sdk/extension-shared";
 import type { ChannelAccountSnapshot, ChannelStatusIssue } from "./runtime-api";
 
 const ZALO_STATUS_FIELDS = ["accountId", "enabled", "configured", "dmPolicy"] as const;

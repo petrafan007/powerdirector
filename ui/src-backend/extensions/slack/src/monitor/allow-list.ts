@@ -2,12 +2,12 @@ import {
   compileAllowlist,
   resolveCompiledAllowlistMatch,
   type AllowlistMatch,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import {
   normalizeHyphenSlug,
   normalizeStringEntries,
   normalizeStringEntriesLower,
-} from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/text-runtime";
 
 const SLACK_SLUG_CACHE_MAX = 512;
 const slackSlugCache = new Map<string, string>();

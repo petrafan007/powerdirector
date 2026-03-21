@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/talk-voice";
+export * from "powerdirector/plugin-sdk/talk-voice";

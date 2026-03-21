@@ -1,10 +1,10 @@
-import type { MarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import type { MarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   chunkMarkdownIR,
   markdownToIR,
   type MarkdownIR,
   type MarkdownStyle,
-} from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/text-runtime";
 
 type SignalTextStyle = "BOLD" | "ITALIC" | "STRIKETHROUGH" | "MONOSPACE" | "SPOILER";
 

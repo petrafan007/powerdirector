@@ -1,6 +1,6 @@
 import type { App } from "@slack/bolt";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import type { ResolvedSlackAccount } from "../../accounts";
 import { createSlackMonitorContext } from "../context";
 

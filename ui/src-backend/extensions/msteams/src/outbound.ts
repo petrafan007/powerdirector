@@ -1,5 +1,5 @@
-import { resolveOutboundSendDep } from "@/src-backend/plugin-sdk/channel-runtime";
-import { createAttachedChannelResultAdapter } from "@/src-backend/plugin-sdk/channel-send-result";
+import { resolveOutboundSendDep } from "powerdirector/plugin-sdk/channel-runtime";
+import { createAttachedChannelResultAdapter } from "powerdirector/plugin-sdk/channel-send-result";
 import type { ChannelOutboundAdapter } from "../runtime-api";
 import { createMSTeamsPollStoreFs } from "./polls";
 import { getMSTeamsRuntime } from "./runtime";

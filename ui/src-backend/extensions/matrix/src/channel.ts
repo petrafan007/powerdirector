@@ -1,11 +1,11 @@
 import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   createAllowlistProviderOpenWarningCollector,
   projectWarningCollector,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import {
   createChannelDirectoryAdapter,
   createPairingPrefixStripper,
@@ -14,9 +14,9 @@ import {
   createRuntimeOutboundDelegates,
   createTextPairingAdapter,
   listResolvedDirectoryEntriesFromSources,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { buildTrafficStatusSummary } from "@/src-backend/plugin-sdk/extension-shared";
-import { createLazyRuntimeNamedExport } from "@/src-backend/plugin-sdk/lazy-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { buildTrafficStatusSummary } from "powerdirector/plugin-sdk/extension-shared";
+import { createLazyRuntimeNamedExport } from "powerdirector/plugin-sdk/lazy-runtime";
 import {
   buildChannelConfigSchema,
   buildProbeChannelStatusSummary,

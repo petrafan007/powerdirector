@@ -1,4 +1,4 @@
-import type { DiscordSendResult } from "@/src-backend/extensions/discord/api";
+import type { DiscordSendResult } from "powerdirector/extensions/discord/api";
 import { attachChannelToResult } from "./channel-send-result";
 
 type DiscordSendOptionInput = {

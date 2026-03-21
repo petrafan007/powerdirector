@@ -1,7 +1,7 @@
 import {
   resolveSendableOutboundReplyParts,
   sendMediaWithLeadingCaption,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import {
   chunkByParagraph,
   chunkMarkdownTextWithMode,

@@ -1,22 +1,22 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveConfiguredBindingRoute,
   type ConfiguredBindingRouteResult,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { getSessionBindingService } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { isPluginOwnedSessionBindingRecord } from "@/src-backend/plugin-sdk/conversation-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { getSessionBindingService } from "powerdirector/plugin-sdk/conversation-runtime";
+import { isPluginOwnedSessionBindingRecord } from "powerdirector/plugin-sdk/conversation-runtime";
 import {
   buildAgentSessionKey,
   deriveLastRoutePolicy,
   resolveAgentRoute,
-} from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/routing";
 import {
   buildAgentMainSessionKey,
   DEFAULT_ACCOUNT_ID,
   resolveAgentIdFromSessionKey,
   sanitizeAgentId,
-} from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import {
   buildTelegramGroupPeerId,
   buildTelegramParentPeer,

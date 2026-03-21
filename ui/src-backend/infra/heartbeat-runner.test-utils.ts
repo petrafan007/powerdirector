@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { vi } from "vitest";
-import { telegramPlugin, setTelegramRuntime } from "@/src-backend/extensions/telegram/index";
+import { telegramPlugin, setTelegramRuntime } from "powerdirector/extensions/telegram/index";
 import * as replyModule from "../auto-reply/reply";
 import type { PowerDirectorConfig } from "../config/config";
 import { resolveMainSessionKey } from "../config/sessions";

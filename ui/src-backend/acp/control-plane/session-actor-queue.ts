@@ -1,4 +1,4 @@
-import { KeyedAsyncQueue } from "@/src-backend/plugin-sdk/keyed-async-queue";
+import { KeyedAsyncQueue } from "powerdirector/plugin-sdk/keyed-async-queue";
 
 export class SessionActorQueue {
   private readonly queue = new KeyedAsyncQueue();

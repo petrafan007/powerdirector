@@ -28,7 +28,7 @@ export { buildChannelConfigSchema } from "../channels/plugins/config-schema";
 export {
   resolveBlueBubblesGroupRequireMention,
   resolveBlueBubblesGroupToolPolicy,
-} from "@/src-backend/extensions/bluebubbles/runtime-api";
+} from "powerdirector/extensions/bluebubbles/runtime-api";
 export { formatPairingApproveHint } from "../channels/plugins/helpers";
 export { resolveChannelMediaMaxBytes } from "../channels/plugins/media-limits";
 export {
@@ -56,13 +56,13 @@ export type { PowerDirectorConfig } from "../config/config";
 export type { DmPolicy, GroupPolicy } from "../config/types";
 export { ToolPolicySchema } from "../config/zod-schema.agent-runtime";
 export { MarkdownConfigSchema } from "../config/zod-schema.core";
-export type { ParsedChatTarget } from "@/src-backend/extensions/imessage/api";
+export type { ParsedChatTarget } from "powerdirector/extensions/imessage/api";
 export {
   parseChatAllowTargetPrefixes,
   parseChatTargetPrefixesOrThrow,
   resolveServicePrefixedAllowTarget,
   resolveServicePrefixedTarget,
-} from "@/src-backend/extensions/imessage/api";
+} from "powerdirector/extensions/imessage/api";
 export { stripMarkdown } from "../line/markdown-to-line";
 export { parseFiniteNumber } from "../infra/parse-finite-number";
 export { emptyPluginConfigSchema } from "../plugins/config-schema";

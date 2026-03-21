@@ -1,6 +1,6 @@
 import type { SlackEventMiddlewareArgs } from "@slack/bolt";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
 import type { SlackMonitorContext } from "../context";
 import type { SlackMemberChannelEvent } from "../types";
 import { authorizeAndResolveSlackSystemEventContext } from "./system-event-context";

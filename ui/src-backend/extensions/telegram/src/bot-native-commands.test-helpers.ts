@@ -1,8 +1,8 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { ChannelGroupPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import type { TelegramAccountConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import type { MockFn } from "@/src-backend/plugin-sdk/testing";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { ChannelGroupPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import type { TelegramAccountConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import type { MockFn } from "powerdirector/plugin-sdk/testing";
 import { vi } from "vitest";
 import {
   createNativeCommandTestParams,
@@ -12,17 +12,17 @@ import type { RegisterTelegramNativeCommandsParams } from "./bot-native-commands
 import { registerTelegramNativeCommands } from "./bot-native-commands";
 
 type GetPluginCommandSpecsFn =
-  typeof import("@/src-backend/plugin-sdk/plugin-runtime").getPluginCommandSpecs;
-type MatchPluginCommandFn = typeof import("@/src-backend/plugin-sdk/plugin-runtime").matchPluginCommand;
+  typeof import("powerdirector/plugin-sdk/plugin-runtime").getPluginCommandSpecs;
+type MatchPluginCommandFn = typeof import("powerdirector/plugin-sdk/plugin-runtime").matchPluginCommand;
 type ExecutePluginCommandFn =
-  typeof import("@/src-backend/plugin-sdk/plugin-runtime").executePluginCommand;
+  typeof import("powerdirector/plugin-sdk/plugin-runtime").executePluginCommand;
 type DispatchReplyWithBufferedBlockDispatcherFn =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").dispatchReplyWithBufferedBlockDispatcher;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").dispatchReplyWithBufferedBlockDispatcher;
 type DispatchReplyWithBufferedBlockDispatcherResult = Awaited<
   ReturnType<DispatchReplyWithBufferedBlockDispatcherFn>
 >;
 type RecordInboundSessionMetaSafeFn =
-  typeof import("@/src-backend/plugin-sdk/channel-runtime").recordInboundSessionMetaSafe;
+  typeof import("powerdirector/plugin-sdk/channel-runtime").recordInboundSessionMetaSafe;
 type AnyMock = MockFn<(...args: unknown[]) => unknown>;
 type AnyAsyncMock = MockFn<(...args: unknown[]) => Promise<unknown>>;
 type NativeCommandHarness = {
@@ -42,7 +42,7 @@ export const getPluginCommandSpecs = pluginCommandMocks.getPluginCommandSpecs;
 export const matchPluginCommand = pluginCommandMocks.matchPluginCommand;
 export const executePluginCommand = pluginCommandMocks.executePluginCommand;
 
-vi.mock("@/src-backend/plugin-sdk/plugin-runtime", () => ({
+vi.mock("powerdirector/plugin-sdk/plugin-runtime", () => ({
   getPluginCommandSpecs: pluginCommandMocks.getPluginCommandSpecs,
   matchPluginCommand: pluginCommandMocks.matchPluginCommand,
   executePluginCommand: pluginCommandMocks.executePluginCommand,
@@ -65,8 +65,8 @@ const replyPipelineMocks = vi.hoisted(() => {
 export const dispatchReplyWithBufferedBlockDispatcher =
   replyPipelineMocks.dispatchReplyWithBufferedBlockDispatcher;
 
-vi.mock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/reply-runtime")>();
+vi.mock("powerdirector/plugin-sdk/reply-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/reply-runtime")>();
   return {
     ...actual,
     finalizeInboundContext: replyPipelineMocks.finalizeInboundContext,
@@ -74,16 +74,16 @@ vi.mock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
       replyPipelineMocks.dispatchReplyWithBufferedBlockDispatcher,
   };
 });
-vi.mock("@/src-backend/plugin-sdk/channel-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/channel-runtime")>();
+vi.mock("powerdirector/plugin-sdk/channel-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/channel-runtime")>();
   return {
     ...actual,
     recordInboundSessionMetaSafe: replyPipelineMocks.recordInboundSessionMetaSafe,
   };
 });
-vi.mock("@/src-backend/plugin-sdk/channel-reply-pipeline", async (importOriginal) => {
+vi.mock("powerdirector/plugin-sdk/channel-reply-pipeline", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("@/src-backend/plugin-sdk/channel-reply-pipeline")>();
+    await importOriginal<typeof import("powerdirector/plugin-sdk/channel-reply-pipeline")>();
   return {
     ...actual,
     createChannelReplyPipeline: replyPipelineMocks.createChannelReplyPipeline,
@@ -95,8 +95,8 @@ const deliveryMocks = vi.hoisted(() => ({
 }));
 export const deliverReplies = deliveryMocks.deliverReplies;
 vi.mock("./bot/delivery", () => ({ deliverReplies: deliveryMocks.deliverReplies }));
-vi.mock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/conversation-runtime")>();
+vi.mock("powerdirector/plugin-sdk/conversation-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/conversation-runtime")>();
   return {
     ...actual,
     readChannelAllowFromStore: vi.fn(async () => []),

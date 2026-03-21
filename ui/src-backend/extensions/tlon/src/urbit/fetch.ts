@@ -2,7 +2,7 @@ import {
   fetchWithSsrFGuard,
   type LookupFn,
   type SsrFPolicy,
-} from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
 import { validateUrbitBaseUrl } from "./base-url";
 import { UrbitUrlError } from "./errors";
 

@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
-import type { ChannelAgentTool } from "@/src-backend/plugin-sdk/channel-runtime";
-import { startWebLoginWithQr, waitForWebLogin } from "@/src-backend/plugin-sdk/whatsapp-login-qr";
+import type { ChannelAgentTool } from "powerdirector/plugin-sdk/channel-runtime";
+import { startWebLoginWithQr, waitForWebLogin } from "powerdirector/plugin-sdk/whatsapp-login-qr";
 
 export function createWhatsAppLoginTool(): ChannelAgentTool {
   return {

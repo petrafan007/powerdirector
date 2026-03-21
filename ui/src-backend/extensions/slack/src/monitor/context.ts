@@ -1,17 +1,17 @@
 import type { App } from "@slack/bolt";
-import { formatAllowlistMatchMeta } from "@/src-backend/plugin-sdk/channel-runtime";
+import { formatAllowlistMatchMeta } from "powerdirector/plugin-sdk/channel-runtime";
 import type {
   PowerDirectorConfig,
   SlackReactionNotificationMode,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveSessionKey, type SessionScope } from "@/src-backend/plugin-sdk/config-runtime";
-import type { DmPolicy, GroupPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import { createDedupeCache } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { HistoryEntry } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { getChildLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { resolveSessionKey, type SessionScope } from "powerdirector/plugin-sdk/config-runtime";
+import type { DmPolicy, GroupPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import { createDedupeCache } from "powerdirector/plugin-sdk/infra-runtime";
+import type { HistoryEntry } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { getChildLogger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import type { SlackMessageEvent } from "../types";
 import { normalizeAllowList, normalizeAllowListLower, normalizeSlackSlug } from "./allow-list";
 import type { SlackChannelConfigEntries } from "./channel-config";
@@ -53,7 +53,7 @@ export type SlackMonitorContext = {
   replyToMode: "off" | "first" | "all";
   threadHistoryScope: "thread" | "channel";
   threadInheritParent: boolean;
-  slashCommand: Required<import("@/src-backend/plugin-sdk/config-runtime").SlackSlashCommandConfig>;
+  slashCommand: Required<import("powerdirector/plugin-sdk/config-runtime").SlackSlashCommandConfig>;
   textLimit: number;
   ackReactionScope: string;
   typingReaction: string;

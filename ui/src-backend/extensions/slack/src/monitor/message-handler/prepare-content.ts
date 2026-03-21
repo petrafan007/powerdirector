@@ -1,4 +1,4 @@
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import type { SlackFile, SlackMessageEvent } from "../../types";
 import {
   MAX_SLACK_MEDIA_FILES,

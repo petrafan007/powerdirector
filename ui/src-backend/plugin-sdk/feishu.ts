@@ -67,7 +67,7 @@ export type { RuntimeEnv } from "../runtime";
 export { formatDocsLink } from "../terminal/links";
 export { evaluateSenderGroupAccessForPolicy } from "./group-access";
 export type { WizardPrompter } from "../wizard/prompts";
-export { feishuSetupWizard, feishuSetupAdapter } from "@/src-backend/extensions/feishu/setup-api";
+export { feishuSetupWizard, feishuSetupAdapter } from "powerdirector/extensions/feishu/setup-api";
 export { buildAgentMediaPayload } from "./agent-media-payload";
 export { readJsonFileWithFallback } from "./json-store";
 export { createChannelPairingController } from "./channel-pairing";
@@ -82,7 +82,7 @@ export { withTempDownloadPath } from "./temp-path";
 export {
   buildFeishuConversationId,
   parseFeishuConversationId,
-} from "@/src-backend/extensions/feishu/api";
+} from "powerdirector/extensions/feishu/api";
 export {
   createWebhookAnomalyTracker,
   createFixedWindowRateLimiter,

@@ -3,7 +3,7 @@ import {
   createRateLimitRetryRunner,
   type RetryConfig,
   type RetryRunner,
-} from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
 
 export const DISCORD_RETRY_DEFAULTS = {
   attempts: 3,

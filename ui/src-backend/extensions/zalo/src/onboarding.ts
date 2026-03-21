@@ -4,7 +4,7 @@ import type {
   PowerDirectorConfig,
   SecretInput,
   WizardPrompter,
-} from "@/src-backend/plugin-sdk/zalo";
+} from "powerdirector/plugin-sdk/zalo";
 import {
   buildSingleChannelSecretPromptState,
   DEFAULT_ACCOUNT_ID,
@@ -14,7 +14,7 @@ import {
   promptSingleChannelSecretInput,
   resolveAccountIdForConfigure,
   setTopLevelChannelDmPolicyWithAllowFrom,
-} from "@/src-backend/plugin-sdk/zalo";
+} from "powerdirector/plugin-sdk/zalo";
 import { listZaloAccountIds, resolveDefaultZaloAccountId, resolveZaloAccount } from "./accounts";
 
 const channel = "zalo" as const;

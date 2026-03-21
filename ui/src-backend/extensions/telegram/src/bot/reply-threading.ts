@@ -1,4 +1,4 @@
-import type { ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
+import type { ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
 
 export type DeliveryProgress = {
   hasReplied: boolean;

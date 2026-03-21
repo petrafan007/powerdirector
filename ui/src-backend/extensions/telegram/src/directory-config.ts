@@ -1,8 +1,8 @@
-import { mapAllowFromEntries } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { mapAllowFromEntries } from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   listInspectedDirectoryEntriesFromSources,
   type DirectoryConfigParams,
-} from "@/src-backend/plugin-sdk/directory-runtime";
+} from "powerdirector/plugin-sdk/directory-runtime";
 import { inspectTelegramAccount, type InspectedTelegramAccount } from "../api";
 
 export async function listTelegramDirectoryPeersFromConfig(params: DirectoryConfigParams) {

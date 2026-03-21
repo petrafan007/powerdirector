@@ -1,5 +1,5 @@
 import type { messagingApi } from "@line/bot-sdk";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import type { ReplyPayload } from "../auto-reply/types";
 import type { FlexContainer } from "./flex-templates";
 import type { ProcessedLineMessage } from "./markdown-to-line";

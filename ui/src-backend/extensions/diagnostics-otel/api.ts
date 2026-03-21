@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/diagnostics-otel";
+export * from "powerdirector/plugin-sdk/diagnostics-otel";

@@ -5,7 +5,7 @@ import type {
   DmPolicy,
   SecretInput,
   WizardPrompter,
-} from "@/src-backend/plugin-sdk/feishu";
+} from "powerdirector/plugin-sdk/feishu";
 import {
   buildSingleChannelSecretPromptState,
   DEFAULT_ACCOUNT_ID,
@@ -17,7 +17,7 @@ import {
   setTopLevelChannelDmPolicyWithAllowFrom,
   setTopLevelChannelGroupPolicy,
   splitOnboardingEntries,
-} from "@/src-backend/plugin-sdk/feishu";
+} from "powerdirector/plugin-sdk/feishu";
 import { resolveFeishuCredentials } from "./accounts";
 import { probeFeishu } from "./probe";
 import type { FeishuConfig } from "./types";

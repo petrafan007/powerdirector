@@ -1,9 +1,9 @@
 import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createAllowlistProviderRestrictSendersWarningCollector } from "@/src-backend/plugin-sdk/channel-policy";
-import { createChannelPluginBase } from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createAllowlistProviderRestrictSendersWarningCollector } from "powerdirector/plugin-sdk/channel-policy";
+import { createChannelPluginBase } from "powerdirector/plugin-sdk/core";
 import {
   listSignalAccountIds,
   resolveDefaultSignalAccountId,

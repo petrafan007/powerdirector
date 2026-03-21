@@ -5,7 +5,7 @@ import {
   PROVIDER_LABELS,
   type ProviderUsageSnapshot,
   type UsageWindow,
-} from "@/src-backend/plugin-sdk/provider-usage";
+} from "powerdirector/plugin-sdk/provider-usage";
 
 type CopilotUsageResponse = {
   quota_snapshots?: {

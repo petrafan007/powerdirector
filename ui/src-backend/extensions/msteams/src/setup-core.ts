@@ -1,4 +1,4 @@
-import { DEFAULT_ACCOUNT_ID, type ChannelSetupAdapter } from "@/src-backend/plugin-sdk/setup";
+import { DEFAULT_ACCOUNT_ID, type ChannelSetupAdapter } from "powerdirector/plugin-sdk/setup";
 
 export const msteamsSetupAdapter: ChannelSetupAdapter = {
   resolveAccountId: () => DEFAULT_ACCOUNT_ID,

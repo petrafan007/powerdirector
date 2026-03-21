@@ -1,8 +1,8 @@
-import type { BaseProbeResult } from "@/src-backend/plugin-sdk/channel-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { runCommandWithTimeout } from "@/src-backend/plugin-sdk/process-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { detectBinary } from "@/src-backend/plugin-sdk/setup";
+import type { BaseProbeResult } from "powerdirector/plugin-sdk/channel-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { runCommandWithTimeout } from "powerdirector/plugin-sdk/process-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { detectBinary } from "powerdirector/plugin-sdk/setup";
 import { createIMessageRpcClient } from "./client";
 import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from "./constants";
 

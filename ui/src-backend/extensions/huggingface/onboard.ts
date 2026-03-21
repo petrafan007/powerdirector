@@ -2,11 +2,11 @@ import {
   buildHuggingfaceModelDefinition,
   HUGGINGFACE_BASE_URL,
   HUGGINGFACE_MODEL_CATALOG,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 import {
   applyProviderConfigWithModelCatalogPreset,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/provider-onboard";
+} from "powerdirector/plugin-sdk/provider-onboard";
 
 export const HUGGINGFACE_DEFAULT_MODEL_REF = "huggingface/deepseek-ai/DeepSeek-R1";
 

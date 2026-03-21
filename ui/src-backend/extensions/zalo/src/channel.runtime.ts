@@ -1,4 +1,4 @@
-import { createAccountStatusSink } from "@/src-backend/plugin-sdk/channel-lifecycle";
+import { createAccountStatusSink } from "powerdirector/plugin-sdk/channel-lifecycle";
 import { probeZalo } from "./probe";
 import { resolveZaloProxyFetch } from "./proxy";
 import {

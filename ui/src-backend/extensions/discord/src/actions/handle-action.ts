@@ -3,11 +3,11 @@ import {
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from "@/src-backend/plugin-sdk/agent-runtime";
-import { readBooleanParam } from "@/src-backend/plugin-sdk/boolean-param";
-import { resolveReactionMessageId } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelMessageActionContext } from "@/src-backend/plugin-sdk/channel-runtime";
-import { normalizeInteractiveReply } from "@/src-backend/plugin-sdk/interactive-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
+import { readBooleanParam } from "powerdirector/plugin-sdk/boolean-param";
+import { resolveReactionMessageId } from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelMessageActionContext } from "powerdirector/plugin-sdk/channel-runtime";
+import { normalizeInteractiveReply } from "powerdirector/plugin-sdk/interactive-runtime";
 import { buildDiscordInteractiveComponents } from "../shared-interactive";
 import { resolveDiscordChannelId } from "../targets";
 import { tryHandleDiscordMessageActionGuildAdmin } from "./handle-action.guild-admin";

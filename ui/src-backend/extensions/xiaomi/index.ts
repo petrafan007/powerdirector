@@ -1,7 +1,7 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
-import { buildSingleProviderApiKeyCatalog } from "@/src-backend/plugin-sdk/provider-catalog";
-import { PROVIDER_LABELS } from "@/src-backend/plugin-sdk/provider-usage";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
+import { buildSingleProviderApiKeyCatalog } from "powerdirector/plugin-sdk/provider-catalog";
+import { PROVIDER_LABELS } from "powerdirector/plugin-sdk/provider-usage";
 import { applyXiaomiConfig, XIAOMI_DEFAULT_MODEL_REF } from "./onboard";
 import { buildXiaomiProvider } from "./provider-catalog";
 

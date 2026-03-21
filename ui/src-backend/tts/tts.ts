@@ -9,7 +9,7 @@ import {
   unlinkSync,
 } from "node:fs";
 import path from "node:path";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import type { ReplyPayload } from "../auto-reply/types";
 import { normalizeChannelId } from "../channels/plugins/index";
 import type { ChannelId } from "../channels/plugins/types";

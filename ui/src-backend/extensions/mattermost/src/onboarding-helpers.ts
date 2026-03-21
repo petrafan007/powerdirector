@@ -1,1 +1,1 @@
-export { promptAccountId, resolveAccountIdForConfigure } from "@/src-backend/plugin-sdk/mattermost";
+export { promptAccountId, resolveAccountIdForConfigure } from "powerdirector/plugin-sdk/mattermost";

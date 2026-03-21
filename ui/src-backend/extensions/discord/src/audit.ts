@@ -1,9 +1,9 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import type {
   DiscordGuildChannelConfig,
   DiscordGuildEntry,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { isRecord } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { isRecord } from "powerdirector/plugin-sdk/text-runtime";
 import { inspectDiscordAccount } from "./account-inspect";
 import { fetchChannelPermissionsDiscord } from "./send";
 

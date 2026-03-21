@@ -2,7 +2,7 @@ import {
   computeBackoff,
   sleepWithAbort,
   type BackoffPolicy,
-} from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
 
 export type TelegramSendChatActionLogger = (message: string) => void;
 

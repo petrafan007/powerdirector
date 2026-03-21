@@ -14,15 +14,15 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { RateLimitError, type RequestClient } from "@buape/carbon";
-import type { RetryRunner } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolvePreferredPowerDirectorTmpDir } from "@/src-backend/plugin-sdk/infra-runtime";
+import type { RetryRunner } from "powerdirector/plugin-sdk/infra-runtime";
+import { resolvePreferredPowerDirectorTmpDir } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   parseFfprobeCodecAndSampleRate,
   runFfmpeg,
   runFfprobe,
-} from "@/src-backend/plugin-sdk/media-runtime";
-import { MEDIA_FFMPEG_MAX_AUDIO_DURATION_SECS } from "@/src-backend/plugin-sdk/media-runtime";
-import { unlinkIfExists } from "@/src-backend/plugin-sdk/media-runtime";
+} from "powerdirector/plugin-sdk/media-runtime";
+import { MEDIA_FFMPEG_MAX_AUDIO_DURATION_SECS } from "powerdirector/plugin-sdk/media-runtime";
+import { unlinkIfExists } from "powerdirector/plugin-sdk/media-runtime";
 
 const DISCORD_VOICE_MESSAGE_FLAG = 1 << 13;
 const SUPPRESS_NOTIFICATIONS_FLAG = 1 << 12;

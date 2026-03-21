@@ -1,7 +1,7 @@
-import type { BackoffPolicy } from "@/src-backend/plugin-sdk/infra-runtime";
-import { computeBackoff, sleepWithAbort } from "@/src-backend/plugin-sdk/infra-runtime";
-import { logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import type { BackoffPolicy } from "powerdirector/plugin-sdk/infra-runtime";
+import { computeBackoff, sleepWithAbort } from "powerdirector/plugin-sdk/infra-runtime";
+import { logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { type SignalSseEvent, streamSignalEvents } from "./client";
 
 const DEFAULT_RECONNECT_POLICY: BackoffPolicy = {

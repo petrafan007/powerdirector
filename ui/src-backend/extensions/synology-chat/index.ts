@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { synologyChatPlugin } from "./src/channel";
 import { setSynologyRuntime } from "./src/runtime";
 

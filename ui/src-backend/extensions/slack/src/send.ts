@@ -1,19 +1,19 @@
 import { type Block, type KnownBlock, type WebClient } from "@slack/web-api";
-import { loadConfig, type PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import { loadConfig, type PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   fetchWithSsrFGuard,
   withTrustedEnvProxyGuardedFetchMode,
-} from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveTextChunksWithFallback } from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveTextChunksWithFallback } from "powerdirector/plugin-sdk/reply-payload";
 import {
   chunkMarkdownTextWithMode,
   resolveChunkMode,
   resolveTextChunkLimit,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { isSilentReplyText } from "@/src-backend/plugin-sdk/reply-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { loadWebMedia } from "@/src-backend/plugin-sdk/web-media";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { isSilentReplyText } from "powerdirector/plugin-sdk/reply-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { loadWebMedia } from "powerdirector/plugin-sdk/web-media";
 import type { SlackTokenSource } from "./accounts";
 import { resolveSlackAccount } from "./accounts";
 import { buildSlackBlocksFallbackText } from "./blocks-fallback";

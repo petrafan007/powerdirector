@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { googlechatPlugin } from "./src/channel";
 import { setGoogleChatRuntime } from "./src/runtime";
 

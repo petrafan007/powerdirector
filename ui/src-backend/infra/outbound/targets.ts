@@ -1,4 +1,4 @@
-import { mapAllowFromEntries } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { mapAllowFromEntries } from "powerdirector/plugin-sdk/channel-config-helpers";
 import { normalizeChatType, type ChatType } from "../../channels/chat-type";
 import type { ChannelOutboundTargetMode } from "../../channels/plugins/types";
 import { formatCliCommand } from "../../cli/command-format";

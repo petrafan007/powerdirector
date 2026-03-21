@@ -1,13 +1,13 @@
-import { createScopedChannelMediaMaxBytesResolver } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelOutboundAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOutboundSendDep, type OutboundSendDeps } from "@/src-backend/plugin-sdk/channel-runtime";
+import { createScopedChannelMediaMaxBytesResolver } from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelOutboundAdapter } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep, type OutboundSendDeps } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   attachChannelToResult,
   attachChannelToResults,
   createAttachedChannelResultAdapter,
-} from "@/src-backend/plugin-sdk/channel-send-result";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/channel-send-result";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
 import { markdownToSignalTextChunks } from "./format";
 import { sendMessageSignal } from "./send";
 

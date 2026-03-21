@@ -5,7 +5,7 @@
  * This is the primary entry point for the Twitch channel integration.
  */
 
-import { buildPassiveProbedChannelStatusSummary } from "@/src-backend/plugin-sdk/extension-shared";
+import { buildPassiveProbedChannelStatusSummary } from "powerdirector/plugin-sdk/extension-shared";
 import type { PowerDirectorConfig } from "../api";
 import { buildChannelConfigSchema } from "../api";
 import { twitchMessageActions } from "./actions";
@@ -136,7 +136,7 @@ export const twitchPlugin: ChannelPlugin<TwitchAccountConfig> = {
       accountId?: string | null;
       inputs: string[];
       kind: ChannelResolveKind;
-      runtime: import("@/src-backend/plugin-sdk/runtime-env").RuntimeEnv;
+      runtime: import("powerdirector/plugin-sdk/runtime-env").RuntimeEnv;
     }): Promise<ChannelResolveResult[]> => {
       const account = getAccountConfig(cfg, accountId ?? DEFAULT_ACCOUNT_ID);
 

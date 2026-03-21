@@ -1,15 +1,15 @@
 import {
   resolvePayloadMediaUrls,
   sendPayloadMediaSequenceOrFallback,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelOutboundAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOutboundSendDep, type OutboundSendDeps } from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelOutboundAdapter } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep, type OutboundSendDeps } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   attachChannelToResult,
   createAttachedChannelResultAdapter,
-} from "@/src-backend/plugin-sdk/channel-send-result";
-import { resolveInteractiveTextFallback } from "@/src-backend/plugin-sdk/interactive-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/channel-send-result";
+import { resolveInteractiveTextFallback } from "powerdirector/plugin-sdk/interactive-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
 import type { TelegramInlineButtons } from "./button-types";
 import { resolveTelegramInlineButtons } from "./button-types";
 import { markdownToTelegramHtmlChunks } from "./format";

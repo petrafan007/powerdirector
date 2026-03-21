@@ -13,7 +13,7 @@ export {
   IMessageConfigSchema,
   type ChannelPlugin,
   type IMessageAccountConfig,
-} from "@/src-backend/plugin-sdk/imessage";
+} from "powerdirector/plugin-sdk/imessage";
 export {
   resolveIMessageGroupRequireMention,
   resolveIMessageGroupToolPolicy,

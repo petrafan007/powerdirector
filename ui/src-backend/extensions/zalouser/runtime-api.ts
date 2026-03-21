@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/zalouser";
+export * from "powerdirector/plugin-sdk/zalouser";

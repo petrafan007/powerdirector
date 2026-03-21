@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { nostrPlugin } from "./src/channel";
 import type { NostrProfile } from "./src/config-schema";
 import { createNostrProfileHttpHandler } from "./src/nostr-profile-http";

@@ -1,11 +1,11 @@
-import { isAllowedParsedChatSender } from "@/src-backend/plugin-sdk/allow-from";
+import { isAllowedParsedChatSender } from "powerdirector/plugin-sdk/allow-from";
 import {
   parseChatAllowTargetPrefixes,
   parseChatTargetPrefixesOrThrow,
   type ParsedChatTarget,
   resolveServicePrefixedAllowTarget,
   resolveServicePrefixedTarget,
-} from "@/src-backend/plugin-sdk/imessage-core";
+} from "powerdirector/plugin-sdk/imessage-core";
 
 export type BlueBubblesService = "imessage" | "sms" | "auto";
 

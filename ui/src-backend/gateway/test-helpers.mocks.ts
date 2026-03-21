@@ -574,7 +574,7 @@ vi.mock("../commands/health", () => ({
 vi.mock("../commands/status", () => ({
   getStatusSummary: vi.fn().mockResolvedValue({ ok: true }),
 }));
-vi.mock("@/src-backend/extensions/whatsapp/runtime-api", () => ({
+vi.mock("powerdirector/extensions/whatsapp/runtime-api", () => ({
   sendMessageWhatsApp: (...args: unknown[]) =>
     (hoisted.sendWhatsAppMock as (...args: unknown[]) => unknown)(...args),
   sendPollWhatsApp: (...args: unknown[]) =>

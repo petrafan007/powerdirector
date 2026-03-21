@@ -1,6 +1,6 @@
-import { createChannelPairingChallengeIssuer } from "@/src-backend/plugin-sdk/channel-pairing";
-import { formatAllowlistMatchMeta } from "@/src-backend/plugin-sdk/channel-runtime";
-import { upsertChannelPairingRequest } from "@/src-backend/plugin-sdk/conversation-runtime";
+import { createChannelPairingChallengeIssuer } from "powerdirector/plugin-sdk/channel-pairing";
+import { formatAllowlistMatchMeta } from "powerdirector/plugin-sdk/channel-runtime";
+import { upsertChannelPairingRequest } from "powerdirector/plugin-sdk/conversation-runtime";
 import { resolveSlackAllowListMatch } from "./allow-list";
 import type { SlackMonitorContext } from "./context";
 

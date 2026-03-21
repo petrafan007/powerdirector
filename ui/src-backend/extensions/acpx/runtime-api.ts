@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/acpx";
+export * from "powerdirector/plugin-sdk/acpx";

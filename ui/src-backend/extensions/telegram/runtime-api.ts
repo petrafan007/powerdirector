@@ -7,12 +7,12 @@ export type {
   TelegramAccountConfig,
   TelegramActionConfig,
   TelegramNetworkConfig,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 export type {
   PowerDirectorPluginService,
   PowerDirectorPluginServiceContext,
   PluginLogger,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 export type {
   AcpRuntime,
   AcpRuntimeCapabilities,
@@ -24,8 +24,8 @@ export type {
   AcpRuntimeTurnInput,
   AcpRuntimeErrorCode,
   AcpSessionUpdateTag,
-} from "@/src-backend/plugin-sdk/acp-runtime";
-export { AcpRuntimeError } from "@/src-backend/plugin-sdk/acp-runtime";
+} from "powerdirector/plugin-sdk/acp-runtime";
+export { AcpRuntimeError } from "powerdirector/plugin-sdk/acp-runtime";
 
 export {
   buildTokenChannelStatusSummary,
@@ -37,7 +37,7 @@ export {
   projectCredentialSnapshotFields,
   resolveConfiguredFromCredentialStatuses,
   resolveTelegramPollVisibility,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 export {
   buildChannelConfigSchema,
   getChatChannelMeta,
@@ -49,7 +49,7 @@ export {
   readStringParam,
   resolvePollMaxSelections,
   TelegramConfigSchema,
-} from "@/src-backend/plugin-sdk/telegram-core";
+} from "powerdirector/plugin-sdk/telegram-core";
 export type { TelegramProbe } from "./src/probe";
 export { auditTelegramGroupMembership, collectTelegramUnmentionedGroupIds } from "./src/audit";
 export { telegramMessageActions } from "./src/channel-actions";

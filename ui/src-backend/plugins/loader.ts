@@ -713,7 +713,7 @@ export function loadPowerDirectorPlugins(options: PluginLoadOptions = {}): Plugi
     }
     const pluginSdkAlias = resolvePluginSdkAlias();
     const aliasMap = {
-      ...(pluginSdkAlias ? { "@/src-backend/plugin-sdk": path.dirname(pluginSdkAlias) } : {}),
+      ...(pluginSdkAlias ? { "powerdirector/plugin-sdk": path.dirname(pluginSdkAlias) } : {}),
       ...resolvePluginSdkScopedAliasMap(),
     };
     const loader = createJiti(import.meta.url, {

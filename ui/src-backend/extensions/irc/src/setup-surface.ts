@@ -1,14 +1,14 @@
-import type { DmPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import { DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/routing";
+import type { DmPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import { DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/routing";
 import {
   createAllowFromSection,
   promptParsedAllowFromForAccount,
   setSetupChannelEnabled,
-} from "@/src-backend/plugin-sdk/setup";
-import type { ChannelSetupDmPolicy } from "@/src-backend/plugin-sdk/setup";
-import type { ChannelSetupWizard } from "@/src-backend/plugin-sdk/setup";
-import { formatDocsLink } from "@/src-backend/plugin-sdk/setup";
-import type { WizardPrompter } from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
+import type { ChannelSetupDmPolicy } from "powerdirector/plugin-sdk/setup";
+import type { ChannelSetupWizard } from "powerdirector/plugin-sdk/setup";
+import { formatDocsLink } from "powerdirector/plugin-sdk/setup";
+import type { WizardPrompter } from "powerdirector/plugin-sdk/setup";
 import { listIrcAccountIds, resolveDefaultIrcAccountId, resolveIrcAccount } from "./accounts";
 import {
   isChannelTarget,

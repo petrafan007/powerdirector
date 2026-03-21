@@ -1,6 +1,6 @@
-import { wrapFetchWithAbortSignal } from "@/src-backend/plugin-sdk/infra-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import { wrapFetchWithAbortSignal } from "powerdirector/plugin-sdk/infra-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { ProxyAgent, fetch as undiciFetch } from "undici";
 
 export function resolveDiscordRestFetch(

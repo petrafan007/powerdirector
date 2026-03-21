@@ -1,5 +1,5 @@
-import type { PluginRuntime } from "@/src-backend/plugin-sdk/test-utils";
-import { removeAckReactionAfterReply, shouldAckReaction } from "@/src-backend/plugin-sdk/test-utils";
+import type { PluginRuntime } from "powerdirector/plugin-sdk/test-utils";
+import { removeAckReactionAfterReply, shouldAckReaction } from "powerdirector/plugin-sdk/test-utils";
 import { vi } from "vitest";
 
 type DeepPartial<T> = {

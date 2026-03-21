@@ -3,7 +3,7 @@ import {
   emptyPluginConfigSchema,
   type PowerDirectorPluginApi,
   type ProviderAuthContext,
-} from "@/src-backend/plugin-sdk/google-gemini-cli-auth";
+} from "powerdirector/plugin-sdk/google-gemini-cli-auth";
 import { loginGeminiCliOAuth } from "./oauth";
 
 const PROVIDER_ID = "google-gemini-cli";

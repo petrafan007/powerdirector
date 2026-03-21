@@ -3,7 +3,7 @@ import {
   normalizeSecretInputString,
   prepareScopedSetupConfig,
   type ChannelSetupAdapter,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import type { CoreConfig } from "./types";
 
 const channel = "matrix" as const;

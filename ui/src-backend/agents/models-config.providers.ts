@@ -1,8 +1,8 @@
 import {
   QIANFAN_BASE_URL,
   QIANFAN_DEFAULT_MODEL_ID,
-} from "@/src-backend/extensions/qianfan/provider-catalog";
-import { XIAOMI_DEFAULT_MODEL_ID } from "@/src-backend/extensions/xiaomi/provider-catalog";
+} from "powerdirector/extensions/qianfan/provider-catalog";
+import { XIAOMI_DEFAULT_MODEL_ID } from "powerdirector/extensions/xiaomi/provider-catalog";
 import type { PowerDirectorConfig } from "../config/config";
 import { coerceSecretRef, resolveSecretInputRef } from "../config/types.secrets";
 import { isRecord } from "../utils";
@@ -11,23 +11,23 @@ import { ensureAuthProfileStore, listProfilesForProvider } from "./auth-profiles
 import { discoverBedrockModels } from "./bedrock-discovery";
 import { normalizeGoogleModelId } from "./model-id-normalization";
 import { resolveOllamaApiBase } from "./models-config.providers.discovery";
-export { buildKimiCodingProvider } from "@/src-backend/extensions/kimi-coding/provider-catalog";
-export { buildKilocodeProvider } from "@/src-backend/extensions/kilocode/provider-catalog";
+export { buildKimiCodingProvider } from "powerdirector/extensions/kimi-coding/provider-catalog";
+export { buildKilocodeProvider } from "powerdirector/extensions/kilocode/provider-catalog";
 export {
   MODELSTUDIO_BASE_URL,
   MODELSTUDIO_DEFAULT_MODEL_ID,
   buildModelStudioProvider,
-} from "@/src-backend/extensions/modelstudio/provider-catalog";
-export { buildNvidiaProvider } from "@/src-backend/extensions/nvidia/provider-catalog";
+} from "powerdirector/extensions/modelstudio/provider-catalog";
+export { buildNvidiaProvider } from "powerdirector/extensions/nvidia/provider-catalog";
 export {
   QIANFAN_BASE_URL,
   QIANFAN_DEFAULT_MODEL_ID,
   buildQianfanProvider,
-} from "@/src-backend/extensions/qianfan/provider-catalog";
+} from "powerdirector/extensions/qianfan/provider-catalog";
 export {
   XIAOMI_DEFAULT_MODEL_ID,
   buildXiaomiProvider,
-} from "@/src-backend/extensions/xiaomi/provider-catalog";
+} from "powerdirector/extensions/xiaomi/provider-catalog";
 import {
   groupPluginDiscoveryProvidersByOrder,
   normalizePluginDiscoveryResult,

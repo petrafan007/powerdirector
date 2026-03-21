@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/tlon";
+export * from "powerdirector/plugin-sdk/tlon";

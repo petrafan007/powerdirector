@@ -1,7 +1,7 @@
 import {
   hasOutboundReplyContent,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import { loadSessionStore } from "../../config/sessions";
 import { isAudioFileName } from "../../media/mime";
 import { normalizeVerboseLevel, type VerboseLevel } from "../thinking";

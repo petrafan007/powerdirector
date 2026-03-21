@@ -4,7 +4,7 @@ import {
   resolveProviderWebSearchPluginConfig,
   setProviderWebSearchPluginConfigValue,
   type WebSearchProviderPlugin,
-} from "@/src-backend/plugin-sdk/provider-web-search";
+} from "powerdirector/plugin-sdk/provider-web-search";
 import { runFirecrawlSearch } from "./firecrawl-client";
 
 const GenericFirecrawlSearchSchema = Type.Object(

@@ -15,7 +15,7 @@ import {
   type ChannelSetupWizard,
   type PowerDirectorConfig,
   type SecretInput,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import { listFeishuAccountIds, resolveFeishuCredentials } from "./accounts";
 import { probeFeishu } from "./probe";
 import { feishuSetupAdapter } from "./setup-core";

@@ -1,5 +1,5 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { buildSingleProviderApiKeyCatalog } from "@/src-backend/plugin-sdk/provider-catalog";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { buildSingleProviderApiKeyCatalog } from "powerdirector/plugin-sdk/provider-catalog";
 import { buildNvidiaProvider } from "./provider-catalog";
 
 const PROVIDER_ID = "nvidia";

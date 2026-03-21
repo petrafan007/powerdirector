@@ -1,7 +1,7 @@
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { createInterface, type Interface } from "node:readline";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolveUserPath } from "@/src-backend/plugin-sdk/text-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { resolveUserPath } from "powerdirector/plugin-sdk/text-runtime";
 import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from "./constants";
 
 export type IMessageRpcError = {

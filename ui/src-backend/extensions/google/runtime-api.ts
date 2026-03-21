@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/google";
+export * from "powerdirector/plugin-sdk/google";

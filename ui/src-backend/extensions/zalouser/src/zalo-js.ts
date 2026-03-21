@@ -3,7 +3,7 @@ import fs from "node:fs";
 import fsp from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveStateDir as resolvePluginStateDir } from "@/src-backend/plugin-sdk/state-paths";
+import { resolveStateDir as resolvePluginStateDir } from "powerdirector/plugin-sdk/state-paths";
 import { loadOutboundMediaFromUrl } from "../runtime-api";
 import { normalizeZaloReactionIcon } from "./reaction";
 import type {

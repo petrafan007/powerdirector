@@ -258,7 +258,7 @@ vi.mock("../pairing/pairing-store", () => ({
   upsertChannelPairingRequest: vi.fn().mockResolvedValue({ code: "000000", created: false }),
 }));
 
-vi.mock("@/src-backend/extensions/telegram/api", () => ({
+vi.mock("powerdirector/extensions/telegram/api", () => ({
   resolveTelegramToken: vi.fn(() => ({ token: "", source: "none" })),
 }));
 

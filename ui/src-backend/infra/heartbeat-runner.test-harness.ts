@@ -1,7 +1,7 @@
 import { beforeEach } from "vitest";
-import { slackPlugin, setSlackRuntime } from "@/src-backend/extensions/slack/index";
-import { telegramPlugin, setTelegramRuntime } from "@/src-backend/extensions/telegram/index";
-import { whatsappPlugin, setWhatsAppRuntime } from "@/src-backend/extensions/whatsapp/index";
+import { slackPlugin, setSlackRuntime } from "powerdirector/extensions/slack/index";
+import { telegramPlugin, setTelegramRuntime } from "powerdirector/extensions/telegram/index";
+import { whatsappPlugin, setWhatsAppRuntime } from "powerdirector/extensions/whatsapp/index";
 import type { ChannelPlugin } from "../channels/plugins/types.plugin";
 import { setActivePluginRegistry } from "../plugins/runtime";
 import { createPluginRuntime } from "../plugins/runtime/index";

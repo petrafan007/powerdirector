@@ -1,9 +1,9 @@
-import { formatNormalizedAllowFromEntries } from "@/src-backend/plugin-sdk/allow-from";
+import { formatNormalizedAllowFromEntries } from "powerdirector/plugin-sdk/allow-from";
 import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createAllowlistProviderRestrictSendersWarningCollector } from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createAllowlistProviderRestrictSendersWarningCollector } from "powerdirector/plugin-sdk/channel-policy";
 import {
   createAttachedChannelResultAdapter,
   createChannelDirectoryAdapter,
@@ -11,8 +11,8 @@ import {
   createMessageToolButtonsSchema,
   createScopedAccountReplyToModeResolver,
   type ChannelMessageToolDiscovery,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { buildPassiveProbedChannelStatusSummary } from "@/src-backend/plugin-sdk/extension-shared";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { buildPassiveProbedChannelStatusSummary } from "powerdirector/plugin-sdk/extension-shared";
 import { MattermostConfigSchema } from "./config-schema";
 import { resolveMattermostGroupRequireMention } from "./group-mentions";
 import {

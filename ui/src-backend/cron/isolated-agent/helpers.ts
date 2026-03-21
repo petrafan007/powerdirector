@@ -1,4 +1,4 @@
-import { hasOutboundReplyContent } from "@/src-backend/plugin-sdk/reply-payload";
+import { hasOutboundReplyContent } from "powerdirector/plugin-sdk/reply-payload";
 import { DEFAULT_HEARTBEAT_ACK_MAX_CHARS } from "../../auto-reply/heartbeat";
 import type { ReplyPayload } from "../../auto-reply/types";
 import { truncateUtf16Safe } from "../../utils";

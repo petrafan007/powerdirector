@@ -1,4 +1,4 @@
-import { normalizeIMessageHandle } from "@/src-backend/extensions/imessage/api";
+import { normalizeIMessageHandle } from "powerdirector/extensions/imessage/api";
 import { imessageOutbound } from "../../test/channel-outbounds";
 import type { ChannelOutboundAdapter, ChannelPlugin } from "../channels/plugins/types";
 import { collectStatusIssuesFromLastError } from "../plugin-sdk/status-helpers";

@@ -4,9 +4,9 @@ import {
   getContentType,
   normalizeMessageContent,
 } from "@whiskeysockets/baileys";
-import { formatLocationText, type NormalizedLocation } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { jidToE164 } from "@/src-backend/plugin-sdk/text-runtime";
+import { formatLocationText, type NormalizedLocation } from "powerdirector/plugin-sdk/channel-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { jidToE164 } from "powerdirector/plugin-sdk/text-runtime";
 import { parseVcard } from "../vcard";
 
 function unwrapMessage(message: proto.IMessage | undefined): proto.IMessage | undefined {

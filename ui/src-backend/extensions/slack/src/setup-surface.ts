@@ -6,12 +6,12 @@ import {
   parseMentionOrPrefixedId,
   promptLegacyChannelAllowFromForAccount,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import type {
   ChannelSetupWizard,
   ChannelSetupWizardAllowFromEntry,
-} from "@/src-backend/plugin-sdk/setup";
-import { formatDocsLink } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import { formatDocsLink } from "powerdirector/plugin-sdk/setup-tools";
 import { resolveDefaultSlackAccountId, resolveSlackAccount } from "./accounts";
 import { resolveSlackChannelAllowlist } from "./resolve-channels";
 import { resolveSlackUserAllowlist } from "./resolve-users";

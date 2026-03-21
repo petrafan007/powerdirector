@@ -2,9 +2,9 @@ import {
   resolveToolsBySender,
   type GroupToolPolicyBySenderConfig,
   type GroupToolPolicyConfig,
-} from "@/src-backend/plugin-sdk/channel-policy";
-import { type ChannelGroupContext } from "@/src-backend/plugin-sdk/channel-runtime";
-import { normalizeHyphenSlug } from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/channel-policy";
+import { type ChannelGroupContext } from "powerdirector/plugin-sdk/channel-runtime";
+import { normalizeHyphenSlug } from "powerdirector/plugin-sdk/core";
 import { inspectSlackAccount } from "./account-inspect";
 
 type SlackChannelPolicyEntry = {

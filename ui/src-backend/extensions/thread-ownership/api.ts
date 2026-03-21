@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/thread-ownership";
+export * from "powerdirector/plugin-sdk/thread-ownership";

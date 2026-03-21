@@ -1,4 +1,4 @@
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import { resolvePathFromInput } from "../../agents/path-policy";
 import { assertMediaNotDataUrl, resolveSandboxedMediaSource } from "../../agents/sandbox-paths";
 import { ensureSandboxWorkspaceForSession } from "../../agents/sandbox";

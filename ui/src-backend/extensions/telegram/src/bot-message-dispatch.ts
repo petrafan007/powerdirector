@@ -1,32 +1,32 @@
 import type { Bot } from "grammy";
-import { resolveAgentDir } from "@/src-backend/plugin-sdk/agent-runtime";
+import { resolveAgentDir } from "powerdirector/plugin-sdk/agent-runtime";
 import {
   findModelInCatalog,
   loadModelCatalog,
   modelSupportsVision,
-} from "@/src-backend/plugin-sdk/agent-runtime";
-import { resolveDefaultModelForAgent } from "@/src-backend/plugin-sdk/agent-runtime";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { removeAckReactionAfterReply } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logAckFailure, logTypingFailure } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
+import { resolveDefaultModelForAgent } from "powerdirector/plugin-sdk/agent-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { removeAckReactionAfterReply } from "powerdirector/plugin-sdk/channel-runtime";
+import { logAckFailure, logTypingFailure } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   loadSessionStore,
   resolveSessionStoreEntry,
   resolveStorePath,
-} from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
 import type {
   PowerDirectorConfig,
   ReplyToMode,
   TelegramAccountConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { getAgentScopedMediaLocalRoots } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
-import { resolveChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import { clearHistoryEntriesIfEnabled } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { danger, logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { getAgentScopedMediaLocalRoots } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
+import { resolveChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import { clearHistoryEntriesIfEnabled } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { danger, logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { defaultTelegramBotDeps, type TelegramBotDeps } from "./bot-deps";
 import type { TelegramMessageContext } from "./bot-message-context";
 import type { TelegramBotOptions } from "./bot";

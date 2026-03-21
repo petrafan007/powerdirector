@@ -1,9 +1,9 @@
-import { resolveMessagePrefix } from "@/src-backend/plugin-sdk/agent-runtime";
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveMessagePrefix } from "powerdirector/plugin-sdk/agent-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   formatInboundEnvelope,
   type EnvelopeFormatOptions,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import type { WebInboundMsg } from "../types";
 
 export function formatReplyContext(msg: WebInboundMsg) {

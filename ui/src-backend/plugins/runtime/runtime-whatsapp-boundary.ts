@@ -19,8 +19,8 @@ import {
 
 const WHATSAPP_PLUGIN_ID = "whatsapp";
 
-type WhatsAppLightModule = typeof import("@/src-backend/extensions/whatsapp/light-runtime-api");
-type WhatsAppHeavyModule = typeof import("@/src-backend/extensions/whatsapp/runtime-api");
+type WhatsAppLightModule = typeof import("powerdirector/extensions/whatsapp/light-runtime-api");
+type WhatsAppHeavyModule = typeof import("powerdirector/extensions/whatsapp/runtime-api");
 
 type WhatsAppPluginRecord = {
   origin: string;
@@ -97,7 +97,7 @@ function getJiti(modulePath: string) {
     modulePath: modulePath,
   });
   const aliasMap = {
-    ...(pluginSdkAlias ? { "@/src-backend/plugin-sdk": pluginSdkAlias } : {}),
+    ...(pluginSdkAlias ? { "powerdirector/plugin-sdk": pluginSdkAlias } : {}),
     ...resolvePluginSdkScopedAliasMap({ modulePath }),
   };
   const loader = createJiti(import.meta.url, {

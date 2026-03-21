@@ -1,4 +1,4 @@
-import { createLazyRuntimeNamedExport } from "@/src-backend/plugin-sdk/lazy-runtime";
+import { createLazyRuntimeNamedExport } from "powerdirector/plugin-sdk/lazy-runtime";
 import { resolveBlueBubblesAccount } from "./accounts";
 import { getCachedBlueBubblesPrivateApiStatus, isMacOS26OrHigher } from "./probe";
 import {

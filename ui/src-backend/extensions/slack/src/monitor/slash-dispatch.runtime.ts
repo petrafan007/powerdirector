@@ -1,28 +1,28 @@
 import {
   recordInboundSessionMetaSafe as recordInboundSessionMetaSafeImpl,
   resolveConversationLabel as resolveConversationLabelImpl,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveMarkdownTableMode as resolveMarkdownTableModeImpl } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveMarkdownTableMode as resolveMarkdownTableModeImpl } from "powerdirector/plugin-sdk/config-runtime";
 import {
   dispatchReplyWithDispatcher as dispatchReplyWithDispatcherImpl,
   finalizeInboundContext as finalizeInboundContextImpl,
   resolveChunkMode as resolveChunkModeImpl,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute as resolveAgentRouteImpl } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute as resolveAgentRouteImpl } from "powerdirector/plugin-sdk/routing";
 import { deliverSlackSlashReplies as deliverSlackSlashRepliesImpl } from "./replies";
 
-type ResolveChunkMode = typeof import("@/src-backend/plugin-sdk/reply-runtime").resolveChunkMode;
+type ResolveChunkMode = typeof import("powerdirector/plugin-sdk/reply-runtime").resolveChunkMode;
 type FinalizeInboundContext =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").finalizeInboundContext;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").finalizeInboundContext;
 type DispatchReplyWithDispatcher =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").dispatchReplyWithDispatcher;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").dispatchReplyWithDispatcher;
 type ResolveConversationLabel =
-  typeof import("@/src-backend/plugin-sdk/channel-runtime").resolveConversationLabel;
+  typeof import("powerdirector/plugin-sdk/channel-runtime").resolveConversationLabel;
 type RecordInboundSessionMetaSafe =
-  typeof import("@/src-backend/plugin-sdk/channel-runtime").recordInboundSessionMetaSafe;
+  typeof import("powerdirector/plugin-sdk/channel-runtime").recordInboundSessionMetaSafe;
 type ResolveMarkdownTableMode =
-  typeof import("@/src-backend/plugin-sdk/config-runtime").resolveMarkdownTableMode;
-type ResolveAgentRoute = typeof import("@/src-backend/plugin-sdk/routing").resolveAgentRoute;
+  typeof import("powerdirector/plugin-sdk/config-runtime").resolveMarkdownTableMode;
+type ResolveAgentRoute = typeof import("powerdirector/plugin-sdk/routing").resolveAgentRoute;
 type DeliverSlackSlashReplies = typeof import("./replies").deliverSlackSlashReplies;
 
 export function resolveChunkMode(

@@ -3,7 +3,7 @@ import {
   createSlackMessageToolBlocksSchema,
   type ChannelMessageActionAdapter,
   type ChannelMessageToolDiscovery,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import type { SlackActionContext } from "./action-runtime";
 import { handleSlackAction } from "./action-runtime";
 import { handleSlackMessageAction } from "./message-action-dispatch";

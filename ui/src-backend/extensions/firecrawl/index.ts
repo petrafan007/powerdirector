@@ -1,4 +1,4 @@
-import { definePluginEntry, type AnyAgentTool } from "@/src-backend/plugin-sdk/core";
+import { definePluginEntry, type AnyAgentTool } from "powerdirector/plugin-sdk/core";
 import { createFirecrawlScrapeTool } from "./src/firecrawl-scrape-tool";
 import { createFirecrawlWebSearchProvider } from "./src/firecrawl-search-provider";
 import { createFirecrawlSearchTool } from "./src/firecrawl-search-tool";

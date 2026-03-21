@@ -1,4 +1,4 @@
-import { normalizeResolvedSecretInputString } from "@/src-backend/plugin-sdk/config-runtime";
+import { normalizeResolvedSecretInputString } from "powerdirector/plugin-sdk/config-runtime";
 
 export function normalizeSlackToken(raw?: unknown): string | undefined {
   return normalizeResolvedSecretInputString({

@@ -1,9 +1,9 @@
-import { resolveMentionGating } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { hasControlCommand } from "@/src-backend/plugin-sdk/reply-runtime";
-import { parseActivationCommand } from "@/src-backend/plugin-sdk/reply-runtime";
-import { recordPendingHistoryEntryIfEnabled } from "@/src-backend/plugin-sdk/reply-runtime";
-import { normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+import { resolveMentionGating } from "powerdirector/plugin-sdk/channel-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { hasControlCommand } from "powerdirector/plugin-sdk/reply-runtime";
+import { parseActivationCommand } from "powerdirector/plugin-sdk/reply-runtime";
+import { recordPendingHistoryEntryIfEnabled } from "powerdirector/plugin-sdk/reply-runtime";
+import { normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import type { MentionConfig } from "../mentions";
 import { buildMentionConfig, debugMention, resolveOwnerList } from "../mentions";
 import type { WebInboundMsg } from "../types";

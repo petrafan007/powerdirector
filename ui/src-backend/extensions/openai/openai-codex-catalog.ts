@@ -1,4 +1,4 @@
-import type { ModelProviderConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelProviderConfig } from "powerdirector/plugin-sdk/provider-models";
 
 export const OPENAI_CODEX_BASE_URL = "https://chatgpt.com/backend-api";
 

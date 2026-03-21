@@ -1,7 +1,7 @@
-import type { ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
-import type { TelegramAccountConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import type { ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
+import type { TelegramAccountConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import type { TelegramBotDeps } from "./bot-deps";
 import {
   buildTelegramMessageContext,

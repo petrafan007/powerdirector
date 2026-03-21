@@ -1,4 +1,4 @@
-import type { DiscordGuildEntry } from "@/src-backend/plugin-sdk/config-runtime";
+import type { DiscordGuildEntry } from "powerdirector/plugin-sdk/config-runtime";
 import {
   createAccountScopedAllowFromSection,
   createAccountScopedGroupAccessSection,
@@ -9,14 +9,14 @@ import {
   patchChannelConfigForAccount,
   setSetupChannelEnabled,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import {
   createAllowlistSetupWizardProxy,
   type ChannelSetupAdapter,
   type ChannelSetupDmPolicy,
   type ChannelSetupWizard,
-} from "@/src-backend/plugin-sdk/setup";
-import { formatDocsLink } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import { formatDocsLink } from "powerdirector/plugin-sdk/setup-tools";
 import { inspectDiscordAccount } from "./account-inspect";
 import { listDiscordAccountIds, resolveDiscordAccount } from "./accounts";
 

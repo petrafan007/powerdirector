@@ -2,9 +2,9 @@ import type { Client } from "@buape/carbon";
 import {
   createChannelInboundDebouncer,
   shouldDebounceTextInbound,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOpenProviderRuntimeGroupPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOpenProviderRuntimeGroupPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
 import { buildDiscordInboundJob } from "./inbound-job";
 import { createDiscordInboundWorker } from "./inbound-worker";
 import type { DiscordMessageEvent, DiscordMessageHandler } from "./listeners";

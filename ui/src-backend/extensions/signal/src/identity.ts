@@ -1,5 +1,5 @@
-import { evaluateSenderGroupAccessForPolicy } from "@/src-backend/plugin-sdk/group-access";
-import { normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+import { evaluateSenderGroupAccessForPolicy } from "powerdirector/plugin-sdk/group-access";
+import { normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 
 export type SignalSender =
   | { kind: "phone"; raw: string; e164: string }

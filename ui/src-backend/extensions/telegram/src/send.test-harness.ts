@@ -1,4 +1,4 @@
-import type { MockFn } from "@/src-backend/plugin-sdk/testing";
+import type { MockFn } from "powerdirector/plugin-sdk/testing";
 import { beforeEach, vi } from "vitest";
 
 const { botApi, botCtorSpy } = vi.hoisted(() => ({
@@ -44,7 +44,7 @@ type TelegramSendTestMocks = {
   maybePersistResolvedTelegramTarget: MockFn;
 };
 
-vi.mock("@/src-backend/plugin-sdk/web-media", () => ({
+vi.mock("powerdirector/plugin-sdk/web-media", () => ({
   loadWebMedia,
 }));
 
@@ -72,8 +72,8 @@ vi.mock("grammy", () => ({
   InputFile: class {},
 }));
 
-vi.mock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.mock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     loadConfig,

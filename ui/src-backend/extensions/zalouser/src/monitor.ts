@@ -1,16 +1,16 @@
 import {
   DM_GROUP_ACCESS_REASON,
   resolveDmGroupAccessWithLists,
-} from "@/src-backend/plugin-sdk/channel-policy";
-import { createDeferred } from "@/src-backend/plugin-sdk/extension-shared";
-import { KeyedAsyncQueue } from "@/src-backend/plugin-sdk/keyed-async-queue";
+} from "powerdirector/plugin-sdk/channel-policy";
+import { createDeferred } from "powerdirector/plugin-sdk/extension-shared";
+import { KeyedAsyncQueue } from "powerdirector/plugin-sdk/keyed-async-queue";
 import {
   DEFAULT_GROUP_HISTORY_LIMIT,
   type HistoryEntry,
   buildPendingHistoryContextFromMap,
   clearHistoryEntriesIfEnabled,
   recordPendingHistoryEntryIfEnabled,
-} from "@/src-backend/plugin-sdk/reply-history";
+} from "powerdirector/plugin-sdk/reply-history";
 import type {
   MarkdownTableMode,
   PowerDirectorConfig,

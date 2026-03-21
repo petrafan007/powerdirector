@@ -1,16 +1,16 @@
-import { formatAllowFromLowercase } from "@/src-backend/plugin-sdk/allow-from";
+import { formatAllowFromLowercase } from "powerdirector/plugin-sdk/allow-from";
 import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createAccountStatusSink } from "@/src-backend/plugin-sdk/channel-lifecycle";
-import { createAllowlistProviderRouteAllowlistWarningCollector } from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createAccountStatusSink } from "powerdirector/plugin-sdk/channel-lifecycle";
+import { createAllowlistProviderRouteAllowlistWarningCollector } from "powerdirector/plugin-sdk/channel-policy";
 import {
   createAttachedChannelResultAdapter,
   createLoggedPairingApprovalNotifier,
   createPairingPrefixStripper,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { runStoppablePassiveMonitor } from "@/src-backend/plugin-sdk/extension-shared";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { runStoppablePassiveMonitor } from "powerdirector/plugin-sdk/extension-shared";
 import {
   buildBaseChannelStatusSummary,
   buildChannelConfigSchema,

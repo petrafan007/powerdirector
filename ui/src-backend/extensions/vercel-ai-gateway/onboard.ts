@@ -1,7 +1,7 @@
 import {
   applyAgentDefaultModelPrimary,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/provider-onboard";
+} from "powerdirector/plugin-sdk/provider-onboard";
 
 export const VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF = "vercel-ai-gateway/anthropic/claude-opus-4.6";
 

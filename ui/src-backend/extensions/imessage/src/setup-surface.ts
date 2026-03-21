@@ -2,8 +2,8 @@ import {
   createDetectedBinaryStatus,
   setSetupChannelEnabled,
   type ChannelSetupWizard,
-} from "@/src-backend/plugin-sdk/setup";
-import { detectBinary } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import { detectBinary } from "powerdirector/plugin-sdk/setup-tools";
 import { listIMessageAccountIds, resolveIMessageAccount } from "./accounts";
 import {
   createIMessageCliPathTextInput,

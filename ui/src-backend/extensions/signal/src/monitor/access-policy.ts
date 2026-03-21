@@ -1,9 +1,9 @@
-import { createChannelPairingChallengeIssuer } from "@/src-backend/plugin-sdk/channel-pairing";
-import { upsertChannelPairingRequest } from "@/src-backend/plugin-sdk/conversation-runtime";
+import { createChannelPairingChallengeIssuer } from "powerdirector/plugin-sdk/channel-pairing";
+import { upsertChannelPairingRequest } from "powerdirector/plugin-sdk/conversation-runtime";
 import {
   readStoreAllowFromForDmPolicy,
   resolveDmGroupAccessWithLists,
-} from "@/src-backend/plugin-sdk/security-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
 import { isSignalSenderAllowed, type SignalSender } from "../identity";
 
 type SignalDmPolicy = "open" | "pairing" | "allowlist" | "disabled";

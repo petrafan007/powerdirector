@@ -1,32 +1,32 @@
-import { resolveAckReaction } from "@/src-backend/plugin-sdk/agent-runtime";
+import { resolveAckReaction } from "powerdirector/plugin-sdk/agent-runtime";
 import {
   shouldAckReaction as shouldAckReactionGate,
   type AckReactionScope,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveControlCommandGate } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveConversationLabel } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logInboundDrop } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveMentionGatingWithBypass } from "@/src-backend/plugin-sdk/channel-runtime";
-import { recordInboundSession } from "@/src-backend/plugin-sdk/channel-runtime";
-import { readSessionUpdatedAt, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { hasControlCommand } from "@/src-backend/plugin-sdk/reply-runtime";
-import { shouldHandleTextCommands } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveControlCommandGate } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveConversationLabel } from "powerdirector/plugin-sdk/channel-runtime";
+import { logInboundDrop } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveMentionGatingWithBypass } from "powerdirector/plugin-sdk/channel-runtime";
+import { recordInboundSession } from "powerdirector/plugin-sdk/channel-runtime";
+import { readSessionUpdatedAt, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { hasControlCommand } from "powerdirector/plugin-sdk/reply-runtime";
+import { shouldHandleTextCommands } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   formatInboundEnvelope,
   resolveEnvelopeFormatOptions,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildPendingHistoryContextFromMap,
   recordPendingHistoryEntryIfEnabled,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildMentionRegexes, matchesMentionWithExplicit } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { FinalizedMsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { resolveThreadSessionKeys } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolvePinnedMainDmOwnerFromAllowlist } from "@/src-backend/plugin-sdk/security-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { buildMentionRegexes, matchesMentionWithExplicit } from "powerdirector/plugin-sdk/reply-runtime";
+import type { FinalizedMsgContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { resolveThreadSessionKeys } from "powerdirector/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { resolvePinnedMainDmOwnerFromAllowlist } from "powerdirector/plugin-sdk/security-runtime";
 import { resolveSlackReplyToMode, type ResolvedSlackAccount } from "../../accounts";
 import { reactSlackMessage } from "../../actions";
 import { sendMessageSlack } from "../../send";

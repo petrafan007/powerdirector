@@ -1,6 +1,6 @@
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveStorePath, updateLastRoute } from "@/src-backend/plugin-sdk/config-runtime";
-import type { MsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveStorePath, updateLastRoute } from "powerdirector/plugin-sdk/config-runtime";
+import type { MsgContext } from "powerdirector/plugin-sdk/reply-runtime";
 import { formatError } from "../../session";
 
 export function trackBackgroundTask(

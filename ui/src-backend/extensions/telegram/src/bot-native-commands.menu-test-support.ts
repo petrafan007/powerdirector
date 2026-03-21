@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { expect, vi } from "vitest";
 import type { SkillCommandSpec } from "../../../src/agents/skills";
 import type { PowerDirectorConfig } from "../runtime-api";
@@ -34,8 +34,8 @@ const deliveryMocks = vi.hoisted(() => ({
 export const listSkillCommandsForAgents = skillCommandMocks.listSkillCommandsForAgents;
 export const deliverReplies = deliveryMocks.deliverReplies;
 
-vi.mock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/reply-runtime")>();
+vi.mock("powerdirector/plugin-sdk/reply-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/reply-runtime")>();
   return {
     ...actual,
     listSkillCommandsForAgents,

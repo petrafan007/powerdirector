@@ -1,10 +1,10 @@
-import { loadConfig, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
-import { readChannelAllowFromStore } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
+import { loadConfig, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
+import { readChannelAllowFromStore } from "powerdirector/plugin-sdk/conversation-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   dispatchReplyWithBufferedBlockDispatcher,
   listSkillCommandsForAgents,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import { wasSentByBot } from "./sent-message-cache";
 
 export type TelegramBotDeps = {

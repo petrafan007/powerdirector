@@ -1,8 +1,8 @@
 import type {
   ProviderResolveDynamicModelContext,
   ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/plugin-entry";
-import { cloneFirstTemplateModel } from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/plugin-entry";
+import { cloneFirstTemplateModel } from "powerdirector/plugin-sdk/provider-models";
 
 const GEMINI_3_1_PRO_PREFIX = "gemini-3.1-pro";
 const GEMINI_3_1_FLASH_PREFIX = "gemini-3.1-flash";

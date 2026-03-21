@@ -1,5 +1,5 @@
 import type { MatrixClient } from "@vector-im/matrix-bot-sdk";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
 
 // Support multiple active clients for multi-account
 const activeClients = new Map<string, MatrixClient>();

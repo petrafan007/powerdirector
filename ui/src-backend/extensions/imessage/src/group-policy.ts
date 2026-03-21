@@ -2,8 +2,8 @@ import {
   resolveChannelGroupRequireMention,
   resolveChannelGroupToolsPolicy,
   type GroupToolPolicyConfig,
-} from "@/src-backend/plugin-sdk/channel-policy";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/channel-policy";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 
 type IMessageGroupContext = {
   cfg: PowerDirectorConfig;

@@ -1,4 +1,4 @@
-import { createDraftStreamLoop } from "@/src-backend/plugin-sdk/channel-runtime";
+import { createDraftStreamLoop } from "powerdirector/plugin-sdk/channel-runtime";
 import { deleteSlackMessage, editSlackMessage } from "./actions";
 import { sendMessageSlack } from "./send";
 

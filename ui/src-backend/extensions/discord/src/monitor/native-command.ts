@@ -11,32 +11,32 @@ import {
   type StringSelectMenuInteraction,
 } from "@buape/carbon";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import { resolveHumanDelayConfig } from "@/src-backend/plugin-sdk/agent-runtime";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { resolveCommandAuthorizedFromAuthorizers } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveNativeCommandSessionTargets } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig, loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isDangerousNameMatchingEnabled } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveOpenProviderRuntimeGroupPolicy } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveHumanDelayConfig } from "powerdirector/plugin-sdk/agent-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { resolveCommandAuthorizedFromAuthorizers } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveNativeCommandSessionTargets } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig, loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isDangerousNameMatchingEnabled } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveOpenProviderRuntimeGroupPolicy } from "powerdirector/plugin-sdk/config-runtime";
 import {
   ensureConfiguredBindingRouteReady,
   resolveConfiguredBindingRoute,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { buildPairingReply } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { getAgentScopedMediaLocalRoots } from "@/src-backend/plugin-sdk/media-runtime";
-import { executePluginCommand, matchPluginCommand } from "@/src-backend/plugin-sdk/plugin-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { buildPairingReply } from "powerdirector/plugin-sdk/conversation-runtime";
+import { getAgentScopedMediaLocalRoots } from "powerdirector/plugin-sdk/media-runtime";
+import { executePluginCommand, matchPluginCommand } from "powerdirector/plugin-sdk/plugin-runtime";
 import {
   resolveSendableOutboundReplyParts,
   resolveTextChunksWithFallback,
-} from "@/src-backend/plugin-sdk/reply-payload";
-import { resolveChunkMode, resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-payload";
+import { resolveChunkMode, resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
 import type {
   ChatCommandDefinition,
   CommandArgDefinition,
   CommandArgValues,
   CommandArgs,
   NativeCommandSpec,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildCommandTextFromArgs,
   findCommandByNativeName,
@@ -45,12 +45,12 @@ import {
   resolveCommandArgChoices,
   resolveCommandArgMenu,
   serializeCommandArgs,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { dispatchReplyWithDispatcher } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { loadWebMedia } from "@/src-backend/plugin-sdk/web-media";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { dispatchReplyWithDispatcher } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { loadWebMedia } from "powerdirector/plugin-sdk/web-media";
 import { resolveDiscordMaxLinesPerMessage } from "../accounts";
 import { chunkDiscordTextWithMode } from "../chunk";
 import {

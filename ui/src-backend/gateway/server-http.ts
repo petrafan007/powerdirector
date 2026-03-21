@@ -7,7 +7,7 @@ import {
 } from "node:http";
 import { createServer as createHttpsServer } from "node:https";
 import type { TlsOptions } from "node:tls";
-import { handleSlackHttpRequest } from "@/src-backend/plugin-sdk/slack";
+import { handleSlackHttpRequest } from "powerdirector/plugin-sdk/slack";
 import type { WebSocketServer } from "ws";
 import { resolveAgentAvatar } from "../agents/identity-avatar";
 import { CANVAS_WS_PATH, handleA2uiHttpRequest } from "../canvas-host/a2ui";

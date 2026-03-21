@@ -1,9 +1,9 @@
-import { resolveFetch } from "@/src-backend/plugin-sdk/infra-runtime";
+import { resolveFetch } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   resolveRetryConfig,
   retryAsync,
   type RetryConfig,
-} from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";
 const DISCORD_API_RETRY_DEFAULTS = {

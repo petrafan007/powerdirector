@@ -3,10 +3,10 @@ import { configureClient } from "@tloncorp/api";
 import type {
   ChannelAccountSnapshot,
   ChannelOutboundAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { ChannelPlugin } from "@/src-backend/plugin-sdk/core";
-import { createLoggerBackedRuntime } from "@/src-backend/plugin-sdk/runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { ChannelPlugin } from "powerdirector/plugin-sdk/core";
+import { createLoggerBackedRuntime } from "powerdirector/plugin-sdk/runtime";
 import { monitorTlonProvider } from "./monitor/index";
 import { tlonSetupWizard } from "./setup-surface";
 import {

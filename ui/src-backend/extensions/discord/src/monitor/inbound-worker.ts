@@ -1,7 +1,7 @@
-import { createRunStateMachine } from "@/src-backend/plugin-sdk/channel-runtime";
-import { formatDurationSeconds } from "@/src-backend/plugin-sdk/infra-runtime";
-import { KeyedAsyncQueue } from "@/src-backend/plugin-sdk/keyed-async-queue";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
+import { createRunStateMachine } from "powerdirector/plugin-sdk/channel-runtime";
+import { formatDurationSeconds } from "powerdirector/plugin-sdk/infra-runtime";
+import { KeyedAsyncQueue } from "powerdirector/plugin-sdk/keyed-async-queue";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
 import { materializeDiscordInboundJob, type DiscordInboundJob } from "./inbound-job";
 import type { RuntimeEnv } from "./message-handler.preflight.types";
 import { processDiscordMessage } from "./message-handler.process";

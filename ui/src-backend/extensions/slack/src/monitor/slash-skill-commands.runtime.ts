@@ -1,7 +1,7 @@
-import { listSkillCommandsForAgents as listSkillCommandsForAgentsImpl } from "@/src-backend/plugin-sdk/reply-runtime";
+import { listSkillCommandsForAgents as listSkillCommandsForAgentsImpl } from "powerdirector/plugin-sdk/reply-runtime";
 
 type ListSkillCommandsForAgents =
-  typeof import("@/src-backend/plugin-sdk/reply-runtime").listSkillCommandsForAgents;
+  typeof import("powerdirector/plugin-sdk/reply-runtime").listSkillCommandsForAgents;
 
 export function listSkillCommandsForAgents(
   ...args: Parameters<ListSkillCommandsForAgents>

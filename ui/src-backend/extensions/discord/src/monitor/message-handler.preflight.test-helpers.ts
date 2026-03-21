@@ -1,5 +1,5 @@
 import { ChannelType } from "@buape/carbon";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import type { preflightDiscordMessage } from "./message-handler.preflight";
 import { createNoopThreadBindingManager } from "./thread-bindings";
 
@@ -90,7 +90,7 @@ export function createDiscordPreflightArgs(params: {
     discordConfig: params.discordConfig,
     accountId: "default",
     token: "token",
-    runtime: {} as import("@/src-backend/plugin-sdk/runtime-env").RuntimeEnv,
+    runtime: {} as import("powerdirector/plugin-sdk/runtime-env").RuntimeEnv,
     botUserId: params.botUserId ?? "powerdirector-bot",
     guildHistories: new Map(),
     historyLimit: 0,

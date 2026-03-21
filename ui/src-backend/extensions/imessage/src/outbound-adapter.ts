@@ -1,8 +1,8 @@
 import {
   createScopedChannelMediaMaxBytesResolver,
   createDirectTextMediaOutbound,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOutboundSendDep, type OutboundSendDeps } from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep, type OutboundSendDeps } from "powerdirector/plugin-sdk/channel-runtime";
 import { sendMessageIMessage } from "./send";
 
 function resolveIMessageSender(deps: OutboundSendDeps | undefined) {

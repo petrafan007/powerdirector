@@ -1,4 +1,4 @@
-import { createScopedChannelConfigAdapter } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { createScopedChannelConfigAdapter } from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   listLineAccountIds,
   resolveDefaultLineAccountId,

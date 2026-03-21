@@ -1,13 +1,13 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { ChannelGroupPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveOpenProviderRuntimeGroupPolicy } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { ChannelGroupPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveOpenProviderRuntimeGroupPolicy } from "powerdirector/plugin-sdk/config-runtime";
 import type {
   TelegramAccountConfig,
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { evaluateMatchedGroupAccessForPolicy } from "@/src-backend/plugin-sdk/group-access";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { evaluateMatchedGroupAccessForPolicy } from "powerdirector/plugin-sdk/group-access";
 import { isSenderAllowed, type NormalizedAllowFrom } from "./bot-access";
 import { firstDefined } from "./bot-access";
 

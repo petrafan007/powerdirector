@@ -1,40 +1,40 @@
 import { ChannelType, type RequestClient } from "@buape/carbon";
-import { resolveAckReaction, resolveHumanDelayConfig } from "@/src-backend/plugin-sdk/agent-runtime";
-import { EmbeddedBlockChunker } from "@/src-backend/plugin-sdk/agent-runtime";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { shouldAckReaction as shouldAckReactionGate } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logTypingFailure, logAckFailure } from "@/src-backend/plugin-sdk/channel-runtime";
-import { recordInboundSession } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveAckReaction, resolveHumanDelayConfig } from "powerdirector/plugin-sdk/agent-runtime";
+import { EmbeddedBlockChunker } from "powerdirector/plugin-sdk/agent-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { shouldAckReaction as shouldAckReactionGate } from "powerdirector/plugin-sdk/channel-runtime";
+import { logTypingFailure, logAckFailure } from "powerdirector/plugin-sdk/channel-runtime";
+import { recordInboundSession } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   createStatusReactionController,
   DEFAULT_TIMING,
   type StatusReactionAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { isDangerousNameMatchingEnabled } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveDiscordPreviewStreamMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { readSessionUpdatedAt, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
-import { getAgentScopedMediaLocalRoots } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
-import { resolveChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import { dispatchInboundMessage } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { isDangerousNameMatchingEnabled } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveDiscordPreviewStreamMode } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { readSessionUpdatedAt, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
+import { getAgentScopedMediaLocalRoots } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
+import { resolveChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import { dispatchInboundMessage } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   formatInboundEnvelope,
   resolveEnvelopeFormatOptions,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildPendingHistoryContextFromMap,
   clearHistoryEntriesIfEnabled,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { createReplyDispatcherWithTyping } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildAgentSessionKey } from "@/src-backend/plugin-sdk/routing";
-import { resolveThreadSessionKeys } from "@/src-backend/plugin-sdk/routing";
-import { danger, logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { convertMarkdownTables } from "@/src-backend/plugin-sdk/text-runtime";
-import { stripReasoningTagsFromText } from "@/src-backend/plugin-sdk/text-runtime";
-import { truncateUtf16Safe } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { createReplyDispatcherWithTyping } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { buildAgentSessionKey } from "powerdirector/plugin-sdk/routing";
+import { resolveThreadSessionKeys } from "powerdirector/plugin-sdk/routing";
+import { danger, logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { convertMarkdownTables } from "powerdirector/plugin-sdk/text-runtime";
+import { stripReasoningTagsFromText } from "powerdirector/plugin-sdk/text-runtime";
+import { truncateUtf16Safe } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveDiscordMaxLinesPerMessage } from "../accounts";
 import { chunkDiscordTextWithMode } from "../chunk";
 import { resolveDiscordDraftStreamingChunking } from "../draft-chunking";

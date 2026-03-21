@@ -17,11 +17,11 @@ export type {
   ChannelConfiguredBindingConversationRef,
   ChannelConfiguredBindingMatch,
 } from "../channels/plugins/types.adapters";
-export type { InspectedTelegramAccount } from "@/src-backend/extensions/telegram/api";
-export type { ResolvedTelegramAccount } from "@/src-backend/extensions/telegram/api";
-export type { TelegramProbe } from "@/src-backend/extensions/telegram/runtime-api";
-export type { TelegramButtonStyle, TelegramInlineButtons } from "@/src-backend/extensions/telegram/api";
-export type { StickerMetadata } from "@/src-backend/extensions/telegram/api";
+export type { InspectedTelegramAccount } from "powerdirector/extensions/telegram/api";
+export type { ResolvedTelegramAccount } from "powerdirector/extensions/telegram/api";
+export type { TelegramProbe } from "powerdirector/extensions/telegram/runtime-api";
+export type { TelegramButtonStyle, TelegramInlineButtons } from "powerdirector/extensions/telegram/api";
+export type { StickerMetadata } from "powerdirector/extensions/telegram/api";
 
 export { emptyPluginConfigSchema } from "../plugins/config-schema";
 export { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key";
@@ -51,11 +51,11 @@ export {
 export {
   listTelegramDirectoryGroupsFromConfig,
   listTelegramDirectoryPeersFromConfig,
-} from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
 export {
   resolveTelegramGroupRequireMention,
   resolveTelegramGroupToolPolicy,
-} from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
 export { TelegramConfigSchema } from "../config/zod-schema.providers-core";
 
 export { buildTokenChannelStatusSummary } from "./status-helpers";
@@ -65,26 +65,26 @@ export {
   listTelegramAccountIds,
   resolveDefaultTelegramAccountId,
   resolveTelegramPollActionGateState,
-} from "@/src-backend/extensions/telegram/api";
-export { inspectTelegramAccount } from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
+export { inspectTelegramAccount } from "powerdirector/extensions/telegram/api";
 export {
   looksLikeTelegramTargetId,
   normalizeTelegramMessagingTarget,
-} from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
 export {
   parseTelegramReplyToMessageId,
   parseTelegramThreadId,
-} from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
 export {
   isNumericTelegramUserId,
   normalizeTelegramAllowFromEntry,
-} from "@/src-backend/extensions/telegram/api";
-export { fetchTelegramChatId } from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
+export { fetchTelegramChatId } from "powerdirector/extensions/telegram/api";
 export {
   resolveTelegramInlineButtonsScope,
   resolveTelegramTargetChatType,
-} from "@/src-backend/extensions/telegram/api";
-export { resolveTelegramReactionLevel } from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
+export { resolveTelegramReactionLevel } from "powerdirector/extensions/telegram/api";
 export {
   auditTelegramGroupMembership,
   collectTelegramUnmentionedGroupIds,
@@ -103,16 +103,16 @@ export {
   sendStickerTelegram,
   sendTypingTelegram,
   unpinMessageTelegram,
-} from "@/src-backend/extensions/telegram/runtime-api";
-export { getCacheStats, searchStickers } from "@/src-backend/extensions/telegram/api";
-export { resolveTelegramToken } from "@/src-backend/extensions/telegram/runtime-api";
-export { telegramMessageActions } from "@/src-backend/extensions/telegram/runtime-api";
+} from "powerdirector/extensions/telegram/runtime-api";
+export { getCacheStats, searchStickers } from "powerdirector/extensions/telegram/api";
+export { resolveTelegramToken } from "powerdirector/extensions/telegram/runtime-api";
+export { telegramMessageActions } from "powerdirector/extensions/telegram/runtime-api";
 export {
   setTelegramThreadBindingIdleTimeoutBySessionKey,
   setTelegramThreadBindingMaxAgeBySessionKey,
-} from "@/src-backend/extensions/telegram/runtime-api";
-export { collectTelegramStatusIssues } from "@/src-backend/extensions/telegram/api";
-export { sendTelegramPayloadMessages } from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/runtime-api";
+export { collectTelegramStatusIssues } from "powerdirector/extensions/telegram/api";
+export { sendTelegramPayloadMessages } from "powerdirector/extensions/telegram/api";
 export {
   buildBrowseProvidersButton,
   buildModelsKeyboard,
@@ -120,8 +120,8 @@ export {
   calculateTotalPages,
   getModelsPageSize,
   type ProviderInfo,
-} from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
 export {
   isTelegramExecApprovalApprover,
   isTelegramExecApprovalClientEnabled,
-} from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";

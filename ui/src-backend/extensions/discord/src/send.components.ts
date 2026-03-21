@@ -5,9 +5,9 @@ import {
   type RequestClient,
 } from "@buape/carbon";
 import { ChannelType, Routes } from "discord-api-types/v10";
-import { loadConfig, type PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { recordChannelActivity } from "@/src-backend/plugin-sdk/infra-runtime";
-import { loadWebMedia } from "@/src-backend/plugin-sdk/web-media";
+import { loadConfig, type PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { recordChannelActivity } from "powerdirector/plugin-sdk/infra-runtime";
+import { loadWebMedia } from "powerdirector/plugin-sdk/web-media";
 import { resolveDiscordAccount } from "./accounts";
 import { registerDiscordComponentEntries } from "./components-registry";
 import {

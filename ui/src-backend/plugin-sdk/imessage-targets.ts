@@ -1,1 +1,1 @@
-export { normalizeIMessageHandle } from "@/src-backend/extensions/imessage/api";
+export { normalizeIMessageHandle } from "powerdirector/extensions/imessage/api";

@@ -1,6 +1,6 @@
-import { resetSystemEventsForTest } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resetInboundDedupe } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { MockFn } from "@/src-backend/plugin-sdk/testing";
+import { resetSystemEventsForTest } from "powerdirector/plugin-sdk/infra-runtime";
+import { resetInboundDedupe } from "powerdirector/plugin-sdk/reply-runtime";
+import type { MockFn } from "powerdirector/plugin-sdk/testing";
 import { beforeEach, vi } from "vitest";
 import type { SignalDaemonExitEvent, SignalDaemonHandle } from "./daemon";
 
@@ -68,16 +68,16 @@ export function createMockSignalDaemonHandle(
   };
 }
 
-vi.mock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.mock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     loadConfig: () => config,
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/reply-runtime")>();
+vi.mock("powerdirector/plugin-sdk/reply-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/reply-runtime")>();
   return {
     ...actual,
     getReplyFromConfig: (...args: unknown[]) => replyMock(...args),
@@ -90,13 +90,13 @@ vi.mock("./send", () => ({
   sendReadReceiptSignal: vi.fn().mockResolvedValue(true),
 }));
 
-vi.mock("@/src-backend/plugin-sdk/conversation-runtime", () => ({
+vi.mock("powerdirector/plugin-sdk/conversation-runtime", () => ({
   readChannelAllowFromStore: (...args: unknown[]) => readAllowFromStoreMock(...args),
   upsertChannelPairingRequest: (...args: unknown[]) => upsertPairingRequestMock(...args),
 }));
 
-vi.mock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.mock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     resolveStorePath: vi.fn(() => "/tmp/powerdirector-sessions.json"),
@@ -120,8 +120,8 @@ vi.mock("./daemon", async (importOriginal) => {
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/infra-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/infra-runtime")>();
+vi.mock("powerdirector/plugin-sdk/infra-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/infra-runtime")>();
   return {
     ...actual,
     waitForTransportReady: (...args: unknown[]) => waitForTransportReadyMock(...args),

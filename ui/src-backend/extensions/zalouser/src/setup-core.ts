@@ -1,4 +1,4 @@
-import { createPatchedAccountSetupAdapter } from "@/src-backend/plugin-sdk/setup";
+import { createPatchedAccountSetupAdapter } from "powerdirector/plugin-sdk/setup";
 
 const channel = "zalouser" as const;
 

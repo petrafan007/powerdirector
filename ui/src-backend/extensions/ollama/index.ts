@@ -5,14 +5,14 @@ import {
   type ProviderAuthMethodNonInteractiveContext,
   type ProviderAuthResult,
   type ProviderDiscoveryContext,
-} from "@/src-backend/plugin-sdk/core";
-import { OLLAMA_DEFAULT_BASE_URL, resolveOllamaApiBase } from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/core";
+import { OLLAMA_DEFAULT_BASE_URL, resolveOllamaApiBase } from "powerdirector/plugin-sdk/provider-models";
 
 const PROVIDER_ID = "ollama";
 const DEFAULT_API_KEY = "ollama-local";
 
 async function loadProviderSetup() {
-  return await import("@/src-backend/plugin-sdk/ollama-setup");
+  return await import("powerdirector/plugin-sdk/ollama-setup");
 }
 
 export default definePluginEntry({

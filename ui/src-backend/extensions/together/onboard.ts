@@ -2,11 +2,11 @@ import {
   buildTogetherModelDefinition,
   TOGETHER_BASE_URL,
   TOGETHER_MODEL_CATALOG,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 import {
   applyProviderConfigWithModelCatalogPreset,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/provider-onboard";
+} from "powerdirector/plugin-sdk/provider-onboard";
 
 export const TOGETHER_DEFAULT_MODEL_REF = "together/moonshotai/Kimi-K2.5";
 

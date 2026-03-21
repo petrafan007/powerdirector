@@ -3,11 +3,11 @@ import {
   VENICE_BASE_URL,
   VENICE_DEFAULT_MODEL_REF,
   VENICE_MODEL_CATALOG,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 import {
   applyProviderConfigWithModelCatalogPreset,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/provider-onboard";
+} from "powerdirector/plugin-sdk/provider-onboard";
 
 export { VENICE_DEFAULT_MODEL_REF };
 

@@ -6,10 +6,10 @@ import type { Bot } from "grammy";
 import {
   normalizeTelegramCommandName,
   TELEGRAM_COMMAND_NAME_PATTERN,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolveStateDir } from "@/src-backend/plugin-sdk/state-paths";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { resolveStateDir } from "powerdirector/plugin-sdk/state-paths";
 import { withTelegramApiErrorLogging } from "./api-logging";
 
 export const TELEGRAM_MAX_COMMANDS = 100;

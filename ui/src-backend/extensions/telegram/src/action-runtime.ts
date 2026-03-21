@@ -1,6 +1,6 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import { readBooleanParam } from "@/src-backend/plugin-sdk/boolean-param";
-import { resolveReactionMessageId } from "@/src-backend/plugin-sdk/channel-runtime";
+import { readBooleanParam } from "powerdirector/plugin-sdk/boolean-param";
+import { resolveReactionMessageId } from "powerdirector/plugin-sdk/channel-runtime";
 import { resolveTelegramPollVisibility } from "../runtime-api";
 import {
   jsonResult,

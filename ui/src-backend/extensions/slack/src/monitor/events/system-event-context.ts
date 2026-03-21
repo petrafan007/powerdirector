@@ -1,4 +1,4 @@
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { authorizeSlackSystemEventSender } from "../auth";
 import { resolveSlackChannelLabel } from "../channel-config";
 import type { SlackMonitorContext } from "../context";

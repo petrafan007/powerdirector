@@ -1,7 +1,7 @@
 import {
   buildChannelOutboundSessionRoute,
   type ChannelOutboundSessionRouteParams,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 import { parseTlonTarget } from "./targets";
 
 export function resolveTlonOutboundSessionRoute(params: ChannelOutboundSessionRouteParams) {

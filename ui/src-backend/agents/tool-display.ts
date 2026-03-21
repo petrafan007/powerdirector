@@ -1,4 +1,4 @@
-import SHARED_TOOL_DISPLAY_JSON from "@/src-backend/apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json" with { type: "json" };
+import SHARED_TOOL_DISPLAY_JSON from "powerdirector/apps/shared/PowerDirectorKit/Sources/PowerDirectorKit/Resources/tool-display.json" with { type: "json" };
 import { redactToolDetail } from "../logging/redact";
 import { shortenHomeInString } from "../utils";
 import {

@@ -3,7 +3,7 @@ import {
   normalizeAccountId,
   resolveAccountEntry,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/account-resolution";
+} from "powerdirector/plugin-sdk/account-resolution";
 import type { IMessageAccountConfig } from "../runtime-api";
 
 export type ResolvedIMessageAccount = {

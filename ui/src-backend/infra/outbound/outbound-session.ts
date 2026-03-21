@@ -1,23 +1,23 @@
-import { parseDiscordTarget } from "@/src-backend/extensions/discord/api";
-import { normalizeIMessageHandle, parseIMessageTarget } from "@/src-backend/extensions/imessage/api";
+import { parseDiscordTarget } from "powerdirector/extensions/discord/api";
+import { normalizeIMessageHandle, parseIMessageTarget } from "powerdirector/extensions/imessage/api";
 import {
   looksLikeUuid,
   resolveSignalPeerId,
   resolveSignalRecipient,
   resolveSignalSender,
-} from "@/src-backend/extensions/signal/api";
+} from "powerdirector/extensions/signal/api";
 import {
   createSlackWebClient,
   normalizeAllowListLower,
   parseSlackTarget,
   resolveSlackAccount,
-} from "@/src-backend/extensions/slack/api";
+} from "powerdirector/extensions/slack/api";
 import {
   buildTelegramGroupPeerId,
   parseTelegramTarget,
   parseTelegramThreadId,
   resolveTelegramTargetChatType,
-} from "@/src-backend/extensions/telegram/api";
+} from "powerdirector/extensions/telegram/api";
 import type { MsgContext } from "../../auto-reply/templating";
 import type { ChatType } from "../../channels/chat-type";
 import { getChannelPlugin } from "../../channels/plugins/index";

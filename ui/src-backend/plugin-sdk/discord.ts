@@ -6,15 +6,15 @@ export type {
 export type { PowerDirectorConfig } from "../config/config";
 export type { DiscordAccountConfig, DiscordActionConfig } from "../config/types";
 export type { DiscordConfig } from "../config/types.discord";
-export type { DiscordPluralKitConfig } from "@/src-backend/extensions/discord/api";
-export type { InspectedDiscordAccount } from "@/src-backend/extensions/discord/api";
-export type { ResolvedDiscordAccount } from "@/src-backend/extensions/discord/api";
-export type { DiscordSendComponents, DiscordSendEmbeds } from "@/src-backend/extensions/discord/api";
+export type { DiscordPluralKitConfig } from "powerdirector/extensions/discord/api";
+export type { InspectedDiscordAccount } from "powerdirector/extensions/discord/api";
+export type { ResolvedDiscordAccount } from "powerdirector/extensions/discord/api";
+export type { DiscordSendComponents, DiscordSendEmbeds } from "powerdirector/extensions/discord/api";
 export type {
   ThreadBindingManager,
   ThreadBindingRecord,
   ThreadBindingTargetKind,
-} from "@/src-backend/extensions/discord/runtime-api";
+} from "powerdirector/extensions/discord/runtime-api";
 export type {
   ChannelConfiguredBindingProvider,
   ChannelConfiguredBindingConversationRef,
@@ -52,11 +52,11 @@ export {
 export {
   listDiscordDirectoryGroupsFromConfig,
   listDiscordDirectoryPeersFromConfig,
-} from "@/src-backend/extensions/discord/api";
+} from "powerdirector/extensions/discord/api";
 export {
   resolveDiscordGroupRequireMention,
   resolveDiscordGroupToolPolicy,
-} from "@/src-backend/extensions/discord/api";
+} from "powerdirector/extensions/discord/api";
 export { DiscordConfigSchema } from "../config/zod-schema.providers-core";
 
 export {
@@ -68,20 +68,20 @@ export {
   createDiscordActionGate,
   listDiscordAccountIds,
   resolveDefaultDiscordAccountId,
-} from "@/src-backend/extensions/discord/api";
-export { inspectDiscordAccount } from "@/src-backend/extensions/discord/api";
+} from "powerdirector/extensions/discord/api";
+export { inspectDiscordAccount } from "powerdirector/extensions/discord/api";
 export {
   looksLikeDiscordTargetId,
   normalizeDiscordMessagingTarget,
   normalizeDiscordOutboundTarget,
-} from "@/src-backend/extensions/discord/api";
-export { collectDiscordAuditChannelIds } from "@/src-backend/extensions/discord/runtime-api";
-export { collectDiscordStatusIssues } from "@/src-backend/extensions/discord/api";
+} from "powerdirector/extensions/discord/api";
+export { collectDiscordAuditChannelIds } from "powerdirector/extensions/discord/runtime-api";
+export { collectDiscordStatusIssues } from "powerdirector/extensions/discord/api";
 export {
   DISCORD_DEFAULT_INBOUND_WORKER_TIMEOUT_MS,
   DISCORD_DEFAULT_LISTENER_TIMEOUT_MS,
-} from "@/src-backend/extensions/discord/runtime-api";
-export { normalizeExplicitDiscordSessionKey } from "@/src-backend/extensions/discord/session-key-api";
+} from "powerdirector/extensions/discord/runtime-api";
+export { normalizeExplicitDiscordSessionKey } from "powerdirector/extensions/discord/session-key-api";
 export {
   autoBindSpawnedDiscordSubagent,
   getThreadBindingManager,
@@ -93,11 +93,11 @@ export {
   setThreadBindingIdleTimeoutBySessionKey,
   setThreadBindingMaxAgeBySessionKey,
   unbindThreadBindingsBySessionKey,
-} from "@/src-backend/extensions/discord/runtime-api";
-export { getGateway } from "@/src-backend/extensions/discord/runtime-api";
-export { getPresence } from "@/src-backend/extensions/discord/runtime-api";
-export { readDiscordComponentSpec } from "@/src-backend/extensions/discord/api";
-export { resolveDiscordChannelId } from "@/src-backend/extensions/discord/api";
+} from "powerdirector/extensions/discord/runtime-api";
+export { getGateway } from "powerdirector/extensions/discord/runtime-api";
+export { getPresence } from "powerdirector/extensions/discord/runtime-api";
+export { readDiscordComponentSpec } from "powerdirector/extensions/discord/api";
+export { resolveDiscordChannelId } from "powerdirector/extensions/discord/api";
 export {
   addRoleDiscord,
   auditDiscordChannelPermissions,
@@ -149,5 +149,5 @@ export {
   unpinMessageDiscord,
   uploadEmojiDiscord,
   uploadStickerDiscord,
-} from "@/src-backend/extensions/discord/runtime-api";
-export { discordMessageActions } from "@/src-backend/extensions/discord/runtime-api";
+} from "powerdirector/extensions/discord/runtime-api";
+export { discordMessageActions } from "powerdirector/extensions/discord/runtime-api";

@@ -1,14 +1,14 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { formatCliCommand } from "@/src-backend/plugin-sdk/cli-runtime";
-import { DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/routing";
-import { info, success } from "@/src-backend/plugin-sdk/runtime-env";
-import { getChildLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { defaultRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolveOAuthDir } from "@/src-backend/plugin-sdk/state-paths";
-import type { WebChannel } from "@/src-backend/plugin-sdk/text-runtime";
-import { jidToE164, resolveUserPath } from "@/src-backend/plugin-sdk/text-runtime";
+import { formatCliCommand } from "powerdirector/plugin-sdk/cli-runtime";
+import { DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/routing";
+import { info, success } from "powerdirector/plugin-sdk/runtime-env";
+import { getChildLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { defaultRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { resolveOAuthDir } from "powerdirector/plugin-sdk/state-paths";
+import type { WebChannel } from "powerdirector/plugin-sdk/text-runtime";
+import { jidToE164, resolveUserPath } from "powerdirector/plugin-sdk/text-runtime";
 
 export function resolveDefaultWebAuthDir(): string {
   return path.join(resolveOAuthDir(), "whatsapp", DEFAULT_ACCOUNT_ID);

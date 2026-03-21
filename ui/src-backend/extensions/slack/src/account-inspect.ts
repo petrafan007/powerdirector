@@ -2,11 +2,11 @@ import {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/account-resolution";
+} from "powerdirector/plugin-sdk/account-resolution";
 import {
   hasConfiguredSecretInput,
   normalizeSecretInputString,
-} from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
 import type { SlackAccountSurfaceFields } from "./account-surface-fields";
 import {
   mergeSlackAccountConfig,

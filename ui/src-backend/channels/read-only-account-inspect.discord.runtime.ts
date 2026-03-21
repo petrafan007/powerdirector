@@ -1,8 +1,8 @@
-import { inspectDiscordAccount as inspectDiscordAccountImpl } from "@/src-backend/plugin-sdk/discord";
+import { inspectDiscordAccount as inspectDiscordAccountImpl } from "powerdirector/plugin-sdk/discord";
 
-export type { InspectedDiscordAccount } from "@/src-backend/plugin-sdk/discord";
+export type { InspectedDiscordAccount } from "powerdirector/plugin-sdk/discord";
 
-type InspectDiscordAccount = typeof import("@/src-backend/plugin-sdk/discord").inspectDiscordAccount;
+type InspectDiscordAccount = typeof import("powerdirector/plugin-sdk/discord").inspectDiscordAccount;
 
 export function inspectDiscordAccount(
   ...args: Parameters<InspectDiscordAccount>

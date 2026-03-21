@@ -7,7 +7,7 @@ import type {
   LeaveEvent,
   PostbackEvent,
 } from "@line/bot-sdk";
-import { evaluateMatchedGroupAccessForPolicy } from "@/src-backend/plugin-sdk/group-access";
+import { evaluateMatchedGroupAccessForPolicy } from "powerdirector/plugin-sdk/group-access";
 import { hasControlCommand } from "../auto-reply/command-detection";
 import {
   clearHistoryEntriesIfEnabled,

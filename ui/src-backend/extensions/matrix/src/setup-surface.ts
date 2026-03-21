@@ -14,7 +14,7 @@ import {
   type PowerDirectorConfig,
   type SecretInput,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import { listMatrixDirectoryGroupsLive } from "./directory-live";
 import { resolveMatrixAccount } from "./matrix/accounts";
 import { ensureMatrixSdkInstalled, isMatrixSdkAvailable } from "./matrix/deps";

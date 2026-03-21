@@ -1,4 +1,4 @@
-import { resolveChannelGroupRequireMention } from "@/src-backend/plugin-sdk/channel-policy";
+import { resolveChannelGroupRequireMention } from "powerdirector/plugin-sdk/channel-policy";
 import { resolveExactLineGroupConfigKey, type PowerDirectorConfig } from "../runtime-api";
 
 type LineGroupContext = {

@@ -1,4 +1,4 @@
-import { stripAssistantInternalScaffolding } from "@/src-backend/plugin-sdk/text-runtime";
+import { stripAssistantInternalScaffolding } from "powerdirector/plugin-sdk/text-runtime";
 
 /**
  * Patterns that indicate assistant-internal metadata leaked into text.

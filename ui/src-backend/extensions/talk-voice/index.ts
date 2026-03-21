@@ -1,5 +1,5 @@
-import { resolveActiveTalkProviderConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { SpeechVoiceOption } from "@/src-backend/plugin-sdk/speech";
+import { resolveActiveTalkProviderConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { SpeechVoiceOption } from "powerdirector/plugin-sdk/speech";
 import { definePluginEntry, type PowerDirectorPluginApi } from "./api";
 
 function mask(s: string, keep: number = 6): string {

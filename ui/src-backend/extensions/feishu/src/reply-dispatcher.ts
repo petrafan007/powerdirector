@@ -2,7 +2,7 @@ import {
   resolveSendableOutboundReplyParts,
   resolveTextChunksWithFallback,
   sendMediaWithLeadingCaption,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import {
   createChannelReplyPipeline,
   createReplyPrefixContext,

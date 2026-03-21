@@ -1,4 +1,4 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
 
 export default definePluginEntry({
   id: "memory-core",

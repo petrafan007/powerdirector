@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/matrix";
+export * from "powerdirector/plugin-sdk/matrix";

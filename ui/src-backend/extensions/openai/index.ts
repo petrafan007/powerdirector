@@ -1,6 +1,6 @@
-import { buildOpenAIImageGenerationProvider } from "@/src-backend/plugin-sdk/image-generation";
-import { definePluginEntry } from "@/src-backend/plugin-sdk/plugin-entry";
-import { buildOpenAISpeechProvider } from "@/src-backend/plugin-sdk/speech";
+import { buildOpenAIImageGenerationProvider } from "powerdirector/plugin-sdk/image-generation";
+import { definePluginEntry } from "powerdirector/plugin-sdk/plugin-entry";
+import { buildOpenAISpeechProvider } from "powerdirector/plugin-sdk/speech";
 import { openaiMediaUnderstandingProvider } from "./media-understanding-provider";
 import { buildOpenAICodexProviderPlugin } from "./openai-codex-provider";
 import { buildOpenAIProvider } from "./openai-provider";

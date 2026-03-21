@@ -1,4 +1,4 @@
-import { DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/account-id";
+import { DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/account-id";
 import {
   buildSingleChannelSecretPromptState,
   hasConfiguredSecretInput,
@@ -7,7 +7,7 @@ import {
   type PowerDirectorConfig,
   type SecretInput,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/mattermost";
+} from "powerdirector/plugin-sdk/mattermost";
 import {
   listMattermostAccountIds,
   resolveDefaultMattermostAccountId,

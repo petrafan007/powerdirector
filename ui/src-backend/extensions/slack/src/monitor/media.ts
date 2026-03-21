@@ -1,9 +1,9 @@
 import type { WebClient as SlackWebClient } from "@slack/web-api";
-import { normalizeHostname } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { FetchLike } from "@/src-backend/plugin-sdk/media-runtime";
-import { fetchRemoteMedia } from "@/src-backend/plugin-sdk/media-runtime";
-import { saveMediaBuffer } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveRequestUrl } from "@/src-backend/plugin-sdk/request-url";
+import { normalizeHostname } from "powerdirector/plugin-sdk/infra-runtime";
+import type { FetchLike } from "powerdirector/plugin-sdk/media-runtime";
+import { fetchRemoteMedia } from "powerdirector/plugin-sdk/media-runtime";
+import { saveMediaBuffer } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveRequestUrl } from "powerdirector/plugin-sdk/request-url";
 import type { SlackAttachment, SlackFile } from "../types";
 
 function isSlackHostname(hostname: string): boolean {

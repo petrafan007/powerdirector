@@ -1,4 +1,4 @@
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
 
 export const whatsappLog = createSubsystemLogger("gateway/channels/whatsapp");
 export const whatsappInboundLog = whatsappLog.child("inbound");

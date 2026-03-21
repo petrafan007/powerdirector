@@ -1,13 +1,13 @@
-import { createScopedDmSecurityResolver } from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createAccountStatusSink } from "@/src-backend/plugin-sdk/channel-lifecycle";
+import { createScopedDmSecurityResolver } from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createAccountStatusSink } from "powerdirector/plugin-sdk/channel-lifecycle";
 import {
   createEmptyChannelResult,
   createPairingPrefixStripper,
   createRawChannelSendResultAdapter,
   createStaticReplyToModeResolver,
   createTextPairingAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { buildPassiveProbedChannelStatusSummary } from "@/src-backend/plugin-sdk/extension-shared";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { buildPassiveProbedChannelStatusSummary } from "powerdirector/plugin-sdk/extension-shared";
 import type {
   ChannelAccountSnapshot,
   ChannelDirectoryEntry,

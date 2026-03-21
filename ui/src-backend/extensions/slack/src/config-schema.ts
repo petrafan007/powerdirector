@@ -1,3 +1,3 @@
-import { buildChannelConfigSchema, SlackConfigSchema } from "@/src-backend/plugin-sdk/slack-core";
+import { buildChannelConfigSchema, SlackConfigSchema } from "powerdirector/plugin-sdk/slack-core";
 
 export const SlackChannelConfigSchema = buildChannelConfigSchema(SlackConfigSchema);

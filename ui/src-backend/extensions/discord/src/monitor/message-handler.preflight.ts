@@ -1,34 +1,34 @@
 import { ChannelType, MessageType, type Message, type User } from "@buape/carbon";
 import { Routes, type APIMessage } from "discord-api-types/v10";
-import { formatAllowlistMatchMeta } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveControlCommandGate } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logInboundDrop } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveMentionGatingWithBypass } from "@/src-backend/plugin-sdk/channel-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isDangerousNameMatchingEnabled } from "@/src-backend/plugin-sdk/config-runtime";
+import { formatAllowlistMatchMeta } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveControlCommandGate } from "powerdirector/plugin-sdk/channel-runtime";
+import { logInboundDrop } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveMentionGatingWithBypass } from "powerdirector/plugin-sdk/channel-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isDangerousNameMatchingEnabled } from "powerdirector/plugin-sdk/config-runtime";
 import {
   ensureConfiguredBindingRouteReady,
   resolveConfiguredBindingRoute,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
 import {
   getSessionBindingService,
   type SessionBindingRecord,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { buildPairingReply } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { isPluginOwnedSessionBindingRecord } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { recordChannelActivity } from "@/src-backend/plugin-sdk/infra-runtime";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { hasControlCommand } from "@/src-backend/plugin-sdk/reply-runtime";
-import { shouldHandleTextCommands } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { buildPairingReply } from "powerdirector/plugin-sdk/conversation-runtime";
+import { isPluginOwnedSessionBindingRecord } from "powerdirector/plugin-sdk/conversation-runtime";
+import { recordChannelActivity } from "powerdirector/plugin-sdk/infra-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { hasControlCommand } from "powerdirector/plugin-sdk/reply-runtime";
+import { shouldHandleTextCommands } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   recordPendingHistoryEntryIfEnabled,
   type HistoryEntry,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildMentionRegexes, matchesMentionWithExplicit } from "@/src-backend/plugin-sdk/reply-runtime";
-import { DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { getChildLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { logDebug } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { buildMentionRegexes, matchesMentionWithExplicit } from "powerdirector/plugin-sdk/reply-runtime";
+import { DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { getChildLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { logDebug } from "powerdirector/plugin-sdk/text-runtime";
 import { fetchPluralKitMessageInfo } from "../pluralkit";
 import { sendMessageDiscord } from "../send";
 import {

@@ -1,4 +1,4 @@
-import { DEFAULT_EMOJIS, type StatusReactionEmojis } from "@/src-backend/plugin-sdk/channel-runtime";
+import { DEFAULT_EMOJIS, type StatusReactionEmojis } from "powerdirector/plugin-sdk/channel-runtime";
 
 type StatusReactionEmojiKey = keyof Required<StatusReactionEmojis>;
 

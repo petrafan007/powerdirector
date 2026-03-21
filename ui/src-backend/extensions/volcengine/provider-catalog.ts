@@ -5,7 +5,7 @@ import {
   DOUBAO_CODING_MODEL_CATALOG,
   DOUBAO_MODEL_CATALOG,
   type ModelProviderConfig,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 
 export function buildDoubaoProvider(): ModelProviderConfig {
   return {

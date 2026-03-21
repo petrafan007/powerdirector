@@ -1,7 +1,7 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth-api-key";
-import { buildSingleProviderApiKeyCatalog } from "@/src-backend/plugin-sdk/provider-catalog";
-import { applyXaiModelCompat } from "@/src-backend/plugin-sdk/provider-models";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth-api-key";
+import { buildSingleProviderApiKeyCatalog } from "powerdirector/plugin-sdk/provider-catalog";
+import { applyXaiModelCompat } from "powerdirector/plugin-sdk/provider-models";
 import { applyVeniceConfig, VENICE_DEFAULT_MODEL_REF } from "./onboard";
 import { buildVeniceProvider } from "./provider-catalog";
 
