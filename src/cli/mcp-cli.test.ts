@@ -22,7 +22,7 @@ vi.mock("../runtime.js", () => ({
 const tempDirs: string[] = [];
 
 async function createWorkspace(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-cli-mcp-"));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-cli-mcp-"));
   tempDirs.push(dir);
   return dir;
 }

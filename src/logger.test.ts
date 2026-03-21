@@ -149,7 +149,7 @@ describe("stripRedundantSubsystemPrefixForConsole", () => {
 });
 
 function pathForTest() {
-  const file = path.join(os.tmpdir(), `powerdirector-log-${crypto.randomUUID()}.log`);
+  const file = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-log-${crypto.randomUUID()}.log`);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   return file;
 }

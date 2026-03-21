@@ -37,7 +37,7 @@ export type DiscordModelPickerPreferenceScope = {
 };
 
 function resolvePreferencesStorePath(env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => ""))));
+  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""))));
   return path.join(stateDir, "discord", "model-picker-preferences.json");
 }
 

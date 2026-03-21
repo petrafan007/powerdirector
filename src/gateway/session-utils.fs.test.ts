@@ -20,7 +20,7 @@ function registerTempSessionStore(
 ) {
   let dir = "";
   beforeAll(() => {
-    dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+    dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
     assignPaths(dir, path.join(dir, "sessions.json"));
   });
   afterAll(() => {
@@ -806,7 +806,7 @@ describe("resolveSessionTranscriptCandidates", () => {
     vi.unstubAllEnvs();
   });
 
-  test("fallback candidate uses POWERDIRECTOR_HOME instead of ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "")", () => {
+  test("fallback candidate uses POWERDIRECTOR_HOME instead of ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "")", () => {
     vi.stubEnv("POWERDIRECTOR_HOME", "/srv/powerdirector-home");
     vi.stubEnv("HOME", "/home/other");
 

@@ -7,7 +7,7 @@ import { resolvePowerDirectorAgentDir } from "./agent-paths.js";
 
 describe("resolvePowerDirectorAgentDir", () => {
   const withTempStateDir = async (run: (stateDir: string) => void) => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-agent-"));
+    const stateDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-agent-"));
     try {
       run(stateDir);
     } finally {

@@ -46,7 +46,7 @@ describe("media server", () => {
   }
 
   beforeAll(async () => {
-    MEDIA_DIR = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-media-test-"));
+    MEDIA_DIR = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-media-test-"));
     server = await startMediaServer(0, 1_000);
     port = (server.address() as AddressInfo).port;
   });

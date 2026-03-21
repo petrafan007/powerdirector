@@ -9,7 +9,7 @@ import { writePluginWithSkill } from "./test-helpers/skill-plugin-fixtures.js";
 const tempDirs: string[] = [];
 
 async function createTempWorkspaceDir() {
-  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
+  const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
   tempDirs.push(workspaceDir);
   return workspaceDir;
 }

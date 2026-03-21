@@ -40,7 +40,7 @@ export function createTempHomeHarness(options: { prefix: string; beforeEachCase?
   let caseId = 0;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), options.prefix));
+    fixtureRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), options.prefix));
   });
 
   afterAll(async () => {

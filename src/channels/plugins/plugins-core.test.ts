@@ -128,7 +128,7 @@ describe("channel plugin catalog", () => {
   });
 
   it("includes external catalog entries", () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-catalog-"));
+    const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-catalog-"));
     const catalogPath = path.join(dir, "catalog.json");
     fs.writeFileSync(
       catalogPath,
@@ -161,7 +161,7 @@ describe("channel plugin catalog", () => {
   });
 
   it("preserves plugin ids when they differ from channel ids", () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-channel-catalog-state-"));
+    const stateDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-channel-catalog-state-"));
     const pluginDir = path.join(stateDir, "extensions", "demo-channel-plugin");
     fs.mkdirSync(pluginDir, { recursive: true });
     fs.writeFileSync(
@@ -205,7 +205,7 @@ describe("channel plugin catalog", () => {
   });
 
   it("uses the provided env for external catalog path resolution", () => {
-    const home = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-catalog-home-"));
+    const home = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-catalog-home-"));
     const catalogPath = path.join(home, "catalog.json");
     fs.writeFileSync(
       catalogPath,
@@ -243,7 +243,7 @@ describe("channel plugin catalog", () => {
   });
 
   it("uses the provided env for default catalog paths", () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-catalog-state-"));
+    const stateDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-catalog-state-"));
     const catalogPath = path.join(stateDir, "plugins", "catalog.json");
     fs.mkdirSync(path.dirname(catalogPath), { recursive: true });
     fs.writeFileSync(
@@ -281,7 +281,7 @@ describe("channel plugin catalog", () => {
   });
 
   it("includes bundled metadata-only channel entries even when the runtime entrypoint is omitted", () => {
-    const packageRoot = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-bundled-catalog-"));
+    const packageRoot = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-bundled-catalog-"));
     const bundledDir = path.join(packageRoot, "dist", "extensions", "whatsapp");
     fs.mkdirSync(bundledDir, { recursive: true });
     fs.writeFileSync(

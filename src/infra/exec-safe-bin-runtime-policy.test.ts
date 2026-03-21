@@ -124,7 +124,7 @@ describe("exec safe-bin runtime policy", () => {
     if (process.platform === "win32") {
       return;
     }
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-safe-bin-runtime-"));
+    const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-safe-bin-runtime-"));
     try {
       await fs.chmod(dir, 0o777);
       const onWarning = vi.fn();

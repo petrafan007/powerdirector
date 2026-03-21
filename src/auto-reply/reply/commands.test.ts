@@ -125,10 +125,10 @@ const { parseDebugCommand } = await import("./debug-commands.js");
 const { parseInlineDirectives } = await import("./directive-handling.js");
 const { buildCommandContext, handleCommands } = await import("./commands.js");
 
-let testWorkspaceDir = os.tmpdir();
+let testWorkspaceDir = ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp");
 
 beforeAll(async () => {
-  testWorkspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-commands-"));
+  testWorkspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-commands-"));
   await fs.writeFile(path.join(testWorkspaceDir, "AGENTS.md"), "# Agents\n", "utf-8");
 });
 
@@ -166,7 +166,7 @@ async function withTempConfigPath<T>(
   initialConfig: Record<string, unknown>,
   run: (configPath: string) => Promise<T>,
 ): Promise<T> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-commands-config-"));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-commands-config-"));
   const configPath = path.join(dir, "powerdirector.json");
   const previous = process.env.POWERDIRECTOR_CONFIG_PATH;
   process.env.POWERDIRECTOR_CONFIG_PATH = configPath;

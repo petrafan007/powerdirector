@@ -303,12 +303,12 @@ describe("buildServiceEnvironment", () => {
     expect(env.TMPDIR).toBe("/var/folders/xw/abc123/T/");
   });
 
-  it("falls back to os.tmpdir when TMPDIR is not set", () => {
+  it("falls back to ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) when TMPDIR is not set", () => {
     const env = buildServiceEnvironment({
       env: { HOME: "/home/user" },
       port: 18789,
     });
-    expect(env.TMPDIR).toBe(os.tmpdir());
+    expect(env.TMPDIR).toBe(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"));
   });
 
   it("uses profile-specific unit and label", () => {
@@ -435,11 +435,11 @@ describe("buildNodeServiceEnvironment", () => {
     expect(env.TMPDIR).toBe("/tmp/custom");
   });
 
-  it("falls back to os.tmpdir for node services when TMPDIR is not set", () => {
+  it("falls back to ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) for node services when TMPDIR is not set", () => {
     const env = buildNodeServiceEnvironment({
       env: { HOME: "/home/user" },
     });
-    expect(env.TMPDIR).toBe(os.tmpdir());
+    expect(env.TMPDIR).toBe(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"));
   });
 
   it("prepends extra runtime directories to the node service PATH", () => {

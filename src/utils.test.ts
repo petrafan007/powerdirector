@@ -22,7 +22,7 @@ async function withTempDir<T>(
   prefix: string,
   run: (dir: string) => T | Promise<T>,
 ): Promise<Awaited<T>> {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+  const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   try {
     return await run(dir);
   } finally {
@@ -120,7 +120,7 @@ describe("jidToE164", () => {
 
 describe("resolveConfigDir", () => {
   it("prefers ~/.powerdirector when legacy dir is missing", async () => {
-    const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "powerdirector-config-dir-"));
+    const root = await fs.promises.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-dir-"));
     try {
       const newDir = path.join(root, ".powerdirector");
       await fs.promises.mkdir(newDir, { recursive: true });

@@ -39,7 +39,7 @@ describe("cron run log", () => {
   });
 
   async function withRunLogDir(prefix: string, run: (dir: string) => Promise<void>) {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+    const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
     try {
       await run(dir);
     } finally {
@@ -48,13 +48,13 @@ describe("cron run log", () => {
   }
 
   it("resolves store path to per-job runs/<jobId>.jsonl", () => {
-    const storePath = path.join(os.tmpdir(), "cron", "jobs.json");
+    const storePath = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "cron", "jobs.json");
     const p = resolveCronRunLogPath({ storePath, jobId: "job-1" });
-    expect(p.endsWith(path.join(os.tmpdir(), "cron", "runs", "job-1.jsonl"))).toBe(true);
+    expect(p.endsWith(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "cron", "runs", "job-1.jsonl"))).toBe(true);
   });
 
   it("rejects unsafe job ids when resolving run log path", () => {
-    const storePath = path.join(os.tmpdir(), "cron", "jobs.json");
+    const storePath = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "cron", "jobs.json");
     expect(() => resolveCronRunLogPath({ storePath, jobId: "../job-1" })).toThrow(
       /invalid cron run log job id/i,
     );

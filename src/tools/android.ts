@@ -70,7 +70,7 @@ export class AndroidTool implements Tool {
 
                 case 'screenshot': {
                     const remoteTmp = '/sdcard/screenshot.png';
-                    const localOut = args.outputPath || path.join(os.tmpdir(), `android-screenshot-${Date.now()}.png`);
+                    const localOut = args.outputPath || path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `android-screenshot-${Date.now()}.png`);
                     await execAsync(`${adb} shell screencap -p ${remoteTmp}`);
                     await execAsync(`${adb} pull ${remoteTmp} ${localOut}`);
                     await execAsync(`${adb} shell rm ${remoteTmp}`);
@@ -80,7 +80,7 @@ export class AndroidTool implements Tool {
                 case 'screen_record': {
                     const duration = Math.min(args.duration || 10, 180);
                     const remoteTmp = '/sdcard/screenrecord.mp4';
-                    const localOut = args.outputPath || path.join(os.tmpdir(), `android-record-${Date.now()}.mp4`);
+                    const localOut = args.outputPath || path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `android-record-${Date.now()}.mp4`);
                     await execAsync(`${adb} shell screenrecord --time-limit ${duration} ${remoteTmp}`, { timeout: (duration + 5) * 1000 });
                     await execAsync(`${adb} pull ${remoteTmp} ${localOut}`);
                     await execAsync(`${adb} shell rm ${remoteTmp}`);
@@ -145,7 +145,7 @@ export class AndroidTool implements Tool {
 
                 case 'file_pull': {
                     if (!args.remotePath) return { output: 'remotePath required', isError: true };
-                    const localDest = args.localPath || path.join(os.tmpdir(), path.basename(args.remotePath));
+                    const localDest = args.localPath || path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), path.basename(args.remotePath));
                     const { stdout } = await execAsync(`${adb} pull ${args.remotePath} ${localDest}`);
                     return { output: `${stdout.trim()}\nSaved to: ${localDest}` };
                 }

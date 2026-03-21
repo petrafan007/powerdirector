@@ -27,7 +27,7 @@ let configOverride: Record<string, unknown> = {
   },
   agents: {
     defaults: {
-      workspace: os.tmpdir(),
+      workspace: ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
     },
   },
 };
@@ -153,7 +153,7 @@ describe("spawnSubagentDirect filename validation", () => {
     callGatewayMock.mockClear();
     setupGatewayMock();
     workspaceDirOverride = fs.mkdtempSync(
-      path.join(os.tmpdir(), `powerdirector-subagent-attachments-${process.pid}-${Date.now()}-`),
+      path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-subagent-attachments-${process.pid}-${Date.now()}-`),
     );
     configPathOverride = path.join(workspaceDirOverride, "powerdirector.test.json");
     fs.writeFileSync(configPathOverride, JSON.stringify(configOverride, null, 2));

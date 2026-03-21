@@ -32,7 +32,7 @@ describe("gateway tool", () => {
     vi.useFakeTimers();
     const kill = vi.spyOn(process, "kill").mockImplementation(() => true);
     const envSnapshot = captureEnv(["POWERDIRECTOR_STATE_DIR", "POWERDIRECTOR_PROFILE"]);
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-test-"));
+    const stateDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-test-"));
     process.env.POWERDIRECTOR_STATE_DIR = stateDir;
     process.env.POWERDIRECTOR_PROFILE = "isolated";
 

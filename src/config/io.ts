@@ -645,7 +645,7 @@ function normalizeDeps(overrides: ConfigIoDeps = {}): Required<ConfigIoDeps> {
     json5: overrides.json5 ?? JSON5,
     env: overrides.env ?? process.env,
     homedir:
-      overrides.homedir ?? (() => resolveRequiredHomeDir(overrides.env ?? process.env, (typeof os.homedir === "function" ? os.homedir : (() => "")))),
+      overrides.homedir ?? (() => resolveRequiredHomeDir(overrides.env ?? process.env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")))),
     configPath: overrides.configPath ?? "",
     logger: overrides.logger ?? console,
   };

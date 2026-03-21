@@ -17,7 +17,7 @@ describe("doctor command", () => {
   it("warns when the state directory is missing", async () => {
     mockDoctorConfigSnapshot();
 
-    const missingDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-missing-state-"));
+    const missingDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-missing-state-"));
     fs.rmSync(missingDir, { recursive: true, force: true });
     process.env.POWERDIRECTOR_STATE_DIR = missingDir;
     note.mockClear();

@@ -93,7 +93,7 @@ describe("getApiKeyForModel", () => {
       "POWERDIRECTOR_AGENT_DIR",
       "PI_CODING_AGENT_DIR",
     ]);
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-oauth-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-oauth-"));
 
     try {
       process.env.POWERDIRECTOR_STATE_DIR = tempDir;
@@ -160,7 +160,7 @@ describe("getApiKeyForModel", () => {
       "POWERDIRECTOR_AGENT_DIR",
       "PI_CODING_AGENT_DIR",
     ]);
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-auth-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-auth-"));
 
     try {
       delete process.env.OPENAI_API_KEY;

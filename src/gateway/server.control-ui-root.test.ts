@@ -7,7 +7,7 @@ import { installGatewayTestHooks, testState, withGatewayServer } from "./test-he
 installGatewayTestHooks({ scope: "suite" });
 
 async function withGlobalControlUiHardlinkFixture<T>(run: (rootPath: string) => Promise<T>) {
-  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-gateway-ui-hardlink-"));
+  const tmp = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-gateway-ui-hardlink-"));
   try {
     const packageRoot = path.join(tmp, "pnpm-global", "5", "node_modules", "powerdirector");
     const controlUiRoot = path.join(packageRoot, "dist", "control-ui");

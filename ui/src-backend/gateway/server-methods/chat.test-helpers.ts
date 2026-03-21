@@ -8,7 +8,7 @@ export function createTranscriptFixtureSync(params: {
   sessionId: string;
   fileName?: string;
 }) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), params.prefix));
+  const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), params.prefix));
   const transcriptPath = path.join(dir, params.fileName ?? "sess.jsonl");
   fs.writeFileSync(
     transcriptPath,

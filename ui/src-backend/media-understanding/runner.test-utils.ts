@@ -21,7 +21,7 @@ export async function withMediaFixture(
   run: (params: MediaFixtureParams) => Promise<void>,
 ) {
   const tmpPath = path.join(
-    os.tmpdir(),
+    ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
     `${params.filePrefix}-${Date.now().toString()}.${params.extension}`,
   );
   await fs.writeFile(tmpPath, params.fileContents);

@@ -28,7 +28,7 @@ describe("ACP install hints", () => {
   });
 
   it("uses local acpx extension path when present", () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "acp-install-hint-"));
+    const tempRoot = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "acp-install-hint-"));
     tempDirs.push(tempRoot);
     fs.mkdirSync(path.join(tempRoot, "extensions", "acpx"), { recursive: true });
     process.chdir(tempRoot);
@@ -40,7 +40,7 @@ describe("ACP install hints", () => {
   });
 
   it("falls back to npm install hint for acpx when local extension is absent", () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "acp-install-hint-"));
+    const tempRoot = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "acp-install-hint-"));
     tempDirs.push(tempRoot);
     process.chdir(tempRoot);
 

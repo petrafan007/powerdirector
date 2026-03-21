@@ -7,7 +7,7 @@ import { createPinnedLookup } from "../infra/net/ssrf.js";
 import { captureEnv } from "../test-utils/env.js";
 import { saveMediaSource, setMediaStoreNetworkDepsForTest } from "./store.js";
 
-const HOME = path.join(os.tmpdir(), "powerdirector-home-redirect");
+const HOME = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-home-redirect");
 const mockRequest = vi.fn();
 
 function createMockHttpExchange() {

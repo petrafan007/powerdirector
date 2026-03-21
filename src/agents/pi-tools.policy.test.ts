@@ -171,7 +171,7 @@ describe("resolveSubagentToolPolicy depth awareness", () => {
 
   it("uses stored leaf role for flat depth-1 session keys", () => {
     const storePath = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       `powerdirector-subagent-policy-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     fs.mkdirSync(path.dirname(storePath), { recursive: true });

@@ -92,7 +92,7 @@ describeLaunchdIntegration("launchd integration", () => {
 
   beforeAll(async () => {
     const testId = randomUUID().slice(0, 8);
-    homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `powerdirector-launchd-int-${testId}-`));
+    homeDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-launchd-int-${testId}-`));
     env = {
       HOME: homeDir,
       POWERDIRECTOR_LAUNCHD_LABEL: `ai.powerdirector.launchd-int-${testId}`,

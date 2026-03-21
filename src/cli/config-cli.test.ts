@@ -640,7 +640,7 @@ describe("config cli", () => {
 
     it("rejects --allow-exec without --dry-run", async () => {
       const nonexistentBatchPath = path.join(
-        os.tmpdir(),
+        ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
         `powerdirector-config-batch-nonexistent-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
       );
       await expect(
@@ -803,7 +803,7 @@ describe("config cli", () => {
       setSnapshot(resolved, resolved);
 
       const pathname = path.join(
-        os.tmpdir(),
+        ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
         `powerdirector-config-batch-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
       );
       fs.writeFileSync(pathname, '[{"path":"gateway.auth.mode","value":"token"}]', "utf8");
@@ -820,7 +820,7 @@ describe("config cli", () => {
 
     it("rejects malformed batch-file payloads", async () => {
       const pathname = path.join(
-        os.tmpdir(),
+        ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
         `powerdirector-config-batch-invalid-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
       );
       fs.writeFileSync(pathname, '{"path":"gateway.auth.mode","value":"token"}', "utf8");

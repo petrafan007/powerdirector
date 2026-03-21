@@ -63,7 +63,7 @@ function resolveWatchPaths(workspaceDir: string, config?: PowerDirectorConfig): 
     paths.push(path.join(workspaceDir, ".agents", "skills"));
   }
   paths.push(path.join(CONFIG_DIR, "skills"));
-  paths.push(path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".agents", "skills"));
+  paths.push(path.join(((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""), ".agents", "skills"));
   const extraDirsRaw = config?.skills?.load?.extraDirs ?? [];
   const extraDirs = extraDirsRaw
     .map((d) => (typeof d === "string" ? d.trim() : ""))

@@ -7,7 +7,7 @@ import { createPersistentDedupe } from "./persistent-dedupe.js";
 const tmpRoots: string[] = [];
 
 async function makeTmpRoot(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-dedupe-"));
+  const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-dedupe-"));
   tmpRoots.push(root);
   return root;
 }

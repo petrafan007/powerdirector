@@ -133,7 +133,7 @@ describe("memory index", () => {
     vi.resetModules();
     await import("./test-runtime-mocks.js");
     ({ getMemorySearchManager } = await import("./index.js"));
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-mem-fixtures-"));
+    fixtureRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-mem-fixtures-"));
     workspaceDir = path.join(fixtureRoot, "workspace");
     memoryDir = path.join(workspaceDir, "memory");
     extraDir = path.join(workspaceDir, "extra");

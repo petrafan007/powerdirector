@@ -340,7 +340,7 @@ function parseSshConfigHost(configText: string): string | null {
 }
 
 function resolveSshTmpRoot(): string {
-  return path.resolve(resolvePreferredPowerDirectorTmpDir() ?? os.tmpdir());
+  return path.resolve(resolvePreferredPowerDirectorTmpDir() ?? ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"));
 }
 
 function resolveOptionalLocalPath(value: string | undefined): string | undefined {

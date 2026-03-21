@@ -24,7 +24,7 @@ export type CronServiceOptions = ConstructorParameters<typeof CronService>[0];
 
 export function setupCronIssueRegressionFixtures() {
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "cron-issues-"));
+    fixtureRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "cron-issues-"));
   });
 
   beforeEach(() => {

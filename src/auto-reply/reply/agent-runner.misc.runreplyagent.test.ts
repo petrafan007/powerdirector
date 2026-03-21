@@ -382,7 +382,7 @@ describe("runReplyAgent auto-compaction token update", () => {
   }
 
   it("updates totalTokens after auto-compaction using lastCallUsage", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-compact-tokens-"));
+    const tmp = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-compact-tokens-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry = {
@@ -459,7 +459,7 @@ describe("runReplyAgent auto-compaction token update", () => {
   });
 
   it("tracks auto-compaction from embedded result metadata even when no compaction event is emitted", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-compact-meta-"));
+    const tmp = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-compact-meta-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry = {
@@ -522,7 +522,7 @@ describe("runReplyAgent auto-compaction token update", () => {
   });
 
   it("accumulates compactions across fallback attempts without double-counting a single attempt", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-compact-fallback-"));
+    const tmp = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-compact-fallback-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry = {
@@ -607,7 +607,7 @@ describe("runReplyAgent auto-compaction token update", () => {
   });
 
   it("does not count failed compaction end events from earlier fallback attempts", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-compact-fallback-failed-"));
+    const tmp = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-compact-fallback-failed-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry = {
@@ -691,7 +691,7 @@ describe("runReplyAgent auto-compaction token update", () => {
     expect(stored[sessionKey].compactionCount).toBe(2);
   });
   it("updates totalTokens from lastCallUsage even without compaction", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-usage-last-"));
+    const tmp = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-usage-last-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry = {
@@ -749,7 +749,7 @@ describe("runReplyAgent auto-compaction token update", () => {
   });
 
   it("does not enqueue legacy post-compaction audit warnings", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-no-audit-warning-"));
+    const tmp = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-no-audit-warning-"));
     const workspaceDir = path.join(tmp, "workspace");
     await fs.mkdir(workspaceDir, { recursive: true });
     const sessionFile = path.join(tmp, "session.jsonl");
@@ -1244,7 +1244,7 @@ describe("runReplyAgent messaging tool suppression", () => {
 
   it("persists usage fields even when replies are suppressed", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-session-store-")),
+      await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-store-")),
       "sessions.json",
     );
     const sessionKey = "main";
@@ -1277,7 +1277,7 @@ describe("runReplyAgent messaging tool suppression", () => {
 
   it("persists totalTokens from promptTokens when snapshot is available", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-session-store-")),
+      await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-store-")),
       "sessions.json",
     );
     const sessionKey = "main";
@@ -1309,7 +1309,7 @@ describe("runReplyAgent messaging tool suppression", () => {
 
   it("persists totalTokens from promptTokens when provider omits usage", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-session-store-")),
+      await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-store-")),
       "sessions.json",
     );
     const sessionKey = "main";

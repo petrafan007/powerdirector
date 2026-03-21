@@ -123,7 +123,7 @@ describe("memory indexing with OpenAI batches", () => {
     await import("./test-runtime-mocks.js");
     ({ getMemorySearchManager } = await import("./index.js"));
 
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-mem-batch-"));
+    fixtureRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-mem-batch-"));
     workspaceDir = path.join(fixtureRoot, "workspace");
     memoryDir = path.join(workspaceDir, "memory");
     indexPath = path.join(fixtureRoot, "index.sqlite");

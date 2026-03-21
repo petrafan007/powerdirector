@@ -77,7 +77,7 @@ describe("tool_result_persist hook", () => {
   });
 
   it("loads tool_result_persist hooks without breaking persistence", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-toolpersist-"));
+    const tmp = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-toolpersist-"));
     process.env.POWERDIRECTOR_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
 
     const pluginA = writeTempPlugin({
@@ -132,7 +132,7 @@ describe("tool_result_persist hook", () => {
 
 describe("before_message_write hook", () => {
   it("continues persistence when a before_message_write hook throws", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-before-write-"));
+    const tmp = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-before-write-"));
     process.env.POWERDIRECTOR_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
 
     const plugin = writeTempPlugin({

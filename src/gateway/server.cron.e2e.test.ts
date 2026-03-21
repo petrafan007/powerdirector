@@ -69,7 +69,7 @@ describe("gateway server cron", () => {
   test("handles cron CRUD, normalization, and patch semantics", { timeout: 120_000 }, async () => {
     const prevSkipCron = process.env.POWERDIRECTOR_SKIP_CRON;
     process.env.POWERDIRECTOR_SKIP_CRON = "0";
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-gw-cron-"));
+    const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-gw-cron-"));
     testState.cronStorePath = path.join(dir, "cron", "jobs.json");
     testState.sessionConfig = { mainKey: "primary" };
     testState.cronEnabled = false;
@@ -349,7 +349,7 @@ describe("gateway server cron", () => {
   test("writes cron run history and auto-runs due jobs", async () => {
     const prevSkipCron = process.env.POWERDIRECTOR_SKIP_CRON;
     process.env.POWERDIRECTOR_SKIP_CRON = "0";
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-gw-cron-log-"));
+    const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-gw-cron-log-"));
     testState.cronStorePath = path.join(dir, "cron", "jobs.json");
     testState.cronEnabled = undefined;
     await fs.mkdir(path.dirname(testState.cronStorePath), { recursive: true });
@@ -446,7 +446,7 @@ describe("gateway server cron", () => {
   test("posts webhooks for delivery mode and legacy notify fallback only when summary exists", async () => {
     const prevSkipCron = process.env.POWERDIRECTOR_SKIP_CRON;
     process.env.POWERDIRECTOR_SKIP_CRON = "0";
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-gw-cron-webhook-"));
+    const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-gw-cron-webhook-"));
     testState.cronStorePath = path.join(dir, "cron", "jobs.json");
     testState.cronEnabled = false;
     await fs.mkdir(path.dirname(testState.cronStorePath), { recursive: true });

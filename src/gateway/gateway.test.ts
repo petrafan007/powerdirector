@@ -46,7 +46,7 @@ describe("gateway e2e", () => {
 
       const { baseUrl: openaiBaseUrl, restore } = installOpenAiResponsesMock();
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-gw-mock-home-"));
+      const tempHome = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-gw-mock-home-"));
       process.env.HOME = tempHome;
       process.env.POWERDIRECTOR_SKIP_CHANNELS = "1";
       process.env.POWERDIRECTOR_SKIP_GMAIL_WATCHER = "1";
@@ -150,7 +150,7 @@ describe("gateway e2e", () => {
       process.env.POWERDIRECTOR_SKIP_BROWSER_CONTROL_SERVER = "1";
       delete process.env.POWERDIRECTOR_GATEWAY_TOKEN;
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-wizard-home-"));
+      const tempHome = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-wizard-home-"));
       process.env.HOME = tempHome;
       delete process.env.POWERDIRECTOR_STATE_DIR;
       delete process.env.POWERDIRECTOR_CONFIG_PATH;

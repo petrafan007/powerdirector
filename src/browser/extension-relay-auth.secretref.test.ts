@@ -59,7 +59,7 @@ describe("extension-relay-auth SecretRef handling", () => {
   });
 
   it("resolves file-backed gateway.auth.token SecretRef", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-relay-file-secret-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-relay-file-secret-"));
     const secretFile = path.join(tempDir, "relay-secrets.json");
     await fs.writeFile(secretFile, JSON.stringify({ relayToken: "resolved-file-relay-token" }));
     await fs.chmod(secretFile, 0o600);

@@ -10,7 +10,7 @@ export async function withTempDir<T>(
   },
   run: (dir: string) => Promise<T>,
 ): Promise<T> {
-  const base = await fs.mkdtemp(path.join(options.parentDir ?? os.tmpdir(), options.prefix));
+  const base = await fs.mkdtemp(path.join(options.parentDir ?? ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), options.prefix));
   const dir = options.subdir ? path.join(base, options.subdir) : base;
   if (options.subdir) {
     await fs.mkdir(dir, { recursive: true });

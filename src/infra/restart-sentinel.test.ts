@@ -20,7 +20,7 @@ describe("restart sentinel", () => {
 
   beforeEach(async () => {
     envSnapshot = captureEnv(["POWERDIRECTOR_STATE_DIR"]);
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-sentinel-"));
+    tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-sentinel-"));
     process.env.POWERDIRECTOR_STATE_DIR = tempDir;
   });
 

@@ -25,7 +25,7 @@ describe("resolveProviderAuths key normalization", () => {
   } satisfies Record<string, string | undefined>;
 
   beforeAll(async () => {
-    suiteRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-provider-auth-suite-"));
+    suiteRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-provider-auth-suite-"));
     ({ resolveProviderAuths } = await import("./provider-usage.auth.js"));
   });
 
@@ -268,9 +268,9 @@ describe("resolveProviderAuths key normalization", () => {
     expect(auths).toEqual([{ provider: "anthropic", token: "token-1", accountId: "acc-1" }]);
   });
 
-  it("falls back to legacy .pi auth file for zai keys even after ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "") is primed", async () => {
-    // Prime ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "") to simulate long-lived workers that may have touched it before HOME changes.
-    ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
+  it("falls back to legacy .pi auth file for zai keys even after ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "") is primed", async () => {
+    // Prime ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "") to simulate long-lived workers that may have touched it before HOME changes.
+    ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "");
     await expectResolvedAuthsFromSuiteHome({
       providers: ["zai"],
       setup: async (home) => {

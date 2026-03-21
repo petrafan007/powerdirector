@@ -22,9 +22,9 @@ describe("exec approvals", () => {
   beforeEach(async () => {
     previousHome = process.env.HOME;
     previousUserProfile = process.env.USERPROFILE;
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-test-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-test-"));
     process.env.HOME = tempDir;
-    // Windows uses USERPROFILE for ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "")
+    // Windows uses USERPROFILE for ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "")
     process.env.USERPROFILE = tempDir;
   });
 
@@ -79,7 +79,7 @@ describe("exec approvals", () => {
 
   it("skips approval when node allowlist is satisfied", async () => {
     const { callGatewayTool } = await import("./tools/gateway.js");
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-test-bin-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-test-bin-"));
     const binDir = path.join(tempDir, "bin");
     await fs.mkdir(binDir, { recursive: true });
     const exeName = process.platform === "win32" ? "tool.cmd" : "tool";

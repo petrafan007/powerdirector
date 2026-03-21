@@ -314,7 +314,7 @@ describe("uninstallPlugin", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "uninstall-test-"));
+    tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "uninstall-test-"));
   });
 
   afterEach(async () => {
@@ -501,7 +501,7 @@ describe("resolveUninstallDirectoryTarget", () => {
   });
 
   it("falls back to default path when configured installPath is untrusted", () => {
-    const extensionsDir = path.join(os.tmpdir(), "powerdirector-uninstall-safe");
+    const extensionsDir = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-uninstall-safe");
     const target = resolveUninstallDirectoryTarget({
       pluginId: "my-plugin",
       hasInstall: true,

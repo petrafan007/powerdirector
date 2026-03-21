@@ -79,7 +79,7 @@ async function cleanupLegacyLaunchdService(params: {
   await execFileAsync("launchctl", ["bootout", domain, params.plistPath]).catch(() => undefined);
   await execFileAsync("launchctl", ["unload", params.plistPath]).catch(() => undefined);
 
-  const trashDir = path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".Trash");
+  const trashDir = path.join(((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""), ".Trash");
   try {
     await fs.mkdir(trashDir, { recursive: true });
   } catch {

@@ -94,7 +94,7 @@ describe("backup commands", () => {
 
     const stateDir = path.join(tempHome.home, ".powerdirector");
     const workspaceDir = path.join(stateDir, "workspace");
-    const symlinkDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-workspace-link-"));
+    const symlinkDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-workspace-link-"));
     const workspaceLink = path.join(symlinkDir, "ws-link");
     try {
       await fs.mkdir(workspaceDir, { recursive: true });
@@ -121,9 +121,9 @@ describe("backup commands", () => {
 
   it("creates an archive with a manifest and external workspace payload", async () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
-    const externalWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-workspace-"));
+    const externalWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-workspace-"));
     const configPath = path.join(tempHome.home, "custom-config.json");
-    const backupDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backups-"));
+    const backupDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backups-"));
     try {
       process.env.POWERDIRECTOR_CONFIG_PATH = configPath;
       await fs.writeFile(
@@ -153,7 +153,7 @@ describe("backup commands", () => {
         path.join(backupDir, `${buildBackupArchiveRoot(nowMs)}.tar.gz`),
       );
 
-      const extractDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-extract-"));
+      const extractDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-extract-"));
       try {
         await tar.x({ file: result.archivePath, cwd: extractDir, gzip: true });
         const archiveRoot = path.join(extractDir, buildBackupArchiveRoot(nowMs));
@@ -203,7 +203,7 @@ describe("backup commands", () => {
   it("optionally verifies the archive after writing it", async () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
     const archiveDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "powerdirector-backup-verify-on-create-"),
+      path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-verify-on-create-"),
     );
     try {
       await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");
@@ -245,7 +245,7 @@ describe("backup commands", () => {
     }
 
     const stateDir = path.join(tempHome.home, ".powerdirector");
-    const symlinkDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-link-"));
+    const symlinkDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-link-"));
     const symlinkPath = path.join(symlinkDir, "linked-state");
     try {
       await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");
@@ -289,7 +289,7 @@ describe("backup commands", () => {
 
     const stateDir = path.join(tempHome.home, ".powerdirector");
     const workspaceDir = path.join(stateDir, "workspace");
-    const linkParent = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-cwd-link-"));
+    const linkParent = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-cwd-link-"));
     const workspaceLink = path.join(linkParent, "workspace-link");
     try {
       await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");

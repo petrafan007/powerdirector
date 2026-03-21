@@ -1071,7 +1071,7 @@ describe("logs.tail", () => {
   });
 
   it("falls back to latest rolling log file when today is missing", async () => {
-    const tempDir = await fsPromises.mkdtemp(path.join(os.tmpdir(), "powerdirector-logs-"));
+    const tempDir = await fsPromises.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-logs-"));
     const older = path.join(tempDir, "powerdirector-2026-01-20.log");
     const newer = path.join(tempDir, "powerdirector-2026-01-21.log");
 

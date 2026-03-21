@@ -11,7 +11,7 @@ import { resolveWorkspaceTemplateDir } from "./workspace-templates.js";
 
 export function resolveDefaultAgentWorkspaceDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = (typeof os.homedir === "function" ? os.homedir : (() => "")),
+  homedir: () => string = (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")),
 ): string {
   const home = resolveRequiredHomeDir(env, homedir);
   const profile = env.POWERDIRECTOR_PROFILE?.trim();

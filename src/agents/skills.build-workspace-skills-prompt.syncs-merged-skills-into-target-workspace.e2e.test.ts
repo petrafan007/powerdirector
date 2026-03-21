@@ -16,8 +16,8 @@ async function pathExists(filePath: string): Promise<boolean> {
 
 describe("buildWorkspaceSkillsPrompt", () => {
   it("syncs merged skills into a target workspace", async () => {
-    const sourceWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
-    const targetWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
+    const sourceWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
+    const targetWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
     const extraDir = path.join(sourceWorkspace, ".extra");
     const bundledDir = path.join(sourceWorkspace, ".bundled");
     const managedDir = path.join(sourceWorkspace, ".managed");
@@ -63,8 +63,8 @@ describe("buildWorkspaceSkillsPrompt", () => {
     expect(prompt).toContain(path.join(targetWorkspace, "skills", "demo-skill", "SKILL.md"));
   });
   it("keeps synced skills confined under target workspace when frontmatter name uses traversal", async () => {
-    const sourceWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
-    const targetWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
+    const sourceWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
+    const targetWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
     const escapeId = `${Date.now()}-${process.pid}-${Math.random().toString(16).slice(2)}`;
     const traversalName = `../../../skill-sync-escape-${escapeId}`;
     const escapedDest = path.resolve(targetWorkspace, "skills", traversalName);
@@ -93,10 +93,10 @@ describe("buildWorkspaceSkillsPrompt", () => {
     expect(await pathExists(escapedDest)).toBe(false);
   });
   it("keeps synced skills confined under target workspace when frontmatter name is absolute", async () => {
-    const sourceWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
-    const targetWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
+    const sourceWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
+    const targetWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
     const escapeId = `${Date.now()}-${process.pid}-${Math.random().toString(16).slice(2)}`;
-    const absoluteDest = path.join(os.tmpdir(), `skill-sync-abs-escape-${escapeId}`);
+    const absoluteDest = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `skill-sync-abs-escape-${escapeId}`);
 
     await fs.rm(absoluteDest, { recursive: true, force: true });
     await writeSkill({
@@ -120,7 +120,7 @@ describe("buildWorkspaceSkillsPrompt", () => {
     expect(await pathExists(absoluteDest)).toBe(false);
   });
   it("filters skills based on env/config gates", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
     const skillDir = path.join(workspaceDir, "skills", "nano-banana-pro");
     const originalEnv = process.env.GEMINI_API_KEY;
     delete process.env.GEMINI_API_KEY;
@@ -157,7 +157,7 @@ describe("buildWorkspaceSkillsPrompt", () => {
     }
   });
   it("applies skill filters, including empty lists", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
     await writeSkill({
       dir: path.join(workspaceDir, "skills", "alpha"),
       name: "alpha",

@@ -12,7 +12,7 @@ export type EmbeddedPiRunnerTestWorkspace = {
 export async function createEmbeddedPiRunnerTestWorkspace(
   prefix: string,
 ): Promise<EmbeddedPiRunnerTestWorkspace> {
-  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const tempRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   const agentDir = path.join(tempRoot, "agent");
   const workspaceDir = path.join(tempRoot, "workspace");
   await fs.mkdir(agentDir, { recursive: true });

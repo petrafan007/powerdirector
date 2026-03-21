@@ -40,12 +40,12 @@ describe("sandbox skill mirroring", () => {
   });
 
   const runContext = async (workspaceAccess: "none" | "ro") => {
-    const bundledDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-bundled-skills-"));
+    const bundledDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-bundled-skills-"));
     await fs.mkdir(bundledDir, { recursive: true });
 
     process.env.POWERDIRECTOR_BUNDLED_SKILLS_DIR = bundledDir;
 
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-workspace-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-workspace-"));
     await writeSkill({
       dir: path.join(workspaceDir, "skills", "demo-skill"),
       name: "demo-skill",

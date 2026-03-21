@@ -131,7 +131,7 @@ describe("gateway update.run", () => {
       );
       expect(sigusr1).toHaveBeenCalled();
 
-      const sentinelPath = path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".powerdirector", "restart-sentinel.json");
+      const sentinelPath = path.join(((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""), ".powerdirector", "restart-sentinel.json");
       const raw = await fs.readFile(sentinelPath, "utf-8");
       const parsed = JSON.parse(raw) as {
         payload?: { kind?: string; stats?: { mode?: string } };

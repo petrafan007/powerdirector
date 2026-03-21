@@ -244,7 +244,7 @@ describe("secrets CLI", () => {
 
   it("forwards --allow-exec to secrets apply dry-run", async () => {
     const planPath = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       `powerdirector-secrets-cli-test-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     await fs.writeFile(
@@ -289,7 +289,7 @@ describe("secrets CLI", () => {
 
   it("forwards --allow-exec to secrets apply write mode", async () => {
     const planPath = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       `powerdirector-secrets-cli-test-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     await fs.writeFile(
@@ -331,7 +331,7 @@ describe("secrets CLI", () => {
 
   it("does not print skipped-exec note when apply dry-run skippedExecRefs is zero", async () => {
     const planPath = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       `powerdirector-secrets-cli-test-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     await fs.writeFile(

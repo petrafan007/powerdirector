@@ -49,7 +49,7 @@ describe("memory manager cache hydration", () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-mem-concurrent-"));
+    workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-mem-concurrent-"));
     await fs.mkdir(path.join(workspaceDir, "memory"), { recursive: true });
     await fs.writeFile(path.join(workspaceDir, "MEMORY.md"), "Hello memory.");
     hoisted.providerCreateCalls = 0;

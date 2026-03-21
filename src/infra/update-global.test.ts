@@ -99,7 +99,7 @@ describe("update global helpers", () => {
   });
 
   it("detects install managers from resolved roots and on-disk presence", async () => {
-    const base = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-update-global-"));
+    const base = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-update-global-"));
     const npmRoot = path.join(base, "npm-root");
     const pnpmRoot = path.join(base, "pnpm-root");
     const bunRoot = path.join(base, ".bun", "install", "global", "node_modules");
@@ -168,7 +168,7 @@ describe("update global helpers", () => {
   });
 
   it("cleans only renamed package directories", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-update-cleanup-"));
+    const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-update-cleanup-"));
     await fs.mkdir(path.join(root, ".powerdirector-123"), { recursive: true });
     await fs.mkdir(path.join(root, ".powerdirector-456"), { recursive: true });
     await fs.writeFile(path.join(root, ".powerdirector-file"), "nope", "utf8");

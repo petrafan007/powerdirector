@@ -6,7 +6,7 @@ import { saveAuthProfileStore } from "./auth-profiles.js";
 import { discoverAuthStorage } from "./pi-model-discovery.js";
 
 async function createAgentDir(): Promise<string> {
-  return await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-pi-auth-storage-"));
+  return await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-pi-auth-storage-"));
 }
 
 async function withAgentDir(run: (agentDir: string) => Promise<void>): Promise<void> {

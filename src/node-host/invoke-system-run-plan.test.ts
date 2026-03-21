@@ -101,7 +101,7 @@ function withFakeRuntimeBins<T>(params: {
   tmpPrefix?: string;
   run: () => T;
 }): T {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), params.tmpPrefix ?? "powerdirector-runtime-bins-"));
+  const tmp = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), params.tmpPrefix ?? "powerdirector-runtime-bins-"));
   const binDir = path.join(tmp, "bin");
   fs.mkdirSync(binDir, { recursive: true });
   for (const binName of params.binNames) {
@@ -152,7 +152,7 @@ function withScriptOperandPlanFixture<T>(
   },
   run: (fixture: ScriptOperandFixture, tmp: string) => T,
 ) {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), params.tmpPrefix));
+  const tmp = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), params.tmpPrefix));
   const fixture = createScriptOperandFixture(tmp, params.fixture);
   writeScriptOperandFixture(fixture);
   params.afterWrite?.(fixture, tmp);
@@ -316,7 +316,7 @@ describe("hardenApprovedExecutionPaths", () => {
 
   for (const testCase of cases) {
     it.runIf(process.platform !== "win32")(testCase.name, () => {
-      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-approval-hardening-"));
+      const tmp = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-approval-hardening-"));
       const oldPath = process.env.PATH;
       let pathToken: PathTokenSetup | null = null;
       if (testCase.withPathToken) {
@@ -606,7 +606,7 @@ describe("hardenApprovedExecutionPaths", () => {
       withFakeRuntimeBin({
         binName: testCase.binName,
         run: () => {
-          const tmp = fs.mkdtempSync(path.join(os.tmpdir(), testCase.tmpPrefix));
+          const tmp = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), testCase.tmpPrefix));
           try {
             testCase.setup?.(tmp);
             expectRuntimeApprovalDenied(testCase.command, tmp);
@@ -619,7 +619,7 @@ describe("hardenApprovedExecutionPaths", () => {
   }
 
   it("captures the real shell script operand after value-taking shell flags", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-shell-option-value-"));
+    const tmp = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-shell-option-value-"));
     try {
       const scriptPath = path.join(tmp, "run.sh");
       fs.writeFileSync(scriptPath, "#!/bin/sh\necho SAFE\n");

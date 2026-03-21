@@ -9,7 +9,7 @@ describe("logger timestamp format", () => {
   let logPath = "";
 
   beforeEach(() => {
-    logPath = path.join(os.tmpdir(), `powerdirector-log-ts-${crypto.randomUUID()}.log`);
+    logPath = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-log-ts-${crypto.randomUUID()}.log`);
     resetLogger();
     setLoggerOverride(null);
   });

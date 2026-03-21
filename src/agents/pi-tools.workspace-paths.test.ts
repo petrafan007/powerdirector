@@ -13,7 +13,7 @@ vi.mock("../infra/shell-env.js", async (importOriginal) => {
   return { ...mod, getShellPathFromLoginShell: () => null };
 });
 async function withTempDir<T>(prefix: string, fn: (dir: string) => Promise<T>) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   try {
     return await fn(dir);
   } finally {

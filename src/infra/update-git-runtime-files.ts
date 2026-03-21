@@ -114,7 +114,7 @@ function formatBackupTimestamp(date: Date): string {
 }
 
 function resolveRuntimeBackupBaseDir(root: string): string {
-  const homeDir = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "").trim();
+  const homeDir = ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "").trim();
   const instanceName = path.basename(root) || "powerdirector";
   if (homeDir.length > 0) {
     return path.join(homeDir, "powerdirector-backups", instanceName);

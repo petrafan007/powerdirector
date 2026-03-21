@@ -47,7 +47,7 @@ export async function connectGatewayClient(params: {
 }) {
   const role = params.role ?? "operator";
   const platform = params.platform ?? process.platform;
-  const identityRoot = process.env.POWERDIRECTOR_STATE_DIR ?? process.env.HOME ?? os.tmpdir();
+  const identityRoot = process.env.POWERDIRECTOR_STATE_DIR ?? process.env.HOME ?? ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp");
   const deviceIdentity =
     params.deviceIdentity ??
     loadOrCreateDeviceIdentity(

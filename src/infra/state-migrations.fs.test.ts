@@ -13,7 +13,7 @@ import {
 
 describe("state migration fs helpers", () => {
   it("reads directories safely and creates missing directories", () => {
-    const base = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-state-migrations-fs-"));
+    const base = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-state-migrations-fs-"));
     const nested = path.join(base, "nested");
 
     expect(safeReadDir(nested)).toEqual([]);
@@ -26,7 +26,7 @@ describe("state migration fs helpers", () => {
   });
 
   it("distinguishes files from directories", () => {
-    const base = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-state-migrations-fs-"));
+    const base = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-state-migrations-fs-"));
     const filePath = path.join(base, "store.json");
     const dirPath = path.join(base, "dir");
     fs.writeFileSync(filePath, "{}", "utf8");
@@ -47,7 +47,7 @@ describe("state migration fs helpers", () => {
   });
 
   it("parses json5 session stores and rejects invalid shapes", () => {
-    const base = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-state-migrations-fs-"));
+    const base = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-state-migrations-fs-"));
     const okPath = path.join(base, "store.json");
     const badPath = path.join(base, "bad.json");
     const listPath = path.join(base, "list.json");

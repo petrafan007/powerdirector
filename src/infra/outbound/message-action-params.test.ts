@@ -140,7 +140,7 @@ describe("message action media helpers", () => {
   });
 
   maybeIt("normalizes sandbox media lists and dedupes resolved workspace paths", async () => {
-    const sandboxRoot = await fs.mkdtemp(path.join(os.tmpdir(), "msg-params-list-"));
+    const sandboxRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "msg-params-list-"));
     try {
       await expect(
         normalizeSandboxMediaList({
@@ -161,8 +161,8 @@ describe("message action media helpers", () => {
 
 describe("message action sandbox media hydration", () => {
   maybeIt("rejects symlink retarget escapes after sandbox media normalization", async () => {
-    const sandboxRoot = await fs.mkdtemp(path.join(os.tmpdir(), "msg-params-sandbox-"));
-    const outsideRoot = await fs.mkdtemp(path.join(os.tmpdir(), "msg-params-outside-"));
+    const sandboxRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "msg-params-sandbox-"));
+    const outsideRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "msg-params-outside-"));
     try {
       const insideDir = path.join(sandboxRoot, "inside");
       await fs.mkdir(insideDir, { recursive: true });

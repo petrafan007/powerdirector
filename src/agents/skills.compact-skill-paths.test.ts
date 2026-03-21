@@ -6,7 +6,7 @@ import { buildWorkspaceSkillsPrompt } from "./skills.js";
 import { writeSkill } from "./skills.test-helpers.js";
 
 async function withTempWorkspace(run: (workspaceDir: string) => Promise<void>) {
-  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-compact-"));
+  const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-compact-"));
   try {
     await run(workspaceDir);
   } finally {
@@ -30,7 +30,7 @@ describe("compactSkillPaths", () => {
         managedSkillsDir: path.join(workspaceDir, ".managed-empty"),
       });
 
-      const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
+      const home = ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "");
       // The prompt should NOT contain the absolute home directory path
       // when the skill is under the home directory (which tmpdir usually is on macOS)
       if (workspaceDir.startsWith(home)) {

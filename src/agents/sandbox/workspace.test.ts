@@ -8,7 +8,7 @@ import { ensureSandboxWorkspace } from "./workspace.js";
 const tempRoots: string[] = [];
 
 async function makeTempRoot(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-sandbox-workspace-"));
+  const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-sandbox-workspace-"));
   tempRoots.push(root);
   return root;
 }

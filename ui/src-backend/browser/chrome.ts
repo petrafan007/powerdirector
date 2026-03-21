@@ -320,7 +320,7 @@ export async function launchPowerDirectorChrome(
       env: {
         ...process.env,
         // Reduce accidental sharing with the user's env.
-        HOME: ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""),
+        HOME: ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""),
       },
     });
   };

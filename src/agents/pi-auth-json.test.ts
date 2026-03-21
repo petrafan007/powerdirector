@@ -8,7 +8,7 @@ import { ensurePiAuthJsonFromAuthProfiles } from "./pi-auth-json.js";
 type AuthProfileStore = Parameters<typeof saveAuthProfileStore>[0];
 
 async function createAgentDir() {
-  return fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-agent-"));
+  return fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-agent-"));
 }
 
 function writeProfiles(agentDir: string, profiles: AuthProfileStore["profiles"]) {

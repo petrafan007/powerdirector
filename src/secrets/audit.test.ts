@@ -39,7 +39,7 @@ function hasFinding(
 }
 
 async function createAuditFixture(): Promise<AuditFixture> {
-  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-secrets-audit-"));
+  const rootDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-secrets-audit-"));
   const stateDir = path.join(rootDir, ".powerdirector");
   const configPath = path.join(stateDir, "powerdirector.json");
   const authStorePath = path.join(stateDir, "agents", "main", "agent", "auth-profiles.json");

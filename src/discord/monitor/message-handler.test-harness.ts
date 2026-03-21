@@ -7,7 +7,7 @@ import { createNoopThreadBindingManager } from "./thread-bindings.js";
 export async function createBaseDiscordMessageContext(
   overrides: Record<string, unknown> = {},
 ): Promise<DiscordMessagePreflightContext> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-discord-"));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-discord-"));
   const storePath = path.join(dir, "sessions.json");
   return {
     cfg: { messages: { ackReaction: "👀" }, session: { store: storePath } },

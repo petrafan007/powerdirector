@@ -50,7 +50,7 @@ describe("bundled provider auth env vars", () => {
   });
 
   it("supports check mode for stale generated artifacts", () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-provider-auth-env-vars-"));
+    const tempRoot = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-provider-auth-env-vars-"));
     tempDirs.push(tempRoot);
 
     writeJson(path.join(tempRoot, "extensions", "alpha", "powerdirector.plugin.json"), {

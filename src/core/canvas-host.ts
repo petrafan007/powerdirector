@@ -92,7 +92,7 @@ export class CanvasHostManager {
         if (trimmed) {
             return path.resolve(trimmed);
         }
-        return path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), '.powerdirector', 'workspace', 'canvas');
+        return path.join(((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""), '.powerdirector', 'workspace', 'canvas');
     }
 
     private normalizePort(value: any): number {

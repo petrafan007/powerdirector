@@ -117,7 +117,7 @@ async function waitForAssertion(assertion: () => void, timeoutMs = 250, stepMs =
 }
 
 function createTranscriptFixture(prefix: string) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+  const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   const transcriptPath = path.join(dir, "sess.jsonl");
   fs.writeFileSync(
     transcriptPath,

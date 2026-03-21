@@ -274,7 +274,7 @@ export function truncateUtf16Safe(input: string, maxLen: number): string {
 export function resolveUserPath(
   input: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function" ? (typeof os.homedir === "function" ? os.homedir : (() => "")) : (() => ""),
+  homedir: () => string = typeof (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")) === "function" ? (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")) : (() => ""),
 ): string {
   if (!input) {
     return "";
@@ -284,7 +284,7 @@ export function resolveUserPath(
 
 export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function" ? (typeof os.homedir === "function" ? os.homedir : (() => "")) : (() => ""),
+  homedir: () => string = typeof (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")) === "function" ? (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")) : (() => ""),
 ): string {
   const override = env.POWERDIRECTOR_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
@@ -303,7 +303,7 @@ export function resolveConfigDir(
 }
 
 export function resolveHomeDir(): string | undefined {
-  return resolveEffectiveHomeDir(process.env, typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function" ? (typeof os.homedir === "function" ? os.homedir : (() => "")) : (() => ""));
+  return resolveEffectiveHomeDir(process.env, typeof (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")) === "function" ? (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")) : (() => ""));
 }
 
 function resolveHomeDisplayPrefix(): { home: string; prefix: string } | undefined {

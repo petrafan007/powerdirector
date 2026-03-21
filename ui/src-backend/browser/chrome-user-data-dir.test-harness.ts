@@ -9,7 +9,7 @@ type ChromeUserDataDirRef = {
 
 export function installChromeUserDataDirHooks(chromeUserDataDir: ChromeUserDataDirRef): void {
   beforeAll(async () => {
-    chromeUserDataDir.dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-chrome-user-data-"));
+    chromeUserDataDir.dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-chrome-user-data-"));
   });
 
   afterAll(async () => {

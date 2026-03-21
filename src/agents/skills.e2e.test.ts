@@ -23,7 +23,7 @@ type SkillFixture = {
 const tempDirs: string[] = [];
 
 const makeWorkspace = async () => {
-  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-"));
+  const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-"));
   tempDirs.push(workspaceDir);
   return workspaceDir;
 };

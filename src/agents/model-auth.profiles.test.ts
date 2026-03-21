@@ -56,7 +56,7 @@ async function expectBedrockAuthSource(params: {
 
 describe("getApiKeyForModel", () => {
   it("migrates legacy oauth.json into auth-profiles.json", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-oauth-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-oauth-"));
 
     try {
       const agentDir = path.join(tempDir, "agent");
@@ -122,7 +122,7 @@ describe("getApiKeyForModel", () => {
   });
 
   it("suggests openai-codex when only Codex OAuth is configured", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-auth-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-auth-"));
 
     try {
       const agentDir = path.join(tempDir, "agent");

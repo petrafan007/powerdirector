@@ -11,7 +11,7 @@ describe("resolveCliSpawnInvocation", () => {
   const originalPathExt = process.env.PATHEXT;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-qmd-win-spawn-"));
+    tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-qmd-win-spawn-"));
     platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
   });
 

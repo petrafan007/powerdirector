@@ -123,7 +123,7 @@ async function withStubbedStateDir<T>(
   name: string,
   run: (stateDir: string) => Promise<T>,
 ): Promise<T> {
-  const stateDir = path.join(os.tmpdir(), name);
+  const stateDir = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), name);
   vi.stubEnv("POWERDIRECTOR_STATE_DIR", stateDir);
   try {
     return await run(stateDir);

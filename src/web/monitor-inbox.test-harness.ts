@@ -143,7 +143,7 @@ export function installWebMonitorInboxUnitTestHooks(opts?: { authDir?: boolean }
     const { resetWebInboundDedupe } = await import("./inbound.js");
     resetWebInboundDedupe();
     if (createAuthDir) {
-      authDir = fsSync.mkdtempSync(path.join(os.tmpdir(), "powerdirector-auth-"));
+      authDir = fsSync.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-auth-"));
     } else {
       authDir = undefined;
     }

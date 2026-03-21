@@ -151,7 +151,7 @@ function mightContainDynamicTmpdirJoin(source: string): boolean {
   }
   return (
     (source.includes("path.join") || PATH_JOIN_CALL_PATTERN.test(source)) &&
-    (source.includes("os.tmpdir") || OS_TMPDIR_CALL_PATTERN.test(source)) &&
+    (source.includes("((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))") || OS_TMPDIR_CALL_PATTERN.test(source)) &&
     source.includes("`") &&
     source.includes("${")
   );
@@ -196,17 +196,17 @@ describe("temp path guard", () => {
 
   it("detects dynamic and ignores static fixtures", () => {
     const dynamicFixtures = [
-      "const p = path.join(os.tmpdir(), `powerdirector-${id}`);",
-      "const p = path.join(os.tmpdir(), 'safe', `${token}`);",
+      "const p = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-${id}`);",
+      "const p = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), 'safe', `${token}`);",
     ];
     const staticFixtures = [
-      "const p = path.join(os.tmpdir(), 'powerdirector-fixed');",
-      "const p = path.join(os.tmpdir(), `powerdirector-fixed`);",
-      "const p = path.join(os.tmpdir(), prefix + '-x');",
-      "const p = path.join(os.tmpdir(), segment);",
+      "const p = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), 'powerdirector-fixed');",
+      "const p = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-fixed`);",
+      "const p = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix + '-x');",
+      "const p = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), segment);",
       "const p = path.join('/tmp', `powerdirector-${id}`);",
-      "// path.join(os.tmpdir(), `powerdirector-${id}`)",
-      "const p = path.join(os.tmpdir());",
+      "// path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-${id}`)",
+      "const p = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"));",
     ];
 
     for (const fixture of dynamicFixtures) {

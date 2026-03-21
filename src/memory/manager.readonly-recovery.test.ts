@@ -72,7 +72,7 @@ describe("memory manager readonly recovery", () => {
 
   beforeEach(async () => {
     resetEmbeddingMocks();
-    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-mem-readonly-"));
+    workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-mem-readonly-"));
     indexPath = path.join(workspaceDir, "index.sqlite");
     await fs.mkdir(path.join(workspaceDir, "memory"), { recursive: true });
     await fs.writeFile(path.join(workspaceDir, "MEMORY.md"), "Hello memory.");

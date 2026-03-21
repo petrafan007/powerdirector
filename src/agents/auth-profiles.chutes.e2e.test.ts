@@ -31,7 +31,7 @@ describe("auth-profiles (chutes)", () => {
       "PI_CODING_AGENT_DIR",
       "CHUTES_CLIENT_ID",
     ]);
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-chutes-"));
+    tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-chutes-"));
     process.env.POWERDIRECTOR_STATE_DIR = tempDir;
     process.env.POWERDIRECTOR_AGENT_DIR = path.join(tempDir, "agents", "main", "agent");
     process.env.PI_CODING_AGENT_DIR = process.env.POWERDIRECTOR_AGENT_DIR;

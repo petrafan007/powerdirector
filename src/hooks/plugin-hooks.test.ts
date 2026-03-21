@@ -19,7 +19,7 @@ describe("bundle plugin hooks", () => {
   let previousBundledHooksDir: string | undefined;
 
   beforeAll(async () => {
-    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "powerdirector-plugin-hooks-"));
+    fixtureRoot = await fsp.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-plugin-hooks-"));
   });
 
   beforeEach(async () => {

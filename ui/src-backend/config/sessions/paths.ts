@@ -8,7 +8,7 @@ import { resolveStateDir } from "../paths";
 function resolveAgentSessionsDir(
   agentId?: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => ""))),
+  homedir: () => string = () => resolveRequiredHomeDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""))),
 ): string {
   const root = resolveStateDir(env, homedir);
   const id = normalizeAgentId(agentId ?? DEFAULT_AGENT_ID);
@@ -17,7 +17,7 @@ function resolveAgentSessionsDir(
 
 export function resolveSessionTranscriptsDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => ""))),
+  homedir: () => string = () => resolveRequiredHomeDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""))),
 ): string {
   return resolveAgentSessionsDir(DEFAULT_AGENT_ID, env, homedir);
 }
@@ -25,7 +25,7 @@ export function resolveSessionTranscriptsDir(
 export function resolveSessionTranscriptsDirForAgent(
   agentId?: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => ""))),
+  homedir: () => string = () => resolveRequiredHomeDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""))),
 ): string {
   return resolveAgentSessionsDir(agentId, env, homedir);
 }
@@ -282,7 +282,7 @@ export function resolveStorePath(
 ) {
   const agentId = normalizeAgentId(opts?.agentId ?? DEFAULT_AGENT_ID);
   const env = opts?.env ?? process.env;
-  const homedir = () => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
+  const homedir = () => resolveRequiredHomeDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")));
   if (!store) {
     return path.join(resolveAgentSessionsDir(agentId, env, homedir), "sessions.json");
   }

@@ -122,7 +122,7 @@ export function registerBrowserFilesAndDownloadsCommands(
     .description("Wait for the next download (and save it)")
     .argument(
       "[path]",
-      "Save path within powerdirector temp downloads dir (default: /tmp/powerdirector/downloads/...; fallback: os.tmpdir()/powerdirector/downloads/...)",
+      "Save path within powerdirector temp downloads dir (default: /tmp/powerdirector/downloads/...; fallback: ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp")/powerdirector/downloads/...)",
     )
     .option("--target-id <id>", "CDP target id (or unique prefix)")
     .option(

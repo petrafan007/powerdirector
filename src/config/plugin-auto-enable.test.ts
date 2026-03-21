@@ -31,7 +31,7 @@ function mkdirSafe(dir: string) {
 }
 
 function makeTempDir() {
-  const dir = mkdtempSafe(path.join(os.tmpdir(), "powerdirector-plugin-auto-enable-"));
+  const dir = mkdtempSafe(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-plugin-auto-enable-"));
   tempDirs.push(dir);
   return dir;
 }

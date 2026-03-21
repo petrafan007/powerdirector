@@ -59,7 +59,7 @@ export async function prepareRestartScript(
   env: NodeJS.ProcessEnv = process.env,
   gatewayPort: number = DEFAULT_GATEWAY_PORT,
 ): Promise<string | null> {
-  const tmpDir = os.tmpdir();
+  const tmpDir = ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp");
   const timestamp = Date.now();
   const platform = process.platform;
 
@@ -86,7 +86,7 @@ rm -f "$0"
       const uid = process.getuid ? process.getuid() : 501;
       // Resolve HOME at generation time via env/process.env to match launchd.ts,
       // and shell-escape the label in the plist filename to prevent injection.
-      const home = env.HOME?.trim() || process.env.HOME || ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
+      const home = env.HOME?.trim() || process.env.HOME || ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "");
       const plistPath = path.join(home, "Library", "LaunchAgents", `${label}.plist`);
       const escapedPlistPath = shellEscape(plistPath);
       filename = `powerdirector-restart-${timestamp}.sh`;

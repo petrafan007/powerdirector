@@ -207,7 +207,7 @@ async function projectPlanState(params: {
 
   const options = normalizeSecretsPlanOptions(params.plan.options);
   const nextConfig = structuredClone(snapshot.config);
-  const stateDir = resolveStateDir(params.env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
+  const stateDir = resolveStateDir(params.env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")));
   const changedFiles = new Set<string>();
   const warnings: string[] = [];
   const configPath = resolveUserPath(snapshot.path);
@@ -631,7 +631,7 @@ function scrubEnvFiles(params: {
   if (!params.enabled || params.scrubbedValues.size === 0) {
     return envRawByPath;
   }
-  const envPath = path.join(resolveConfigDir(params.env, (typeof os.homedir === "function" ? os.homedir : (() => ""))), ".env");
+  const envPath = path.join(resolveConfigDir(params.env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""))), ".env");
   if (!fs.existsSync(envPath)) {
     return envRawByPath;
   }

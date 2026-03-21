@@ -213,7 +213,7 @@ function fromSessionBindingInput(params: {
 }
 
 function resolveBindingsPath(accountId: string, env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
+  const stateDir = resolveStateDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")));
   return path.join(stateDir, "telegram", `thread-bindings-${accountId}.json`);
 }
 

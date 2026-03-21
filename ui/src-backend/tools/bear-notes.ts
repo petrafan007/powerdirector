@@ -46,7 +46,7 @@ export class BearNotesTool implements Tool {
                     if (!args.query) return { output: 'Query required', isError: true };
                     // Bear stores notes in a SQLite database
                     const dbPath = path.join(
-                        ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""),
+                        ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""),
                         'Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite'
                     );
                     if (!fs.existsSync(dbPath)) {
@@ -61,7 +61,7 @@ export class BearNotesTool implements Tool {
                 case 'get_note': {
                     if (!args.title) return { output: 'Title required', isError: true };
                     const dbPath = path.join(
-                        ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""),
+                        ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""),
                         'Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite'
                     );
                     if (!fs.existsSync(dbPath)) {

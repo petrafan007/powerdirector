@@ -12,7 +12,7 @@ export async function withTempSecretFiles<T>(
   secrets: { password?: string; token?: string },
   run: (files: SecretFiles) => Promise<T>,
 ): Promise<T> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   try {
     const files: SecretFiles = {};
     if (secrets.token !== undefined) {

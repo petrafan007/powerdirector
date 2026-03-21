@@ -54,7 +54,7 @@ vi.mock("../cron/isolated-agent.js", () => ({
 import { buildGatewayCronService } from "./server-cron.js";
 
 function createCronConfig(name: string): PowerDirectorConfig {
-  const tmpDir = path.join(os.tmpdir(), `${name}-${Date.now()}`);
+  const tmpDir = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `${name}-${Date.now()}`);
   return {
     session: {
       mainKey: "main",
@@ -158,7 +158,7 @@ describe("buildGatewayCronService", () => {
   });
 
   it("passes custom session targets through to isolated cron runs", async () => {
-    const tmpDir = path.join(os.tmpdir(), `server-cron-custom-session-${Date.now()}`);
+    const tmpDir = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `server-cron-custom-session-${Date.now()}`);
     const cfg = {
       session: {
         mainKey: "main",

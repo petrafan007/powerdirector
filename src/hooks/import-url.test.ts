@@ -9,7 +9,7 @@ describe("buildImportUrl", () => {
   let tmpFile: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "import-url-test-"));
+    tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "import-url-test-"));
     tmpFile = path.join(tmpDir, "handler.js");
     fs.writeFileSync(tmpFile, "export default () => {};");
   });

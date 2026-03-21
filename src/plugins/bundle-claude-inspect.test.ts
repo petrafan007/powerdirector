@@ -15,7 +15,7 @@ describe("Claude bundle plugin inspect integration", () => {
   let rootDir: string;
 
   beforeAll(() => {
-    rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-claude-bundle-"));
+    rootDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-claude-bundle-"));
 
     // .claude-plugin/plugin.json
     const manifestDir = path.join(rootDir, ".claude-plugin");

@@ -45,7 +45,7 @@ describe("createHostWorkspaceEditTool host access mapping", () => {
   it.runIf(process.platform !== "win32")(
     "silently passes access for outside-workspace paths so readFile reports the real error",
     async () => {
-      tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-edit-access-test-"));
+      tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-edit-access-test-"));
       const workspaceDir = path.join(tmpDir, "workspace");
       const outsideDir = path.join(tmpDir, "outside");
       const linkDir = path.join(workspaceDir, "escape");

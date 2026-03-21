@@ -22,7 +22,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
       },
       agents: {
         defaults: {
-          workspace: os.tmpdir(),
+          workspace: ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
         },
       },
     }),

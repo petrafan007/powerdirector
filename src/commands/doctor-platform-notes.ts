@@ -11,7 +11,7 @@ import { shortenHomePath } from "../utils.js";
 const execFileAsync = promisify(execFile);
 
 function resolveHomeDir(): string {
-  return process.env.HOME ?? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
+  return process.env.HOME ?? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "");
 }
 
 export async function noteMacLaunchAgentOverrides() {

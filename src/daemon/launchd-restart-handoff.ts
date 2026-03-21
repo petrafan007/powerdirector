@@ -38,7 +38,7 @@ export function resolveLaunchdRestartTarget(
 ): LaunchdRestartTarget {
   const domain = resolveGuiDomain();
   const label = resolveLaunchAgentLabel(env);
-  const home = env.HOME?.trim() || ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
+  const home = env.HOME?.trim() || ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "");
   const plistPath = path.join(home, "Library", "LaunchAgents", `${label}.plist`);
   return {
     domain,

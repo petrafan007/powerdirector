@@ -139,7 +139,7 @@ function normalizeSources(
 }
 
 function resolveStorePath(agentId: string, raw?: string): string {
-    const fallback = path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".powerdirector", "memory", `${agentId}.sqlite`);
+    const fallback = path.join(((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""), ".powerdirector", "memory", `${agentId}.sqlite`);
     if (!raw) {
         return fallback;
     }

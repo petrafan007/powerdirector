@@ -100,7 +100,7 @@ export async function prepareCliBundleMcpConfig(params: {
     return { backend: params.backend };
   }
 
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-cli-mcp-"));
+  const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-cli-mcp-"));
   const mcpConfigPath = path.join(tempDir, "mcp.json");
   await fs.writeFile(mcpConfigPath, `${JSON.stringify(mergedConfig, null, 2)}\n`, "utf-8");
 

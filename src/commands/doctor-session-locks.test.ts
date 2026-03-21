@@ -19,7 +19,7 @@ describe("noteSessionLockHealth", () => {
   beforeEach(async () => {
     note.mockClear();
     envSnapshot = captureEnv(["POWERDIRECTOR_STATE_DIR"]);
-    root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-doctor-locks-"));
+    root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-doctor-locks-"));
     process.env.POWERDIRECTOR_STATE_DIR = root;
   });
 

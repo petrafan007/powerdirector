@@ -11,7 +11,7 @@ const tempDirs: string[] = [];
 const originalBundledDir = process.env.POWERDIRECTOR_BUNDLED_PLUGINS_DIR;
 
 async function createTempDir(prefix: string) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   tempDirs.push(dir);
   return dir;
 }

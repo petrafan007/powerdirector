@@ -85,7 +85,7 @@ describe("doctor state integrity oauth dir checks", () => {
 
   beforeEach(() => {
     envSnapshot = captureEnv();
-    tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-doctor-state-integrity-"));
+    tempHome = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-doctor-state-integrity-"));
     process.env.HOME = tempHome;
     process.env.POWERDIRECTOR_HOME = tempHome;
     process.env.POWERDIRECTOR_STATE_DIR = path.join(tempHome, ".powerdirector");

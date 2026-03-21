@@ -219,7 +219,7 @@ describe("runWithModelFallback – probe logic", () => {
     setLoggerOverride({
       level: "trace",
       consoleLevel: "silent",
-      file: path.join(os.tmpdir(), `powerdirector-model-fallback-probe-${Date.now()}.log`),
+      file: path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-model-fallback-probe-${Date.now()}.log`),
     });
     unregisterLogTransport = registerLogTransport((record) => {
       records.push(record);

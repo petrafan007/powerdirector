@@ -65,7 +65,7 @@ describe("sessions_spawn depth + child limits", () => {
     resetSubagentRegistryForTests();
     callGatewayMock.mockClear();
     storeTemplatePath = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       `powerdirector-subagent-depth-${Date.now()}-${Math.random().toString(16).slice(2)}-{agentId}.json`,
     );
     configOverride = {

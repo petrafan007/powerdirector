@@ -25,7 +25,7 @@ type AuthSyncFixture = {
 };
 
 async function withAuthSyncFixture(run: (fixture: AuthSyncFixture) => Promise<void>) {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-models-list-auth-sync-"));
+  const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-models-list-auth-sync-"));
   try {
     const stateDir = path.join(root, "state");
     const agentDir = path.join(stateDir, "agents", "main", "agent");

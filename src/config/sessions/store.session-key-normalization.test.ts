@@ -30,7 +30,7 @@ describe("session store key normalization", () => {
   let storePath = "";
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-session-key-normalize-"));
+    tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-key-normalize-"));
     storePath = path.join(tempDir, "sessions.json");
     await fs.writeFile(storePath, "{}", "utf-8");
   });

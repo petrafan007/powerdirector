@@ -320,7 +320,7 @@ function resolveSharedServiceEnvironmentFields(
   const stateDir = env.POWERDIRECTOR_STATE_DIR;
   const configPath = env.POWERDIRECTOR_CONFIG_PATH;
   // Keep a usable temp directory for supervised services even when the host env omits TMPDIR.
-  const tmpDir = env.TMPDIR?.trim() || os.tmpdir();
+  const tmpDir = env.TMPDIR?.trim() || ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp");
   const proxyEnv = readServiceProxyEnvironment(env);
   // On macOS, launchd services don't inherit the shell environment, so Node's undici/fetch
   // cannot locate the system CA bundle. Default to /etc/ssl/cert.pem so TLS verification

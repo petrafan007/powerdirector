@@ -159,7 +159,7 @@ describe("resolvePreferredPowerDirectorTmpDir", () => {
     expect(tmpdir).not.toHaveBeenCalled();
   });
 
-  it("falls back to os.tmpdir()/powerdirector when /tmp/powerdirector is not a directory", () => {
+  it("falls back to ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp")/powerdirector when /tmp/powerdirector is not a directory", () => {
     const lstatSync = vi.fn(() => makeDirStat({ isDirectory: false, mode: 0o100644 }));
     const { resolved, tmpdir } = resolveWithMocks({ lstatSync });
 
@@ -167,7 +167,7 @@ describe("resolvePreferredPowerDirectorTmpDir", () => {
     expect(tmpdir).toHaveBeenCalled();
   });
 
-  it("falls back to os.tmpdir()/powerdirector when /tmp is not writable", () => {
+  it("falls back to ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp")/powerdirector when /tmp is not writable", () => {
     const accessSync = vi.fn((target: string) => {
       if (target === "/tmp") {
         throw new Error("read-only");

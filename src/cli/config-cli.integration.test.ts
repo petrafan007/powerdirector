@@ -58,7 +58,7 @@ function createExecDryRunBatch(params: { markerPath: string }) {
 
 describe("config cli integration", () => {
   it("supports batch-file dry-run and then writes real config changes", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-config-cli-int-"));
+    const tempDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-cli-int-"));
     const configPath = path.join(tempDir, "powerdirector.json");
     const batchPath = path.join(tempDir, "batch.json");
     const envSnapshot = captureEnv([
@@ -147,7 +147,7 @@ describe("config cli integration", () => {
   });
 
   it("keeps file unchanged when real-file dry-run fails and reports JSON error payload", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-config-cli-int-fail-"));
+    const tempDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-cli-int-fail-"));
     const configPath = path.join(tempDir, "powerdirector.json");
     const envSnapshot = captureEnv([
       "POWERDIRECTOR_CONFIG_PATH",
@@ -218,7 +218,7 @@ describe("config cli integration", () => {
   });
 
   it("skips exec provider execution during dry-run by default", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-config-cli-int-exec-skip-"));
+    const tempDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-cli-int-exec-skip-"));
     const configPath = path.join(tempDir, "powerdirector.json");
     const batchPath = path.join(tempDir, "batch.json");
     const markerPath = path.join(tempDir, "marker.txt");
@@ -273,7 +273,7 @@ describe("config cli integration", () => {
   });
 
   it("executes exec providers during dry-run when --allow-exec is set", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-config-cli-int-exec-allow-"));
+    const tempDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-cli-int-exec-allow-"));
     const configPath = path.join(tempDir, "powerdirector.json");
     const batchPath = path.join(tempDir, "batch.json");
     const markerPath = path.join(tempDir, "marker.txt");

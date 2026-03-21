@@ -131,7 +131,7 @@ describe("web media loading", () => {
     // Also keep it outside the PowerDirector temp root so default localRoots doesn't accidentally make all state readable.
     stateDirSnapshot = captureEnv(["POWERDIRECTOR_STATE_DIR"]);
     process.env.POWERDIRECTOR_STATE_DIR = path.join(
-      path.parse(os.tmpdir()).root,
+      path.parse(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp")).root,
       "var",
       "lib",
       "powerdirector-media-state-test",

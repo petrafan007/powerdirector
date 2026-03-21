@@ -16,7 +16,7 @@ describe("log file size cap", () => {
   let logPath = "";
 
   beforeEach(() => {
-    logPath = path.join(os.tmpdir(), `powerdirector-log-cap-${crypto.randomUUID()}.log`);
+    logPath = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-log-cap-${crypto.randomUUID()}.log`);
     resetLogger();
     setLoggerOverride(null);
   });

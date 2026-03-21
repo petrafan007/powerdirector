@@ -32,7 +32,7 @@ describe("Session Store Cache", () => {
   let storePath: string;
 
   beforeAll(() => {
-    fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "session-cache-test-"));
+    fixtureRoot = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "session-cache-test-"));
   });
 
   afterAll(() => {

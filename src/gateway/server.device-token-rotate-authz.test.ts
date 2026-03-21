@@ -26,7 +26,7 @@ import {
 installGatewayTestHooks({ scope: "suite" });
 
 function resolveDeviceIdentityPath(name: string): string {
-  const root = process.env.POWERDIRECTOR_STATE_DIR ?? process.env.HOME ?? os.tmpdir();
+  const root = process.env.POWERDIRECTOR_STATE_DIR ?? process.env.HOME ?? ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp");
   return path.join(root, "test-device-identities", `${name}.json`);
 }
 

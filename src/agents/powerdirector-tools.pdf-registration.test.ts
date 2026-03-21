@@ -7,7 +7,7 @@ import "./test-helpers/fast-core-tools.js";
 import { createPowerDirectorTools } from "./powerdirector-tools.js";
 
 async function withTempAgentDir<T>(run: (agentDir: string) => Promise<T>): Promise<T> {
-  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-tools-pdf-"));
+  const agentDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-tools-pdf-"));
   try {
     return await run(agentDir);
   } finally {

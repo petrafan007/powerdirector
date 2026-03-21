@@ -12,7 +12,7 @@ afterEach(() => {
 
 describe("ConfigManager workspace validation", () => {
   it("rejects section updates that place the workspace inside the checkout", async () => {
-    const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-config-manager-"));
+    const repoRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-manager-"));
     await fs.mkdir(path.join(repoRoot, ".git"));
     await fs.writeFile(path.join(repoRoot, "powerdirector.config.json"), "{}\n", "utf-8");
     process.chdir(repoRoot);

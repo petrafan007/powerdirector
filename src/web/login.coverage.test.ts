@@ -9,7 +9,7 @@ import { createWaSocket, formatError, waitForWaConnection } from "./session.js";
 const rmMock = vi.spyOn(fs, "rm");
 
 function resolveTestAuthDir() {
-  return path.join(os.tmpdir(), "wa-creds");
+  return path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "wa-creds");
 }
 
 const authDir = resolveTestAuthDir();

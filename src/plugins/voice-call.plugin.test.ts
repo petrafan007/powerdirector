@@ -181,7 +181,7 @@ describe("voice-call plugin", () => {
 
   it("CLI latency summarizes turn metrics from JSONL", async () => {
     const program = new Command();
-    const tmpFile = path.join(os.tmpdir(), `voicecall-latency-${Date.now()}.jsonl`);
+    const tmpFile = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `voicecall-latency-${Date.now()}.jsonl`);
     fs.writeFileSync(
       tmpFile,
       [

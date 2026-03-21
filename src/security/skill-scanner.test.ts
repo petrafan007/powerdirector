@@ -18,7 +18,7 @@ import {
 const tmpDirs: string[] = [];
 
 function makeTmpDir(): string {
-  const dir = fsSync.mkdtempSync(path.join(os.tmpdir(), "skill-scanner-test-"));
+  const dir = fsSync.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "skill-scanner-test-"));
   tmpDirs.push(dir);
   return dir;
 }

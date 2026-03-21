@@ -150,7 +150,7 @@ describe("gateway auth compatibility baseline", () => {
 
     test("keeps local backend device-token reconnects out of pairing", async () => {
       const identityPath = path.join(
-        os.tmpdir(),
+        ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
         `powerdirector-backend-device-${process.pid}-${port}.json`,
       );
       const { loadOrCreateDeviceIdentity, publicKeyRawBase64UrlFromPem } =

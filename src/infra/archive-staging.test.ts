@@ -14,7 +14,7 @@ import {
 const directorySymlinkType = process.platform === "win32" ? "junction" : undefined;
 
 async function withTempDir(prefix: string, run: (dir: string) => Promise<void>) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   try {
     await run(dir);
   } finally {

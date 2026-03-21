@@ -28,7 +28,7 @@ describe("resolveBundledSkillsDir", () => {
   it("resolves bundled skills under a flattened dist layout", async () => {
     delete process.env.POWERDIRECTOR_BUNDLED_SKILLS_DIR;
 
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-bundled-"));
+    const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-bundled-"));
     await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ name: "powerdirector" }));
 
     await writeSkill(path.join(root, "skills", "peekaboo"), "peekaboo");

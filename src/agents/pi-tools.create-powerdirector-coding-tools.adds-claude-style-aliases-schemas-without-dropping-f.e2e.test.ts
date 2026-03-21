@@ -7,7 +7,7 @@ import { createPowerDirectorCodingTools } from "./pi-tools.js";
 
 describe("createPowerDirectorCodingTools", () => {
   it("uses workspaceDir for Read tool path resolution", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-ws-"));
+    const tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-ws-"));
     try {
       // Create a test file in the "workspace"
       const testFile = "test-workspace-file.txt";
@@ -34,7 +34,7 @@ describe("createPowerDirectorCodingTools", () => {
     }
   });
   it("uses workspaceDir for Write tool path resolution", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-ws-"));
+    const tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-ws-"));
     try {
       const testFile = "test-write-file.txt";
       const testContent = "written via workspace path";
@@ -58,7 +58,7 @@ describe("createPowerDirectorCodingTools", () => {
     }
   });
   it("uses workspaceDir for Edit tool path resolution", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-ws-"));
+    const tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-ws-"));
     try {
       const testFile = "test-edit-file.txt";
       const originalContent = "hello world";
@@ -85,7 +85,7 @@ describe("createPowerDirectorCodingTools", () => {
     }
   });
   it("accepts Claude Code parameter aliases for read/write/edit", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-alias-"));
+    const tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-alias-"));
     try {
       const tools = createPowerDirectorCodingTools({ workspaceDir: tmpDir });
       const readTool = tools.find((tool) => tool.name === "read");
@@ -122,7 +122,7 @@ describe("createPowerDirectorCodingTools", () => {
   });
 
   it("coerces structured content blocks for write", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-structured-write-"));
+    const tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-structured-write-"));
     try {
       const tools = createPowerDirectorCodingTools({ workspaceDir: tmpDir });
       const writeTool = tools.find((tool) => tool.name === "write");
@@ -146,7 +146,7 @@ describe("createPowerDirectorCodingTools", () => {
   });
 
   it("coerces structured old/new text blocks for edit", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-structured-edit-"));
+    const tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-structured-edit-"));
     try {
       const filePath = path.join(tmpDir, "structured-edit.js");
       await fs.writeFile(filePath, "const value = 'old';\n", "utf8");

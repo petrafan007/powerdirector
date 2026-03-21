@@ -18,7 +18,7 @@ describe("resolvePowerDirectorAgentDir", () => {
   });
 
   it("defaults to the multi-agent path when no overrides are set", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-agent-"));
+    tempStateDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-agent-"));
     process.env.POWERDIRECTOR_STATE_DIR = tempStateDir;
     delete process.env.POWERDIRECTOR_AGENT_DIR;
     delete process.env.PI_CODING_AGENT_DIR;
@@ -29,7 +29,7 @@ describe("resolvePowerDirectorAgentDir", () => {
   });
 
   it("honors POWERDIRECTOR_AGENT_DIR overrides", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-agent-"));
+    tempStateDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-agent-"));
     const override = path.join(tempStateDir, "agent");
     process.env.POWERDIRECTOR_AGENT_DIR = override;
     delete process.env.PI_CODING_AGENT_DIR;

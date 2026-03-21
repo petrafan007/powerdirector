@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 function withFakeCli(versionOutput: string): { root: string; cliPath: string } {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-install-sh-"));
+  const root = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-install-sh-"));
   const cliPath = path.join(root, "powerdirector");
   const escapedOutput = versionOutput.replace(/'/g, "'\\''");
   fs.writeFileSync(
@@ -96,7 +96,7 @@ describe("install.sh version resolution", () => {
       const fixture = withFakeCli("PowerDirector 2026.3.10 (abcdef0)");
       tempRoots.push(fixture.root);
 
-      const hostileCwd = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-install-stdin-"));
+      const hostileCwd = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-install-stdin-"));
       tempRoots.push(hostileCwd);
       const hostileHelper = path.join(
         hostileCwd,

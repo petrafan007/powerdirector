@@ -15,7 +15,7 @@ const NOW_MS = Date.UTC(2026, 1, 10, 0, 0, 0);
 const tempDirs: string[] = [];
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-temporal-decay-"));
+  const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-temporal-decay-"));
   tempDirs.push(dir);
   return dir;
 }

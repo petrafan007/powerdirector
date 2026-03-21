@@ -10,7 +10,7 @@ describe("agent handler session create events", () => {
   let storePath: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-agent-create-event-"));
+    tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-agent-create-event-"));
     storePath = path.join(tempDir, "sessions.json");
     testState.sessionStorePath = storePath;
     await writeSessionStore({ entries: {} });

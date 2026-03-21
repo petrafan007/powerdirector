@@ -77,7 +77,7 @@ describe("runCapability video provider wiring", () => {
   });
 
   it("auto-selects moonshot for video when google is unavailable", async () => {
-    const isolatedAgentDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-video-agent-"));
+    const isolatedAgentDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-video-agent-"));
     try {
       await withEnvAsync(
         {

@@ -32,7 +32,7 @@ describe("sandbox fs bridge docker e2e", () => {
         return;
       }
 
-      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-fsbridge-e2e-"));
+      const stateDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-fsbridge-e2e-"));
       const workspaceDir = path.join(stateDir, "workspace");
       await fs.mkdir(workspaceDir, { recursive: true });
 

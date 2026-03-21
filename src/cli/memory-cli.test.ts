@@ -140,7 +140,7 @@ describe("memory cli", () => {
   }
 
   async function withQmdIndexDb(content: string, run: (dbPath: string) => Promise<void>) {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "memory-cli-qmd-index-"));
+    const tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "memory-cli-qmd-index-"));
     const dbPath = path.join(tmpDir, "index.sqlite");
     try {
       await fs.writeFile(dbPath, content, "utf-8");

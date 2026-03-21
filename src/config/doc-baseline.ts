@@ -465,8 +465,8 @@ async function loadBundledConfigSchemaResponse(): Promise<ConfigSchemaResponse> 
   const repoRoot = resolveRepoRoot();
   const env = {
     ...process.env,
-    HOME: os.tmpdir(),
-    POWERDIRECTOR_STATE_DIR: path.join(os.tmpdir(), "powerdirector-config-doc-baseline-state"),
+    HOME: ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
+    POWERDIRECTOR_STATE_DIR: path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-doc-baseline-state"),
     POWERDIRECTOR_BUNDLED_PLUGINS_DIR: path.join(repoRoot, "extensions"),
   };
 

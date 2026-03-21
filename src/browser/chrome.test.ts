@@ -109,7 +109,7 @@ describe("browser chrome profile decoration", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "powerdirector-chrome-suite-"));
+    fixtureRoot = await fsp.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-chrome-suite-"));
   });
 
   afterAll(async () => {

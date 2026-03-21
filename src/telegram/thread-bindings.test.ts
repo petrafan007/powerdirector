@@ -124,7 +124,7 @@ describe("telegram thread bindings", () => {
   });
 
   it("does not persist lifecycle updates when manager persistence is disabled", async () => {
-    stateDirOverride = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-telegram-bindings-"));
+    stateDirOverride = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-telegram-bindings-"));
     process.env.POWERDIRECTOR_STATE_DIR = stateDirOverride;
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-03-06T10:00:00.000Z"));
@@ -157,7 +157,7 @@ describe("telegram thread bindings", () => {
     });
 
     const statePath = path.join(
-      resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => ""))),
+      resolveStateDir(process.env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""))),
       "telegram",
       "thread-bindings-no-persist.json",
     );

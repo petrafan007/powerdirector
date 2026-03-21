@@ -24,7 +24,7 @@ describe("normalizeLegacyConfigValues", () => {
 
   beforeEach(() => {
     previousOauthDir = process.env.POWERDIRECTOR_OAUTH_DIR;
-    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-oauth-"));
+    tempOauthDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-oauth-"));
     process.env.POWERDIRECTOR_OAUTH_DIR = tempOauthDir;
   });
 
@@ -87,7 +87,7 @@ describe("normalizeLegacyConfigValues", () => {
   });
 
   it("copies legacy ack reaction when authDir override exists", () => {
-    const customDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-wa-auth-"));
+    const customDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-wa-auth-"));
     try {
       writeCreds(customDir);
 

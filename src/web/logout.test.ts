@@ -17,7 +17,7 @@ describe("web logout", () => {
   let logoutWeb: typeof import("./auth-store.js").logoutWeb;
 
   beforeAll(async () => {
-    fixtureRoot = await fsPromises.mkdtemp(path.join(os.tmpdir(), "powerdirector-test-web-logout-"));
+    fixtureRoot = await fsPromises.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-test-web-logout-"));
     ({ logoutWeb } = await import("./auth-store.js"));
   });
 

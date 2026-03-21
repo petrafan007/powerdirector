@@ -10,7 +10,7 @@ const originalBundledDir = process.env.POWERDIRECTOR_BUNDLED_PLUGINS_DIR;
 const originalVitest = process.env.VITEST;
 
 function makeRepoRoot(prefix: string): string {
-  const repoRoot = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+  const repoRoot = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   tempDirs.push(repoRoot);
   return repoRoot;
 }

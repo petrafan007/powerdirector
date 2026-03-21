@@ -391,7 +391,7 @@ export function detectMacCloudSyncedStateDir(
 
   // Cloud-sync roots should always be anchored to the OS account home on macOS.
   // POWERDIRECTOR_HOME can relocate app data defaults, but iCloud/CloudStorage remain under the OS home.
-  const homedir = deps?.homedir ?? (() => ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""));
+  const homedir = deps?.homedir ?? (() => ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""));
   const roots = [
     {
       storage: "iCloud Drive" as const,
@@ -488,7 +488,7 @@ export async function noteStateIntegrity(
   const warnings: string[] = [];
   const changes: string[] = [];
   const env = process.env;
-  const homedir = () => resolveRequiredHomeDir(env, () => ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""));
+  const homedir = () => resolveRequiredHomeDir(env, () => ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""));
   const stateDir = resolveStateDir(env, homedir);
   const defaultStateDir = path.join(homedir(), ".powerdirector");
   const oauthDir = resolveOAuthDir(env, homedir);

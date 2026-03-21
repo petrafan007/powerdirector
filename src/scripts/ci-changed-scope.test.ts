@@ -136,7 +136,7 @@ describe("detectChangedScope", () => {
 
   it("treats base and head as literal git args", () => {
     const markerPath = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       `powerdirector-ci-changed-scope-${Date.now()}-${Math.random().toString(16).slice(2)}.tmp`,
     );
     markerPaths.push(markerPath);

@@ -66,7 +66,7 @@ describe("sweepCronRunSessions", () => {
 
   beforeEach(async () => {
     resetReaperThrottle();
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cron-reaper-"));
+    tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "cron-reaper-"));
     storePath = path.join(tmpDir, "sessions.json");
   });
 
@@ -137,7 +137,7 @@ describe("sweepCronRunSessions", () => {
 
   it("does not archive external transcript paths for pruned runs", async () => {
     const now = Date.now();
-    const externalDir = fs.mkdtempSync(path.join(os.tmpdir(), "cron-reaper-external-"));
+    const externalDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "cron-reaper-external-"));
     const externalTranscript = path.join(externalDir, "outside.jsonl");
     fs.writeFileSync(externalTranscript, '{"type":"session"}\n');
     const store: Record<string, { sessionId: string; sessionFile?: string; updatedAt: number }> = {

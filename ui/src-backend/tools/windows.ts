@@ -63,7 +63,7 @@ export class WindowsTool implements Tool {
                 }
 
                 case 'screenshot': {
-                    const outputPath = args.outputPath || path.join(os.tmpdir(), `win-screenshot-${Date.now()}.png`);
+                    const outputPath = args.outputPath || path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `win-screenshot-${Date.now()}.png`);
                     const psScript = `
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing

@@ -264,7 +264,7 @@ describe("gateway auth browser hardening", () => {
           scopes: ["operator.admin"],
           clientId: TEST_OPERATOR_CLIENT.id,
           clientMode: TEST_OPERATOR_CLIENT.mode,
-          identityPath: path.join(os.tmpdir(), `powerdirector-browser-device-${randomUUID()}.json`),
+          identityPath: path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `powerdirector-browser-device-${randomUUID()}.json`),
           nonce: String(nonce ?? ""),
         });
         const res = await connectReq(browserWs, {

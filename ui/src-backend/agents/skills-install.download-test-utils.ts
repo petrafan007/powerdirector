@@ -13,7 +13,7 @@ export async function withTempWorkspace(
   run: (params: { workspaceDir: string; stateDir: string }) => Promise<void>,
 ) {
   const tempHome = await createTempHomeEnv("powerdirector-skills-install-home-");
-  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-skills-install-"));
+  const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-skills-install-"));
   try {
     const stateDir = setTempStateDir(workspaceDir);
     await run({ workspaceDir, stateDir });

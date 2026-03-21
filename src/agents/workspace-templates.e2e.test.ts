@@ -9,7 +9,7 @@ import {
 } from "./workspace-templates.js";
 
 async function makeTempRoot(): Promise<string> {
-  return await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-templates-"));
+  return await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-templates-"));
 }
 
 describe("resolveWorkspaceTemplateDir", () => {

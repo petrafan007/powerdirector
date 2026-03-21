@@ -360,7 +360,7 @@ describe("tryDispatchAcpReply", () => {
 
   it("forwards normalized image attachments into ACP turns", async () => {
     setReadyAcpResolution();
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "dispatch-acp-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "dispatch-acp-"));
     const imagePath = path.join(tempDir, "inbound.png");
     try {
       await fs.writeFile(imagePath, "image-bytes");
@@ -392,7 +392,7 @@ describe("tryDispatchAcpReply", () => {
 
   it("skips ACP turns for non-image attachments when there is no text prompt", async () => {
     setReadyAcpResolution();
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "dispatch-acp-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "dispatch-acp-"));
     const docPath = path.join(tempDir, "inbound.pdf");
     const { dispatcher } = createDispatcher();
     const onReplyStart = vi.fn();

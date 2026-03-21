@@ -23,14 +23,14 @@ const CONFIG_FILENAME = "powerdirector.config.json";
 const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function resolveDefaultHomeDir(): string {
-  return resolveRequiredHomeDir(process.env, () => ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""));
+  return resolveRequiredHomeDir(process.env, () => ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""));
 }
 
 /** Build a homedir thunk that respects POWERDIRECTOR_HOME for the given env. */
 function buildHomeDirResolver(env: NodeJS.ProcessEnv = process.env): () => string {
   const custom = env.POWERDIRECTOR_HOME?.trim();
   if (custom) {
-    const resolved = expandHomePrefix(custom, { homedir: (typeof os.homedir === "function" ? os.homedir : (() => "")) });
+    const resolved = expandHomePrefix(custom, { homedir: (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")) });
     return () => resolved;
   }
   return () => resolveDefaultHomeDir();
@@ -151,7 +151,7 @@ export function resolveDefaultConfigCandidates(
 
 export const DEFAULT_GATEWAY_PORT = 3012;
 
-export function resolveGatewayLockDir(tmpdir: () => string = os.tmpdir): string {
+export function resolveGatewayLockDir(tmpdir: () => string = ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))): string {
   return path.join(tmpdir(), "powerdirector-gateway-lock");
 }
 

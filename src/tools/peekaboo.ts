@@ -21,7 +21,7 @@ export class PeekabooTool implements Tool {
 
     async execute(args: any): Promise<ToolResult> {
         try {
-            const outputPath = args.outputPath || path.join(os.tmpdir(), `screenshot-${Date.now()}.png`);
+            const outputPath = args.outputPath || path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `screenshot-${Date.now()}.png`);
             const platform = os.platform();
 
             switch (args.action) {

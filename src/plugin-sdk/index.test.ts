@@ -71,8 +71,8 @@ describe("plugin-sdk exports", () => {
   });
 
   it("emits importable bundled subpath entries", { timeout: 240_000 }, async () => {
-    const outDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-plugin-sdk-build-"));
-    const fixtureDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-plugin-sdk-consumer-"));
+    const outDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-plugin-sdk-build-"));
+    const fixtureDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-plugin-sdk-consumer-"));
 
     try {
       const buildScriptPath = path.join(fixtureDir, "build-plugin-sdk.mjs");

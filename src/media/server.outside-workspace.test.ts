@@ -36,7 +36,7 @@ describe("media server outside-workspace mapping", () => {
   let port = 0;
 
   beforeAll(async () => {
-    mediaDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-media-outside-workspace-"));
+    mediaDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-media-outside-workspace-"));
     server = await startMediaServer(0, 1_000);
     port = (server.address() as AddressInfo).port;
   });

@@ -9,7 +9,7 @@ import { maybeRepairLegacyCronStore } from "./doctor-cron.js";
 let tempRoot: string | null = null;
 
 async function makeTempStorePath() {
-  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-doctor-cron-"));
+  tempRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-doctor-cron-"));
   return path.join(tempRoot, "cron", "jobs.json");
 }
 

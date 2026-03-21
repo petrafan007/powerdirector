@@ -8,7 +8,7 @@ export function createBundleMcpTempHarness() {
 
   return {
     async createTempDir(prefix: string): Promise<string> {
-      const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+      const dir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
       tempDirs.push(dir);
       return dir;
     },

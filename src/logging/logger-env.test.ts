@@ -9,7 +9,7 @@ import {
 } from "../logging.js";
 import { loggingState } from "./state.js";
 
-const testLogPath = path.join(os.tmpdir(), "powerdirector-test-env-log-level.log");
+const testLogPath = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-test-env-log-level.log");
 const defaultMaxFileBytes = 500 * 1024 * 1024;
 
 describe("POWERDIRECTOR_LOG_LEVEL", () => {

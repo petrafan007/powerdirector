@@ -43,7 +43,7 @@ async function withBrokenArchiveFixture(
   },
   run: (archivePath: string) => Promise<void>,
 ) {
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), options.tempPrefix));
+  const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), options.tempPrefix));
   const archivePath = path.join(tempDir, "broken.tar.gz");
   const manifestPath = path.join(tempDir, "manifest.json");
   const payloadSpecs = await Promise.all(
@@ -107,7 +107,7 @@ describe("backupVerifyCommand", () => {
 
   it("verifies an archive created by backup create", async () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-verify-out-"));
+    const archiveDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-verify-out-"));
     try {
       await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");
       await fs.writeFile(path.join(stateDir, "state.txt"), "hello\n", "utf8");
@@ -126,7 +126,7 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the archive does not contain a manifest", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-no-manifest-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-no-manifest-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     try {
       const root = path.join(tempDir, "root");
@@ -144,7 +144,7 @@ describe("backupVerifyCommand", () => {
   });
 
   it("fails when the manifest references a missing asset payload", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-missing-asset-"));
+    const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-missing-asset-"));
     const archivePath = path.join(tempDir, "broken.tar.gz");
     try {
       const rootName = "2026-03-09T00-00-00.000Z-powerdirector-backup";
@@ -216,9 +216,9 @@ describe("backupVerifyCommand", () => {
 
   it("ignores payload manifest.json files when locating the backup manifest", async () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
-    const externalWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-workspace-"));
+    const externalWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-workspace-"));
     const configPath = path.join(tempHome.home, "custom-config.json");
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-verify-out-"));
+    const archiveDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-verify-out-"));
     try {
       process.env.POWERDIRECTOR_CONFIG_PATH = configPath;
       await fs.writeFile(

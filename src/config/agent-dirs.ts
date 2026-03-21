@@ -72,7 +72,7 @@ function resolveEffectiveAgentDir(
   const env = deps?.env ?? process.env;
   const root = resolveStateDir(
     env,
-    deps?.homedir ?? (() => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => "")))),
+    deps?.homedir ?? (() => resolveRequiredHomeDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")))),
   );
   return path.join(root, "agents", id, "agent");
 }

@@ -30,7 +30,7 @@ function useTempSessionsFixture(prefix: string) {
   let sessionsDir = "";
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+    tempDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
     sessionsDir = path.join(tempDir, "agents", "main", "sessions");
     fs.mkdirSync(sessionsDir, { recursive: true });
     storePath = path.join(sessionsDir, "sessions.json");
@@ -83,7 +83,7 @@ describe("session path safety", () => {
     if (process.platform === "win32") {
       return;
     }
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-symlink-session-"));
+    const tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-symlink-session-"));
     const realRoot = path.join(tmpDir, "real-state");
     const aliasRoot = path.join(tmpDir, "alias-state");
     try {
@@ -105,7 +105,7 @@ describe("session path safety", () => {
     if (process.platform === "win32") {
       return;
     }
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-symlink-escape-"));
+    const tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-symlink-escape-"));
     const sessionsDir = path.join(tmpDir, "agents", "main", "sessions");
     const outsideDir = path.join(tmpDir, "outside");
     try {
@@ -196,7 +196,7 @@ describe("session store lock (Promise chain mutex)", () => {
   }
 
   beforeAll(async () => {
-    lockFixtureRoot = await fsPromises.mkdtemp(path.join(os.tmpdir(), "powerdirector-lock-test-"));
+    lockFixtureRoot = await fsPromises.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-lock-test-"));
   });
 
   afterAll(async () => {

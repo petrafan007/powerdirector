@@ -36,7 +36,7 @@ function resolveSubagentStateDir(env: NodeJS.ProcessEnv = process.env): string {
     return resolveStateDir(env);
   }
   if (env.VITEST || env.NODE_ENV === "test") {
-    return path.join(os.tmpdir(), "powerdirector-test-state", String(process.pid));
+    return path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-test-state", String(process.pid));
   }
   return resolveStateDir(env);
 }

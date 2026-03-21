@@ -122,7 +122,7 @@ function hashBotIdentity(botIdentity?: string): string {
 }
 
 function resolveCommandHashPath(accountId?: string, botIdentity?: string): string {
-  const stateDir = resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
+  const stateDir = resolveStateDir(process.env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")));
   const normalizedAccount = accountId?.trim().replace(/[^a-z0-9._-]+/gi, "_") || "default";
   const botHash = hashBotIdentity(botIdentity);
   return path.join(stateDir, "telegram", `command-hash-${normalizedAccount}-${botHash}.txt`);

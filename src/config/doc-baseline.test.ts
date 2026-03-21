@@ -119,7 +119,7 @@ describe("config doc baseline", () => {
   });
 
   it("supports check mode for stale generated artifacts", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-config-doc-baseline-"));
+    const tempRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-config-doc-baseline-"));
     tempRoots.push(tempRoot);
 
     const initial = await writeConfigDocBaselineStatefile({

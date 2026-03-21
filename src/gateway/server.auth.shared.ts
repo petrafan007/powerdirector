@@ -35,7 +35,7 @@ function nextAuthIdentityPath(prefix: string): string {
     "-" +
     String(authIdentityPathSeq++) +
     ".json";
-  return path.join(os.tmpdir(), fileName);
+  return path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), fileName);
 }
 
 async function waitForWsClose(ws: WebSocket, timeoutMs: number): Promise<boolean> {

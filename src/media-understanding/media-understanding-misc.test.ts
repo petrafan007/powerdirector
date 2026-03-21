@@ -25,7 +25,7 @@ describe("media understanding scope", () => {
 const originalFetch = globalThis.fetch;
 
 async function withTempRoot<T>(prefix: string, run: (base: string) => Promise<T>): Promise<T> {
-  const base = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const base = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   try {
     return await run(base);
   } finally {

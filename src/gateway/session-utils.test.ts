@@ -194,7 +194,7 @@ describe("gateway session utils", () => {
 
   test("resolveGatewaySessionStoreTarget uses canonical key for main alias", () => {
     const storeTemplate = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       "powerdirector-session-utils",
       "{agentId}",
       "sessions.json",
@@ -210,7 +210,7 @@ describe("gateway session utils", () => {
   });
 
   test("resolveGatewaySessionStoreTarget includes legacy mixed-case store key", () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "session-utils-case-"));
+    const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "session-utils-case-"));
     const storePath = path.join(dir, "sessions.json");
     // Simulate a legacy store with a mixed-case key
     fs.writeFileSync(
@@ -236,7 +236,7 @@ describe("gateway session utils", () => {
   });
 
   test("resolveGatewaySessionStoreTarget includes all case-variant duplicate keys", () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "session-utils-dupes-"));
+    const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "session-utils-dupes-"));
     const storePath = path.join(dir, "sessions.json");
     // Simulate a store with both canonical and legacy mixed-case entries
     fs.writeFileSync(
@@ -259,7 +259,7 @@ describe("gateway session utils", () => {
   });
 
   test("resolveGatewaySessionStoreTarget finds legacy main alias key when mainKey is customized", () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "session-utils-alias-"));
+    const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "session-utils-alias-"));
     const storePath = path.join(dir, "sessions.json");
     // Legacy store has entry under "agent:ops:MAIN" but mainKey is "work"
     fs.writeFileSync(
@@ -353,7 +353,7 @@ describe("gateway session utils", () => {
   });
 
   test("listAgentsForGateway rejects avatar symlink escapes outside workspace", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "session-utils-avatar-outside-"));
+    const root = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "session-utils-avatar-outside-"));
     const workspace = path.join(root, "workspace");
     fs.mkdirSync(workspace, { recursive: true });
     const outsideFile = path.join(root, "outside.txt");
@@ -370,7 +370,7 @@ describe("gateway session utils", () => {
   });
 
   test("listAgentsForGateway allows avatar symlinks that stay inside workspace", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "session-utils-avatar-inside-"));
+    const root = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "session-utils-avatar-inside-"));
     const workspace = path.join(root, "workspace");
     fs.mkdirSync(path.join(workspace, "avatars"), { recursive: true });
     const targetPath = path.join(workspace, "avatars", "actual.png");
@@ -879,7 +879,7 @@ describe("listSessionsFromStore search", () => {
   });
 
   test("prefers persisted estimated session cost from the store", () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-session-utils-store-cost-"));
+    const tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-utils-store-cost-"));
     const storePath = path.join(tmpDir, "sessions.json");
     fs.writeFileSync(
       path.join(tmpDir, "sess-main.jsonl"),
@@ -968,7 +968,7 @@ describe("listSessionsFromStore search", () => {
   });
 
   test("falls back to transcript usage for totalTokens and zero estimatedCostUsd", () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-session-utils-zero-cost-"));
+    const tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-utils-zero-cost-"));
     const storePath = path.join(tmpDir, "sessions.json");
     fs.writeFileSync(
       path.join(tmpDir, "sess-main.jsonl"),
@@ -1021,7 +1021,7 @@ describe("listSessionsFromStore search", () => {
   });
 
   test("falls back to transcript usage for totalTokens and estimatedCostUsd, and derives contextTokens from the resolved model", () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-session-utils-"));
+    const tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-utils-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const cfg = {
       session: { mainKey: "main" },
@@ -1086,7 +1086,7 @@ describe("listSessionsFromStore search", () => {
   });
 
   test("uses subagent run model immediately for child sessions while transcript usage fills live totals", () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-session-utils-subagent-"));
+    const tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-session-utils-subagent-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const now = Date.now();
     const cfg = {

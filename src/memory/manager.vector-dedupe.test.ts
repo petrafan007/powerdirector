@@ -47,7 +47,7 @@ describe("memory vector dedupe", () => {
     vi.resetModules();
     ({ buildFileEntry } = await import("./internal.js"));
     ({ createMemoryManagerOrThrow } = await import("./test-manager.js"));
-    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-mem-"));
+    workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-mem-"));
     indexPath = path.join(workspaceDir, "index.sqlite");
     await seedMemoryWorkspace(workspaceDir);
   });

@@ -18,7 +18,7 @@ import {
 function setupTempDirLifecycle(prefix: string): () => string {
   let tmpDir = "";
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+    tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   });
   afterEach(async () => {
     await fs.rm(tmpDir, { recursive: true, force: true });
@@ -28,7 +28,7 @@ function setupTempDirLifecycle(prefix: string): () => string {
 
 describe("normalizeExtraMemoryPaths", () => {
   it("trims, resolves, and dedupes paths", () => {
-    const workspaceDir = path.join(os.tmpdir(), "memory-test-workspace");
+    const workspaceDir = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "memory-test-workspace");
     const absPath = path.resolve(path.sep, "shared-notes");
     const result = normalizeExtraMemoryPaths(workspaceDir, [
       " notes ",

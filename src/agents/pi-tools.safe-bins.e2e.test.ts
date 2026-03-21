@@ -10,7 +10,7 @@ const bundledPluginsDirSnapshot = captureEnv(["POWERDIRECTOR_BUNDLED_PLUGINS_DIR
 
 beforeAll(() => {
   process.env.POWERDIRECTOR_BUNDLED_PLUGINS_DIR = path.join(
-    os.tmpdir(),
+    ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
     "powerdirector-test-no-bundled-extensions",
   );
 });
@@ -89,7 +89,7 @@ async function createSafeBinsExecTool(params: {
   files?: Array<{ name: string; contents: string }>;
 }): Promise<{ tmpDir: string; execTool: ExecTool }> {
   const { createPowerDirectorCodingTools } = await import("./pi-tools.js");
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), params.tmpPrefix));
+  const tmpDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), params.tmpPrefix));
   for (const file of params.files ?? []) {
     fs.writeFileSync(path.join(tmpDir, file.name), file.contents, "utf8");
   }

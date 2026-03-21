@@ -18,7 +18,7 @@ export function createTrackedTempDirs() {
       return await pending;
     }
     const create = (async () => {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+      const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
       const state = { root, nextIndex: 0 };
       prefixRoots.set(prefix, state);
       cleanupRoots.add(root);

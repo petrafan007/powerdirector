@@ -26,7 +26,7 @@ const baseRequest: ExecApprovalRequest = {
 };
 
 function createTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-exec-approval-session-target-"));
+  const dir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-exec-approval-session-target-"));
   tempDirs.push(dir);
   return dir;
 }

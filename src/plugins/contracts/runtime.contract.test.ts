@@ -706,7 +706,7 @@ describe("provider runtime contract", () => {
 
     it("falls back to legacy pi auth tokens for usage auth", async () => {
       const provider = requireProviderContractProvider("zai");
-      const home = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-zai-contract-"));
+      const home = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-zai-contract-"));
       await fs.mkdir(path.join(home, ".pi", "agent"), { recursive: true });
       await fs.writeFile(
         path.join(home, ".pi", "agent", "auth.json"),

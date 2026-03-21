@@ -469,7 +469,7 @@ export async function autoMigrateLegacyStateDir(params: {
     return { migrated: false, skipped: true, changes: [], warnings: [] };
   }
 
-  const homedir = params.homedir ?? (typeof os.homedir === "function" ? os.homedir : (() => ""));
+  const homedir = params.homedir ?? (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""));
   const targetDir = resolveNewStateDir(homedir);
   const legacyDirs = resolveLegacyStateDirs(homedir);
   let legacyDir = legacyDirs.find((dir) => {
@@ -607,7 +607,7 @@ export async function detectLegacyStateMigrations(params: {
   homedir?: () => string;
 }): Promise<LegacyStateDetection> {
   const env = params.env ?? process.env;
-  const homedir = params.homedir ?? (typeof os.homedir === "function" ? os.homedir : (() => ""));
+  const homedir = params.homedir ?? (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => ""));
   const stateDir = resolveStateDir(env, homedir);
   const oauthDir = resolveOAuthDir(env, stateDir);
 

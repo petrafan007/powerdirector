@@ -217,7 +217,7 @@ describe("loadWorkspaceBootstrapFiles", () => {
     if (process.platform === "win32") {
       return;
     }
-    const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-workspace-hardlink-"));
+    const rootDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-workspace-hardlink-"));
     try {
       const workspaceDir = path.join(rootDir, "workspace");
       const outsideDir = path.join(rootDir, "outside");

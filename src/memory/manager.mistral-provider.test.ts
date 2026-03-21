@@ -75,7 +75,7 @@ describe("memory manager mistral provider wiring", () => {
   beforeEach(async () => {
     vi.clearAllMocks();
     createEmbeddingProviderMock.mockReset();
-    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-memory-mistral-"));
+    workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-memory-mistral-"));
     indexPath = path.join(workspaceDir, "index.sqlite");
     await fs.mkdir(path.join(workspaceDir, "memory"), { recursive: true });
     await fs.writeFile(path.join(workspaceDir, "MEMORY.md"), "test");

@@ -50,7 +50,7 @@ function createConfig(): PowerDirectorConfig {
 function createSession() {
   return {
     command: "ssh",
-    configPath: path.join(os.tmpdir(), "powerdirector-test-ssh-config"),
+    configPath: path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-test-ssh-config"),
     host: "powerdirector-sandbox",
   };
 }

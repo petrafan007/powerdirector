@@ -19,7 +19,7 @@ describe("powerdirector-tools: subagents steer failure", () => {
     resetSubagentRegistryForTests();
     callGatewayMock.mockClear();
     const storePath = path.join(
-      os.tmpdir(),
+      ((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"),
       `powerdirector-subagents-steer-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     setSubagentsConfigOverride({

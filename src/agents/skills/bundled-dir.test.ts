@@ -19,7 +19,7 @@ describe("resolveBundledSkillsDir", () => {
   });
 
   it("returns POWERDIRECTOR_BUNDLED_SKILLS_DIR override when set", async () => {
-    const overrideDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-bundled-override-"));
+    const overrideDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-bundled-override-"));
     process.env.POWERDIRECTOR_BUNDLED_SKILLS_DIR = ` ${overrideDir} `;
     expect(resolveBundledSkillsDir()).toBe(overrideDir);
   });
@@ -27,7 +27,7 @@ describe("resolveBundledSkillsDir", () => {
   it("resolves bundled skills under a flattened dist layout", async () => {
     delete process.env.POWERDIRECTOR_BUNDLED_SKILLS_DIR;
 
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-bundled-"));
+    const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-bundled-"));
     await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ name: "powerdirector" }));
 
     await writeSkill({

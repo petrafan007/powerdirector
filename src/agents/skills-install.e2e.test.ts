@@ -52,7 +52,7 @@ describe("installSkill code safety scanning", () => {
   });
 
   it("adds detailed warnings for critical findings and continues install", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-skills-install-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-skills-install-"));
     try {
       const skillDir = await writeInstallableSkill(workspaceDir, "danger-skill");
       scanDirectoryWithSummaryMock.mockResolvedValue({
@@ -89,7 +89,7 @@ describe("installSkill code safety scanning", () => {
   });
 
   it("warns and continues when skill scan fails", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-skills-install-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-skills-install-"));
     try {
       await writeInstallableSkill(workspaceDir, "scanfail-skill");
       scanDirectoryWithSummaryMock.mockRejectedValue(new Error("scanner exploded"));

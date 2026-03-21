@@ -31,7 +31,7 @@ async function loadDevTemplate(name: string, fallback: string): Promise<string> 
 }
 
 const resolveDevWorkspaceDir = (env: NodeJS.ProcessEnv = process.env): string => {
-  const baseDir = resolveDefaultAgentWorkspaceDir(env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
+  const baseDir = resolveDefaultAgentWorkspaceDir(env, (typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function" ? ((typeof os.homedir === "function") ? os.homedir : (() => "")) : (() => "")));
   const profile = env.POWERDIRECTOR_PROFILE?.trim().toLowerCase();
   if (profile === "dev") {
     return baseDir;

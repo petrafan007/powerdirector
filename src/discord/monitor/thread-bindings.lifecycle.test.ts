@@ -455,7 +455,7 @@ describe("thread binding lifecycle", () => {
   it("persists touched activity timestamps across restart when persistence is enabled", async () => {
     vi.useFakeTimers();
     const previousStateDir = process.env.POWERDIRECTOR_STATE_DIR;
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-thread-bindings-"));
+    const stateDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-thread-bindings-"));
     process.env.POWERDIRECTOR_STATE_DIR = stateDir;
     try {
       __testing.resetThreadBindingsForTests();
@@ -1149,7 +1149,7 @@ describe("thread binding lifecycle", () => {
 
   it("migrates legacy expiresAt bindings to idle/max-age semantics", () => {
     const previousStateDir = process.env.POWERDIRECTOR_STATE_DIR;
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-thread-bindings-"));
+    const stateDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-thread-bindings-"));
     process.env.POWERDIRECTOR_STATE_DIR = stateDir;
     try {
       __testing.resetThreadBindingsForTests();
@@ -1247,7 +1247,7 @@ describe("thread binding lifecycle", () => {
 
   it("persists unbinds even when no manager is active", () => {
     const previousStateDir = process.env.POWERDIRECTOR_STATE_DIR;
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-thread-bindings-"));
+    const stateDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-thread-bindings-"));
     process.env.POWERDIRECTOR_STATE_DIR = stateDir;
     try {
       __testing.resetThreadBindingsForTests();

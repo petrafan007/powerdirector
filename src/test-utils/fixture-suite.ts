@@ -8,7 +8,7 @@ export function createFixtureSuite(rootPrefix: string) {
 
   return {
     async setup(): Promise<void> {
-      fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), rootPrefix));
+      fixtureRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), rootPrefix));
     },
     async cleanup(): Promise<void> {
       if (!fixtureRoot) {

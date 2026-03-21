@@ -32,7 +32,7 @@ describe("backupCreateCommand atomic archive write", () => {
 
   it("does not leave a partial final archive behind when tar creation fails", async () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-failure-"));
+    const archiveDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-failure-"));
     try {
       await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");
       await fs.writeFile(path.join(stateDir, "state.txt"), "state\n", "utf8");
@@ -62,7 +62,7 @@ describe("backupCreateCommand atomic archive write", () => {
 
   it("does not overwrite an archive created after readiness checks complete", async () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-race-"));
+    const archiveDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-race-"));
     const realLink = fs.link.bind(fs);
     const linkSpy = vi.spyOn(fs, "link");
     try {
@@ -99,7 +99,7 @@ describe("backupCreateCommand atomic archive write", () => {
 
   it("falls back to exclusive copy when hard-link publication is unsupported", async () => {
     const stateDir = path.join(tempHome.home, ".powerdirector");
-    const archiveDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-backup-copy-fallback-"));
+    const archiveDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-backup-copy-fallback-"));
     const linkSpy = vi.spyOn(fs, "link");
     try {
       await fs.writeFile(path.join(stateDir, "powerdirector.json"), JSON.stringify({}), "utf8");

@@ -44,7 +44,7 @@ const skillCommandDebugOnce = new Set<string>();
  * Saves ~5–6 tokens per skill path × N skills ≈ 400–600 tokens total.
  */
 function compactSkillPaths(skills: Skill[]): Skill[] {
-  const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
+  const home = ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : "");
   if (!home) return skills;
   const prefix = home.endsWith(path.sep) ? home : home + path.sep;
   return skills.map((s) => ({
@@ -472,7 +472,7 @@ function loadSkillEntries(
     dir: managedSkillsDir,
     source: "powerdirector-managed",
   });
-  const personalAgentsSkillsDir = path.resolve(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".agents", "skills");
+  const personalAgentsSkillsDir = path.resolve(((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""), ".agents", "skills");
   const personalAgentsSkills = loadSkills({
     dir: personalAgentsSkillsDir,
     source: "agents-skills-personal",

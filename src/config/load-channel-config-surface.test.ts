@@ -7,7 +7,7 @@ import { loadChannelConfigSurfaceModule } from "../../scripts/load-channel-confi
 const tempDirs: string[] = [];
 
 function makeTempRoot(prefix: string): string {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+  const root = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   tempDirs.push(root);
   return root;
 }

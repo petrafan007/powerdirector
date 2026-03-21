@@ -21,7 +21,7 @@ export async function withStateDirEnv<T>(
   fn: (ctx: { tempRoot: string; stateDir: string }) => Promise<T>,
 ): Promise<T> {
   const snapshot = snapshotStateDirEnv();
-  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const tempRoot = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   const stateDir = path.join(tempRoot, "state");
   await fs.mkdir(stateDir, { recursive: true });
   setStateDirEnv(stateDir);

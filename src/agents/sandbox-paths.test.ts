@@ -7,7 +7,7 @@ import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-
 import { resolveSandboxedMediaSource } from "./sandbox-paths.js";
 
 async function withSandboxRoot<T>(run: (sandboxDir: string) => Promise<T>) {
-  const sandboxDir = await fs.mkdtemp(path.join(os.tmpdir(), "sandbox-media-"));
+  const sandboxDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "sandbox-media-"));
   try {
     return await run(sandboxDir);
   } finally {
@@ -149,7 +149,7 @@ describe("resolveSandboxedMediaSource", () => {
     },
     {
       name: "absolute paths under host tmp outside powerdirector tmp root",
-      media: path.join(os.tmpdir(), "outside-powerdirector", "passwd"),
+      media: path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "outside-powerdirector", "passwd"),
       expected: /sandbox/i,
     },
     {

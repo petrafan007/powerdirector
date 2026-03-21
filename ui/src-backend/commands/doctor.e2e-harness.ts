@@ -399,7 +399,7 @@ beforeEach(() => {
   originalStateDir = process.env.POWERDIRECTOR_STATE_DIR;
   originalUpdateInProgress = process.env.POWERDIRECTOR_UPDATE_IN_PROGRESS;
   process.env.POWERDIRECTOR_UPDATE_IN_PROGRESS = "1";
-  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-doctor-state-"));
+  tempStateDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-doctor-state-"));
   process.env.POWERDIRECTOR_STATE_DIR = tempStateDir;
   fs.mkdirSync(path.join(tempStateDir, "agents", "main", "sessions"), {
     recursive: true,

@@ -14,8 +14,8 @@ describe("skills-cli (e2e)", () => {
 
   beforeAll(() => {
     envSnapshot = captureEnv(["POWERDIRECTOR_BUNDLED_SKILLS_DIR"]);
-    tempWorkspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-skills-test-"));
-    tempBundledDir = fs.mkdtempSync(path.join(os.tmpdir(), "powerdirector-bundled-skills-test-"));
+    tempWorkspaceDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-skills-test-"));
+    tempBundledDir = fs.mkdtempSync(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-bundled-skills-test-"));
     process.env.POWERDIRECTOR_BUNDLED_SKILLS_DIR = tempBundledDir;
   });
 

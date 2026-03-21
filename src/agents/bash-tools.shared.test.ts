@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { resolveSandboxWorkdir } from "./bash-tools.shared.js";
 
 async function withTempDir(run: (dir: string) => Promise<void>) {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "powerdirector-bash-workdir-"));
+  const dir = await mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-bash-workdir-"));
   try {
     await run(dir);
   } finally {

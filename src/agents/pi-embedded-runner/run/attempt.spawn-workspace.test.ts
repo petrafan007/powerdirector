@@ -392,11 +392,11 @@ describe("runEmbeddedAttempt sessions_spawn workspace inheritance", () => {
   });
 
   it("passes the real workspace to sessions_spawn when workspaceAccess is ro", async () => {
-    const realWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-real-workspace-"));
+    const realWorkspace = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-real-workspace-"));
     const sandboxWorkspace = await fs.mkdtemp(
-      path.join(os.tmpdir(), "powerdirector-sandbox-workspace-"),
+      path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-sandbox-workspace-"),
     );
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-agent-dir-"));
+    const agentDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-agent-dir-"));
     tempPaths.push(realWorkspace, sandboxWorkspace, agentDir);
 
     hoisted.resolveSandboxContextMock.mockResolvedValue(
@@ -486,8 +486,8 @@ describe("runEmbeddedAttempt bootstrap warning prompt assembly", () => {
   });
 
   it("keeps bootstrap warnings in the sent prompt after hook prepend context", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-warning-workspace-"));
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-warning-agent-dir-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-warning-workspace-"));
+    const agentDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-warning-agent-dir-"));
     const sessionFile = path.join(workspaceDir, "session.jsonl");
     tempPaths.push(workspaceDir, agentDir);
     await fs.writeFile(sessionFile, "", "utf8");
@@ -568,8 +568,8 @@ describe("runEmbeddedAttempt cache-ttl tracking after compaction", () => {
   });
 
   async function runAttemptWithCacheTtl(compactionCount: number) {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-cache-ttl-workspace-"));
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-cache-ttl-agent-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-cache-ttl-workspace-"));
+    const agentDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-cache-ttl-agent-"));
     const sessionFile = path.join(workspaceDir, "session.jsonl");
     tempPaths.push(workspaceDir, agentDir);
     await fs.writeFile(sessionFile, "", "utf8");
@@ -705,8 +705,8 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     }) => Promise<CompactResult>;
     info?: Partial<ContextEngineInfo>;
   }) {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-ctx-engine-workspace-"));
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-ctx-engine-agent-"));
+    const workspaceDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-ctx-engine-workspace-"));
+    const agentDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-ctx-engine-agent-"));
     const sessionFile = path.join(workspaceDir, "session.jsonl");
     tempPaths.push(workspaceDir, agentDir);
     await fs.writeFile(sessionFile, "", "utf8");

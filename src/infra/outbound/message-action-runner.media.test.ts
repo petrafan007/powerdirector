@@ -29,7 +29,7 @@ const slackConfig = {
 } as PowerDirectorConfig;
 
 async function withSandbox(test: (sandboxDir: string) => Promise<void>) {
-  const sandboxDir = await fs.mkdtemp(path.join(os.tmpdir(), "msg-sandbox-"));
+  const sandboxDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "msg-sandbox-"));
   try {
     await test(sandboxDir);
   } finally {
@@ -183,7 +183,7 @@ describe("runMessageAction media behavior", () => {
     }) {
       await restoreRealMediaLoader();
 
-      const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), params.tempPrefix));
+      const tempDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), params.tempPrefix));
       try {
         const outsidePath = path.join(tempDir, "secret.txt");
         await fs.writeFile(outsidePath, "secret", "utf8");
@@ -388,7 +388,7 @@ describe("runMessageAction media behavior", () => {
     it("allows media paths under preferred PowerDirector tmp root", async () => {
       const tmpRoot = resolvePreferredPowerDirectorTmpDir();
       await fs.mkdir(tmpRoot, { recursive: true });
-      const sandboxDir = await fs.mkdtemp(path.join(os.tmpdir(), "msg-sandbox-"));
+      const sandboxDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "msg-sandbox-"));
       try {
         const tmpFile = path.join(tmpRoot, "test-media-image.png");
         const result = await runMessageAction({
@@ -409,7 +409,7 @@ describe("runMessageAction media behavior", () => {
           throw new Error("expected send result");
         }
         expect(result.sendResult?.mediaUrl).toBe(path.resolve(tmpFile));
-        const hostTmpOutsidePowerDirector = path.join(os.tmpdir(), "outside-powerdirector", "test-media.png");
+        const hostTmpOutsidePowerDirector = path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "outside-powerdirector", "test-media.png");
         await expect(
           runMessageAction({
             cfg: slackConfig,

@@ -9,7 +9,7 @@ export async function movePathToTrash(targetPath: string): Promise<string> {
     await runExec("trash", [targetPath], { timeoutMs: 10_000 });
     return targetPath;
   } catch {
-    const trashDir = path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".Trash");
+    const trashDir = path.join(((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""), ".Trash");
     fs.mkdirSync(trashDir, { recursive: true });
     const base = path.basename(targetPath);
     let dest = path.join(trashDir, `${base}-${Date.now()}`);

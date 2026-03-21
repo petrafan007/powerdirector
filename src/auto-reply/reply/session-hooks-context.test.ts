@@ -24,7 +24,7 @@ vi.mock("../../plugins/hook-runner-global.js", () => ({
 const { initSessionState } = await import("./session.js");
 
 async function createStorePath(prefix: string): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), `${prefix}-`));
+  const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), `${prefix}-`));
   return path.join(root, "sessions.json");
 }
 

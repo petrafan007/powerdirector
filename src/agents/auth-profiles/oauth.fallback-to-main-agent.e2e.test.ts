@@ -18,7 +18,7 @@ describe("resolveApiKeyForProfile fallback to main agent", () => {
   let secondaryAgentDir: string;
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "oauth-fallback-test-"));
+    tmpDir = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "oauth-fallback-test-"));
     mainAgentDir = path.join(tmpDir, "agents", "main", "agent");
     secondaryAgentDir = path.join(tmpDir, "agents", "kids", "agent");
     await fs.mkdir(mainAgentDir, { recursive: true });

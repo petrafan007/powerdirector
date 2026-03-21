@@ -26,7 +26,7 @@ async function expectLocalAvatarPath(
 
 describe("resolveAgentAvatar", () => {
   it("resolves local avatar from config when inside workspace", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-avatar-"));
+    const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-avatar-"));
     const workspace = path.join(root, "work");
     const avatarPath = path.join(workspace, "avatars", "main.png");
     await writeFile(avatarPath);
@@ -47,7 +47,7 @@ describe("resolveAgentAvatar", () => {
   });
 
   it("rejects avatars outside the workspace", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-avatar-"));
+    const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-avatar-"));
     const workspace = path.join(root, "work");
     await fs.mkdir(workspace, { recursive: true });
     const outsidePath = path.join(root, "outside.png");
@@ -73,7 +73,7 @@ describe("resolveAgentAvatar", () => {
   });
 
   it("falls back to IDENTITY.md when config has no avatar", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-avatar-"));
+    const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-avatar-"));
     const workspace = path.join(root, "work");
     const avatarPath = path.join(workspace, "avatars", "fallback.png");
     await writeFile(avatarPath);
@@ -94,7 +94,7 @@ describe("resolveAgentAvatar", () => {
   });
 
   it("returns missing for non-existent local avatar files", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-avatar-"));
+    const root = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), "powerdirector-avatar-"));
     const workspace = path.join(root, "work");
     await fs.mkdir(workspace, { recursive: true });
 

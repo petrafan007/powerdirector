@@ -17,7 +17,7 @@ export type TempHomeEnv = {
 };
 
 export async function createTempHomeEnv(prefix: string): Promise<TempHomeEnv> {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const home = await fs.mkdtemp(path.join(((typeof ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp")) === "function") ? ((typeof os.tmpdir === "function") ? os.tmpdir : (() => "/tmp"))() : "/tmp"), prefix));
   await fs.mkdir(path.join(home, ".powerdirector"), { recursive: true });
 
   const snapshot = captureEnv([...HOME_ENV_KEYS]);
