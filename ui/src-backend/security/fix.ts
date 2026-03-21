@@ -396,7 +396,7 @@ export async function fixSecurityFootguns(opts?: {
   const exec = opts?.exec ?? runExec;
   const isWindows = platform === "win32";
   const stateDir = opts?.stateDir ?? resolveStateDir(env);
-  const configPath = opts?.configPath ?? resolveConfigPath(env, stateDir);
+  const configPath = opts?.configPath ?? resolveConfigPath(env);
   const actions: SecurityFixAction[] = [];
   const errors: string[] = [];
 

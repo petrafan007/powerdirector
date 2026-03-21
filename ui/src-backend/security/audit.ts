@@ -1158,7 +1158,7 @@ async function createAuditExecutionContext(
   const deep = opts.deep === true;
   const deepTimeoutMs = Math.max(250, opts.deepTimeoutMs ?? 5000);
   const stateDir = opts.stateDir ?? resolveStateDir(env);
-  const configPath = opts.configPath ?? resolveConfigPath(env, stateDir);
+  const configPath = opts.configPath ?? resolveConfigPath(env);
   const { readConfigSnapshotForAudit } = await loadAuditNonDeepModule();
   const configSnapshot = includeFilesystem
     ? opts.configSnapshot !== undefined

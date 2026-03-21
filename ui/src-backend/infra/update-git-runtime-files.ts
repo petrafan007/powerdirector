@@ -49,6 +49,8 @@ export function buildGitDirtyCheckArgv(root: string): string[] {
     "--",
     ":!dist/control-ui/",
     ":!ui/src-backend/",
+    ":!pnpm-lock.yaml",
+    ":!package-lock.json",
     ...GIT_RUNTIME_PRESERVE_PATHS.map((relativePath) => `:!${relativePath}`),
   ];
 }

@@ -201,7 +201,7 @@ export class ContextPruner {
             : null;
     }
 
-    public prune(history: Message[], overrideTokens?: number): Message[] {
+    public prune(history: Message[]): Message[] {
         let pruned = history.map((msg) => this.cloneMessage(msg));
 
         // 1. Evict old media first if over total image budget.
@@ -210,7 +210,7 @@ export class ContextPruner {
         pruned = this.applyContextPruning(pruned);
 
         // 3. Enforce token budget on the final history window.
-        pruned = this.enforceTokenBudget(pruned, overrideTokens);
+        pruned = this.enforceTokenBudget(pruned);
 
         if (this.pruning?.mode === 'cache-ttl') {
             this.lastCacheTouchAt = Date.now();
@@ -501,7 +501,7 @@ export class ContextPruner {
         return messages;
     }
 
-    private enforceTokenBudget(messages: Message[], overrideTokens?: number): Message[] {
+    private enforceTokenBudget(messages: Message[]): Message[] {
         const systemPrompt = this.config.retainSystemPrompt ? messages.find((m) => m.role === 'system') : null;
         let window = this.config.retainSystemPrompt
             ? messages.filter((m) => m.role !== 'system')
@@ -511,7 +511,7 @@ export class ContextPruner {
         // recent follow-up questions are never lost to blind shifting.
         const PROTECT_LAST_USER_TURNS = 2;
 
-        while (this.budgetManager.checkTotalBudget(window, overrideTokens) === false && window.length > 1) {
+        while (this.budgetManager.checkTotalBudget(window) === false && window.length > 1) {
             // Build set of indexes to protect (last N user-role messages, excluding tool outputs).
             const protectedIndexes = new Set<number>();
             let userCount = 0;

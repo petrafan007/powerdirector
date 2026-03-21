@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     "better-sqlite3",
     "tenorjs",
     "discord.js",
+    "@discordjs/voice",
     "@discordjs/ws",
     "ws",
     "bufferutil",

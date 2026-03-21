@@ -140,12 +140,11 @@ export class SessionManager {
 
     public compactSession(id: string, summary: string, keepLastN: number): void {
         const db = this.dbManager.getDb();
-        const messages = db.prepare('SELECT id, timestamp FROM messages WHERE session_id = ? ORDER BY timestamp ASC, id ASC').all(id) as any[];
+        const messages = db.prepare('SELECT id FROM messages WHERE session_id = ? ORDER BY timestamp ASC, id ASC').all(id) as any[];
         
         if (messages.length <= keepLastN) return;
         
         const toDelete = messages.slice(0, messages.length - keepLastN);
-        const keptMessages = messages.slice(messages.length - keepLastN);
         const deleteIds = toDelete.map(m => m.id);
         
         if (deleteIds.length > 0) {
@@ -153,9 +152,7 @@ export class SessionManager {
             db.prepare(`DELETE FROM messages WHERE id IN (${placeholders})`).run(...deleteIds);
         }
 
-        // Anchor the summary exactly 1ms before the first kept message
-        const firstKeptTimestamp = keptMessages[0]?.timestamp || Date.now();
-        const insertedAt = firstKeptTimestamp - 1;
+        const insertedAt = Date.now();
 
         // Add the compacted baseline exactly where compaction happened so the UI
         // keeps it in chronological order with the surrounding run output.

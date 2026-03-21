@@ -143,10 +143,9 @@ async function loadDaemonConfigContext(
     ...(serviceEnv ?? undefined),
   } satisfies Record<string, string | undefined>;
 
-  const cliConfigPath = resolveConfigPath(process.env, resolveStateDir(process.env));
+  const cliConfigPath = resolveConfigPath(process.env);
   const daemonConfigPath = resolveConfigPath(
     mergedDaemonEnv as NodeJS.ProcessEnv,
-    resolveStateDir(mergedDaemonEnv as NodeJS.ProcessEnv),
   );
 
   const cliIO = createConfigIO({ env: process.env, configPath: cliConfigPath });
