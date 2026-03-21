@@ -39,14 +39,14 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
  */
 function safeExtend(schema: any, shape: any): z.AnyZodObject {
   const unwrapped = unwrapSchema(schema) as z.AnyZodObject;
-  // If the object has refinements, we need to extend the base shape directly
-  if (unwrapped._def.effects && unwrapped._def.effects.length > 0) {
-    return z.object({
-      ...unwrapped.shape,
-      ...shape,
-    }) as any;
-  }
-  return unwrapped.extend(shape) as any;
+  const isStrict = unwrapped._def.unknownKeys === 'strict';
+  
+  const newSchema = z.object({
+    ...unwrapped.shape,
+    ...shape,
+  });
+
+  return (isStrict ? newSchema.strict() : newSchema) as any;
 }
 
 const rootBaseSchema = unwrapSchema(BasePowerDirectorSchema) as z.AnyZodObject;
