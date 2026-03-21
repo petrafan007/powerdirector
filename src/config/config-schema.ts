@@ -18,16 +18,20 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
       return current;
     }
     
-    // Zod internal structure can vary between versions and build environments (swc/webpack)
+    if (typeof current.innerType === 'function') {
+      current = current.innerType();
+      continue;
+    }
+
+    if (typeof current.unwrap === 'function') {
+      current = current.unwrap();
+      continue;
+    }
+
     const def = current._def;
     if (!def) {
-      // If we don't have a _def, we might have a direct wrapper
       if (current.schema) {
         current = current.schema;
-        continue;
-      }
-      if (current.innerType) {
-        current = current.innerType;
         continue;
       }
       break;
@@ -37,14 +41,8 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
       current = def.schema;
     } else if (def.innerType) {
       current = def.innerType;
-    } else if (def.effects && Array.isArray(def.effects) && def.effects.length > 0) {
-      // Some versions of ZodEffects store the inner schema in _def.schema, others elsewhere
-      // If we got here and didn't find .schema, it's a dead end unless we find another way
-      break;
     } else if (def.in) {
       current = def.in;
-    } else if (typeof current.unwrap === 'function') {
-      current = current.unwrap();
     } else {
       break;
     }
