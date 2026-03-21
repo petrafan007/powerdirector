@@ -11,11 +11,19 @@ import {
  * Robustly unwrap Zod types to find the underlying schema that can be extended.
  * This handles ZodOptional, ZodNullable, ZodEffects (refinements), and ZodPipeline (transforms).
  */
+/**
+ * Robustly unwrap Zod types to find the underlying schema that can be extended.
+ * This handles ZodOptional, ZodNullable, ZodDefault, ZodCatch, ZodEffects, and ZodPipeline.
+ */
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
   while (current && typeof current.extend !== 'function') {
     if (current._def?.innerType) {
       current = current._def.innerType;
+    } else if (current._def?.schema) {
+      current = current._def.schema;
+    } else if (current._def?.in) {
+      current = current._def.in;
     } else if (typeof current.unwrap === 'function') {
       current = current.unwrap();
     } else {
@@ -23,6 +31,22 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
     }
   }
   return current;
+}
+
+/**
+ * Safely extends a Zod object schema even if it contains refinements.
+ * This is a workaround for Zod's limitation where .extend() fails on refined objects.
+ */
+function safeExtend(schema: any, shape: any): z.AnyZodObject {
+  const unwrapped = unwrapSchema(schema) as z.AnyZodObject;
+  // If the object has refinements, we need to extend the base shape directly
+  if (unwrapped._def.effects && unwrapped._def.effects.length > 0) {
+    return z.object({
+      ...unwrapped.shape,
+      ...shape,
+    }) as any;
+  }
+  return unwrapped.extend(shape) as any;
 }
 
 const rootBaseSchema = unwrapSchema(BasePowerDirectorSchema) as z.AnyZodObject;
@@ -45,12 +69,12 @@ const terminalSchema = z
   .strict();
 
 const gatewaySchema = rootBaseSchema.shape.gateway
-  ? (unwrapSchema(rootBaseSchema.shape.gateway) as z.AnyZodObject).extend({
+  ? safeExtend(rootBaseSchema.shape.gateway, {
     terminal: terminalSchema.optional(),
   })
   : z.object({ terminal: terminalSchema.optional() });
 
-export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZodObject).extend({
+export const modelEntrySchema = safeExtend(ModelDefinitionSchema, {
   alias: z.string().optional(),
   rateLimit: z.number().optional(),
   timeoutOverride: z.number().optional(),
@@ -65,27 +89,21 @@ export const modelProviderSchema = z
       }
       return val;
     },
-    (unwrapSchema(ModelProviderSchema) as z.AnyZodObject)
-      .extend({
-        baseUrl: z.string().min(1).optional(),
-        models: z.array(modelEntrySchema).optional(),
-      })
-      .strict(),
+    safeExtend(ModelProviderSchema, {
+      baseUrl: z.string().min(1).optional(),
+      models: z.array(modelEntrySchema).optional(),
+    }).strict(),
   );
 
 const modelsBaseSchema = unwrapSchema(ModelsConfigSchema) as z.AnyZodObject;
-export const modelsSchema = modelsBaseSchema
-  .extend({
-    providers: z.record(z.string(), modelProviderSchema).optional(),
-  })
-  .strict();
+export const modelsSchema = safeExtend(modelsBaseSchema, {
+  providers: z.record(z.string(), modelProviderSchema).optional(),
+}).strict();
 
-export const PowerDirectorSchema = rootBaseSchema
-  .extend({
-    gateway: gatewaySchema.optional(),
-    models: modelsSchema.optional(),
-  })
-  .strict();
+export const PowerDirectorSchema = safeExtend(rootBaseSchema, {
+  gateway: gatewaySchema.optional(),
+  models: modelsSchema.optional(),
+}).strict();
 
 export type PowerDirectorConfig = z.infer<typeof PowerDirectorSchema>;
 
