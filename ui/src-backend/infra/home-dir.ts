@@ -10,7 +10,8 @@ export function resolveEffectiveHomeDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = () => ((typeof os.homedir === "function") ? os.homedir() : ""),
 ): string | undefined {
-  const raw = resolveRawHomeDir(env, homedir);
+  const safeHomedir = typeof homedir === "function" ? homedir : (() => "");
+  const raw = resolveRawHomeDir(env, safeHomedir);
   return raw ? path.resolve(raw) : undefined;
 }
 
@@ -43,7 +44,7 @@ function resolveRawHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): strin
 
 function normalizeSafe(homedir: () => string): string | undefined {
   try {
-    return normalize(homedir());
+    return typeof homedir === "function" ? normalize(homedir()) : undefined;
   } catch {
     return undefined;
   }
@@ -53,7 +54,8 @@ export function resolveRequiredHomeDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = () => ((typeof os.homedir === "function") ? os.homedir() : ""),
 ): string {
-  return resolveEffectiveHomeDir(env, homedir) ?? path.resolve(process.cwd());
+  const safeHomedir = typeof homedir === "function" ? homedir : (() => "");
+  return resolveEffectiveHomeDir(env, safeHomedir) ?? path.resolve(process.cwd());
 }
 
 export function expandHomePrefix(
