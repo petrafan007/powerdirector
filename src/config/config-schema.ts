@@ -21,6 +21,10 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
       current = current._def.schema;
     } else if (current._def?.in) {
       current = current._def.in;
+    } else if (current._def?.effects) {
+      // Handle ZodEffects (preprocess, refine, transform)
+      // They might have the schema in _def.schema or _def.innerType depending on version
+      current = current._def.schema || current._def.innerType;
     } else if (typeof current.unwrap === 'function') {
       current = current.unwrap();
     } else {
