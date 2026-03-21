@@ -17,18 +17,35 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
     if (current && typeof current.extend === 'function') {
       return current;
     }
-    const typeName = current?._def?.typeName;
-    const constructorName = current?.constructor?.name;
-    if (current?._def?.innerType) {
-      current = current._def.innerType;
-    } else if (current?._def?.schema) {
-      current = current._def.schema;
-    } else if (current?._def?.in) {
-      current = current._def.in;
-    } else if (typeof current?.unwrap === 'function') {
+    
+    // Zod internal structure can vary between versions and build environments (swc/webpack)
+    const def = current._def;
+    if (!def) {
+      // If we don't have a _def, we might have a direct wrapper
+      if (current.schema) {
+        current = current.schema;
+        continue;
+      }
+      if (current.innerType) {
+        current = current.innerType;
+        continue;
+      }
+      break;
+    }
+
+    if (def.schema) {
+      current = def.schema;
+    } else if (def.innerType) {
+      current = def.innerType;
+    } else if (def.effects && Array.isArray(def.effects) && def.effects.length > 0) {
+      // Some versions of ZodEffects store the inner schema in _def.schema, others elsewhere
+      // If we got here and didn't find .schema, it's a dead end unless we find another way
+      break;
+    } else if (def.in) {
+      current = def.in;
+    } else if (typeof current.unwrap === 'function') {
       current = current.unwrap();
     } else {
-      console.error(`[unwrapSchema] Failed to unwrap extendable object. typeName: ${typeName}, constructor: ${constructorName}, keys: ${Object.keys(current ?? {})}`);
       break;
     }
   }
