@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import os from "node:os";
+import * as os from "node:os";
 import path from "node:path";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { formatCliCommand } from "../cli/command-format.js";
@@ -377,7 +377,7 @@ export function detectMacCloudSyncedStateDir(
   stateDir: string,
   deps?: {
     platform?: NodeJS.Platform;
-    homedir?: string;
+    homedir?: () => string;
     resolveRealPath?: (targetPath: string) => string | null;
   },
 ): {
@@ -391,15 +391,15 @@ export function detectMacCloudSyncedStateDir(
 
   // Cloud-sync roots should always be anchored to the OS account home on macOS.
   // POWERDIRECTOR_HOME can relocate app data defaults, but iCloud/CloudStorage remain under the OS home.
-  const homedir = deps?.homedir ?? os.homedir();
+  const homedir = deps?.homedir ?? (() => os.homedir());
   const roots = [
     {
       storage: "iCloud Drive" as const,
-      root: path.join(homedir, "Library", "Mobile Documents", "com~apple~CloudDocs"),
+      root: path.join(homedir(), "Library", "Mobile Documents", "com~apple~CloudDocs"),
     },
     {
       storage: "CloudStorage provider" as const,
-      root: path.join(homedir, "Library", "CloudStorage"),
+      root: path.join(homedir(), "Library", "CloudStorage"),
     },
   ];
   const realPath = (deps?.resolveRealPath ?? tryResolveRealPath)(stateDir);
@@ -488,10 +488,10 @@ export async function noteStateIntegrity(
   const warnings: string[] = [];
   const changes: string[] = [];
   const env = process.env;
-  const homedir = () => resolveRequiredHomeDir(env, os.homedir);
+  const homedir = () => resolveRequiredHomeDir(env, () => os.homedir());
   const stateDir = resolveStateDir(env, homedir);
   const defaultStateDir = path.join(homedir(), ".powerdirector");
-  const oauthDir = resolveOAuthDir(env, stateDir);
+  const oauthDir = resolveOAuthDir(env, homedir);
   const agentId = resolveDefaultAgentId(cfg);
   const sessionsDir = resolveSessionTranscriptsDirForAgent(agentId, env, homedir);
   const storePath = resolveStorePath(cfg.session?.store, { agentId });
