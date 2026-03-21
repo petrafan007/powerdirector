@@ -31,15 +31,9 @@ export default defineConfig([
     platform: "node",
   },
   {
-    entry: "src/plugin-sdk/index.ts",
+    entry: ["src/plugin-sdk/*.ts", "!src/plugin-sdk/entrypoints.ts", "!src/plugin-sdk/*.test.ts"],
     outDir: "dist/plugin-sdk",
-    env,
-    fixedExtension: false,
-    platform: "node",
-  },
-  {
-    entry: "src/plugin-sdk/account-id.ts",
-    outDir: "dist/plugin-sdk",
+    bundle: false,
     env,
     fixedExtension: false,
     platform: "node",
