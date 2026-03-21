@@ -13,16 +13,16 @@ import {
  */
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
-  // Keep unwrapping as long as we don't have an .extend method (which means it's a raw ZodObject)
-  while (current && typeof current.extend !== 'function') {
+  while (current) {
+    if (typeof current.extend === 'function') {
+      return current;
+    }
     if (current._def?.innerType) {
       current = current._def.innerType;
     } else if (current._def?.schema) {
       current = current._def.schema;
     } else if (current._def?.in) {
       current = current._def.in;
-    } else if (current._def?.effects) {
-      current = current._def.schema || current._def.innerType;
     } else if (typeof current.unwrap === 'function') {
       current = current.unwrap();
     } else {
