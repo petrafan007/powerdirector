@@ -13,45 +13,14 @@ import {
  */
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
-  while (current) {
-    if (current && typeof current.extend === 'function') {
-      return current;
-    }
-    
-    // ZodOptional, ZodNullable, ZodDefault, ZodCatch
+  while (current && typeof current.extend !== 'function') {
     if (current._def?.innerType) {
       current = current._def.innerType;
-      continue;
-    }
-
-    // ZodEffects (preprocess, refine, transform)
-    if (current._def?.schema) {
-      current = current._def.schema;
-      continue;
-    }
-
-    // ZodPipeline
-    if (current._def?.in) {
-      current = current._def.in;
-      continue;
-    }
-
-    if (typeof current.unwrap === 'function') {
+    } else if (typeof current.unwrap === 'function') {
       current = current.unwrap();
-      continue;
+    } else {
+      break;
     }
-
-    // Direct property access for some environments
-    if (current.schema) {
-      current = current.schema;
-      continue;
-    }
-    if (current.innerType) {
-      current = current.innerType;
-      continue;
-    }
-
-    break;
   }
   return current;
 }

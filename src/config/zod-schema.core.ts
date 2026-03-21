@@ -246,13 +246,7 @@ export const ModelDefinitionSchema = z
   .strict();
 
 export const ModelProviderSchema = z
-  .preprocess((val: any) => {
-    if (val && typeof val === "object" && val.baseURL) {
-      if (!val.baseUrl) val.baseUrl = val.baseURL;
-      delete val.baseURL;
-    }
-    return val;
-  }, z.object({
+  .object({
     baseUrl: z.string().optional(),
     apiKey: SecretInputSchema.optional().register(sensitive),
     auth: z
@@ -283,7 +277,7 @@ export const ModelProviderSchema = z
     // Ollama-specific
     retrieveLocalModels: z.boolean().optional(),
     defaultModel: z.string().optional(),
-  }).strict());
+  }).strict();
 
 export const BedrockDiscoverySchema = z
   .object({
