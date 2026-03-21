@@ -216,7 +216,7 @@ describe("modelSupportsImages", () => {
 
 describe("loadImageFromRef", () => {
   it("allows sandbox-validated host paths outside default media roots", async () => {
-    const homeDir = os.homedir();
+    const homeDir = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
     await fs.mkdir(homeDir, { recursive: true });
     const sandboxParent = await fs.mkdtemp(path.join(homeDir, "powerdirector-sandbox-image-"));
     try {

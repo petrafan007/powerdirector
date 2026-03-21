@@ -8,7 +8,7 @@ import type { AnyAgentTool } from "./pi-tools.types.js";
 function resolveHostEditPath(root: string, pathParam: string): string {
   const expanded =
     pathParam.startsWith("~/") || pathParam === "~"
-      ? pathParam.replace(/^~/, os.homedir())
+      ? pathParam.replace(/^~/, ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""))
       : pathParam;
   return path.isAbsolute(expanded) ? path.resolve(expanded) : path.resolve(root, expanded);
 }

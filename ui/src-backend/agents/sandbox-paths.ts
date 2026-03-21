@@ -21,10 +21,10 @@ function normalizeAtPrefix(filePath: string): string {
 function expandPath(filePath: string): string {
   const normalized = normalizeUnicodeSpaces(normalizeAtPrefix(filePath));
   if (normalized === "~") {
-    return os.homedir();
+    return ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   }
   if (normalized.startsWith("~/")) {
-    return os.homedir() + normalized.slice(1);
+    return ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "") + normalized.slice(1);
   }
   return normalized;
 }
@@ -210,8 +210,8 @@ async function assertNoTmpAliasEscape(params: {
 }
 
 function shortPath(value: string) {
-  if (value.startsWith(os.homedir())) {
-    return `~${value.slice(os.homedir().length)}`;
+  if (value.startsWith(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""))) {
+    return `~${value.slice(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "").length)}`;
   }
   return value;
 }

@@ -8,7 +8,7 @@ function normalize(value: string | undefined): string | undefined {
 
 export function resolveEffectiveHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => ((typeof os.homedir === "function") ? os.homedir() : ""),
+  homedir: () => string = () => ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "") : ""),
 ): string | undefined {
   const safeHomedir = typeof homedir === "function" ? homedir : (() => "");
   const raw = resolveRawHomeDir(env, safeHomedir);
@@ -52,7 +52,7 @@ function normalizeSafe(homedir: () => string): string | undefined {
 
 export function resolveRequiredHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => ((typeof os.homedir === "function") ? os.homedir() : ""),
+  homedir: () => string = () => ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "") : ""),
 ): string {
   const safeHomedir = typeof homedir === "function" ? homedir : (() => "");
   return resolveEffectiveHomeDir(env, safeHomedir) ?? path.resolve(process.cwd());
@@ -71,7 +71,7 @@ export function expandHomePrefix(
   }
   const home =
     normalize(opts?.home) ??
-    resolveEffectiveHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => (typeof os.homedir === "function" ? ((typeof os.homedir === "function") ? os.homedir() : "") : "")));
+    resolveEffectiveHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => (typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function" ? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "") : "") : "")));
   if (!home) {
     return input;
   }
@@ -91,7 +91,7 @@ export function resolveHomeRelativePath(
   }
   if (trimmed.startsWith("~")) {
     const expanded = expandHomePrefix(trimmed, {
-      home: resolveRequiredHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => (typeof os.homedir === "function" ? ((typeof os.homedir === "function") ? os.homedir() : "") : ""))),
+      home: resolveRequiredHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => (typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function" ? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "") : "") : ""))),
       env: opts?.env,
       homedir: opts?.homedir,
     });

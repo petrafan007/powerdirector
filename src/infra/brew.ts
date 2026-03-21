@@ -23,7 +23,7 @@ export function resolveBrewPathDirs(opts?: {
   homeDir?: string;
   env?: NodeJS.ProcessEnv;
 }): string[] {
-  const homeDir = opts?.homeDir ?? os.homedir();
+  const homeDir = opts?.homeDir ?? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   const env = opts?.env ?? process.env;
 
   const dirs: string[] = [];
@@ -47,7 +47,7 @@ export function resolveBrewExecutable(opts?: {
   homeDir?: string;
   env?: NodeJS.ProcessEnv;
 }): string | undefined {
-  const homeDir = opts?.homeDir ?? os.homedir();
+  const homeDir = opts?.homeDir ?? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   const env = opts?.env ?? process.env;
 
   const candidates: string[] = [];

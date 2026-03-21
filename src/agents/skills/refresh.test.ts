@@ -33,8 +33,8 @@ describe("ensureSkillsWatcher", () => {
         posix(path.join("/tmp/workspace", "skills", "*", "SKILL.md")),
         posix(path.join("/tmp/workspace", ".agents", "skills", "SKILL.md")),
         posix(path.join("/tmp/workspace", ".agents", "skills", "*", "SKILL.md")),
-        posix(path.join(os.homedir(), ".agents", "skills", "SKILL.md")),
-        posix(path.join(os.homedir(), ".agents", "skills", "*", "SKILL.md")),
+        posix(path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".agents", "skills", "SKILL.md")),
+        posix(path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".agents", "skills", "*", "SKILL.md")),
       ]),
     );
     expect(targets.every((target) => target.includes("SKILL.md"))).toBe(true);

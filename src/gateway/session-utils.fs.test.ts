@@ -806,7 +806,7 @@ describe("resolveSessionTranscriptCandidates", () => {
     vi.unstubAllEnvs();
   });
 
-  test("fallback candidate uses POWERDIRECTOR_HOME instead of os.homedir()", () => {
+  test("fallback candidate uses POWERDIRECTOR_HOME instead of ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "")", () => {
     vi.stubEnv("POWERDIRECTOR_HOME", "/srv/powerdirector-home");
     vi.stubEnv("HOME", "/home/other");
 

@@ -74,7 +74,7 @@ function shouldSkipMissingConfigFastPath(): boolean {
 }
 
 function resolveDefaultMemoryStorePath(agentId: string): string {
-  return path.join(resolveStateDir(process.env, os.homedir), "memory", `${agentId}.sqlite`);
+  return path.join(resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => ""))), "memory", `${agentId}.sqlite`);
 }
 
 async function resolveMemoryStatusSnapshot(params: {

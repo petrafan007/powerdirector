@@ -132,7 +132,7 @@ function normalizeSources(
 }
 
 function resolveStorePath(agentId: string, raw?: string): string {
-  const stateDir = resolveStateDir(process.env, os.homedir);
+  const stateDir = resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
   const fallback = path.join(stateDir, "memory", `${agentId}.sqlite`);
   if (!raw) {
     return fallback;

@@ -52,7 +52,7 @@ function mergePath(params: { existing: string; prepend?: string[]; append?: stri
 function candidateBinDirs(opts: EnsurePowerDirectorPathOpts): { prepend: string[]; append: string[] } {
   const execPath = opts.execPath ?? process.execPath;
   const cwd = opts.cwd ?? process.cwd();
-  const homeDir = opts.homeDir ?? os.homedir();
+  const homeDir = opts.homeDir ?? ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   const platform = opts.platform ?? process.platform;
 
   const prepend: string[] = [];

@@ -30,7 +30,7 @@ describe("compactSkillPaths", () => {
         managedSkillsDir: path.join(workspaceDir, ".managed-empty"),
       });
 
-      const home = os.homedir();
+      const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
       // The prompt should NOT contain the absolute home directory path
       // when the skill is under the home directory (which tmpdir usually is on macOS)
       if (workspaceDir.startsWith(home)) {

@@ -19,7 +19,7 @@ type CompletionDeps = {
 };
 
 async function resolveProfileHint(shell: ShellCompletionStatus["shell"]): Promise<string> {
-  const home = process.env.HOME || os.homedir();
+  const home = process.env.HOME || ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   if (shell === "zsh") {
     return "~/.zshrc";
   }

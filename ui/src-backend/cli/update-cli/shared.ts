@@ -121,7 +121,7 @@ export function resolveGitInstallDir(): string {
 }
 
 function resolveDefaultGitDir(): string {
-  return resolveStateDir(process.env, os.homedir);
+  return resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
 }
 
 export function resolveNodeRunner(): string {

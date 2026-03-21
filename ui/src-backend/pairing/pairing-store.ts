@@ -55,7 +55,7 @@ type AllowFromStore = {
 };
 
 function resolveCredentialsDir(env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, os.homedir));
+  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => ""))));
   return resolveOAuthDir(env, stateDir);
 }
 

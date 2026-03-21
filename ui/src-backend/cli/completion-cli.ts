@@ -49,7 +49,7 @@ function sanitizeCompletionBasename(value: string): string {
 }
 
 function resolveCompletionCacheDir(env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, os.homedir);
+  const stateDir = resolveStateDir(env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
   return path.join(stateDir, "completions");
 }
 
@@ -161,7 +161,7 @@ function updateCompletionProfile(
 }
 
 function getShellProfilePath(shell: CompletionShell): string {
-  const home = process.env.HOME || os.homedir();
+  const home = process.env.HOME || ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   if (shell === "zsh") {
     return path.join(home, ".zshrc");
   }
@@ -301,7 +301,7 @@ export function registerCompletionCli(program: Command) {
 }
 
 export async function installCompletion(shell: string, yes: boolean, binName = "powerdirector") {
-  const home = process.env.HOME || os.homedir();
+  const home = process.env.HOME || ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   let profilePath = "";
   let sourceLine = "";
 

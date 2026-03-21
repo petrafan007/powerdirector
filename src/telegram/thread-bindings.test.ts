@@ -157,7 +157,7 @@ describe("telegram thread bindings", () => {
     });
 
     const statePath = path.join(
-      resolveStateDir(process.env, os.homedir),
+      resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => ""))),
       "telegram",
       "thread-bindings-no-persist.json",
     );

@@ -116,7 +116,7 @@ function expandHomeDir(value: string): string {
   if (!value.startsWith("~")) {
     return value;
   }
-  const home = os.homedir();
+  const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   if (value === "~") {
     return home;
   }

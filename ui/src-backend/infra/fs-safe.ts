@@ -69,7 +69,7 @@ const OPEN_APPEND_CREATE_FLAGS =
 const ensureTrailingSep = (value: string) => (value.endsWith(path.sep) ? value : value + path.sep);
 
 async function expandRelativePathWithHome(relativePath: string): Promise<string> {
-  let home = process.env.HOME || process.env.USERPROFILE || os.homedir();
+  let home = process.env.HOME || process.env.USERPROFILE || ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   try {
     home = await fs.realpath(home);
   } catch {

@@ -811,7 +811,7 @@ function symlinkEscapeError(params: {
 }
 
 function shortPath(value: string): string {
-  const home = os.homedir();
+  const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
   if (value.startsWith(home)) {
     return `~${value.slice(home.length)}`;
   }

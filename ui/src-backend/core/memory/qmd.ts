@@ -191,7 +191,7 @@ export class QmdBackend implements MemorySearchManager {
         this.qmdCommand = parsedCommand.command;
         this.qmdCommandArgs = parsedCommand.args;
 
-        const stateDir = path.join(os.homedir(), ".powerdirector");
+        const stateDir = path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".powerdirector");
         const agentStateDir = path.join(stateDir, "agents", this.agentId);
         this.qmdDir = path.join(agentStateDir, "qmd");
 

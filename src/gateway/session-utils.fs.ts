@@ -187,7 +187,7 @@ export function resolveSessionTranscriptCandidates(
     pushCandidate(() => resolveSessionTranscriptPath(sessionId, agentId));
   }
 
-  const home = resolveRequiredHomeDir(process.env, os.homedir);
+  const home = resolveRequiredHomeDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
   const legacyDir = path.join(home, ".powerdirector", "sessions");
   pushCandidate(() => resolveSessionTranscriptPathInDir(sessionId, legacyDir));
 

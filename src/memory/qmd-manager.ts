@@ -186,7 +186,7 @@ export class QmdMemoryManager implements MemorySearchManager {
     this.agentId = params.agentId;
     this.qmd = params.resolved;
     this.workspaceDir = resolveAgentWorkspaceDir(params.cfg, params.agentId);
-    this.stateDir = resolveStateDir(process.env, os.homedir);
+    this.stateDir = resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
     this.agentStateDir = path.join(this.stateDir, "agents", this.agentId);
     this.qmdDir = path.join(this.agentStateDir, "qmd");
     // QMD uses XDG base dirs for its internal state.
@@ -1140,7 +1140,7 @@ export class QmdMemoryManager implements MemorySearchManager {
     const defaultCacheHome =
       process.env.XDG_CACHE_HOME ||
       (process.platform === "win32" ? process.env.LOCALAPPDATA : undefined) ||
-      path.join(os.homedir(), ".cache");
+      path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".cache");
     const defaultModelsDir = path.join(defaultCacheHome, "qmd", "models");
     const targetModelsDir = path.join(this.xdgCacheHome, "qmd", "models");
     try {

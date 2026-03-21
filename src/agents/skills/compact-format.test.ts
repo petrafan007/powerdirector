@@ -179,7 +179,7 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
     // Budget check must use the compacted length, not the longer canonical path.
     // If it used canonical paths, it would overestimate and potentially drop
     // skills that actually fit after compaction.
-    const home = os.homedir();
+    const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
     const skills = Array.from({ length: 30 }, (_, i) =>
       makeSkill(
         `skill-${i}`,
@@ -211,7 +211,7 @@ describe("applySkillsPromptLimits (via buildWorkspaceSkillsPrompt)", () => {
   });
 
   it("resolvedSkills in snapshot keeps canonical paths, not compacted", () => {
-    const home = os.homedir();
+    const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
     const skills = Array.from({ length: 5 }, (_, i) =>
       makeSkill(`skill-${i}`, "A skill", `${home}/.powerdirector/workspace/skills/skill-${i}/SKILL.md`),
     );

@@ -214,7 +214,7 @@ describe("exec approvals", () => {
     previousUserProfile = process.env.USERPROFILE;
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-test-"));
     process.env.HOME = tempDir;
-    // Windows uses USERPROFILE for os.homedir()
+    // Windows uses USERPROFILE for ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "")
     process.env.USERPROFILE = tempDir;
   });
 

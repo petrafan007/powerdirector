@@ -72,7 +72,7 @@ describe("shell env fallback", () => {
     expect(receivedEnv?.PS4).toBeUndefined();
     expect(receivedEnv?.ZDOTDIR).toBeUndefined();
     expect(receivedEnv?.SHELL).toBeUndefined();
-    expect(receivedEnv?.HOME).toBe(os.homedir());
+    expect(receivedEnv?.HOME).toBe(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""));
   }
 
   function withEtcShells(shells: string[], fn: () => void) {

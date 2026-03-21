@@ -35,7 +35,7 @@ describe("acp prompt cwd prefix", () => {
     sessionStore.createSession({
       sessionId: TEST_SESSION_ID,
       sessionKey: TEST_SESSION_KEY,
-      cwd: options.cwd ?? path.join(os.homedir(), "powerdirector-test"),
+      cwd: options.cwd ?? path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), "powerdirector-test"),
     });
 
     const requestSpy = createStopAfterSendSpy();
@@ -54,7 +54,7 @@ describe("acp prompt cwd prefix", () => {
   }
 
   async function runPromptWithCwd(cwd: string) {
-    const pinnedHome = os.homedir();
+    const pinnedHome = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "");
     const previousPowerDirectorHome = process.env.POWERDIRECTOR_HOME;
     const previousHome = process.env.HOME;
     delete process.env.POWERDIRECTOR_HOME;
@@ -77,7 +77,7 @@ describe("acp prompt cwd prefix", () => {
   }
 
   it("redacts home directory in prompt prefix", async () => {
-    const requestSpy = await runPromptWithCwd(path.join(os.homedir(), "powerdirector-test"));
+    const requestSpy = await runPromptWithCwd(path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), "powerdirector-test"));
     expect(requestSpy).toHaveBeenCalledWith(
       "chat.send",
       expect.objectContaining({
@@ -88,7 +88,7 @@ describe("acp prompt cwd prefix", () => {
   });
 
   it("keeps backslash separators when cwd uses them", async () => {
-    const requestSpy = await runPromptWithCwd(`${os.homedir()}\\powerdirector-test`);
+    const requestSpy = await runPromptWithCwd(`${((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "")}\\powerdirector-test`);
     expect(requestSpy).toHaveBeenCalledWith(
       "chat.send",
       expect.objectContaining({

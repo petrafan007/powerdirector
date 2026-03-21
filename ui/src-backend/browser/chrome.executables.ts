@@ -203,7 +203,7 @@ function detectDefaultChromiumExecutableMac(): BrowserExecutable | null {
 
 function detectDefaultBrowserBundleIdMac(): string | null {
   const plistPath = path.join(
-    os.homedir(),
+    ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""),
     "Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist",
   );
   if (!exists(plistPath)) {
@@ -310,7 +310,7 @@ function detectDefaultChromiumExecutableWindows(): BrowserExecutable | null {
 
 function findDesktopFilePath(desktopId: string): string | null {
   const candidates = [
-    path.join(os.homedir(), ".local", "share", "applications", desktopId),
+    path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), ".local", "share", "applications", desktopId),
     path.join("/usr/local/share/applications", desktopId),
     path.join("/usr/share/applications", desktopId),
     path.join("/var/lib/snapd/desktop/applications", desktopId),
@@ -479,7 +479,7 @@ export function findChromeExecutableMac(): BrowserExecutable | null {
     },
     {
       kind: "chrome",
-      path: path.join(os.homedir(), "Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+      path: path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), "Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
     },
     {
       kind: "brave",
@@ -487,7 +487,7 @@ export function findChromeExecutableMac(): BrowserExecutable | null {
     },
     {
       kind: "brave",
-      path: path.join(os.homedir(), "Applications/Brave Browser.app/Contents/MacOS/Brave Browser"),
+      path: path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), "Applications/Brave Browser.app/Contents/MacOS/Brave Browser"),
     },
     {
       kind: "edge",
@@ -496,7 +496,7 @@ export function findChromeExecutableMac(): BrowserExecutable | null {
     {
       kind: "edge",
       path: path.join(
-        os.homedir(),
+        ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""),
         "Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
       ),
     },
@@ -506,7 +506,7 @@ export function findChromeExecutableMac(): BrowserExecutable | null {
     },
     {
       kind: "chromium",
-      path: path.join(os.homedir(), "Applications/Chromium.app/Contents/MacOS/Chromium"),
+      path: path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), "Applications/Chromium.app/Contents/MacOS/Chromium"),
     },
     {
       kind: "canary",
@@ -515,7 +515,7 @@ export function findChromeExecutableMac(): BrowserExecutable | null {
     {
       kind: "canary",
       path: path.join(
-        os.homedir(),
+        ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""),
         "Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
       ),
     },
@@ -527,10 +527,10 @@ export function findChromeExecutableMac(): BrowserExecutable | null {
 export function findGoogleChromeExecutableMac(): BrowserExecutable | null {
   return findFirstChromeExecutable([
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    path.join(os.homedir(), "Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+    path.join(((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""), "Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
     "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
     path.join(
-      os.homedir(),
+      ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : ""),
       "Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary",
     ),
   ]);

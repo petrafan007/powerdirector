@@ -103,7 +103,7 @@ export function applyCliProfileEnv(params: {
   homedir?: () => string;
 }) {
   const env = params.env ?? (process.env as Record<string, string | undefined>);
-  const homedir = params.homedir ?? os.homedir;
+  const homedir = params.homedir ?? (typeof os.homedir === "function" ? os.homedir : (() => ""));
   const profile = params.profile.trim();
   if (!profile) {
     return;

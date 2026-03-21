@@ -882,7 +882,7 @@ export function registerPluginsCli(program: Command) {
     .action(async (id: string, opts: PluginUninstallOptions) => {
       const cfg = loadConfig();
       const report = buildPluginStatusReport({ config: cfg });
-      const extensionsDir = path.join(resolveStateDir(process.env, os.homedir), "extensions");
+      const extensionsDir = path.join(resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => ""))), "extensions");
       const keepFiles = Boolean(opts.keepFiles || opts.keepConfig);
 
       if (opts.keepConfig) {

@@ -88,7 +88,7 @@ function formatSourceLabel(source: string, workspaceDir: string, agentId: string
     );
   }
   if (source === "sessions") {
-    const stateDir = resolveStateDir(process.env, os.homedir);
+    const stateDir = resolveStateDir(process.env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
     return shortenHomeInString(
       `sessions (${path.join(stateDir, "agents", agentId, "sessions")}${path.sep}*.jsonl)`,
     );

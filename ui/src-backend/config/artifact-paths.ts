@@ -5,7 +5,7 @@ import { resolveRequiredHomeDir } from "../infra/home-dir";
 import { resolveStateDir } from "./paths";
 
 function envHomedir(env: NodeJS.ProcessEnv): () => string {
-  return () => resolveRequiredHomeDir(env, os.homedir);
+  return () => resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => "")));
 }
 
 function sanitizePathComponent(value: string): string {

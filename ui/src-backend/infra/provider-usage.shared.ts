@@ -70,7 +70,7 @@ export function resolveLegacyPiAgentAccessToken(
 ): string | undefined {
   try {
     const authPath = path.join(
-      resolveRequiredHomeDir(env, os.homedir),
+      resolveRequiredHomeDir(env, (typeof os.homedir === "function" ? os.homedir : (() => ""))),
       ".pi",
       "agent",
       "auth.json",

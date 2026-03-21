@@ -16,7 +16,7 @@ function resolveShellExecEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   const execEnv = sanitizeHostExecEnv({ baseEnv: env });
 
   // Startup-file resolution must stay pinned to the real user home.
-  const home = os.homedir().trim();
+  const home = ((typeof (typeof os.homedir === "function" ? os.homedir : (() => "")) === "function") ? (typeof os.homedir === "function" ? os.homedir : (() => ""))() : "").trim();
   if (home) {
     execEnv.HOME = home;
   } else {
