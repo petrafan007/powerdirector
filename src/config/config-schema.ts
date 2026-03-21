@@ -17,6 +17,7 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
     if (typeof current.extend === 'function') {
       return current;
     }
+    const typeName = current._def?.typeName;
     if (current._def?.innerType) {
       current = current._def.innerType;
     } else if (current._def?.schema) {
@@ -26,6 +27,7 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
     } else if (typeof current.unwrap === 'function') {
       current = current.unwrap();
     } else {
+      console.error(`[unwrapSchema] Failed to unwrap extendable object from type: ${typeName}`);
       break;
     }
   }
