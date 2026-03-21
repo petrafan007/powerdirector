@@ -283,8 +283,7 @@ export const ModelProviderSchema = z
     // Ollama-specific
     retrieveLocalModels: z.boolean().optional(),
     defaultModel: z.string().optional(),
-  })
-  .strict();
+  }).strict());
 
 export const BedrockDiscoverySchema = z
   .object({
