@@ -65,12 +65,13 @@ export const modelProviderSchema = z
       }
       return val;
     },
-    (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).extend({
-      baseUrl: z.string().min(1).optional(),
-      models: z.array(modelEntrySchema).optional(),
-    }),
-  )
-  .strict();
+    (unwrapSchema(ModelProviderSchema) as z.AnyZodObject)
+      .extend({
+        baseUrl: z.string().min(1).optional(),
+        models: z.array(modelEntrySchema).optional(),
+      })
+      .strict(),
+  );
 
 const modelsBaseSchema = unwrapSchema(ModelsConfigSchema) as z.AnyZodObject;
 export const modelsSchema = modelsBaseSchema
