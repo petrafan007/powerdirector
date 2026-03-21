@@ -636,7 +636,7 @@ function resolveConfigPathForDeps(deps: Required<ConfigIoDeps>): string {
   if (deps.configPath) {
     return deps.configPath;
   }
-  return resolveConfigPath(deps.env, resolveStateDir(deps.env, deps.homedir));
+  return resolveConfigPath(deps.env, deps.homedir);
 }
 
 function normalizeDeps(overrides: ConfigIoDeps = {}): Required<ConfigIoDeps> {

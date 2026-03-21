@@ -8,7 +8,7 @@
     "google-auth-library": "^10.6.2"
   },
   "peerDependencies": {
-    "powerdirector": ">=2026.3.11"
+    "powerdirector": "workspace:*"
   },
   "peerDependenciesMeta": {
     "powerdirector": {

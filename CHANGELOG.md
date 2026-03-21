@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **[Wave 2] Backup System** (`v2026.3.8`): New `backup` sub-command group (`create`, `verify`) with support for `--dry-run`, config-only mode, and inclusion/exclusion of workspaces and sessions.
 
 ### Changed / Fixed
+- **[Hotfix 17] Chat UI Message Ordering**: Resolved issue where optimistic user messages sent during concurrent generation events would get stuck below the agent's replies until historical synchronization.
+- **[Hotfix 17] Context Baseline Pinning**: Fixed `SessionManager` auto-compaction to explicitly insert the new session summary securely into chronological history bounds, preventing it from resting at the absolute bottom of the chat interface.
+- **[Hotfix 17] Mercury-2 Token Exhaustion**: Fixed `429 Input token limit exceeded` failures in fallback routing specifically targeting `inception/mercury-2`. The agent and context pruner now dynamically negotiate safe `maxTokens` (8192) limits per request to prevent context window overflow when fallback engines rely on restrictive contexts.
+- **[Hotfix 17] Gateway Boot Crash**: Resolved a TypeError (`homedir is not a function`) that prevented the PowerDirector gateway from initializing in some test and remote environments due to malformed path route config signatures.
 - **[Wave 2] SecretRef Normalization & Runtime Isolation** (`v2026.3.8`): The gateway now operates on a "secrets runtime snapshot" that is activated at startup and can be hot-reloaded. Required secret references in config now fail-closed at startup if unresolved.
 - **[Wave 2] Subagent State Machine & Dispatch Fixes** (`v2026.2.25`): Hardened the internal gateway dispatch for plugin-spawned subagents. Added `setFallbackGatewayContext` to support subagent operations from non-WebSocket paths (e.g., Telegram polling, WhatsApp).
 - **[Wave 2] Reliability & Hardening** (`v2026.3.8`):

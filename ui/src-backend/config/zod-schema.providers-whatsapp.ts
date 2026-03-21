@@ -152,7 +152,7 @@ export const WhatsAppAccountSchema = WhatsAppSharedBaseSchema.extend({
   mediaMaxMb: z.number().int().positive().optional(),
 }).strict();
 
-export const WhatsAppConfigSchema = WhatsAppSharedBaseSchema.safeExtend({
+export const WhatsAppConfigSchema = WhatsAppSharedBaseSchema.extend({
   accounts: z.record(z.string(), WhatsAppAccountSchema.optional()).optional(),
   defaultAccount: z.string().optional(),
   mediaMaxMb: z.number().int().positive().optional().default(50),

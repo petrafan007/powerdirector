@@ -23,28 +23,28 @@ const CONFIG_FILENAME = "powerdirector.config.json";
 const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function resolveDefaultHomeDir(): string {
-  return resolveRequiredHomeDir(process.env, os.homedir);
+  return resolveRequiredHomeDir(process.env, () => os.homedir());
 }
 
 /** Build a homedir thunk that respects POWERDIRECTOR_HOME for the given env. */
 function buildHomeDirResolver(env: NodeJS.ProcessEnv = process.env): () => string {
   const custom = env.POWERDIRECTOR_HOME?.trim();
   if (custom) {
-    const resolved = expandHomePrefix(custom, os.homedir);
+    const resolved = expandHomePrefix(custom, { homedir: os.homedir });
     return () => resolved;
   }
-  return resolveDefaultHomeDir;
+  return () => resolveDefaultHomeDir();
 }
 
-export function resolveLegacyStateDir(homedir: () => string = resolveDefaultHomeDir): string {
+export function resolveLegacyStateDir(homedir: () => string = () => resolveDefaultHomeDir()): string {
   return path.join(homedir(), ".powerdirector");
 }
 
-export function resolveLegacyStateDirs(homedir: () => string = resolveDefaultHomeDir): string[] {
+export function resolveLegacyStateDirs(homedir: () => string = () => resolveDefaultHomeDir()): string[] {
   return LEGACY_STATE_DIRNAMES.map((dir) => path.join(homedir(), dir));
 }
 
-export function resolveNewStateDir(homedir: () => string = resolveDefaultHomeDir): string {
+export function resolveNewStateDir(homedir: () => string = () => resolveDefaultHomeDir()): string {
   return path.join(homedir(), NEW_STATE_DIRNAME);
 }
 
@@ -54,7 +54,7 @@ export function resolveStateDir(
 ): string {
   const envDir = env.POWERDIRECTOR_STATE_DIR?.trim();
   if (envDir) {
-    return expandHomePrefix(envDir, homedir);
+    return expandHomePrefix(envDir, { homedir });
   }
   return resolveNewStateDir(homedir);
 }
@@ -95,7 +95,7 @@ export function resolveConfigPathCandidate(
 ): string {
   const override = env.POWERDIRECTOR_CONFIG_PATH?.trim() || env.POWERDIRECTOR_CONFIG_PATH?.trim();
   if (override) {
-    return expandHomePrefix(override, homedir);
+    return expandHomePrefix(override, { homedir });
   }
 
   const stateDir = resolveStateDir(env, homedir);

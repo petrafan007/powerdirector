@@ -1784,6 +1784,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     };
 
     const sortedMessages = [...messages].sort((a, b) => {
+        // Guarantee user messages are always strictly above assistant messages for the exact same run
+        const runIdA = a.metadata?.runId;
+        const runIdB = b.metadata?.runId;
+        if (runIdA && runIdB && runIdA === runIdB) {
+            if (a.role === 'user' && b.role !== 'user') return -1;
+            if (b.role === 'user' && a.role !== 'user') return 1;
+        }
+
         const timeA = a.timestamp || Number.MAX_SAFE_INTEGER;
         const timeB = b.timestamp || Number.MAX_SAFE_INTEGER;
 
