@@ -14,20 +14,20 @@ import {
 function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
   let current: any = schema;
   while (current) {
-    if (typeof current.extend === 'function') {
+    if (current && typeof current.extend === 'function') {
       return current;
     }
-    const typeName = current._def?.typeName;
-    if (current._def?.innerType) {
+    const typeName = current?._def?.typeName;
+    if (current?._def?.innerType) {
       current = current._def.innerType;
-    } else if (current._def?.schema) {
+    } else if (current?._def?.schema) {
       current = current._def.schema;
-    } else if (current._def?.in) {
+    } else if (current?._def?.in) {
       current = current._def.in;
-    } else if (typeof current.unwrap === 'function') {
+    } else if (typeof current?.unwrap === 'function') {
       current = current.unwrap();
     } else {
-      console.error(`[unwrapSchema] Failed to unwrap extendable object from type: ${typeName}`);
+      console.error(`[unwrapSchema] Failed to unwrap extendable object. typeName: ${typeName}, keys: ${Object.keys(current ?? {})}`);
       break;
     }
   }
