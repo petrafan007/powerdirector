@@ -134,7 +134,22 @@ export async function checkGitUpdateStatus(params: {
   const upstream = upstreamRes && upstreamRes.code === 0 ? upstreamRes.stdout.trim() : null;
 
   const dirtyRes = await runCommandWithTimeout(
-    ["git", "-C", root, "status", "--porcelain", "--", ":!dist/control-ui/"],
+    [
+      "git",
+      "-C",
+      root,
+      "status",
+      "--porcelain",
+      "--",
+      ":!dist/control-ui/",
+      ":!ui/src-backend/",
+      ":!ui/next.config.ts",
+      ":!ui/package-lock.json",
+      ":!pnpm-lock.yaml",
+      ":!package-lock.json",
+      ":!powerdirector.config.json",
+      ":!MEMORY.md"
+    ],
     { timeoutMs },
   ).catch(() => null);
   const dirty = dirtyRes && dirtyRes.code === 0 ? dirtyRes.stdout.trim().length > 0 : null;

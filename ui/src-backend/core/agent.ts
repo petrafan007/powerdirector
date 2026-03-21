@@ -160,7 +160,12 @@ export class Agent {
             }
         }
 
-        const prunedMessages = this.contextPruner.prune(messages);
+        // Mercury-2 context window is small (8k), while default is 100k+
+        // If modelHint is mercury-2, force prune to 8192 tokens.
+        const isMercury2 = options.modelHint?.toLowerCase().includes('mercury-2');
+        const overrideTokens = isMercury2 ? 8192 : undefined;
+
+        const prunedMessages = this.contextPruner.prune(messages, overrideTokens);
         console.log(`[Agent] Context pruned to ${prunedMessages.length} messages`);
 
         const toolDefs = this.tools
@@ -390,7 +395,7 @@ export class Agent {
                         });
                     }
                     responseText = '';
-                    prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                    prompt = this.formatPrompt(this.contextPruner.prune(messages, overrideTokens), toolDefs, options);
                     continue;
                 }
 
@@ -444,7 +449,7 @@ export class Agent {
                         });
                     }
                     responseText = '';
-                    prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                    prompt = this.formatPrompt(this.contextPruner.prune(messages, overrideTokens), toolDefs, options);
                     continue;
                 }
 
@@ -609,7 +614,7 @@ export class Agent {
                         messages.push(toolResultMsg);
                         if (options.onStep) options.onStep(toolResultMsg);
 
-                        prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                        prompt = this.formatPrompt(this.contextPruner.prune(messages, overrideTokens), toolDefs, options);
                         loopEndedWithTool = true;
                         continue;
                     }
@@ -635,7 +640,7 @@ export class Agent {
                     if (options.onStep) options.onStep(errorMsg);
 
                     // Re-prompt the model with the error
-                    prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                    prompt = this.formatPrompt(this.contextPruner.prune(messages, overrideTokens), toolDefs, options);
                     loopEndedWithTool = true; // Pretend we "ended with tool" so we don't hit the "no tool call" break
                     continue;
                 }
@@ -656,7 +661,7 @@ export class Agent {
                         sequence: turnSequence++
                     }
                 } as Message);
-                prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                prompt = this.formatPrompt(this.contextPruner.prune(messages, overrideTokens), toolDefs, options);
                 loopEndedWithTool = true;
                 continue;
             }

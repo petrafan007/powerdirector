@@ -26,7 +26,7 @@ export class BudgetManager {
         return Math.ceil(text.length / 4);
     }
 
-    public checkTotalBudget(history: Message[]): boolean {
+    public checkTotalBudget(history: Message[], overrideTokens?: number): boolean {
         let totalImages = 0;
         let totalTokens = 0;
 
@@ -43,7 +43,8 @@ export class BudgetManager {
             }
         }
 
+        const maxTokens = overrideTokens || this.config.maxTokens;
         // This method just returns status, doesn't throw. Pruner uses this.
-        return totalImages <= this.config.maxTotalImages && totalTokens <= this.config.maxTokens;
+        return totalImages <= this.config.maxTotalImages && totalTokens <= maxTokens;
     }
 }
