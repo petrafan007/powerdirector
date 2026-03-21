@@ -52,12 +52,12 @@ const terminalSchema = z
   .strict();
 
 const gatewaySchema = rootBaseSchema.shape.gateway
-  ? (unwrapSchema(rootBaseSchema.shape.gateway) as z.AnyZodObject).safeExtend({
+  ? (unwrapSchema(rootBaseSchema.shape.gateway) as z.AnyZodObject).extend({
     terminal: terminalSchema.optional(),
   })
   : z.object({ terminal: terminalSchema.optional() });
 
-export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZodObject).safeExtend({
+export const modelEntrySchema = (unwrapSchema(ModelDefinitionSchema) as z.AnyZodObject).extend({
   alias: z.string().optional(),
   rateLimit: z.number().optional(),
   timeoutOverride: z.number().optional(),
@@ -72,7 +72,7 @@ export const modelProviderSchema = z
       }
       return val;
     },
-    (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).safeExtend({
+    (unwrapSchema(ModelProviderSchema) as z.AnyZodObject).extend({
       baseUrl: z.string().min(1).optional(),
       models: z.array(modelEntrySchema).optional(),
     }),
@@ -81,13 +81,13 @@ export const modelProviderSchema = z
 
 const modelsBaseSchema = unwrapSchema(ModelsConfigSchema) as z.AnyZodObject;
 export const modelsSchema = modelsBaseSchema
-  .safeExtend({
+  .extend({
     providers: z.record(z.string(), modelProviderSchema).optional(),
   })
   .strict();
 
 export const PowerDirectorSchema = rootBaseSchema
-  .safeExtend({
+  .extend({
     gateway: gatewaySchema.optional(),
     models: modelsSchema.optional(),
   })
