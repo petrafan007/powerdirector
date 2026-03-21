@@ -18,6 +18,7 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
       return current;
     }
     const typeName = current?._def?.typeName;
+    const constructorName = current?.constructor?.name;
     if (current?._def?.innerType) {
       current = current._def.innerType;
     } else if (current?._def?.schema) {
@@ -27,7 +28,7 @@ function unwrapSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
     } else if (typeof current?.unwrap === 'function') {
       current = current.unwrap();
     } else {
-      console.error(`[unwrapSchema] Failed to unwrap extendable object. typeName: ${typeName}, keys: ${Object.keys(current ?? {})}`);
+      console.error(`[unwrapSchema] Failed to unwrap extendable object. typeName: ${typeName}, constructor: ${constructorName}, keys: ${Object.keys(current ?? {})}`);
       break;
     }
   }
