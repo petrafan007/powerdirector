@@ -172,9 +172,9 @@ function resolveAbsoluteScopedPath(value: string, cwd: string): string | undefin
     }
   }
   if (candidate === "~") {
-    candidate = homedir();
+    candidate = ((typeof homedir === "function") ? homedir() : "");
   } else if (candidate.startsWith("~/")) {
-    candidate = path.join(homedir(), candidate.slice(2));
+    candidate = path.join(((typeof homedir === "function") ? homedir() : ""), candidate.slice(2));
   }
   const absolute = path.isAbsolute(candidate)
     ? path.normalize(candidate)

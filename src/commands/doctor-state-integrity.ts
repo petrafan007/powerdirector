@@ -395,11 +395,11 @@ export function detectMacCloudSyncedStateDir(
   const roots = [
     {
       storage: "iCloud Drive" as const,
-      root: path.join(homedir(), "Library", "Mobile Documents", "com~apple~CloudDocs"),
+      root: path.join(((typeof homedir === "function") ? homedir() : ""), "Library", "Mobile Documents", "com~apple~CloudDocs"),
     },
     {
       storage: "CloudStorage provider" as const,
-      root: path.join(homedir(), "Library", "CloudStorage"),
+      root: path.join(((typeof homedir === "function") ? homedir() : ""), "Library", "CloudStorage"),
     },
   ];
   const realPath = (deps?.resolveRealPath ?? tryResolveRealPath)(stateDir);
@@ -490,7 +490,7 @@ export async function noteStateIntegrity(
   const env = process.env;
   const homedir = () => resolveRequiredHomeDir(env, () => ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof ((typeof os.homedir === "function") ? os.homedir : (() => "")) === "function") ? ((typeof os.homedir === "function") ? os.homedir : (() => ""))() : "") : ""));
   const stateDir = resolveStateDir(env, homedir);
-  const defaultStateDir = path.join(homedir(), ".powerdirector");
+  const defaultStateDir = path.join(((typeof homedir === "function") ? homedir() : ""), ".powerdirector");
   const oauthDir = resolveOAuthDir(env, homedir);
   const agentId = resolveDefaultAgentId(cfg);
   const sessionsDir = resolveSessionTranscriptsDirForAgent(agentId, env, homedir);

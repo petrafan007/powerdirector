@@ -170,7 +170,7 @@ function normalizeContainerPath(input: string): string {
 
 export function resolveWorkdir(workdir: string, warnings: string[]) {
   const current = safeCwd();
-  const fallback = current ?? homedir();
+  const fallback = current ?? ((typeof homedir === "function") ? homedir() : "");
   try {
     const stats = statSync(workdir);
     if (stats.isDirectory()) {
