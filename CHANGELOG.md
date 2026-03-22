@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0-beta.10] - 2026-03-22
+
+### Changed / Fixed
+- **[Hotfix] Upgrade Recovery**: Fixed a critical issue where local modifications were blocking upgrades to `v1.2.0-beta.10`.
+- **[Hotfix] Safe Homedir & Path Isolation**: Finalized the migration to `safeHomedir` across all CLI commands and backend infrastructure.
+- **[Hotfix] Line Plugin Fixes**: Upstreamed critical fixes from the personal instance for the `line` plugin and `setup-core`.
+- **[Hotfix] Doctor State-Integrity**: Resolved conflicts and missing thunk evaluation in `doctor-state-integrity.ts`.
+
 ## [1.2.0-beta.3] - 2026-03-18
 
 ### Added

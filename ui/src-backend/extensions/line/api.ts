@@ -1,2 +1,2 @@
 export * from "@/src-backend/plugin-sdk/line";
-export * from "./setup-api";
+// lineSetupAdapter and lineSetupWizard are already in the SDK alias
