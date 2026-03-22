@@ -70,7 +70,8 @@ const nextConfig: NextConfig = {
     "authenticate-pam",
     "esbuild",
     "sqlite-vec",
-    "tar"
+    "tar",
+    "jiti",
   ],
   typescript: {
     // UI build imports backend runtime modules from ../src; backend typechecking is enforced via root `npm run build`.
@@ -124,6 +125,7 @@ const nextConfig: NextConfig = {
         "node-llama-cpp": "commonjs node-llama-cpp",
         "@napi-rs/canvas": "commonjs @napi-rs/canvas",
         "@snazzah/davey": "commonjs @snazzah/davey",
+        jiti: "commonjs jiti",
       };
       if (Array.isArray(config.externals)) {
         config.externals.push(nativeServerExternalHandler, externalPackages);

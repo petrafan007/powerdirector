@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from '@/src-backend/agents/agent-scope';
 import { listChannelPlugins } from '@/src-backend/channels/plugins/index';
-import { SECTION_NAMES, SectionName, sectionSchemas } from '@/src-backend/config/config-schema';
+import { isSectionName, normalizeSectionName, SECTION_NAMES, sectionSchemas } from '@/src-backend/config/config-schema';
 import { buildConfigSchema } from '@/src-backend/config/schema';
 import { loadPluginManifestRegistry } from '@/src-backend/plugins/manifest-registry';
 import { getConfigManager } from '../../../../../lib/config-instance';
@@ -111,10 +111,11 @@ export async function GET(
     { params }: { params: Promise<{ section: string }> }
 ) {
     try {
-        const { section } = await params;
-        if (!SECTION_NAMES.includes(section as SectionName)) {
+        const { section: requestedSection } = await params;
+        const section = normalizeSectionName(requestedSection);
+        if (!isSectionName(section)) {
             return NextResponse.json(
-                { error: `Unknown section: ${section}`, validSections: SECTION_NAMES },
+                { error: `Unknown section: ${requestedSection}`, validSections: SECTION_NAMES },
                 { status: 400 }
             );
         }
@@ -130,7 +131,7 @@ export async function GET(
             mergedSchema = null;
         }
 
-        const zodSchema = sectionSchemas[section as SectionName];
+        const zodSchema = sectionSchemas[section];
         try {
             // Prefer Zod v4 native conversion with transform fallback behavior.
             // @ts-ignore
@@ -152,7 +153,7 @@ export async function GET(
 
         schema = mergeSectionSchemas(asPlainObject(mergedSchema), asPlainObject(zodSectionSchema)) ?? {};
 
-        return NextResponse.json({ section, schema });
+        return NextResponse.json({ section: requestedSection, canonicalSection: section, schema });
     } catch (error: any) {
         return NextResponse.json({ error: error?.message || 'Failed to build schema' }, { status: 500 });
     }

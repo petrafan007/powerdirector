@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getConfigManager } from '../../../../lib/config-instance';
 import { resetService } from '../../../../lib/agent-instance';
-import { SECTION_NAMES, SectionName } from '@/src-backend/config/config-schema';
+import { isSectionName, normalizeSectionName, SECTION_NAMES } from '@/src-backend/config/config-schema';
 
 // GET /api/config/:section
 export async function GET(
@@ -9,16 +9,17 @@ export async function GET(
     { params }: { params: Promise<{ section: string }> }
 ) {
     try {
-        const { section } = await params;
-        if (!SECTION_NAMES.includes(section as SectionName)) {
+        const { section: requestedSection } = await params;
+        const section = normalizeSectionName(requestedSection);
+        if (!isSectionName(section)) {
             return NextResponse.json(
-                { error: `Unknown section: ${section}`, validSections: SECTION_NAMES },
+                { error: `Unknown section: ${requestedSection}`, validSections: SECTION_NAMES },
                 { status: 400 }
             );
         }
-        const data: any = getConfigManager().getSection(section as SectionName, true);
+        const data: any = getConfigManager().getSection(section, true);
 
-        return NextResponse.json({ section, data });
+        return NextResponse.json({ section: requestedSection, canonicalSection: section, data });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
@@ -30,10 +31,11 @@ export async function PUT(
     { params }: { params: Promise<{ section: string }> }
 ) {
     try {
-        const { section } = await params;
-        if (!SECTION_NAMES.includes(section as SectionName)) {
+        const { section: requestedSection } = await params;
+        const section = normalizeSectionName(requestedSection);
+        if (!isSectionName(section)) {
             return NextResponse.json(
-                { error: `Unknown section: ${section}`, validSections: SECTION_NAMES },
+                { error: `Unknown section: ${requestedSection}`, validSections: SECTION_NAMES },
                 { status: 400 }
             );
         }
@@ -45,7 +47,7 @@ export async function PUT(
             body = Object.values(body);
         }
 
-        const result = getConfigManager().updateSection(section as SectionName, body);
+        const result = getConfigManager().updateSection(section, body);
 
         if (!result.success) {
             console.error('[API] Validation failed for section:', section);
@@ -58,9 +60,14 @@ export async function PUT(
 
         await resetService();
 
-        const updated: any = getConfigManager().getSection(section as SectionName, true);
+        const updated: any = getConfigManager().getSection(section, true);
 
-        return NextResponse.json({ section, data: updated, success: true });
+        return NextResponse.json({
+            section: requestedSection,
+            canonicalSection: section,
+            data: updated,
+            success: true,
+        });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
