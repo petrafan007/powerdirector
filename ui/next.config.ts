@@ -4,6 +4,14 @@ import { fileURLToPath } from "node:url";
 
 const configDir = path.dirname(fileURLToPath(import.meta.url));
 const appVersion = process.env.npm_package_version ?? "0.0.0";
+const FORCE_SERVER_EXTERNAL_PACKAGE_PATTERNS = [
+  /^@napi-rs\/canvas(?:-.+)?$/,
+  /^@snazzah\/davey(?:-.+)?$/,
+];
+
+function shouldForceServerExternal(request: string): boolean {
+  return FORCE_SERVER_EXTERNAL_PACKAGE_PATTERNS.some((pattern) => pattern.test(request));
+}
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: configDir,
@@ -56,6 +64,7 @@ const nextConfig: NextConfig = {
     "@mariozechner/pi-agent-core",
     "node-llama-cpp",
     "@napi-rs/canvas",
+    "@snazzah/davey",
     "protobufjs",
     "@tloncorp/api",
     "authenticate-pam",
@@ -93,6 +102,17 @@ const nextConfig: NextConfig = {
     }
 
     if (isServer) {
+      const nativeServerExternalHandler = (
+        params: { request?: string },
+        callback: (error?: Error | null, result?: string) => void,
+      ) => {
+        const request = params.request;
+        if (typeof request === "string" && shouldForceServerExternal(request)) {
+          callback(null, `commonjs ${request}`);
+          return;
+        }
+        callback();
+      };
       const externalPackages = {
         "@mariozechner/pi-coding-agent": "commonjs @mariozechner/pi-coding-agent",
         "@mariozechner/pi-tui": "commonjs @mariozechner/pi-tui",
@@ -102,13 +122,15 @@ const nextConfig: NextConfig = {
         electron: "commonjs electron",
         sharp: "commonjs sharp",
         "node-llama-cpp": "commonjs node-llama-cpp",
+        "@napi-rs/canvas": "commonjs @napi-rs/canvas",
+        "@snazzah/davey": "commonjs @snazzah/davey",
       };
       if (Array.isArray(config.externals)) {
-        config.externals.push(externalPackages);
+        config.externals.push(nativeServerExternalHandler, externalPackages);
       } else if (config.externals) {
-        config.externals = [config.externals, externalPackages];
+        config.externals = [config.externals, nativeServerExternalHandler, externalPackages];
       } else {
-        config.externals = [externalPackages];
+        config.externals = [nativeServerExternalHandler, externalPackages];
       }
     }
     return config;
