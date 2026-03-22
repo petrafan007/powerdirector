@@ -5,6 +5,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { withEnvAsync } from "../test-utils/env.js";
 import { pathExists } from "../utils.js";
 import { resolveStableNodePath } from "./stable-node-path.js";
+import { buildGitDirtyCheckArgv } from "./update-git-runtime-files.js";
 import { runGatewayUpdate } from "./update-runner.js";
 
 type CommandResponse = { stdout?: string; stderr?: string; code?: number | null };
@@ -60,6 +61,7 @@ describe("runGatewayUpdate", () => {
     let uiBuildCount = 0;
     const doctorNodePath = await resolveStableNodePath(process.execPath);
     const doctorKey = `${doctorNodePath} ${path.join(tempDir, "powerdirector.mjs")} doctor --non-interactive --fix`;
+    const dirtyCheckKey = buildGitDirtyCheckArgv(tempDir).join(" ");
 
     const runCommand = async (argv: string[]) => {
       const key = argv.join(" ");
@@ -71,10 +73,10 @@ describe("runGatewayUpdate", () => {
       if (key === `git -C ${tempDir} rev-parse HEAD`) {
         return { stdout: "abc123", stderr: "", code: 0 };
       }
-      if (key === `git -C ${tempDir} status --porcelain -- :!dist/control-ui/`) {
+      if (key === dirtyCheckKey) {
         return { stdout: "", stderr: "", code: 0 };
       }
-      if (key === `git -C ${tempDir} fetch --all --prune --tags`) {
+      if (key === `git -C ${tempDir} fetch --all --prune --tags --force`) {
         return { stdout: "", stderr: "", code: 0 };
       }
       if (key === `git -C ${tempDir} tag --list v* --sort=-v:refname`) {
@@ -130,24 +132,24 @@ describe("runGatewayUpdate", () => {
     options?: { additionalTags?: string[] },
   ): Record<string, CommandResponse> {
     const tagOutput = [stableTag, ...(options?.additionalTags ?? [])].join("\n");
+    const dirtyCheckKey = buildGitDirtyCheckArgv(tempDir).join(" ");
     return {
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/`]: { stdout: "" },
-      [`git -C ${tempDir} fetch --all --prune --tags`]: { stdout: "" },
+      [dirtyCheckKey]: { stdout: "" },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} tag --list v* --sort=-v:refname`]: { stdout: `${tagOutput}\n` },
       [`git -C ${tempDir} checkout --detach ${stableTag}`]: { stdout: "" },
     };
   }
 
   function buildGitWorktreeProbeResponses(options?: { status?: string; branch?: string }) {
+    const dirtyCheckKey = buildGitDirtyCheckArgv(tempDir).join(" ");
     return {
       [`git -C ${tempDir} rev-parse --show-toplevel`]: { stdout: tempDir },
       [`git -C ${tempDir} rev-parse HEAD`]: { stdout: "abc123" },
       [`git -C ${tempDir} rev-parse --abbrev-ref HEAD`]: { stdout: options?.branch ?? "main" },
-      [`git -C ${tempDir} status --porcelain -- :!dist/control-ui/`]: {
-        stdout: options?.status ?? "",
-      },
+      [dirtyCheckKey]: { stdout: options?.status ?? "" },
     } satisfies Record<string, CommandResponse>;
   }
 
@@ -248,6 +250,35 @@ describe("runGatewayUpdate", () => {
     expect(calls.some((call) => call.includes("rebase"))).toBe(false);
   });
 
+  it("ignores runtime-only dirty lines before deciding to skip", async () => {
+    await setupGitCheckout();
+    const { runner, calls } = createRunner({
+      ...buildGitWorktreeProbeResponses({
+        status: [
+          "?? .powerdirector/",
+          "?? ui/.wwebjs_auth/",
+          "?? powerdirector.config.json.tmp",
+        ].join("\n"),
+      }),
+      [`git -C ${tempDir} rev-parse --abbrev-ref --symbolic-full-name @{upstream}`]: {
+        stdout: "origin/main",
+      },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
+      [`git -C ${tempDir} rev-parse @{upstream}`]: { stdout: "upstream123" },
+      [`git -C ${tempDir} rev-list --max-count=10 upstream123`]: { stdout: "upstream123\n" },
+      [`git -C ${tempDir} rebase upstream123`]: { stdout: "" },
+      "npm install": { stdout: "" },
+      "npm build": { stdout: "" },
+      "npm ui:build": { stdout: "" },
+    });
+
+    const result = await runWithRunner(runner);
+
+    expect(result.status).not.toBe("skipped");
+    expect(result.reason).not.toBe("dirty");
+    expect(calls.some((call) => call.includes("rebase upstream123"))).toBe(true);
+  });
+
   it("aborts rebase on failure", async () => {
     await setupGitCheckout();
     const { runner, calls } = createRunner({
@@ -255,7 +286,7 @@ describe("runGatewayUpdate", () => {
       [`git -C ${tempDir} rev-parse --abbrev-ref --symbolic-full-name @{upstream}`]: {
         stdout: "origin/main",
       },
-      [`git -C ${tempDir} fetch --all --prune --tags`]: { stdout: "" },
+      [`git -C ${tempDir} fetch --all --prune --tags --force`]: { stdout: "" },
       [`git -C ${tempDir} rev-parse @{upstream}`]: { stdout: "upstream123" },
       [`git -C ${tempDir} rev-list --max-count=10 upstream123`]: { stdout: "upstream123\n" },
       [`git -C ${tempDir} rebase upstream123`]: { code: 1, stderr: "conflict" },

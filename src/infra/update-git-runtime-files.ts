@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "./home-dir.js";
 
 export const GIT_RUNTIME_PRESERVE_PATHS = ["powerdirector.config.json", "MEMORY.md"] as const;
 export const GIT_RUNTIME_BACKUP_PATHS = [
@@ -15,10 +16,49 @@ export const GIT_RUNTIME_BACKUP_PATHS = [
   "memory",
   "ui/.wwebjs_auth",
 ] as const;
+export const GIT_RUNTIME_DIRTY_CHECK_EXCLUDE_PATHS = [
+  "dist/control-ui/",
+  "ui/src-backend/",
+  "ui/next.config.ts",
+  "ui/package-lock.json",
+  "ui/pnpm-lock.yaml",
+  "pnpm-lock.yaml",
+  "package-lock.json",
+  "bun.lockb",
+  ".powerdirector/",
+  ".powerdirector-update-backups/",
+  ".env",
+  "powerdirector.db",
+  "powerdirector.db-shm",
+  "powerdirector.db-wal",
+  "logs/",
+  "state/",
+  "diagnostics/",
+  "media/",
+  "memory/",
+  "generated/",
+  "agent/media/",
+  "latest_session.json",
+  "ui/.wwebjs_auth/",
+  ...GIT_RUNTIME_PRESERVE_PATHS,
+] as const;
 export const GIT_SAFE_TEMP_ROOT_DIR_NAMES = ["tmp"] as const;
 export const GIT_SAFE_TEMP_ROOT_DIR_PREFIXES = [".tmp-"] as const;
+export const GIT_SAFE_RUNTIME_ROOT_DIR_NAMES = [
+  ".powerdirector",
+  ".powerdirector-update-backups",
+  "logs",
+  "state",
+  "diagnostics",
+  "media",
+  "memory",
+  "generated",
+] as const;
+export const GIT_SAFE_RUNTIME_NESTED_DIR_PATHS = ["agent/media/", "ui/.wwebjs_auth/"] as const;
 const GIT_SAFE_CONFIG_ARTIFACT_ROOT_FILE_RE =
   /^powerdirector(?:\.config)?\.json(?:\.bak(?:\.\d+)?|(?:\.[^.]+){0,2}\.tmp)$/i;
+const GIT_SAFE_RUNTIME_ROOT_FILE_RE =
+  /^(?:\.env(?:\.[^/]+)*|powerdirector\.db(?:-(?:shm|wal))?|latest_session\.json)$/i;
 
 export type PreservedGitRuntimeFile = {
   relativePath: string;
@@ -47,11 +87,7 @@ export function buildGitDirtyCheckArgv(root: string): string[] {
     "status",
     "--porcelain",
     "--",
-    ":!dist/control-ui/",
-    ":!ui/src-backend/",
-    ":!pnpm-lock.yaml",
-    ":!package-lock.json",
-    ...GIT_RUNTIME_PRESERVE_PATHS.map((relativePath) => `:!${relativePath}`),
+    ...GIT_RUNTIME_DIRTY_CHECK_EXCLUDE_PATHS.map((relativePath) => `:!${relativePath}`),
   ];
 }
 
@@ -84,9 +120,33 @@ export function isSafeGitTempRootDirPath(rawPath: string): boolean {
   return GIT_SAFE_TEMP_ROOT_DIR_PREFIXES.some((prefix) => rootDir.startsWith(prefix));
 }
 
+export function isSafeGitRuntimeRootDirPath(rawPath: string): boolean {
+  const normalizedPath = normalizeGitStatusPath(rawPath);
+  if (!normalizedPath.endsWith("/")) {
+    return false;
+  }
+  const rootDir = normalizedPath.slice(0, -1);
+  return !rootDir.includes("/")
+    && GIT_SAFE_RUNTIME_ROOT_DIR_NAMES.includes(
+      rootDir as (typeof GIT_SAFE_RUNTIME_ROOT_DIR_NAMES)[number],
+    );
+}
+
+export function isSafeGitRuntimeNestedDirPath(rawPath: string): boolean {
+  const normalizedPath = normalizeGitStatusPath(rawPath);
+  return GIT_SAFE_RUNTIME_NESTED_DIR_PATHS.includes(
+    normalizedPath as (typeof GIT_SAFE_RUNTIME_NESTED_DIR_PATHS)[number],
+  );
+}
+
 export function isSafeGitConfigArtifactRootPath(rawPath: string): boolean {
   const normalizedPath = normalizeGitStatusPath(rawPath);
   return !normalizedPath.includes("/") && GIT_SAFE_CONFIG_ARTIFACT_ROOT_FILE_RE.test(normalizedPath);
+}
+
+export function isSafeGitRuntimeRootFilePath(rawPath: string): boolean {
+  const normalizedPath = normalizeGitStatusPath(rawPath);
+  return !normalizedPath.includes("/") && GIT_SAFE_RUNTIME_ROOT_FILE_RE.test(normalizedPath);
 }
 
 export function isIgnorableGitDirtyStatusLine(line: string): boolean {
@@ -98,7 +158,11 @@ export function isIgnorableGitDirtyStatusLine(line: string): boolean {
     return false;
   }
   const dirtyPath = trimmed.slice(3);
-  return isSafeGitTempRootDirPath(dirtyPath) || isSafeGitConfigArtifactRootPath(dirtyPath);
+  return isSafeGitTempRootDirPath(dirtyPath)
+    || isSafeGitRuntimeRootDirPath(dirtyPath)
+    || isSafeGitRuntimeNestedDirPath(dirtyPath)
+    || isSafeGitConfigArtifactRootPath(dirtyPath)
+    || isSafeGitRuntimeRootFilePath(dirtyPath);
 }
 
 export function filterBlockingGitDirtyStatus(stdout: string): string[] {
@@ -114,7 +178,7 @@ function formatBackupTimestamp(date: Date): string {
 }
 
 function resolveRuntimeBackupBaseDir(root: string): string {
-  const homeDir = os.homedir().trim();
+  const homeDir = safeHomedir().trim();
   const instanceName = path.basename(root) || "powerdirector";
   if (homeDir.length > 0) {
     return path.join(homeDir, "powerdirector-backups", instanceName);

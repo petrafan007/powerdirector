@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { safeTmpdir } from "./home-dir";
 import { type CommandOptions, runCommandWithTimeout } from "../process/exec";
 import {
   resolveControlUiDistIndexHealth,
@@ -11,6 +12,7 @@ import { readPackageName, readPackageVersion } from "./package-json";
 import { normalizePackageTagInput } from "./package-tag";
 import { trimLogTail } from "./restart-sentinel";
 import { resolveStableNodePath } from "./stable-node-path";
+import { buildGitDirtyCheckArgv, filterBlockingGitDirtyStatus } from "./update-git-runtime-files";
 import {
   channelToNpmTag,
   DEFAULT_PACKAGE_CHANNEL,
@@ -408,15 +410,12 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     };
 
     const statusCheck = await runStep(
-      step(
-        "clean check",
-        ["git", "-C", gitRoot, "status", "--porcelain", "--", ":!dist/control-ui/"],
-        gitRoot,
-      ),
+      step("clean check", buildGitDirtyCheckArgv(gitRoot), gitRoot),
     );
     steps.push(statusCheck);
-    const hasUncommittedChanges =
-      statusCheck.stdoutTail && statusCheck.stdoutTail.trim().length > 0;
+    const blockingDirtyLines = filterBlockingGitDirtyStatus(statusCheck.stdoutTail ?? "");
+    statusCheck.stdoutTail = blockingDirtyLines.join("\n");
+    const hasUncommittedChanges = blockingDirtyLines.length > 0;
     if (hasUncommittedChanges) {
       return {
         status: "skipped",
@@ -472,7 +471,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       }
 
       const fetchStep = await runStep(
-        step("git fetch", ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags"], gitRoot),
+        step("git fetch", ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags", "--force"], gitRoot),
       );
       steps.push(fetchStep);
 
@@ -534,7 +533,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       }
 
       const manager = await detectPackageManager(gitRoot);
-      const preflightRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-update-preflight-"));
+      const preflightRoot = await fs.mkdtemp(path.join(safeTmpdir(), "powerdirector-update-preflight-"));
       const worktreeDir = path.join(preflightRoot, "worktree");
       const worktreeStep = await runStep(
         step(
@@ -658,7 +657,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       }
     } else {
       const fetchStep = await runStep(
-        step("git fetch", ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags"], gitRoot),
+        step("git fetch", ["git", "-C", gitRoot, "fetch", "--all", "--prune", "--tags", "--force"], gitRoot),
       );
       steps.push(fetchStep);
       if (fetchStep.exitCode !== 0) {

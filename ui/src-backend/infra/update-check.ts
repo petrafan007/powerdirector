@@ -4,6 +4,7 @@ import { runCommandWithTimeout } from "../process/exec";
 import { fetchWithTimeout } from "../utils/fetch-timeout";
 import { detectPackageManager as detectPackageManagerImpl } from "./detect-package-manager";
 import { channelToNpmTag, type UpdateChannel } from "./update-channels";
+import { buildGitDirtyCheckArgv, filterBlockingGitDirtyStatus } from "./update-git-runtime-files";
 
 export type PackageManager = "pnpm" | "bun" | "npm" | "unknown";
 
@@ -133,26 +134,13 @@ export async function checkGitUpdateStatus(params: {
   ).catch(() => null);
   const upstream = upstreamRes && upstreamRes.code === 0 ? upstreamRes.stdout.trim() : null;
 
-  const dirtyRes = await runCommandWithTimeout(
-    [
-      "git",
-      "-C",
-      root,
-      "status",
-      "--porcelain",
-      "--",
-      ":!dist/control-ui/",
-      ":!ui/src-backend/",
-      ":!ui/next.config.ts",
-      ":!ui/package-lock.json",
-      ":!pnpm-lock.yaml",
-      ":!package-lock.json",
-      ":!powerdirector.config.json",
-      ":!MEMORY.md"
-    ],
-    { timeoutMs },
-  ).catch(() => null);
-  const dirty = dirtyRes && dirtyRes.code === 0 ? dirtyRes.stdout.trim().length > 0 : null;
+  const dirtyRes = await runCommandWithTimeout(buildGitDirtyCheckArgv(root), { timeoutMs }).catch(
+    () => null,
+  );
+  const dirty =
+    dirtyRes && dirtyRes.code === 0
+      ? filterBlockingGitDirtyStatus(dirtyRes.stdout).length > 0
+      : null;
 
   const fetchOk = params.fetch
     ? await runCommandWithTimeout(["git", "-C", root, "fetch", "--quiet", "--prune"], { timeoutMs })

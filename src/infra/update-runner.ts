@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { safeTmpdir } from "./home-dir.js";
 import { type CommandOptions, runCommandWithTimeout } from "../process/exec.js";
 import {
   resolveControlUiDistIndexHealth,
@@ -11,6 +12,7 @@ import { readPackageName, readPackageVersion } from "./package-json.js";
 import { normalizePackageTagInput } from "./package-tag.js";
 import { trimLogTail } from "./restart-sentinel.js";
 import { resolveStableNodePath } from "./stable-node-path.js";
+import { buildGitDirtyCheckArgv, filterBlockingGitDirtyStatus } from "./update-git-runtime-files.js";
 import {
   channelToNpmTag,
   DEFAULT_PACKAGE_CHANNEL,
@@ -408,15 +410,12 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     };
 
     const statusCheck = await runStep(
-      step(
-        "clean check",
-        ["git", "-C", gitRoot, "status", "--porcelain", "--", ":!dist/control-ui/"],
-        gitRoot,
-      ),
+      step("clean check", buildGitDirtyCheckArgv(gitRoot), gitRoot),
     );
     steps.push(statusCheck);
-    const hasUncommittedChanges =
-      statusCheck.stdoutTail && statusCheck.stdoutTail.trim().length > 0;
+    const blockingDirtyLines = filterBlockingGitDirtyStatus(statusCheck.stdoutTail ?? "");
+    statusCheck.stdoutTail = blockingDirtyLines.join("\n");
+    const hasUncommittedChanges = blockingDirtyLines.length > 0;
     if (hasUncommittedChanges) {
       return {
         status: "skipped",
@@ -534,7 +533,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       }
 
       const manager = await detectPackageManager(gitRoot);
-      const preflightRoot = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-update-preflight-"));
+      const preflightRoot = await fs.mkdtemp(path.join(safeTmpdir(), "powerdirector-update-preflight-"));
       const worktreeDir = path.join(preflightRoot, "worktree");
       const worktreeStep = await runStep(
         step(
