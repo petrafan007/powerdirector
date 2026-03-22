@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1-beta.1] - 2026-03-22
+
+### Added
+- **[Wave 3] Platform & Browser Ops**: Ported health/readiness endpoints (`/healthz`, `/readyz`).
+- **[Wave 3] Browser Relay**: Reconnect tolerance and startup diagnostics.
+- **[Wave 3] CDP URL**: Normalization and wildcard debugger rewrite.
+
+### Changed
+- **[Wave 3] Browser Session**: Cleanup on session reset/delete.
+- **[Wave 3] Extension Handshake**: Init/fill fixes.
+- **[Wave 3] Relay Bind Host**: Added or removed `browser.relayBindHost` per parity target.
+
 ## [1.2.0-beta.10] - 2026-03-22
 
 ### Changed / Fixed
