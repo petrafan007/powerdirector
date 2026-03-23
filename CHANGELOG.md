@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **[Wave 3] Browser Session**: Cleanup on session reset/delete.
 - **[Wave 3] Extension Handshake**: Init/fill fixes.
 - **[Wave 3] Relay Bind Host**: Added or removed `browser.relayBindHost` per parity target.
-- **[Hotfix] Update-Runner Doctor Crash**: Migrated all remaining direct `os.homedir()` and `os.tmpdir()` calls to `safeHomedir` and `safeTmpdir` abstractions to resolve `TypeError: homedir is not a function` during personal instance upgrades.
+- **[Hotfix] Update-Runner Doctor Crash**: Migrated all remaining direct `os.homedir()` and `os.tmpdir()` calls to hoisted `safeHomedir` and `safeTmpdir` abstractions, and updated primary path resolution functions to support both string and thunk (function) inputs to resolve `TypeError: homedir is not a function` during personal instance upgrades.
 
 ## [1.2.0-beta.10] - 2026-03-22
 

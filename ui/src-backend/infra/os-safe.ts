@@ -1,17 +1,22 @@
 import * as os from "node:os";
-import { homedir as nativeHomedir, tmpdir as nativeTmpdir } from "node:os";
 
+/**
+ * Hoisted function declarations to resolve ReferenceError during early module evaluation
+ * especially in Next.js worker threads where imports might be partially resolved.
+ */
 export function safeHomedir(): string {
+  const native = os.homedir;
   try {
-    return typeof nativeHomedir === "function" ? nativeHomedir() : "";
+    return typeof native === "function" ? native() : "";
   } catch {
     return "";
   }
 }
 
 export function safeTmpdir(): string {
+  const native = os.tmpdir;
   try {
-    return typeof nativeTmpdir === "function" ? nativeTmpdir() : "/tmp";
+    return typeof native === "function" ? native() : "/tmp";
   } catch {
     return "/tmp";
   }

@@ -8,13 +8,16 @@ function normalize(value: string | undefined): string | undefined {
 
 export function resolveEffectiveHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => safeHomedir(),
+  homedir: string | (() => string) = () => safeHomedir(),
 ): string | undefined {
   const raw = resolveRawHomeDir(env, homedir);
   return raw ? path.resolve(raw) : undefined;
 }
 
-function resolveRawHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): string | undefined {
+function resolveRawHomeDir(
+  env: NodeJS.ProcessEnv,
+  homedir: string | (() => string),
+): string | undefined {
   const explicitHome = normalize(env.POWERDIRECTOR_HOME);
   if (explicitHome) {
     if (explicitHome === "~" || explicitHome.startsWith("~/") || explicitHome.startsWith("~\\")) {
@@ -41,9 +44,9 @@ function resolveRawHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): strin
   return normalizeSafe(homedir);
 }
 
-function normalizeSafe(homedir: () => string): string | undefined {
+function normalizeSafe(homedir: string | (() => string)): string | undefined {
   try {
-    return normalize(homedir());
+    return normalize(typeof homedir === "function" ? homedir() : homedir);
   } catch {
     return undefined;
   }
@@ -51,7 +54,7 @@ function normalizeSafe(homedir: () => string): string | undefined {
 
 export function resolveRequiredHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => safeHomedir(),
+  homedir: string | (() => string) = () => safeHomedir(),
 ): string {
   return resolveEffectiveHomeDir(env, homedir) ?? path.resolve(process.cwd());
 }
@@ -61,7 +64,7 @@ export function expandHomePrefix(
   opts?: {
     home?: string;
     env?: NodeJS.ProcessEnv;
-    homedir?: () => string;
+    homedir?: string | (() => string);
   },
 ): string {
   if (!input.startsWith("~")) {
@@ -80,7 +83,7 @@ export function resolveHomeRelativePath(
   input: string,
   opts?: {
     env?: NodeJS.ProcessEnv;
-    homedir?: () => string;
+    homedir?: string | (() => string);
   },
 ): string {
   const trimmed = input.trim();

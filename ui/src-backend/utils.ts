@@ -274,7 +274,7 @@ export function truncateUtf16Safe(input: string, maxLen: number): string {
 export function resolveUserPath(
   input: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = safeHomedir,
+  homedir: () => string = () => safeHomedir(),
 ): string {
   if (!input) {
     return "";
@@ -284,7 +284,7 @@ export function resolveUserPath(
 
 export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = safeHomedir,
+  homedir: () => string = () => safeHomedir(),
 ): string {
   const override = env.POWERDIRECTOR_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
