@@ -1,3 +1,4 @@
+import { safeHomedir } from "../infra/os-safe";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
