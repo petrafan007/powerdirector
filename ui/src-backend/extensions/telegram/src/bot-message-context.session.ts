@@ -1,26 +1,26 @@
-import { toLocationContext } from "@/src-backend/plugin-sdk/channel-runtime";
-import { recordInboundSession } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { readSessionUpdatedAt, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
+import { toLocationContext } from "powerdirector/plugin-sdk/channel-runtime";
+import { recordInboundSession } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { readSessionUpdatedAt, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
 import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeCommandBody } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeCommandBody } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   formatInboundEnvelope,
   resolveEnvelopeFormatOptions,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildPendingHistoryContextFromMap,
   type HistoryEntry,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ResolvedAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { resolveInboundLastRouteSessionKey } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolvePinnedMainDmOwnerFromAllowlist } from "@/src-backend/plugin-sdk/security-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ResolvedAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { resolveInboundLastRouteSessionKey } from "powerdirector/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { resolvePinnedMainDmOwnerFromAllowlist } from "powerdirector/plugin-sdk/security-runtime";
 import { normalizeAllowFrom } from "./bot-access";
 import type {
   TelegramMediaRef,
@@ -63,7 +63,7 @@ export async function buildTelegramInboundContextPayload(params: {
   stickerCacheHit: boolean;
   effectiveWasMentioned: boolean;
   commandAuthorized: boolean;
-  locationData?: import("@/src-backend/plugin-sdk/channel-runtime").NormalizedLocation;
+  locationData?: import("powerdirector/plugin-sdk/channel-runtime").NormalizedLocation;
   options?: TelegramMessageContextOptions;
   dmAllowFrom?: Array<string | number>;
 }): Promise<{

@@ -1,5 +1,5 @@
 import { Container } from "@buape/carbon";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import { inspectDiscordAccount } from "./account-inspect";
 
 const DEFAULT_DISCORD_ACCENT_COLOR = "#5865F2";

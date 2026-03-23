@@ -1,4 +1,4 @@
-import { SYSTEM_MARK } from "@/src-backend/plugin-sdk/infra-runtime";
+import { SYSTEM_MARK } from "powerdirector/plugin-sdk/infra-runtime";
 import type { ThreadBindingRecord } from "./thread-bindings.types";
 
 const THREAD_BINDING_PERSONA_MAX_CHARS = 80;

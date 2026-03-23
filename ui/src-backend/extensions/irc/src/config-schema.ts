@@ -1,4 +1,4 @@
-import { requireChannelOpenAllowFrom } from "@/src-backend/plugin-sdk/extension-shared";
+import { requireChannelOpenAllowFrom } from "powerdirector/plugin-sdk/extension-shared";
 import { z } from "zod";
 import {
   BlockStreamingCoalesceSchema,

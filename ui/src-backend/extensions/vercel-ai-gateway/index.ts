@@ -1,6 +1,6 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
-import { buildSingleProviderApiKeyCatalog } from "@/src-backend/plugin-sdk/provider-catalog";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
+import { buildSingleProviderApiKeyCatalog } from "powerdirector/plugin-sdk/provider-catalog";
 import { applyVercelAiGatewayConfig, VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF } from "./onboard";
 import { buildVercelAiGatewayProvider } from "./provider-catalog";
 

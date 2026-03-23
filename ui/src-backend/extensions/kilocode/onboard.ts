@@ -1,8 +1,8 @@
-import { KILOCODE_BASE_URL, KILOCODE_DEFAULT_MODEL_REF } from "@/src-backend/plugin-sdk/provider-models";
+import { KILOCODE_BASE_URL, KILOCODE_DEFAULT_MODEL_REF } from "powerdirector/plugin-sdk/provider-models";
 import {
   applyProviderConfigWithModelCatalogPreset,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/provider-onboard";
+} from "powerdirector/plugin-sdk/provider-onboard";
 import { buildKilocodeProvider } from "./provider-catalog";
 
 export { KILOCODE_BASE_URL, KILOCODE_DEFAULT_MODEL_REF };

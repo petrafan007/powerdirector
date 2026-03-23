@@ -1,7 +1,7 @@
 import {
   createChannelInboundDebouncer,
   shouldDebounceTextInbound,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import type { ResolvedSlackAccount } from "../accounts";
 import type { SlackMessageEvent } from "../types";
 import { stripSlackMentionsForCommandDetection } from "./commands";

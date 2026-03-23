@@ -2,8 +2,8 @@ import {
   createDetectedBinaryStatus,
   setSetupChannelEnabled,
   type ChannelSetupWizard,
-} from "@/src-backend/plugin-sdk/setup";
-import { detectBinary, installSignalCli } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import { detectBinary, installSignalCli } from "powerdirector/plugin-sdk/setup-tools";
 import { listSignalAccountIds, resolveSignalAccount } from "./accounts";
 import {
   createSignalCliPathTextInput,

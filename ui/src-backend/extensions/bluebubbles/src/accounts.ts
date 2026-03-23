@@ -1,6 +1,6 @@
-import { createAccountListHelpers } from "@/src-backend/plugin-sdk/account-helpers";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/core";
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-helpers";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 import { hasConfiguredSecretInput, normalizeSecretInputString } from "./secret-input";
 import { normalizeBlueBubblesServerUrl, type BlueBubblesAccountConfig } from "./types";
 

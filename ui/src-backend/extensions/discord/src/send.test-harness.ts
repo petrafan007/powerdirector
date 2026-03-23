@@ -1,4 +1,4 @@
-import type { MockFn } from "@/src-backend/plugin-sdk/testing";
+import type { MockFn } from "powerdirector/plugin-sdk/testing";
 import { vi } from "vitest";
 
 type DiscordWebMediaMockFactoryResult = {

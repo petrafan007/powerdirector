@@ -1,4 +1,4 @@
-import { fetchWithSsrFGuard } from "@/src-backend/plugin-sdk/infra-runtime";
+import { fetchWithSsrFGuard } from "powerdirector/plugin-sdk/infra-runtime";
 import { DEFAULT_FETCH_TIMEOUT_MS } from "./oauth.shared";
 
 export async function fetchWithTimeout(

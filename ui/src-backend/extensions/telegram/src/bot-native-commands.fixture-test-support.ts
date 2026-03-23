@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { vi } from "vitest";
 import type { PowerDirectorConfig, TelegramAccountConfig } from "../runtime-api";
 import type { RegisterTelegramNativeCommandsParams } from "./bot-native-commands";

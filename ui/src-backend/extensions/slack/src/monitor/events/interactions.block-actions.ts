@@ -4,9 +4,9 @@ import {
   buildPluginBindingResolvedText,
   parsePluginBindingApprovalCustomId,
   resolvePluginConversationBindingApproval,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { dispatchPluginInteractiveHandler } from "@/src-backend/plugin-sdk/plugin-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { dispatchPluginInteractiveHandler } from "powerdirector/plugin-sdk/plugin-runtime";
 import { SLACK_REPLY_BUTTON_ACTION_ID, SLACK_REPLY_SELECT_ACTION_ID } from "../../blocks-render";
 import { authorizeSlackSystemEventSender } from "../auth";
 import type { SlackMonitorContext } from "../context";

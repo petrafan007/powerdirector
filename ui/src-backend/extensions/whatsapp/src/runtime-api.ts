@@ -14,7 +14,7 @@ export {
   WhatsAppConfigSchema,
   type ChannelPlugin,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/whatsapp-core";
+} from "powerdirector/plugin-sdk/whatsapp-core";
 
 export {
   createWhatsAppOutboundBase,
@@ -26,6 +26,6 @@ export {
   type DmPolicy,
   type GroupPolicy,
   type WhatsAppAccountConfig,
-} from "@/src-backend/plugin-sdk/whatsapp-shared";
+} from "powerdirector/plugin-sdk/whatsapp-shared";
 
 export { monitorWebChannel } from "./channel.runtime";

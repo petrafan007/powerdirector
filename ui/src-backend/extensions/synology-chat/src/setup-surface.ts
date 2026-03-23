@@ -9,7 +9,7 @@ import {
   type ChannelSetupAdapter,
   type ChannelSetupWizard,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import { listAccountIds, resolveAccount } from "./accounts";
 import type { SynologyChatAccountRaw, SynologyChatChannelConfig } from "./types";
 

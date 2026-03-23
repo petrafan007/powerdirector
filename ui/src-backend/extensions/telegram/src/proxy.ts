@@ -1,1 +1,1 @@
-export { getProxyUrlFromFetch, makeProxyFetch } from "@/src-backend/plugin-sdk/infra-runtime";
+export { getProxyUrlFromFetch, makeProxyFetch } from "powerdirector/plugin-sdk/infra-runtime";

@@ -1,4 +1,4 @@
-import * as ssrf from "@/src-backend/plugin-sdk/infra-runtime";
+import * as ssrf from "powerdirector/plugin-sdk/infra-runtime";
 import { afterEach, beforeAll, beforeEach, expect, vi, type Mock } from "vitest";
 
 type StickerSpy = Mock<(...args: unknown[]) => unknown>;
@@ -133,7 +133,7 @@ beforeAll(async () => {
       ...opts,
       telegramDeps: harness.telegramBotDepsForTest,
     });
-  const replyModule = await import("@/src-backend/plugin-sdk/reply-runtime");
+  const replyModule = await import("powerdirector/plugin-sdk/reply-runtime");
   replySpyRef = (replyModule as unknown as { __replySpy: ReturnType<typeof vi.fn> }).__replySpy;
 }, TELEGRAM_BOT_IMPORT_TIMEOUT_MS);
 

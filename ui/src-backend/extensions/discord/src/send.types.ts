@@ -1,6 +1,6 @@
 import type { RequestClient } from "@buape/carbon";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { RetryConfig } from "@/src-backend/plugin-sdk/infra-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { RetryConfig } from "powerdirector/plugin-sdk/infra-runtime";
 
 export class DiscordSendError extends Error {
   kind?: "missing-permissions" | "dm-blocked";

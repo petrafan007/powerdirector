@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 
 type DiscordAudioAttachment = {
   content_type?: string;

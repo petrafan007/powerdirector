@@ -1,18 +1,18 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { GatewayClient } from "@/src-backend/plugin-sdk/gateway-runtime";
-import { createOperatorApprovalsGatewayClient } from "@/src-backend/plugin-sdk/gateway-runtime";
-import type { EventFrame } from "@/src-backend/plugin-sdk/gateway-runtime";
-import { resolveExecApprovalCommandDisplay } from "@/src-backend/plugin-sdk/infra-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { GatewayClient } from "powerdirector/plugin-sdk/gateway-runtime";
+import { createOperatorApprovalsGatewayClient } from "powerdirector/plugin-sdk/gateway-runtime";
+import type { EventFrame } from "powerdirector/plugin-sdk/gateway-runtime";
+import { resolveExecApprovalCommandDisplay } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   buildExecApprovalPendingReplyPayload,
   type ExecApprovalPendingReplyParams,
-} from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveExecApprovalSessionTarget } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { ExecApprovalRequest, ExecApprovalResolved } from "@/src-backend/plugin-sdk/infra-runtime";
-import { normalizeAccountId, parseAgentSessionKey } from "@/src-backend/plugin-sdk/routing";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { compileSafeRegex, testRegexWithBoundedInput } from "@/src-backend/plugin-sdk/security-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveExecApprovalSessionTarget } from "powerdirector/plugin-sdk/infra-runtime";
+import type { ExecApprovalRequest, ExecApprovalResolved } from "powerdirector/plugin-sdk/infra-runtime";
+import { normalizeAccountId, parseAgentSessionKey } from "powerdirector/plugin-sdk/routing";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { compileSafeRegex, testRegexWithBoundedInput } from "powerdirector/plugin-sdk/security-runtime";
 import { buildTelegramExecApprovalButtons } from "./approval-buttons";
 import {
   getTelegramExecApprovalApprovers,

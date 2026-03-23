@@ -1,4 +1,4 @@
-import type { ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
+import type { ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
 import type { SlackAppMentionEvent, SlackMessageEvent } from "./types";
 
 export type SlackThreadContext = {

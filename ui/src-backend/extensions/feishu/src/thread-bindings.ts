@@ -1,17 +1,17 @@
-import { resolveThreadBindingConversationIdFromBindingId } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveThreadBindingConversationIdFromBindingId } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   resolveThreadBindingIdleTimeoutMsForChannel,
   resolveThreadBindingMaxAgeMsForChannel,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   registerSessionBindingAdapter,
   unregisterSessionBindingAdapter,
   type BindingTargetKind,
   type SessionBindingRecord,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { normalizeAccountId, resolveAgentIdFromSessionKey } from "@/src-backend/plugin-sdk/routing";
-import { resolveGlobalSingleton } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { normalizeAccountId, resolveAgentIdFromSessionKey } from "powerdirector/plugin-sdk/routing";
+import { resolveGlobalSingleton } from "powerdirector/plugin-sdk/text-runtime";
 
 type FeishuBindingTargetKind = "subagent" | "acp";
 

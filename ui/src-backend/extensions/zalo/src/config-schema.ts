@@ -3,7 +3,7 @@ import {
   buildCatchallMultiAccountChannelSchema,
   DmPolicySchema,
   GroupPolicySchema,
-} from "@/src-backend/plugin-sdk/channel-config-schema";
+} from "powerdirector/plugin-sdk/channel-config-schema";
 import { z } from "zod";
 import { MarkdownConfigSchema } from "./runtime-api";
 import { buildSecretInputSchema } from "./secret-input";

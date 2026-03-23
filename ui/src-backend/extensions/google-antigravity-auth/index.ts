@@ -6,7 +6,7 @@ import {
   isWSL2Sync,
   type PowerDirectorPluginApi,
   type ProviderAuthContext,
-} from "@/src-backend/plugin-sdk/index";
+} from "powerdirector/plugin-sdk";
 
 const CLIENT_ID = process.env.GOOGLE_ANTIGRAVITY_CLIENT_ID || "";
 const CLIENT_SECRET = process.env.GOOGLE_ANTIGRAVITY_CLIENT_SECRET || "";

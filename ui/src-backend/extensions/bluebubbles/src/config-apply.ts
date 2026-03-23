@@ -1,5 +1,5 @@
-import { DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/account-id";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/core";
+import { DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/account-id";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 
 type BlueBubblesConfigPatch = {
   serverUrl?: string;

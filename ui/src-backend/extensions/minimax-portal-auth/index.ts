@@ -4,7 +4,7 @@ import {
   type PowerDirectorPluginApi,
   type ProviderAuthContext,
   type ProviderAuthResult,
-} from "@/src-backend/plugin-sdk/minimax-portal-auth";
+} from "powerdirector/plugin-sdk/minimax-portal-auth";
 import { loginMiniMaxPortalOAuth, type MiniMaxRegion } from "./oauth";
 
 const PROVIDER_ID = "minimax-portal";

@@ -1,5 +1,5 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
 import { applyHuggingfaceConfig, HUGGINGFACE_DEFAULT_MODEL_REF } from "./onboard";
 import { buildHuggingfaceProvider } from "./provider-catalog";
 

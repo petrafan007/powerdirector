@@ -1,33 +1,33 @@
 import type { Bot, Context } from "grammy";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { resolveCommandAuthorizedFromAuthorizers } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveNativeCommandSessionTargets } from "@/src-backend/plugin-sdk/channel-runtime";
-import { recordInboundSessionMetaSafe } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { ChannelGroupPolicy } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { resolveCommandAuthorizedFromAuthorizers } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveNativeCommandSessionTargets } from "powerdirector/plugin-sdk/channel-runtime";
+import { recordInboundSessionMetaSafe } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { ChannelGroupPolicy } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   normalizeTelegramCommandName,
   resolveTelegramCustomCommands,
   TELEGRAM_COMMAND_NAME_PATTERN,
-} from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
 import type {
   ReplyToMode,
   TelegramAccountConfig,
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { ensureConfiguredBindingRouteReady } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { getAgentScopedMediaLocalRoots } from "@/src-backend/plugin-sdk/media-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { ensureConfiguredBindingRouteReady } from "powerdirector/plugin-sdk/conversation-runtime";
+import { getAgentScopedMediaLocalRoots } from "powerdirector/plugin-sdk/media-runtime";
 import {
   executePluginCommand,
   getPluginCommandSpecs,
   matchPluginCommand,
-} from "@/src-backend/plugin-sdk/plugin-runtime";
-import { resolveChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveCommandAuthorization } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { CommandArgs } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/plugin-runtime";
+import { resolveChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveCommandAuthorization } from "powerdirector/plugin-sdk/reply-runtime";
+import type { CommandArgs } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildCommandTextFromArgs,
   findCommandByNativeName,
@@ -35,13 +35,13 @@ import {
   listNativeCommandSpecsForConfig,
   parseCommandArgs,
   resolveCommandArgMenu,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { resolveThreadSessionKeys } from "@/src-backend/plugin-sdk/routing";
-import { danger, logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { getChildLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { resolveThreadSessionKeys } from "powerdirector/plugin-sdk/routing";
+import { danger, logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { getChildLogger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { withTelegramApiErrorLogging } from "./api-logging";
 import { isSenderAllowed, normalizeDmAllowFromWithStore } from "./bot-access";
 import { defaultTelegramBotDeps, type TelegramBotDeps } from "./bot-deps";

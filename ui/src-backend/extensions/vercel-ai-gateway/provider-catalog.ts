@@ -2,7 +2,7 @@ import {
   discoverVercelAiGatewayModels,
   VERCEL_AI_GATEWAY_BASE_URL,
   type ModelProviderConfig,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 
 export async function buildVercelAiGatewayProvider(): Promise<ModelProviderConfig> {
   return {

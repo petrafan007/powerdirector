@@ -1,7 +1,7 @@
 import {
   listInspectedDirectoryEntriesFromSources,
   type DirectoryConfigParams,
-} from "@/src-backend/plugin-sdk/directory-runtime";
+} from "powerdirector/plugin-sdk/directory-runtime";
 import { inspectDiscordAccount, type InspectedDiscordAccount } from "../api";
 
 export async function listDiscordDirectoryPeersFromConfig(params: DirectoryConfigParams) {

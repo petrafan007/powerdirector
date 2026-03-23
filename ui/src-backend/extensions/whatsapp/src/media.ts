@@ -1,20 +1,20 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SafeOpenError, readLocalFileSafely } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { SsrFPolicy } from "@/src-backend/plugin-sdk/infra-runtime";
-import { type MediaKind, maxBytesForKind } from "@/src-backend/plugin-sdk/media-runtime";
-import { fetchRemoteMedia } from "@/src-backend/plugin-sdk/media-runtime";
+import { SafeOpenError, readLocalFileSafely } from "powerdirector/plugin-sdk/infra-runtime";
+import type { SsrFPolicy } from "powerdirector/plugin-sdk/infra-runtime";
+import { type MediaKind, maxBytesForKind } from "powerdirector/plugin-sdk/media-runtime";
+import { fetchRemoteMedia } from "powerdirector/plugin-sdk/media-runtime";
 import {
   convertHeicToJpeg,
   hasAlphaChannel,
   optimizeImageToPng,
   resizeToJpeg,
-} from "@/src-backend/plugin-sdk/media-runtime";
-import { getDefaultMediaLocalRoots } from "@/src-backend/plugin-sdk/media-runtime";
-import { detectMime, extensionForMime, kindFromMime } from "@/src-backend/plugin-sdk/media-runtime";
-import { logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolveUserPath } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/media-runtime";
+import { getDefaultMediaLocalRoots } from "powerdirector/plugin-sdk/media-runtime";
+import { detectMime, extensionForMime, kindFromMime } from "powerdirector/plugin-sdk/media-runtime";
+import { logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { resolveUserPath } from "powerdirector/plugin-sdk/text-runtime";
 
 export type WebMediaResult = {
   buffer: Buffer;

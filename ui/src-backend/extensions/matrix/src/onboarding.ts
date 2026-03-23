@@ -1,4 +1,4 @@
-import type { DmPolicy } from "@/src-backend/plugin-sdk/matrix";
+import type { DmPolicy } from "powerdirector/plugin-sdk/matrix";
 import {
   addWildcardAllowFrom,
   buildSingleChannelSecretPromptState,
@@ -13,7 +13,7 @@ import {
   type ChannelOnboardingAdapter,
   type ChannelOnboardingDmPolicy,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/matrix";
+} from "powerdirector/plugin-sdk/matrix";
 import { listMatrixDirectoryGroupsLive } from "./directory-live";
 import { resolveMatrixAccount } from "./matrix/accounts";
 import { ensureMatrixSdkInstalled, isMatrixSdkAvailable } from "./matrix/deps";

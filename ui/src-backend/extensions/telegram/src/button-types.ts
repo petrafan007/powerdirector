@@ -1,9 +1,9 @@
-import { reduceInteractiveReply } from "@/src-backend/plugin-sdk/interactive-runtime";
+import { reduceInteractiveReply } from "powerdirector/plugin-sdk/interactive-runtime";
 import {
   normalizeInteractiveReply,
   type InteractiveReply,
   type InteractiveReplyButton,
-} from "@/src-backend/plugin-sdk/interactive-runtime";
+} from "powerdirector/plugin-sdk/interactive-runtime";
 
 export type TelegramButtonStyle = "danger" | "success" | "primary";
 

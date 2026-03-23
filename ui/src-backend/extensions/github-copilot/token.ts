@@ -1,6 +1,6 @@
 import path from "node:path";
-import { loadJsonFile, saveJsonFile } from "@/src-backend/plugin-sdk/json-store";
-import { resolveStateDir } from "@/src-backend/plugin-sdk/state-paths";
+import { loadJsonFile, saveJsonFile } from "powerdirector/plugin-sdk/json-store";
+import { resolveStateDir } from "powerdirector/plugin-sdk/state-paths";
 
 const COPILOT_TOKEN_URL = "https://api.github.com/copilot_internal/v2/token";
 

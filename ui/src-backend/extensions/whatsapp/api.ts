@@ -7,4 +7,4 @@ export {
   listWhatsAppDirectoryGroupsFromConfig,
   listWhatsAppDirectoryPeersFromConfig,
 } from "./src/directory-config";
-export { resolveWhatsAppGroupIntroHint } from "@/src-backend/plugin-sdk/whatsapp-core";
+export { resolveWhatsAppGroupIntroHint } from "powerdirector/plugin-sdk/whatsapp-core";

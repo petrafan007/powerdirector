@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import {
   hasOutboundReplyContent,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import { resolveRunModelFallbacksOverride } from "../../agents/agent-scope";
 import { resolveBootstrapWarningSignaturesSeen } from "../../agents/bootstrap-budget";
 import { lookupContextTokens } from "../../agents/context";

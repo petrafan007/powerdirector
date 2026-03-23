@@ -1,10 +1,10 @@
-import type { MarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import type { MarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   chunkMarkdownIR,
   markdownToIR,
   type MarkdownLinkSpan,
-} from "@/src-backend/plugin-sdk/text-runtime";
-import { renderMarkdownWithMarkers } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/text-runtime";
+import { renderMarkdownWithMarkers } from "powerdirector/plugin-sdk/text-runtime";
 
 // Escape special characters for Slack mrkdwn format.
 // Preserve Slack's angle-bracket tokens so mentions and links stay intact.

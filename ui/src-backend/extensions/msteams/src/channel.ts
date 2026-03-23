@@ -1,9 +1,9 @@
-import { formatAllowFromLowercase } from "@/src-backend/plugin-sdk/allow-from";
-import { createTopLevelChannelConfigAdapter } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { formatAllowFromLowercase } from "powerdirector/plugin-sdk/allow-from";
+import { createTopLevelChannelConfigAdapter } from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   createAllowlistProviderGroupPolicyWarningCollector,
   projectWarningCollector,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import {
   createChannelDirectoryAdapter,
   createMessageToolCardSchema,
@@ -11,13 +11,13 @@ import {
   createRuntimeDirectoryLiveAdapter,
   createRuntimeOutboundDelegates,
   createTextPairingAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageToolDiscovery,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { listDirectoryEntriesFromSources } from "@/src-backend/plugin-sdk/directory-runtime";
-import { createLazyRuntimeNamedExport } from "@/src-backend/plugin-sdk/lazy-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { listDirectoryEntriesFromSources } from "powerdirector/plugin-sdk/directory-runtime";
+import { createLazyRuntimeNamedExport } from "powerdirector/plugin-sdk/lazy-runtime";
 import type { ChannelMessageActionName, ChannelPlugin, PowerDirectorConfig } from "../runtime-api";
 import {
   buildProbeChannelStatusSummary,

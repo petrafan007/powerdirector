@@ -1,4 +1,4 @@
-import type { ModelProviderConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelProviderConfig } from "powerdirector/plugin-sdk/provider-models";
 import { buildXaiCatalogModels, XAI_BASE_URL } from "./model-definitions";
 
 export function buildXaiProvider(

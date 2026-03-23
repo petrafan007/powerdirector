@@ -1,14 +1,14 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   readConfigFileSnapshotForWrite,
   writeConfigFile,
-} from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
 import {
   loadCronStore,
   resolveCronStorePath,
   saveCronStore,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
 import {
   normalizeTelegramChatId,
   normalizeTelegramLookupTarget,

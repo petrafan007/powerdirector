@@ -1,5 +1,5 @@
-import type { DirectoryConfigParams } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelDirectoryEntry } from "@/src-backend/plugin-sdk/channel-runtime";
+import type { DirectoryConfigParams } from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelDirectoryEntry } from "powerdirector/plugin-sdk/channel-runtime";
 import { resolveSlackAccount } from "./accounts";
 import { createSlackWebClient } from "./client";
 

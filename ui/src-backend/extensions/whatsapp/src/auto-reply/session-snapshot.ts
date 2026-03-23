@@ -1,4 +1,4 @@
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   evaluateSessionFreshness,
   loadSessionStore,
@@ -8,8 +8,8 @@ import {
   resolveSessionResetType,
   resolveSessionKey,
   resolveStorePath,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeMainKey } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeMainKey } from "powerdirector/plugin-sdk/routing";
 
 export function getSessionSnapshot(
   cfg: ReturnType<typeof loadConfig>,

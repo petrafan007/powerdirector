@@ -2,7 +2,7 @@ import {
   resolveChannelGroupRequireMention,
   resolveChannelGroupToolsPolicy,
   type GroupToolPolicyConfig,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import type { PowerDirectorConfig } from "./runtime-api";
 
 type WhatsAppGroupContext = {

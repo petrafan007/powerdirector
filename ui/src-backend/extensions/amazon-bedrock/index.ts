@@ -1,8 +1,8 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/plugin-entry";
+import { definePluginEntry } from "powerdirector/plugin-sdk/plugin-entry";
 import {
   createBedrockNoCacheWrapper,
   isAnthropicBedrockModel,
-} from "@/src-backend/plugin-sdk/provider-stream";
+} from "powerdirector/plugin-sdk/provider-stream";
 
 const PROVIDER_ID = "amazon-bedrock";
 const CLAUDE_46_MODEL_RE = /claude-(?:opus|sonnet)-4(?:\.|-)6(?:$|[-.])/i;

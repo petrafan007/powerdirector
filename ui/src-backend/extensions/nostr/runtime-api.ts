@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/nostr";
+export * from "powerdirector/plugin-sdk/nostr";

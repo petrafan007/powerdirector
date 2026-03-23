@@ -1,5 +1,5 @@
-import { ensureAuthProfileStore, listProfilesForProvider } from "@/src-backend/plugin-sdk/agent-runtime";
-import { QWEN_OAUTH_MARKER } from "@/src-backend/plugin-sdk/agent-runtime";
+import { ensureAuthProfileStore, listProfilesForProvider } from "powerdirector/plugin-sdk/agent-runtime";
+import { QWEN_OAUTH_MARKER } from "powerdirector/plugin-sdk/agent-runtime";
 import { buildQwenPortalProvider, QWEN_PORTAL_BASE_URL } from "./provider-catalog";
 import {
   buildOauthProviderAuthResult,

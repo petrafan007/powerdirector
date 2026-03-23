@@ -1,22 +1,22 @@
 import type { RequestClient } from "@buape/carbon";
-import { resolveAgentAvatar } from "@/src-backend/plugin-sdk/agent-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { MarkdownTableMode, ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveAgentAvatar } from "powerdirector/plugin-sdk/agent-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { MarkdownTableMode, ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveRetryConfig,
   retryAsync,
   type RetryConfig,
   type RetryRunner,
-} from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
 import {
   resolveSendableOutboundReplyParts,
   resolveTextChunksWithFallback,
   sendMediaWithLeadingCaption,
-} from "@/src-backend/plugin-sdk/reply-payload";
-import type { ChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { convertMarkdownTables } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-payload";
+import type { ChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { convertMarkdownTables } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveDiscordAccount } from "../accounts";
 import { chunkDiscordTextWithMode } from "../chunk";
 import { createDiscordRetryRunner } from "../retry";

@@ -27,6 +27,12 @@
       "@/*": [
         "./*"
       ],
+      "powerdirector/plugin-sdk": [
+        "./src-backend/plugin-sdk/index.ts"
+      ],
+      "powerdirector/plugin-sdk/*": [
+        "./src-backend/plugin-sdk/*"
+      ],
       "powerdirector/*": [
         "./src-backend/*"
       ]

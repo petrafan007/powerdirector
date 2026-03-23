@@ -2,7 +2,7 @@ import { EventEmitter } from "node:events";
 import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resetLogger, setLoggerOverride } from "@/src-backend/plugin-sdk/runtime-env";
+import { resetLogger, setLoggerOverride } from "powerdirector/plugin-sdk/runtime-env";
 import { afterEach, beforeEach, expect, vi } from "vitest";
 
 // Avoid exporting vitest mock types (TS2742 under pnpm + d.ts emit).
@@ -72,8 +72,8 @@ function createMockSock(): MockSock {
 
 const sock: MockSock = createMockSock();
 
-vi.mock("@/src-backend/plugin-sdk/media-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/media-runtime")>();
+vi.mock("powerdirector/plugin-sdk/media-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/media-runtime")>();
   return {
     ...actual,
     saveMediaBuffer: vi.fn().mockResolvedValue({
@@ -85,24 +85,24 @@ vi.mock("@/src-backend/plugin-sdk/media-runtime", async (importOriginal) => {
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.mock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     loadConfig: () => mockLoadConfig(),
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/conversation-runtime")>();
+vi.mock("powerdirector/plugin-sdk/conversation-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/conversation-runtime")>();
   return {
     ...actual,
     upsertChannelPairingRequest: (...args: unknown[]) => upsertPairingRequestMock(...args),
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/security-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/security-runtime")>();
+vi.mock("powerdirector/plugin-sdk/security-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/security-runtime")>();
   return {
     ...actual,
     readStoreAllowFromForDmPolicy: async (

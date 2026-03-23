@@ -9,7 +9,7 @@ import {
   type ChannelOnboardingDmPolicy,
   type DmPolicy,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/irc";
+} from "powerdirector/plugin-sdk/irc";
 import { listIrcAccountIds, resolveDefaultIrcAccountId, resolveIrcAccount } from "./accounts";
 import {
   isChannelTarget,

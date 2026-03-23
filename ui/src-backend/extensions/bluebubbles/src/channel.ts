@@ -1,19 +1,19 @@
-import { formatNormalizedAllowFromEntries } from "@/src-backend/plugin-sdk/allow-from";
+import { formatNormalizedAllowFromEntries } from "powerdirector/plugin-sdk/allow-from";
 import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createAccountStatusSink } from "@/src-backend/plugin-sdk/channel-lifecycle";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createAccountStatusSink } from "powerdirector/plugin-sdk/channel-lifecycle";
 import {
   createOpenGroupPolicyRestrictSendersWarningCollector,
   projectWarningCollector,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import {
   createAttachedChannelResultAdapter,
   createPairingPrefixStripper,
   createTextPairingAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { createLazyRuntimeNamedExport } from "@/src-backend/plugin-sdk/lazy-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { createLazyRuntimeNamedExport } from "powerdirector/plugin-sdk/lazy-runtime";
 import {
   listBlueBubblesAccountIds,
   type ResolvedBlueBubblesAccount,

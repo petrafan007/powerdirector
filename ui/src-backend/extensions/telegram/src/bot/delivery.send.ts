@@ -1,6 +1,6 @@
 import { type Bot, GrammyError } from "grammy";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { withTelegramApiErrorLogging } from "../api-logging";
 import { markdownToTelegramHtml } from "../format";
 import { buildInlineKeyboard } from "../send";

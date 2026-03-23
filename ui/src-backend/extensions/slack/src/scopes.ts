@@ -1,5 +1,5 @@
 import type { WebClient } from "@slack/web-api";
-import { isRecord } from "@/src-backend/plugin-sdk/text-runtime";
+import { isRecord } from "powerdirector/plugin-sdk/text-runtime";
 import { createSlackWebClient } from "./client";
 
 export type SlackScopesResult = {

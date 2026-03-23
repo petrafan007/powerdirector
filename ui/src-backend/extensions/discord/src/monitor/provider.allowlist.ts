@@ -4,11 +4,11 @@ import {
   canonicalizeAllowlistWithResolvedIds,
   patchAllowlistUsersInConfigEntries,
   summarizeMapping,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { DiscordGuildEntry } from "@/src-backend/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { normalizeStringEntries } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { DiscordGuildEntry } from "powerdirector/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { normalizeStringEntries } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveDiscordChannelAllowlist } from "../resolve-channels";
 import { resolveDiscordUserAllowlist } from "../resolve-users";
 

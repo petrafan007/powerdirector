@@ -3,9 +3,9 @@ import {
   type PowerDirectorConfig,
   promptLegacyChannelAllowFromForAccount,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/setup";
-import { type ChannelSetupWizard } from "@/src-backend/plugin-sdk/setup";
-import { formatDocsLink } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import { type ChannelSetupWizard } from "powerdirector/plugin-sdk/setup";
+import { formatDocsLink } from "powerdirector/plugin-sdk/setup-tools";
 import { resolveDefaultDiscordAccountId, resolveDiscordAccount } from "./accounts";
 import { resolveDiscordChannelAllowlist } from "./resolve-channels";
 import { resolveDiscordUserAllowlist } from "./resolve-users";

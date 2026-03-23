@@ -1,7 +1,7 @@
 import {
   DISCORD_DEFAULT_INBOUND_WORKER_TIMEOUT_MS,
   DISCORD_DEFAULT_LISTENER_TIMEOUT_MS,
-} from "@/src-backend/plugin-sdk/discord";
+} from "powerdirector/plugin-sdk/discord";
 import { MEDIA_AUDIO_FIELD_HELP } from "./media-audio-field-metadata";
 import { IRC_FIELD_HELP } from "./schema.irc";
 import { describeTalkSilenceTimeoutDefaults } from "./talk-defaults";

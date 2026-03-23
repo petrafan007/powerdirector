@@ -1,9 +1,9 @@
 import { GatewayIntents, GatewayPlugin } from "@buape/carbon/gateway";
 import type { APIGatewayBotInfo } from "discord-api-types/v10";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import type { DiscordAccountConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import type { DiscordAccountConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { ProxyAgent, fetch as undiciFetch } from "undici";
 import WebSocket from "ws";
 
@@ -23,7 +23,7 @@ type DiscordGatewayFetch = (
 type DiscordGatewayMetadataError = Error & { transient?: boolean };
 
 export function resolveDiscordGatewayIntents(
-  intentsConfig?: import("@/src-backend/plugin-sdk/config-runtime").DiscordIntentsConfig,
+  intentsConfig?: import("powerdirector/plugin-sdk/config-runtime").DiscordIntentsConfig,
 ): number {
   let intents =
     GatewayIntents.Guilds |

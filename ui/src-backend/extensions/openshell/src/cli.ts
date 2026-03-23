@@ -4,10 +4,10 @@ import {
   runPluginCommandWithTimeout,
   shellEscape,
   type SshSandboxSession,
-} from "@/src-backend/plugin-sdk/sandbox";
+} from "powerdirector/plugin-sdk/sandbox";
 import type { ResolvedOpenShellPluginConfig } from "./config";
 
-export { buildExecRemoteCommand, shellEscape } from "@/src-backend/plugin-sdk/sandbox";
+export { buildExecRemoteCommand, shellEscape } from "powerdirector/plugin-sdk/sandbox";
 
 export type OpenShellExecContext = {
   config: ResolvedOpenShellPluginConfig;

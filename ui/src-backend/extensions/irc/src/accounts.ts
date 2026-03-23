@@ -1,8 +1,8 @@
-import { createAccountListHelpers } from "@/src-backend/plugin-sdk/account-helpers";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
-import { normalizeResolvedSecretInputString } from "@/src-backend/plugin-sdk/config-runtime";
-import { parseOptionalDelimitedEntries } from "@/src-backend/plugin-sdk/core";
-import { tryReadSecretFileSync } from "@/src-backend/plugin-sdk/infra-runtime";
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
+import { normalizeResolvedSecretInputString } from "powerdirector/plugin-sdk/config-runtime";
+import { parseOptionalDelimitedEntries } from "powerdirector/plugin-sdk/core";
+import { tryReadSecretFileSync } from "powerdirector/plugin-sdk/infra-runtime";
 import type { CoreConfig, IrcAccountConfig, IrcNickServConfig } from "./types";
 
 const TRUTHY_ENV = new Set(["true", "1", "yes", "on"]);

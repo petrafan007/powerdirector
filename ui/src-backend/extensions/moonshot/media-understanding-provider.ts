@@ -7,7 +7,7 @@ import {
   assertOkOrThrowHttpError,
   normalizeBaseUrl,
   postJsonRequest,
-} from "@/src-backend/plugin-sdk/media-understanding";
+} from "powerdirector/plugin-sdk/media-understanding";
 
 export const DEFAULT_MOONSHOT_VIDEO_BASE_URL = "https://api.moonshot.ai/v1";
 const DEFAULT_MOONSHOT_VIDEO_MODEL = "kimi-k2.5";

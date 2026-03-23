@@ -2,14 +2,14 @@
  * Twitch onboarding adapter for CLI setup wizard.
  */
 
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/twitch";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/twitch";
 import {
   formatDocsLink,
   promptChannelAccessConfig,
   type ChannelOnboardingAdapter,
   type ChannelOnboardingDmPolicy,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/twitch";
+} from "powerdirector/plugin-sdk/twitch";
 import { DEFAULT_ACCOUNT_ID, getAccountConfig } from "./config";
 import type { TwitchAccountConfig, TwitchRole } from "./types";
 import { isAccountConfigured } from "./utils/twitch";

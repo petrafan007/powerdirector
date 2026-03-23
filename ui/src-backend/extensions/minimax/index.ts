@@ -4,14 +4,14 @@ import {
   type ProviderAuthContext,
   type ProviderAuthResult,
   type ProviderCatalogContext,
-} from "@/src-backend/plugin-sdk/minimax-portal-auth";
+} from "powerdirector/plugin-sdk/minimax-portal-auth";
 import {
   MINIMAX_OAUTH_MARKER,
   createProviderApiKeyAuthMethod,
   ensureAuthProfileStore,
   listProfilesForProvider,
-} from "@/src-backend/plugin-sdk/provider-auth";
-import { fetchMinimaxUsage } from "@/src-backend/plugin-sdk/provider-usage";
+} from "powerdirector/plugin-sdk/provider-auth";
+import { fetchMinimaxUsage } from "powerdirector/plugin-sdk/provider-usage";
 import {
   minimaxMediaUnderstandingProvider,
   minimaxPortalMediaUnderstandingProvider,

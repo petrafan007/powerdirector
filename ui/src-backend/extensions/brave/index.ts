@@ -1,4 +1,4 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
 import { createBraveWebSearchProvider } from "./src/brave-web-search-provider";
 
 export default definePluginEntry({

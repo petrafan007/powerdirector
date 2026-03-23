@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { createAttachedChannelResultAdapter } from "@/src-backend/plugin-sdk/channel-send-result";
+import { createAttachedChannelResultAdapter } from "powerdirector/plugin-sdk/channel-send-result";
 import type { ChannelOutboundAdapter } from "../runtime-api";
 import { resolveFeishuAccount } from "./accounts";
 import { sendMediaFeishu } from "./media";

@@ -1,6 +1,6 @@
 import type { SlackEventMiddlewareArgs } from "@slack/bolt";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
 import type { SlackAppMentionEvent, SlackMessageEvent } from "../../types";
 import { normalizeSlackChannelType } from "../channel-type";
 import type { SlackMonitorContext } from "../context";

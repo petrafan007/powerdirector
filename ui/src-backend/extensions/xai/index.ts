@@ -1,8 +1,8 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth-api-key";
-import { buildSingleProviderApiKeyCatalog } from "@/src-backend/plugin-sdk/provider-catalog";
-import { applyXaiModelCompat } from "@/src-backend/plugin-sdk/provider-models";
-import { createToolStreamWrapper } from "@/src-backend/plugin-sdk/provider-stream";
+import { definePluginEntry } from "powerdirector/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth-api-key";
+import { buildSingleProviderApiKeyCatalog } from "powerdirector/plugin-sdk/provider-catalog";
+import { applyXaiModelCompat } from "powerdirector/plugin-sdk/provider-models";
+import { createToolStreamWrapper } from "powerdirector/plugin-sdk/provider-stream";
 import { applyXaiConfig, XAI_DEFAULT_MODEL_REF } from "./onboard";
 import { buildXaiProvider } from "./provider-catalog";
 import { isModernXaiModel, resolveXaiForwardCompatModel } from "./provider-models";

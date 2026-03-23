@@ -1,6 +1,6 @@
 import type { Block, KnownBlock } from "@slack/web-api";
-import { reduceInteractiveReply } from "@/src-backend/plugin-sdk/interactive-runtime";
-import type { InteractiveReply } from "@/src-backend/plugin-sdk/interactive-runtime";
+import { reduceInteractiveReply } from "powerdirector/plugin-sdk/interactive-runtime";
+import type { InteractiveReply } from "powerdirector/plugin-sdk/interactive-runtime";
 import { truncateSlackText } from "./truncate";
 
 export const SLACK_REPLY_BUTTON_ACTION_ID = "powerdirector:reply_button";

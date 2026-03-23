@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import type { PowerDirectorConfig } from "../runtime-api";
 import {
   createChannelReplyPipeline,

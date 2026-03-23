@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/msteams";
+export * from "powerdirector/plugin-sdk/msteams";

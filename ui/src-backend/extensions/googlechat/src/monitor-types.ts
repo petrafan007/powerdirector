@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/core";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 import type { ResolvedGoogleChatAccount } from "./accounts";
 import type { GoogleChatAudienceType } from "./auth";
 import { getGoogleChatRuntime } from "./runtime";

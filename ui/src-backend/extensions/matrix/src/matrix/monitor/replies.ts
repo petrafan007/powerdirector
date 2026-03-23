@@ -2,7 +2,7 @@ import type { MatrixClient } from "@vector-im/matrix-bot-sdk";
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import type { MarkdownTableMode, ReplyPayload, RuntimeEnv } from "../../../runtime-api";
 import { getMatrixRuntime } from "../../runtime";
 import { sendMessageMatrix } from "../send";

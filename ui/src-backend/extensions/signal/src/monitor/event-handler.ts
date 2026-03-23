@@ -1,40 +1,40 @@
-import { resolveHumanDelayConfig } from "@/src-backend/plugin-sdk/agent-runtime";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { resolveControlCommandGate } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveHumanDelayConfig } from "powerdirector/plugin-sdk/agent-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { resolveControlCommandGate } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   createChannelInboundDebouncer,
   shouldDebounceTextInbound,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { logInboundDrop, logTypingFailure } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveMentionGatingWithBypass } from "@/src-backend/plugin-sdk/channel-runtime";
-import { normalizeSignalMessagingTarget } from "@/src-backend/plugin-sdk/channel-runtime";
-import { recordInboundSession } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveChannelGroupRequireMention } from "@/src-backend/plugin-sdk/config-runtime";
-import { readSessionUpdatedAt, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { kindFromMime } from "@/src-backend/plugin-sdk/media-runtime";
-import { hasControlCommand } from "@/src-backend/plugin-sdk/reply-runtime";
-import { dispatchInboundMessage } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { logInboundDrop, logTypingFailure } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveMentionGatingWithBypass } from "powerdirector/plugin-sdk/channel-runtime";
+import { normalizeSignalMessagingTarget } from "powerdirector/plugin-sdk/channel-runtime";
+import { recordInboundSession } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveChannelGroupRequireMention } from "powerdirector/plugin-sdk/config-runtime";
+import { readSessionUpdatedAt, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { kindFromMime } from "powerdirector/plugin-sdk/media-runtime";
+import { hasControlCommand } from "powerdirector/plugin-sdk/reply-runtime";
+import { dispatchInboundMessage } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   formatInboundEnvelope,
   formatInboundFromLabel,
   resolveEnvelopeFormatOptions,
-} from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
 import {
   buildPendingHistoryContextFromMap,
   clearHistoryEntriesIfEnabled,
   recordPendingHistoryEntryIfEnabled,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { buildMentionRegexes, matchesMentionPatterns } from "@/src-backend/plugin-sdk/reply-runtime";
-import { createReplyDispatcherWithTyping } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { danger, logVerbose, shouldLogVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { buildMentionRegexes, matchesMentionPatterns } from "powerdirector/plugin-sdk/reply-runtime";
+import { createReplyDispatcherWithTyping } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { danger, logVerbose, shouldLogVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import {
   DM_GROUP_ACCESS_REASON,
   resolvePinnedMainDmOwnerFromAllowlist,
-} from "@/src-backend/plugin-sdk/security-runtime";
-import { normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
+import { normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import {
   formatSignalPairingIdLine,
   formatSignalSenderDisplay,

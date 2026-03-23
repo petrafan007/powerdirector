@@ -1,5 +1,5 @@
-import { createAccountListHelpers } from "@/src-backend/plugin-sdk/account-helpers";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
+import { createAccountListHelpers } from "powerdirector/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
 import type { PowerDirectorConfig } from "../runtime-api";
 import type { ResolvedZalouserAccount, ZalouserAccountConfig, ZalouserConfig } from "./types";
 import { checkZaloAuthenticated, getZaloUserInfo } from "./zalo-js";

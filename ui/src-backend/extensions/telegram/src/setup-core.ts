@@ -6,9 +6,9 @@ import {
   splitSetupEntries,
   type PowerDirectorConfig,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/setup";
-import type { ChannelSetupAdapter, ChannelSetupDmPolicy } from "@/src-backend/plugin-sdk/setup";
-import { formatCliCommand, formatDocsLink } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import type { ChannelSetupAdapter, ChannelSetupDmPolicy } from "powerdirector/plugin-sdk/setup";
+import { formatCliCommand, formatDocsLink } from "powerdirector/plugin-sdk/setup-tools";
 import { resolveDefaultTelegramAccountId, resolveTelegramAccount } from "./accounts";
 import { fetchTelegramChatId } from "./api-fetch";
 

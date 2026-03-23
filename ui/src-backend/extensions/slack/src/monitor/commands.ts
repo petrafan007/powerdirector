@@ -1,4 +1,4 @@
-import type { SlackSlashCommandConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { SlackSlashCommandConfig } from "powerdirector/plugin-sdk/config-runtime";
 
 /**
  * Strip Slack mentions (<@U123>, <@U123|name>) so command detection works on

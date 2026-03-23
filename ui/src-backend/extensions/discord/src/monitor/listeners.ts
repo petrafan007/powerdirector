@@ -8,16 +8,16 @@ import {
   ThreadUpdateListener,
   type User,
 } from "@buape/carbon";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { formatDurationSeconds } from "@/src-backend/plugin-sdk/infra-runtime";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { danger, logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { formatDurationSeconds } from "powerdirector/plugin-sdk/infra-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { danger, logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
 import {
   readStoreAllowFromForDmPolicy,
   resolveDmGroupAccessWithLists,
-} from "@/src-backend/plugin-sdk/security-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
 import {
   isDiscordGroupAllowedByPolicy,
   normalizeDiscordAllowList,
@@ -36,9 +36,9 @@ import { isThreadArchived } from "./thread-bindings.discord-api";
 import { closeDiscordThreadSessions } from "./thread-session-close";
 import { normalizeDiscordListenerTimeoutMs, runDiscordTaskWithTimeout } from "./timeouts";
 
-type LoadedConfig = ReturnType<typeof import("@/src-backend/plugin-sdk/config-runtime").loadConfig>;
-type RuntimeEnv = import("@/src-backend/plugin-sdk/runtime-env").RuntimeEnv;
-type Logger = ReturnType<typeof import("@/src-backend/plugin-sdk/runtime-env").createSubsystemLogger>;
+type LoadedConfig = ReturnType<typeof import("powerdirector/plugin-sdk/config-runtime").loadConfig>;
+type RuntimeEnv = import("powerdirector/plugin-sdk/runtime-env").RuntimeEnv;
+type Logger = ReturnType<typeof import("powerdirector/plugin-sdk/runtime-env").createSubsystemLogger>;
 
 export type DiscordMessageEvent = Parameters<MessageCreateListener["handle"]>[0];
 

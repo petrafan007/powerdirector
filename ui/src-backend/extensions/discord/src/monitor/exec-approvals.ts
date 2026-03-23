@@ -10,24 +10,24 @@ import {
   type TopLevelComponents,
 } from "@buape/carbon";
 import { ButtonStyle, Routes } from "discord-api-types/v10";
-import { normalizeMessageChannel } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { loadSessionStore, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
-import type { DiscordExecApprovalConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { GatewayClient } from "@/src-backend/plugin-sdk/gateway-runtime";
-import { createOperatorApprovalsGatewayClient } from "@/src-backend/plugin-sdk/gateway-runtime";
-import type { EventFrame } from "@/src-backend/plugin-sdk/gateway-runtime";
-import { resolveExecApprovalCommandDisplay } from "@/src-backend/plugin-sdk/infra-runtime";
-import { getExecApprovalApproverDmNoticeText } from "@/src-backend/plugin-sdk/infra-runtime";
+import { normalizeMessageChannel } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { loadSessionStore, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
+import type { DiscordExecApprovalConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { GatewayClient } from "powerdirector/plugin-sdk/gateway-runtime";
+import { createOperatorApprovalsGatewayClient } from "powerdirector/plugin-sdk/gateway-runtime";
+import type { EventFrame } from "powerdirector/plugin-sdk/gateway-runtime";
+import { resolveExecApprovalCommandDisplay } from "powerdirector/plugin-sdk/infra-runtime";
+import { getExecApprovalApproverDmNoticeText } from "powerdirector/plugin-sdk/infra-runtime";
 import type {
   ExecApprovalDecision,
   ExecApprovalRequest,
   ExecApprovalResolved,
-} from "@/src-backend/plugin-sdk/infra-runtime";
-import { normalizeAccountId, resolveAgentIdFromSessionKey } from "@/src-backend/plugin-sdk/routing";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { compileSafeRegex, testRegexWithBoundedInput } from "@/src-backend/plugin-sdk/security-runtime";
-import { logDebug, logError } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
+import { normalizeAccountId, resolveAgentIdFromSessionKey } from "powerdirector/plugin-sdk/routing";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { compileSafeRegex, testRegexWithBoundedInput } from "powerdirector/plugin-sdk/security-runtime";
+import { logDebug, logError } from "powerdirector/plugin-sdk/text-runtime";
 import { createDiscordClient, stripUndefinedFields } from "../send.shared";
 import { DiscordUiContainer } from "../ui";
 

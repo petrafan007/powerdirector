@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/feishu";
+export * from "powerdirector/plugin-sdk/feishu";

@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import type { AnyAgentTool } from "./runtime-api";
 import { zalouserPlugin } from "./src/channel";
 import { setZalouserRuntime } from "./src/runtime";

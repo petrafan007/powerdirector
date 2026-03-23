@@ -1,12 +1,12 @@
 import * as dns from "node:dns";
-import type { TelegramNetworkConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { TelegramNetworkConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   createPinnedLookup,
   hasEnvHttpProxyConfigured,
   resolveFetch,
   type PinnedDispatcherPolicy,
-} from "@/src-backend/plugin-sdk/infra-runtime";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/infra-runtime";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
 import { Agent, EnvHttpProxyAgent, ProxyAgent, fetch as undiciFetch } from "undici";
 import {
   resolveTelegramAutoSelectFamilyDecision,

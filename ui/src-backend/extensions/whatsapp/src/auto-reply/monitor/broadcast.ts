@@ -1,11 +1,11 @@
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { buildAgentSessionKey, deriveLastRoutePolicy } from "@/src-backend/plugin-sdk/routing";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { buildAgentSessionKey, deriveLastRoutePolicy } from "powerdirector/plugin-sdk/routing";
 import {
   buildAgentMainSessionKey,
   DEFAULT_MAIN_KEY,
   normalizeAgentId,
-} from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/routing";
 import { formatError } from "../../session";
 import { whatsappInboundLog } from "../loggers";
 import type { WebInboundMsg } from "../types";

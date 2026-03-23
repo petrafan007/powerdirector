@@ -2,7 +2,7 @@ import type {
   ChannelAccountSnapshot,
   ChannelGatewayContext,
   PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/test-utils";
+} from "powerdirector/plugin-sdk/test-utils";
 import { vi } from "vitest";
 import { createRuntimeEnv } from "./runtime-env";
 

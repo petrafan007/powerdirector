@@ -4,7 +4,7 @@ import {
   calculateTotalPages,
   getModelsPageSize,
   type ProviderInfo,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 import { resolveAgentDir, resolveSessionAgentId } from "../../agents/agent-scope";
 import { resolveModelAuthLabel } from "../../agents/model-auth-label";
 import { loadModelCatalog } from "../../agents/model-catalog";

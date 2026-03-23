@@ -1,19 +1,19 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveThreadBindingConversationIdFromBindingId } from "@/src-backend/plugin-sdk/channel-runtime";
-import { formatThreadBindingDurationLabel } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveThreadBindingConversationIdFromBindingId } from "powerdirector/plugin-sdk/channel-runtime";
+import { formatThreadBindingDurationLabel } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   registerSessionBindingAdapter,
   unregisterSessionBindingAdapter,
   type BindingTargetKind,
   type SessionBindingRecord,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { writeJsonAtomic } from "@/src-backend/plugin-sdk/infra-runtime";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolveStateDir } from "@/src-backend/plugin-sdk/state-paths";
-import { resolveGlobalSingleton } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { writeJsonAtomic } from "powerdirector/plugin-sdk/infra-runtime";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { resolveStateDir } from "powerdirector/plugin-sdk/state-paths";
+import { resolveGlobalSingleton } from "powerdirector/plugin-sdk/text-runtime";
 
 const DEFAULT_THREAD_BINDING_IDLE_TIMEOUT_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_THREAD_BINDING_MAX_AGE_MS = 0;

@@ -1,4 +1,4 @@
-import type { DirectoryConfigParams } from "@/src-backend/plugin-sdk/channel-runtime";
+import type { DirectoryConfigParams } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   buildMessagingTarget,
   parseMentionPrefixOrAtUserTarget,
@@ -6,7 +6,7 @@ import {
   type MessagingTarget,
   type MessagingTargetKind,
   type MessagingTargetParseOptions,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import { rememberDiscordDirectoryUser } from "./directory-cache";
 import { listDiscordDirectoryPeersLive } from "./directory-live";
 

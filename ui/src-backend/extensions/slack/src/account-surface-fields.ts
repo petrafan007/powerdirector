@@ -1,4 +1,4 @@
-import type { SlackAccountConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { SlackAccountConfig } from "powerdirector/plugin-sdk/config-runtime";
 
 export type SlackAccountSurfaceFields = {
   groupPolicy?: SlackAccountConfig["groupPolicy"];

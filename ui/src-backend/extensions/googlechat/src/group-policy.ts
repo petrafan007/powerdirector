@@ -1,5 +1,5 @@
-import { resolveChannelGroupRequireMention } from "@/src-backend/plugin-sdk/channel-policy";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/core";
+import { resolveChannelGroupRequireMention } from "powerdirector/plugin-sdk/channel-policy";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 
 type GoogleChatGroupContext = {
   cfg: PowerDirectorConfig;

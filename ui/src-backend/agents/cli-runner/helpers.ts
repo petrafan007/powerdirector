@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import type { AgentTool } from "@mariozechner/pi-agent-core";
 import type { ImageContent } from "@mariozechner/pi-ai";
-import { KeyedAsyncQueue } from "@/src-backend/plugin-sdk/keyed-async-queue";
+import { KeyedAsyncQueue } from "powerdirector/plugin-sdk/keyed-async-queue";
 import type { ThinkLevel } from "../../auto-reply/thinking";
 import type { PowerDirectorConfig } from "../../config/config";
 import type { CliBackendConfig } from "../../config/types";

@@ -1,5 +1,5 @@
-import { createNonExitingRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { normalizeStringEntries } from "@/src-backend/plugin-sdk/text-runtime";
+import { createNonExitingRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { normalizeStringEntries } from "powerdirector/plugin-sdk/text-runtime";
 import type { MonitorIMessageOpts } from "./types";
 
 export function resolveRuntime(opts: MonitorIMessageOpts): RuntimeEnv {

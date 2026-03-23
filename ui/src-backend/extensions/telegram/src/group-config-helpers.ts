@@ -2,7 +2,7 @@ import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
 import { firstDefined } from "./bot-access";
 
 export function resolveTelegramGroupPromptSettings(params: {

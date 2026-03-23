@@ -1,17 +1,17 @@
-import { resolveAckReaction } from "@/src-backend/plugin-sdk/agent-runtime";
-import { shouldAckReaction as shouldAckReactionGate } from "@/src-backend/plugin-sdk/channel-runtime";
-import { logInboundDrop } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveAckReaction } from "powerdirector/plugin-sdk/agent-runtime";
+import { shouldAckReaction as shouldAckReactionGate } from "powerdirector/plugin-sdk/channel-runtime";
+import { logInboundDrop } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   createStatusReactionController,
   type StatusReactionController,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { TelegramDirectConfig, TelegramGroupConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { ensureConfiguredBindingRouteReady } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { recordChannelActivity } from "@/src-backend/plugin-sdk/infra-runtime";
-import { deriveLastRoutePolicy } from "@/src-backend/plugin-sdk/routing";
-import { DEFAULT_ACCOUNT_ID, resolveThreadSessionKeys } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { TelegramDirectConfig, TelegramGroupConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { ensureConfiguredBindingRouteReady } from "powerdirector/plugin-sdk/conversation-runtime";
+import { recordChannelActivity } from "powerdirector/plugin-sdk/infra-runtime";
+import { deriveLastRoutePolicy } from "powerdirector/plugin-sdk/routing";
+import { DEFAULT_ACCOUNT_ID, resolveThreadSessionKeys } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { withTelegramApiErrorLogging } from "./api-logging";
 import { firstDefined, normalizeAllowFrom, normalizeDmAllowFromWithStore } from "./bot-access";
 import { resolveTelegramInboundBody } from "./bot-message-context.body";

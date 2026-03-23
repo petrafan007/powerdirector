@@ -1,13 +1,13 @@
-import { createScopedDmSecurityResolver } from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createAllowlistProviderRestrictSendersWarningCollector } from "@/src-backend/plugin-sdk/channel-policy";
+import { createScopedDmSecurityResolver } from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createAllowlistProviderRestrictSendersWarningCollector } from "powerdirector/plugin-sdk/channel-policy";
 import {
   createAttachedChannelResultAdapter,
   createEmptyChannelDirectoryAdapter,
   createEmptyChannelResult,
   createPairingPrefixStripper,
   createTextPairingAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOutboundMediaUrls } from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOutboundMediaUrls } from "powerdirector/plugin-sdk/reply-payload";
 import {
   buildChannelConfigSchema,
   buildComputedAccountStatusSnapshot,

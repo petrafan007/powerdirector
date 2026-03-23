@@ -4,7 +4,7 @@ import {
   transcribeOpenAiCompatibleAudio,
   type AudioTranscriptionRequest,
   type MediaUnderstandingProvider,
-} from "@/src-backend/plugin-sdk/media-understanding";
+} from "powerdirector/plugin-sdk/media-understanding";
 
 export const DEFAULT_OPENAI_AUDIO_BASE_URL = "https://api.openai.com/v1";
 const DEFAULT_OPENAI_AUDIO_MODEL = "gpt-4o-mini-transcribe";

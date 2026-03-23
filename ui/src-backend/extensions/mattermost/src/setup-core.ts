@@ -1,4 +1,4 @@
-import type { ChannelSetupAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
+import type { ChannelSetupAdapter } from "powerdirector/plugin-sdk/channel-runtime";
 import { resolveMattermostAccount, type ResolvedMattermostAccount } from "./mattermost/accounts";
 import { normalizeMattermostBaseUrl } from "./mattermost/client";
 import {

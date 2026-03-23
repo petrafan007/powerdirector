@@ -1,10 +1,10 @@
-import { collectTelegramUnmentionedGroupIds } from "@/src-backend/plugin-sdk/telegram";
-import { telegramMessageActions } from "@/src-backend/plugin-sdk/telegram";
+import { collectTelegramUnmentionedGroupIds } from "powerdirector/plugin-sdk/telegram";
+import { telegramMessageActions } from "powerdirector/plugin-sdk/telegram";
 import {
   setTelegramThreadBindingIdleTimeoutBySessionKey,
   setTelegramThreadBindingMaxAgeBySessionKey,
-} from "@/src-backend/plugin-sdk/telegram";
-import { resolveTelegramToken } from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
+import { resolveTelegramToken } from "powerdirector/plugin-sdk/telegram";
 import {
   createLazyRuntimeMethodBinder,
   createLazyRuntimeSurface,

@@ -4,8 +4,8 @@ import {
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from "@/src-backend/plugin-sdk/agent-runtime";
-import type { PowerDirectorPluginApi } from "@/src-backend/plugin-sdk/plugin-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/plugin-runtime";
 import { runFirecrawlSearch } from "./firecrawl-client";
 
 const FirecrawlSearchToolSchema = Type.Object(

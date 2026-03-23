@@ -1,6 +1,6 @@
-import { auditTelegramGroupMembership as auditTelegramGroupMembershipImpl } from "@/src-backend/plugin-sdk/telegram";
-import { monitorTelegramProvider as monitorTelegramProviderImpl } from "@/src-backend/plugin-sdk/telegram";
-import { probeTelegram as probeTelegramImpl } from "@/src-backend/plugin-sdk/telegram";
+import { auditTelegramGroupMembership as auditTelegramGroupMembershipImpl } from "powerdirector/plugin-sdk/telegram";
+import { monitorTelegramProvider as monitorTelegramProviderImpl } from "powerdirector/plugin-sdk/telegram";
+import { probeTelegram as probeTelegramImpl } from "powerdirector/plugin-sdk/telegram";
 import {
   deleteMessageTelegram as deleteMessageTelegramImpl,
   editMessageReplyMarkupTelegram as editMessageReplyMarkupTelegramImpl,
@@ -11,7 +11,7 @@ import {
   sendPollTelegram as sendPollTelegramImpl,
   sendTypingTelegram as sendTypingTelegramImpl,
   unpinMessageTelegram as unpinMessageTelegramImpl,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 import type { PluginRuntimeChannel } from "./types-channel";
 
 type RuntimeTelegramOps = Pick<

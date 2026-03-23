@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { discordPlugin } from "./src/channel";
 import { setDiscordRuntime } from "./src/runtime";
 import { registerDiscordSubagentHooks } from "./src/subagent-hooks";

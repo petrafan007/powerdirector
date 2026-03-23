@@ -1,15 +1,15 @@
 import type { SlackActionMiddlewareArgs, SlackCommandMiddlewareArgs } from "@slack/bolt";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { resolveCommandAuthorizedFromAuthorizers } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveNativeCommandSessionTargets } from "@/src-backend/plugin-sdk/channel-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { resolveCommandAuthorizedFromAuthorizers } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveNativeCommandSessionTargets } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   resolveNativeCommandsEnabled,
   resolveNativeSkillsEnabled,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { type ChatCommandDefinition, type CommandArgs } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { danger, logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { chunkItems } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { type ChatCommandDefinition, type CommandArgs } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { danger, logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { chunkItems } from "powerdirector/plugin-sdk/text-runtime";
 import type { ResolvedSlackAccount } from "../accounts";
 import { truncateSlackText } from "../truncate";
 import { resolveSlackAllowListMatch, resolveSlackUserAllowed } from "./allow-list";

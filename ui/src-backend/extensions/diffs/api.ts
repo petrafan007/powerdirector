@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/diffs";
+export * from "powerdirector/plugin-sdk/diffs";

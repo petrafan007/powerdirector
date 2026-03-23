@@ -1,6 +1,6 @@
-import { transcribeFirstAudio as transcribeFirstAudioImpl } from "@/src-backend/plugin-sdk/media-runtime";
+import { transcribeFirstAudio as transcribeFirstAudioImpl } from "powerdirector/plugin-sdk/media-runtime";
 
-type TranscribeFirstAudio = typeof import("@/src-backend/plugin-sdk/media-runtime").transcribeFirstAudio;
+type TranscribeFirstAudio = typeof import("powerdirector/plugin-sdk/media-runtime").transcribeFirstAudio;
 
 export async function transcribeFirstAudio(
   ...args: Parameters<TranscribeFirstAudio>

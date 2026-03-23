@@ -8,9 +8,9 @@ import {
   type ChannelMessageActionName,
   type ChannelMessageToolDiscovery,
   type ChannelMessageToolSchemaContribution,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { TelegramActionConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { extractToolSend } from "@/src-backend/plugin-sdk/tool-send";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { TelegramActionConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { extractToolSend } from "powerdirector/plugin-sdk/tool-send";
 import {
   createTelegramActionGate,
   listEnabledTelegramAccounts,

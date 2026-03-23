@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **[Wave 3] Platform & Browser Ops**: Ported health/readiness endpoints (`/healthz`, `/readyz`).
 - **[Wave 3] Browser Relay**: Reconnect tolerance and startup diagnostics.
 - **[Wave 3] CDP URL**: Normalization and wildcard debugger rewrite.
+- **[Hotfix] ReferenceError: safeHomedir is not defined**: Converted `safeHomedir` and `safeTmpdir` to hoisted function declarations and updated call sites (e.g. `utils.ts`) to use thunks for default parameter values to resolve initialization race conditions during Next.js builds.
+- **[Hotfix] UNRESOLVED_IMPORT @napi-rs/canvas**: Added `@napi-rs/canvas` to `dependencies` in `ui/package.json` to ensure correct Webpack resolution of native modules.
+- **[Hotfix] UI Build Module Resolution**: Fixed "Cannot find module" errors during Next.js pre-rendering by adding Webpack aliases for `powerdirector/` and setting `POWERDIRECTOR_BUNDLED_PLUGINS_DIR` to the sanitized `src-backend/extensions` directory during the build process.
 
 ### Changed
 - **[Wave 3] Browser Session**: Cleanup on session reset/delete.

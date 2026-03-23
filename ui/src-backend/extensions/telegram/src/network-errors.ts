@@ -3,7 +3,7 @@ import {
   extractErrorCode,
   formatErrorMessage,
   readErrorName,
-} from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/infra-runtime";
 
 const TELEGRAM_NETWORK_ORIGIN = Symbol("powerdirector.telegram.network-origin");
 

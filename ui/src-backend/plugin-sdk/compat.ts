@@ -8,7 +8,7 @@ const shouldWarnCompatImport =
 
 if (shouldWarnCompatImport) {
   process.emitWarning(
-    "@/src-backend/plugin-sdk/compat is deprecated for new plugins. Migrate to focused powerdirector/plugin-sdk/<subpath> imports.",
+    "powerdirector/plugin-sdk/compat is deprecated for new plugins. Migrate to focused powerdirector/plugin-sdk/<subpath> imports.",
     {
       code: "POWERDIRECTOR_PLUGIN_SDK_COMPAT_DEPRECATED",
       detail:

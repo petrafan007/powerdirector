@@ -5,7 +5,7 @@ import {
   normalizeChatType,
   resolveAccountEntry,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/account-resolution";
+} from "powerdirector/plugin-sdk/account-resolution";
 import type { SlackAccountSurfaceFields } from "./account-surface-fields";
 import type { SlackAccountConfig } from "./runtime-api";
 import { resolveSlackAppToken, resolveSlackBotToken, resolveSlackUserToken } from "./token";

@@ -125,7 +125,8 @@
     "twitter-api-v2": "^1.29.0",
     "undici": "^7.22.0",
     "whatsapp-web.js": "^1.34.6",
-    "@modelcontextprotocol/sdk": "^1.27.1"
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@napi-rs/canvas": "^0.1.95"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",

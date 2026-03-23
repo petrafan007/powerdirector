@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { registerLineCardCommand } from "./src/card-command";
 import { linePlugin } from "./src/channel";
 import { setLineRuntime } from "./src/runtime";

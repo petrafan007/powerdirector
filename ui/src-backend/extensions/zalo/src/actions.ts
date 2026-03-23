@@ -1,4 +1,4 @@
-import { createLazyRuntimeNamedExport } from "@/src-backend/plugin-sdk/lazy-runtime";
+import { createLazyRuntimeNamedExport } from "powerdirector/plugin-sdk/lazy-runtime";
 import { listEnabledZaloAccounts } from "./accounts";
 import type {
   ChannelMessageActionAdapter,

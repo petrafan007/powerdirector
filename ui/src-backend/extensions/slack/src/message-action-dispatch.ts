@@ -1,7 +1,7 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { ChannelMessageActionContext } from "@/src-backend/plugin-sdk/channel-runtime";
-import { normalizeInteractiveReply } from "@/src-backend/plugin-sdk/interactive-runtime";
-import { readNumberParam, readStringParam } from "@/src-backend/plugin-sdk/slack-core";
+import type { ChannelMessageActionContext } from "powerdirector/plugin-sdk/channel-runtime";
+import { normalizeInteractiveReply } from "powerdirector/plugin-sdk/interactive-runtime";
+import { readNumberParam, readStringParam } from "powerdirector/plugin-sdk/slack-core";
 import { parseSlackBlocksInput } from "./blocks-input";
 import { buildSlackInteractiveBlocks } from "./blocks-render";
 

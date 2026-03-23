@@ -1,5 +1,5 @@
-import type { FinalizedMsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ResolvedAgentRoute } from "@/src-backend/plugin-sdk/routing";
+import type { FinalizedMsgContext } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ResolvedAgentRoute } from "powerdirector/plugin-sdk/routing";
 import type { ResolvedSlackAccount } from "../../accounts";
 import type { SlackMessageEvent } from "../../types";
 import type { SlackChannelConfigResolved } from "../channel-config";

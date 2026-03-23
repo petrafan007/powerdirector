@@ -1,7 +1,7 @@
 import { Type } from "@sinclair/typebox";
-import { jsonResult, readNumberParam, readStringParam } from "@/src-backend/plugin-sdk/agent-runtime";
-import { optionalStringEnum } from "@/src-backend/plugin-sdk/core";
-import type { PowerDirectorPluginApi } from "@/src-backend/plugin-sdk/plugin-runtime";
+import { jsonResult, readNumberParam, readStringParam } from "powerdirector/plugin-sdk/agent-runtime";
+import { optionalStringEnum } from "powerdirector/plugin-sdk/core";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/plugin-runtime";
 import { runFirecrawlScrape } from "./firecrawl-client";
 
 const FirecrawlScrapeToolSchema = Type.Object(

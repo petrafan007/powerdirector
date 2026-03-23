@@ -1,4 +1,4 @@
-import { isTelegramVoiceCompatibleAudio } from "@/src-backend/plugin-sdk/media-runtime";
+import { isTelegramVoiceCompatibleAudio } from "powerdirector/plugin-sdk/media-runtime";
 
 export function resolveTelegramVoiceDecision(opts: {
   wantsVoice: boolean;

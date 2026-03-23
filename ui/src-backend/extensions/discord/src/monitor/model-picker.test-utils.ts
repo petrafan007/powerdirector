@@ -1,4 +1,4 @@
-import type { ModelsProviderData } from "@/src-backend/plugin-sdk/reply-runtime";
+import type { ModelsProviderData } from "powerdirector/plugin-sdk/reply-runtime";
 
 export function createModelsProviderData(
   entries: Record<string, string[]>,

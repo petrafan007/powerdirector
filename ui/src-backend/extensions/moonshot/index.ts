@@ -1,10 +1,10 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
-import { buildSingleProviderApiKeyCatalog } from "@/src-backend/plugin-sdk/provider-catalog";
+import { definePluginEntry } from "powerdirector/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
+import { buildSingleProviderApiKeyCatalog } from "powerdirector/plugin-sdk/provider-catalog";
 import {
   createMoonshotThinkingWrapper,
   resolveMoonshotThinkingType,
-} from "@/src-backend/plugin-sdk/provider-stream";
+} from "powerdirector/plugin-sdk/provider-stream";
 import { moonshotMediaUnderstandingProvider } from "./media-understanding-provider";
 import {
   applyMoonshotConfig,

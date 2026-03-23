@@ -9,17 +9,17 @@ import {
 import { PollLayoutType } from "discord-api-types/payloads/v10";
 import type { RESTAPIPoll } from "discord-api-types/rest/v10";
 import { Routes, type APIChannel, type APIEmbed } from "discord-api-types/v10";
-import { loadConfig, type PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { RetryRunner } from "@/src-backend/plugin-sdk/infra-runtime";
-import { buildOutboundMediaLoadOptions } from "@/src-backend/plugin-sdk/media-runtime";
+import { loadConfig, type PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { RetryRunner } from "powerdirector/plugin-sdk/infra-runtime";
+import { buildOutboundMediaLoadOptions } from "powerdirector/plugin-sdk/media-runtime";
 import {
   normalizePollDurationHours,
   normalizePollInput,
   type PollInput,
-} from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveTextChunksWithFallback } from "@/src-backend/plugin-sdk/reply-payload";
-import type { ChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import { loadWebMedia } from "@/src-backend/plugin-sdk/web-media";
+} from "powerdirector/plugin-sdk/media-runtime";
+import { resolveTextChunksWithFallback } from "powerdirector/plugin-sdk/reply-payload";
+import type { ChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import { loadWebMedia } from "powerdirector/plugin-sdk/web-media";
 import { resolveDiscordAccount } from "./accounts";
 import { chunkDiscordTextWithMode } from "./chunk";
 import { createDiscordClient, resolveDiscordRest } from "./client";

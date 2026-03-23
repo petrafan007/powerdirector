@@ -11,25 +11,25 @@ import {
   type StringSelectMenuInteraction,
 } from "@buape/carbon";
 import { ButtonStyle } from "discord-api-types/v10";
-import type { PowerDirectorConfig, loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { loadSessionStore, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig, loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { loadSessionStore, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
 import {
   buildCommandTextFromArgs,
   findCommandByNativeName,
   listChatCommands,
   resolveCommandArgChoices,
   serializeCommandArgs,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveStoredModelOverride } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveStoredModelOverride } from "powerdirector/plugin-sdk/reply-runtime";
 import type {
   ChatCommandDefinition,
   CommandArgDefinition,
   CommandArgValues,
   CommandArgs,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ResolvedAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { chunkItems, withTimeout } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import type { ResolvedAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { chunkItems, withTimeout } from "powerdirector/plugin-sdk/text-runtime";
 import { normalizeDiscordSlug } from "./allow-list";
 import { resolveDiscordChannelInfo } from "./message-utils";
 import {

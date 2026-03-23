@@ -12,7 +12,7 @@ import {
   type ChannelSetupWizard,
   type PowerDirectorConfig,
   type SecretInput,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import { listZaloAccountIds, resolveDefaultZaloAccountId, resolveZaloAccount } from "./accounts";
 import { zaloSetupAdapter } from "./setup-core";
 

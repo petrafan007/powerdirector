@@ -1,23 +1,23 @@
 import { type Bot, GrammyError, InputFile } from "grammy";
-import type { ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
-import type { MarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { fireAndForgetHook } from "@/src-backend/plugin-sdk/hook-runtime";
-import { createInternalHookEvent, triggerInternalHook } from "@/src-backend/plugin-sdk/hook-runtime";
+import type { ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
+import type { MarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { fireAndForgetHook } from "powerdirector/plugin-sdk/hook-runtime";
+import { createInternalHookEvent, triggerInternalHook } from "powerdirector/plugin-sdk/hook-runtime";
 import {
   buildCanonicalSentMessageHookContext,
   toInternalMessageSentContext,
   toPluginMessageContext,
   toPluginMessageSentEvent,
-} from "@/src-backend/plugin-sdk/hook-runtime";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import { buildOutboundMediaLoadOptions } from "@/src-backend/plugin-sdk/media-runtime";
-import { isGifMedia, kindFromMime } from "@/src-backend/plugin-sdk/media-runtime";
-import { getGlobalHookRunner } from "@/src-backend/plugin-sdk/plugin-runtime";
-import { chunkMarkdownTextWithMode, type ChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { danger, logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { loadWebMedia } from "@/src-backend/plugin-sdk/web-media";
+} from "powerdirector/plugin-sdk/hook-runtime";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import { buildOutboundMediaLoadOptions } from "powerdirector/plugin-sdk/media-runtime";
+import { isGifMedia, kindFromMime } from "powerdirector/plugin-sdk/media-runtime";
+import { getGlobalHookRunner } from "powerdirector/plugin-sdk/plugin-runtime";
+import { chunkMarkdownTextWithMode, type ChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { danger, logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { loadWebMedia } from "powerdirector/plugin-sdk/web-media";
 import type { TelegramInlineButtons } from "../button-types";
 import { splitTelegramCaption } from "../caption";
 import {

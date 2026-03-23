@@ -1,6 +1,6 @@
 import type { Bot } from "grammy";
-import { createFinalizableDraftLifecycle } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveGlobalSingleton } from "@/src-backend/plugin-sdk/text-runtime";
+import { createFinalizableDraftLifecycle } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveGlobalSingleton } from "powerdirector/plugin-sdk/text-runtime";
 import { buildTelegramThreadParams, type TelegramThreadSpec } from "./bot/helpers";
 import { isSafeToRetrySendError, isTelegramClientRejection } from "./network-errors";
 

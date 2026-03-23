@@ -1,4 +1,4 @@
-import { tryReadSecretFileSync } from "@/src-backend/plugin-sdk/infra-runtime";
+import { tryReadSecretFileSync } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   createAccountListHelpers,
   DEFAULT_ACCOUNT_ID,

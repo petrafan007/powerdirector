@@ -4,7 +4,7 @@ import type {
   PowerDirectorConfig,
   DmPolicy,
   WizardPrompter,
-} from "@/src-backend/plugin-sdk/bluebubbles";
+} from "powerdirector/plugin-sdk/bluebubbles";
 import {
   DEFAULT_ACCOUNT_ID,
   formatDocsLink,
@@ -12,7 +12,7 @@ import {
   normalizeAccountId,
   resolveAccountIdForConfigure,
   setTopLevelChannelDmPolicyWithAllowFrom,
-} from "@/src-backend/plugin-sdk/bluebubbles";
+} from "powerdirector/plugin-sdk/bluebubbles";
 import {
   listBlueBubblesAccountIds,
   resolveBlueBubblesAccount,

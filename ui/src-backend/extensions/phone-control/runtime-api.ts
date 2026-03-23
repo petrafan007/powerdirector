@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/phone-control";
+export * from "powerdirector/plugin-sdk/phone-control";

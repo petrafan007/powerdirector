@@ -1,4 +1,4 @@
-import { createAllowFromSection, createTopLevelChannelDmPolicy } from "@/src-backend/plugin-sdk/setup";
+import { createAllowFromSection, createTopLevelChannelDmPolicy } from "powerdirector/plugin-sdk/setup";
 import {
   DEFAULT_ACCOUNT_ID,
   formatDocsLink,

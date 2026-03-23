@@ -1,4 +1,4 @@
-import { generateSecureToken } from "@/src-backend/plugin-sdk/infra-runtime";
+import { generateSecureToken } from "powerdirector/plugin-sdk/infra-runtime";
 
 const SLACK_EXTERNAL_ARG_MENU_TOKEN_BYTES = 18;
 const SLACK_EXTERNAL_ARG_MENU_TOKEN_LENGTH = Math.ceil(

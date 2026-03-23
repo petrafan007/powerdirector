@@ -18,37 +18,37 @@ import {
 } from "@buape/carbon";
 import type { APIStringSelectComponent } from "discord-api-types/v10";
 import { ButtonStyle, ChannelType } from "discord-api-types/v10";
-import { resolveHumanDelayConfig } from "@/src-backend/plugin-sdk/agent-runtime";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
-import { recordInboundSession } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isDangerousNameMatchingEnabled } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { readSessionUpdatedAt, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
-import type { DiscordAccountConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { resolveHumanDelayConfig } from "powerdirector/plugin-sdk/agent-runtime";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
+import { recordInboundSession } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isDangerousNameMatchingEnabled } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { readSessionUpdatedAt, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
+import type { DiscordAccountConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   buildPluginBindingResolvedText,
   parsePluginBindingApprovalCustomId,
   resolvePluginConversationBindingApproval,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { enqueueSystemEvent } from "@/src-backend/plugin-sdk/infra-runtime";
-import { getAgentScopedMediaLocalRoots } from "@/src-backend/plugin-sdk/media-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { enqueueSystemEvent } from "powerdirector/plugin-sdk/infra-runtime";
+import { getAgentScopedMediaLocalRoots } from "powerdirector/plugin-sdk/media-runtime";
 import {
   dispatchPluginInteractiveHandler,
   type PluginInteractiveDiscordHandlerContext,
-} from "@/src-backend/plugin-sdk/plugin-runtime";
-import { resolveChunkMode, resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/plugin-runtime";
+import { resolveChunkMode, resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   formatInboundEnvelope,
   resolveEnvelopeFormatOptions,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { finalizeInboundContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { dispatchReplyWithBufferedBlockDispatcher } from "@/src-backend/plugin-sdk/reply-runtime";
-import { createReplyReferencePlanner } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { createNonExitingRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { logDebug, logError } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { finalizeInboundContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { dispatchReplyWithBufferedBlockDispatcher } from "powerdirector/plugin-sdk/reply-runtime";
+import { createReplyReferencePlanner } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { createNonExitingRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { logDebug, logError } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveDiscordMaxLinesPerMessage } from "../accounts";
 import { resolveDiscordComponentEntry, resolveDiscordModalEntry } from "../components-registry";
 import {

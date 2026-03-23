@@ -1,7 +1,7 @@
 import {
   listInspectedDirectoryEntriesFromSources,
   type DirectoryConfigParams,
-} from "@/src-backend/plugin-sdk/directory-runtime";
+} from "powerdirector/plugin-sdk/directory-runtime";
 import { inspectSlackAccount, type InspectedSlackAccount } from "../api";
 import { parseSlackTarget } from "./targets";
 

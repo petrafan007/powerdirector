@@ -2,7 +2,7 @@ import {
   resolveOutboundMediaUrls,
   resolveTextChunksWithFallback,
   sendMediaWithLeadingCaption,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import { downloadBlueBubblesAttachment } from "./attachments";
 import { markBlueBubblesChatRead, sendBlueBubblesTyping } from "./chat";
 import { fetchBlueBubblesHistory } from "./history";

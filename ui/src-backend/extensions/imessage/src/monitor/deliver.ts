@@ -1,13 +1,13 @@
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
-import { chunkTextWithMode, resolveChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { convertMarkdownTables } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-payload";
+import { chunkTextWithMode, resolveChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { convertMarkdownTables } from "powerdirector/plugin-sdk/text-runtime";
 import type { createIMessageRpcClient } from "../client";
 import { sendMessageIMessage } from "../send";
 import type { SentMessageCache } from "./echo-cache";

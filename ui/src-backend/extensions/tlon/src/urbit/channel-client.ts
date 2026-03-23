@@ -1,4 +1,4 @@
-import type { LookupFn, SsrFPolicy } from "@/src-backend/plugin-sdk/index";
+import type { LookupFn, SsrFPolicy } from "powerdirector/plugin-sdk";
 import { ensureUrbitChannelOpen, pokeUrbitChannel, scryUrbitPath } from "./channel-ops";
 import { getUrbitContext, normalizeUrbitCookie } from "./context";
 import { urbitFetch } from "./fetch";

@@ -1,7 +1,7 @@
-import { formatNormalizedAllowFromEntries } from "@/src-backend/plugin-sdk/allow-from";
-import { createScopedChannelConfigAdapter } from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { buildChannelConfigSchema } from "@/src-backend/plugin-sdk/channel-config-schema";
-import type { ChannelPlugin } from "@/src-backend/plugin-sdk/core";
+import { formatNormalizedAllowFromEntries } from "powerdirector/plugin-sdk/allow-from";
+import { createScopedChannelConfigAdapter } from "powerdirector/plugin-sdk/channel-config-helpers";
+import { buildChannelConfigSchema } from "powerdirector/plugin-sdk/channel-config-schema";
+import type { ChannelPlugin } from "powerdirector/plugin-sdk/core";
 import {
   listBlueBubblesAccountIds,
   type ResolvedBlueBubblesAccount,

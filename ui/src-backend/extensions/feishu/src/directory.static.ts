@@ -1,7 +1,7 @@
 import {
   listDirectoryGroupEntriesFromMapKeysAndAllowFrom,
   listDirectoryUserEntriesFromAllowFromAndMapKeys,
-} from "@/src-backend/plugin-sdk/directory-runtime";
+} from "powerdirector/plugin-sdk/directory-runtime";
 import type { ClawdbotConfig } from "../runtime-api";
 import { resolveFeishuAccount } from "./accounts";
 import { normalizeFeishuTarget } from "./targets";

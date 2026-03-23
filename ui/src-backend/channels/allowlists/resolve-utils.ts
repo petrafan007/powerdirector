@@ -1,4 +1,4 @@
-import { mapAllowFromEntries } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { mapAllowFromEntries } from "powerdirector/plugin-sdk/channel-config-helpers";
 import type { RuntimeEnv } from "../../runtime";
 import { summarizeStringEntries } from "../../shared/string-sample";
 

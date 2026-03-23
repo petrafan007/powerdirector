@@ -11,45 +11,45 @@ import {
 import { GatewayCloseCodes, type GatewayPlugin } from "@buape/carbon/gateway";
 import { VoicePlugin } from "@buape/carbon/voice";
 import { Routes } from "discord-api-types/v10";
-import { getAcpSessionManager } from "@/src-backend/plugin-sdk/acp-runtime";
-import { isAcpRuntimeError } from "@/src-backend/plugin-sdk/acp-runtime";
+import { getAcpSessionManager } from "powerdirector/plugin-sdk/acp-runtime";
+import { isAcpRuntimeError } from "powerdirector/plugin-sdk/acp-runtime";
 import {
   resolveThreadBindingIdleTimeoutMs,
   resolveThreadBindingMaxAgeMs,
   resolveThreadBindingsEnabled,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import {
   isNativeCommandsExplicitlyDisabled,
   resolveNativeCommandsEnabled,
   resolveNativeSkillsEnabled,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import type { PowerDirectorConfig, ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isDangerousNameMatchingEnabled } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig, ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isDangerousNameMatchingEnabled } from "powerdirector/plugin-sdk/config-runtime";
 import {
   GROUP_POLICY_BLOCKED_LABEL,
   resolveOpenProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { createConnectedChannelStatusPatch } from "@/src-backend/plugin-sdk/gateway-runtime";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import { getPluginCommandSpecs } from "@/src-backend/plugin-sdk/plugin-runtime";
-import { resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { NativeCommandSpec } from "@/src-backend/plugin-sdk/reply-runtime";
-import { listNativeCommandSpecsForConfig } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { HistoryEntry } from "@/src-backend/plugin-sdk/reply-runtime";
-import { listSkillCommandsForAgents } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { createConnectedChannelStatusPatch } from "powerdirector/plugin-sdk/gateway-runtime";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import { getPluginCommandSpecs } from "powerdirector/plugin-sdk/plugin-runtime";
+import { resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
+import type { NativeCommandSpec } from "powerdirector/plugin-sdk/reply-runtime";
+import { listNativeCommandSpecsForConfig } from "powerdirector/plugin-sdk/reply-runtime";
+import type { HistoryEntry } from "powerdirector/plugin-sdk/reply-runtime";
+import { listSkillCommandsForAgents } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   danger,
   isVerbose,
   logVerbose,
   shouldLogVerbose,
   warn,
-} from "@/src-backend/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { createNonExitingRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { summarizeStringEntries } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { createNonExitingRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { summarizeStringEntries } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveDiscordAccount } from "../accounts";
 import { getDiscordGatewayEmitter } from "../monitor.gateway";
 import { fetchDiscordApplicationId } from "../probe";

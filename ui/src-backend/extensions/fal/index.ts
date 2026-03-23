@@ -1,6 +1,6 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { buildFalImageGenerationProvider } from "@/src-backend/plugin-sdk/image-generation";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { buildFalImageGenerationProvider } from "powerdirector/plugin-sdk/image-generation";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
 import { applyFalConfig, FAL_DEFAULT_IMAGE_MODEL_REF } from "./onboard";
 
 const PROVIDER_ID = "fal";

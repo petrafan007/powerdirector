@@ -1,28 +1,28 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveAllowlistProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import type { SignalReactionNotificationMode } from "@/src-backend/plugin-sdk/config-runtime";
-import type { BackoffPolicy } from "@/src-backend/plugin-sdk/infra-runtime";
-import { waitForTransportReady } from "@/src-backend/plugin-sdk/infra-runtime";
-import { saveMediaBuffer } from "@/src-backend/plugin-sdk/media-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import type { SignalReactionNotificationMode } from "powerdirector/plugin-sdk/config-runtime";
+import type { BackoffPolicy } from "powerdirector/plugin-sdk/infra-runtime";
+import { waitForTransportReady } from "powerdirector/plugin-sdk/infra-runtime";
+import { saveMediaBuffer } from "powerdirector/plugin-sdk/media-runtime";
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import {
   chunkTextWithMode,
   resolveChunkMode,
   resolveTextChunkLimit,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { createNonExitingRuntime, type RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { normalizeStringEntries } from "@/src-backend/plugin-sdk/text-runtime";
-import { normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "powerdirector/plugin-sdk/reply-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { createNonExitingRuntime, type RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { normalizeStringEntries } from "powerdirector/plugin-sdk/text-runtime";
+import { normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveSignalAccount } from "./accounts";
 import { signalCheck, signalRpcRequest } from "./client";
 import { formatSignalDaemonExit, spawnSignalDaemon, type SignalDaemonHandle } from "./daemon";

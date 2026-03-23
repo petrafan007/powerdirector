@@ -407,6 +407,10 @@ importers:
       vitest:
         specifier: ^4.0.18
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.3.0)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
+    optionalDependencies:
+      '@napi-rs/canvas':
+        specifier: ^0.1.95
+        version: 0.1.95
 
   extensions/acpx:
     dependencies:
@@ -863,6 +867,9 @@ importers:
       '@mozilla/readability':
         specifier: ^0.6.0
         version: 0.6.0
+      '@napi-rs/canvas':
+        specifier: ^0.1.95
+        version: 0.1.95
       '@noble/hashes':
         specifier: ^2.0.1
         version: 2.0.1
@@ -10949,7 +10956,6 @@ snapshots:
       '@napi-rs/canvas-linux-x64-musl': 0.1.95
       '@napi-rs/canvas-win32-arm64-msvc': 0.1.95
       '@napi-rs/canvas-win32-x64-msvc': 0.1.95
-    optional: true
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:

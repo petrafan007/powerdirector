@@ -1,4 +1,4 @@
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import { resolveSignalAccount } from "./accounts";
 
 export function resolveSignalRpcContext(

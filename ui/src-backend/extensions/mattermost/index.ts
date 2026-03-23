@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { mattermostPlugin } from "./src/channel";
 import { registerSlashCommandRoute } from "./src/mattermost/slash-state";
 import { setMattermostRuntime } from "./src/runtime";

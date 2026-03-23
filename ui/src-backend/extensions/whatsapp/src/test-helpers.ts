@@ -32,8 +32,8 @@ export function resetLoadConfigMock() {
   (globalThis as Record<symbol, unknown>)[CONFIG_KEY] = () => DEFAULT_CONFIG;
 }
 
-vi.mock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.mock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     loadConfig: () => {
@@ -78,7 +78,7 @@ vi.mock("../../config/config", async (importOriginal) => {
   // `../../config/config.js` is correct for modules under `src/web/auto-reply/*`.
   // For typing in this file (which lives in `src/web/*`), refer to the same module
   // via the local relative path.
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     loadConfig: () => {
@@ -91,8 +91,8 @@ vi.mock("../../config/config", async (importOriginal) => {
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/media-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/media-runtime")>();
+vi.mock("powerdirector/plugin-sdk/media-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/media-runtime")>();
   const mockModule = Object.create(null) as Record<string, unknown>;
   Object.defineProperties(mockModule, Object.getOwnPropertyDescriptors(actual));
   Object.defineProperty(mockModule, "saveMediaBuffer", {
@@ -109,8 +109,8 @@ vi.mock("@/src-backend/plugin-sdk/media-runtime", async (importOriginal) => {
   return mockModule;
 });
 
-vi.mock("@/src-backend/plugin-sdk/state-paths", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/state-paths")>();
+vi.mock("powerdirector/plugin-sdk/state-paths", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/state-paths")>();
   return {
     ...actual,
     resolveOAuthDir: () => "/tmp/powerdirector-oauth",

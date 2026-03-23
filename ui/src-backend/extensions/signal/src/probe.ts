@@ -1,4 +1,4 @@
-import type { BaseProbeResult } from "@/src-backend/plugin-sdk/channel-runtime";
+import type { BaseProbeResult } from "powerdirector/plugin-sdk/channel-runtime";
 import { signalCheck, signalRpcRequest } from "./client";
 
 export type SignalProbe = BaseProbeResult & {

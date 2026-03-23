@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import os from "node:os";
-import { resolveLoggerBackedRuntime } from "@/src-backend/plugin-sdk/extension-shared";
+import { resolveLoggerBackedRuntime } from "powerdirector/plugin-sdk/extension-shared";
 import {
   type RuntimeEnv,
   isRequestBodyLimitError,

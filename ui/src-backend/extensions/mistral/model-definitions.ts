@@ -1,4 +1,4 @@
-import type { ModelDefinitionConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelDefinitionConfig } from "powerdirector/plugin-sdk/provider-models";
 
 export const MISTRAL_BASE_URL = "https://api.mistral.ai/v1";
 export const MISTRAL_DEFAULT_MODEL_ID = "mistral-large-latest";

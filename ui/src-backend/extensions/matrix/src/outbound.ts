@@ -1,4 +1,4 @@
-import { resolveOutboundSendDep } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep } from "powerdirector/plugin-sdk/channel-runtime";
 import type { ChannelOutboundAdapter } from "../runtime-api";
 import { sendMessageMatrix, sendPollMatrix } from "./matrix/send";
 import { getMatrixRuntime } from "./runtime";

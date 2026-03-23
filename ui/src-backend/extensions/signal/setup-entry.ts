@@ -1,4 +1,4 @@
-import { defineSetupPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineSetupPluginEntry } from "powerdirector/plugin-sdk/core";
 import { signalSetupPlugin } from "./src/channel.setup";
 
 export { signalSetupPlugin } from "./src/channel.setup";

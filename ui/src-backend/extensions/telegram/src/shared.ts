@@ -1,6 +1,6 @@
-import { formatAllowFromLowercase } from "@/src-backend/plugin-sdk/allow-from";
-import { createScopedChannelConfigAdapter } from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createChannelPluginBase } from "@/src-backend/plugin-sdk/core";
+import { formatAllowFromLowercase } from "powerdirector/plugin-sdk/allow-from";
+import { createScopedChannelConfigAdapter } from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createChannelPluginBase } from "powerdirector/plugin-sdk/core";
 import {
   buildChannelConfigSchema,
   getChatChannelMeta,

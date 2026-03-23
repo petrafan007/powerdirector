@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { registerFeishuBitableTools } from "./src/bitable";
 import { feishuPlugin } from "./src/channel";
 import { registerFeishuChatTools } from "./src/chat";

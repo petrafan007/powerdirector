@@ -1,4 +1,4 @@
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
 import { fetchWithSsrFGuard } from "../../../runtime-api";
 import { getMatrixRuntime } from "../../runtime";
 import {

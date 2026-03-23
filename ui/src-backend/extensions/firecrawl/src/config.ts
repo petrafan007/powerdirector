@@ -1,6 +1,6 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeResolvedSecretInputString } from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeSecretInput } from "@/src-backend/plugin-sdk/provider-auth";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeResolvedSecretInputString } from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeSecretInput } from "powerdirector/plugin-sdk/provider-auth";
 
 export const DEFAULT_FIRECRAWL_BASE_URL = "https://api.firecrawl.dev";
 export const DEFAULT_FIRECRAWL_SEARCH_TIMEOUT_SECONDS = 30;

@@ -1,4 +1,4 @@
-import type { DiscordPluralKitConfig } from "@/src-backend/plugin-sdk/discord";
+import type { DiscordPluralKitConfig } from "powerdirector/plugin-sdk/discord";
 import type {
   BlockStreamingChunkConfig,
   BlockStreamingCoalesceConfig,

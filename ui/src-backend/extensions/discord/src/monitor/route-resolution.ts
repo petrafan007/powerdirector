@@ -1,11 +1,11 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   deriveLastRoutePolicy,
   resolveAgentRoute,
   type ResolvedAgentRoute,
   type RoutePeer,
-} from "@/src-backend/plugin-sdk/routing";
-import { resolveAgentIdFromSessionKey } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/routing";
+import { resolveAgentIdFromSessionKey } from "powerdirector/plugin-sdk/routing";
 
 export function buildDiscordRoutePeer(params: {
   isDirectMessage: boolean;

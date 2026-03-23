@@ -1,4 +1,4 @@
-import { defineSetupPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineSetupPluginEntry } from "powerdirector/plugin-sdk/core";
 import { whatsappSetupPlugin } from "./src/channel.setup";
 
 export { whatsappSetupPlugin } from "./src/channel.setup";

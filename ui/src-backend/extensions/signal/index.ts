@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { signalPlugin } from "./src/channel";
 import { setSignalRuntime } from "./src/runtime";
 

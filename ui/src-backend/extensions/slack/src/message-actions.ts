@@ -1,9 +1,9 @@
-import { createActionGate } from "@/src-backend/plugin-sdk/agent-runtime";
+import { createActionGate } from "powerdirector/plugin-sdk/agent-runtime";
 import type {
   ChannelMessageActionName,
   ChannelToolSend,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import { listEnabledSlackAccounts } from "./accounts";
 
 export function listSlackMessageActions(cfg: PowerDirectorConfig): ChannelMessageActionName[] {

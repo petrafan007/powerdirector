@@ -1,14 +1,14 @@
-import type { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveChannelGroupPolicy,
   resolveChannelGroupRequireMention,
-} from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
 import {
   loadSessionStore,
   resolveGroupSessionKey,
   resolveStorePath,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { normalizeGroupActivation } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { normalizeGroupActivation } from "powerdirector/plugin-sdk/reply-runtime";
 
 export function resolveGroupPolicyFor(cfg: ReturnType<typeof loadConfig>, conversationId: string) {
   const groupId = resolveGroupSessionKey({

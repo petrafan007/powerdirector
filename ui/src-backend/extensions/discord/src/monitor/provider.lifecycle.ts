@@ -1,9 +1,9 @@
 import type { Client } from "@buape/carbon";
 import type { GatewayPlugin } from "@buape/carbon/gateway";
-import { createArmableStallWatchdog } from "@/src-backend/plugin-sdk/channel-runtime";
-import { createConnectedChannelStatusPatch } from "@/src-backend/plugin-sdk/gateway-runtime";
-import { danger } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import { createArmableStallWatchdog } from "powerdirector/plugin-sdk/channel-runtime";
+import { createConnectedChannelStatusPatch } from "powerdirector/plugin-sdk/gateway-runtime";
+import { danger } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { attachDiscordGatewayLogging } from "../gateway-logging";
 import { getDiscordGatewayEmitter, waitForDiscordGatewayStop } from "../monitor.gateway";
 import type { DiscordVoiceManager } from "../voice/manager";

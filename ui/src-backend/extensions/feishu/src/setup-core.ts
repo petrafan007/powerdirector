@@ -2,7 +2,7 @@ import {
   DEFAULT_ACCOUNT_ID,
   type ChannelSetupAdapter,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import type { FeishuConfig } from "./types";
 
 export function setFeishuNamedAccountEnabled(

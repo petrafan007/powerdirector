@@ -3,16 +3,16 @@ import {
   definePluginEntry,
   type ProviderResolveDynamicModelContext,
   type ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth-api-key";
-import { applyXaiModelCompat, DEFAULT_CONTEXT_TOKENS } from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth-api-key";
+import { applyXaiModelCompat, DEFAULT_CONTEXT_TOKENS } from "powerdirector/plugin-sdk/provider-models";
 import {
   getOpenRouterModelCapabilities,
   loadOpenRouterModelCapabilities,
   createOpenRouterSystemCacheWrapper,
   createOpenRouterWrapper,
   isProxyReasoningUnsupported,
-} from "@/src-backend/plugin-sdk/provider-stream";
+} from "powerdirector/plugin-sdk/provider-stream";
 import { applyOpenrouterConfig, OPENROUTER_DEFAULT_MODEL_REF } from "./onboard";
 import { buildOpenrouterProvider } from "./provider-catalog";
 

@@ -1,11 +1,11 @@
-import type { MarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
+import type { MarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
 import {
   chunkMarkdownIR,
   markdownToIR,
   type MarkdownLinkSpan,
   type MarkdownIR,
-} from "@/src-backend/plugin-sdk/text-runtime";
-import { renderMarkdownWithMarkers } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/text-runtime";
+import { renderMarkdownWithMarkers } from "powerdirector/plugin-sdk/text-runtime";
 
 export type TelegramFormattedChunk = {
   html: string;

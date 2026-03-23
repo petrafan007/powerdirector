@@ -1,13 +1,13 @@
 import {
   listSlackDirectoryGroupsLive as listSlackDirectoryGroupsLiveImpl,
   listSlackDirectoryPeersLive as listSlackDirectoryPeersLiveImpl,
-} from "@/src-backend/plugin-sdk/slack";
-import { monitorSlackProvider as monitorSlackProviderImpl } from "@/src-backend/plugin-sdk/slack";
-import { probeSlack as probeSlackImpl } from "@/src-backend/plugin-sdk/slack";
-import { resolveSlackChannelAllowlist as resolveSlackChannelAllowlistImpl } from "@/src-backend/plugin-sdk/slack";
-import { resolveSlackUserAllowlist as resolveSlackUserAllowlistImpl } from "@/src-backend/plugin-sdk/slack";
-import { sendMessageSlack as sendMessageSlackImpl } from "@/src-backend/plugin-sdk/slack";
-import { handleSlackAction as handleSlackActionImpl } from "@/src-backend/plugin-sdk/slack";
+} from "powerdirector/plugin-sdk/slack";
+import { monitorSlackProvider as monitorSlackProviderImpl } from "powerdirector/plugin-sdk/slack";
+import { probeSlack as probeSlackImpl } from "powerdirector/plugin-sdk/slack";
+import { resolveSlackChannelAllowlist as resolveSlackChannelAllowlistImpl } from "powerdirector/plugin-sdk/slack";
+import { resolveSlackUserAllowlist as resolveSlackUserAllowlistImpl } from "powerdirector/plugin-sdk/slack";
+import { sendMessageSlack as sendMessageSlackImpl } from "powerdirector/plugin-sdk/slack";
+import { handleSlackAction as handleSlackActionImpl } from "powerdirector/plugin-sdk/slack";
 import type { PluginRuntimeChannel } from "./types-channel";
 
 type RuntimeSlackOps = Pick<

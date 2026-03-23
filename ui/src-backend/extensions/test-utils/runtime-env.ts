@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/test-utils";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/test-utils";
 import { vi } from "vitest";
 
 export function createRuntimeEnv(): RuntimeEnv {

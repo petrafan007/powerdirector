@@ -1,7 +1,7 @@
 import {
   applyProviderConfigWithDefaultModelsPreset,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/provider-onboard";
+} from "powerdirector/plugin-sdk/provider-onboard";
 import { XAI_BASE_URL, XAI_DEFAULT_MODEL_ID } from "./model-definitions";
 import { buildXaiCatalogModels } from "./model-definitions";
 

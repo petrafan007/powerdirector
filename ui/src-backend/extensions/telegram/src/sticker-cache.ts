@@ -1,19 +1,19 @@
 import path from "node:path";
-import { resolveApiKeyForProvider } from "@/src-backend/plugin-sdk/agent-runtime";
-import type { ModelCatalogEntry } from "@/src-backend/plugin-sdk/agent-runtime";
+import { resolveApiKeyForProvider } from "powerdirector/plugin-sdk/agent-runtime";
+import type { ModelCatalogEntry } from "powerdirector/plugin-sdk/agent-runtime";
 import {
   findModelInCatalog,
   loadModelCatalog,
   modelSupportsVision,
-} from "@/src-backend/plugin-sdk/agent-runtime";
-import { resolveDefaultModelForAgent } from "@/src-backend/plugin-sdk/agent-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { loadJsonFile, saveJsonFile } from "@/src-backend/plugin-sdk/json-store";
-import { AUTO_IMAGE_KEY_PROVIDERS, DEFAULT_IMAGE_MODELS } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveAutoImageModel } from "@/src-backend/plugin-sdk/media-runtime";
-import { describeImageFileWithModel } from "@/src-backend/plugin-sdk/media-understanding-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { STATE_DIR } from "@/src-backend/plugin-sdk/state-paths";
+} from "powerdirector/plugin-sdk/agent-runtime";
+import { resolveDefaultModelForAgent } from "powerdirector/plugin-sdk/agent-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { loadJsonFile, saveJsonFile } from "powerdirector/plugin-sdk/json-store";
+import { AUTO_IMAGE_KEY_PROVIDERS, DEFAULT_IMAGE_MODELS } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveAutoImageModel } from "powerdirector/plugin-sdk/media-runtime";
+import { describeImageFileWithModel } from "powerdirector/plugin-sdk/media-understanding-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { STATE_DIR } from "powerdirector/plugin-sdk/state-paths";
 
 const CACHE_FILE = path.join(STATE_DIR, "telegram", "sticker-cache.json");
 const CACHE_VERSION = 1;

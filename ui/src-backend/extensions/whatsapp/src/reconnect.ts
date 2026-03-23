@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { BackoffPolicy } from "@/src-backend/plugin-sdk/infra-runtime";
-import { computeBackoff, sleepWithAbort } from "@/src-backend/plugin-sdk/infra-runtime";
-import { clamp } from "@/src-backend/plugin-sdk/text-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { BackoffPolicy } from "powerdirector/plugin-sdk/infra-runtime";
+import { computeBackoff, sleepWithAbort } from "powerdirector/plugin-sdk/infra-runtime";
+import { clamp } from "powerdirector/plugin-sdk/text-runtime";
 
 export type ReconnectPolicy = BackoffPolicy & {
   maxAttempts: number;

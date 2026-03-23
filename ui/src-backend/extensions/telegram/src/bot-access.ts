@@ -2,9 +2,9 @@ import {
   firstDefined,
   isSenderIdAllowed,
   mergeDmAllowFromSources,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { AllowlistMatch } from "@/src-backend/plugin-sdk/channel-runtime";
-import { createSubsystemLogger } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { AllowlistMatch } from "powerdirector/plugin-sdk/channel-runtime";
+import { createSubsystemLogger } from "powerdirector/plugin-sdk/runtime-env";
 
 export type NormalizedAllowFrom = {
   entries: string[];

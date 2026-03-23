@@ -1,5 +1,5 @@
-import type { PowerDirectorPluginApi } from "@/src-backend/plugin-sdk/core";
-import { registerSandboxBackend } from "@/src-backend/plugin-sdk/sandbox";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/core";
+import { registerSandboxBackend } from "powerdirector/plugin-sdk/sandbox";
 import {
   createOpenShellSandboxBackendFactory,
   createOpenShellSandboxBackendManager,

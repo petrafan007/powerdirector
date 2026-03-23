@@ -1,8 +1,8 @@
 import { RequestClient } from "@buape/carbon";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { RetryConfig } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { RetryRunner } from "@/src-backend/plugin-sdk/infra-runtime";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { RetryConfig } from "powerdirector/plugin-sdk/infra-runtime";
+import type { RetryRunner } from "powerdirector/plugin-sdk/infra-runtime";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 import {
   mergeDiscordAccountConfig,
   resolveDiscordAccount,

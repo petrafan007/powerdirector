@@ -1,4 +1,4 @@
-import type { ChannelPlugin } from "@/src-backend/plugin-sdk/core";
+import type { ChannelPlugin } from "powerdirector/plugin-sdk/core";
 import {
   resolveWhatsAppGroupIntroHint,
   resolveWhatsAppGroupRequireMention,

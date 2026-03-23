@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import { isVerbose } from "../globals";
 import { shouldLogSubsystemToConsole } from "../logging/console";
 import { getDefaultRedactPatterns, redactSensitiveText } from "../logging/redact";

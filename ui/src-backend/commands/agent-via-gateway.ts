@@ -1,4 +1,4 @@
-import { resolveSendableOutboundReplyParts } from "@/src-backend/plugin-sdk/reply-payload";
+import { resolveSendableOutboundReplyParts } from "powerdirector/plugin-sdk/reply-payload";
 import { listAgentIds } from "../agents/agent-scope";
 import { formatCliCommand } from "../cli/command-format";
 import type { CliDeps } from "../cli/deps";

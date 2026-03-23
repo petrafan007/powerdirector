@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/lobster";
+export * from "powerdirector/plugin-sdk/lobster";

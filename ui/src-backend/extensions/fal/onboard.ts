@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/provider-onboard";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/provider-onboard";
 
 export const FAL_DEFAULT_IMAGE_MODEL_REF = "fal/fal-ai/flux/dev";
 

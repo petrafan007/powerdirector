@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/core";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/core";
 import type { ResolvedBlueBubblesAccount } from "./accounts";
 import { getBlueBubblesRuntime } from "./runtime";
 import type { BlueBubblesAccountConfig } from "./types";

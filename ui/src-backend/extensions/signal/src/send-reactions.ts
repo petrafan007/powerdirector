@@ -2,8 +2,8 @@
  * Signal reactions via signal-cli JSON-RPC API
  */
 
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import { resolveSignalAccount } from "./accounts";
 import { signalRpcRequest } from "./client";
 import { resolveSignalRpcContext } from "./rpc-context";

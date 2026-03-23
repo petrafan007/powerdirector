@@ -4,8 +4,8 @@ import {
   readNumberParam,
   readStringArrayParam,
   readStringParam,
-} from "@/src-backend/plugin-sdk/agent-runtime";
-import type { ChannelMessageActionContext } from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
+import type { ChannelMessageActionContext } from "powerdirector/plugin-sdk/channel-runtime";
 import { handleDiscordAction } from "./runtime";
 import {
   isDiscordModerationAction,

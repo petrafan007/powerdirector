@@ -1,7 +1,7 @@
-import { formatReasoningMessage } from "@/src-backend/plugin-sdk/agent-runtime";
-import type { ReplyPayload } from "@/src-backend/plugin-sdk/reply-runtime";
-import { findCodeRegions, isInsideCode } from "@/src-backend/plugin-sdk/text-runtime";
-import { stripReasoningTagsFromText } from "@/src-backend/plugin-sdk/text-runtime";
+import { formatReasoningMessage } from "powerdirector/plugin-sdk/agent-runtime";
+import type { ReplyPayload } from "powerdirector/plugin-sdk/reply-runtime";
+import { findCodeRegions, isInsideCode } from "powerdirector/plugin-sdk/text-runtime";
+import { stripReasoningTagsFromText } from "powerdirector/plugin-sdk/text-runtime";
 
 const REASONING_MESSAGE_PREFIX = "Reasoning:\n";
 const REASONING_TAG_PREFIXES = [

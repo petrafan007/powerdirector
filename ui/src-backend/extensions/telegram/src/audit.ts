@@ -1,5 +1,5 @@
-import type { TelegramGroupConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { TelegramNetworkConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { TelegramGroupConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { TelegramNetworkConfig } from "powerdirector/plugin-sdk/config-runtime";
 
 export type TelegramGroupMembershipAuditEntry = {
   chatId: string;

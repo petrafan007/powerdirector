@@ -1,6 +1,6 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
-import { isRecord } from "@/src-backend/plugin-sdk/text-runtime";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
+import { isRecord } from "powerdirector/plugin-sdk/text-runtime";
 import { applyKimiCodeConfig, KIMI_CODING_MODEL_REF } from "./onboard";
 import { buildKimiCodingProvider } from "./provider-catalog";
 

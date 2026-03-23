@@ -12,8 +12,8 @@ const mocks = vi.hoisted(() => ({
   resolveStorePathMock: vi.fn(),
 }));
 
-vi.mock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/reply-runtime")>();
+vi.mock("powerdirector/plugin-sdk/reply-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/reply-runtime")>();
   return {
     ...actual,
     dispatchReplyWithDispatcher: (...args: unknown[]) => mocks.dispatchMock(...args),
@@ -21,8 +21,8 @@ vi.mock("@/src-backend/plugin-sdk/reply-runtime", async (importOriginal) => {
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/conversation-runtime")>();
+vi.mock("powerdirector/plugin-sdk/conversation-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/conversation-runtime")>();
   return {
     ...actual,
     readChannelAllowFromStore: (...args: unknown[]) => mocks.readAllowFromStoreMock(...args),
@@ -30,16 +30,16 @@ vi.mock("@/src-backend/plugin-sdk/conversation-runtime", async (importOriginal) 
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/routing", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/routing")>();
+vi.mock("powerdirector/plugin-sdk/routing", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/routing")>();
   return {
     ...actual,
     resolveAgentRoute: (...args: unknown[]) => mocks.resolveAgentRouteMock(...args),
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/channel-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/channel-runtime")>();
+vi.mock("powerdirector/plugin-sdk/channel-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/channel-runtime")>();
   return {
     ...actual,
     resolveConversationLabel: (...args: unknown[]) => mocks.resolveConversationLabelMock(...args),
@@ -48,9 +48,9 @@ vi.mock("@/src-backend/plugin-sdk/channel-runtime", async (importOriginal) => {
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/channel-reply-pipeline", async (importOriginal) => {
+vi.mock("powerdirector/plugin-sdk/channel-reply-pipeline", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("@/src-backend/plugin-sdk/channel-reply-pipeline")>();
+    await importOriginal<typeof import("powerdirector/plugin-sdk/channel-reply-pipeline")>();
   return {
     ...actual,
     createChannelReplyPipeline: (...args: unknown[]) =>
@@ -58,8 +58,8 @@ vi.mock("@/src-backend/plugin-sdk/channel-reply-pipeline", async (importOriginal
   };
 });
 
-vi.mock("@/src-backend/plugin-sdk/config-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src-backend/plugin-sdk/config-runtime")>();
+vi.mock("powerdirector/plugin-sdk/config-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("powerdirector/plugin-sdk/config-runtime")>();
   return {
     ...actual,
     recordSessionMetaFromInbound: (...args: unknown[]) =>

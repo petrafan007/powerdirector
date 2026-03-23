@@ -1,26 +1,26 @@
-import { formatNormalizedAllowFromEntries } from "@/src-backend/plugin-sdk/allow-from";
+import { formatNormalizedAllowFromEntries } from "powerdirector/plugin-sdk/allow-from";
 import {
   createScopedChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   composeWarningCollectors,
   createAllowlistProviderGroupPolicyWarningCollector,
   createConditionalWarningCollector,
   createAllowlistProviderOpenWarningCollector,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import {
   createAttachedChannelResultAdapter,
   createChannelDirectoryAdapter,
   createTopLevelChannelReplyToModeResolver,
   createTextPairingAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import {
   listResolvedDirectoryGroupEntriesFromMapKeys,
   listResolvedDirectoryUserEntriesFromAllowFrom,
-} from "@/src-backend/plugin-sdk/directory-runtime";
-import { buildPassiveProbedChannelStatusSummary } from "@/src-backend/plugin-sdk/extension-shared";
-import { createLazyRuntimeNamedExport } from "@/src-backend/plugin-sdk/lazy-runtime";
+} from "powerdirector/plugin-sdk/directory-runtime";
+import { buildPassiveProbedChannelStatusSummary } from "powerdirector/plugin-sdk/extension-shared";
+import { createLazyRuntimeNamedExport } from "powerdirector/plugin-sdk/lazy-runtime";
 import {
   buildComputedAccountStatusSnapshot,
   buildChannelConfigSchema,

@@ -1,8 +1,8 @@
-import { inspectSlackAccount as inspectSlackAccountImpl } from "@/src-backend/plugin-sdk/slack";
+import { inspectSlackAccount as inspectSlackAccountImpl } from "powerdirector/plugin-sdk/slack";
 
-export type { InspectedSlackAccount } from "@/src-backend/plugin-sdk/slack";
+export type { InspectedSlackAccount } from "powerdirector/plugin-sdk/slack";
 
-type InspectSlackAccount = typeof import("@/src-backend/plugin-sdk/slack").inspectSlackAccount;
+type InspectSlackAccount = typeof import("powerdirector/plugin-sdk/slack").inspectSlackAccount;
 
 export function inspectSlackAccount(
   ...args: Parameters<InspectSlackAccount>

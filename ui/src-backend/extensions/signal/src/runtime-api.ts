@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/signal";
+export * from "powerdirector/plugin-sdk/signal";

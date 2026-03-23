@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { bluebubblesPlugin } from "./src/channel";
 import { setBlueBubblesRuntime } from "./src/runtime";
 

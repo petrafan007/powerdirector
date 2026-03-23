@@ -7,11 +7,11 @@ import {
   makeWASocket,
   useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
-import { formatCliCommand } from "@/src-backend/plugin-sdk/cli-runtime";
-import { VERSION } from "@/src-backend/plugin-sdk/cli-runtime";
-import { danger, success } from "@/src-backend/plugin-sdk/runtime-env";
-import { getChildLogger, toPinoLikeLogger } from "@/src-backend/plugin-sdk/runtime-env";
-import { ensureDir, resolveUserPath } from "@/src-backend/plugin-sdk/text-runtime";
+import { formatCliCommand } from "powerdirector/plugin-sdk/cli-runtime";
+import { VERSION } from "powerdirector/plugin-sdk/cli-runtime";
+import { danger, success } from "powerdirector/plugin-sdk/runtime-env";
+import { getChildLogger, toPinoLikeLogger } from "powerdirector/plugin-sdk/runtime-env";
+import { ensureDir, resolveUserPath } from "powerdirector/plugin-sdk/text-runtime";
 import qrcode from "qrcode-terminal";
 import {
   maybeRestoreCredsFromBackup,

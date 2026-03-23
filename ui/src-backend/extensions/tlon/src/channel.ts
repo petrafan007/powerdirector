@@ -1,11 +1,11 @@
-import { createHybridChannelConfigAdapter } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { createHybridChannelConfigAdapter } from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   createRuntimeOutboundDelegates,
   type ChannelAccountSnapshot,
   type ChannelPlugin,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { createLazyRuntimeModule } from "@/src-backend/plugin-sdk/lazy-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { createLazyRuntimeModule } from "powerdirector/plugin-sdk/lazy-runtime";
 import { tlonChannelConfigSchema } from "./config-schema";
 import { resolveTlonOutboundSessionRoute } from "./session-route";
 import {

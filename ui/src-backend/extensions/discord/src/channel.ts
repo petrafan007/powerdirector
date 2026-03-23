@@ -3,9 +3,9 @@ import {
   buildLegacyDmAccountAllowlistAdapter,
   createAccountScopedAllowlistNameResolver,
   createNestedAllowlistOverrideResolver,
-} from "@/src-backend/plugin-sdk/allowlist-config-edit";
-import { createScopedDmSecurityResolver } from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { createOpenProviderConfiguredRouteWarningCollector } from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/allowlist-config-edit";
+import { createScopedDmSecurityResolver } from "powerdirector/plugin-sdk/channel-config-helpers";
+import { createOpenProviderConfiguredRouteWarningCollector } from "powerdirector/plugin-sdk/channel-policy";
 import {
   createAttachedChannelResultAdapter,
   createChannelDirectoryAdapter,
@@ -16,9 +16,9 @@ import {
   normalizeMessageChannel,
   resolveOutboundSendDep,
   resolveTargetsWithOptionalToken,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { buildOutboundBaseSessionKey, normalizeOutboundThreadId } from "@/src-backend/plugin-sdk/core";
-import { resolveThreadSessionKeys, type RoutePeer } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { buildOutboundBaseSessionKey, normalizeOutboundThreadId } from "powerdirector/plugin-sdk/core";
+import { resolveThreadSessionKeys, type RoutePeer } from "powerdirector/plugin-sdk/routing";
 import {
   listDiscordAccountIds,
   resolveDiscordAccount,

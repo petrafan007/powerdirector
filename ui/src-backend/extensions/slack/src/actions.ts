@@ -1,6 +1,6 @@
 import type { Block, KnownBlock, WebClient } from "@slack/web-api";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { resolveSlackAccount } from "./accounts";
 import { buildSlackBlocksFallbackText } from "./blocks-fallback";
 import { validateSlackBlocksArray } from "./blocks-input";

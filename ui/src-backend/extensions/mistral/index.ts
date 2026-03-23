@@ -1,5 +1,5 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
 import { mistralMediaUnderstandingProvider } from "./media-understanding-provider";
 import { applyMistralConfig, MISTRAL_DEFAULT_MODEL_REF } from "./onboard";
 

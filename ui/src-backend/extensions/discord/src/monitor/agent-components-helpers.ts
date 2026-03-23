@@ -10,19 +10,19 @@ import {
 } from "@buape/carbon";
 import type { APIStringSelectComponent } from "discord-api-types/v10";
 import { ChannelType } from "discord-api-types/v10";
-import { createChannelPairingChallengeIssuer } from "@/src-backend/plugin-sdk/channel-pairing";
-import { resolveCommandAuthorizedFromAuthorizers } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { DiscordAccountConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isDangerousNameMatchingEnabled } from "@/src-backend/plugin-sdk/config-runtime";
-import { upsertChannelPairingRequest } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import { createChannelPairingChallengeIssuer } from "powerdirector/plugin-sdk/channel-pairing";
+import { resolveCommandAuthorizedFromAuthorizers } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { DiscordAccountConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isDangerousNameMatchingEnabled } from "powerdirector/plugin-sdk/config-runtime";
+import { upsertChannelPairingRequest } from "powerdirector/plugin-sdk/conversation-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import {
   readStoreAllowFromForDmPolicy,
   resolvePinnedMainDmOwnerFromAllowlist,
-} from "@/src-backend/plugin-sdk/security-runtime";
-import { logError } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
+import { logError } from "powerdirector/plugin-sdk/text-runtime";
 import {
   createDiscordFormModal,
   parseDiscordComponentCustomId,
@@ -71,7 +71,7 @@ export type AgentComponentContext = {
   cfg: PowerDirectorConfig;
   accountId: string;
   discordConfig?: DiscordAccountConfig;
-  runtime?: import("@/src-backend/plugin-sdk/runtime-env").RuntimeEnv;
+  runtime?: import("powerdirector/plugin-sdk/runtime-env").RuntimeEnv;
   token?: string;
   guildEntries?: Record<string, DiscordGuildEntryResolved>;
   allowFrom?: string[];

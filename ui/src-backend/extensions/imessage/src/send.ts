@@ -1,8 +1,8 @@
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveMarkdownTableMode } from "@/src-backend/plugin-sdk/config-runtime";
-import { kindFromMime } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveOutboundAttachmentFromUrl } from "@/src-backend/plugin-sdk/media-runtime";
-import { convertMarkdownTables } from "@/src-backend/plugin-sdk/text-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveMarkdownTableMode } from "powerdirector/plugin-sdk/config-runtime";
+import { kindFromMime } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveOutboundAttachmentFromUrl } from "powerdirector/plugin-sdk/media-runtime";
+import { convertMarkdownTables } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveIMessageAccount, type ResolvedIMessageAccount } from "./accounts";
 import { createIMessageRpcClient, type IMessageRpcClient } from "./client";
 import { formatIMessageChatTarget, type IMessageService, parseIMessageTarget } from "./targets";

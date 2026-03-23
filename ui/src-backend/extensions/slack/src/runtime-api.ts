@@ -9,7 +9,7 @@ export {
   type ChannelPlugin,
   type PowerDirectorConfig,
   type SlackAccountConfig,
-} from "@/src-backend/plugin-sdk/slack";
+} from "powerdirector/plugin-sdk/slack";
 export {
   listSlackDirectoryGroupsFromConfig,
   listSlackDirectoryPeersFromConfig,
@@ -25,5 +25,5 @@ export {
   readStringParam,
   SlackConfigSchema,
   withNormalizedTimestamp,
-} from "@/src-backend/plugin-sdk/slack-core";
+} from "powerdirector/plugin-sdk/slack-core";
 export { isSlackInteractiveRepliesEnabled } from "./interactive-replies";

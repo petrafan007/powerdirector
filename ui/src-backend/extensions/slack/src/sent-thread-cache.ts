@@ -1,4 +1,4 @@
-import { resolveGlobalMap } from "@/src-backend/plugin-sdk/text-runtime";
+import { resolveGlobalMap } from "powerdirector/plugin-sdk/text-runtime";
 
 /**
  * In-memory cache of Slack threads the bot has participated in.

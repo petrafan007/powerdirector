@@ -1,5 +1,5 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveStorePath, updateSessionStore } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveStorePath, updateSessionStore } from "powerdirector/plugin-sdk/config-runtime";
 
 /**
  * Marks every session entry in the store whose key contains {@link threadId}

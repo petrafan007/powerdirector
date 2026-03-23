@@ -1,4 +1,4 @@
-import { AllowFromListSchema, DmPolicySchema } from "@/src-backend/plugin-sdk/channel-config-schema";
+import { AllowFromListSchema, DmPolicySchema } from "powerdirector/plugin-sdk/channel-config-schema";
 import { z } from "zod";
 import { MarkdownConfigSchema, buildChannelConfigSchema } from "../api";
 

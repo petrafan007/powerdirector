@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/mattermost";
+export * from "powerdirector/plugin-sdk/mattermost";

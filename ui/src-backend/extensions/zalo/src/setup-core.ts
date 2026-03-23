@@ -1,4 +1,4 @@
-import { createPatchedAccountSetupAdapter, DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/setup";
+import { createPatchedAccountSetupAdapter, DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/setup";
 
 const channel = "zalo" as const;
 

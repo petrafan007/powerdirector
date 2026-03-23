@@ -1,7 +1,7 @@
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
-} from "@/src-backend/plugin-sdk/reply-payload";
+} from "powerdirector/plugin-sdk/reply-payload";
 import type { PowerDirectorConfig, PluginRuntime, ReplyPayload } from "../runtime-api";
 import { getAgentScopedMediaLocalRoots } from "../runtime-api";
 

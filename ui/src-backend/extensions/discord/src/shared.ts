@@ -1,5 +1,5 @@
-import { formatAllowFromLowercase } from "@/src-backend/plugin-sdk/allow-from";
-import { createChannelPluginBase } from "@/src-backend/plugin-sdk/core";
+import { formatAllowFromLowercase } from "powerdirector/plugin-sdk/allow-from";
+import { createChannelPluginBase } from "powerdirector/plugin-sdk/core";
 import { inspectDiscordAccount } from "./account-inspect";
 import {
   listDiscordAccountIds,

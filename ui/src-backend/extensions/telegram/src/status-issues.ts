@@ -3,11 +3,11 @@ import {
   asString,
   isRecord,
   resolveEnabledConfiguredAccountId,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import type {
   ChannelAccountSnapshot,
   ChannelStatusIssue,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 
 type TelegramAccountStatus = {
   accountId?: unknown;

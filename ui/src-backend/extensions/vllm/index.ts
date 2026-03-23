@@ -3,17 +3,17 @@ import {
   VLLM_DEFAULT_BASE_URL,
   VLLM_MODEL_PLACEHOLDER,
   VLLM_PROVIDER_LABEL,
-} from "@/src-backend/plugin-sdk/agent-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
 import {
   definePluginEntry,
   type PowerDirectorPluginApi,
   type ProviderAuthMethodNonInteractiveContext,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 
 const PROVIDER_ID = "vllm";
 
 async function loadProviderSetup() {
-  return await import("@/src-backend/plugin-sdk/self-hosted-provider-setup");
+  return await import("powerdirector/plugin-sdk/self-hosted-provider-setup");
 }
 
 export default definePluginEntry({

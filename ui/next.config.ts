@@ -109,6 +109,13 @@ const nextConfig: NextConfig = {
       path.resolve(configDir, "src-backend"),
       "node_modules",
     ];
+    config.resolve.alias = {
+      ...(config.resolve.alias ?? {}),
+      "powerdirector/plugin-sdk": path.resolve(configDir, "src-backend", "plugin-sdk"),
+      "powerdirector/plugin-sdk/": path.resolve(configDir, "src-backend", "plugin-sdk/"),
+      "powerdirector/": path.resolve(configDir, "src-backend/"),
+      "powerdirector": path.resolve(configDir, "src-backend"),
+    };
 
     // Force webpack to include the shared src-backend directory in compilation
     const tsRule = config.module.rules.find((rule) => rule.test && rule.test.toString().includes('ts'));

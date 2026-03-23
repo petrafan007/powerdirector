@@ -1,4 +1,4 @@
-import { mapAllowlistResolutionInputs } from "@/src-backend/plugin-sdk/allowlist-resolution";
+import { mapAllowlistResolutionInputs } from "powerdirector/plugin-sdk/allowlist-resolution";
 import { searchGraphUsers } from "./graph-users";
 import {
   listChannelsForTeam,

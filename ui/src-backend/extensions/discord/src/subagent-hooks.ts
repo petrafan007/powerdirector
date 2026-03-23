@@ -1,4 +1,4 @@
-import type { PowerDirectorPluginApi } from "@/src-backend/plugin-sdk/core";
+import type { PowerDirectorPluginApi } from "powerdirector/plugin-sdk/core";
 import { resolveDiscordAccount } from "./accounts";
 import {
   autoBindSpawnedDiscordSubagent,

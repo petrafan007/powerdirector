@@ -9,7 +9,7 @@ import {
   type MediaUnderstandingProvider,
   type VideoDescriptionRequest,
   type VideoDescriptionResult,
-} from "@/src-backend/plugin-sdk/media-understanding";
+} from "powerdirector/plugin-sdk/media-understanding";
 import { normalizeGoogleModelId, parseGeminiAuth } from "./runtime-api";
 
 export const DEFAULT_GOOGLE_AUDIO_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";

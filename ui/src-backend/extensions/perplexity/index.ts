@@ -1,4 +1,4 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
 import { createPerplexityWebSearchProvider } from "./src/perplexity-web-search-provider";
 
 export default definePluginEntry({

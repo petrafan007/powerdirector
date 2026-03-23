@@ -1,4 +1,4 @@
-import { normalizeWebhookPath } from "@/src-backend/plugin-sdk/webhook-path";
+import { normalizeWebhookPath } from "powerdirector/plugin-sdk/webhook-path";
 import type { BlueBubblesAccountConfig } from "./types";
 
 export { normalizeWebhookPath };

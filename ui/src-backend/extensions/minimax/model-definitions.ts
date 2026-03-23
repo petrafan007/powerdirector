@@ -1,4 +1,4 @@
-import type { ModelDefinitionConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelDefinitionConfig } from "powerdirector/plugin-sdk/provider-models";
 
 export const DEFAULT_MINIMAX_BASE_URL = "https://api.minimax.io/v1";
 export const MINIMAX_API_BASE_URL = "https://api.minimax.io/anthropic";

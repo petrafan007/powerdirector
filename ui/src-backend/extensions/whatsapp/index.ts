@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { whatsappPlugin } from "./src/channel";
 import { setWhatsAppRuntime } from "./src/runtime";
 

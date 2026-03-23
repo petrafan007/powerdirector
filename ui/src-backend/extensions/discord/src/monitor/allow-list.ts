@@ -1,12 +1,12 @@
 import type { Guild, User } from "@buape/carbon";
-import type { AllowlistMatch } from "@/src-backend/plugin-sdk/channel-runtime";
+import type { AllowlistMatch } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   buildChannelKeyCandidates,
   resolveChannelEntryMatchWithFallback,
   resolveChannelMatchConfig,
   type ChannelMatchSource,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { evaluateGroupRouteAccessForPolicy } from "@/src-backend/plugin-sdk/group-access";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { evaluateGroupRouteAccessForPolicy } from "powerdirector/plugin-sdk/group-access";
 import { formatDiscordUserTag } from "./format";
 
 export type DiscordAllowList = {

@@ -1,12 +1,12 @@
 import {
   createScopedDmSecurityResolver,
   createTopLevelChannelConfigAdapter,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
-import { attachChannelToResult } from "@/src-backend/plugin-sdk/channel-send-result";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
+import { attachChannelToResult } from "powerdirector/plugin-sdk/channel-send-result";
 import {
   buildPassiveChannelStatusSummary,
   buildTrafficStatusSummary,
-} from "@/src-backend/plugin-sdk/extension-shared";
+} from "powerdirector/plugin-sdk/extension-shared";
 import {
   buildChannelConfigSchema,
   collectStatusIssuesFromLastError,

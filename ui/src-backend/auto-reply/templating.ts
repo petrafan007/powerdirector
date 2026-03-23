@@ -1,4 +1,4 @@
-import type { StickerMetadata } from "@/src-backend/plugin-sdk/telegram";
+import type { StickerMetadata } from "powerdirector/plugin-sdk/telegram";
 import type { ChannelId } from "../channels/plugins/types";
 import type {
   MediaUnderstandingDecision,

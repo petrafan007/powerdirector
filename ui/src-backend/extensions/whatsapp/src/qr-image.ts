@@ -1,4 +1,4 @@
-import { encodePngRgba, fillPixel } from "@/src-backend/plugin-sdk/media-runtime";
+import { encodePngRgba, fillPixel } from "powerdirector/plugin-sdk/media-runtime";
 import QRCodeModule from "qrcode-terminal/vendor/QRCode/index.js";
 import QRErrorCorrectLevelModule from "qrcode-terminal/vendor/QRCode/QRErrorCorrectLevel.js";
 

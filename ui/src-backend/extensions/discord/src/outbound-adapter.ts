@@ -2,15 +2,15 @@ import {
   resolvePayloadMediaUrls,
   sendPayloadMediaSequenceOrFallback,
   sendTextMediaPayload,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelOutboundAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
-import { resolveOutboundSendDep } from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelOutboundAdapter } from "powerdirector/plugin-sdk/channel-runtime";
+import { resolveOutboundSendDep } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   attachChannelToResult,
   createAttachedChannelResultAdapter,
-} from "@/src-backend/plugin-sdk/channel-send-result";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { OutboundIdentity } from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/channel-send-result";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { OutboundIdentity } from "powerdirector/plugin-sdk/infra-runtime";
 import type { DiscordComponentMessageSpec } from "./components";
 import { getThreadBindingManager, type ThreadBindingRecord } from "./monitor/thread-bindings";
 import { normalizeDiscordOutboundTarget } from "./normalize";

@@ -1,4 +1,4 @@
-import type { ModelProviderConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelProviderConfig } from "powerdirector/plugin-sdk/provider-models";
 
 export const MOONSHOT_BASE_URL = "https://api.moonshot.ai/v1";
 export const MOONSHOT_DEFAULT_MODEL_ID = "kimi-k2.5";

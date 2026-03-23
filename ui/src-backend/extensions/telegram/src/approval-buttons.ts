@@ -1,4 +1,4 @@
-import type { ExecApprovalReplyDecision } from "@/src-backend/plugin-sdk/infra-runtime";
+import type { ExecApprovalReplyDecision } from "powerdirector/plugin-sdk/infra-runtime";
 import type { TelegramInlineButtons } from "./button-types";
 
 const MAX_CALLBACK_DATA_BYTES = 64;

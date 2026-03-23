@@ -1,22 +1,22 @@
-import type { ChannelSetupAdapter } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { ChannelSetupInput } from "@/src-backend/plugin-sdk/channel-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+import type { ChannelSetupAdapter } from "powerdirector/plugin-sdk/channel-runtime";
+import type { ChannelSetupInput } from "powerdirector/plugin-sdk/channel-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 import {
   applyAccountNameToChannelSection,
   patchScopedAccountConfig,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import {
   mergeAllowFromEntries,
   createTopLevelChannelDmPolicy,
   promptParsedAllowFromForAccount,
   resolveSetupAccountId,
   setSetupChannelEnabled,
-} from "@/src-backend/plugin-sdk/setup";
-import type { ChannelSetupDmPolicy } from "@/src-backend/plugin-sdk/setup";
-import { type ChannelSetupWizard } from "@/src-backend/plugin-sdk/setup";
-import { formatDocsLink } from "@/src-backend/plugin-sdk/setup";
-import type { WizardPrompter } from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
+import type { ChannelSetupDmPolicy } from "powerdirector/plugin-sdk/setup";
+import { type ChannelSetupWizard } from "powerdirector/plugin-sdk/setup";
+import { formatDocsLink } from "powerdirector/plugin-sdk/setup";
+import type { WizardPrompter } from "powerdirector/plugin-sdk/setup";
 import {
   listNextcloudTalkAccountIds,
   resolveDefaultNextcloudTalkAccountId,

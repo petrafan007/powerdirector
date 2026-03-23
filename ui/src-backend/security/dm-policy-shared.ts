@@ -1,4 +1,4 @@
-import { evaluateMatchedGroupAccessForPolicy } from "@/src-backend/plugin-sdk/group-access";
+import { evaluateMatchedGroupAccessForPolicy } from "powerdirector/plugin-sdk/group-access";
 import { mergeDmAllowFromSources, resolveGroupAllowFromSources } from "../channels/allow-from";
 import { resolveControlCommandGate } from "../channels/command-gating";
 import type { ChannelId } from "../channels/plugins/types";

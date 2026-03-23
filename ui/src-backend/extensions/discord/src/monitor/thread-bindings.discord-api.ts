@@ -1,6 +1,6 @@
 import { ChannelType, Routes } from "discord-api-types/v10";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import { createDiscordRestClient } from "../client";
 import { sendMessageDiscord, sendWebhookMessageDiscord } from "../send";
 import { createThreadDiscord } from "../send.messages";

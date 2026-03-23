@@ -1,12 +1,12 @@
-import { buildDmGroupAccountAllowlistAdapter } from "@/src-backend/plugin-sdk/allowlist-config-edit";
+import { buildDmGroupAccountAllowlistAdapter } from "powerdirector/plugin-sdk/allowlist-config-edit";
 import {
   createAttachedChannelResultAdapter,
   resolveOutboundSendDep,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { buildOutboundBaseSessionKey } from "@/src-backend/plugin-sdk/core";
-import { buildPassiveProbedChannelStatusSummary } from "@/src-backend/plugin-sdk/extension-shared";
-import { createLazyRuntimeModule } from "@/src-backend/plugin-sdk/lazy-runtime";
-import { type RoutePeer } from "@/src-backend/plugin-sdk/routing";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { buildOutboundBaseSessionKey } from "powerdirector/plugin-sdk/core";
+import { buildPassiveProbedChannelStatusSummary } from "powerdirector/plugin-sdk/extension-shared";
+import { createLazyRuntimeModule } from "powerdirector/plugin-sdk/lazy-runtime";
+import { type RoutePeer } from "powerdirector/plugin-sdk/routing";
 import {
   collectStatusIssuesFromLastError,
   DEFAULT_ACCOUNT_ID,

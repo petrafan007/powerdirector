@@ -1,5 +1,5 @@
 import type { AnyMessageContent } from "@whiskeysockets/baileys";
-import type { NormalizedLocation } from "@/src-backend/plugin-sdk/channel-runtime";
+import type { NormalizedLocation } from "powerdirector/plugin-sdk/channel-runtime";
 
 export type WebListenerCloseReason = {
   status?: number;

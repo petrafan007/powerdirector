@@ -1,7 +1,7 @@
-import { type PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAccountEntry } from "@/src-backend/plugin-sdk/routing";
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/routing";
+import { type PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAccountEntry } from "powerdirector/plugin-sdk/routing";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/routing";
 import { DISCORD_TEXT_CHUNK_LIMIT } from "./outbound-adapter";
 
 const DEFAULT_DISCORD_DRAFT_STREAM_MIN = 200;

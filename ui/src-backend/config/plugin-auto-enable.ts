@@ -1,4 +1,4 @@
-import { hasAnyWhatsAppAuth } from "@/src-backend/plugin-sdk/whatsapp";
+import { hasAnyWhatsAppAuth } from "powerdirector/plugin-sdk/whatsapp";
 import { normalizeProviderId } from "../agents/model-selection";
 import { hasMeaningfulChannelConfig } from "../channels/config-presence";
 import {

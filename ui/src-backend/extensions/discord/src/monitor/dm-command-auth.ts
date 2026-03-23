@@ -1,9 +1,9 @@
-import { resolveCommandAuthorizedFromAuthorizers } from "@/src-backend/plugin-sdk/channel-runtime";
+import { resolveCommandAuthorizedFromAuthorizers } from "powerdirector/plugin-sdk/channel-runtime";
 import {
   readStoreAllowFromForDmPolicy,
   resolveDmGroupAccessWithLists,
   type DmGroupAccessDecision,
-} from "@/src-backend/plugin-sdk/security-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
 import { normalizeDiscordAllowList, resolveDiscordAllowListMatch } from "./allow-list";
 
 const DISCORD_ALLOW_LIST_PREFIXES = ["discord:", "user:", "pk:"];

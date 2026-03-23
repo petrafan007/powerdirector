@@ -1,4 +1,4 @@
-import type { ModelProviderConfig } from "@/src-backend/plugin-sdk/provider-models";
+import type { ModelProviderConfig } from "powerdirector/plugin-sdk/provider-models";
 
 const XIAOMI_BASE_URL = "https://api.xiaomimimo.com/anthropic";
 export const XIAOMI_DEFAULT_MODEL_ID = "mimo-v2-flash";

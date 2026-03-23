@@ -1,5 +1,5 @@
-import { type ChannelSetupWizard } from "@/src-backend/plugin-sdk/setup";
-import { formatDocsLink } from "@/src-backend/plugin-sdk/setup";
+import { type ChannelSetupWizard } from "powerdirector/plugin-sdk/setup";
+import { formatDocsLink } from "powerdirector/plugin-sdk/setup";
 import { listMattermostAccountIds } from "./mattermost/accounts";
 import { normalizeMattermostBaseUrl } from "./mattermost/client";
 import {

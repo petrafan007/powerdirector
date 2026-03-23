@@ -1,6 +1,6 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
-import { OPENCODE_GO_DEFAULT_MODEL_REF } from "@/src-backend/plugin-sdk/provider-models";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
+import { OPENCODE_GO_DEFAULT_MODEL_REF } from "powerdirector/plugin-sdk/provider-models";
 import { applyOpencodeGoConfig } from "./onboard";
 
 const PROVIDER_ID = "opencode-go";

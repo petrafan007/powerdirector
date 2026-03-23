@@ -1,11 +1,11 @@
-import { formatCliCommand } from "@/src-backend/plugin-sdk/cli-runtime";
-import { parseDurationMs } from "@/src-backend/plugin-sdk/cli-runtime";
+import { formatCliCommand } from "powerdirector/plugin-sdk/cli-runtime";
+import { parseDurationMs } from "powerdirector/plugin-sdk/cli-runtime";
 import {
   definePluginEntry,
   type ProviderAuthContext,
   type ProviderResolveDynamicModelContext,
   type ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 import {
   CLAUDE_CLI_PROFILE_ID,
   applyAuthProfileConfig,
@@ -24,9 +24,9 @@ import {
   upsertAuthProfile,
   validateAnthropicSetupToken,
   validateApiKeyInput,
-} from "@/src-backend/plugin-sdk/provider-auth";
-import { normalizeModelCompat } from "@/src-backend/plugin-sdk/provider-models";
-import { fetchClaudeUsage } from "@/src-backend/plugin-sdk/provider-usage";
+} from "powerdirector/plugin-sdk/provider-auth";
+import { normalizeModelCompat } from "powerdirector/plugin-sdk/provider-models";
+import { fetchClaudeUsage } from "powerdirector/plugin-sdk/provider-usage";
 import { anthropicMediaUnderstandingProvider } from "./media-understanding-provider";
 
 const PROVIDER_ID = "anthropic";

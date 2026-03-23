@@ -1,4 +1,4 @@
-import { definePluginEntry } from "@/src-backend/plugin-sdk/core";
+import { definePluginEntry } from "powerdirector/plugin-sdk/core";
 import {
   applyAuthProfileConfig,
   buildApiKeyCredential,
@@ -12,11 +12,11 @@ import {
   type SecretInput,
   upsertAuthProfile,
   validateApiKeyInput,
-} from "@/src-backend/plugin-sdk/provider-auth";
+} from "powerdirector/plugin-sdk/provider-auth";
 import {
   buildCloudflareAiGatewayModelDefinition,
   resolveCloudflareAiGatewayBaseUrl,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 import {
   applyCloudflareAiGatewayConfig,
   buildCloudflareAiGatewayConfigPatch,

@@ -7,7 +7,7 @@ import {
   type ChannelSetupWizard,
   type PowerDirectorConfig,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import {
   listBlueBubblesAccountIds,
   resolveBlueBubblesAccount,

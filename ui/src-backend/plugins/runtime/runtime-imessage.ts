@@ -2,7 +2,7 @@ import {
   monitorIMessageProvider,
   probeIMessage,
   sendMessageIMessage,
-} from "@/src-backend/plugin-sdk/imessage";
+} from "powerdirector/plugin-sdk/imessage";
 import type { PluginRuntimeChannel } from "./types-channel";
 
 export function createRuntimeIMessage(): PluginRuntimeChannel["imessage"] {

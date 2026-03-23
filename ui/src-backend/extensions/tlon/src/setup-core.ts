@@ -8,7 +8,7 @@ import {
   type ChannelSetupInput,
   type ChannelSetupWizard,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/setup";
+} from "powerdirector/plugin-sdk/setup";
 import { buildTlonAccountFields } from "./account-fields";
 import { normalizeShip } from "./targets";
 import { listTlonAccountIds, resolveTlonAccount, type TlonResolvedAccount } from "./types";

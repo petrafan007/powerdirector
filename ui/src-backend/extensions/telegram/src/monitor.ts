@@ -1,11 +1,11 @@
 import type { RunOptions } from "@grammyjs/runner";
-import { resolveAgentMaxConcurrent } from "@/src-backend/plugin-sdk/config-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import { waitForAbortSignal } from "@/src-backend/plugin-sdk/runtime-env";
-import { registerUnhandledRejectionHandler } from "@/src-backend/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
+import { resolveAgentMaxConcurrent } from "powerdirector/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import { waitForAbortSignal } from "powerdirector/plugin-sdk/runtime-env";
+import { registerUnhandledRejectionHandler } from "powerdirector/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
 import { resolveTelegramAccount } from "./accounts";
 import { resolveTelegramAllowedUpdates } from "./allowed-updates";
 import { TelegramExecApprovalHandler } from "./exec-approvals-handler";

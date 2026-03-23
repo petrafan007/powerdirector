@@ -7,16 +7,16 @@
 import {
   createHybridChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "@/src-backend/plugin-sdk/channel-config-helpers";
+} from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   createConditionalWarningCollector,
   projectWarningCollector,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import {
   attachChannelToResult,
   createEmptyChannelDirectoryAdapter,
   createTextPairingAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import { z } from "zod";
 import { DEFAULT_ACCOUNT_ID, registerPluginHttpRoute, buildChannelConfigSchema } from "../api";
 import { listAccountIds, resolveAccount } from "./accounts";

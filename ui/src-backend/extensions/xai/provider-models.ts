@@ -1,8 +1,8 @@
 import type {
   ProviderResolveDynamicModelContext,
   ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/core";
-import { applyXaiModelCompat, normalizeModelCompat } from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/core";
+import { applyXaiModelCompat, normalizeModelCompat } from "powerdirector/plugin-sdk/provider-models";
 import { resolveXaiCatalogEntry, XAI_BASE_URL } from "./model-definitions";
 
 const XAI_MODERN_MODEL_PREFIXES = ["grok-4", "grok-code-fast"] as const;

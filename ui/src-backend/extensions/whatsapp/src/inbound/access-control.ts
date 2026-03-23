@@ -1,17 +1,17 @@
-import { createChannelPairingChallengeIssuer } from "@/src-backend/plugin-sdk/channel-pairing";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import { createChannelPairingChallengeIssuer } from "powerdirector/plugin-sdk/channel-pairing";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveOpenProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { upsertChannelPairingRequest } from "@/src-backend/plugin-sdk/conversation-runtime";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { upsertChannelPairingRequest } from "powerdirector/plugin-sdk/conversation-runtime";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
 import {
   readStoreAllowFromForDmPolicy,
   resolveDmGroupAccessWithLists,
-} from "@/src-backend/plugin-sdk/security-runtime";
-import { isSelfChatMode, normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/security-runtime";
+import { isSelfChatMode, normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveWhatsAppAccount } from "../accounts";
 
 export type InboundAccessControlResult = {

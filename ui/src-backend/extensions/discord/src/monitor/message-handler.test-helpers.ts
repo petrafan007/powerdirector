@@ -1,4 +1,4 @@
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
 import { vi } from "vitest";
 import type { createDiscordMessageHandler } from "./message-handler";
 import { createNoopThreadBindingManager } from "./thread-bindings";

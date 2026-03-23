@@ -10,7 +10,7 @@ import {
 import {
   resolveTelegramInlineButtonsScope,
   resolveTelegramReactionLevel,
-} from "@/src-backend/plugin-sdk/telegram";
+} from "powerdirector/plugin-sdk/telegram";
 import { resolveHeartbeatPrompt } from "../../auto-reply/heartbeat";
 import type { ReasoningLevel, ThinkLevel } from "../../auto-reply/thinking";
 import { resolveChannelCapabilities } from "../../config/channel-capabilities";

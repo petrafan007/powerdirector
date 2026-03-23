@@ -1,5 +1,5 @@
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
-import { tryReadSecretFileSync } from "@/src-backend/plugin-sdk/infra-runtime";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
+import { tryReadSecretFileSync } from "powerdirector/plugin-sdk/infra-runtime";
 import type { BaseTokenResolution } from "./runtime-api";
 import { normalizeResolvedSecretInputString, normalizeSecretInputString } from "./secret-input";
 import type { ZaloConfig } from "./types";

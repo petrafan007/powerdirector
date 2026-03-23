@@ -1,4 +1,4 @@
-import { hasOutboundReplyContent } from "@/src-backend/plugin-sdk/reply-payload";
+import { hasOutboundReplyContent } from "powerdirector/plugin-sdk/reply-payload";
 import type { PowerDirectorConfig } from "../../config/config";
 import type { TtsAutoMode } from "../../config/types.tts";
 import { logVerbose } from "../../globals";

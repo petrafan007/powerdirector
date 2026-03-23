@@ -1,4 +1,4 @@
-import { normalizeAccountId } from "@/src-backend/plugin-sdk/account-id";
+import { normalizeAccountId } from "powerdirector/plugin-sdk/account-id";
 import { getMatrixRuntime } from "../../runtime";
 import type { CoreConfig } from "../../types";
 import { getActiveMatrixClient } from "../active-client";

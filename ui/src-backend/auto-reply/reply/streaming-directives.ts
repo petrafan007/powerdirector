@@ -1,4 +1,4 @@
-import { hasOutboundReplyContent } from "@/src-backend/plugin-sdk/reply-payload";
+import { hasOutboundReplyContent } from "powerdirector/plugin-sdk/reply-payload";
 import { splitMediaFromOutput } from "../../media/parse";
 import { parseInlineDirectives } from "../../utils/directive-tags";
 import { isSilentReplyPrefixText, isSilentReplyText, SILENT_REPLY_TOKEN } from "../tokens";

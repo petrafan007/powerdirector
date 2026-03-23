@@ -1,4 +1,4 @@
-import { evaluateGroupRouteAccessForPolicy } from "@/src-backend/plugin-sdk/group-access";
+import { evaluateGroupRouteAccessForPolicy } from "powerdirector/plugin-sdk/group-access";
 
 export function isSlackChannelAllowedByPolicy(params: {
   groupPolicy: "open" | "disabled" | "allowlist";

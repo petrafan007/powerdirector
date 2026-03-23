@@ -1,4 +1,4 @@
-import { normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+import { normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import {
   createAllowedChatSenderMatcher,
   type ChatSenderAllowParams,

@@ -1,4 +1,4 @@
-import { buildUntrustedChannelMetadata } from "@/src-backend/plugin-sdk/security-runtime";
+import { buildUntrustedChannelMetadata } from "powerdirector/plugin-sdk/security-runtime";
 import {
   resolveDiscordOwnerAllowFrom,
   type DiscordChannelConfigResolved,

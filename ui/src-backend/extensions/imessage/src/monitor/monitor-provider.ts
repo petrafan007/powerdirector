@@ -1,42 +1,42 @@
 import fs from "node:fs/promises";
-import { resolveHumanDelayConfig } from "@/src-backend/plugin-sdk/agent-runtime";
-import { createChannelPairingChallengeIssuer } from "@/src-backend/plugin-sdk/channel-pairing";
-import { createChannelReplyPipeline } from "@/src-backend/plugin-sdk/channel-reply-pipeline";
+import { resolveHumanDelayConfig } from "powerdirector/plugin-sdk/agent-runtime";
+import { createChannelPairingChallengeIssuer } from "powerdirector/plugin-sdk/channel-pairing";
+import { createChannelReplyPipeline } from "powerdirector/plugin-sdk/channel-reply-pipeline";
 import {
   createChannelInboundDebouncer,
   shouldDebounceTextInbound,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { recordInboundSession } from "@/src-backend/plugin-sdk/channel-runtime";
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { recordInboundSession } from "powerdirector/plugin-sdk/channel-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
 import {
   resolveOpenProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { readSessionUpdatedAt, resolveStorePath } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { readSessionUpdatedAt, resolveStorePath } from "powerdirector/plugin-sdk/config-runtime";
 import {
   readChannelAllowFromStore,
   upsertChannelPairingRequest,
-} from "@/src-backend/plugin-sdk/conversation-runtime";
-import { normalizeScpRemoteHost } from "@/src-backend/plugin-sdk/infra-runtime";
-import { waitForTransportReady } from "@/src-backend/plugin-sdk/infra-runtime";
+} from "powerdirector/plugin-sdk/conversation-runtime";
+import { normalizeScpRemoteHost } from "powerdirector/plugin-sdk/infra-runtime";
+import { waitForTransportReady } from "powerdirector/plugin-sdk/infra-runtime";
 import {
   isInboundPathAllowed,
   resolveIMessageAttachmentRoots,
   resolveIMessageRemoteAttachmentRoots,
-} from "@/src-backend/plugin-sdk/media-runtime";
-import { kindFromMime } from "@/src-backend/plugin-sdk/media-runtime";
-import { resolveTextChunkLimit } from "@/src-backend/plugin-sdk/reply-runtime";
-import { dispatchInboundMessage } from "@/src-backend/plugin-sdk/reply-runtime";
+} from "powerdirector/plugin-sdk/media-runtime";
+import { kindFromMime } from "powerdirector/plugin-sdk/media-runtime";
+import { resolveTextChunkLimit } from "powerdirector/plugin-sdk/reply-runtime";
+import { dispatchInboundMessage } from "powerdirector/plugin-sdk/reply-runtime";
 import {
   clearHistoryEntriesIfEnabled,
   DEFAULT_GROUP_HISTORY_LIMIT,
   type HistoryEntry,
-} from "@/src-backend/plugin-sdk/reply-runtime";
-import { createReplyDispatcher } from "@/src-backend/plugin-sdk/reply-runtime";
-import { danger, logVerbose, shouldLogVerbose, warn } from "@/src-backend/plugin-sdk/runtime-env";
-import { resolvePinnedMainDmOwnerFromAllowlist } from "@/src-backend/plugin-sdk/security-runtime";
-import { truncateUtf16Safe } from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/reply-runtime";
+import { createReplyDispatcher } from "powerdirector/plugin-sdk/reply-runtime";
+import { danger, logVerbose, shouldLogVerbose, warn } from "powerdirector/plugin-sdk/runtime-env";
+import { resolvePinnedMainDmOwnerFromAllowlist } from "powerdirector/plugin-sdk/security-runtime";
+import { truncateUtf16Safe } from "powerdirector/plugin-sdk/text-runtime";
 import { resolveIMessageAccount } from "../accounts";
 import { createIMessageRpcClient } from "../client";
 import { DEFAULT_IMESSAGE_PROBE_TIMEOUT_MS } from "../constants";

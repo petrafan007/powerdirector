@@ -14,7 +14,7 @@ import {
   type ChannelOnboardingDmPolicy,
   type PowerDirectorConfig,
   type WizardPrompter,
-} from "@/src-backend/plugin-sdk/nextcloud-talk";
+} from "powerdirector/plugin-sdk/nextcloud-talk";
 import {
   listNextcloudTalkAccountIds,
   resolveDefaultNextcloudTalkAccountId,

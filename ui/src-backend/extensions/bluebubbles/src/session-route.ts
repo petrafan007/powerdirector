@@ -2,7 +2,7 @@ import {
   buildChannelOutboundSessionRoute,
   stripChannelTargetPrefix,
   type ChannelOutboundSessionRouteParams,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 import { parseBlueBubblesTarget } from "./targets";
 
 export function resolveBlueBubblesOutboundSessionRoute(params: ChannelOutboundSessionRouteParams) {

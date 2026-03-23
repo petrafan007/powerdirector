@@ -1,4 +1,4 @@
-import type { DiscordSlashCommandConfig } from "@/src-backend/plugin-sdk/config-runtime";
+import type { DiscordSlashCommandConfig } from "powerdirector/plugin-sdk/config-runtime";
 
 export function resolveDiscordSlashCommandConfig(
   raw?: DiscordSlashCommandConfig,

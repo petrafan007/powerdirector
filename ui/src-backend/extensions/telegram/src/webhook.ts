@@ -1,19 +1,19 @@
 import { timingSafeEqual } from "node:crypto";
 import { createServer } from "node:http";
 import { InputFile, webhookCallback } from "grammy";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isDiagnosticsEnabled } from "@/src-backend/plugin-sdk/infra-runtime";
-import { formatErrorMessage } from "@/src-backend/plugin-sdk/infra-runtime";
-import { readJsonBodyWithLimit } from "@/src-backend/plugin-sdk/infra-runtime";
-import type { RuntimeEnv } from "@/src-backend/plugin-sdk/runtime-env";
-import { defaultRuntime } from "@/src-backend/plugin-sdk/runtime-env";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isDiagnosticsEnabled } from "powerdirector/plugin-sdk/infra-runtime";
+import { formatErrorMessage } from "powerdirector/plugin-sdk/infra-runtime";
+import { readJsonBodyWithLimit } from "powerdirector/plugin-sdk/infra-runtime";
+import type { RuntimeEnv } from "powerdirector/plugin-sdk/runtime-env";
+import { defaultRuntime } from "powerdirector/plugin-sdk/runtime-env";
 import {
   logWebhookError,
   logWebhookProcessed,
   logWebhookReceived,
   startDiagnosticHeartbeat,
   stopDiagnosticHeartbeat,
-} from "@/src-backend/plugin-sdk/text-runtime";
+} from "powerdirector/plugin-sdk/text-runtime";
 import { resolveTelegramAllowedUpdates } from "./allowed-updates";
 import { withTelegramApiErrorLogging } from "./api-logging";
 import { createTelegramBot } from "./bot";

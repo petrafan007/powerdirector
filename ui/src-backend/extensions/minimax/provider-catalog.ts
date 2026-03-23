@@ -1,7 +1,7 @@
 import type {
   ModelDefinitionConfig,
   ModelProviderConfig,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 
 const MINIMAX_PORTAL_BASE_URL = "https://api.minimax.io/anthropic";
 export const MINIMAX_DEFAULT_MODEL_ID = "MiniMax-M2.7";

@@ -6,12 +6,12 @@ import {
   resolveProfilesUnavailableReason,
   type AuthProfileFailureReason,
   type AuthProfileStore,
-} from "@/src-backend/plugin-sdk/agent-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
 import type {
   DiscordAccountConfig,
   DiscordAutoPresenceConfig,
-} from "@/src-backend/plugin-sdk/config-runtime";
-import { warn } from "@/src-backend/plugin-sdk/runtime-env";
+} from "powerdirector/plugin-sdk/config-runtime";
+import { warn } from "powerdirector/plugin-sdk/runtime-env";
 import { resolveDiscordPresenceUpdate } from "./presence";
 
 const DEFAULT_CUSTOM_ACTIVITY_TYPE = 4;

@@ -2,8 +2,8 @@ import {
   resolveChannelGroupRequireMention,
   resolveChannelGroupToolsPolicy,
   type GroupToolPolicyConfig,
-} from "@/src-backend/plugin-sdk/channel-policy";
-import { type ChannelGroupContext } from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-policy";
+import { type ChannelGroupContext } from "powerdirector/plugin-sdk/channel-runtime";
 
 function parseTelegramGroupId(value?: string | null) {
   const raw = value?.trim() ?? "";

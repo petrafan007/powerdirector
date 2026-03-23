@@ -1,6 +1,6 @@
-import { markdownToText, truncateText } from "@/src-backend/plugin-sdk/agent-runtime";
-import type { PowerDirectorConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { withTrustedWebToolsEndpoint } from "@/src-backend/plugin-sdk/provider-web-search";
+import { markdownToText, truncateText } from "powerdirector/plugin-sdk/agent-runtime";
+import type { PowerDirectorConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { withTrustedWebToolsEndpoint } from "powerdirector/plugin-sdk/provider-web-search";
 import {
   DEFAULT_CACHE_TTL_MINUTES,
   normalizeCacheKey,
@@ -8,8 +8,8 @@ import {
   readResponseText,
   resolveCacheTtlMs,
   writeCache,
-} from "@/src-backend/plugin-sdk/provider-web-search";
-import { wrapExternalContent, wrapWebContent } from "@/src-backend/plugin-sdk/security-runtime";
+} from "powerdirector/plugin-sdk/provider-web-search";
+import { wrapExternalContent, wrapWebContent } from "powerdirector/plugin-sdk/security-runtime";
 import {
   resolveFirecrawlApiKey,
   resolveFirecrawlBaseUrl,

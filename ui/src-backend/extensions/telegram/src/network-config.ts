@@ -1,7 +1,7 @@
 import process from "node:process";
-import type { TelegramNetworkConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import { isTruthyEnvValue } from "@/src-backend/plugin-sdk/infra-runtime";
-import { isWSL2Sync } from "@/src-backend/plugin-sdk/infra-runtime";
+import type { TelegramNetworkConfig } from "powerdirector/plugin-sdk/config-runtime";
+import { isTruthyEnvValue } from "powerdirector/plugin-sdk/infra-runtime";
+import { isWSL2Sync } from "powerdirector/plugin-sdk/infra-runtime";
 
 export const TELEGRAM_DISABLE_AUTO_SELECT_FAMILY_ENV =
   "POWERDIRECTOR_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY";

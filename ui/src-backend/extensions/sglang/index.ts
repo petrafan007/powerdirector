@@ -3,17 +3,17 @@ import {
   SGLANG_DEFAULT_BASE_URL,
   SGLANG_MODEL_PLACEHOLDER,
   SGLANG_PROVIDER_LABEL,
-} from "@/src-backend/plugin-sdk/agent-runtime";
+} from "powerdirector/plugin-sdk/agent-runtime";
 import {
   definePluginEntry,
   type PowerDirectorPluginApi,
   type ProviderAuthMethodNonInteractiveContext,
-} from "@/src-backend/plugin-sdk/core";
+} from "powerdirector/plugin-sdk/core";
 
 const PROVIDER_ID = "sglang";
 
 async function loadProviderSetup() {
-  return await import("@/src-backend/plugin-sdk/self-hosted-provider-setup");
+  return await import("powerdirector/plugin-sdk/self-hosted-provider-setup");
 }
 
 export default definePluginEntry({

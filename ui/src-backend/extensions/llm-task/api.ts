@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/llm-task";
+export * from "powerdirector/plugin-sdk/llm-task";

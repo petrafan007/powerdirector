@@ -9,9 +9,9 @@ import {
   setSetupChannelEnabled,
   type DmPolicy,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/setup";
-import type { ChannelSetupWizard } from "@/src-backend/plugin-sdk/setup";
-import { formatCliCommand, formatDocsLink } from "@/src-backend/plugin-sdk/setup-tools";
+} from "powerdirector/plugin-sdk/setup";
+import type { ChannelSetupWizard } from "powerdirector/plugin-sdk/setup";
+import { formatCliCommand, formatDocsLink } from "powerdirector/plugin-sdk/setup-tools";
 import { listWhatsAppAccountIds, resolveWhatsAppAuthDir } from "./accounts";
 import { loginWeb } from "./login";
 import { whatsappSetupAdapter } from "./setup-core";

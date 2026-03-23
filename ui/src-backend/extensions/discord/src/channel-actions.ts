@@ -2,13 +2,13 @@ import {
   createDiscordMessageToolComponentsSchema,
   createUnionActionGate,
   listTokenSourcedAccounts,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
   ChannelMessageToolDiscovery,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import type { DiscordActionConfig } from "@/src-backend/plugin-sdk/config-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import type { DiscordActionConfig } from "powerdirector/plugin-sdk/config-runtime";
 import { createDiscordActionGate, listEnabledDiscordAccounts } from "./accounts";
 import { handleDiscordMessageAction } from "./actions/handle-action";
 

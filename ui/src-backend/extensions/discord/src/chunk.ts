@@ -1,4 +1,4 @@
-import { chunkMarkdownTextWithMode, type ChunkMode } from "@/src-backend/plugin-sdk/reply-runtime";
+import { chunkMarkdownTextWithMode, type ChunkMode } from "powerdirector/plugin-sdk/reply-runtime";
 
 export type ChunkDiscordTextOpts = {
   /** Max characters per Discord message. Default: 2000. */

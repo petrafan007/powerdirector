@@ -1,4 +1,4 @@
-import { resolveLoggerBackedRuntime } from "@/src-backend/plugin-sdk/extension-shared";
+import { resolveLoggerBackedRuntime } from "powerdirector/plugin-sdk/extension-shared";
 import { resolveIrcAccount } from "./accounts";
 import { connectIrcClient, type IrcClient } from "./client";
 import { buildIrcConnectOptions } from "./connect-options";

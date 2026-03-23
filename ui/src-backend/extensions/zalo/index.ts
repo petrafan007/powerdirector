@@ -1,4 +1,4 @@
-import { defineChannelPluginEntry } from "@/src-backend/plugin-sdk/core";
+import { defineChannelPluginEntry } from "powerdirector/plugin-sdk/core";
 import { zaloPlugin } from "./src/channel";
 import { setZaloRuntime } from "./src/runtime";
 

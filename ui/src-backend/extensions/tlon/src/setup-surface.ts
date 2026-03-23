@@ -1,4 +1,4 @@
-import { DEFAULT_ACCOUNT_ID } from "@/src-backend/plugin-sdk/setup";
+import { DEFAULT_ACCOUNT_ID } from "powerdirector/plugin-sdk/setup";
 import {
   applyTlonSetupConfig,
   createTlonSetupWizardBase,

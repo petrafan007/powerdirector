@@ -1,8 +1,8 @@
 import type { ChannelType, Client, User } from "@buape/carbon";
-import type { ReplyToMode } from "@/src-backend/plugin-sdk/config-runtime";
-import type { SessionBindingRecord } from "@/src-backend/plugin-sdk/conversation-runtime";
-import type { HistoryEntry } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
+import type { ReplyToMode } from "powerdirector/plugin-sdk/config-runtime";
+import type { SessionBindingRecord } from "powerdirector/plugin-sdk/conversation-runtime";
+import type { HistoryEntry } from "powerdirector/plugin-sdk/reply-runtime";
+import type { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
 import type { DiscordChannelConfigResolved, DiscordGuildEntryResolved } from "./allow-list";
 import type { DiscordChannelInfo } from "./message-utils";
 import type { DiscordThreadBindingLookup } from "./reply-delivery";
@@ -12,16 +12,16 @@ export type { DiscordSenderIdentity } from "./sender-identity";
 import type { DiscordThreadChannel } from "./threading";
 
 export type LoadedConfig = ReturnType<
-  typeof import("@/src-backend/plugin-sdk/config-runtime").loadConfig
+  typeof import("powerdirector/plugin-sdk/config-runtime").loadConfig
 >;
-export type RuntimeEnv = import("@/src-backend/plugin-sdk/runtime-env").RuntimeEnv;
+export type RuntimeEnv = import("powerdirector/plugin-sdk/runtime-env").RuntimeEnv;
 
 export type DiscordMessageEvent = import("./listeners").DiscordMessageEvent;
 
 type DiscordMessagePreflightSharedFields = {
   cfg: LoadedConfig;
   discordConfig: NonNullable<
-    import("@/src-backend/plugin-sdk/config-runtime").PowerDirectorConfig["channels"]
+    import("powerdirector/plugin-sdk/config-runtime").PowerDirectorConfig["channels"]
   >["discord"];
   accountId: string;
   token: string;

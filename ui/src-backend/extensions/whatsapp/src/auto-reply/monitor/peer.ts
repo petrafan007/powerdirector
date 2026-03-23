@@ -1,4 +1,4 @@
-import { jidToE164, normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+import { jidToE164, normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import type { WebInboundMsg } from "../types";
 
 export function resolvePeerId(msg: WebInboundMsg) {

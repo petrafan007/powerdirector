@@ -1,9 +1,9 @@
-import { formatAllowFromLowercase } from "@/src-backend/plugin-sdk/allow-from";
-import { createHybridChannelConfigAdapter } from "@/src-backend/plugin-sdk/channel-config-helpers";
+import { formatAllowFromLowercase } from "powerdirector/plugin-sdk/allow-from";
+import { createHybridChannelConfigAdapter } from "powerdirector/plugin-sdk/channel-config-helpers";
 import {
   createAllowlistProviderGroupPolicyWarningCollector,
   projectWarningCollector,
-} from "@/src-backend/plugin-sdk/channel-policy";
+} from "powerdirector/plugin-sdk/channel-policy";
 import {
   createChannelDirectoryAdapter,
   createMessageToolCardSchema,
@@ -11,12 +11,12 @@ import {
   createRuntimeDirectoryLiveAdapter,
   createRuntimeOutboundDelegates,
   createTextPairingAdapter,
-} from "@/src-backend/plugin-sdk/channel-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageToolDiscovery,
-} from "@/src-backend/plugin-sdk/channel-runtime";
-import { createLazyRuntimeNamedExport } from "@/src-backend/plugin-sdk/lazy-runtime";
+} from "powerdirector/plugin-sdk/channel-runtime";
+import { createLazyRuntimeNamedExport } from "powerdirector/plugin-sdk/lazy-runtime";
 import type { ChannelMeta, ChannelPlugin, ClawdbotConfig } from "../runtime-api";
 import {
   buildChannelConfigSchema,

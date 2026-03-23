@@ -2,9 +2,9 @@ import type {
   PowerDirectorPluginApi,
   ProviderAuthContext,
   ProviderFetchUsageSnapshotContext,
-} from "@/src-backend/plugin-sdk/plugin-entry";
-import { buildOauthProviderAuthResult } from "@/src-backend/plugin-sdk/provider-auth";
-import { fetchGeminiUsage } from "@/src-backend/plugin-sdk/provider-usage";
+} from "powerdirector/plugin-sdk/plugin-entry";
+import { buildOauthProviderAuthResult } from "powerdirector/plugin-sdk/provider-auth";
+import { fetchGeminiUsage } from "powerdirector/plugin-sdk/provider-usage";
 import { isModernGoogleModel, resolveGoogle31ForwardCompatModel } from "./provider-models";
 
 const PROVIDER_ID = "google-gemini-cli";

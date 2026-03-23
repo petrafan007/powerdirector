@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/nextcloud-talk";
+export * from "powerdirector/plugin-sdk/nextcloud-talk";

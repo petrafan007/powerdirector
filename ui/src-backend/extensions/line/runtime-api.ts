@@ -1,1 +1,1 @@
-export * from "@/src-backend/plugin-sdk/line-core";
+export * from "powerdirector/plugin-sdk/line-core";

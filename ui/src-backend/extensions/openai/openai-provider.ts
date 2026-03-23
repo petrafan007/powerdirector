@@ -1,8 +1,8 @@
 import {
   type ProviderResolveDynamicModelContext,
   type ProviderRuntimeModel,
-} from "@/src-backend/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "@/src-backend/plugin-sdk/provider-auth";
+} from "powerdirector/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "powerdirector/plugin-sdk/provider-auth";
 import {
   applyOpenAIConfig,
   DEFAULT_CONTEXT_TOKENS,
@@ -10,11 +10,11 @@ import {
   normalizeProviderId,
   OPENAI_DEFAULT_MODEL,
   type ProviderPlugin,
-} from "@/src-backend/plugin-sdk/provider-models";
+} from "powerdirector/plugin-sdk/provider-models";
 import {
   createOpenAIAttributionHeadersWrapper,
   createOpenAIDefaultTransportWrapper,
-} from "@/src-backend/plugin-sdk/provider-stream";
+} from "powerdirector/plugin-sdk/provider-stream";
 import {
   cloneFirstTemplateModel,
   findCatalogTemplate,

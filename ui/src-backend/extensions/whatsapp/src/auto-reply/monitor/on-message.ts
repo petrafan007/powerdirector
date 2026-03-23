@@ -1,10 +1,10 @@
-import { loadConfig } from "@/src-backend/plugin-sdk/config-runtime";
-import type { getReplyFromConfig } from "@/src-backend/plugin-sdk/reply-runtime";
-import type { MsgContext } from "@/src-backend/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "@/src-backend/plugin-sdk/routing";
-import { buildGroupHistoryKey } from "@/src-backend/plugin-sdk/routing";
-import { logVerbose } from "@/src-backend/plugin-sdk/runtime-env";
-import { normalizeE164 } from "@/src-backend/plugin-sdk/text-runtime";
+import { loadConfig } from "powerdirector/plugin-sdk/config-runtime";
+import type { getReplyFromConfig } from "powerdirector/plugin-sdk/reply-runtime";
+import type { MsgContext } from "powerdirector/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "powerdirector/plugin-sdk/routing";
+import { buildGroupHistoryKey } from "powerdirector/plugin-sdk/routing";
+import { logVerbose } from "powerdirector/plugin-sdk/runtime-env";
+import { normalizeE164 } from "powerdirector/plugin-sdk/text-runtime";
 import type { MentionConfig } from "../mentions";
 import type { WebInboundMsg } from "../types";
 import { maybeBroadcastMessage } from "./broadcast";
@@ -26,7 +26,7 @@ export function createWebOnMessageHandler(params: {
   echoTracker: EchoTracker;
   backgroundTasks: Set<Promise<unknown>>;
   replyResolver: typeof getReplyFromConfig;
-  replyLogger: ReturnType<(typeof import("@/src-backend/plugin-sdk/runtime-env"))["getChildLogger"]>;
+  replyLogger: ReturnType<(typeof import("powerdirector/plugin-sdk/runtime-env"))["getChildLogger"]>;
   baseMentionConfig: MentionConfig;
   account: { authDir?: string; accountId?: string };
 }) {

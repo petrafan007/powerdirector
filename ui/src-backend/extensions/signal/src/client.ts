@@ -1,6 +1,6 @@
-import { resolveFetch } from "@/src-backend/plugin-sdk/infra-runtime";
-import { generateSecureUuid } from "@/src-backend/plugin-sdk/infra-runtime";
-import { fetchWithTimeout } from "@/src-backend/plugin-sdk/text-runtime";
+import { resolveFetch } from "powerdirector/plugin-sdk/infra-runtime";
+import { generateSecureUuid } from "powerdirector/plugin-sdk/infra-runtime";
+import { fetchWithTimeout } from "powerdirector/plugin-sdk/text-runtime";
 
 export type SignalRpcOptions = {
   baseUrl: string;

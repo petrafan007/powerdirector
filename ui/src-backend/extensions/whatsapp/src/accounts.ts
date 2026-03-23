@@ -7,8 +7,8 @@ import {
   resolveAccountEntry,
   resolveUserPath,
   type PowerDirectorConfig,
-} from "@/src-backend/plugin-sdk/account-resolution";
-import { resolveOAuthDir } from "@/src-backend/plugin-sdk/state-paths";
+} from "powerdirector/plugin-sdk/account-resolution";
+import { resolveOAuthDir } from "powerdirector/plugin-sdk/state-paths";
 import { hasWebCredsSync } from "./auth-store";
 import type { DmPolicy, GroupPolicy, WhatsAppAccountConfig } from "./runtime-api";
 

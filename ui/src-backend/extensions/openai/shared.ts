@@ -1,5 +1,5 @@
-import { findCatalogTemplate } from "@/src-backend/plugin-sdk/provider-catalog";
-import { cloneFirstTemplateModel } from "@/src-backend/plugin-sdk/provider-models";
+import { findCatalogTemplate } from "powerdirector/plugin-sdk/provider-catalog";
+import { cloneFirstTemplateModel } from "powerdirector/plugin-sdk/provider-models";
 
 export const OPENAI_API_BASE_URL = "https://api.openai.com/v1";
 
