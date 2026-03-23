@@ -1,22 +1,20 @@
 import * as os from "node:os";
 
 /**
- * Hoisted function declarations to resolve ReferenceError during early module evaluation
- * especially in Next.js worker threads where imports might be partially resolved.
+ * Robust homedir resolution to avoid ReferenceError during early module evaluation
+ * especially in Next.js worker threads.
  */
 export function safeHomedir(): string {
-  const native = os.homedir;
   try {
-    return typeof native === "function" ? native() : "";
+    return os.homedir();
   } catch {
-    return "";
+    return process.env.HOME || process.env.USERPROFILE || "";
   }
 }
 
 export function safeTmpdir(): string {
-  const native = os.tmpdir;
   try {
-    return typeof native === "function" ? native() : "/tmp";
+    return os.tmpdir();
   } catch {
     return "/tmp";
   }

@@ -1,5 +1,25 @@
 import path from "node:path";
-import { safeHomedir } from "./os-safe.js";
+import * as os from "node:os";
+
+if (typeof globalThis !== 'undefined') {
+  (globalThis as any).safeHomedir = safeHomedir;
+}
+
+export function safeHomedir(): string {
+  try {
+    return os.homedir();
+  } catch {
+    return process.env.HOME || process.env.USERPROFILE || "";
+  }
+}
+
+export function safeTmpdir(): string {
+  try {
+    return os.tmpdir();
+  } catch {
+    return "/tmp";
+  }
+}
 
 function normalize(value: string | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -8,7 +28,7 @@ function normalize(value: string | undefined): string | undefined {
 
 export function resolveEffectiveHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: string | (() => string) = () => safeHomedir(),
+  homedir: string | (() => string) = safeHomedir,
 ): string | undefined {
   const raw = resolveRawHomeDir(env, homedir);
   return raw ? path.resolve(raw) : undefined;
@@ -54,7 +74,7 @@ function normalizeSafe(homedir: string | (() => string)): string | undefined {
 
 export function resolveRequiredHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: string | (() => string) = () => safeHomedir(),
+  homedir: string | (() => string) = safeHomedir,
 ): string {
   return resolveEffectiveHomeDir(env, homedir) ?? path.resolve(process.cwd());
 }
@@ -72,7 +92,7 @@ export function expandHomePrefix(
   }
   const home =
     normalize(opts?.home) ??
-    resolveEffectiveHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => safeHomedir()));
+    resolveEffectiveHomeDir(opts?.env ?? process.env, opts?.homedir ?? safeHomedir);
   if (!home) {
     return input;
   }
@@ -92,7 +112,7 @@ export function resolveHomeRelativePath(
   }
   if (trimmed.startsWith("~")) {
     const expanded = expandHomePrefix(trimmed, {
-      home: resolveRequiredHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => safeHomedir())),
+      home: resolveRequiredHomeDir(opts?.env ?? process.env, opts?.homedir ?? safeHomedir),
       env: opts?.env,
       homedir: opts?.homedir,
     });

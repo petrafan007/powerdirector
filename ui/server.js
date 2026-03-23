@@ -46,20 +46,19 @@ const handle = app.getRequestHandler()
 app.prepare().then(() => {
     const terminalProxy = new WebSocketServer({ noServer: true })
 
-    terminalProxy.on('connection', (clientSocket, req) => {
-        const targetPort = readTerminalPort()
+    const proxyWebSocket = (req, socket, head, targetPort) => {
         const parsedUrl = parse(req.url || '', false)
-        const targetUrl = `ws://127.0.0.1:${targetPort}${parsedUrl.search || ''}`
+        const targetUrl = `ws://127.0.0.1:${targetPort}${parsedUrl.path || ''}`
 
-        console.log(`Proxying terminal websocket to ${targetUrl}`)
+        console.log(`Proxying websocket from ${req.url} to ${targetUrl}`)
 
         const upstreamSocket = new WebSocket(targetUrl)
 
-        const closePeer = (socket, code, reason) => {
-            if (!socket) return
-            if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+        const closePeer = (peer, code, reason) => {
+            if (!peer) return
+            if (peer.readyState === WebSocket.OPEN || peer.readyState === WebSocket.CONNECTING) {
                 try {
-                    socket.close(code, reason)
+                    peer.close(code, reason)
                 } catch {
                     // Ignore peer shutdown races.
                 }
@@ -67,7 +66,7 @@ app.prepare().then(() => {
         }
 
         upstreamSocket.on('open', () => {
-            clientSocket.on('message', (data, isBinary) => {
+            socket.on('message', (data, isBinary) => {
                 if (upstreamSocket.readyState === WebSocket.OPEN) {
                     upstreamSocket.send(data, { binary: isBinary })
                 }
@@ -75,36 +74,66 @@ app.prepare().then(() => {
         })
 
         upstreamSocket.on('message', (data, isBinary) => {
-            if (clientSocket.readyState === WebSocket.OPEN) {
-                clientSocket.send(data, { binary: isBinary })
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(data, { binary: isBinary })
             }
         })
 
         upstreamSocket.on('close', (code, reason) => {
-            closePeer(clientSocket, code, reason.toString())
+            closePeer(socket, code, reason.toString())
         })
 
         upstreamSocket.on('error', (err) => {
-            console.error('Terminal proxy upstream error:', err)
-            closePeer(clientSocket, 1011, 'terminal-upstream-error')
+            console.error(`WebSocket proxy upstream error (${targetUrl}):`, err)
+            closePeer(socket, 1011, 'upstream-error')
         })
 
-        clientSocket.on('close', (code, reason) => {
+        socket.on('close', (code, reason) => {
             closePeer(upstreamSocket, code, reason.toString())
         })
 
-        clientSocket.on('error', (err) => {
-            console.error('Terminal proxy client error:', err)
-            closePeer(upstreamSocket, 1001, 'terminal-client-error')
+        socket.on('error', (err) => {
+            console.error('WebSocket proxy client error:', err)
+            closePeer(upstreamSocket, 1001, 'client-error')
         })
-    })
+    }
+
+    const gatewayProxy = (req, res, targetPort) => {
+        const parsedUrl = parse(req.url)
+        console.log(`Proxying HTTP ${req.method} ${req.url} to 127.0.0.1:${targetPort}`)
+        const options = {
+            hostname: '127.0.0.1',
+            port: targetPort,
+            path: parsedUrl.path,
+            method: req.method,
+            headers: req.headers
+        }
+
+        const proxyReq = require('http').request(options, (proxyRes) => {
+            res.writeHead(proxyRes.statusCode, proxyRes.headers)
+            proxyRes.pipe(res, { end: true })
+        })
+
+        proxyReq.on('error', (err) => {
+            console.error('Gateway proxy error:', err)
+            if (!res.headersSent) {
+                res.writeHead(502)
+                res.end('Gateway Proxy Error')
+            }
+        })
+
+        req.pipe(proxyReq, { end: true })
+    }
 
     const server = createServer(async (req, res) => {
         try {
-            // Be sure to pass `true` as the second argument to `url.parse`.
-            // This tells it to parse the query portion of the URL.
             const parsedUrl = parse(req.url, true)
-            const { pathname, query } = parsedUrl
+            const { pathname } = parsedUrl
+
+            // Proxy specific gateway paths
+            if (pathname.startsWith('/v1/') || pathname.startsWith('/hooks/') || pathname.startsWith('/plugins/') || pathname === '/health' || pathname === '/probe') {
+                return gatewayProxy(req, res, 3006)
+            }
 
             await handle(req, res, parsedUrl)
         } catch (err) {
@@ -116,14 +145,14 @@ app.prepare().then(() => {
 
     server.on('upgrade', (req, socket, head) => {
         const parsedUrl = parse(req.url || '', true)
-        if (parsedUrl.pathname !== '/terminal-ws') {
-            socket.destroy()
-            return
+        if (parsedUrl.pathname === '/terminal-ws') {
+            terminalProxy.handleUpgrade(req, socket, head, (ws) => {
+                terminalProxy.emit('connection', ws, req)
+            })
+        } else {
+            // Proxy everything else to Gateway on 3006
+            proxyWebSocket(req, socket, head, 3006)
         }
-
-        terminalProxy.handleUpgrade(req, socket, head, (ws) => {
-            terminalProxy.emit('connection', ws, req)
-        })
     })
 
     server

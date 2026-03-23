@@ -1,0 +1,23 @@
+[Unit]
+Description=PowerDirector Gateway (v1.2.1-beta.1)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart="/usr/local/bin/node" "/home/jcavallarojr/powerdirector/dist/index.js" gateway --port 3006
+Restart=always
+RestartSec=5
+KillMode=process
+Environment=dotenvPath=/home/jcavallarojr/powerdirector
+Environment=HOME=/home/jcavallarojr
+Environment=TMPDIR=/tmp
+Environment="PATH=/home/jcavallarojr/.bun/bin:/home/jcavallarojr/.local/bin:/home/jcavallarojr/.npm-global/bin:/home/jcavallarojr/bin:/home/jcavallarojr/.volta/bin:/home/jcavallarojr/.asdf/shims:/home/jcavallarojr/.nvm/current/bin:/home/jcavallarojr/.fnm/current/bin:/home/jcavallarojr/.local/share/pnpm:/usr/local/bin:/usr/bin:/bin"
+Environment=POWERDIRECTOR_GATEWAY_PORT=3007
+Environment=POWERDIRECTOR_GATEWAY_TOKEN=b53f518007b17c291429cfeac0e1dadb7625a6b1909e9c467a0057367ee7b98d
+Environment="POWERDIRECTOR_SYSTEMD_UNIT=powerdirector-gateway.service"
+Environment=POWERDIRECTOR_SERVICE_MARKER=powerdirector
+Environment=POWERDIRECTOR_SERVICE_KIND=gateway
+Environment=POWERDIRECTOR_SERVICE_VERSION=1.2.1-beta.1
+
+[Install]
+WantedBy=default.target

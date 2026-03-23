@@ -78,7 +78,7 @@ const nextConfig: NextConfig = {
     // Ignore Next's duplicate typecheck pass here so webpack can produce the server bundle.
     ignoreBuildErrors: true,
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     config.resolve = config.resolve ?? {};
     config.ignoreWarnings = [
       {
@@ -163,6 +163,11 @@ const nextConfig: NextConfig = {
         config.externals = [nativeServerExternalHandler, externalPackages];
       }
     }
+    config.plugins = config.plugins || [];
+    config.plugins.push(new webpack.DefinePlugin({
+      'safeHomedir': '(() => { try { return require("os").homedir(); } catch { return process.env.HOME || process.env.USERPROFILE || ""; } })'
+    }));
+
     return config;
   },
   turbopack: {},
