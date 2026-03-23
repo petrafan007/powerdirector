@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { Command, Option } from "commander";
 import { resolveStateDir } from "../config/paths.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import { routeLogsToStderr } from "../logging/console.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
@@ -49,7 +49,7 @@ function sanitizeCompletionBasename(value: string): string {
 }
 
 function resolveCompletionCacheDir(env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, os.homedir);
+  const stateDir = resolveStateDir(env, safeHomedir);
   return path.join(stateDir, "completions");
 }
 
@@ -161,7 +161,7 @@ function updateCompletionProfile(
 }
 
 function getShellProfilePath(shell: CompletionShell): string {
-  const home = process.env.HOME || os.homedir();
+  const home = process.env.HOME || safeHomedir();
   if (shell === "zsh") {
     return path.join(home, ".zshrc");
   }
@@ -301,7 +301,7 @@ export function registerCompletionCli(program: Command) {
 }
 
 export async function installCompletion(shell: string, yes: boolean, binName = "powerdirector") {
-  const home = process.env.HOME || os.homedir();
+  const home = process.env.HOME || safeHomedir();
   let profilePath = "";
   let sourceLine = "";
 

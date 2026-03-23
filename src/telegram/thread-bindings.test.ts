@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resolveStateDir } from "../config/paths.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import { getSessionBindingService } from "../infra/outbound/session-binding-service.js";
 import {
   __testing,
@@ -157,7 +158,7 @@ describe("telegram thread bindings", () => {
     });
 
     const statePath = path.join(
-      resolveStateDir(process.env, os.homedir),
+      resolveStateDir(process.env, safeHomedir),
       "telegram",
       "thread-bindings-no-persist.json",
     );

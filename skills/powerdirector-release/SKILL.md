@@ -35,7 +35,11 @@ This mirrors the `powerdirector-release` skill used in Codex. Use it for new-ver
 5) QA before pushing: inspect changed code, run targeted tests, run builds to catch integration failures.
 6) Commit in `~/powerdirector-source`.
 7) Push to GitHub; align `main`/`master`; create or move tag `v<version>` to the shipped commit.
-8) Refresh `~/powerdirector-newusertest` from GitHub, rebuild, run on `4007/4008`.
+8) Refresh `~/powerdirector-newusertest` from GitHub, clean up ports, rebuild completely, and run on `4007/4008`.
+   - **CRITICAL**: Kill any lingering processes on 4007 (`pkill -f "node ui/server.js" || true`, `pkill -f "dist/index.js" || true`).
+   - **CRITICAL**: Run a full install (`npm ci` or `pnpm install`).
+   - **CRITICAL**: Build BOTH the backend (`npm run build`) AND the frontend UI (`pnpm ui:build` or `cd ui && npm install && npm run build`). Missing the UI build will cause the gateway to fail to serve the web interface.
+   - Start the gateway (`DB_PATH=./powerdirector.db TERMINAL_PORT=4008 ./setup-ports.sh && node dist/index.js gateway run --port 4007`).
 9) Validate with `agent-browser`.
 10) Report: commit/tag, what changed, QA/build/tests run, UI verification, any caveats.
 

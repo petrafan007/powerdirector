@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
 import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
 import type { PowerDirectorConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import { writeFileWithinRoot } from "../infra/fs-safe.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { isFileMissingError, statRegularFile } from "./fs-utils.js";
@@ -186,7 +186,7 @@ export class QmdMemoryManager implements MemorySearchManager {
     this.agentId = params.agentId;
     this.qmd = params.resolved;
     this.workspaceDir = resolveAgentWorkspaceDir(params.cfg, params.agentId);
-    this.stateDir = resolveStateDir(process.env, os.homedir);
+    this.stateDir = resolveStateDir(process.env, safeHomedir);
     this.agentStateDir = path.join(this.stateDir, "agents", this.agentId);
     this.qmdDir = path.join(this.agentStateDir, "qmd");
     // QMD uses XDG base dirs for its internal state.
@@ -1140,7 +1140,7 @@ export class QmdMemoryManager implements MemorySearchManager {
     const defaultCacheHome =
       process.env.XDG_CACHE_HOME ||
       (process.platform === "win32" ? process.env.LOCALAPPDATA : undefined) ||
-      path.join(os.homedir(), ".cache");
+      path.join(safeHomedir(), ".cache");
     const defaultModelsDir = path.join(defaultCacheHome, "qmd", "models");
     const targetModelsDir = path.join(this.xdgCacheHome, "qmd", "models");
     try {

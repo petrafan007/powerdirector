@@ -1,6 +1,5 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
-import { homedir } from "node:os";
 import path from "node:path";
 import * as readline from "node:readline";
 import { Readable, Writable } from "node:stream";
@@ -14,6 +13,7 @@ import {
   type SessionNotification,
 } from "@agentclientprotocol/sdk";
 import { isKnownCoreToolId } from "../agents/tool-catalog.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import { ensurePowerDirectorCliOnPath } from "../infra/path-env.js";
 import {
   materializeWindowsSpawnProgram,
@@ -172,9 +172,9 @@ function resolveAbsoluteScopedPath(value: string, cwd: string): string | undefin
     }
   }
   if (candidate === "~") {
-    candidate = homedir();
+    candidate = safeHomedir();
   } else if (candidate.startsWith("~/")) {
-    candidate = path.join(homedir(), candidate.slice(2));
+    candidate = path.join(safeHomedir(), candidate.slice(2));
   }
   const absolute = path.isAbsolute(candidate)
     ? path.normalize(candidate)

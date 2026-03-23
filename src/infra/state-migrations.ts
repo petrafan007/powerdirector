@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "./os-safe.js";
 import { listTelegramAccountIds } from "powerdirector/plugin-sdk/telegram";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import type { PowerDirectorConfig } from "../config/config.js";
@@ -469,7 +469,7 @@ export async function autoMigrateLegacyStateDir(params: {
     return { migrated: false, skipped: true, changes: [], warnings: [] };
   }
 
-  const homedir = params.homedir ?? os.homedir;
+  const homedir = params.homedir ?? safeHomedir;
   const targetDir = resolveNewStateDir(homedir);
   const legacyDirs = resolveLegacyStateDirs(homedir);
   let legacyDir = legacyDirs.find((dir) => {
@@ -607,7 +607,7 @@ export async function detectLegacyStateMigrations(params: {
   homedir?: () => string;
 }): Promise<LegacyStateDetection> {
   const env = params.env ?? process.env;
-  const homedir = params.homedir ?? os.homedir;
+  const homedir = params.homedir ?? safeHomedir;
   const stateDir = resolveStateDir(env, homedir);
   const oauthDir = resolveOAuthDir(env, stateDir);
 

@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import {
   formatSkillsForPrompt,
@@ -8,6 +7,7 @@ import {
 } from "@mariozechner/pi-coding-agent";
 import type { PowerDirectorConfig } from "../../config/config";
 import { isPathInside } from "../../infra/path-guards";
+import { safeHomedir } from "../../infra/os-safe";
 import { createSubsystemLogger } from "../../logging/subsystem";
 import { CONFIG_DIR, resolveUserPath } from "../../utils";
 import { resolveSandboxPath } from "../sandbox-paths";
@@ -44,7 +44,7 @@ const skillCommandDebugOnce = new Set<string>();
  * Saves ~5–6 tokens per skill path × N skills ≈ 400–600 tokens total.
  */
 function compactSkillPaths(skills: Skill[]): Skill[] {
-  const home = os.homedir();
+  const home = safeHomedir();
   if (!home) return skills;
   const prefix = home.endsWith(path.sep) ? home : home + path.sep;
   return skills.map((s) => ({
@@ -472,7 +472,7 @@ function loadSkillEntries(
     dir: managedSkillsDir,
     source: "powerdirector-managed",
   });
-  const personalAgentsSkillsDir = path.resolve(os.homedir(), ".agents", "skills");
+  const personalAgentsSkillsDir = path.resolve(safeHomedir(), ".agents", "skills");
   const personalAgentsSkills = loadSkills({
     dir: personalAgentsSkillsDir,
     source: "agents-skills-personal",

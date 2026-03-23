@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { resolveBrewPathDirs } from "./brew";
 import { isTruthyEnvValue } from "./env";
+import { safeHomedir } from "./os-safe";
 
 type EnsurePowerDirectorPathOpts = {
   execPath?: string;
@@ -52,7 +52,7 @@ function mergePath(params: { existing: string; prepend?: string[]; append?: stri
 function candidateBinDirs(opts: EnsurePowerDirectorPathOpts): { prepend: string[]; append: string[] } {
   const execPath = opts.execPath ?? process.execPath;
   const cwd = opts.cwd ?? process.cwd();
-  const homeDir = opts.homeDir ?? os.homedir();
+  const homeDir = opts.homeDir ?? safeHomedir();
   const platform = opts.platform ?? process.platform;
 
   const prepend: string[] = [];

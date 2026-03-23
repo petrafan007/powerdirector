@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "../infra/os-safe.js";
 import { generateSecureToken } from "../infra/secure-random.js";
 import { runExec } from "../process/exec.js";
 
@@ -9,7 +9,7 @@ export async function movePathToTrash(targetPath: string): Promise<string> {
     await runExec("trash", [targetPath], { timeoutMs: 10_000 });
     return targetPath;
   } catch {
-    const trashDir = path.join(os.homedir(), ".Trash");
+    const trashDir = path.join(safeHomedir(), ".Trash");
     fs.mkdirSync(trashDir, { recursive: true });
     const base = path.basename(targetPath);
     let dest = path.join(trashDir, `${base}-${Date.now()}`);

@@ -3,12 +3,12 @@ import type { Stats } from "node:fs";
 import { constants as fsConstants } from "node:fs";
 import type { FileHandle } from "node:fs/promises";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { logWarn } from "../logger";
 import { sameFileIdentity } from "./file-identity";
 import { runPinnedWriteHelper } from "./fs-pinned-write-helper";
 import { expandHomePrefix } from "./home-dir";
+import { safeHomedir } from "./os-safe";
 import { assertNoPathAliasEscape } from "./path-alias-guards";
 import {
   hasNodeErrorCode,
@@ -69,7 +69,7 @@ const OPEN_APPEND_CREATE_FLAGS =
 const ensureTrailingSep = (value: string) => (value.endsWith(path.sep) ? value : value + path.sep);
 
 async function expandRelativePathWithHome(relativePath: string): Promise<string> {
-  let home = process.env.HOME || process.env.USERPROFILE || os.homedir();
+  let home = process.env.HOME || process.env.USERPROFILE || safeHomedir();
   try {
     home = await fs.realpath(home);
   } catch {

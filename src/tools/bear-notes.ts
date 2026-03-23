@@ -5,6 +5,7 @@ import util from 'node:util';
 import os from 'node:os';
 import path from 'node:path';
 import fs from 'node:fs';
+import { safeHomedir } from '../infra/os-safe.js';
 
 const execAsync = util.promisify(exec);
 
@@ -46,7 +47,7 @@ export class BearNotesTool implements Tool {
                     if (!args.query) return { output: 'Query required', isError: true };
                     // Bear stores notes in a SQLite database
                     const dbPath = path.join(
-                        os.homedir(),
+                        safeHomedir(),
                         'Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite'
                     );
                     if (!fs.existsSync(dbPath)) {
@@ -61,7 +62,7 @@ export class BearNotesTool implements Tool {
                 case 'get_note': {
                     if (!args.title) return { output: 'Title required', isError: true };
                     const dbPath = path.join(
-                        os.homedir(),
+                        safeHomedir(),
                         'Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite'
                     );
                     if (!fs.existsSync(dbPath)) {

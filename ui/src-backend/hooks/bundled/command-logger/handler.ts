@@ -24,9 +24,9 @@
  */
 
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { resolveStateDir } from "../../../config/paths";
+import { safeHomedir } from "../../../infra/os-safe";
 import { createSubsystemLogger } from "../../../logging/subsystem";
 import type { HookHandler } from "../../hooks";
 
@@ -43,7 +43,7 @@ const logCommand: HookHandler = async (event) => {
 
   try {
     // Create log directory
-    const stateDir = resolveStateDir(process.env, os.homedir);
+    const stateDir = resolveStateDir(process.env, safeHomedir);
     const logDir = path.join(stateDir, "logs");
     await fs.mkdir(logDir, { recursive: true });
 

@@ -1,10 +1,10 @@
 import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { writeConfigFile, type PowerDirectorConfig } from "../config/config";
 import { resolveGatewayPort, resolveIsNixMode } from "../config/paths";
+import { safeHomedir } from "../infra/os-safe";
 import { resolveSecretInputRef } from "../config/types.secrets";
 import {
   findExtraGatewayServices,
@@ -79,7 +79,7 @@ async function cleanupLegacyLaunchdService(params: {
   await execFileAsync("launchctl", ["bootout", domain, params.plistPath]).catch(() => undefined);
   await execFileAsync("launchctl", ["unload", params.plistPath]).catch(() => undefined);
 
-  const trashDir = path.join(os.homedir(), ".Trash");
+  const trashDir = path.join(safeHomedir(), ".Trash");
   try {
     await fs.mkdir(trashDir, { recursive: true });
   } catch {

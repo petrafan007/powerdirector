@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { isTruthyEnvValue } from "./env";
 import { sanitizeHostExecEnv } from "./host-env-security";
+import { safeHomedir } from "./os-safe";
 
 const DEFAULT_TIMEOUT_MS = 15_000;
 const DEFAULT_MAX_BUFFER_BYTES = 2 * 1024 * 1024;
@@ -16,7 +17,7 @@ function resolveShellExecEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   const execEnv = sanitizeHostExecEnv({ baseEnv: env });
 
   // Startup-file resolution must stay pinned to the real user home.
-  const home = os.homedir().trim();
+  const home = safeHomedir().trim();
   if (home) {
     execEnv.HOME = home;
   } else {

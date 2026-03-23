@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import { describe, expect, it, vi } from "vitest";
+import { safeHomedir } from "./os-safe.js";
 import {
   getShellEnvAppliedKeys,
   getShellPathFromLoginShell,
@@ -72,7 +73,7 @@ describe("shell env fallback", () => {
     expect(receivedEnv?.PS4).toBeUndefined();
     expect(receivedEnv?.ZDOTDIR).toBeUndefined();
     expect(receivedEnv?.SHELL).toBeUndefined();
-    expect(receivedEnv?.HOME).toBe(os.homedir());
+    expect(receivedEnv?.HOME).toBe(safeHomedir());
   }
 
   function withEtcShells(shells: string[], fn: () => void) {

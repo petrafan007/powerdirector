@@ -1,12 +1,12 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { getPairingAdapter } from "../channels/plugins/pairing";
 import type { ChannelId, ChannelPairingAdapter } from "../channels/plugins/types";
 import { resolveOAuthDir, resolveStateDir } from "../config/paths";
 import { withFileLock as withPathLock } from "../infra/file-lock";
 import { resolveRequiredHomeDir } from "../infra/home-dir";
+import { safeHomedir } from "../infra/os-safe";
 import { readJsonFileWithFallback, writeJsonFileAtomically } from "../plugin-sdk/json-store";
 import { DEFAULT_ACCOUNT_ID } from "../routing/session-key";
 
@@ -55,7 +55,7 @@ type AllowFromStore = {
 };
 
 function resolveCredentialsDir(env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, os.homedir));
+  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, safeHomedir));
   return resolveOAuthDir(env, stateDir);
 }
 

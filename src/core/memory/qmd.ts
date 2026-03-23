@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import fsSync from "node:fs";
 import path from "node:path";
-import os from "node:os";
+import { safeHomedir } from "../../infra/os-safe.js";
 import Database from "better-sqlite3";
 import {
     MemorySearchManager,
@@ -191,7 +191,7 @@ export class QmdBackend implements MemorySearchManager {
         this.qmdCommand = parsedCommand.command;
         this.qmdCommandArgs = parsedCommand.args;
 
-        const stateDir = path.join(os.homedir(), ".powerdirector");
+        const stateDir = path.join(safeHomedir(), ".powerdirector");
         const agentStateDir = path.join(stateDir, "agents", this.agentId);
         this.qmdDir = path.join(agentStateDir, "qmd");
 

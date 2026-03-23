@@ -33,7 +33,11 @@ This mirrors the `powerdirector-hotfix` skill. Use it for same-version repairs (
 4) QA before pushing: inspect changed code, run targeted tests, run builds to catch integration failures.
 5) Commit the fix in `~/powerdirector-source`.
 6) Push to GitHub and force-update release state: push branch, align `main`/`master`, force-move tag `v<version>` to the repaired commit.
-7) Refresh `~/powerdirector-newusertest` from GitHub, rebuild, run on `4007/4008`.
+7) Refresh `~/powerdirector-newusertest` from GitHub, clean up ports, rebuild completely, and run on `4007/4008`.
+   - **CRITICAL**: Kill any lingering processes on 4007 (`pkill -f "node ui/server.js" || true`, `pkill -f "dist/index.js" || true`).
+   - **CRITICAL**: Run a full install (`npm ci` or `pnpm install`).
+   - **CRITICAL**: Build BOTH the backend (`npm run build`) AND the frontend UI (`pnpm ui:build` or `cd ui && npm install && npm run build`). Missing the UI build will cause the gateway to fail to serve the web interface.
+   - Start the gateway (`DB_PATH=./powerdirector.db TERMINAL_PORT=4008 ./setup-ports.sh && node dist/index.js gateway run --port 4007`).
 8) Validate the repaired behavior with `agent-browser`.
 9) Report: commit/tag, what was fixed, QA/build/tests run, UI verification, any caveats.
 

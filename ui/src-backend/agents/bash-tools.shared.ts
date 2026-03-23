@@ -1,7 +1,7 @@
 import { existsSync, statSync } from "node:fs";
 import fs from "node:fs/promises";
-import { homedir } from "node:os";
 import path from "node:path";
+import { safeHomedir } from "../infra/os-safe";
 import { sliceUtf16Safe } from "../utils";
 import { assertSandboxPath } from "./sandbox-paths";
 import type { SandboxBackendExecSpec } from "./sandbox/backend";
@@ -170,7 +170,7 @@ function normalizeContainerPath(input: string): string {
 
 export function resolveWorkdir(workdir: string, warnings: string[]) {
   const current = safeCwd();
-  const fallback = current ?? homedir();
+  const fallback = current ?? safeHomedir();
   try {
     const stats = statSync(workdir);
     if (stats.isDirectory()) {

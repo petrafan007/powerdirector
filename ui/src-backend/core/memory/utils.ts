@@ -1,10 +1,10 @@
 // @ts-nocheck
-import os from 'node:os';
 import path from 'node:path';
+import { safeHomedir } from '../../infra/os-safe';
 
 export function resolveUserPath(raw: string): string {
     if (raw.startsWith('~/')) {
-        return path.join(os.homedir(), raw.slice(2));
+        return path.join(safeHomedir(), raw.slice(2));
     }
     return path.resolve(raw);
 }

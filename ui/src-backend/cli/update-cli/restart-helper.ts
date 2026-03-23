@@ -1,8 +1,8 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { DEFAULT_GATEWAY_PORT } from "../../config/paths";
+import { safeHomedir, safeTmpdir } from "../../infra/os-safe";
 import { quoteCmdScriptArg } from "../../daemon/cmd-argv";
 import {
   resolveGatewayLaunchAgentLabel,
@@ -59,7 +59,7 @@ export async function prepareRestartScript(
   env: NodeJS.ProcessEnv = process.env,
   gatewayPort: number = DEFAULT_GATEWAY_PORT,
 ): Promise<string | null> {
-  const tmpDir = os.tmpdir();
+  const tmpDir = safeTmpdir();
   const timestamp = Date.now();
   const platform = process.platform;
 
@@ -86,7 +86,7 @@ rm -f "$0"
       const uid = process.getuid ? process.getuid() : 501;
       // Resolve HOME at generation time via env/process.env to match launchd.ts,
       // and shell-escape the label in the plist filename to prevent injection.
-      const home = env.HOME?.trim() || process.env.HOME || os.homedir();
+      const home = env.HOME?.trim() || process.env.HOME || safeHomedir();
       const plistPath = path.join(home, "Library", "LaunchAgents", `${label}.plist`);
       const escapedPlistPath = shellEscape(plistPath);
       filename = `powerdirector-restart-${timestamp}.sh`;

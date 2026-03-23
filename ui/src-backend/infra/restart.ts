@@ -1,5 +1,4 @@
 import { spawnSync } from "node:child_process";
-import os from "node:os";
 import path from "node:path";
 import { loadConfig } from "../config/config";
 import {
@@ -7,6 +6,7 @@ import {
   resolveGatewaySystemdServiceName,
 } from "../daemon/constants";
 import { createSubsystemLogger } from "../logging/subsystem";
+import { safeHomedir } from "./os-safe";
 import { cleanStaleGatewayProcessesSync, findGatewayPidsOnPortSync } from "./restart-stale-pids";
 import { relaunchGatewayScheduledTask } from "./windows-task-restart";
 
@@ -361,7 +361,7 @@ export function triggerPowerDirectorRestart(): RestartAttempt {
   // kickstart fails when the service was previously booted out (deregistered from launchd).
   // Fall back to bootstrap (re-register from plist) + kickstart.
   // Use env HOME to match how launchd.ts resolves the plist install path.
-  const home = process.env.HOME?.trim() || os.homedir();
+  const home = process.env.HOME?.trim() || safeHomedir();
   const plistPath = path.join(home, "Library", "LaunchAgents", `${label}.plist`);
   const bootstrapArgs = ["bootstrap", domain, plistPath];
   tried.push(`launchctl ${bootstrapArgs.join(" ")}`);

@@ -1,9 +1,9 @@
 import syncFs from "node:fs";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { openBoundaryFile } from "../infra/boundary-file-read.js";
 import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { isCronSessionKey, isSubagentSessionKey } from "../routing/session-key.js";
 import { resolveUserPath } from "../utils.js";
@@ -11,7 +11,7 @@ import { resolveWorkspaceTemplateDir } from "./workspace-templates.js";
 
 export function resolveDefaultAgentWorkspaceDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = os.homedir,
+  homedir: () => string = safeHomedir,
 ): string {
   const home = resolveRequiredHomeDir(env, homedir);
   const profile = env.POWERDIRECTOR_PROFILE?.trim();

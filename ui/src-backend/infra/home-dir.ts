@@ -1,5 +1,5 @@
-import * as os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "./os-safe";
 
 function normalize(value: string | undefined): string | undefined {
   const trimmed = value?.trim();
@@ -8,7 +8,7 @@ function normalize(value: string | undefined): string | undefined {
 
 export function resolveEffectiveHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => os.homedir(),
+  homedir: () => string = () => safeHomedir(),
 ): string | undefined {
   const raw = resolveRawHomeDir(env, homedir);
   return raw ? path.resolve(raw) : undefined;
@@ -51,7 +51,7 @@ function normalizeSafe(homedir: () => string): string | undefined {
 
 export function resolveRequiredHomeDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => os.homedir(),
+  homedir: () => string = () => safeHomedir(),
 ): string {
   return resolveEffectiveHomeDir(env, homedir) ?? path.resolve(process.cwd());
 }
@@ -69,7 +69,7 @@ export function expandHomePrefix(
   }
   const home =
     normalize(opts?.home) ??
-    resolveEffectiveHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => os.homedir()));
+    resolveEffectiveHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => safeHomedir()));
   if (!home) {
     return input;
   }
@@ -89,7 +89,7 @@ export function resolveHomeRelativePath(
   }
   if (trimmed.startsWith("~")) {
     const expanded = expandHomePrefix(trimmed, {
-      home: resolveRequiredHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => os.homedir())),
+      home: resolveRequiredHomeDir(opts?.env ?? process.env, opts?.homedir ?? (() => safeHomedir())),
       env: opts?.env,
       homedir: opts?.homedir,
     });

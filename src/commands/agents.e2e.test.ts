@@ -1,8 +1,8 @@
-import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { PowerDirectorConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import {
   applyAgentBindings,
   applyAgentConfig,
@@ -45,7 +45,7 @@ describe("agents helpers", () => {
 
     expect(main).toBeTruthy();
     expect(main?.workspace).toBe(
-      path.join(resolveStateDir(process.env, os.homedir), "workspace-main"),
+      path.join(resolveStateDir(process.env, safeHomedir), "workspace-main"),
     );
     expect(main?.bindings).toBe(1);
     expect(main?.model).toBe("anthropic/claude");

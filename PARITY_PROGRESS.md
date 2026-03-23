@@ -44,6 +44,7 @@ Status tracker by wave/sprint with beta-version increments per wave (beta.1 is c
 - [x] Done [x] QA  `browser.relayBindHost` (`v2026.3.8`)
 - [x] Done [x] QA  CDP URL normalization & wildcard debugger rewrite (`v2026.3.8`)
 - [x] Done [x] QA  Browser session cleanup on session reset/delete (`v2026.3.7`)
+- [x] Done [x] QA  Migrate all `os.homedir()` calls to `safeHomedir` to fix update-runner doctor crash (`v1.2.1-beta.1-hotfix`)
 
 ## Wave 4 – target **1.2.0-beta.5** (Feature Parity)
 - [ ] Done [ ] QA  First-class PDF tool (`v2026.3.2`)

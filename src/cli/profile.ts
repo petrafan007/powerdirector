@@ -1,6 +1,6 @@
-import os from "node:os";
 import path from "node:path";
 import { resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import { isValidProfileName } from "./profile-utils.js";
 
 export type CliProfileParseResult =
@@ -103,7 +103,7 @@ export function applyCliProfileEnv(params: {
   homedir?: () => string;
 }) {
   const env = params.env ?? (process.env as Record<string, string | undefined>);
-  const homedir = params.homedir ?? os.homedir;
+  const homedir = params.homedir ?? safeHomedir;
   const profile = params.profile.trim();
   if (!profile) {
     return;

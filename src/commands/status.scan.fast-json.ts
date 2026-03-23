@@ -1,8 +1,8 @@
 import { existsSync } from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { hasPotentialConfiguredChannels } from "../channels/config-presence.js";
 import { resolveConfigPath, resolveStateDir } from "../config/paths.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import type { PowerDirectorConfig } from "../config/types.js";
 import { resolveOsSummary } from "../infra/os-summary.js";
 import { buildPluginCompatibilityNotices } from "../plugins/status.js";
@@ -74,7 +74,7 @@ function shouldSkipMissingConfigFastPath(): boolean {
 }
 
 function resolveDefaultMemoryStorePath(agentId: string): string {
-  return path.join(resolveStateDir(process.env, os.homedir), "memory", `${agentId}.sqlite`);
+  return path.join(resolveStateDir(process.env, safeHomedir), "memory", `${agentId}.sqlite`);
 }
 
 async function resolveMemoryStatusSnapshot(params: {

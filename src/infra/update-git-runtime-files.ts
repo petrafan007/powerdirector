@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { safeHomedir } from "./home-dir.js";
+import { safeHomedir } from "./os-safe.js";
 
 export const GIT_RUNTIME_PRESERVE_PATHS = ["powerdirector.config.json", "MEMORY.md"] as const;
 export const GIT_RUNTIME_BACKUP_PATHS = [

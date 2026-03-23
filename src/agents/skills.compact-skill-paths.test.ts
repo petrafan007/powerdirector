@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { safeHomedir, safeTmpdir } from "../infra/os-safe.js";
 import { buildWorkspaceSkillsPrompt } from "./skills.js";
 import { writeSkill } from "./skills.test-helpers.js";
 
 async function withTempWorkspace(run: (workspaceDir: string) => Promise<void>) {
-  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "powerdirector-compact-"));
+  const workspaceDir = await fs.mkdtemp(path.join(safeTmpdir(), "powerdirector-compact-"));
   try {
     await run(workspaceDir);
   } finally {
@@ -30,7 +30,7 @@ describe("compactSkillPaths", () => {
         managedSkillsDir: path.join(workspaceDir, ".managed-empty"),
       });
 
-      const home = os.homedir();
+      const home = safeHomedir();
       // The prompt should NOT contain the absolute home directory path
       // when the skill is under the home directory (which tmpdir usually is on macOS)
       if (workspaceDir.startsWith(home)) {

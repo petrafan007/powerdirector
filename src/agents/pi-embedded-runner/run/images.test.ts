@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { safeHomedir } from "../../../infra/os-safe.js";
 import { createHostSandboxFsBridge } from "../../test-helpers/host-sandbox-fs-bridge.js";
 import { createUnsafeMountedSandbox } from "../../test-helpers/unsafe-mounted-sandbox.js";
 import {
@@ -216,7 +216,7 @@ describe("modelSupportsImages", () => {
 
 describe("loadImageFromRef", () => {
   it("allows sandbox-validated host paths outside default media roots", async () => {
-    const homeDir = os.homedir();
+    const homeDir = safeHomedir();
     await fs.mkdir(homeDir, { recursive: true });
     const sandboxParent = await fs.mkdtemp(path.join(homeDir, "powerdirector-sandbox-image-"));
     try {

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import os from 'node:os';
 import path from 'node:path';
+import { safeHomedir } from '../infra/os-safe';
 
 type JsonObject = Record<string, any>;
 
@@ -92,7 +92,7 @@ export class CanvasHostManager {
         if (trimmed) {
             return path.resolve(trimmed);
         }
-        return path.join(os.homedir(), '.powerdirector', 'workspace', 'canvas');
+        return path.join(safeHomedir(), '.powerdirector', 'workspace', 'canvas');
     }
 
     private normalizePort(value: any): number {

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import path from "node:path";
-import os from "node:os";
+import { safeHomedir } from "../../infra/os-safe.js";
 import { resolveUserPath, clampNumber, clampInt } from "./utils.js";
 
 // --- Types for Memory Search (Sqlite-Vec) ---
@@ -139,7 +139,7 @@ function normalizeSources(
 }
 
 function resolveStorePath(agentId: string, raw?: string): string {
-    const fallback = path.join(os.homedir(), ".powerdirector", "memory", `${agentId}.sqlite`);
+    const fallback = path.join(safeHomedir(), ".powerdirector", "memory", `${agentId}.sqlite`);
     if (!raw) {
         return fallback;
     }

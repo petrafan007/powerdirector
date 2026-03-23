@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { describe, expect, test, vi } from "vitest";
 import { WebSocket } from "ws";
 import { CONFIG_PATH } from "../config/config.js";
+import { safeHomedir, safeTmpdir } from "../infra/os-safe.js";
 import type { DeviceIdentity } from "../infra/device-identity.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 import type { GatewayClient } from "./client.js";
@@ -151,7 +151,7 @@ describe("gateway update.run", () => {
       }, FAST_WAIT_OPTS);
       expect(sigusr1).toHaveBeenCalled();
 
-      const sentinelPath = path.join(os.homedir(), ".powerdirector", "restart-sentinel.json");
+      const sentinelPath = path.join(safeHomedir(), ".powerdirector", "restart-sentinel.json");
       const raw = await fs.readFile(sentinelPath, "utf-8");
       const parsed = JSON.parse(raw) as {
         payload?: { kind?: string; stats?: { mode?: string } };
@@ -323,7 +323,7 @@ describe("gateway node command allowlist", () => {
   test("rejects reconnect metadata spoof for paired node devices", async () => {
     const { loadOrCreateDeviceIdentity } = await import("../infra/device-identity.js");
     const deviceIdentityPath = path.join(
-      os.tmpdir(),
+      safeTmpdir(),
       `powerdirector-spoof-test-device-${Date.now()}-${Math.random().toString(36).slice(2)}.json`,
     );
     const deviceIdentity = loadOrCreateDeviceIdentity(deviceIdentityPath);

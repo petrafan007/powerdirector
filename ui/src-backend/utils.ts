@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { resolveOAuthDir } from "./config/paths";
 import { logVerbose, shouldLogVerbose } from "./globals";
@@ -8,6 +7,7 @@ import {
   resolveHomeRelativePath,
   resolveRequiredHomeDir,
 } from "./infra/home-dir";
+import { safeHomedir } from "./infra/os-safe";
 import { isPlainObject } from "./infra/plain-object";
 
 export async function ensureDir(dir: string) {
@@ -274,7 +274,7 @@ export function truncateUtf16Safe(input: string, maxLen: number): string {
 export function resolveUserPath(
   input: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = os.homedir,
+  homedir: () => string = safeHomedir,
 ): string {
   if (!input) {
     return "";
@@ -284,7 +284,7 @@ export function resolveUserPath(
 
 export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = os.homedir,
+  homedir: () => string = safeHomedir,
 ): string {
   const override = env.POWERDIRECTOR_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
@@ -303,7 +303,7 @@ export function resolveConfigDir(
 }
 
 export function resolveHomeDir(): string | undefined {
-  return resolveEffectiveHomeDir(process.env, os.homedir);
+  return resolveEffectiveHomeDir(process.env, safeHomedir);
 }
 
 function resolveHomeDisplayPrefix(): { home: string; prefix: string } | undefined {

@@ -1,8 +1,8 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { resolveStateDir } from "../../config/paths";
+import { safeHomedir } from "../../infra/os-safe";
 import { resolvePowerDirectorPackageRoot } from "../../infra/powerdirector-root";
 import { readPackageName, readPackageVersion } from "../../infra/package-json";
 import { normalizePackageTagInput } from "../../infra/package-tag";
@@ -121,7 +121,7 @@ export function resolveGitInstallDir(): string {
 }
 
 function resolveDefaultGitDir(): string {
-  return resolveStateDir(process.env, os.homedir);
+  return resolveStateDir(process.env, safeHomedir);
 }
 
 export function resolveNodeRunner(): string {

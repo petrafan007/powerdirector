@@ -1,6 +1,5 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import type { Command } from "commander";
 import { resolveDefaultAgentId } from "../agents/agent-scope";
@@ -8,6 +7,7 @@ import { loadConfig } from "../config/config";
 import { resolveStateDir } from "../config/paths";
 import { resolveSessionTranscriptsDirForAgent } from "../config/sessions/paths";
 import { setVerbose } from "../globals";
+import { safeHomedir } from "../infra/os-safe";
 import { getMemorySearchManager, type MemorySearchManagerResult } from "../memory/index";
 import { listMemoryFiles, normalizeExtraMemoryPaths } from "../memory/internal";
 import { defaultRuntime } from "../runtime";
@@ -88,7 +88,7 @@ function formatSourceLabel(source: string, workspaceDir: string, agentId: string
     );
   }
   if (source === "sessions") {
-    const stateDir = resolveStateDir(process.env, os.homedir);
+    const stateDir = resolveStateDir(process.env, safeHomedir);
     return shortenHomeInString(
       `sessions (${path.join(stateDir, "agents", agentId, "sessions")}${path.sep}*.jsonl)`,
     );

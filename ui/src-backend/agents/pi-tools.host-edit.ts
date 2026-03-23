@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import type { AgentToolResult, AgentToolUpdateCallback } from "@mariozechner/pi-agent-core";
+import { safeHomedir } from "../infra/os-safe";
 import type { AnyAgentTool } from "./pi-tools.types";
 
 /** Resolve path for host edit: expand ~ and resolve relative paths against root. */
 function resolveHostEditPath(root: string, pathParam: string): string {
   const expanded =
     pathParam.startsWith("~/") || pathParam === "~"
-      ? pathParam.replace(/^~/, os.homedir())
+      ? pathParam.replace(/^~/, safeHomedir())
       : pathParam;
   return path.isAbsolute(expanded) ? path.resolve(expanded) : path.resolve(root, expanded);
 }

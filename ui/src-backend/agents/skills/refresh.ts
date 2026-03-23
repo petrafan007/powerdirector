@@ -1,7 +1,7 @@
-import os from "node:os";
 import path from "node:path";
 import chokidar, { type FSWatcher } from "chokidar";
 import type { PowerDirectorConfig } from "../../config/config";
+import { safeHomedir } from "../../infra/os-safe";
 import { createSubsystemLogger } from "../../logging/subsystem";
 import { CONFIG_DIR, resolveUserPath } from "../../utils";
 import { resolvePluginSkillDirs } from "./plugin-skills";
@@ -63,7 +63,7 @@ function resolveWatchPaths(workspaceDir: string, config?: PowerDirectorConfig): 
     paths.push(path.join(workspaceDir, ".agents", "skills"));
   }
   paths.push(path.join(CONFIG_DIR, "skills"));
-  paths.push(path.join(os.homedir(), ".agents", "skills"));
+  paths.push(path.join(safeHomedir(), ".agents", "skills"));
   const extraDirsRaw = config?.skills?.load?.extraDirs ?? [];
   const extraDirs = extraDirsRaw
     .map((d) => (typeof d === "string" ? d.trim() : ""))

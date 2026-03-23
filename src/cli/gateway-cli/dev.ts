@@ -1,10 +1,10 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { resolveWorkspaceTemplateDir } from "../../agents/workspace-templates.js";
 import { resolveDefaultAgentWorkspaceDir } from "../../agents/workspace.js";
 import { handleReset } from "../../commands/onboard-helpers.js";
 import { createConfigIO, writeConfigFile } from "../../config/config.js";
+import { safeHomedir } from "../../infra/os-safe.js";
 import { defaultRuntime } from "../../runtime.js";
 import { resolveUserPath, shortenHomePath } from "../../utils.js";
 
@@ -31,7 +31,7 @@ async function loadDevTemplate(name: string, fallback: string): Promise<string> 
 }
 
 const resolveDevWorkspaceDir = (env: NodeJS.ProcessEnv = process.env): string => {
-  const baseDir = resolveDefaultAgentWorkspaceDir(env, os.homedir);
+  const baseDir = resolveDefaultAgentWorkspaceDir(env, safeHomedir);
   const profile = env.POWERDIRECTOR_PROFILE?.trim().toLowerCase();
   if (profile === "dev") {
     return baseDir;

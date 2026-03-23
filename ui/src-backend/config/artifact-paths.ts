@@ -1,11 +1,11 @@
 import crypto from "node:crypto";
-import os from "node:os";
 import path from "node:path";
 import { resolveRequiredHomeDir } from "../infra/home-dir";
+import { safeHomedir } from "../infra/os-safe";
 import { resolveStateDir } from "./paths";
 
 function envHomedir(env: NodeJS.ProcessEnv): () => string {
-  return () => resolveRequiredHomeDir(env, os.homedir);
+  return () => resolveRequiredHomeDir(env, safeHomedir);
 }
 
 function sanitizePathComponent(value: string): string {

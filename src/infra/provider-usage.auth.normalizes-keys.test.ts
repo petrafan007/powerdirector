@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { safeHomedir } from "./os-safe.js";
 import { NON_ENV_SECRETREF_MARKER } from "../agents/model-auth-markers.js";
 
 const resolveProviderUsageAuthWithPluginMock = vi.fn(async (..._args: unknown[]) => null);
@@ -268,9 +269,9 @@ describe("resolveProviderAuths key normalization", () => {
     expect(auths).toEqual([{ provider: "anthropic", token: "token-1", accountId: "acc-1" }]);
   });
 
-  it("falls back to legacy .pi auth file for zai keys even after os.homedir() is primed", async () => {
-    // Prime os.homedir() to simulate long-lived workers that may have touched it before HOME changes.
-    os.homedir();
+  it("falls back to legacy .pi auth file for zai keys even after safeHomedir() is primed", async () => {
+    // Prime safeHomedir() to simulate long-lived workers that may have touched it before HOME changes.
+    safeHomedir();
     await expectResolvedAuthsFromSuiteHome({
       providers: ["zai"],
       setup: async (home) => {

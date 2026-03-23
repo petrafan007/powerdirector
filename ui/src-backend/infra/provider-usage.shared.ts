@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { normalizeProviderId } from "../agents/model-selection";
 import { resolveRequiredHomeDir } from "./home-dir";
+import { safeHomedir } from "./os-safe";
 import type { UsageProviderId } from "./provider-usage.types";
 
 export const DEFAULT_TIMEOUT_MS = 5000;
@@ -70,7 +71,7 @@ export function resolveLegacyPiAgentAccessToken(
 ): string | undefined {
   try {
     const authPath = path.join(
-      resolveRequiredHomeDir(env, os.homedir),
+      resolveRequiredHomeDir(env, safeHomedir),
       ".pi",
       "agent",
       "auth.json",

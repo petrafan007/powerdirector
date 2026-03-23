@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import type { PowerDirectorConfig } from "../config/config";
+import { safeHomedir } from "../infra/os-safe";
 import { hasConfiguredSecretInput } from "../config/types.secrets";
 import { note } from "../terminal/note";
 import { shortenHomePath } from "../utils";
@@ -11,7 +12,7 @@ import { shortenHomePath } from "../utils";
 const execFileAsync = promisify(execFile);
 
 function resolveHomeDir(): string {
-  return process.env.HOME ?? os.homedir();
+  return process.env.HOME ?? safeHomedir();
 }
 
 export async function noteMacLaunchAgentOverrides() {

@@ -1,8 +1,8 @@
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import type { SsrFPolicy } from "../infra/net/ssrf";
+import { safeHomedir } from "../infra/os-safe";
 import { ensurePortAvailable } from "../infra/ports";
 import { rawDataToString } from "../infra/ws";
 import { createSubsystemLogger } from "../logging/subsystem";
@@ -320,7 +320,7 @@ export async function launchPowerDirectorChrome(
       env: {
         ...process.env,
         // Reduce accidental sharing with the user's env.
-        HOME: os.homedir(),
+        HOME: safeHomedir(),
       },
     });
   };

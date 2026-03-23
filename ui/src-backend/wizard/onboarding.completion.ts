@@ -1,4 +1,3 @@
-import os from "node:os";
 import path from "node:path";
 import { resolveCliName } from "../cli/cli-name";
 import { installCompletion } from "../cli/completion-cli";
@@ -7,6 +6,7 @@ import {
   checkShellCompletionStatus,
   ensureCompletionCacheExists,
 } from "../commands/doctor-completion";
+import { safeHomedir } from "../infra/os-safe";
 import { pathExists } from "../utils";
 import type { WizardFlow } from "./onboarding.types";
 import type { WizardPrompter } from "./prompts";
@@ -19,7 +19,7 @@ type CompletionDeps = {
 };
 
 async function resolveProfileHint(shell: ShellCompletionStatus["shell"]): Promise<string> {
-  const home = process.env.HOME || os.homedir();
+  const home = process.env.HOME || safeHomedir();
   if (shell === "zsh") {
     return "~/.zshrc";
   }

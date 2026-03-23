@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "./os-safe";
 
 function isExecutable(filePath: string): boolean {
   try {
@@ -23,7 +23,7 @@ export function resolveBrewPathDirs(opts?: {
   homeDir?: string;
   env?: NodeJS.ProcessEnv;
 }): string[] {
-  const homeDir = opts?.homeDir ?? os.homedir();
+  const homeDir = opts?.homeDir ?? safeHomedir();
   const env = opts?.env ?? process.env;
 
   const dirs: string[] = [];
@@ -47,7 +47,7 @@ export function resolveBrewExecutable(opts?: {
   homeDir?: string;
   env?: NodeJS.ProcessEnv;
 }): string | undefined {
-  const homeDir = opts?.homeDir ?? os.homedir();
+  const homeDir = opts?.homeDir ?? safeHomedir();
   const env = opts?.env ?? process.env;
 
   const candidates: string[] = [];

@@ -1,5 +1,5 @@
-import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "../infra/os-safe.js";
 import { resolveRequiredHomeDir } from "../infra/home-dir.js";
 import { DEFAULT_AGENT_ID, normalizeAgentId } from "../routing/session-key.js";
 import { resolveUserPath } from "../utils.js";
@@ -72,7 +72,7 @@ function resolveEffectiveAgentDir(
   const env = deps?.env ?? process.env;
   const root = resolveStateDir(
     env,
-    deps?.homedir ?? (() => resolveRequiredHomeDir(env, os.homedir)),
+    deps?.homedir ?? (() => resolveRequiredHomeDir(env, safeHomedir)),
   );
   return path.join(root, "agents", id, "agent");
 }

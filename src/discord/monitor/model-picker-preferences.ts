@@ -1,9 +1,9 @@
-import os from "node:os";
 import path from "node:path";
 import { normalizeProviderId } from "../../agents/model-selection.js";
 import { resolveStateDir } from "../../config/paths.js";
 import { withFileLock } from "../../infra/file-lock.js";
 import { resolveRequiredHomeDir } from "../../infra/home-dir.js";
+import { safeHomedir } from "../../infra/os-safe.js";
 import { readJsonFileWithFallback, writeJsonFileAtomically } from "../../plugin-sdk/json-store.js";
 import { normalizeAccountId as normalizeSharedAccountId } from "../../routing/account-id.js";
 
@@ -37,7 +37,7 @@ export type DiscordModelPickerPreferenceScope = {
 };
 
 function resolvePreferencesStorePath(env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, os.homedir));
+  const stateDir = resolveStateDir(env, () => resolveRequiredHomeDir(env, safeHomedir));
   return path.join(stateDir, "discord", "model-picker-preferences.json");
 }
 

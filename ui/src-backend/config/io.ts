@@ -1,12 +1,12 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import JSON5 from "json5";
 import { ensureOwnerDisplaySecret } from "../agents/owner-display";
 import { loadDotEnv } from "../infra/dotenv";
 import { resolveRequiredHomeDir } from "../infra/home-dir";
+import { safeHomedir } from "../infra/os-safe";
 import {
   loadShellEnvFallback,
   resolveShellEnvFallbackTimeoutMs,
@@ -645,7 +645,7 @@ function normalizeDeps(overrides: ConfigIoDeps = {}): Required<ConfigIoDeps> {
     json5: overrides.json5 ?? JSON5,
     env: overrides.env ?? process.env,
     homedir:
-      overrides.homedir ?? (() => resolveRequiredHomeDir(overrides.env ?? process.env, os.homedir)),
+      overrides.homedir ?? (() => resolveRequiredHomeDir(overrides.env ?? process.env, safeHomedir)),
     configPath: overrides.configPath ?? "",
     logger: overrides.logger ?? console,
   };

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { pathExists } from "../utils.js";
+import { safeHomedir } from "./os-safe.js";
 import { applyPathPrepend } from "./path-prepend.js";
 
 export type GlobalInstallManager = "npm" | "pnpm" | "bun";
@@ -133,7 +133,7 @@ async function tryRealpath(targetPath: string): Promise<string> {
 }
 
 function resolveBunGlobalRoot(): string {
-  const bunInstall = process.env.BUN_INSTALL?.trim() || path.join(os.homedir(), ".bun");
+  const bunInstall = process.env.BUN_INSTALL?.trim() || path.join(safeHomedir(), ".bun");
   return path.join(bunInstall, "install", "global", "node_modules");
 }
 

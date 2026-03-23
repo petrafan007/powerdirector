@@ -657,8 +657,8 @@ export async function runSecretsAudit(
     filesScanned: new Set([configPath]),
   };
 
-  const stateDir = resolveStateDir(env, os.homedir);
-  const envPath = path.join(resolveConfigDir(env, os.homedir), ".env");
+  const stateDir = resolveStateDir(env, safeHomedir);
+  const envPath = path.join(resolveConfigDir(env, safeHomedir), ".env");
   const config = snapshot.valid ? snapshot.config : ({} as PowerDirectorConfig);
   let resolution = {
     refsChecked: 0,

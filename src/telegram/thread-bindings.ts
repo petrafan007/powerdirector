@@ -1,10 +1,10 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { resolveThreadBindingConversationIdFromBindingId } from "../channels/thread-binding-id.js";
 import { formatThreadBindingDurationLabel } from "../channels/thread-bindings-messages.js";
 import { resolveStateDir } from "../config/paths.js";
 import { logVerbose } from "../globals.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import { writeJsonAtomic } from "../infra/json-files.js";
 import {
   registerSessionBindingAdapter,
@@ -213,7 +213,7 @@ function fromSessionBindingInput(params: {
 }
 
 function resolveBindingsPath(accountId: string, env: NodeJS.ProcessEnv = process.env): string {
-  const stateDir = resolveStateDir(env, os.homedir);
+  const stateDir = resolveStateDir(env, safeHomedir);
   return path.join(stateDir, "telegram", `thread-bindings-${accountId}.json`);
 }
 

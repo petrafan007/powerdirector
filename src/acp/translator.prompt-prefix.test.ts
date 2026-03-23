@@ -1,7 +1,7 @@
-import os from "node:os";
 import path from "node:path";
 import type { PromptRequest } from "@agentclientprotocol/sdk";
 import { describe, expect, it, vi } from "vitest";
+import { safeHomedir } from "../infra/os-safe.js";
 import type { GatewayClient } from "../gateway/client.js";
 import { createInMemorySessionStore } from "./session.js";
 import { AcpGatewayAgent } from "./translator.js";
@@ -35,7 +35,7 @@ describe("acp prompt cwd prefix", () => {
     sessionStore.createSession({
       sessionId: TEST_SESSION_ID,
       sessionKey: TEST_SESSION_KEY,
-      cwd: options.cwd ?? path.join(os.homedir(), "powerdirector-test"),
+      cwd: options.cwd ?? path.join(safeHomedir(), "powerdirector-test"),
     });
 
     const requestSpy = createStopAfterSendSpy();
@@ -54,7 +54,7 @@ describe("acp prompt cwd prefix", () => {
   }
 
   async function runPromptWithCwd(cwd: string) {
-    const pinnedHome = os.homedir();
+    const pinnedHome = safeHomedir();
     const previousPowerDirectorHome = process.env.POWERDIRECTOR_HOME;
     const previousHome = process.env.HOME;
     delete process.env.POWERDIRECTOR_HOME;
@@ -77,7 +77,7 @@ describe("acp prompt cwd prefix", () => {
   }
 
   it("redacts home directory in prompt prefix", async () => {
-    const requestSpy = await runPromptWithCwd(path.join(os.homedir(), "powerdirector-test"));
+    const requestSpy = await runPromptWithCwd(path.join(safeHomedir(), "powerdirector-test"));
     expect(requestSpy).toHaveBeenCalledWith(
       "chat.send",
       expect.objectContaining({
@@ -88,7 +88,7 @@ describe("acp prompt cwd prefix", () => {
   });
 
   it("keeps backslash separators when cwd uses them", async () => {
-    const requestSpy = await runPromptWithCwd(`${os.homedir()}\\powerdirector-test`);
+    const requestSpy = await runPromptWithCwd(`${safeHomedir()}\\powerdirector-test`);
     expect(requestSpy).toHaveBeenCalledWith(
       "chat.send",
       expect.objectContaining({

@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import { isNotFoundPathError } from "./path-guards.js";
+import { safeHomedir } from "./os-safe.js";
 
 export async function assertNoHardlinkedFinalPath(params: {
   filePath: string;
@@ -31,8 +32,8 @@ export async function assertNoHardlinkedFinalPath(params: {
 }
 
 function shortPath(value: string) {
-  if (value.startsWith(os.homedir())) {
-    return `~${value.slice(os.homedir().length)}`;
+  if (value.startsWith(safeHomedir())) {
+    return `~${value.slice(safeHomedir().length)}`;
   }
   return value;
 }

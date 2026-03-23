@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "../infra/os-safe.js";
 import type { Command } from "commander";
 import type { PowerDirectorConfig } from "../config/config.js";
 import { loadConfig, writeConfigFile } from "../config/config.js";
@@ -882,7 +882,7 @@ export function registerPluginsCli(program: Command) {
     .action(async (id: string, opts: PluginUninstallOptions) => {
       const cfg = loadConfig();
       const report = buildPluginStatusReport({ config: cfg });
-      const extensionsDir = path.join(resolveStateDir(process.env, os.homedir), "extensions");
+      const extensionsDir = path.join(resolveStateDir(process.env, safeHomedir), "extensions");
       const keepFiles = Boolean(opts.keepFiles || opts.keepConfig);
 
       if (opts.keepConfig) {

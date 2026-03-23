@@ -1,6 +1,5 @@
 import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { hasAvailableAuthForProvider } from "../agents/model-auth.js";
 import {
@@ -19,6 +18,7 @@ import type {
   MediaUnderstandingModelConfig,
 } from "../config/types.tools.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import {
   mergeInboundPathRoots,
   resolveIMessageAttachmentRoots,
@@ -116,7 +116,7 @@ function expandHomeDir(value: string): string {
   if (!value.startsWith("~")) {
     return value;
   }
-  const home = os.homedir();
+  const home = safeHomedir();
   if (value === "~") {
     return home;
   }

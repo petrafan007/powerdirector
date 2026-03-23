@@ -1,6 +1,6 @@
-import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, URL } from "node:url";
+import { safeHomedir } from "../infra/os-safe.js";
 import { assertNoPathAliasEscape, type PathAliasPolicy } from "../infra/path-alias-guards.js";
 import { isPathInside } from "../infra/path-guards.js";
 import { resolvePreferredPowerDirectorTmpDir } from "../infra/tmp-powerdirector-dir.js";
@@ -21,10 +21,10 @@ function normalizeAtPrefix(filePath: string): string {
 function expandPath(filePath: string): string {
   const normalized = normalizeUnicodeSpaces(normalizeAtPrefix(filePath));
   if (normalized === "~") {
-    return os.homedir();
+    return safeHomedir();
   }
   if (normalized.startsWith("~/")) {
-    return os.homedir() + normalized.slice(1);
+    return safeHomedir() + normalized.slice(1);
   }
   return normalized;
 }
@@ -210,8 +210,8 @@ async function assertNoTmpAliasEscape(params: {
 }
 
 function shortPath(value: string) {
-  if (value.startsWith(os.homedir())) {
-    return `~${value.slice(os.homedir().length)}`;
+  if (value.startsWith(safeHomedir())) {
+    return `~${value.slice(safeHomedir().length)}`;
   }
   return value;
 }

@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import type { Bot } from "grammy";
 import { resolveStateDir } from "../config/paths.js";
@@ -9,6 +8,7 @@ import {
   TELEGRAM_COMMAND_NAME_PATTERN,
 } from "../config/telegram-custom-commands.js";
 import { logVerbose } from "../globals.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { withTelegramApiErrorLogging } from "./api-logging.js";
 
@@ -122,7 +122,7 @@ function hashBotIdentity(botIdentity?: string): string {
 }
 
 function resolveCommandHashPath(accountId?: string, botIdentity?: string): string {
-  const stateDir = resolveStateDir(process.env, os.homedir);
+  const stateDir = resolveStateDir(process.env, safeHomedir);
   const normalizedAccount = accountId?.trim().replace(/[^a-z0-9._-]+/gi, "_") || "default";
   const botHash = hashBotIdentity(botIdentity);
   return path.join(stateDir, "telegram", `command-hash-${normalizedAccount}-${botHash}.txt`);

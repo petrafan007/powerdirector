@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import fsp from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "./os-safe.js";
 import { isNotFoundPathError, isPathInside } from "./path-guards.js";
 
 export type BoundaryPathIntent = "read" | "write" | "create" | "delete" | "stat";
@@ -811,7 +811,7 @@ function symlinkEscapeError(params: {
 }
 
 function shortPath(value: string): string {
-  const home = os.homedir();
+  const home = safeHomedir();
   if (value.startsWith(home)) {
     return `~${value.slice(home.length)}`;
   }

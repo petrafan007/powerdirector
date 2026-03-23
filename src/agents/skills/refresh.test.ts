@@ -1,6 +1,6 @@
-import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
+import { safeHomedir } from "../../infra/os-safe.js";
 
 const watchMock = vi.fn(() => ({
   on: vi.fn(),
@@ -33,8 +33,8 @@ describe("ensureSkillsWatcher", () => {
         posix(path.join("/tmp/workspace", "skills", "*", "SKILL.md")),
         posix(path.join("/tmp/workspace", ".agents", "skills", "SKILL.md")),
         posix(path.join("/tmp/workspace", ".agents", "skills", "*", "SKILL.md")),
-        posix(path.join(os.homedir(), ".agents", "skills", "SKILL.md")),
-        posix(path.join(os.homedir(), ".agents", "skills", "*", "SKILL.md")),
+        posix(path.join(safeHomedir(), ".agents", "skills", "SKILL.md")),
+        posix(path.join(safeHomedir(), ".agents", "skills", "*", "SKILL.md")),
       ]),
     );
     expect(targets.every((target) => target.includes("SKILL.md"))).toBe(true);

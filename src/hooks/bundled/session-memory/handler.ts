@@ -6,7 +6,6 @@
  */
 
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import {
   resolveAgentIdByWorkspacePath,
@@ -14,6 +13,7 @@ import {
 } from "../../../agents/agent-scope.js";
 import type { PowerDirectorConfig } from "../../../config/config.js";
 import { resolveStateDir } from "../../../config/paths.js";
+import { safeHomedir } from "../../../infra/os-safe.js";
 import { writeFileWithinRoot } from "../../../infra/fs-safe.js";
 import { createSubsystemLogger } from "../../../logging/subsystem.js";
 import {
@@ -217,7 +217,7 @@ const saveSessionToMemory: HookHandler = async (event) => {
       contextWorkspaceDir ||
       (cfg
         ? resolveAgentWorkspaceDir(cfg, agentId)
-        : path.join(resolveStateDir(process.env, os.homedir), "workspace"));
+        : path.join(resolveStateDir(process.env, safeHomedir), "workspace"));
     const displaySessionKey = resolveDisplaySessionKey({
       cfg,
       workspaceDir: contextWorkspaceDir,
@@ -316,7 +316,7 @@ const saveSessionToMemory: HookHandler = async (event) => {
     const memoryFilePath = path.join(memoryDir, filename);
     log.debug("Memory file path resolved", {
       filename,
-      path: memoryFilePath.replace(os.homedir(), "~"),
+      path: memoryFilePath.replace(safeHomedir(), "~"),
     });
 
     // Format time as HH:MM:SS UTC
@@ -353,7 +353,7 @@ const saveSessionToMemory: HookHandler = async (event) => {
     log.debug("Memory file written successfully");
 
     // Log completion (but don't send user-visible confirmation - it's internal housekeeping)
-    const relPath = memoryFilePath.replace(os.homedir(), "~");
+    const relPath = memoryFilePath.replace(safeHomedir(), "~");
     log.info(`Session context saved to ${relPath}`);
   } catch (err) {
     if (err instanceof Error) {

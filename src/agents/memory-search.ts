@@ -1,7 +1,7 @@
-import os from "node:os";
 import path from "node:path";
 import type { PowerDirectorConfig, MemorySearchConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
+import { safeHomedir } from "../infra/os-safe.js";
 import type { SecretInput } from "../config/types.secrets.js";
 import {
   isMemoryMultimodalEnabled,
@@ -132,7 +132,7 @@ function normalizeSources(
 }
 
 function resolveStorePath(agentId: string, raw?: string): string {
-  const stateDir = resolveStateDir(process.env, os.homedir);
+  const stateDir = resolveStateDir(process.env, safeHomedir);
   const fallback = path.join(stateDir, "memory", `${agentId}.sqlite`);
   if (!raw) {
     return fallback;

@@ -2,6 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { expandHomePrefix, resolveRequiredHomeDir } from "../infra/home-dir";
+import { safeHomedir } from "../infra/os-safe";
 import type { PowerDirectorConfig } from "./types";
 
 /**
@@ -23,14 +24,14 @@ const CONFIG_FILENAME = "powerdirector.config.json";
 const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
 
 function resolveDefaultHomeDir(): string {
-  return resolveRequiredHomeDir(process.env, () => os.homedir());
+  return resolveRequiredHomeDir(process.env, () => safeHomedir());
 }
 
 /** Build a homedir thunk that respects POWERDIRECTOR_HOME for the given env. */
 function buildHomeDirResolver(env: NodeJS.ProcessEnv = process.env): () => string {
   const custom = env.POWERDIRECTOR_HOME?.trim();
   if (custom) {
-    const resolved = expandHomePrefix(custom, { homedir: os.homedir });
+    const resolved = expandHomePrefix(custom, { homedir: safeHomedir });
     return () => resolved;
   }
   return () => resolveDefaultHomeDir();

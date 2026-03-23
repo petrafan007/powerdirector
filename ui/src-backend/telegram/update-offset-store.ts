@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { resolveStateDir } from "../config/paths";
+import { safeHomedir } from "../infra/os-safe";
 import { writeJsonAtomic } from "../infra/json-files";
 
 const STORE_VERSION = 2;
@@ -28,7 +28,7 @@ function resolveTelegramUpdateOffsetPath(
   accountId?: string,
   env: NodeJS.ProcessEnv = process.env,
 ): string {
-  const stateDir = resolveStateDir(env, os.homedir);
+  const stateDir = resolveStateDir(env, safeHomedir);
   const normalized = normalizeAccountId(accountId);
   return path.join(stateDir, "telegram", `update-offset-${normalized}.json`);
 }

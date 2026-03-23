@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { safeTmpdir } from "./home-dir";
+import { safeTmpdir } from "./os-safe";
 import { type CommandOptions, runCommandWithTimeout } from "../process/exec";
 import {
   resolveControlUiDistIndexHealth,

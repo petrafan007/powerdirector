@@ -1,14 +1,14 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { expandHomePrefix, resolveRequiredHomeDir } from "../../infra/home-dir.js";
+import { safeHomedir } from "../../infra/os-safe.js";
 import { DEFAULT_AGENT_ID, normalizeAgentId } from "../../routing/session-key.js";
 import { resolveStateDir } from "../paths.js";
 
 function resolveAgentSessionsDir(
   agentId?: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => resolveRequiredHomeDir(env, os.homedir),
+  homedir: () => string = () => resolveRequiredHomeDir(env, safeHomedir),
 ): string {
   const root = resolveStateDir(env, homedir);
   const id = normalizeAgentId(agentId ?? DEFAULT_AGENT_ID);
@@ -17,7 +17,7 @@ function resolveAgentSessionsDir(
 
 export function resolveSessionTranscriptsDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => resolveRequiredHomeDir(env, os.homedir),
+  homedir: () => string = () => resolveRequiredHomeDir(env, safeHomedir),
 ): string {
   return resolveAgentSessionsDir(DEFAULT_AGENT_ID, env, homedir);
 }
@@ -25,7 +25,7 @@ export function resolveSessionTranscriptsDir(
 export function resolveSessionTranscriptsDirForAgent(
   agentId?: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = () => resolveRequiredHomeDir(env, os.homedir),
+  homedir: () => string = () => resolveRequiredHomeDir(env, safeHomedir),
 ): string {
   return resolveAgentSessionsDir(agentId, env, homedir);
 }
@@ -282,7 +282,7 @@ export function resolveStorePath(
 ) {
   const agentId = normalizeAgentId(opts?.agentId ?? DEFAULT_AGENT_ID);
   const env = opts?.env ?? process.env;
-  const homedir = () => resolveRequiredHomeDir(env, os.homedir);
+  const homedir = () => resolveRequiredHomeDir(env, safeHomedir);
   if (!store) {
     return path.join(resolveAgentSessionsDir(agentId, env, homedir), "sessions.json");
   }

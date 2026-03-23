@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
-import os from "node:os";
 import path from "node:path";
+import { safeHomedir } from "../infra/os-safe";
 import { resolveGatewayLaunchAgentLabel } from "./constants";
 
 export type LaunchdRestartHandoffMode = "kickstart" | "start-after-exit";
@@ -38,7 +38,7 @@ export function resolveLaunchdRestartTarget(
 ): LaunchdRestartTarget {
   const domain = resolveGuiDomain();
   const label = resolveLaunchAgentLabel(env);
-  const home = env.HOME?.trim() || os.homedir();
+  const home = env.HOME?.trim() || safeHomedir();
   const plistPath = path.join(home, "Library", "LaunchAgents", `${label}.plist`);
   return {
     domain,
