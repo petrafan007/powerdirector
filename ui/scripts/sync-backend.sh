@@ -42,6 +42,7 @@ find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])\.\.\/(\.\.\/)
 
 # 3. Correct mapping for absolute powerdirector/ imports to alias
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\/plugin-sdk\/([^'\"]+)\1/\1@\/src-backend\/plugin-sdk\/\2\1/g" {} +
+find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\/plugin-sdk\1/\1@\/src-backend\/plugin-sdk\/index\1/g" {} +
 find "$TARGET_DIR" -type f -name "*.ts" -exec sed -i -E "s/(['\"])powerdirector\//\1@\/src-backend\//g" {} +
 
 echo "Backend sync and import sanitization complete."

@@ -97,7 +97,7 @@ function getJiti(modulePath: string) {
     modulePath: modulePath,
   });
   const aliasMap = {
-    ...(pluginSdkAlias ? { "@/src-backend/plugin-sdk": pluginSdkAlias } : {}),
+    ...(pluginSdkAlias ? { "@/src-backend/plugin-sdk/index": pluginSdkAlias } : {}),
     ...resolvePluginSdkScopedAliasMap({ modulePath }),
   };
   const loader = createJiti(import.meta.url, {
