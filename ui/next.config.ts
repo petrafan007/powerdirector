@@ -80,6 +80,20 @@ const nextConfig: NextConfig = {
   },
   webpack: (config, { isServer }) => {
     config.resolve = config.resolve ?? {};
+    config.ignoreWarnings = [
+      {
+        module: /node_modules\/@discordjs\/voice/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+      {
+        module: /src-backend\/infra\/git-commit\.ts/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+      {
+        module: /src-backend\/version\.ts/,
+        message: /module\.createRequire failed parsing argument/,
+      },
+    ];
     // Ensure webpack can resolve .js imports to .ts files in the symlinked src-backend dir
     config.resolve.extensionAlias = {
       ...(config.resolve.extensionAlias ?? {}),
