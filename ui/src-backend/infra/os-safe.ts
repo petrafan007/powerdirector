@@ -1,8 +1,9 @@
 import * as os from "node:os";
+import { homedir as nativeHomedir, tmpdir as nativeTmpdir } from "node:os";
 
 export const safeHomedir = (): string => {
   try {
-    return typeof os.homedir === "function" ? os.homedir() : "";
+    return typeof nativeHomedir === "function" ? nativeHomedir() : "";
   } catch {
     return "";
   }
@@ -10,7 +11,7 @@ export const safeHomedir = (): string => {
 
 export const safeTmpdir = (): string => {
   try {
-    return typeof os.tmpdir === "function" ? os.tmpdir() : "/tmp";
+    return typeof nativeTmpdir === "function" ? nativeTmpdir() : "/tmp";
   } catch {
     return "/tmp";
   }
