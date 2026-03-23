@@ -98,10 +98,17 @@ const nextConfig: NextConfig = {
     config.resolve.extensionAlias = {
       ...(config.resolve.extensionAlias ?? {}),
       ".js": [".ts", ".tsx", ".js"],
+      ".jsx": [".tsx", ".jsx"],
     };
     config.resolve.extensions = Array.from(new Set([
-      ".ts", ".tsx", ".js", ".jsx", ...(config.resolve.extensions || [])
+      ".ts", ".tsx", ".js", ".jsx", ".json", ...(config.resolve.extensions || [])
     ]));
+    // Add src-backend to modules for easier resolution
+    config.resolve.modules = [
+      ...(config.resolve.modules || []),
+      path.resolve(configDir, "src-backend"),
+      "node_modules",
+    ];
 
     // Force webpack to include the shared src-backend directory in compilation
     const tsRule = config.module.rules.find((rule) => rule.test && rule.test.toString().includes('ts'));
