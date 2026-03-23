@@ -160,19 +160,21 @@ const readCommitFromPackageJson = () => {
 
 const readCommitFromBuildInfo = () => {
   try {
-    const require = createRequire(import.meta.url);
-    const candidates = ["../build-info.json", "./build-info.json"];
+    const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+    const candidates = [path.join(moduleDir, "../build-info.json"), path.join(moduleDir, "./build-info.json")];
     for (const candidate of candidates) {
       try {
-        const info = require(candidate) as {
-          commit?: string | null;
-        };
-        const formatted = formatCommit(info.commit ?? null);
-        if (formatted) {
-          return formatted;
+        if (fs.existsSync(candidate)) {
+          const info = JSON.parse(fs.readFileSync(candidate, "utf-8")) as {
+            commit?: string | null;
+          };
+          const formatted = formatCommit(info.commit ?? null);
+          if (formatted) {
+            return formatted;
+          }
         }
       } catch {
-        // ignore missing candidate
+        // ignore missing candidate or parse error
       }
     }
     return null;
