@@ -1,4 +1,6 @@
-import { createRequire } from "node:module";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 declare const __POWERDIRECTOR_VERSION__: string | undefined;
 const CORE_PACKAGE_NAME = "powerdirector";
@@ -22,18 +24,21 @@ function readVersionFromJsonCandidates(
   opts: { requirePackageName?: boolean } = {},
 ): string | null {
   try {
-    const require = createRequire(moduleUrl);
+    const moduleDir = path.dirname(fileURLToPath(moduleUrl));
     for (const candidate of candidates) {
       try {
-        const parsed = require(candidate) as { name?: string; version?: string };
-        const version = parsed.version?.trim();
-        if (!version) {
-          continue;
+        const fullPath = path.resolve(moduleDir, candidate);
+        if (fs.existsSync(fullPath)) {
+          const parsed = JSON.parse(fs.readFileSync(fullPath, "utf-8")) as { name?: string; version?: string };
+          const version = parsed.version?.trim();
+          if (!version) {
+            continue;
+          }
+          if (opts.requirePackageName && parsed.name !== CORE_PACKAGE_NAME) {
+            continue;
+          }
+          return version;
         }
-        if (opts.requirePackageName && parsed.name !== CORE_PACKAGE_NAME) {
-          continue;
-        }
-        return version;
       } catch {
         // ignore missing or unreadable candidate
       }
