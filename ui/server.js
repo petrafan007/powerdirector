@@ -10,25 +10,46 @@ const port = parseInt(process.env.PORT, 10) || 3007
 const hostname = '0.0.0.0'
 console.log('Attempting to start Next.js from:', __dirname)
 
-function readTerminalPort() {
-    const envPort = parseInt(process.env.TERMINAL_PORT, 10)
+const rootDir = path.resolve(__dirname, '..')
+const configPath = path.join(rootDir, 'powerdirector.config.json')
+
+function readPortFromEnv(envName) {
+    const envPort = parseInt(process.env[envName], 10)
     if (Number.isFinite(envPort) && envPort > 0 && envPort <= 65535) {
         return envPort
     }
+    return undefined
+}
 
-    const rootDir = path.resolve(__dirname, '..')
-    const configPath = path.join(rootDir, 'powerdirector.config.json')
+function readProjectConfig() {
     try {
-        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'))
-        const configuredPort = Number(config?.terminal?.port)
-        if (Number.isFinite(configuredPort) && configuredPort > 0 && configuredPort <= 65535) {
-            return Math.floor(configuredPort)
-        }
+        return JSON.parse(fs.readFileSync(configPath, 'utf8'))
     } catch (error) {
-        console.warn('Failed to read terminal port from config:', error?.message || error)
+        console.warn('Failed to read ports from config:', error?.message || error)
+    }
+    return undefined
+}
+
+function readConfiguredPort(envName, configValue, fallbackPort) {
+    const envPort = readPortFromEnv(envName)
+    if (envPort !== undefined) {
+        return envPort
     }
 
-    return 3008
+    const configuredPort = Number(configValue)
+    if (Number.isFinite(configuredPort) && configuredPort > 0 && configuredPort <= 65535) {
+        return Math.floor(configuredPort)
+    }
+
+    return fallbackPort
+}
+
+function readTerminalPort(config) {
+    return readConfiguredPort('TERMINAL_PORT', config?.terminal?.port, 3008)
+}
+
+function readGatewayPort(config) {
+    return readConfiguredPort('POWERDIRECTOR_GATEWAY_PORT', config?.gateway?.port, 3006)
 }
 
 // when using middleware `hostname` and `port` must be provided below
@@ -44,7 +65,13 @@ const app = next({
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
+    const config = readProjectConfig()
+    const terminalPort = readTerminalPort(config)
+    const gatewayPort = readGatewayPort(config)
     const terminalProxy = new WebSocketServer({ noServer: true })
+
+    console.log(`Proxying terminal traffic to 127.0.0.1:${terminalPort}`)
+    console.log(`Proxying gateway traffic to 127.0.0.1:${gatewayPort}`)
 
     const proxyWebSocket = (req, socket, head, targetPort) => {
         const parsedUrl = parse(req.url || '', false)
@@ -132,7 +159,7 @@ app.prepare().then(() => {
 
             // Proxy specific gateway paths
             if (pathname.startsWith('/v1/') || pathname.startsWith('/hooks/') || pathname.startsWith('/plugins/') || pathname === '/health' || pathname === '/probe') {
-                return gatewayProxy(req, res, 3006)
+                return gatewayProxy(req, res, gatewayPort)
             }
 
             await handle(req, res, parsedUrl)
@@ -150,8 +177,8 @@ app.prepare().then(() => {
                 terminalProxy.emit('connection', ws, req)
             })
         } else {
-            // Proxy everything else to Gateway on 3006
-            proxyWebSocket(req, socket, head, 3006)
+            // Proxy everything else to the configured Gateway port.
+            proxyWebSocket(req, socket, head, gatewayPort)
         }
     })
 

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **[Hotfix] Large Session History OOM / Bad Gateway**: Added bounded session-history reads in `SessionManager`, capped `/api/sessions/[id]` responses to a safe window with oversized message truncation, and switched chat response metadata lookup to targeted recent-assistant queries so giant transcripts no longer trigger `Invalid string length` / heap exhaustion when the UI loads a session.
 - **[Hotfix] Session Edit API Repair**: Reworked the `/api/sessions/[id]` PATCH handler to use the actual session-manager methods for rename/custom-instruction updates instead of a mismatched compatibility branch that returned incorrect results.
 - **[Hotfix] UI Build Route Evaluation**: Deferred system-presence imports in `/api/instances` and `/api/overview` so Next.js can finish build-time page-data collection without crashing on route-module evaluation.
+- **[Hotfix] QA UI Gateway Port Override**: Updated `ui/server.js` to honor `POWERDIRECTOR_GATEWAY_PORT` (and `config.gateway.port`) for HTTP/WebSocket proxying so the required isolated `4007/4008` hotfix/release QA flow can run without colliding with the personal instance on `3006`.
 
 ## [1.2.1-beta.1] - 2026-03-22
 
