@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - UI config parsing accepts stringified numeric limits via a more resilient `asPositiveNumber`.
 - Wave 4 parity checklist completed (PDF tool, diffs plugin + PDF output, ContextEngine stack, route-binding CLI, ACP provenance, Brave LLM-context search) for this release train.
 - **[Hotfix] Update Install Doctor Compatibility**: Hardened the shared config-path resolvers so `doctor --fix` and the in-app updater accept either string or thunk `homedir`/`tmpdir` inputs without crashing at the final repair step.
+- **[Hotfix] Chat Session Open Crash**: Fixed a `Cannot access '<minified>' before initialization` client crash when opening a session by declaring the thinking-toggle state before the derived message filters that use it.
 
 ## [1.2.1-beta.1] - 2026-03-22
 

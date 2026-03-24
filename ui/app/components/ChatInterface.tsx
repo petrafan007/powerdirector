@@ -1950,6 +1950,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         return idA - idB;
     });
 
+    const [showThinking, setShowThinking] = useState(true);
+
     const visibleMessages = ui.showToolCalls
         ? sortedMessages
         : sortedMessages.filter((msg) => !isToolCallMessage(msg));
@@ -2034,8 +2036,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
         return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     };
-
-    const [showThinking, setShowThinking] = useState(true);
 
     // ... (inside component body)
 
