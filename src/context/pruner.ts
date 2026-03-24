@@ -201,6 +201,19 @@ export class ContextPruner {
             : null;
     }
 
+    public setContextWindowTokens(limit?: number) {
+        if (typeof limit !== 'number' || !Number.isFinite(limit) || limit <= 0) return;
+        const normalized = Math.floor(limit);
+        this.config.maxTokens = normalized;
+        if (this.pruning) {
+            this.pruning.contextWindowTokens = normalized;
+        }
+        const budgetCfg = (this.budgetManager as any)?.config;
+        if (budgetCfg) {
+            budgetCfg.maxTokens = normalized;
+        }
+    }
+
     public prune(history: Message[]): Message[] {
         let pruned = history.map((msg) => this.cloneMessage(msg));
 

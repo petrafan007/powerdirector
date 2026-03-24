@@ -1,2 +1,10 @@
+import * as home from "./home-dir";
 export { safeHomedir, safeTmpdir } from "./home-dir";
-import osSafe from "./home-dir"; export default osSafe;
+
+const osSafe = {
+  ...home,
+  homedir: home.safeHomedir,
+  tmpdir: home.safeTmpdir,
+};
+
+export default osSafe;

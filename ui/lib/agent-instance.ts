@@ -271,6 +271,11 @@ function resolvePreferredProviderOrder(agentDefaults: any, modelProviders: Recor
 }
 
 function asPositiveNumber(value: any): number | undefined {
+    if (typeof value === 'string') {
+        const parsed = Number(value.trim());
+        if (!Number.isFinite(parsed)) return undefined;
+        value = parsed;
+    }
     if (typeof value !== 'number' || !Number.isFinite(value)) return undefined;
     if (value <= 0) return undefined;
     return value;

@@ -36,6 +36,10 @@ export interface ProviderExecutionMetadata {
     fallbackUsed: boolean;
     fallbackFromProvider?: string;
     fallbackFromModel?: string;
+    maxTurns?: number;
+    contextTokens?: number;
+    contextWindow?: number;
+    maxTokens?: number;
 }
 
 export interface ProviderExecutionResult {
@@ -323,6 +327,7 @@ export class ProviderRouter {
                         linkedSignal
                     );
 
+                const modelDef = this.resolveModelDefinition(provider, effectiveModel);
                 this.clearProviderCooldown(provider.config.name, effectiveModel);
                 const fallbackUsed = index > 0;
                 this.abortController = null;
@@ -334,7 +339,11 @@ export class ProviderRouter {
                     requestedModel: targetModel || entryModel,
                     fallbackUsed,
                     fallbackFromProvider: fallbackUsed ? firstProviderName : undefined,
-                    fallbackFromModel: fallbackUsed ? firstProviderModel : undefined
+                    fallbackFromModel: fallbackUsed ? firstProviderModel : undefined,
+                    maxTurns: modelDef?.maxTurns,
+                    contextTokens: modelDef?.contextTokens ?? modelDef?.contextWindow ?? modelDef?.maxTokens,
+                    contextWindow: modelDef?.contextWindow,
+                    maxTokens: modelDef?.maxTokens
                 };
 
                 if (fallbackUsed && options?.onFallback) {
@@ -595,6 +604,7 @@ export class ProviderRouter {
                     stream = (async function* () { yield output; })();
                 }
 
+                const modelDef = this.resolveModelDefinition(provider, effectiveModel);
                 this.clearProviderCooldown(provider.config.name, effectiveModel);
                 const fallbackUsed = index > 0;
 
@@ -606,7 +616,11 @@ export class ProviderRouter {
                     requestedModel: entryModel,
                     fallbackUsed,
                     fallbackFromProvider: fallbackUsed ? firstProviderName : undefined,
-                    fallbackFromModel: fallbackUsed ? firstProviderModel : undefined
+                    fallbackFromModel: fallbackUsed ? firstProviderModel : undefined,
+                    maxTurns: modelDef?.maxTurns,
+                    contextTokens: modelDef?.contextTokens ?? modelDef?.contextWindow ?? modelDef?.maxTokens,
+                    contextWindow: modelDef?.contextWindow,
+                    maxTokens: modelDef?.maxTokens
                 };
 
                 if (fallbackUsed && options?.onFallback) {
@@ -663,6 +677,15 @@ export class ProviderRouter {
 
         // Model-only hint can be attempted across all providers.
         return targetModel;
+    }
+
+    private resolveModelDefinition(provider: Provider, modelId?: string): any | undefined {
+        const normalized = (modelId || '').trim().toLowerCase();
+        if (!normalized) return undefined;
+        const providerAny = provider as any;
+        const models = providerAny?.config?.models || providerAny?.models;
+        if (!Array.isArray(models)) return undefined;
+        return models.find((m: any) => typeof m?.id === 'string' && m.id.trim().toLowerCase() === normalized);
     }
 
     private resolveEffectiveModel(provider: Provider, modelForProvider?: string): string | undefined {

@@ -47,12 +47,12 @@ Status tracker by wave/sprint with beta-version increments per wave (beta.1 is c
 - [x] Done [x] QA  Migrate all `os.homedir()` calls to `safeHomedir` to fix update-runner doctor crash (`v1.2.1-beta.1-hotfix`)
 
 ## Wave 4 – target **1.2.0-beta.5** (Feature Parity)
-- [ ] Done [ ] QA  First-class PDF tool (`v2026.3.2`)
-- [ ] Done [ ] QA  Diffs plugin (`v2026.3.1`) & diff PDF output (`v2026.3.2`)
-- [ ] Done [ ] QA  ContextEngine stack (interface `v2026.3.7` + registry/bootstrap fixes `v2026.3.8`)
-- [ ] Done [ ] QA  Route-binding CLI (`agents bindings/bind/unbind`) (`v2026.2.26`)
-- [ ] Done [ ] QA  ACP provenance/history improvements (`v2026.3.8`)
-- [ ] Done [ ] QA  Brave LLM-context search mode (`v2026.3.8`)
+- [x] Done [x] QA  First-class PDF tool (`v2026.3.2`)
+- [x] Done [x] QA  Diffs plugin (`v2026.3.1`) & diff PDF output (`v2026.3.2`)
+- [x] Done [x] QA  ContextEngine stack (interface `v2026.3.7` + registry/bootstrap fixes `v2026.3.8`)
+- [x] Done [x] QA  Route-binding CLI (`agents bindings/bind/unbind`) (`v2026.2.26`)
+- [x] Done [x] QA  ACP provenance/history improvements (`v2026.3.8`)
+- [x] Done [x] QA  Brave LLM-context search mode (`v2026.3.8`)
 
 ## Notes
 - Current shipped version: **1.2.0-beta.2** (Wave 1 complete).

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2-beta.1] - 2026-03-24
+
+### Added
+- Click-to-expand media viewer for final assistant images and videos in chat, with modal copy/download controls and an inline video player.
+
+### Changed
+- Thinking toggle now hides whole thinking-status bubbles; added a wrench toggle to show/hide tool-call messages without reloading.
+- Model-aware limits: Model definitions now carry `maxTurns`/`contextTokens`, router metadata propagates them, and the agent loop/pruner honor model-specific caps with global fallback (removing the Ollama-only 10-turn cap).
+- UI config parsing accepts stringified numeric limits via a more resilient `asPositiveNumber`.
+- Wave 4 parity checklist completed (PDF tool, diffs plugin + PDF output, ContextEngine stack, route-binding CLI, ACP provenance, Brave LLM-context search) for this release train.
+
 ## [1.2.1-beta.1] - 2026-03-22
 
 ### Added

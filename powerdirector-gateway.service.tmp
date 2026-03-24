@@ -1,5 +1,5 @@
 [Unit]
-Description=PowerDirector Gateway (v1.2.1-beta.1)
+Description=PowerDirector Gateway (v1.2.2-beta.1)
 After=network-online.target
 Wants=network-online.target
 
@@ -17,7 +17,7 @@ Environment=POWERDIRECTOR_GATEWAY_TOKEN=b53f518007b17c291429cfeac0e1dadb7625a6b1
 Environment="POWERDIRECTOR_SYSTEMD_UNIT=powerdirector-gateway.service"
 Environment=POWERDIRECTOR_SERVICE_MARKER=powerdirector
 Environment=POWERDIRECTOR_SERVICE_KIND=gateway
-Environment=POWERDIRECTOR_SERVICE_VERSION=1.2.1-beta.1
+Environment=POWERDIRECTOR_SERVICE_VERSION=1.2.2-beta.1
 
 [Install]
 WantedBy=default.target

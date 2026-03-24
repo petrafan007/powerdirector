@@ -19,7 +19,7 @@ import { isRunProgressMessage, shouldClearThinkingIndicator } from '../../lib/ch
 import {
     Bot, User, Paperclip, Send, X, FileText, Image as ImageIcon, Smile, Settings,
     Search, Trash2, ChevronDown, CheckCircle2, AlertCircle, Info, MoreHorizontal,
-    Square, Layers, Brain, Terminal, ShieldAlert
+    Square, Layers, Brain, Terminal, ShieldAlert, Wrench
 } from 'lucide-react';
 import { Message } from '../../../src/context/types';
 
@@ -210,6 +210,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     const [selectedToolOutput, setSelectedToolOutput] = useState<{ title: string, content: string, plainText?: boolean } | null>(null);
     const [sidebarWidth, setSidebarWidth] = useState(400);
     const isResizing = useRef(false);
+    const [mediaModal, setMediaModal] = useState<{ type: 'image' | 'video'; src: string; filename?: string } | null>(null);
 
     const handleMouseMove = useCallback((e: MouseEvent) => {
         if (!isResizing.current) return;
@@ -437,19 +438,30 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         }
     };
 
+    const applyUiLocalOverrides = (base: UiRuntimeSettings): UiRuntimeSettings => {
+        try {
+            const storedShowToolCalls = localStorage.getItem('pd_show_tool_calls');
+            if (storedShowToolCalls === '0') return { ...base, showToolCalls: false };
+            if (storedShowToolCalls === '1') return { ...base, showToolCalls: true };
+        } catch {
+            // Ignore localStorage errors
+        }
+        return base;
+    };
+
     const fetchUiSettings = async () => {
         try {
             const res = await fetch('/api/config/ui');
             const data = await res.json();
             const section = data?.data || {};
-            setUi({
+            setUi(applyUiLocalOverrides({
                 showTimestamps: section.showTimestamps !== false,
                 showToolCalls: section.showToolCalls !== false,
                 codeHighlighting: section.codeHighlighting !== false,
                 markdownRendering: section.markdownRendering !== false
-            });
+            }));
         } catch {
-            // Keep defaults
+            setUi(prev => applyUiLocalOverrides(prev));
         }
     };
 
@@ -1592,18 +1604,59 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         return `/api/media?path=${encodeURIComponent(value)}`;
     };
 
-    const renderMetadataMedia = (url: string, key: string) => {
+    const extractFilename = (raw: string): string | undefined => {
+        if (!raw) return undefined;
+        try {
+            const parsed = new URL(raw, 'http://placeholder');
+            const last = parsed.pathname.split('/').filter(Boolean).pop();
+            return last || undefined;
+        } catch {
+            const parts = raw.split(/[\\\\/]/).filter(Boolean);
+            return parts.pop();
+        }
+    };
+
+    const renderMetadataMedia = (
+        url: string,
+        key: string,
+        opts?: { interactive?: boolean; filenameHint?: string; onOpen?: (type: 'image' | 'video', src: string, filename?: string) => void }
+    ) => {
         const value = normalizeMediaPath(url);
         const src = toMediaSrc(value);
         const isVideo = /\.(mp4|webm|mov)(?:[?#].*)?$/i.test(value);
         const isImage = /\.(png|jpe?g|webp|gif|svg)(?:[?#].*)?$/i.test(value);
+        const interactive = opts?.interactive === true;
+        const filename = opts?.filenameHint || extractFilename(value);
+
+        const handleOpen = interactive && opts?.onOpen
+            ? () => opts.onOpen(isVideo ? 'video' : 'image', value, filename)
+            : undefined;
+
+        const sharedKeyHandlers = interactive && handleOpen
+            ? {
+                role: 'button' as const,
+                tabIndex: 0,
+                onKeyDown: (e: React.KeyboardEvent) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleOpen();
+                    }
+                }
+            }
+            : {};
 
         if (isVideo) {
             return (
-                <div key={key} className="my-3 relative w-full max-w-lg rounded-xl border shadow-inner overflow-hidden" style={{ borderColor: 'var(--pd-border)' }}>
+                <div
+                    key={key}
+                    className={`my-3 relative w-full max-w-lg rounded-xl border shadow-inner overflow-hidden ${interactive ? 'cursor-zoom-in' : ''}`}
+                    style={{ borderColor: 'var(--pd-border)' }}
+                    onClick={handleOpen}
+                    {...sharedKeyHandlers}
+                >
                     <video
                         src={src}
-                        controls
+                        controls={!interactive}
                         className="w-full h-auto max-h-[400px]"
                         onError={(e) => {
                             (e.target as HTMLVideoElement).parentElement!.style.display = 'none';
@@ -1611,13 +1664,24 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     >
                         Your browser does not support the video tag.
                     </video>
+                    {interactive && (
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center text-white text-sm font-semibold pointer-events-none">
+                            Click to open video
+                        </div>
+                    )}
                 </div>
             );
         }
 
         if (isImage) {
             return (
-                <div key={key} className="my-3 relative w-full max-w-sm rounded-xl border shadow-inner overflow-hidden flex justify-center items-center" style={{ borderColor: 'var(--pd-border)' }}>
+                <div
+                    key={key}
+                    className={`my-3 relative w-full max-w-sm rounded-xl border shadow-inner overflow-hidden flex justify-center items-center ${interactive ? 'cursor-zoom-in' : ''}`}
+                    style={{ borderColor: 'var(--pd-border)' }}
+                    onClick={handleOpen}
+                    {...sharedKeyHandlers}
+                >
                     <img
                         src={src}
                         alt="Attached media"
@@ -1626,6 +1690,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             (e.target as HTMLImageElement).parentElement!.style.display = 'none';
                         }}
                     />
+                    {interactive && (
+                        <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+                    )}
                 </div>
             );
         }
@@ -1643,7 +1710,54 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         );
     };
 
-    const attachMetadataMedia = (base: React.ReactNode, contentText: string, metadata?: Record<string, any>) => {
+    const openMediaModal = (type: 'image' | 'video', rawSrc: string, filename?: string) => {
+        const normalizedSrc = toMediaSrc(normalizeMediaPath(rawSrc));
+        setMediaModal({ type, src: normalizedSrc, filename: filename || extractFilename(rawSrc) });
+    };
+
+    const copyMediaToClipboard = async () => {
+        if (!mediaModal || mediaModal.type !== 'image') return;
+        try {
+            const res = await fetch(mediaModal.src);
+            const blob = await res.blob();
+            // ClipboardItem is required for binary image copy; guard for browser support.
+            if (typeof ClipboardItem === 'undefined' || !navigator.clipboard?.write) {
+                throw new Error('Clipboard API unavailable');
+            }
+            const item = new ClipboardItem({ [blob.type || 'image/png']: blob });
+            await navigator.clipboard.write([item]);
+        } catch (err) {
+            console.error('Failed to copy image to clipboard', err);
+            setGlobalError('Copy failed. Please try again or save the image manually.');
+        }
+    };
+
+    const downloadMedia = async () => {
+        if (!mediaModal) return;
+        try {
+            const res = await fetch(mediaModal.src);
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const ext = (blob.type && blob.type.split('/')[1]) || (mediaModal.type === 'image' ? 'png' : 'mp4');
+            link.href = url;
+            link.download = mediaModal.filename || `media.${ext}`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Failed to download media', err);
+            setGlobalError('Download failed. Please retry.');
+        }
+    };
+
+    const attachMetadataMedia = (
+        base: React.ReactNode,
+        contentText: string,
+        metadata?: Record<string, any>,
+        interactive = false
+    ) => {
         const rawUrls = Array.isArray(metadata?.mediaUrls)
             ? metadata.mediaUrls
             : (typeof metadata?.mediaUrl === 'string' && metadata.mediaUrl.trim().length > 0 ? [metadata.mediaUrl] : []);
@@ -1666,14 +1780,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <div className="space-y-1">
                 {base}
                 <div className="pt-1">
-                    {missingFromText.map((url, idx) => renderMetadataMedia(url, `meta-media-${idx}-${url}`))}
+                    {missingFromText.map((url, idx) => renderMetadataMedia(url, `meta-media-${idx}-${url}`, interactive ? { interactive: true, onOpen: openMediaModal } : undefined))}
                 </div>
             </div>
         );
     };
 
-    const renderContent = (content: any, metadata?: Record<string, any>) => {
+    const renderContent = (content: any, metadata?: Record<string, any>, options?: { interactiveMedia?: boolean }) => {
         let textContent = '';
+        const mediaInteractive = options?.interactiveMedia === true;
 
         if (typeof content === 'string') {
             textContent = content;
@@ -1722,7 +1837,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 return attachMetadataMedia(
                     <span className="whitespace-pre-wrap">{content}</span>,
                     String(content),
-                    metadata
+                    metadata,
+                    mediaInteractive
                 );
             }
             // Prettify loose JSON
@@ -1735,11 +1851,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                         </pre>
                         ,
                         String(content),
-                        metadata
+                        metadata,
+                        mediaInteractive
                     );
                 } catch { /* not json */ }
             }
-            return attachMetadataMedia(renderMarkdownText(content), String(content), metadata);
+            return attachMetadataMedia(renderMarkdownText(content), String(content), metadata, mediaInteractive);
         }
         if (Array.isArray(content)) {
             return attachMetadataMedia((
@@ -1748,21 +1865,32 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                         if (c.type === 'text') return <div key={i} className="whitespace-pre-wrap leading-relaxed">{renderFormatting(c.text)}</div>;
                         if (c.type === 'image') {
                             const url = c.image_url?.url || c.previewUrl;
-                            return (
-                                <div key={i} className="rounded-xl overflow-hidden border border-slate-700 max-w-xl shadow-2xl bg-black/20">
-                                    <img src={url} alt="Attached" className="w-full h-auto object-contain max-h-[500px]" />
-                                </div>
+                            if (!url) return null;
+                            return renderMetadataMedia(
+                                url,
+                                `content-image-${i}-${url}`,
+                                mediaInteractive ? { interactive: true, filenameHint: c.filename, onOpen: openMediaModal } : { filenameHint: c.filename }
+                            );
+                        }
+                        if (c.type === 'video') {
+                            const url = (c as any).video_url?.url || (c as any).url || c.previewUrl;
+                            if (!url) return null;
+                            return renderMetadataMedia(
+                                url,
+                                `content-video-${i}-${url}`,
+                                mediaInteractive ? { interactive: true, filenameHint: c.filename, onOpen: openMediaModal } : { filenameHint: c.filename }
                             );
                         }
                         return null;
                     })}
                 </div>
-            ), '', metadata);
+            ), '', metadata, mediaInteractive);
         }
         return attachMetadataMedia(
             <pre className="p-2 opacity-50 text-[10px] bg-black/20 rounded">{JSON.stringify(content, null, 2)}</pre>,
             '',
-            metadata
+            metadata,
+            mediaInteractive
         );
     };
 
@@ -1826,6 +1954,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         ? sortedMessages
         : sortedMessages.filter((msg) => !isToolCallMessage(msg));
 
+    const renderableMessages = showThinking
+        ? visibleMessages
+        : visibleMessages.filter((msg) => normalizedText(msg.metadata?.status).toLowerCase() !== 'thinking');
+
     const executionTurnKeys = useMemo(() => {
         const keys = new Set<string>();
         for (const msg of sortedMessages) {
@@ -1882,6 +2014,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         const newMap = { ...sessionReasoningMap, [sessionId]: newLevel };
         setSessionReasoningMap(newMap);
         localStorage.setItem(SESSION_REASONING_STORAGE_KEY, JSON.stringify(newMap));
+    };
+
+    const toggleToolCallsVisibility = () => {
+        setUi(prev => {
+            const next = { ...prev, showToolCalls: !prev.showToolCalls };
+            try {
+                localStorage.setItem('pd_show_tool_calls', next.showToolCalls ? '1' : '0');
+            } catch {
+                // Ignore storage failures
+            }
+            return next;
+        });
     };
 
     // ─── Format file size ───
@@ -1973,6 +2117,54 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 </div>
             )}
 
+            {mediaModal && (
+                <div className="fixed inset-0 z-[120] flex items-center justify-center px-4">
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setMediaModal(null)} />
+                    <div
+                        className="relative z-[121] w-full max-w-5xl max-h-[90vh] rounded-2xl border shadow-2xl flex flex-col overflow-hidden"
+                        style={{ background: 'var(--pd-surface-panel)', borderColor: 'var(--pd-border)' }}
+                    >
+                        <div className="flex-1 overflow-auto flex items-center justify-center bg-black/20">
+                            {mediaModal.type === 'image' ? (
+                                <img src={mediaModal.src} alt={mediaModal.filename || 'Image'} className="max-h-[80vh] max-w-full object-contain" />
+                            ) : (
+                                <video
+                                    src={mediaModal.src}
+                                    controls
+                                    autoPlay
+                                    className="max-h-[80vh] max-w-full rounded-lg shadow-inner"
+                                />
+                            )}
+                        </div>
+                        <div className="p-4 border-t flex justify-end gap-3" style={{ borderColor: 'var(--pd-border)' }}>
+                            {mediaModal.type === 'image' && (
+                                <button
+                                    onClick={copyMediaToClipboard}
+                                    className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                                    style={{ background: 'var(--pd-surface-panel-2)', color: 'var(--pd-text-main)' }}
+                                >
+                                    Copy
+                                </button>
+                            )}
+                            <button
+                                onClick={downloadMedia}
+                                className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                                style={{ background: 'var(--pd-surface-panel-2)', color: 'var(--pd-text-main)' }}
+                            >
+                                Download
+                            </button>
+                            <button
+                                onClick={() => setMediaModal(null)}
+                                className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                                style={{ background: 'var(--pd-accent)', color: '#0b0f19' }}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="flex-1 flex flex-col min-w-0 border-r" style={{ borderColor: selectedToolOutput ? 'var(--pd-border)' : 'transparent' }}>
                 {/* Chat Header */}
                 <div className="flex items-center justify-between px-6 py-3 border-b shrink-0" style={{ borderColor: 'var(--pd-border)' }}>
@@ -1987,6 +2179,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             title="Toggle assistant thinking/working output"
                         >
                             <Brain size={18} />
+                        </button>
+                        <button
+                            onClick={toggleToolCallsVisibility}
+                            className={`p-2 rounded-lg transition-colors cursor-pointer hover:opacity-100 ${ui.showToolCalls ? 'opacity-100 text-[var(--pd-accent)]' : 'opacity-50 text-[var(--pd-text-muted)]'}`}
+                            title="Toggle tool call visibility"
+                        >
+                            <Wrench size={18} />
                         </button>
                         {onToggleFullscreen && (
                             <button
@@ -2035,7 +2234,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                             </button>
                         </div>
                     )}
-                    {visibleMessages.map((msg, idx) => {
+                    {renderableMessages.map((msg, idx) => {
                         const messageRunId = normalizedText(msg.metadata?.runId);
                         const messageTurn = typeof msg.metadata?.turn === 'number' ? msg.metadata.turn : null;
                         const messageType = normalizedText(msg.metadata?.type).toLowerCase();
@@ -2112,7 +2311,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                                                         <div className="font-bold text-xs uppercase tracking-wider opacity-70" style={{ color: iconColor }}>{label}</div>
                                                     </div>
                                                     <div className="text-sm leading-relaxed" style={{ color: 'var(--pd-text-main)' }}>
-                                                        {renderContent(msg.content, msg.metadata)}
+                                                        {renderContent(msg.content, msg.metadata, { interactiveMedia: false })}
                                                     </div>
                                                 </div>
                                             );
@@ -2269,7 +2468,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                                                 <div className="text-sm leading-relaxed">
                                                     {isToolRelated && !isUser && !isExecBlock
                                                         ? renderToolOutput(msg.content, msg.metadata?.tool || 'tool')
-                                                        : renderContent(msg.content, msg.metadata)
+                                                        : renderContent(msg.content, msg.metadata, { interactiveMedia: isAssistantFinal })
                                                     }
                                                 </div>
                                             </div>

@@ -160,7 +160,7 @@ export class Agent {
             }
         }
 
-        const prunedMessages = this.contextPruner.prune(messages);
+        const prunedMessages = this.pruneForModel(messages, responseMetadata);
         console.log(`[Agent] Context pruned to ${prunedMessages.length} messages`);
 
         const toolDefs = this.tools
@@ -205,15 +205,30 @@ export class Agent {
         let streamRetryCount = 0;
         let toolIntentRepairCount = 0;
 
-        // Dynamic turn limit: Use configured maxTurns, or default to 10 for Ollama, 20 for others
-        const isLocalOllama = options.modelHint?.toLowerCase().includes('ollama');
-        const maxTurns = this.options.maxTurns ?? (isLocalOllama ? 10 : 20);
-
         let turnSequence = 1;
-
         let currentTurn = 0;
-        for (let i = 0; i < maxTurns; i++) {
-            currentTurn = i + 1;
+
+        while (true) {
+            const effectiveMaxTurns = this.resolveTurnLimit(responseMetadata);
+            if (currentTurn >= effectiveMaxTurns) {
+                console.log(`[Agent] Max turns (${effectiveMaxTurns}) reached for session ${sessionId}.`);
+                const turnLimitMsg: Message = {
+                    role: 'assistant',
+                    content: `Agent has gone ${effectiveMaxTurns} turns, continue?`,
+                    timestamp: Date.now(),
+                    metadata: {
+                        limitReached: 'turns',
+                        status: 'completed',
+                        runId,
+                        sequence: turnSequence++
+                    }
+                };
+                this.sessionManager.saveMessage(sessionId, turnLimitMsg);
+                if (options.onStep) options.onStep(turnLimitMsg);
+                return responseText || "Turn limit reached.";
+            }
+
+            currentTurn += 1;
             if (options.abortSignal?.aborted) {
                 console.log(`[Agent] Run paused for session ${sessionId} at turn ${currentTurn}`);
                 const pauseMsg: Message = {
@@ -232,7 +247,7 @@ export class Agent {
                 return responseText || "Paused.";
             }
 
-            console.log(`[Agent] Thinking (Turn ${currentTurn}/${maxTurns})... timeout=${stepTimeoutMs}ms`);
+            console.log(`[Agent] Thinking (Turn ${currentTurn}/${effectiveMaxTurns})... timeout=${stepTimeoutMs}ms`);
 
             if (this.options.humanDelayMs > 0) {
                 const delay = Math.min(this.options.humanDelayMs, 10000); // Caps at 10s for safety
@@ -390,7 +405,7 @@ export class Agent {
                         });
                     }
                     responseText = '';
-                    prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                    prompt = this.formatPrompt(this.pruneForModel(messages, responseMetadata), toolDefs, options);
                     continue;
                 }
 
@@ -444,7 +459,7 @@ export class Agent {
                         });
                     }
                     responseText = '';
-                    prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                    prompt = this.formatPrompt(this.pruneForModel(messages, responseMetadata), toolDefs, options);
                     continue;
                 }
 
@@ -609,7 +624,7 @@ export class Agent {
                         messages.push(toolResultMsg);
                         if (options.onStep) options.onStep(toolResultMsg);
 
-                        prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                        prompt = this.formatPrompt(this.pruneForModel(messages, responseMetadata), toolDefs, options);
                         loopEndedWithTool = true;
                         continue;
                     }
@@ -635,7 +650,7 @@ export class Agent {
                     if (options.onStep) options.onStep(errorMsg);
 
                     // Re-prompt the model with the error
-                    prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                    prompt = this.formatPrompt(this.pruneForModel(messages, responseMetadata), toolDefs, options);
                     loopEndedWithTool = true; // Pretend we "ended with tool" so we don't hit the "no tool call" break
                     continue;
                 }
@@ -656,7 +671,7 @@ export class Agent {
                         sequence: turnSequence++
                     }
                 } as Message);
-                prompt = this.formatPrompt(this.contextPruner.prune(messages), toolDefs, options);
+                prompt = this.formatPrompt(this.pruneForModel(messages, responseMetadata), toolDefs, options);
                 loopEndedWithTool = true;
                 continue;
             }
@@ -685,24 +700,6 @@ export class Agent {
         }
 
         // If we hit the turn limit, notify UI
-        if (loopEndedWithTool) {
-            console.log(`[Agent] Max turns (${maxTurns}) reached for session ${sessionId}.`);
-            const turnLimitMsg: Message = {
-                role: 'assistant',
-                content: `Agent has gone ${maxTurns} turns, continue?`,
-                timestamp: Date.now(),
-                metadata: {
-                    limitReached: 'turns',
-                    status: 'completed',
-                    runId,
-                    sequence: turnSequence++
-                }
-            };
-            this.sessionManager.saveMessage(sessionId, turnLimitMsg);
-            if (options.onStep) options.onStep(turnLimitMsg);
-            return responseText || "Turn limit reached.";
-        }
-
         const assistantMsg: Message = {
             role: 'assistant',
             content: responseText,
@@ -740,6 +737,44 @@ export class Agent {
         }
 
         return responseText;
+    }
+
+    private resolveTurnLimit(metadata?: ProviderExecutionMetadata): number {
+        if (metadata && typeof metadata.maxTurns === 'number' && Number.isFinite(metadata.maxTurns) && metadata.maxTurns > 0) {
+            return Math.floor(metadata.maxTurns);
+        }
+        if (typeof this.options.maxTurns === 'number' && Number.isFinite(this.options.maxTurns) && this.options.maxTurns > 0) {
+            return Math.floor(this.options.maxTurns);
+        }
+        return 20;
+    }
+
+    private resolveContextTokenLimit(metadata?: ProviderExecutionMetadata): number {
+        const modelLimit = metadata?.contextTokens ?? metadata?.contextWindow ?? metadata?.maxTokens;
+        if (typeof modelLimit === 'number' && Number.isFinite(modelLimit) && modelLimit > 0) {
+            return Math.floor(modelLimit);
+        }
+        const configured = (this.contextPruner as any)?.config?.maxTokens;
+        if (typeof configured === 'number' && Number.isFinite(configured) && configured > 0) {
+            return configured;
+        }
+        return 256000;
+    }
+
+    private pruneForModel(history: Message[], metadata?: ProviderExecutionMetadata): Message[] {
+        const limit = this.resolveContextTokenLimit(metadata);
+        if (typeof (this.contextPruner as any).setContextWindowTokens === 'function') {
+            (this.contextPruner as any).setContextWindowTokens(limit);
+        } else {
+            // Best-effort mutation for older ContextPruner versions
+            if ((this.contextPruner as any).config) {
+                (this.contextPruner as any).config.maxTokens = limit;
+            }
+            if ((this.contextPruner as any).pruning) {
+                (this.contextPruner as any).pruning.contextWindowTokens = limit;
+            }
+        }
+        return this.contextPruner.prune(history);
     }
 
     private formatPrompt(messages: Message[], tools: any[], options: RunStepOptions): string {
