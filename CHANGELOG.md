@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Model-aware limits: Model definitions now carry `maxTurns`/`contextTokens`, router metadata propagates them, and the agent loop/pruner honor model-specific caps with global fallback (removing the Ollama-only 10-turn cap).
 - UI config parsing accepts stringified numeric limits via a more resilient `asPositiveNumber`.
 - Wave 4 parity checklist completed (PDF tool, diffs plugin + PDF output, ContextEngine stack, route-binding CLI, ACP provenance, Brave LLM-context search) for this release train.
+- **[Hotfix] Update Install Doctor Compatibility**: Hardened the shared config-path resolvers so `doctor --fix` and the in-app updater accept either string or thunk `homedir`/`tmpdir` inputs without crashing at the final repair step.
 
 ## [1.2.1-beta.1] - 2026-03-22
 

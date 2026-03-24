@@ -22,9 +22,20 @@ const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moldbot", ".moltbot"] as const;
 const NEW_STATE_DIRNAME = ".powerdirector";
 const CONFIG_FILENAME = "powerdirector.config.json";
 const LEGACY_CONFIG_FILENAMES = ["powerdirector.json", "clawdbot.json", "moldbot.json", "moltbot.json"] as const;
+type DirInput = string | (() => string);
 
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, () => safeHomedir());
+}
+
+function resolveDirInput(input: DirInput): string {
+  try {
+    const raw = typeof input === "function" ? input() : input;
+    const trimmed = raw?.trim();
+    return path.resolve(trimmed || process.cwd());
+  } catch {
+    return path.resolve(process.cwd());
+  }
 }
 
 /** Build a homedir thunk that respects POWERDIRECTOR_HOME for the given env. */
@@ -37,25 +48,26 @@ function buildHomeDirResolver(env: NodeJS.ProcessEnv = process.env): () => strin
   return () => resolveDefaultHomeDir();
 }
 
-export function resolveLegacyStateDir(homedir: () => string = () => resolveDefaultHomeDir()): string {
-  return path.join(homedir(), ".powerdirector");
+export function resolveLegacyStateDir(homedir: DirInput = () => resolveDefaultHomeDir()): string {
+  return path.join(resolveDirInput(homedir), ".powerdirector");
 }
 
-export function resolveLegacyStateDirs(homedir: () => string = () => resolveDefaultHomeDir()): string[] {
-  return LEGACY_STATE_DIRNAMES.map((dir) => path.join(homedir(), dir));
+export function resolveLegacyStateDirs(homedir: DirInput = () => resolveDefaultHomeDir()): string[] {
+  const home = resolveDirInput(homedir);
+  return LEGACY_STATE_DIRNAMES.map((dir) => path.join(home, dir));
 }
 
-export function resolveNewStateDir(homedir: () => string = () => resolveDefaultHomeDir()): string {
-  return path.join(homedir(), NEW_STATE_DIRNAME);
+export function resolveNewStateDir(homedir: DirInput = () => resolveDefaultHomeDir()): string {
+  return path.join(resolveDirInput(homedir), NEW_STATE_DIRNAME);
 }
 
 export function resolveStateDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = buildHomeDirResolver(env),
+  homedir: DirInput = buildHomeDirResolver(env),
 ): string {
   const envDir = env.POWERDIRECTOR_STATE_DIR?.trim();
   if (envDir) {
-    return expandHomePrefix(envDir, { homedir });
+    return expandHomePrefix(envDir, { env, homedir });
   }
   return resolveNewStateDir(homedir);
 }
@@ -84,7 +96,7 @@ export function resolvePowerDirectorRoot(startDir: string = process.cwd()): stri
 
 export function resolveCanonicalConfigPath(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = buildHomeDirResolver(env),
+  homedir: DirInput = buildHomeDirResolver(env),
 ): string {
   const stateDir = resolveStateDir(env, homedir);
   return path.join(stateDir, CONFIG_FILENAME);
@@ -92,11 +104,11 @@ export function resolveCanonicalConfigPath(
 
 export function resolveConfigPathCandidate(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = buildHomeDirResolver(env),
+  homedir: DirInput = buildHomeDirResolver(env),
 ): string {
   const override = env.POWERDIRECTOR_CONFIG_PATH?.trim() || env.POWERDIRECTOR_CONFIG_PATH?.trim();
   if (override) {
-    return expandHomePrefix(override, { homedir });
+    return expandHomePrefix(override, { env, homedir });
   }
 
   const stateDir = resolveStateDir(env, homedir);
@@ -131,7 +143,7 @@ export function resolveConfigPathCandidate(
 
 export function resolveConfigPath(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = buildHomeDirResolver(env),
+  homedir: DirInput = buildHomeDirResolver(env),
 ): string {
   return resolveConfigPathCandidate(env, homedir);
 }
@@ -140,7 +152,7 @@ export const CONFIG_PATH = resolveConfigPathCandidate();
 
 export function resolveDefaultConfigCandidates(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = buildHomeDirResolver(env),
+  homedir: DirInput = buildHomeDirResolver(env),
 ): string[] {
   const candidates: string[] = [resolveCanonicalConfigPath(env, homedir)];
   const projectRoot = resolvePowerDirectorRoot();
@@ -152,13 +164,13 @@ export function resolveDefaultConfigCandidates(
 
 export const DEFAULT_GATEWAY_PORT = 3012;
 
-export function resolveGatewayLockDir(tmpdir: () => string = os.tmpdir): string {
-  return path.join(tmpdir(), "powerdirector-gateway-lock");
+export function resolveGatewayLockDir(tmpdir: DirInput = os.tmpdir): string {
+  return path.join(resolveDirInput(tmpdir), "powerdirector-gateway-lock");
 }
 
 export function resolveOAuthDir(
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = buildHomeDirResolver(env),
+  homedir: DirInput = buildHomeDirResolver(env),
 ): string {
   const stateDir = resolveStateDir(env, homedir);
   return path.join(stateDir, "credentials");
@@ -167,7 +179,7 @@ export function resolveOAuthDir(
 export function resolveOAuthPath(
   provider: string,
   env: NodeJS.ProcessEnv = process.env,
-  homedir: () => string = buildHomeDirResolver(env),
+  homedir: DirInput = buildHomeDirResolver(env),
 ): string {
   const dir = resolveOAuthDir(env, homedir);
   return path.join(dir, `${provider}.json`);
