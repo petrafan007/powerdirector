@@ -189,20 +189,33 @@ export async function POST(request: Request) {
                     let responseMeta: Record<string, any> | undefined;
                     let responseTimestamp: number | undefined;
                     try {
-                        const sessionManager = service.sessionManager;
-                        // We try the old one first, then look for any session updated in the last 60s for this user.
-                        let sessionData = sessionManager.getSession(targetSessionId);
-
+                        const sessionManager = service.sessionManager as {
+                            getLatestAssistantMessage?: (
+                                targetId: string,
+                                options?: { scanLimit?: number }
+                            ) => any;
+                            getSession?: (targetId: string) => any;
+                            listSessions: () => Array<{ id: string; updatedAt: number }>;
+                        };
                         const findAssistant = (data: any) => data?.messages?.slice().reverse().find((m: any) => m.role === 'assistant' && !m.metadata?.callId);
+                        const findLatestAssistant = (targetId: string) => {
+                            if (typeof sessionManager.getLatestAssistantMessage === 'function') {
+                                return sessionManager.getLatestAssistantMessage(targetId, { scanLimit: 64 });
+                            }
+                            const sessionData = typeof sessionManager.getSession === 'function'
+                                ? sessionManager.getSession(targetId)
+                                : null;
+                            return findAssistant(sessionData);
+                        };
 
-                        let latestAssistant = findAssistant(sessionData);
+                        // We try the active session first, then look for any session updated in the last 60s for this user.
+                        let latestAssistant = findLatestAssistant(targetSessionId);
 
                         if (!latestAssistant) {
-                            // Try to find if a session was just created/updated for this UI peer
+                            // Try to find if a session was just created or updated for this UI peer.
                             const recentSessions = sessionManager.listSessions().filter(s => (Date.now() - s.updatedAt) < 60000);
                             for (const s of recentSessions) {
-                                const data = sessionManager.getSession(s.id);
-                                const found = findAssistant(data);
+                                const found = findLatestAssistant(s.id);
                                 if (found) {
                                     latestAssistant = found;
                                     targetSessionId = s.id;

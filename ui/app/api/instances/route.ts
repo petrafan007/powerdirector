@@ -1,7 +1,25 @@
 
 import { NextResponse } from 'next/server';
-import type { SystemPresence } from '@/src-backend/infra/system-presence';
-import { listSystemPresence } from '@/src-backend/infra/system-presence';
+
+export const dynamic = 'force-dynamic';
+
+type SystemPresence = {
+    host?: string;
+    ip?: string;
+    version?: string;
+    platform?: string;
+    deviceFamily?: string;
+    modelIdentifier?: string;
+    lastInputSeconds?: number;
+    mode?: string;
+    reason?: string;
+    deviceId?: string;
+    roles?: string[];
+    scopes?: string[];
+    instanceId?: string;
+    text: string;
+    ts: number;
+};
 
 type UiInstanceEntry = {
     id: string;
@@ -68,6 +86,7 @@ function toUiInstanceEntry(entry: SystemPresence, index: number): UiInstanceEntr
 
 export async function GET() {
     try {
+        const { listSystemPresence } = await import('@/src-backend/infra/system-presence');
         const entries = listSystemPresence().map(toUiInstanceEntry);
         return NextResponse.json({
             entries,

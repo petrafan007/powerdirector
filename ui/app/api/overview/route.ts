@@ -1,12 +1,12 @@
 
 import { NextResponse } from 'next/server';
 import { getService } from '@/lib/agent-instance';
-import { listSystemPresence } from '@/src-backend/infra/system-presence';
 import { TICK_INTERVAL_MS } from '@/src-backend/gateway/server-constants';
 
 export async function GET() {
     try {
         // Calling getService() ensures runtime managers are initialized.
+        const { listSystemPresence } = await import('@/src-backend/infra/system-presence');
         const service = getService();
         const presence = listSystemPresence();
         const sessionsCount = service.sessionManager.listSessions().length;

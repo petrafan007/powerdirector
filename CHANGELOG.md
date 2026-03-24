@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Wave 4 parity checklist completed (PDF tool, diffs plugin + PDF output, ContextEngine stack, route-binding CLI, ACP provenance, Brave LLM-context search) for this release train.
 - **[Hotfix] Update Install Doctor Compatibility**: Hardened the shared config-path resolvers so `doctor --fix` and the in-app updater accept either string or thunk `homedir`/`tmpdir` inputs without crashing at the final repair step.
 - **[Hotfix] Chat Session Open Crash**: Fixed a `Cannot access '<minified>' before initialization` client crash when opening a session by declaring the thinking-toggle state before the derived message filters that use it.
+- **[Hotfix] Large Session History OOM / Bad Gateway**: Added bounded session-history reads in `SessionManager`, capped `/api/sessions/[id]` responses to a safe window with oversized message truncation, and switched chat response metadata lookup to targeted recent-assistant queries so giant transcripts no longer trigger `Invalid string length` / heap exhaustion when the UI loads a session.
+- **[Hotfix] Session Edit API Repair**: Reworked the `/api/sessions/[id]` PATCH handler to use the actual session-manager methods for rename/custom-instruction updates instead of a mismatched compatibility branch that returned incorrect results.
+- **[Hotfix] UI Build Route Evaluation**: Deferred system-presence imports in `/api/instances` and `/api/overview` so Next.js can finish build-time page-data collection without crashing on route-module evaluation.
 
 ## [1.2.1-beta.1] - 2026-03-22
 
